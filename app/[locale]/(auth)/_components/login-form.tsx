@@ -1,9 +1,10 @@
 "use client"
 
 import React, { useTransition } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
@@ -13,7 +14,6 @@ import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -21,7 +21,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-function LoginPage() {
+function LoginForm() {
+  const t = useTranslations("LoginPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
   const { toast } = useToast()
@@ -45,7 +46,7 @@ function LoginPage() {
 
       if (res.typeError === "base") {
         toast({
-          title: "Login failed",
+          title: t("LoginFailedTitle"),
           description: res.messageError,
         })
         return
@@ -69,13 +70,10 @@ function LoginPage() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>email</FormLabel>
+              <FormLabel>{t("Email")}</FormLabel>
               <FormControl>
                 <Input disabled={pending} placeholder="shadcn" {...field} />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
@@ -85,7 +83,7 @@ function LoginPage() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Password</FormLabel>
+              <FormLabel>{t("Password")}</FormLabel>
               <FormControl>
                 <Input
                   disabled={pending}
@@ -94,19 +92,16 @@ function LoginPage() {
                   {...field}
                 />
               </FormControl>
-              <FormDescription>
-                This is your public display name.
-              </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
         <Button disabled={pending} type="submit">
-          Submit {pending && <Loader2 className="size-4 animate-spin" />}
+          {t("Login")} {pending && <Loader2 className="size-4 animate-spin" />}
         </Button>
       </form>
     </Form>
   )
 }
 
-export default LoginPage
+export default LoginForm

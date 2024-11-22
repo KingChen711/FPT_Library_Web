@@ -1,0 +1,9 @@
+{
+  "HelloWorld": "Xin chào thế giới",
+  "LoginPage": {
+    "Email": "Email",
+    "Password": "Mật khẩu",
+    "Login": "Đăng nhập",
+    "LoginFailedTitle": "Đăng nhập thất bại"
+  }
+}

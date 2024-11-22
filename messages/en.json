@@ -1,0 +1,9 @@
+{
+  "HelloWorld": "Hello world",
+  "LoginPage": {
+    "Email": "Email",
+    "Password": "Password",
+    "Login": "Login",
+    "LoginFailedTitle": "Login failed"
+  }
+}
