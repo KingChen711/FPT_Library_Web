@@ -22,7 +22,6 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-tailwindcss": "^3.17.5",
-    "husky": "^9.1.7",
     "lint-staged": "^15.2.10",
     "lucide-react": "^0.460.0",
     "next": "15.0.3",
@@ -41,13 +40,13 @@
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "eslint": "^8",
-    "eslint-config-next": "15.0.3"
+    "eslint-config-next": "15.0.3",
+    "husky": "^8.0.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
-      "node remove_console.js",
-      "eslint --fix",
-      "prettier --write"
+      "prettier --write",
+      "eslint --fix"
     ],
     "*.css": "prettier --write"
   }
