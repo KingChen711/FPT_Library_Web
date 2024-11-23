@@ -5,6 +5,7 @@ import "./globals.css"
 
 import { notFound } from "next/navigation"
 import AuthProvider from "@/contexts/auth-provider"
+import { ReactQueryProvider } from "@/contexts/react-query-provider"
 import { routing } from "@/i18n/routing"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
@@ -50,9 +51,11 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <NextIntlClientProvider messages={messages}>
-          <AuthProvider>{children}</AuthProvider>
-        </NextIntlClientProvider>
+        <ReactQueryProvider>
+          <NextIntlClientProvider messages={messages}>
+            <AuthProvider>{children}</AuthProvider>
+          </NextIntlClientProvider>
+        </ReactQueryProvider>
         <Toaster />
       </body>
     </html>

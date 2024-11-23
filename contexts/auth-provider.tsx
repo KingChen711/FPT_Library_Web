@@ -3,9 +3,8 @@
 import React, { createContext, useContext, useMemo } from "react"
 import { useLocalStorage } from "@reactuses/core"
 import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
 
-import { type ERole } from "@/lib/types/enums"
+import { ERole } from "@/lib/types/enums"
 import { type Role, type User } from "@/lib/types/models"
 
 type UserWithRole = {
@@ -33,14 +32,21 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { data: userData, isLoading: isLoadingAuth } = useQuery({
     queryKey: ["auth", "who-am-i", token],
-    queryFn: async () =>
-      axios
-        .get<WhoAmIResponse>("/api/users/who-am-i", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => res.data),
+    // queryFn: async () =>
+    //   axios
+    //     .get<WhoAmIResponse>("/api/users/who-am-i", {
+    //       headers: {
+    //         Authorization: `Bearer ${token}`,
+    //       },
+    //     })
+    //     .then((res) => res.data),
+    queryFn: () =>
+      token
+        ? ({
+            userId: "user id",
+            role: { roleName: ERole.STUDENT },
+          } as WhoAmIResponse)
+        : null,
   })
 
   const user = useMemo(() => {
