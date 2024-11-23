@@ -2,19 +2,24 @@ import { cache } from "react"
 
 import "server-only"
 
-import axios from "axios"
-
+import { http } from "@/lib/http"
 import { type Role, type User } from "@/lib/types/models"
 
-import { getToken } from "./get-token"
+import { auth } from "./auth"
 
 type WhoAmIResponse = User & { role: Role }
 
 const whoAmI = cache(async (): Promise<WhoAmIResponse | null> => {
+  const { getToken } = auth()
+
   try {
-    const { data } = await axios.get<WhoAmIResponse>("/api/users/who-am-i", {
+    const data = await http.get<WhoAmIResponse>("/api/users/who-am-i", {
       headers: {
         Authorization: `Bearer ${getToken()}`,
+      },
+      next: {
+        revalidate: 60,
+        tags: ["who-am-i"],
       },
     })
 
