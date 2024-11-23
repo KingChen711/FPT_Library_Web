@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useTransition } from "react"
+import { useAuth } from "@/contexts/auth-provider"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
@@ -8,7 +9,7 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
-import { login } from "@/actions/auth/login.action"
+import { login } from "@/actions/auth/login"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -23,9 +24,12 @@ import { Input } from "@/components/ui/input"
 
 function LoginForm() {
   const t = useTranslations("LoginPage")
-  const [pending, startTransition] = useTransition()
   const router = useRouter()
+
   const { toast } = useToast()
+  const { setToken } = useAuth()
+
+  const [pending, startTransition] = useTransition()
 
   const form = useForm<TLoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -41,6 +45,7 @@ function LoginForm() {
 
       if (res.isSuccess) {
         router.push("/")
+        setToken(res.data.accessToken)
         return
       }
 

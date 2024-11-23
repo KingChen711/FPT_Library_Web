@@ -4,6 +4,7 @@ import localFont from "next/font/local"
 import "./globals.css"
 
 import { notFound } from "next/navigation"
+import AuthProvider from "@/contexts/auth-provider"
 import { routing } from "@/i18n/routing"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages } from "next-intl/server"
@@ -50,7 +51,7 @@ export default async function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NextIntlClientProvider messages={messages}>
-          {children}
+          <AuthProvider>{children}</AuthProvider>
         </NextIntlClientProvider>
         <Toaster />
       </body>
