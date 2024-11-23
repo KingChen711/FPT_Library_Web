@@ -1,6 +1,7 @@
 "use client"
 
-import React, { useTransition } from "react"
+import { useTransition } from "react"
+import Link from "next/link"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
@@ -11,6 +12,7 @@ import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
 import { login } from "@/actions/auth/login.action"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -20,6 +22,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+
+// type LoginFormProps = {
+//   params: Promise<{ locale: string }>
+// }
 
 function LoginForm() {
   const t = useTranslations("LoginPage")
@@ -70,9 +76,15 @@ function LoginForm() {
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("Email")}</FormLabel>
+              <FormLabel className="text-base font-semibold">
+                {t("Email")}
+              </FormLabel>
               <FormControl>
-                <Input disabled={pending} placeholder="shadcn" {...field} />
+                <Input
+                  disabled={pending}
+                  placeholder="Enter your email"
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -83,12 +95,14 @@ function LoginForm() {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>{t("Password")}</FormLabel>
+              <FormLabel className="text-base font-semibold">
+                {t("Password")}
+              </FormLabel>
               <FormControl>
                 <Input
                   disabled={pending}
                   type="password"
-                  placeholder="shadcn"
+                  placeholder="Enter your password"
                   {...field}
                 />
               </FormControl>
@@ -96,9 +110,30 @@ function LoginForm() {
             </FormItem>
           )}
         />
-        <Button disabled={pending} type="submit">
+        <div className="flex justify-between text-sm">
+          <div className="flex items-center gap-2">
+            <Checkbox id="remember" /> Remember me
+          </div>
+          <Link href={"#"}>Forgot password</Link>
+        </div>
+        <Button
+          variant={"primary"}
+          disabled={pending}
+          type="submit"
+          className="w-full"
+        >
           {t("Login")} {pending && <Loader2 className="size-4 animate-spin" />}
         </Button>
+
+        <div className="flex justify-between text-sm">
+          <div className="flex items-center gap-2">
+            New User?{" "}
+            <Link href="/en/register" className="text-blue-400 underline">
+              Register Here
+            </Link>
+          </div>
+          <Link href={"#"}>Use As Guest</Link>
+        </div>
       </form>
     </Form>
   )
