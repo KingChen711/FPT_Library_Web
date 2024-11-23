@@ -20,6 +20,7 @@
 # production
 /build
 bun.lockb
+package-lock.json
 
 # misc
 .DS_Store
@@ -39,3 +40,4 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+

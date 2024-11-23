@@ -16,7 +16,7 @@ export async function login(
 
   await new Promise((resolve) => setTimeout(resolve, 3000))
 
-  const cookieStore = await cookies()
+  const cookieStore = cookies()
   cookieStore.set("accessToken", accessToken)
 
   return {

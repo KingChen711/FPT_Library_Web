@@ -1,7 +1,12 @@
 import Image from "next/image"
+import { routing } from "@/i18n/routing"
 import { getTranslations } from "next-intl/server"
 
 import { ThemeToggle } from "@/components/theme-toggle"
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
+}
 
 export default async function Home() {
   const t = await getTranslations()

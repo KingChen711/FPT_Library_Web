@@ -14,7 +14,7 @@ const whoAmI = cache(async (): Promise<WhoAmIResponse | null> => {
   try {
     const { data } = await axios.get<WhoAmIResponse>("/api/users/who-am-i", {
       headers: {
-        Authorization: `Bearer ${await getToken()}`,
+        Authorization: `Bearer ${getToken()}`,
       },
     })
 
