@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useTransition } from "react"
-import { useAuth } from "@/contexts/auth-provider"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -25,9 +25,9 @@ import { Input } from "@/components/ui/input"
 function LoginForm() {
   const t = useTranslations("LoginPage")
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const { toast } = useToast()
-  const { setToken } = useAuth()
 
   const [pending, startTransition] = useTransition()
 
@@ -44,8 +44,10 @@ function LoginForm() {
       const res = await login(values)
 
       if (res.isSuccess) {
+        queryClient.invalidateQueries({
+          queryKey: ["token"],
+        })
         router.push("/")
-        setToken(res.data.accessToken)
         return
       }
 

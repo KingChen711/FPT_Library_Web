@@ -12,7 +12,6 @@ export async function signOut(): Promise<ActionResponse> {
   cookieStore.delete("accessToken")
 
   revalidateTag("who-am-i")
-  //need to delete accessToken on client local storage too
 
   return {
     isSuccess: true,

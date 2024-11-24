@@ -1,7 +1,6 @@
 "use client"
 
 import React, { createContext, useContext, useMemo } from "react"
-import { useLocalStorage } from "@reactuses/core"
 import { useQuery } from "@tanstack/react-query"
 
 import { ERole } from "@/lib/types/enums"
@@ -12,6 +11,11 @@ type UserWithRole = {
   role: ERole
 }
 
+type Token = {
+  accessToken: string
+  refreshToken: string
+}
+
 type WhoAmIResponse = (User & { role: Role }) | null
 
 type AuthProviderProps = {
@@ -19,8 +23,7 @@ type AuthProviderProps = {
 }
 
 type AuthContextType = {
-  getToken: () => string | null
-  setToken: React.Dispatch<React.SetStateAction<string | null>>
+  getAccessToken: () => string | null
   isLoadingAuth: boolean
   user: UserWithRole | null
 }
@@ -28,10 +31,17 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | null>(null)
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [token, setToken] = useLocalStorage<string | null>("accessToken", null)
+  const { data: token, isLoading: isLoadingToken } = useQuery<Token>({
+    queryKey: ["token"],
+    queryFn: () =>
+      fetch("/api/token")
+        .then((res) => res.json() ?? undefined)
+        .catch(() => undefined),
+  })
 
-  const { data: userData, isLoading: isLoadingAuth } = useQuery({
+  const { data: userData, isLoading: isLoadingUser } = useQuery({
     queryKey: ["auth", "who-am-i", token],
+    enabled: token !== undefined,
     // queryFn: async () =>
     //   axios
     //     .get<WhoAmIResponse>("/api/users/who-am-i", {
@@ -40,6 +50,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     //       },
     //     })
     //     .then((res) => res.data),
+
     queryFn: () =>
       token
         ? ({
@@ -58,12 +69,18 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [userData])
 
-  const getToken = () => {
-    return token
+  const getAccessToken = () => {
+    return token?.accessToken ?? null
   }
 
   return (
-    <AuthContext.Provider value={{ getToken, setToken, isLoadingAuth, user }}>
+    <AuthContext.Provider
+      value={{
+        getAccessToken,
+        isLoadingAuth: isLoadingToken || isLoadingUser,
+        user,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   )

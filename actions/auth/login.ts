@@ -17,14 +17,15 @@ export async function login(
 
   const accessToken =
     "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyLCJyb2xlIjoiQWRtaW4ifQ.a-i4U3sbGBJg1m2ZLi-4V9kntMhLM5TBF6z9Nbgtjfw"
+  const refreshToken = "this-is-refreshToken"
 
   await new Promise((resolve) => setTimeout(resolve, 3000))
 
   const cookieStore = cookies()
   cookieStore.set("accessToken", accessToken)
+  cookieStore.set("refreshToken", refreshToken)
 
   revalidateTag("who-am-i")
-  //need to set accessToken on client local storage too
 
   return {
     isSuccess: true,
