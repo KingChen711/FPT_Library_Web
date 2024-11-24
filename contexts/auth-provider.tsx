@@ -1,7 +1,7 @@
 "use client"
 
-import React, { createContext, useContext, useMemo } from "react"
-import { useQuery } from "@tanstack/react-query"
+import React, { createContext, useContext, useEffect, useMemo } from "react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { ERole } from "@/lib/types/enums"
 import { type Role, type User } from "@/lib/types/models"
@@ -31,6 +31,8 @@ type AuthContextType = {
 export const AuthContext = createContext<AuthContextType | null>(null)
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
+  const queryClient = useQueryClient()
+
   const { data: token, isLoading: isLoadingToken } = useQuery<Token>({
     queryKey: ["token"],
     queryFn: () =>
@@ -72,6 +74,19 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const getAccessToken = () => {
     return token?.accessToken ?? null
   }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      //refresh token here
+      queryClient.invalidateQueries({
+        queryKey: ["token"],
+      })
+    }, 1000 * 60)
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [queryClient])
 
   return (
     <AuthContext.Provider
