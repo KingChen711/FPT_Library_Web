@@ -1,5 +1,5 @@
 import React from "react"
-import { auth } from "@/queries/auth/auth"
+import { auth } from "@/queries/auth"
 
 import { ERole } from "@/lib/types/enums"
 

@@ -1,11 +1,14 @@
 import "server-only"
 
+import { cache } from "react"
 import { cookies } from "next/headers"
 import { redirect } from "@/i18n/routing"
 import jwt from "jsonwebtoken"
 import { getLocale } from "next-intl/server"
 
+import { http } from "@/lib/http"
 import { ERole } from "@/lib/types/enums"
+import { type Role, type User } from "@/lib/types/models"
 
 interface DecodedToken {
   userId: string
@@ -56,6 +59,26 @@ const protect = async (inputRole?: ERole) => {
     })
 }
 
+type WhoAmIResponse = User & { role: Role }
+
+const whoAmI = cache(async (): Promise<WhoAmIResponse | null> => {
+  try {
+    const data = await http.get<WhoAmIResponse>("/api/users/who-am-i", {
+      headers: {
+        Authorization: `Bearer ${getToken()}`,
+      },
+      next: {
+        revalidate: 60,
+        tags: ["who-am-i"],
+      },
+    })
+
+    return data || null
+  } catch {
+    return null
+  }
+})
+
 export const auth = () => {
   const token = getToken()
 
@@ -82,5 +105,6 @@ export const auth = () => {
     isStudent,
     getToken,
     protect,
+    whoAmI,
   }
 }

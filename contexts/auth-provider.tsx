@@ -44,7 +44,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       token
         ? ({
             userId: "user id",
-            role: { roleName: ERole.STUDENT },
+            role: { roleName: ERole.ADMIN },
           } as WhoAmIResponse)
         : null,
   })

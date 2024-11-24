@@ -1,5 +1,6 @@
 "use server"
 
+import { revalidateTag } from "next/cache"
 import { cookies } from "next/headers"
 
 import { type ActionResponse } from "@/lib/types/action-response"
@@ -21,6 +22,9 @@ export async function login(
 
   const cookieStore = cookies()
   cookieStore.set("accessToken", accessToken)
+
+  revalidateTag("who-am-i")
+  //need to set accessToken on client local storage too
 
   return {
     isSuccess: true,
