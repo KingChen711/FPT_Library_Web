@@ -4,6 +4,27 @@
     "Email": "Email",
     "Password": "Password",
     "Login": "Login",
-    "LoginFailedTitle": "Login failed"
+    "LoginFailedTitle": "Login failed",
+    "ConfirmPassword": "Confirm Password"
+  },
+  "RegisterPage": {
+    "Email": "Email",
+    "Password": "Password",
+    "ConfirmedPassword": "Confirmed Password",
+    "Register": "Register",
+    "RegisterFailedTitle": "Register failed",
+    "StudentCode": "Student Code"
+  },
+  "ForgotPasswordPage": {
+    "Email": "Email",
+    "Continue": "Continue",
+    "ForgotPasswordFailedTitle": "Forgot password failed",
+    "BackToLogin": "Back to login"
+  },
+  "VerificationOtpPage": {
+    "Email": "Email",
+    "Verify": "Verify",
+    "EnterOTP": "Enter your OTP here",
+    "VerificationOtpFailedTitle": "Verify OTP failed"
   }
 }

@@ -5,5 +5,25 @@
     "Password": "Mật khẩu",
     "Login": "Đăng nhập",
     "LoginFailedTitle": "Đăng nhập thất bại"
+  },
+  "RegisterPage": {
+    "Email": "Email",
+    "Password": "Mật khẩu",
+    "ConfirmedPassword": "Xâc nhân mật khẩu",
+    "Register": "Đăng kí",
+    "LoginFailedTitle": "Đăng nhập thất bại",
+    "StudentCode": "Mã số sinh viên"
+  },
+  "ForgotPasswordPage": {
+    "Email": "Email",
+    "Continue": "Tiếp tục",
+    "ForgotPasswordFailedTitle": "Quên mật khẩu thất bại",
+    "BackToLogin": "Quay lại trang đăng nhập"
+  },
+  "VerificationOtpPage": {
+    "Email": "Email",
+    "Verify": "Xâc thực OTP",
+    "EnterOTP": "Nhập mã OTP ở đây",
+    "VerificationOtpFailedTitle": "Xác thực OTP thất bại"
   }
 }

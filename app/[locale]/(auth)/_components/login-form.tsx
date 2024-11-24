@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useTransition } from "react"
-import { useRouter } from "@/i18n/routing"
+import { useTransition } from "react"
+import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
@@ -12,6 +12,7 @@ import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
 import { login } from "@/actions/auth/login"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -71,7 +72,7 @@ function LoginForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
           name="email"
@@ -79,23 +80,9 @@ function LoginForm() {
             <FormItem>
               <FormLabel>{t("Email")}</FormLabel>
               <FormControl>
-                <Input disabled={pending} placeholder="shadcn" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="password"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>{t("Password")}</FormLabel>
-              <FormControl>
                 <Input
                   disabled={pending}
-                  type="password"
-                  placeholder="shadcn"
+                  placeholder="Enter your email"
                   {...field}
                 />
               </FormControl>
@@ -103,9 +90,47 @@ function LoginForm() {
             </FormItem>
           )}
         />
-        <Button disabled={pending} type="submit">
+        <div className="flex flex-col gap-y-4">
+          <FormField
+            control={form.control}
+            name="password"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("Password")}</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={pending}
+                    type="password"
+                    placeholder="Enter your password"
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <div className="flex flex-wrap justify-between gap-2 text-sm">
+            <div className="flex items-center gap-2">
+              <Checkbox id="remember" /> Remember me
+            </div>
+            <Link href="/forgot-password" className="hover:underline">
+              Forgot password?
+            </Link>
+          </div>
+        </div>
+        <Button disabled={pending} type="submit" className="w-full">
           {t("Login")} {pending && <Loader2 className="size-4 animate-spin" />}
         </Button>
+
+        <div className="flex justify-between text-sm">
+          <div className="flex items-center gap-1 text-muted-foreground">
+            New user?
+            <Link href="/register" className="text-foreground hover:underline">
+              Register Here
+            </Link>
+          </div>
+          <Link href={"#"}>Use As Guest</Link>
+        </div>
       </form>
     </Form>
   )
