@@ -3,6 +3,7 @@
 import * as React from "react"
 import type * as LabelPrimitive from "@radix-ui/react-label"
 import { Slot } from "@radix-ui/react-slot"
+import { useTranslations } from "next-intl"
 import {
   Controller,
   FormProvider,
@@ -147,7 +148,8 @@ const FormMessage = React.forwardRef<
   React.HTMLAttributes<HTMLParagraphElement>
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
-  const body = error ? String(error?.message) : children
+  const t = useTranslations("Zod")
+  const body = error ? t(String(error?.message)) : children
 
   if (!body) {
     return null
