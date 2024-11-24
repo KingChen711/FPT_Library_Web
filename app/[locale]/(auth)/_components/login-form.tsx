@@ -127,7 +127,7 @@ function LoginForm() {
 
         <div className="flex justify-between text-sm">
           <div className="flex items-center gap-2">
-            New User?{" "}
+            New User?&nbsp;
             <Link href="/en/register" className="text-blue-400 underline">
               Register Here
             </Link>
