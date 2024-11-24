@@ -1,5 +1,7 @@
+import Image from "next/image"
 import Link from "next/link"
 import { routing } from "@/i18n/routing"
+import FptLogo from "@/public/images/fpt-logo.png"
 import { Check } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -12,6 +14,9 @@ function VerificationOtpSuccessPage() {
   return (
     <div className="flex w-1/3 flex-col items-center justify-center gap-6 overflow-hidden">
       <div className="container space-y-4 rounded-lg border-2 bg-white p-8 shadow-2xl">
+        <div className="flex justify-center">
+          <Image src={FptLogo.src} alt="Logo" width={160} height={20} />
+        </div>
         <h1 className="text-center font-semibold">Verification</h1>
         <p className="text-center text-xl font-semibold text-gray-400">
           Thank you
