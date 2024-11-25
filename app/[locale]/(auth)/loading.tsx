@@ -1,9 +1,10 @@
+import React from "react"
 import Image from "next/image"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
 
-import VerifyOtpForm from "../_components/verify-otp-form"
+import { Skeleton } from "@/components/ui/skeleton"
 
-function VerificationOtpPage() {
+function AuthLoading() {
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
@@ -18,15 +19,13 @@ function VerificationOtpPage() {
           />
         </div>
         <div className="flex flex-col gap-y-1">
-          <h1 className="text-center text-lg font-semibold">Verification</h1>
-          <p className="text-center text-sm text-muted-foreground">
-            Check your email for OTP
-          </p>
+          <Skeleton className="h-7 w-full" />
+          <Skeleton className="h-5 w-full" />
         </div>
-        <VerifyOtpForm />
+        <Skeleton className="h-40 w-full" />
       </div>
     </div>
   )
 }
 
-export default VerificationOtpPage
+export default AuthLoading

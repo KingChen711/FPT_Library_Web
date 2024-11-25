@@ -18,6 +18,7 @@ export default async function Home() {
       <div>{t("HelloWorld")}</div>
       <SignedIn>This content for signed in user</SignedIn>
       <SignedOut>This content for signed out user</SignedOut>
+      <div>{Math.random()}</div>
       <ThemeToggle />
       <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
         <Image
