@@ -1,24 +1,22 @@
 import Image from "next/image"
-import { routing } from "@/i18n/routing"
-import { getTranslations } from "next-intl/server"
+import { getTranslations, setRequestLocale } from "next-intl/server"
 
-import SignedIn from "@/components/hoc/signed-in"
-import SignedOut from "@/components/hoc/signed-out"
 import { ThemeToggle } from "@/components/theme-toggle"
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
+type Props = {
+  params: {
+    locale: string
+  }
 }
 
-export default async function Home() {
+export default async function Home({ params: { locale } }: Props) {
+  setRequestLocale(locale)
   const t = await getTranslations()
 
   return (
     <div className="grid min-h-screen grid-rows-[20px_1fr_20px] items-center justify-items-center gap-16 p-8 pb-20 font-[family-name:var(--font-geist-sans)] sm:p-20">
-      <div>{t("HelloWorld")}</div>
-      <SignedIn>This content for signed in user</SignedIn>
-      <SignedOut>This content for signed out user</SignedOut>
       <div>{Math.random()}</div>
+      <div>{t("HelloWorld")}</div>
       <ThemeToggle />
       <main className="row-start-2 flex flex-col items-center gap-8 sm:items-start">
         <Image

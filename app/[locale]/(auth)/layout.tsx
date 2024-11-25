@@ -1,12 +1,7 @@
 import React from "react"
-import { routing } from "@/i18n/routing"
 
 type Props = {
   children: React.ReactNode
-}
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
 }
 
 function AuthLayout({ children }: Props) {
