@@ -1,5 +1,6 @@
 import { cookies } from "next/headers"
 
+//TODO: refresh token nếu thời hạn sắp hết
 export async function GET() {
   await new Promise((res) => setTimeout(res, 3000))
 

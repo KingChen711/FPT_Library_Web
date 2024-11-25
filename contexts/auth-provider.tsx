@@ -1,7 +1,11 @@
 "use client"
 
 import React, { createContext, useContext, useEffect, useMemo } from "react"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import {
+  keepPreviousData,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query"
 
 import { ERole } from "@/lib/types/enums"
 import { type Role, type User } from "@/lib/types/models"
@@ -35,6 +39,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const { data: token, isLoading: isLoadingToken } = useQuery<Token>({
     queryKey: ["token"],
+    placeholderData: keepPreviousData,
     queryFn: () =>
       fetch("/api/token")
         .then((res) => res.json() ?? undefined)
@@ -75,9 +80,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return token?.accessToken ?? null
   }
 
+  //refresh token
   useEffect(() => {
     const timer = setInterval(() => {
-      //refresh token here
       queryClient.invalidateQueries({
         queryKey: ["token"],
       })
