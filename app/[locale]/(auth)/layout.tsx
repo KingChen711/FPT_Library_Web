@@ -11,7 +11,7 @@ export function generateStaticParams() {
 
 function AuthLayout({ children }: Props) {
   return (
-    <div className="flex min-h-dvh flex-col items-center justify-center gap-y-6 bg-background bg-[url('/assets/images/background-auth.jpg')] bg-cover px-6 py-8 dark:bg-[url('/assets/images/bg-dark.jpg')]">
+    <div className="flex min-h-dvh flex-col items-center justify-center gap-y-6 px-6 py-8">
       {children}
     </div>
   )
