@@ -1,12 +1,18 @@
 import React from "react"
 import Image from "next/image"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
+import { setRequestLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
 
 import LoginForm from "../_components/login-form"
 
-async function LoginPage() {
+type Props = {
+  params: { locale: string }
+}
+
+async function LoginPage({ params: { locale } }: Props) {
+  setRequestLocale(locale)
   const t = await getTranslations("LoginPage")
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-card shadow-lg">

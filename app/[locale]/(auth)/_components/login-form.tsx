@@ -141,7 +141,9 @@ function LoginForm() {
                 {t("Register")}
               </Link>
             </div>
-            <Link href="/">{t("Homepage")}</Link>
+            <Link href="/" className="hover:underline">
+              {t("Homepage")}
+            </Link>
           </div>
         </form>
       </Form>

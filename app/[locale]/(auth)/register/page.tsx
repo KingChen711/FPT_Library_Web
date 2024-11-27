@@ -1,9 +1,18 @@
 import Image from "next/image"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
+import { setRequestLocale } from "next-intl/server"
+
+import { getTranslations } from "@/lib/get-translations"
 
 import RegisterForm from "../_components/register-form"
 
-function RegisterPage() {
+type Props = {
+  params: { locale: string }
+}
+
+async function RegisterPage({ params: { locale } }: Props) {
+  setRequestLocale(locale)
+  const t = await getTranslations("RegisterPage")
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
@@ -18,9 +27,11 @@ function RegisterPage() {
           />
         </div>
         <div className="flex flex-col gap-y-1">
-          <h1 className="text-center text-lg font-semibold">Registration</h1>
+          <h1 className="text-center text-lg font-semibold">
+            {t("Create your account")}
+          </h1>
           <p className="text-center text-sm text-muted-foreground">
-            Welcome! Please fill in the details to get started.
+            {t("Message")}
           </p>
         </div>
         <RegisterForm />
