@@ -1,11 +1,18 @@
 {
   "HelloWorld": "Hello world",
   "LoginPage": {
-    "Email": "Email",
-    "Password": "Password",
-    "Login": "Login",
+    "Email": "Email address",
+    "or": "or",
+    "Login": "Continue",
     "LoginFailedTitle": "Login failed",
-    "ConfirmPassword": "Confirm Password"
+    "ConfirmPassword": "Confirm Password",
+    "Welcome back!": "Welcome back!",
+    "Message": "Sign in to continue to FPT e-Library System",
+    "Continue with Google": "Continue with Google",
+    "Enter your email": "Enter your email",
+    "Don’t have an account?": "Don’t have an account?",
+    "Register": "Register",
+    "Homepage": "Homepage"
   },
   "RegisterPage": {
     "Email": "Email",

@@ -13,7 +13,6 @@ import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
 import { login } from "@/actions/auth/login"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -109,12 +108,12 @@ function LoginForm() {
         className="w-full"
       >
         <Icons.Google className="mr-2 size-4" />
-        Continue with Google
+        {t("Continue with Google")}
       </Button>
 
       <div className="flex items-center gap-x-2">
         <Separator className="flex-1" />
-        or
+        <p className="text-sm">{t("or")}</p>
         <Separator className="flex-1" />
       </div>
       <Form {...form}>
@@ -127,8 +126,9 @@ function LoginForm() {
                 <FormLabel>{t("Email")}</FormLabel>
                 <FormControl>
                   <Input
+                    type="email"
                     disabled={pending}
-                    placeholder="Enter your email"
+                    placeholder={t("Enter your email")}
                     {...field}
                   />
                 </FormControl>
@@ -136,50 +136,23 @@ function LoginForm() {
               </FormItem>
             )}
           />
-          <div className="flex flex-col gap-y-4">
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("Password")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={pending}
-                      type="password"
-                      placeholder="Enter your password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex flex-wrap justify-between gap-2 text-sm">
-              <div className="flex items-center gap-2">
-                <Checkbox id="remember" /> Remember me
-              </div>
-              <Link href="/forgot-password" className="hover:underline">
-                Forgot password?
-              </Link>
-            </div>
-          </div>
+
           <Button disabled={pending} type="submit" className="w-full">
-            {t("Login")}{" "}
+            {t("Login")}
             {pending && <Loader2 className="size-4 animate-spin" />}
           </Button>
 
-          <div className="flex justify-between text-sm">
+          <div className="flex flex-wrap justify-between gap-2 text-sm">
             <div className="flex items-center gap-1 text-muted-foreground">
-              New user?
+              {t("Don’t have an account?")}
               <Link
                 href="/register"
                 className="text-foreground hover:underline"
               >
-                Register Here
+                {t("Register")}
               </Link>
             </div>
-            <Link href={"#"}>Use As Guest</Link>
+            <Link href="/">{t("Homepage")}</Link>
           </div>
         </form>
       </Form>

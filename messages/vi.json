@@ -1,13 +1,20 @@
 {
   "HelloWorld": "Xin chào thế giới",
   "LoginPage": {
-    "Email": "Email",
-    "Password": "Mật khẩu",
-    "Login": "Đăng nhập",
-    "LoginFailedTitle": "Đăng nhập thất bại"
+    "Email": "Địa chỉ email",
+    "or": "hoặc",
+    "Login": "Tiếp tục",
+    "LoginFailedTitle": "Đăng nhập thất bại",
+    "Welcome back!": "Chào mừng trở lại!",
+    "Message": "Đăng nhập để tiếp tục với FPT e-Library",
+    "Continue with Google": "Tiếp tục với Google",
+    "Enter your email": "Nhập email",
+    "Don’t have an account?": "Chưa có tài khoản?",
+    "Register": "Đăng ký",
+    "Homepage": "Trang chủ"
   },
   "RegisterPage": {
-    "Email": "Email",
+    "Email": "Địa chỉ email",
     "Password": "Mật khẩu",
     "ConfirmedPassword": "Xâc nhân mật khẩu",
     "Register": "Đăng kí",
