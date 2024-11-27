@@ -16,7 +16,6 @@ import {
 import { login } from "@/actions/auth/login"
 import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -47,7 +46,6 @@ function RegisterForm() {
   const form = useForm<TRegisterSchema>({
     resolver: zodResolver(registerSchema),
     defaultValues: {
-      studentCode: "",
       email: "",
       password: "",
       confirmPassword: "",
@@ -108,33 +106,16 @@ function RegisterForm() {
         className="w-full"
       >
         <Icons.Google className="mr-2 size-4" />
-        Continue with Google
+        {t("Continue with Google")}
       </Button>
 
       <div className="flex items-center gap-x-2">
         <Separator className="flex-1" />
-        or
+        {t("or")}
         <Separator className="flex-1" />
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <FormField
-            control={form.control}
-            name="studentCode"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("StudentCode")}</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={pending}
-                    placeholder="Enter your Student Code"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <FormField
             control={form.control}
             name="email"
@@ -142,11 +123,7 @@ function RegisterForm() {
               <FormItem>
                 <FormLabel>{t("Email")}</FormLabel>
                 <FormControl>
-                  <Input
-                    disabled={pending}
-                    placeholder="Enter your Email"
-                    {...field}
-                  />
+                  <Input disabled={pending} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -157,14 +134,9 @@ function RegisterForm() {
             name="password"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Password</FormLabel>
+                <FormLabel>{t("Password")}</FormLabel>
                 <FormControl>
-                  <Input
-                    disabled={pending}
-                    type="password"
-                    placeholder="Enter your password"
-                    {...field}
-                  />
+                  <Input disabled={pending} type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -176,25 +148,14 @@ function RegisterForm() {
               name="confirmPassword"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Confirm Password</FormLabel>
+                  <FormLabel>{t("ConfirmedPassword")}</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={pending}
-                      type="password"
-                      placeholder="Enter your confirmed password"
-                      {...field}
-                    />
+                    <Input disabled={pending} type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <div className="flex justify-between text-sm">
-              <div className="flex items-center gap-2">
-                <Checkbox id="remember" /> Remember me
-              </div>
-              <Link href={"/forgot-password"}>Forgot password</Link>
-            </div>
           </div>
           <Button disabled={pending} type="submit" className="w-full">
             {t("Register")}
@@ -203,12 +164,14 @@ function RegisterForm() {
 
           <div className="flex justify-between text-sm">
             <div className="flex items-center gap-1 text-muted-foreground">
-              Already a user?
+              {t("Already have an account?")}
               <Link href="/login" className="text-foreground hover:underline">
-                Login Here
+                {t("Sign in")}
               </Link>
             </div>
-            <Link href={"#"}>Use As Guest</Link>
+            <Link href="/" className="hover:underline">
+              {t("Homepage")}
+            </Link>
           </div>
         </form>
       </Form>

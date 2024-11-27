@@ -24,7 +24,7 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 
-function VerifyOtpForm() {
+function ResetPasswordForm() {
   const t = useTranslations("ResetPasswordPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
@@ -127,4 +127,4 @@ function VerifyOtpForm() {
   )
 }
 
-export default VerifyOtpForm
+export default ResetPasswordForm

@@ -4,16 +4,12 @@ import { useTransition } from "react"
 import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
-import { login } from "@/actions/auth/login"
-import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   Form,
   FormControl,
@@ -38,9 +34,6 @@ const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
 function LoginForm() {
   const t = useTranslations("LoginPage")
   const router = useRouter()
-  const queryClient = useQueryClient()
-
-  const { toast } = useToast()
 
   const [pending, startTransition] = useTransition()
 
@@ -48,37 +41,37 @@ function LoginForm() {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   })
 
   function onSubmit(values: TLoginSchema) {
     startTransition(async () => {
-      const res = await login(values)
+      router.push(`/login/password-method/${values.email}`)
+      // const res = await login(values)
 
-      if (res.isSuccess) {
-        queryClient.invalidateQueries({
-          queryKey: ["token"],
-        })
-        router.push("/")
-        return
-      }
+      // if (res.isSuccess) {
+      //   queryClient.invalidateQueries({
+      //     queryKey: ["token"],
+      //   })
+      //   router.push("/")
+      //   return
+      // }
 
-      if (res.typeError === "base") {
-        toast({
-          title: t("LoginFailedTitle"),
-          description: res.messageError,
-        })
-        return
-      }
+      // if (res.typeError === "base") {
+      //   toast({
+      //     title: t("LoginFailedTitle"),
+      //     description: res.messageError,
+      //   })
+      //   return
+      // }
 
-      const keys = Object.keys(res.fieldErrors) as (keyof TLoginSchema)[]
-      keys.forEach((key) =>
-        form.setError(key, { message: res.fieldErrors[key] })
-      )
-      form.setFocus(keys[0])
+      // const keys = Object.keys(res.fieldErrors) as (keyof TLoginSchema)[]
+      // keys.forEach((key) =>
+      //   form.setError(key, { message: res.fieldErrors[key] })
+      // )
+      // form.setFocus(keys[0])
 
-      return
+      // return
     })
   }
 
@@ -109,12 +102,12 @@ function LoginForm() {
         className="w-full"
       >
         <Icons.Google className="mr-2 size-4" />
-        Continue with Google
+        {t("Continue with Google")}
       </Button>
 
       <div className="flex items-center gap-x-2">
         <Separator className="flex-1" />
-        or
+        <p className="text-sm">{t("or")}</p>
         <Separator className="flex-1" />
       </div>
       <Form {...form}>
@@ -126,60 +119,31 @@ function LoginForm() {
               <FormItem>
                 <FormLabel>{t("Email")}</FormLabel>
                 <FormControl>
-                  <Input
-                    disabled={pending}
-                    placeholder="Enter your email"
-                    {...field}
-                  />
+                  <Input type="email" disabled={pending} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-          <div className="flex flex-col gap-y-4">
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("Password")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={pending}
-                      type="password"
-                      placeholder="Enter your password"
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <div className="flex flex-wrap justify-between gap-2 text-sm">
-              <div className="flex items-center gap-2">
-                <Checkbox id="remember" /> Remember me
-              </div>
-              <Link href="/forgot-password" className="hover:underline">
-                Forgot password?
-              </Link>
-            </div>
-          </div>
+
           <Button disabled={pending} type="submit" className="w-full">
-            {t("Login")}{" "}
+            {t("Login")}
             {pending && <Loader2 className="size-4 animate-spin" />}
           </Button>
 
-          <div className="flex justify-between text-sm">
+          <div className="flex flex-wrap justify-between gap-2 text-sm">
             <div className="flex items-center gap-1 text-muted-foreground">
-              New user?
+              {t("Don’t have an account?")}
               <Link
                 href="/register"
                 className="text-foreground hover:underline"
               >
-                Register Here
+                {t("Register")}
               </Link>
             </div>
-            <Link href={"#"}>Use As Guest</Link>
+            <Link href="/" className="hover:underline">
+              {t("Homepage")}
+            </Link>
           </div>
         </form>
       </Form>

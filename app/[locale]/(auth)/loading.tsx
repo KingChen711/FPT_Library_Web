@@ -22,7 +22,7 @@ function AuthLoading() {
           <Skeleton className="h-7 w-full" />
           <Skeleton className="h-5 w-full" />
         </div>
-        <Skeleton className="h-40 w-full" />
+        <Skeleton className="h-48 w-full" />
       </div>
     </div>
   )
