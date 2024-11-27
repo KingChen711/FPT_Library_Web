@@ -1,9 +1,9 @@
 "use client"
 
-import { useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { ArrowLeft, Loader2 } from "lucide-react"
+import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
@@ -25,10 +25,11 @@ import {
 } from "@/components/ui/input-otp"
 
 function VerifyOtpForm() {
-  const t = useTranslations("VerificationOtpPage")
+  const t = useTranslations("ResetPasswordPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
   const { toast } = useToast()
+  const [timeDisableResend, setTimeDisableResend] = useState(0)
 
   const form = useForm<TOtpSchema>({
     resolver: zodResolver(otpSchema),
@@ -49,6 +50,26 @@ function VerifyOtpForm() {
       ),
     })
   }
+
+  function handleResendCode(
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) {
+    e.preventDefault()
+    e.stopPropagation()
+    setTimeDisableResend(30)
+  }
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (timeDisableResend > 0) {
+        setTimeDisableResend((prev) => prev - 1)
+      }
+    }, 1000)
+
+    return () => {
+      clearInterval(timer)
+    }
+  }, [timeDisableResend])
 
   return (
     <Form {...form}>
@@ -71,7 +92,15 @@ function VerifyOtpForm() {
                 </InputOTP>
               </FormControl>
               <FormDescription>
-                Please enter the one-time password sent to your email.
+                <Button
+                  onClick={handleResendCode}
+                  disabled={timeDisableResend > 0}
+                  className="min-h-0 min-w-0 p-0 hover:bg-transparent hover:underline"
+                  variant="ghost"
+                >
+                  {t("No code")}{" "}
+                  {timeDisableResend > 0 ? `(${timeDisableResend})` : null}
+                </Button>
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -83,22 +112,16 @@ function VerifyOtpForm() {
           className="w-full"
           onClick={() => router.push("/verify-otp-success")}
         >
-          {t("Verify")} {pending && <Loader2 className="size-4 animate-spin" />}
+          {t("Continue")}{" "}
+          {pending && <Loader2 className="size-4 animate-spin" />}
         </Button>
 
-        <div className="flex justify-between text-sm">
-          <div className="flex items-center gap-1 text-muted-foreground">
-            Not yet received OTP?
-            <Link href="/login" className="text-foreground hover:underline">
-              Resend
-            </Link>
-          </div>
-          <Button className="w-fit" variant="ghost" asChild>
-            <Link href="/login" className="flex items-center gap-1 text-sm">
-              <ArrowLeft className="size-5" /> Back
-            </Link>
-          </Button>
-        </div>
+        <Link
+          href="/login"
+          className="block cursor-pointer text-center text-sm font-bold hover:underline"
+        >
+          {t("Back to login")}
+        </Link>
       </form>
     </Form>
   )

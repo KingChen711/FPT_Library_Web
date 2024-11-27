@@ -47,11 +47,9 @@
     "No code": "Didn't receive a code? Resend",
     "Back to login": "Back to login"
   },
-  "VerificationOtpPage": {
-    "Email": "Email",
-    "Verify": "Verify",
-    "EnterOTP": "Enter your OTP here",
-    "VerificationOtpFailedTitle": "Verify OTP failed"
+  "VerifyOtpPage": {
+    "Verify your email": "Verify your email",
+    "Message": "Enter the verification code sent to your email"
   },
   "Zod": {
     "email": "Invalid email",

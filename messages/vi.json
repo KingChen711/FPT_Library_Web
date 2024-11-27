@@ -44,11 +44,9 @@
     "No code": "Không nhận được mã? Gửi lại",
     "Back to login": "Về trang đăng nhập"
   },
-  "VerificationOtpPage": {
-    "Email": "Email",
-    "Verify": "Xâc thực OTP",
-    "EnterOTP": "Nhập mã OTP ở đây",
-    "VerificationOtpFailedTitle": "Xác thực OTP thất bại"
+  "VerifyOtpPage": {
+    "Verify your email": "Xác minh email",
+    "Message": "Nhập OTP được gửi đến email của bạn"
   },
   "Zod": {
     "email": "Email không hợp lệ",
