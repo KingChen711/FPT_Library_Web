@@ -36,11 +36,13 @@
     "Sign in": "Đăng nhập",
     "Homepage": "Trang chủ"
   },
-  "ForgotPasswordPage": {
-    "Email": "Email",
+  "ResetPasswordPage": {
+    "Reset password": "Khôi phục mật khẩu",
+    "Message": "Đầu tiên, nhập mã được gửi đến địa chỉ email của bạn",
+    "Email": "Địa chỉ email",
     "Continue": "Tiếp tục",
-    "ForgotPasswordFailedTitle": "Quên mật khẩu thất bại",
-    "BackToLogin": "Quay lại trang đăng nhập"
+    "No code": "Không nhận được mã? Gửi lại",
+    "Back to login": "Về trang đăng nhập"
   },
   "VerificationOtpPage": {
     "Email": "Email",

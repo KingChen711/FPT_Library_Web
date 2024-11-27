@@ -1,9 +1,19 @@
 import Image from "next/image"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
 
-import ForgotPasswordForm from "../_components/forgot-password-form"
+import { getTranslations } from "@/lib/get-translations"
 
-const ForgotPasswordPage = () => {
+import ResetPasswordForm from "../../_components/reset-password-form"
+
+type Props = {
+  params: {
+    email: string
+  }
+}
+
+const ResetPasswordPage = async ({ params }: Props) => {
+  const email = decodeURIComponent(params.email)
+  const t = await getTranslations("ResetPasswordPage")
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
@@ -19,17 +29,17 @@ const ForgotPasswordPage = () => {
         </div>
         <div className="flex flex-col gap-y-1">
           <h1 className="text-center text-lg font-semibold">
-            Forgot your password
+            {t("Reset password")}
           </h1>
           <p className="text-center text-sm text-muted-foreground">
-            Enter the email address and we will send you a link to reset your
-            password
+            {t("Message")}
           </p>
+          <p className="text-center text-sm text-muted-foreground">{email}</p>
         </div>
-        <ForgotPasswordForm />
+        <ResetPasswordForm />
       </div>
     </div>
   )
 }
 
-export default ForgotPasswordPage
+export default ResetPasswordPage

@@ -37,11 +37,15 @@
     "Sign in": "Sign in",
     "Homepage": "Homepage"
   },
-  "ForgotPasswordPage": {
+  "ResetPasswordPage": {
+    "Reset password": "Reset password",
+    "Message": "First, enter the code sent to your email address",
+
     "Email": "Email",
-    "Continue": "Continue",
     "ForgotPasswordFailedTitle": "Forgot password failed",
-    "BackToLogin": "Back to login"
+    "Continue": "Continue",
+    "No code": "Didn't receive a code? Resend",
+    "Back to login": "Back to login"
   },
   "VerificationOtpPage": {
     "Email": "Email",
