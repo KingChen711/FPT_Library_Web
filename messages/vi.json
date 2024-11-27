@@ -11,7 +11,15 @@
     "Enter your email": "Nhập email",
     "Don’t have an account?": "Chưa có tài khoản?",
     "Register": "Đăng ký",
-    "Homepage": "Trang chủ"
+    "Homepage": "Trang chủ",
+    "PasswordMethodPage": {
+      "Enter your password": "Nhập mật khẩu",
+      "Message": "Nhập mật khâu thích hợp cho tài khoản của bạn",
+      "Password": "Mật khẩu",
+      "Login": "Tiếp tục",
+      "Forgot password?": "Quên mật khẩu?",
+      "Back to login": "Về trang đăng nhập"
+    }
   },
   "RegisterPage": {
     "Email": "Địa chỉ email",

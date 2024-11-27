@@ -125,11 +125,7 @@ function RegisterForm() {
               <FormItem>
                 <FormLabel>{t("StudentCode")}</FormLabel>
                 <FormControl>
-                  <Input
-                    disabled={pending}
-                    placeholder="Enter your Student Code"
-                    {...field}
-                  />
+                  <Input disabled={pending} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -142,11 +138,7 @@ function RegisterForm() {
               <FormItem>
                 <FormLabel>{t("Email")}</FormLabel>
                 <FormControl>
-                  <Input
-                    disabled={pending}
-                    placeholder="Enter your Email"
-                    {...field}
-                  />
+                  <Input disabled={pending} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -159,12 +151,7 @@ function RegisterForm() {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    disabled={pending}
-                    type="password"
-                    placeholder="Enter your password"
-                    {...field}
-                  />
+                  <Input disabled={pending} type="password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -178,12 +165,7 @@ function RegisterForm() {
                 <FormItem>
                   <FormLabel>Confirm Password</FormLabel>
                   <FormControl>
-                    <Input
-                      disabled={pending}
-                      type="password"
-                      placeholder="Enter your confirmed password"
-                      {...field}
-                    />
+                    <Input disabled={pending} type="password" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

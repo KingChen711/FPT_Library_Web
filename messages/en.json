@@ -12,7 +12,15 @@
     "Enter your email": "Enter your email",
     "Don’t have an account?": "Don’t have an account?",
     "Register": "Register",
-    "Homepage": "Homepage"
+    "Homepage": "Homepage",
+    "PasswordMethodPage": {
+      "Enter your password": "Enter your password",
+      "Message": "Enter the password associated with your account",
+      "Password": "Password",
+      "Login": "Continue",
+      "Forgot password?": "Forgot password?",
+      "Back to login": "Back to login"
+    }
   },
   "RegisterPage": {
     "Email": "Email",

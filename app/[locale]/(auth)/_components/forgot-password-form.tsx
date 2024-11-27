@@ -73,11 +73,7 @@ function ForgotPasswordForm() {
             <FormItem>
               <FormLabel>{t("Email")}</FormLabel>
               <FormControl>
-                <Input
-                  disabled={pending}
-                  placeholder="Enter your email"
-                  {...field}
-                />
+                <Input disabled={pending} {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>

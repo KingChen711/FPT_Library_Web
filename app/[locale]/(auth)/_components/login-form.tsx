@@ -4,14 +4,11 @@ import { useTransition } from "react"
 import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
-import { login } from "@/actions/auth/login"
-import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -37,9 +34,6 @@ const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
 function LoginForm() {
   const t = useTranslations("LoginPage")
   const router = useRouter()
-  const queryClient = useQueryClient()
-
-  const { toast } = useToast()
 
   const [pending, startTransition] = useTransition()
 
@@ -47,37 +41,37 @@ function LoginForm() {
     resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
-      password: "",
     },
   })
 
   function onSubmit(values: TLoginSchema) {
     startTransition(async () => {
-      const res = await login(values)
+      router.push(`/login/password-method/${values.email}`)
+      // const res = await login(values)
 
-      if (res.isSuccess) {
-        queryClient.invalidateQueries({
-          queryKey: ["token"],
-        })
-        router.push("/")
-        return
-      }
+      // if (res.isSuccess) {
+      //   queryClient.invalidateQueries({
+      //     queryKey: ["token"],
+      //   })
+      //   router.push("/")
+      //   return
+      // }
 
-      if (res.typeError === "base") {
-        toast({
-          title: t("LoginFailedTitle"),
-          description: res.messageError,
-        })
-        return
-      }
+      // if (res.typeError === "base") {
+      //   toast({
+      //     title: t("LoginFailedTitle"),
+      //     description: res.messageError,
+      //   })
+      //   return
+      // }
 
-      const keys = Object.keys(res.fieldErrors) as (keyof TLoginSchema)[]
-      keys.forEach((key) =>
-        form.setError(key, { message: res.fieldErrors[key] })
-      )
-      form.setFocus(keys[0])
+      // const keys = Object.keys(res.fieldErrors) as (keyof TLoginSchema)[]
+      // keys.forEach((key) =>
+      //   form.setError(key, { message: res.fieldErrors[key] })
+      // )
+      // form.setFocus(keys[0])
 
-      return
+      // return
     })
   }
 
@@ -125,12 +119,7 @@ function LoginForm() {
               <FormItem>
                 <FormLabel>{t("Email")}</FormLabel>
                 <FormControl>
-                  <Input
-                    type="email"
-                    disabled={pending}
-                    placeholder={t("Enter your email")}
-                    {...field}
-                  />
+                  <Input type="email" disabled={pending} {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
