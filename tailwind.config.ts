@@ -52,10 +52,17 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
       },
+      width: {
+        "1/8": "12.5%",
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      borderColor: {
+        DEFAULT: "hsl(var(--border))",
+        foreground: "hsl(var(--primary))",
       },
     },
   },
