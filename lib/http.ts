@@ -1,19 +1,58 @@
+import { type ServerActionError } from "./types/action-response"
+
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type CustomOptions = RequestInit & {
   baseUrl?: string
 }
 
+type ErrorResponse = {
+  type: string
+  title: string
+  status: number
+  detail: string
+  instance: string
+  extension: Record<string, string[]>
+}
+
 class HttpError extends Error {
   status: number
-  payload: any
-  constructor({ status, payload }: { status: number; payload: any }) {
+  message: string
+  fieldErrors: Record<string, string[]>
+  constructor(payload: ErrorResponse) {
     super("Http Error")
-    this.status = status
-    this.payload = payload
+    this.status = payload.status
+    this.message = payload.detail
+    this.fieldErrors = payload.extension || {}
   }
 }
 
-const request = async <Response>(
+export function handleHttpError(error: unknown): ServerActionError {
+  if (!(error instanceof HttpError)) {
+    return {
+      isSuccess: false,
+      typeError: "unknown",
+    }
+  }
+
+  if (Object.keys(error.fieldErrors).length === 0) {
+    return {
+      typeError: "form",
+      fieldErrors: error.fieldErrors,
+      isSuccess: false,
+    }
+  }
+
+  if (error.message) {
+    return { isSuccess: false, typeError: "base", messageError: error.message }
+  }
+
+  return {
+    isSuccess: false,
+    typeError: "unknown",
+  }
+}
+
+const request = async <ResponseData = undefined>(
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   url: string,
   options?: CustomOptions
@@ -37,17 +76,13 @@ const request = async <Response>(
     method,
   })
 
-  const payload: Response = await res.json()
-  const data = {
-    status: res.status,
-    payload: payload,
-  }
+  const payload = await res.json()
 
   if (!res.ok) {
-    throw new HttpError(data)
+    throw new HttpError(payload as ErrorResponse)
   }
 
-  return payload
+  return payload.data as ResponseData
 }
 
 export const http = {

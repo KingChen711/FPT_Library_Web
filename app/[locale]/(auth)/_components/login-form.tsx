@@ -4,11 +4,14 @@ import { useTransition } from "react"
 import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
 import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
+import { login } from "@/actions/auth/login"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -32,7 +35,9 @@ declare let window: WindowWithGoogle
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
 
 function LoginForm() {
+  const queryClient = useQueryClient()
   const t = useTranslations("LoginPage")
+  const locale = useLocale()
   const router = useRouter()
 
   const [pending, startTransition] = useTransition()
@@ -47,6 +52,9 @@ function LoginForm() {
   function onSubmit(values: TLoginSchema) {
     startTransition(async () => {
       router.push(`/login/password-method/${values.email}`)
+
+      console.log(queryClient, locale, handleServerActionError, login)
+
       // const res = await login(values)
 
       // if (res.isSuccess) {
@@ -57,21 +65,7 @@ function LoginForm() {
       //   return
       // }
 
-      // if (res.typeError === "base") {
-      //   toast({
-      //     title: t("LoginFailedTitle"),
-      //     description: res.messageError,
-      //   })
-      //   return
-      // }
-
-      // const keys = Object.keys(res.fieldErrors) as (keyof TLoginSchema)[]
-      // keys.forEach((key) =>
-      //   form.setError(key, { message: res.fieldErrors[key] })
-      // )
-      // form.setFocus(keys[0])
-
-      // return
+      // handleServerActionError(res, locale)
     })
   }
 
