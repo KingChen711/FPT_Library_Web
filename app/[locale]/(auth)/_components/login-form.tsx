@@ -1,9 +1,9 @@
 "use client"
 
 import { useTransition } from "react"
-import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useGoogleLogin } from "@react-oauth/google"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -25,15 +25,6 @@ import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 
-interface WindowWithGoogle extends Window {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  google?: any
-}
-
-declare let window: WindowWithGoogle
-
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
-
 function LoginForm() {
   const queryClient = useQueryClient()
   const t = useTranslations("LoginPage")
@@ -41,6 +32,11 @@ function LoginForm() {
   const router = useRouter()
 
   const [pending, startTransition] = useTransition()
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (codeResponse) => console.log(codeResponse),
+    flow: "auth-code",
+  })
 
   const form = useForm<TLoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -69,26 +65,8 @@ function LoginForm() {
     })
   }
 
-  const handleGoogleLogin = () => {
-    if (!window.google) {
-      console.error("Google SDK not loaded")
-      return
-    }
-
-    const tokenClient = window.google.accounts.oauth2.initTokenClient({
-      client_id: GOOGLE_CLIENT_ID,
-      scope: "profile email",
-      callback: (response: { access_token: string }) => {
-        console.log({ access_token: response.access_token })
-      },
-    })
-
-    tokenClient.requestAccessToken()
-  }
-
   return (
     <>
-      <Script src="https://accounts.google.com/gsi/client" async defer />
       <Button
         onClick={handleGoogleLogin}
         variant="outline"
