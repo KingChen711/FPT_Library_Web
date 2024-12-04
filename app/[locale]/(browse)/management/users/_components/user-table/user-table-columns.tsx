@@ -160,6 +160,7 @@ const UserTableColumns: ColumnDef<User>[] = [
     header: () => <div className="w-full text-center">Actions</div>,
     cell: ({ row }) => {
       const payment = row.original
+      console.log("🚀 ~ payment:", payment)
 
       return (
         <DropdownMenu>
@@ -168,7 +169,7 @@ const UserTableColumns: ColumnDef<User>[] = [
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent align="end" className="bg-primary-foreground">
             <DropdownMenuItem>Activate</DropdownMenuItem>
             <DropdownMenuItem>Deactivate</DropdownMenuItem>
           </DropdownMenuContent>

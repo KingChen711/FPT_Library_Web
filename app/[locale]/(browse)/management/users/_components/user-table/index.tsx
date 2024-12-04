@@ -60,7 +60,7 @@ const UserTable = () => {
   })
 
   return (
-    <div className="w-full rounded-lg bg-primary-foreground p-4">
+    <div>
       <div className="flex items-center py-4">
         <Input
           placeholder="Filter emails..."

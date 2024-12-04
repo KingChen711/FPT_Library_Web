@@ -3,8 +3,6 @@ import React from "react"
 import LeftSidebar from "./_component/left-sidebar"
 import ManagementNavbar from "./_component/management-navbar"
 
-// import ManagementNavbar from "./_components/management-navbar"
-
 type Props = {
   children: React.ReactNode
 }

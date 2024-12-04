@@ -8,13 +8,11 @@ import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
-import { type TLoginSchema } from "@/lib/validations/auth/login"
 import {
   registerSchema,
   type TRegisterSchema,
 } from "@/lib/validations/auth/register"
 import { login } from "@/actions/auth/login"
-import { useToast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -41,7 +39,6 @@ function RegisterForm() {
   const t = useTranslations("RegisterPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
-  const { toast } = useToast()
 
   const form = useForm<TRegisterSchema>({
     resolver: zodResolver(registerSchema),
@@ -60,22 +57,6 @@ function RegisterForm() {
         router.push("/")
         return
       }
-
-      if (res.typeError === "base") {
-        toast({
-          title: t("RegisterFailedTitle"),
-          description: res.messageError,
-        })
-        return
-      }
-
-      const keys = Object.keys(res.fieldErrors) as (keyof TLoginSchema)[]
-      keys.forEach((key) =>
-        form.setError(key, { message: res.fieldErrors[key] })
-      )
-      form.setFocus(keys[0])
-
-      return
     })
   }
 
