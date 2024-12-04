@@ -51,6 +51,33 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          "100": "hsl(var(--success-100))",
+        },
+        info: {
+          DEFAULT: "hsl(var(--info))",
+          "100": "hsl(var(--info-100))",
+        },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          "100": "hsl(var(--warning-100))",
+        },
+        danger: {
+          DEFAULT: "hsl(var(--danger))",
+          "100": "hsl(var(--danger-100))",
+        },
+        draft: {
+          DEFAULT: "hsl(var(--draft))",
+          "100": "hsl(var(--draft-100))",
+        },
+        progress: {
+          DEFAULT: "hsl(var(--progress))",
+          "100": "hsl(var(--progress-100))",
+        },
+        "status-foreground": {
+          DEFAULT: "hsl(var(--status-foreground))",
+        },
       },
       width: {
         "1/8": "12.5%",
