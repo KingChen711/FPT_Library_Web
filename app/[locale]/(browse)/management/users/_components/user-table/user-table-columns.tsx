@@ -1,5 +1,11 @@
 import { type ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal } from "lucide-react"
+import {
+  ArrowUpDown,
+  Eye,
+  EyeOff,
+  MoreHorizontal,
+  SquarePen,
+} from "lucide-react"
 
 import { type User } from "@/lib/types/models"
 import { Badge } from "@/components/ui/badge"
@@ -143,7 +149,7 @@ const UserTableColumns: ColumnDef<User>[] = [
     cell: ({ row }) => (
       <div className="flex w-full justify-center text-center capitalize">
         {row.getValue("isActive") ? (
-          <Badge className="flex w-4/5 justify-center bg-green-500 text-center hover:bg-green-500">
+          <Badge className="flex w-4/5 justify-center bg-success text-center hover:bg-success">
             Active
           </Badge>
         ) : (
@@ -170,8 +176,15 @@ const UserTableColumns: ColumnDef<User>[] = [
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end" className="bg-primary-foreground">
-            <DropdownMenuItem>Activate</DropdownMenuItem>
-            <DropdownMenuItem>Deactivate</DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <SquarePen /> Edit
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Eye /> Activate
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <EyeOff /> Deactivate
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       )
