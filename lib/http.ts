@@ -11,7 +11,7 @@ type CustomOptions = RequestInit & {
 type OkResponse<TData = undefined> = {
   resultCode: string
   message: string
-  data: TData | null
+  data: TData
 }
 
 class HttpError extends Error {
@@ -103,6 +103,7 @@ const request = async <TData = undefined>(
 
   if (!res.ok || !payload.resultCode.includes("Success")) {
     if (res.ok) {
+      console.log({ payload })
       throw new HttpError({
         type: payload.resultCode.includes("Error") ? "error" : "warning",
         message: payload.message,
@@ -114,6 +115,8 @@ const request = async <TData = undefined>(
         type: "unknown",
       })
     }
+
+    console.log({ payload })
 
     throw new HttpError({
       type: "form",

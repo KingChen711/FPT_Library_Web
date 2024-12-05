@@ -60,11 +60,9 @@ function RegisterForm() {
       const res = await register(values)
 
       if (res.isSuccess) {
-        router.push("/sign-in")
+        router.push(`/verify-email/${values.email}`)
         return
       }
-
-      console.log(res)
 
       handleServerActionError(res, locale, form)
     })
@@ -204,7 +202,7 @@ function RegisterForm() {
                           setShowConfirmPassword((prev) => !prev)
                         }}
                       >
-                        {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
+                        {showConfirmPassword ? <EyeIcon /> : <EyeClosedIcon />}
                       </Button>
                     </div>
                   </FormControl>

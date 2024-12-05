@@ -19,6 +19,14 @@
       "Login": "Tiếp tục",
       "Forgot password?": "Quên mật khẩu?",
       "Back to login": "Về trang đăng nhập"
+    },
+    "OtpMethodPage": {
+      "Check your email": "Kiểm tra email của bạn",
+      "Message": "để tiếp tục với F-Library",
+      "Password": "Password",
+      "Login": "Tiếp tục",
+      "No code": "Không nhận được mã? Gửi lại",
+      "Back to login": "Về trang đăng nhập"
     }
   },
   "RegisterPage": {
@@ -46,7 +54,7 @@
     "No code": "Không nhận được mã? Gửi lại",
     "Back to login": "Về trang đăng nhập"
   },
-  "VerifyOtpPage": {
+  "VerifyEmailPage": {
     "Verify your email": "Xác minh email",
     "Message": "Nhập OTP được gửi đến email của bạn"
   },

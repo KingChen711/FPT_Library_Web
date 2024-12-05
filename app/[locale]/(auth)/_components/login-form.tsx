@@ -4,7 +4,6 @@ import { useTransition } from "react"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useGoogleLogin } from "@react-oauth/google"
-import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -25,8 +24,8 @@ import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 
+//TODO: update validate
 function LoginForm() {
-  const queryClient = useQueryClient()
   const t = useTranslations("LoginPage")
   const locale = useLocale()
   const router = useRouter()
@@ -47,21 +46,21 @@ function LoginForm() {
 
   function onSubmit(values: TLoginSchema) {
     startTransition(async () => {
-      router.push(`/login/password-method/${values.email}`)
+      startTransition(async () => {
+        const res = await login(values)
 
-      console.log(queryClient, locale, handleServerActionError, login)
+        if (res.isSuccess) {
+          if (res.data === "Auth.Success0003") {
+            router.push(`/login/password-method/${values.email}`)
+            return
+          }
 
-      // const res = await login(values)
+          router.push(`/login/otp-method/${values.email}`)
+          return
+        }
 
-      // if (res.isSuccess) {
-      //   queryClient.invalidateQueries({
-      //     queryKey: ["token"],
-      //   })
-      //   router.push("/")
-      //   return
-      // }
-
-      // handleServerActionError(res, locale)
+        handleServerActionError(res, locale, form)
+      })
     })
   }
 

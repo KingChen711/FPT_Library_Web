@@ -1,18 +1,22 @@
+//verifyEmail
 "use server"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TLoginSchema } from "@/lib/validations/auth/login"
 
-export async function login(
-  body: TLoginSchema
+export async function verifyEmail(
+  email: string,
+  emailVerificationCode: string
 ): Promise<ActionResponse<string>> {
   try {
-    const { resultCode } = await http.post("/api/auth/sign-in", body)
+    const { message } = await http.patch("/api/auth/sign-up/confirm", {
+      email,
+      emailVerificationCode,
+    })
 
     return {
       isSuccess: true,
-      data: resultCode,
+      data: message,
     }
   } catch (error) {
     return handleHttpError(error)

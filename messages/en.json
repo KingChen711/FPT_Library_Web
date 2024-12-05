@@ -15,9 +15,18 @@
     "Homepage": "Homepage",
     "PasswordMethodPage": {
       "Enter your password": "Enter your password",
-      "Message": "Enter the password associated with your account",
+      "Message": "to continue to Prep4IELTS",
       "Password": "Password",
       "Login": "Continue",
+      "Forgot password?": "Forgot password?",
+      "Back to login": "Back to login"
+    },
+    "OtpMethodPage": {
+      "Check your email": "Check your email",
+      "Message": "to continue to Prep4IELTS",
+      "Password": "Password",
+      "Login": "Continue",
+      "No code": "Didn't receive a code? Resend",
       "Forgot password?": "Forgot password?",
       "Back to login": "Back to login"
     }
@@ -49,7 +58,7 @@
     "No code": "Didn't receive a code? Resend",
     "Back to login": "Back to login"
   },
-  "VerifyOtpPage": {
+  "VerifyEmailPage": {
     "Verify your email": "Verify your email",
     "Message": "Enter the verification code sent to your email"
   },
