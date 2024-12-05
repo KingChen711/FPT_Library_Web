@@ -1,10 +1,10 @@
 "use client"
 
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
 import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2 } from "lucide-react"
+import { EyeClosedIcon, EyeIcon, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
@@ -41,6 +41,8 @@ function RegisterForm() {
   const t = useTranslations("RegisterPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
+  const [showPassword, setShowPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   const form = useForm<TRegisterSchema>({
     resolver: zodResolver(registerSchema),
@@ -57,12 +59,14 @@ function RegisterForm() {
     startTransition(async () => {
       const res = await register(values)
 
-      // if (res.isSuccess) {
-      //   router.push("/sign-in")
-      //   return
-      // }
+      if (res.isSuccess) {
+        router.push("/sign-in")
+        return
+      }
 
-      // handleServerActionError(res, locale)
+      console.log(res)
+
+      handleServerActionError(res, locale, form)
     })
   }
 
@@ -152,7 +156,25 @@ function RegisterForm() {
               <FormItem>
                 <FormLabel>{t("Password")}</FormLabel>
                 <FormControl>
-                  <Input disabled={pending} type="password" {...field} />
+                  <div className="flex items-center gap-x-2 rounded-md border">
+                    <Input
+                      disabled={pending}
+                      type={showPassword ? "text" : "password"}
+                      {...field}
+                      className="border-none outline-none focus-visible:ring-transparent"
+                    />
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setShowPassword((prev) => !prev)
+                      }}
+                    >
+                      {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -166,7 +188,25 @@ function RegisterForm() {
                 <FormItem>
                   <FormLabel>{t("ConfirmedPassword")}</FormLabel>
                   <FormControl>
-                    <Input disabled={pending} type="password" {...field} />
+                    <div className="flex items-center gap-x-2 rounded-md border">
+                      <Input
+                        disabled={pending}
+                        type={showConfirmPassword ? "text" : "password"}
+                        {...field}
+                        className="border-none outline-none focus-visible:ring-transparent"
+                      />
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        onClick={(e) => {
+                          e.preventDefault()
+                          e.stopPropagation()
+                          setShowConfirmPassword((prev) => !prev)
+                        }}
+                      >
+                        {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
+                      </Button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

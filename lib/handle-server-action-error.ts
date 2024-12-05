@@ -1,3 +1,5 @@
+"use client"
+
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -12,6 +14,8 @@ function handleServerActionError(
   locale: string,
   form?: UseFormReturn<any, any, undefined>
 ) {
+  console.log("handleServerActionError")
+
   if (error.typeError === "error" || error.typeError === "warning") {
     toast({
       title: locale === "vi" ? "Lỗi" : "Error",
@@ -35,10 +39,14 @@ function handleServerActionError(
 
   if (!form) return
 
+  console.log("form")
+
   //@ts-ignore
   const keys = Object.keys(error.fieldErrors)
-  //@ts-ignore
-  keys.forEach((key) => form.setError(key, { message: res.fieldErrors[key] }))
+  keys.forEach((key) =>
+    //@ts-ignore
+    form.setError(key, { message: error.fieldErrors[key][0] })
+  )
   //@ts-ignore
   form.setFocus(keys[0])
 }

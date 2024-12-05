@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+import { getLocale } from "next-intl/server"
+
 import { type ServerActionError } from "./types/action-response"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -80,6 +82,7 @@ const request = async <TData = undefined>(
   const body = options?.body ? JSON.stringify(options.body) : undefined
   const baseHeaders = {
     "Content-Type": "application/json",
+    "Accept-Language": await getLocale(),
   }
   const baseUrl =
     options?.baseUrl === undefined
