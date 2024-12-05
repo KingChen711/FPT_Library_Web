@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form"
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
 import { login } from "@/actions/auth/login"
+import { loginGoogle } from "@/actions/auth/login-google"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -33,7 +34,18 @@ function LoginForm() {
   const [pending, startTransition] = useTransition()
 
   const handleGoogleLogin = useGoogleLogin({
-    onSuccess: (codeResponse) => console.log(codeResponse),
+    onSuccess: (googleRes) => {
+      startTransition(async () => {
+        const res = await loginGoogle(googleRes.code)
+
+        if (res.isSuccess) {
+          router.push(`/`)
+          return
+        }
+
+        handleServerActionError(res, locale, form)
+      })
+    },
     flow: "auth-code",
   })
 
@@ -46,35 +58,45 @@ function LoginForm() {
 
   function onSubmit(values: TLoginSchema) {
     startTransition(async () => {
-      startTransition(async () => {
-        const res = await login(values)
+      const res = await login(values)
 
-        if (res.isSuccess) {
-          if (res.data === "Auth.Success0003") {
-            router.push(`/login/password-method/${values.email}`)
-            return
-          }
-
-          router.push(`/login/otp-method/${values.email}`)
+      if (res.isSuccess) {
+        if (res.data === "Auth.Success0003") {
+          router.push(`/login/password-method/${values.email}`)
           return
         }
 
-        handleServerActionError(res, locale, form)
-      })
+        router.push(`/login/otp-method/${values.email}`)
+        return
+      }
+
+      handleServerActionError(res, locale, form)
     })
   }
 
   return (
     <>
-      <Button
-        onClick={handleGoogleLogin}
-        variant="outline"
-        size="sm"
-        className="w-full"
-      >
-        <Icons.Google className="mr-2 size-4" />
-        {t("Continue with Google")}
-      </Button>
+      <div className="flex flex-wrap gap-3">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full min-w-40 flex-1"
+          disabled={pending}
+        >
+          <Icons.Facebook className="mr-1 size-3" />
+          Facebook
+        </Button>
+        <Button
+          onClick={handleGoogleLogin}
+          variant="outline"
+          size="sm"
+          className="w-full min-w-40 flex-1"
+          disabled={pending}
+        >
+          <Icons.Google className="mr-1 size-3" />
+          {t("Google")}
+        </Button>
+      </div>
 
       <div className="flex items-center gap-x-2">
         <Separator className="flex-1" />

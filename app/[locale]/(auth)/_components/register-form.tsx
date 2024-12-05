@@ -1,9 +1,9 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useGoogleLogin } from "@react-oauth/google"
 import { EyeClosedIcon, EyeIcon, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -13,6 +13,7 @@ import {
   registerSchema,
   type TRegisterSchema,
 } from "@/lib/validations/auth/register"
+import { loginGoogle } from "@/actions/auth/login-google"
 import { register } from "@/actions/auth/register"
 import { Button } from "@/components/ui/button"
 import {
@@ -26,15 +27,6 @@ import {
 import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-
-interface WindowWithGoogle extends Window {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  google?: any
-}
-
-declare let window: WindowWithGoogle
-
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
 
 function RegisterForm() {
   const locale = useLocale()
@@ -68,35 +60,45 @@ function RegisterForm() {
     })
   }
 
-  const handleGoogleLogin = () => {
-    if (!window.google) {
-      console.error("Google SDK not loaded")
-      return
-    }
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (googleRes) => {
+      startTransition(async () => {
+        const res = await loginGoogle(googleRes.code)
 
-    const tokenClient = window.google.accounts.oauth2.initTokenClient({
-      client_id: GOOGLE_CLIENT_ID,
-      scope: "profile email",
-      callback: (response: { access_token: string }) => {
-        console.log({ access_token: response.access_token })
-      },
-    })
+        if (res.isSuccess) {
+          router.push(`/`)
+          return
+        }
 
-    tokenClient.requestAccessToken()
-  }
+        handleServerActionError(res, locale, form)
+      })
+    },
+    flow: "auth-code",
+  })
 
   return (
     <>
-      <Script src="https://accounts.google.com/gsi/client" async defer />
-      <Button
-        onClick={handleGoogleLogin}
-        variant="outline"
-        size="sm"
-        className="w-full"
-      >
-        <Icons.Google className="mr-2 size-4" />
-        {t("Continue with Google")}
-      </Button>
+      <div className="flex flex-wrap gap-3">
+        <Button
+          variant="outline"
+          size="sm"
+          className="w-full min-w-40 flex-1"
+          disabled={pending}
+        >
+          <Icons.Facebook className="mr-1 size-3" />
+          Facebook
+        </Button>
+        <Button
+          onClick={handleGoogleLogin}
+          variant="outline"
+          size="sm"
+          className="w-full min-w-40 flex-1"
+          disabled={pending}
+        >
+          <Icons.Google className="mr-1 size-3" />
+          {t("Google")}
+        </Button>
+      </div>
 
       <div className="flex items-center gap-x-2">
         <Separator className="flex-1" />

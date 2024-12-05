@@ -101,6 +101,8 @@ const request = async <TData = undefined>(
 
   const payload = (await res.json()) as OkResponse<TData>
 
+  console.log({ payload })
+
   if (!res.ok || !payload.resultCode.includes("Success")) {
     if (res.ok) {
       console.log({ payload })

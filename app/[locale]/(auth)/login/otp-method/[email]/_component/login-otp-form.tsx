@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { otpSchema, type TOtpSchema } from "@/lib/validations/auth/otp"
-import { verifyEmail } from "@/actions/auth/verify-email"
+import { loginByOtp } from "@/actions/auth/login-by-otp"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -45,10 +45,10 @@ function LoginOtpForm({ email }: Props) {
 
   function onSubmit(values: TOtpSchema) {
     startTransition(async () => {
-      const res = await verifyEmail(email, values.pin)
+      const res = await loginByOtp(email, values.pin)
 
       if (res.isSuccess) {
-        router.push(`/login`)
+        router.push(`/`)
         return
       }
 

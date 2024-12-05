@@ -44,8 +44,6 @@ function LoginPasswordForm({ email }: Props) {
   })
 
   function onSubmit(values: TLoginByPasswordSchema) {
-    console.log(values)
-
     startTransition(async () => {
       const res = await loginByPassword(values)
 
