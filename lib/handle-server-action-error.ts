@@ -12,10 +12,11 @@ function handleServerActionError(
   locale: string,
   form?: UseFormReturn<any, any, undefined>
 ) {
-  if (error.typeError === "base") {
+  if (error.typeError === "error" || error.typeError === "warning") {
     toast({
       title: locale === "vi" ? "Lỗi" : "Error",
       description: error.messageError,
+      variant: error.typeError === "warning" ? "warning" : "danger",
     })
     return
   }
@@ -27,6 +28,7 @@ function handleServerActionError(
         locale === "vi"
           ? "Đã xảy ra lỗi không xác định. Vui lòng thử lại sau."
           : "An unknown error occurred. Please try again later.",
+      variant: "danger",
     })
     return
   }

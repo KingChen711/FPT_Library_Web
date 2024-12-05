@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { type ServerActionError } from "./types/action-response"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -5,36 +6,51 @@ type CustomOptions = RequestInit & {
   baseUrl?: string
 }
 
-type ErrorResponse = {
-  type: string
-  title: string
-  status: number
-  detail: string
-  instance: string
-  extension: Record<string, string[]>
+type OkResponse<TData = undefined> = {
+  resultCode: string
+  message: string
+  data: TData | null
 }
 
 class HttpError extends Error {
-  status: number
-  message: string
+  type: "unknown" | "warning" | "error" | "form"
   fieldErrors: Record<string, string[]>
-  constructor(payload: ErrorResponse) {
-    super("Http Error")
-    this.status = payload.status
-    this.message = payload.detail
-    this.fieldErrors = payload.extension || {}
+  constructor({
+    fieldErrors,
+    message,
+    type,
+  }: {
+    type: "unknown" | "warning" | "error" | "form"
+    message?: string
+    fieldErrors?: Record<string, string[]>
+  } & (
+    | {
+        type: "unknown"
+      }
+    | {
+        type: "warning" | "error"
+        message: string
+      }
+    | {
+        type: "form"
+        fieldErrors: Record<string, string[]>
+      }
+  )) {
+    super(message)
+    this.type = type
+    this.fieldErrors = fieldErrors || {}
   }
 }
 
 export function handleHttpError(error: unknown): ServerActionError {
-  if (!(error instanceof HttpError)) {
+  if (!(error instanceof HttpError) || error.type === "unknown") {
     return {
       isSuccess: false,
       typeError: "unknown",
     }
   }
 
-  if (Object.keys(error.fieldErrors).length === 0) {
+  if (Object.keys(error.fieldErrors).length !== 0 && error.type === "form") {
     return {
       typeError: "form",
       fieldErrors: error.fieldErrors,
@@ -42,8 +58,12 @@ export function handleHttpError(error: unknown): ServerActionError {
     }
   }
 
-  if (error.message) {
-    return { isSuccess: false, typeError: "base", messageError: error.message }
+  if (error.message && error.type !== "form") {
+    return {
+      isSuccess: false,
+      typeError: error.type,
+      messageError: error.message,
+    }
   }
 
   return {
@@ -52,7 +72,7 @@ export function handleHttpError(error: unknown): ServerActionError {
   }
 }
 
-const request = async <ResponseData = undefined>(
+const request = async <TData = undefined>(
   method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE",
   url: string,
   options?: CustomOptions
@@ -76,13 +96,30 @@ const request = async <ResponseData = undefined>(
     method,
   })
 
-  const payload = await res.json()
+  const payload = (await res.json()) as OkResponse<TData>
 
-  if (!res.ok) {
-    throw new HttpError(payload as ErrorResponse)
+  if (!res.ok || !payload.resultCode.includes("Success")) {
+    if (res.ok) {
+      throw new HttpError({
+        type: payload.resultCode.includes("Error") ? "error" : "warning",
+        message: payload.message,
+      })
+    }
+
+    if (res.status !== 422) {
+      throw new HttpError({
+        type: "unknown",
+      })
+    }
+
+    throw new HttpError({
+      type: "form",
+      // @ts-ignore
+      fieldErrors: payload.Extensions || {},
+    })
   }
 
-  return payload.data as ResponseData
+  return payload
 }
 
 export const http = {

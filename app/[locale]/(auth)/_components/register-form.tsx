@@ -5,14 +5,15 @@ import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
 import {
   registerSchema,
   type TRegisterSchema,
 } from "@/lib/validations/auth/register"
-import { login } from "@/actions/auth/login"
+import { register } from "@/actions/auth/register"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -36,6 +37,7 @@ declare let window: WindowWithGoogle
 const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
 
 function RegisterForm() {
+  const locale = useLocale()
   const t = useTranslations("RegisterPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
@@ -46,17 +48,21 @@ function RegisterForm() {
       email: "",
       password: "",
       confirmPassword: "",
+      firstName: "",
+      lastName: "",
     },
   })
 
   function onSubmit(values: TRegisterSchema) {
     startTransition(async () => {
-      const res = await login(values)
+      const res = await register(values)
 
-      if (res.isSuccess) {
-        router.push("/")
-        return
-      }
+      // if (res.isSuccess) {
+      //   router.push("/sign-in")
+      //   return
+      // }
+
+      // handleServerActionError(res, locale)
     })
   }
 
@@ -97,6 +103,35 @@ function RegisterForm() {
       </div>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="flex flex-wrap gap-x-4 gap-y-6">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem className="min-w-[160px] flex-1">
+                  <FormLabel>{t("FirstName")}</FormLabel>
+                  <FormControl>
+                    <Input disabled={pending} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem className="min-w-[160px] flex-1">
+                  <FormLabel>{t("LastName")}</FormLabel>
+                  <FormControl>
+                    <Input disabled={pending} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
           <FormField
             control={form.control}
             name="email"

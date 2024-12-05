@@ -23,6 +23,8 @@
   },
   "RegisterPage": {
     "Email": "Địa chỉ email",
+    "FirstName": "Tên",
+    "LastName": "Họ",
     "Password": "Mật khẩu",
     "ConfirmedPassword": "Nhập lại mật khẩu",
     "Register": "Đăng kí",
@@ -52,6 +54,7 @@
     "email": "Email không hợp lệ",
     "min2": "Phải có ít nhất 2 kí tự",
     "max50": "Phải có không quá 50 kí tự",
-    "min6": "Phải có ít nhất 6 kí tự"
+    "min6": "Phải có ít nhất 6 kí tự",
+    "matchPassword": "Mật khẩu không khớp"
   }
 }

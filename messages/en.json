@@ -23,6 +23,8 @@
     }
   },
   "RegisterPage": {
+    "FirstName": "First name",
+    "LastName": "Last name",
     "Email": "Email address",
     "Password": "Password",
     "ConfirmedPassword": "Confirmed password",
@@ -55,6 +57,7 @@
     "email": "Invalid email",
     "min2": "Must contain at least 2 character(s)",
     "max50": "Must contain at most 50 character(s)",
-    "min6": "Must contain at least 6 character(s)"
+    "min6": "Must contain at least 6 character(s)",
+    "matchPassword": "Confirm password does not match"
   }
 }
