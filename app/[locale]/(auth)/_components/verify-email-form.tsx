@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { otpSchema, type TOtpSchema } from "@/lib/validations/auth/otp"
+import { resendOtp } from "@/actions/auth/resend-otp"
 import { verifyEmail } from "@/actions/auth/verify-email"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -32,7 +33,8 @@ type Props = {
 
 function VerifyEmailForm({ email }: Props) {
   const t = useTranslations("ResetPasswordPage")
-  const [pending, startTransition] = useTransition()
+  const [pendingVerifyEmail, startVerifyEmail] = useTransition()
+  const [pendingResendOtp, startResendOtp] = useTransition()
   const router = useRouter()
   const locale = useLocale()
   const [timeDisableResend, setTimeDisableResend] = useState(0)
@@ -45,7 +47,7 @@ function VerifyEmailForm({ email }: Props) {
   })
 
   function onSubmit(values: TOtpSchema) {
-    startTransition(async () => {
+    startVerifyEmail(async () => {
       const res = await verifyEmail(email, values.pin)
 
       if (res.isSuccess) {
@@ -68,6 +70,19 @@ function VerifyEmailForm({ email }: Props) {
     e.preventDefault()
     e.stopPropagation()
     setTimeDisableResend(30)
+
+    startResendOtp(async () => {
+      const res = await resendOtp(email)
+
+      if (res.isSuccess) {
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data,
+          variant: "success",
+        })
+        return
+      }
+    })
   }
 
   useEffect(() => {
@@ -105,7 +120,7 @@ function VerifyEmailForm({ email }: Props) {
               <FormDescription>
                 <Button
                   onClick={handleResendCode}
-                  disabled={timeDisableResend > 0}
+                  disabled={timeDisableResend > 0 || pendingResendOtp}
                   className="min-h-0 min-w-0 p-0 hover:bg-transparent hover:underline"
                   variant="ghost"
                 >
@@ -117,9 +132,9 @@ function VerifyEmailForm({ email }: Props) {
             </FormItem>
           )}
         />
-        <Button disabled={pending} type="submit" className="w-full">
+        <Button disabled={pendingVerifyEmail} type="submit" className="w-full">
           {t("Continue")}{" "}
-          {pending && <Loader2 className="size-4 animate-spin" />}
+          {pendingVerifyEmail && <Loader2 className="size-4 animate-spin" />}
         </Button>
 
         <Link

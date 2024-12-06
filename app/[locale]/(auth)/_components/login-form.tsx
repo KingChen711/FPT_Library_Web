@@ -70,6 +70,13 @@ function LoginForm() {
         return
       }
 
+      if (
+        res.typeError === "warning" &&
+        res.resultCode === "Auth.Warning0008"
+      ) {
+        router.push(`/verify-email/${values.email}`)
+      }
+
       handleServerActionError(res, locale, form)
     })
   }

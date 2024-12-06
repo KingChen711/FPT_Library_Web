@@ -6,6 +6,7 @@ import { type ServerActionError } from "./types/action-response"
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type CustomOptions = RequestInit & {
   baseUrl?: string
+  lang?: string
 }
 
 type OkResponse<TData = undefined> = {
@@ -15,13 +16,16 @@ type OkResponse<TData = undefined> = {
 }
 
 class HttpError extends Error {
+  resultCode: string
   type: "unknown" | "warning" | "error" | "form"
   fieldErrors: Record<string, string[]>
   constructor({
     fieldErrors,
     message,
     type,
+    resultCode,
   }: {
+    resultCode: string
     type: "unknown" | "warning" | "error" | "form"
     message?: string
     fieldErrors?: Record<string, string[]>
@@ -40,6 +44,7 @@ class HttpError extends Error {
   )) {
     super(message)
     this.type = type
+    this.resultCode = resultCode
     this.fieldErrors = fieldErrors || {}
   }
 }
@@ -65,6 +70,7 @@ export function handleHttpError(error: unknown): ServerActionError {
       isSuccess: false,
       typeError: error.type,
       messageError: error.message,
+      resultCode: error.resultCode,
     }
   }
 
@@ -82,8 +88,15 @@ const request = async <TData = undefined>(
   const body = options?.body ? JSON.stringify(options.body) : undefined
   const baseHeaders = {
     "Content-Type": "application/json",
-    "Accept-Language": await getLocale(),
+    "Accept-Language": "",
   }
+
+  if (typeof window === "undefined") {
+    baseHeaders["Accept-Language"] = await getLocale()
+  } else {
+    baseHeaders["Accept-Language"] = options?.lang ?? "vi"
+  }
+
   const baseUrl =
     options?.baseUrl === undefined
       ? process.env.NEXT_PUBLIC_API_ENDPOINT
@@ -101,29 +114,30 @@ const request = async <TData = undefined>(
 
   const payload = (await res.json()) as OkResponse<TData>
 
+  console.log({ body: body ? JSON.parse(body) : null })
   console.log({ payload })
 
   if (!res.ok || !payload.resultCode.includes("Success")) {
     if (res.ok) {
-      console.log({ payload })
       throw new HttpError({
-        type: payload.resultCode.includes("Error") ? "error" : "warning",
+        type: payload.resultCode.includes("Fail") ? "error" : "warning",
         message: payload.message,
+        resultCode: payload.resultCode,
       })
     }
 
     if (res.status !== 422) {
       throw new HttpError({
         type: "unknown",
+        resultCode: "",
       })
     }
-
-    console.log({ payload })
 
     throw new HttpError({
       type: "form",
       // @ts-ignore
       fieldErrors: payload.Extensions || {},
+      resultCode: "",
     })
   }
 

@@ -180,39 +180,39 @@ function RegisterForm() {
               </FormItem>
             )}
           />
-          <div className="flex flex-col gap-y-4">
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("ConfirmedPassword")}</FormLabel>
-                  <FormControl>
-                    <div className="flex items-center gap-x-2 rounded-md border">
-                      <Input
-                        disabled={pending}
-                        type={showConfirmPassword ? "text" : "password"}
-                        {...field}
-                        className="border-none outline-none focus-visible:ring-transparent"
-                      />
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        onClick={(e) => {
-                          e.preventDefault()
-                          e.stopPropagation()
-                          setShowConfirmPassword((prev) => !prev)
-                        }}
-                      >
-                        {showConfirmPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                      </Button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
+
+          <FormField
+            control={form.control}
+            name="confirmPassword"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>{t("ConfirmedPassword")}</FormLabel>
+                <FormControl>
+                  <div className="flex items-center gap-x-2 rounded-md border">
+                    <Input
+                      disabled={pending}
+                      type={showConfirmPassword ? "text" : "password"}
+                      {...field}
+                      className="border-none outline-none focus-visible:ring-transparent"
+                    />
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setShowConfirmPassword((prev) => !prev)
+                      }}
+                    >
+                      {showConfirmPassword ? <EyeIcon /> : <EyeClosedIcon />}
+                    </Button>
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
           <Button disabled={pending} type="submit" className="w-full">
             {t("Register")}
             {pending && <Loader2 className="size-4 animate-spin" />}

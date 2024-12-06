@@ -13,8 +13,6 @@ type TLoginGoogleData = {
 }
 
 export async function loginGoogle(code: string): Promise<ActionResponse> {
-  console.log({ code })
-
   try {
     const { data } = await http.post<TLoginGoogleData>(
       "/api/auth/sign-in-google",

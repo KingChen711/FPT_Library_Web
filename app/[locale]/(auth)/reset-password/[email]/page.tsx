@@ -36,7 +36,7 @@ const ResetPasswordPage = async ({ params }: Props) => {
           </p>
           <p className="text-center text-sm text-muted-foreground">{email}</p>
         </div>
-        <ResetPasswordForm />
+        <ResetPasswordForm email={email} />
       </div>
     </div>
   )
