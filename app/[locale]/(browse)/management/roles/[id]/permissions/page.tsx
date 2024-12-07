@@ -9,12 +9,18 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import RoleActionDropdown from "./_components/role-actions-dropdown"
+import AccessLevelDropdown from "./_components/access-level-dropdown"
 
-function RolesManagementPage() {
+type Props = {
+  id: string
+}
+
+function PermissionsPage({ id }: Props) {
+  console.log(id)
+
   return (
     <div>
-      <h3 className="text-2xl font-semibold">Roles</h3>
+      <h3 className="text-2xl font-semibold">Admin permissions</h3>
       <div className="my-4 grid w-full">
         <div className="overflow-x-auto">
           <Table>
@@ -22,33 +28,37 @@ function RolesManagementPage() {
               <TableRow>
                 <TableHead>Id</TableHead>
                 <TableHead>Role name</TableHead>
-                <TableHead>Role type</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead className="text-right">Access level</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               <TableRow>
                 <TableCell className="font-medium">1</TableCell>
-                <TableCell>Administration</TableCell>
-                <TableCell>User</TableCell>
+                <TableCell>User Management</TableCell>
                 <TableCell className="flex justify-end">
-                  <RoleActionDropdown roleId={"1"} />
+                  <AccessLevelDropdown />
                 </TableCell>
               </TableRow>
               <TableRow>
-                <TableCell className="font-medium">2</TableCell>
-                <TableCell>HeadLibrarian</TableCell>
-                <TableCell>Employee</TableCell>
+                <TableCell className="font-medium">1</TableCell>
+                <TableCell>Employee management</TableCell>
                 <TableCell className="flex justify-end">
-                  <RoleActionDropdown roleId={"2"} />
+                  <AccessLevelDropdown />
                 </TableCell>
               </TableRow>
             </TableBody>
           </Table>
         </div>
       </div>
+
+      {/* <div className="mt-6 flex justify-end gap-x-4">
+        <Button className="w-24">Save</Button>
+        <Button variant="outline" className="w-24">
+          Back
+        </Button>
+      </div> */}
     </div>
   )
 }
 
-export default RolesManagementPage
+export default PermissionsPage
