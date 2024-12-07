@@ -1,6 +1,7 @@
 "use client"
 
 import { useTransition } from "react"
+import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useGoogleLogin } from "@react-oauth/google"
@@ -81,10 +82,44 @@ function LoginForm() {
     })
   }
 
+  // useEffect(() => {
+  //   // Initialize Facebook SDK
+  //   window.fbAsyncInit = function () {
+  //     window.FB.init({
+  //       appId: "YOUR_APP_ID", // Replace with your App ID
+  //       cookie: true, // Enable cookies
+  //       xfbml: true, // Parse social plugins on this page
+  //       version: "v16.0", // Use the latest Graph API version
+  //     })
+  //   }
+  // }, [])
+
+  // const handleLogin = () => {
+  //   window.FB.login(
+  //     (response) => {
+  //       if (response.status === "connected") {
+  //         console.log("Access Token:", response.authResponse.accessToken)
+  //         alert(`Access Token: ${response.authResponse.accessToken}`)
+  //       } else {
+  //         console.error("User not authenticated")
+  //       }
+  //     },
+  //     { scope: "email,public_profile" }
+  //   ) // Request specific permissions
+  // }
+
   return (
     <>
+      <Script
+        async
+        defer
+        crossOrigin="anonymous"
+        src={`https://connect.facebook.net/${locale === "vi" ? "vi" : "en-US"}/sdk.js`}
+      ></Script>
+
       <div className="flex flex-wrap gap-3">
         <Button
+          // onClick={handleLogin}
           variant="outline"
           size="sm"
           className="w-full min-w-40 flex-1"
@@ -93,6 +128,7 @@ function LoginForm() {
           <Icons.Facebook className="mr-1 size-3" />
           Facebook
         </Button>
+
         <Button
           onClick={handleGoogleLogin}
           variant="outline"
