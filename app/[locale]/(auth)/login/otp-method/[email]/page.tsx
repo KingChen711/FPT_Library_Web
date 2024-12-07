@@ -1,9 +1,10 @@
+import React from "react"
 import Image from "next/image"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
 
 import { getTranslations } from "@/lib/get-translations"
 
-import ResetPasswordForm from "../../_components/reset-password-form"
+import LoginOtpForm from "./_component/login-otp-form"
 
 type Props = {
   params: {
@@ -11,11 +12,11 @@ type Props = {
   }
 }
 
-const ResetPasswordPage = async ({ params }: Props) => {
+async function LoginOtpMethodPage({ params }: Props) {
+  const t = await getTranslations("LoginPage.OtpMethodPage")
   const email = decodeURIComponent(params.email)
-  const t = await getTranslations("ResetPasswordPage")
   return (
-    <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
+    <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-card shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
         <div className="flex justify-center">
           <Image
@@ -29,17 +30,17 @@ const ResetPasswordPage = async ({ params }: Props) => {
         </div>
         <div className="flex flex-col gap-y-1">
           <h1 className="text-center text-lg font-semibold">
-            {t("Reset password")}
+            {t("Check your email")}
           </h1>
           <p className="text-center text-sm text-muted-foreground">
             {t("Message")}
           </p>
           <p className="text-center text-sm text-muted-foreground">{email}</p>
         </div>
-        <ResetPasswordForm email={email} />
+        <LoginOtpForm email={email} />
       </div>
     </div>
   )
 }
 
-export default ResetPasswordPage
+export default LoginOtpMethodPage

@@ -1,16 +1,18 @@
 "use client"
 
 import React, { useTransition } from "react"
-import { Link } from "@/i18n/routing"
+import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
 import {
-  loginPasswordSchema,
-  type TLoginPasswordSchema,
-} from "@/lib/validations/auth/login-password"
+  loginByPasswordSchema,
+  type TLoginByPasswordSchema,
+} from "@/lib/validations/auth/login-by-password"
+import { loginByPassword } from "@/actions/auth/login-by-password"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -28,18 +30,30 @@ type Props = {
 
 function LoginPasswordForm({ email }: Props) {
   const t = useTranslations("LoginPage.PasswordMethodPage")
+  const router = useRouter()
+  const locale = useLocale()
 
   const [pending, startTransition] = useTransition()
 
-  const form = useForm<TLoginPasswordSchema>({
-    resolver: zodResolver(loginPasswordSchema),
+  const form = useForm<TLoginByPasswordSchema>({
+    resolver: zodResolver(loginByPasswordSchema),
     defaultValues: {
+      email,
       password: "",
     },
   })
 
-  function onSubmit(values: TLoginPasswordSchema) {
-    console.log(values, startTransition, email)
+  function onSubmit(values: TLoginByPasswordSchema) {
+    startTransition(async () => {
+      const res = await loginByPassword(values)
+
+      if (res.isSuccess) {
+        router.push("/")
+        return
+      }
+
+      handleServerActionError(res, locale, form)
+    })
   }
 
   return (

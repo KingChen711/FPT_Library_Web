@@ -6,6 +6,4 @@ const pubnub = new Pubnub({
   uuid: "authenticatedUserId",
 })
 
-console.log({ pubnub })
-
 export default pubnub

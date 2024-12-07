@@ -1,17 +1,23 @@
 "use client"
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTransition } from "react"
-import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useQueryClient } from "@tanstack/react-query"
+import { useGoogleLogin } from "@react-oauth/google"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
+import { type ReactFacebookLoginInfo } from "react-facebook-login"
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
 import { login } from "@/actions/auth/login"
+import { loginFacebook } from "@/actions/auth/login-facebook"
+import { loginGoogle } from "@/actions/auth/login-google"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -25,22 +31,29 @@ import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 
-interface WindowWithGoogle extends Window {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  google?: any
-}
-
-declare let window: WindowWithGoogle
-
-const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!
-
+//TODO: update validate
 function LoginForm() {
-  const queryClient = useQueryClient()
   const t = useTranslations("LoginPage")
   const locale = useLocale()
   const router = useRouter()
 
   const [pending, startTransition] = useTransition()
+
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: (googleRes) => {
+      startTransition(async () => {
+        const res = await loginGoogle(googleRes.code)
+
+        if (res.isSuccess) {
+          router.push(`/`)
+          return
+        }
+
+        handleServerActionError(res, locale, form)
+      })
+    },
+    flow: "auth-code",
+  })
 
   const form = useForm<TLoginSchema>({
     resolver: zodResolver(loginSchema),
@@ -51,53 +64,74 @@ function LoginForm() {
 
   function onSubmit(values: TLoginSchema) {
     startTransition(async () => {
-      router.push(`/login/password-method/${values.email}`)
+      const res = await login(values)
 
-      console.log(queryClient, locale, handleServerActionError, login)
+      if (res.isSuccess) {
+        if (res.data === "Auth.Success0003") {
+          router.push(`/login/password-method/${values.email}`)
+          return
+        }
 
-      // const res = await login(values)
+        router.push(`/login/otp-method/${values.email}`)
+        return
+      }
 
-      // if (res.isSuccess) {
-      //   queryClient.invalidateQueries({
-      //     queryKey: ["token"],
-      //   })
-      //   router.push("/")
-      //   return
-      // }
+      if (
+        res.typeError === "warning" &&
+        res.resultCode === "Auth.Warning0008"
+      ) {
+        router.push(`/verify-email/${values.email}`)
+      }
 
-      // handleServerActionError(res, locale)
+      handleServerActionError(res, locale, form)
     })
   }
 
-  const handleGoogleLogin = () => {
-    if (!window.google) {
-      console.error("Google SDK not loaded")
-      return
-    }
+  const handleFacebookLogin = (response: ReactFacebookLoginInfo) => {
+    startTransition(async () => {
+      //@ts-ignore
+      const res = await loginFacebook(response.accessToken, response.expiresIn)
 
-    const tokenClient = window.google.accounts.oauth2.initTokenClient({
-      client_id: GOOGLE_CLIENT_ID,
-      scope: "profile email",
-      callback: (response: { access_token: string }) => {
-        console.log({ access_token: response.access_token })
-      },
+      if (res.isSuccess) {
+        router.push(`/`)
+        return
+      }
+
+      handleServerActionError(res, locale, form)
     })
-
-    tokenClient.requestAccessToken()
   }
 
   return (
     <>
-      <Script src="https://accounts.google.com/gsi/client" async defer />
-      <Button
-        onClick={handleGoogleLogin}
-        variant="outline"
-        size="sm"
-        className="w-full"
-      >
-        <Icons.Google className="mr-2 size-4" />
-        {t("Continue with Google")}
-      </Button>
+      <div className="flex flex-wrap gap-3">
+        <FacebookLogin
+          appId="924316922705111"
+          autoLoad={false}
+          callback={handleFacebookLogin}
+          render={(renderProps) => (
+            <Button
+              onClick={renderProps.onClick}
+              variant="outline"
+              size="sm"
+              className="w-full min-w-40 flex-1"
+              // disabled={pending}
+            >
+              <Icons.Facebook className="mr-1 size-3" />
+              Facebook
+            </Button>
+          )}
+        />
+        <Button
+          onClick={handleGoogleLogin}
+          variant="outline"
+          size="sm"
+          className="w-full min-w-40 flex-1"
+          disabled={pending}
+        >
+          <Icons.Google className="mr-1 size-3" />
+          {t("Google")}
+        </Button>
+      </div>
 
       <div className="flex items-center gap-x-2">
         <Separator className="flex-1" />

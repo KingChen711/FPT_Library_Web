@@ -63,7 +63,7 @@ type WhoAmIResponse = User & { role: Role }
 
 const whoAmI = cache(async (): Promise<WhoAmIResponse | null> => {
   try {
-    const data = await http.get<WhoAmIResponse>("/api/users/who-am-i", {
+    const { data } = await http.get<WhoAmIResponse>("/api/users/who-am-i", {
       headers: {
         Authorization: `Bearer ${getToken()}`,
       },

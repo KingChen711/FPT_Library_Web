@@ -1,3 +1,5 @@
+"use client"
+
 /* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -12,10 +14,11 @@ function handleServerActionError(
   locale: string,
   form?: UseFormReturn<any, any, undefined>
 ) {
-  if (error.typeError === "base") {
+  if (error.typeError === "error" || error.typeError === "warning") {
     toast({
       title: locale === "vi" ? "Lỗi" : "Error",
       description: error.messageError,
+      variant: error.typeError === "warning" ? "warning" : "danger",
     })
     return
   }
@@ -27,6 +30,7 @@ function handleServerActionError(
         locale === "vi"
           ? "Đã xảy ra lỗi không xác định. Vui lòng thử lại sau."
           : "An unknown error occurred. Please try again later.",
+      variant: "danger",
     })
     return
   }
@@ -35,8 +39,10 @@ function handleServerActionError(
 
   //@ts-ignore
   const keys = Object.keys(error.fieldErrors)
-  //@ts-ignore
-  keys.forEach((key) => form.setError(key, { message: res.fieldErrors[key] }))
+  keys.forEach((key) =>
+    //@ts-ignore
+    form.setError(key, { message: error.fieldErrors[key][0] })
+  )
   //@ts-ignore
   form.setFocus(keys[0])
 }

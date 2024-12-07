@@ -3,7 +3,7 @@ import fptLogo from "@/public/assets/images/fpt-logo.png"
 
 import { getTranslations } from "@/lib/get-translations"
 
-import VerifyOtpForm from "../../_components/verify-otp-form"
+import VerifyEmailForm from "../../_components/verify-email-form"
 
 type Props = {
   params: {
@@ -11,9 +11,9 @@ type Props = {
   }
 }
 
-const VerifyOtpPage = async ({ params }: Props) => {
+const VerifyEmailPage = async ({ params }: Props) => {
   const email = decodeURIComponent(params.email)
-  const t = await getTranslations("VerifyOtpPage")
+  const t = await getTranslations("VerifyEmailPage")
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
@@ -36,10 +36,10 @@ const VerifyOtpPage = async ({ params }: Props) => {
           </p>
           <p className="text-center text-sm text-muted-foreground">{email}</p>
         </div>
-        <VerifyOtpForm />
+        <VerifyEmailForm email={email} />
       </div>
     </div>
   )
 }
 
-export default VerifyOtpPage
+export default VerifyEmailPage
