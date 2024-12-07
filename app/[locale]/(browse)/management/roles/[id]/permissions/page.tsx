@@ -12,10 +12,12 @@ import {
 import AccessLevelDropdown from "./_components/access-level-dropdown"
 
 type Props = {
-  id: string
+  params: {
+    id: string
+  }
 }
 
-function PermissionsPage({ id }: Props) {
+function PermissionsPage({ params: { id } }: Props) {
   console.log(id)
 
   return (
