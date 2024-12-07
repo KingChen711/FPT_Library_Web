@@ -24,9 +24,12 @@ body {
     --accent-foreground: 21 0% 15%;
     --destructive: 0 50% 50%;
     --destructive-foreground: 21 0% 93%;
+    /* --border: 21 20% 82%; */
+    /* --input: 21 20% 50%; */
+    /* --ring: 21 90.2% 48%; */
+    --ring: 222.2 84% 4.9%;
     --border: 21 20% 82%;
-    --input: 21 20% 50%;
-    --ring: 21 90.2% 48%;
+    --input: 214.3 31.8% 91.4%;
     --radius: 0.5rem;
 
     --success: 152, 62%, 49%;
@@ -60,9 +63,12 @@ body {
     --accent-foreground: 21 0% 90%;
     --destructive: 4 86% 58%;
     --destructive-foreground: 21 0% 90%;
-    --border: 21 20% 18%;
-    --input: 21 20% 18%;
-    --ring: 21 90.2% 48%;
+    /* --border: 21 20% 18%; */
+    /* --input: 21 20% 18%; */
+    /* --ring: 21 90.2% 48%; */
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
     --radius: 0.5rem;
   }
 }

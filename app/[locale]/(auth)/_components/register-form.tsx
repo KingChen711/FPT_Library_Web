@@ -63,6 +63,7 @@ function RegisterForm() {
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: (googleRes) => {
       startTransition(async () => {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const res = await loginGoogle(googleRes.code)
 
         if (res.isSuccess) {

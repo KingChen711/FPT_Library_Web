@@ -67,7 +67,38 @@
     "email": "Invalid email",
     "min2": "Must contain at least 2 character(s)",
     "max50": "Must contain at most 50 character(s)",
-    "min6": "Must contain at least 6 character(s)",
-    "matchPassword": "Confirm password does not match"
+    "min6": "Must contain at least 6 character(s)"
+  },
+  "Me": {
+    "Account": {
+      "Profile": {
+        "profile": "Profile",
+        "security": "Security",
+        "interface": "Interface",
+        "notification": "Notification"
+      }
+    }
+  },
+  "UserManagement": {
+    "users": "Users",
+    "import": "Import",
+    "export": "Export",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "email": "Email",
+    "role": "Role",
+    "status": "Status",
+    "active": "Active",
+    "inactive": "Inactive",
+    "dob": "Date of birth",
+    "phone": "Phone number",
+    "actions": "Actions",
+    "UserDialog": {
+      "addUser": "Add user",
+      "editUser": "Edit user",
+      "deleteUser": "Delete user",
+      "saveBtn": "Save",
+      "cancelBtn": "Cancel"
+    }
   }
 }

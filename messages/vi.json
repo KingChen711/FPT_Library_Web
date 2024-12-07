@@ -1,5 +1,12 @@
 {
   "HelloWorld": "Xin chào thế giới",
+  "Role": {
+    "Admin": "Quản lý",
+    "User": "Người dùng",
+    "Student": "Sinh viên",
+    "Teacher": "Giáo viên",
+    "Staff": "Nhân viên"
+  },
   "LoginPage": {
     "Email": "Địa chỉ email",
     "or": "hoặc",
@@ -64,7 +71,28 @@
     "email": "Email không hợp lệ",
     "min2": "Phải có ít nhất 2 kí tự",
     "max50": "Phải có không quá 50 kí tự",
-    "min6": "Phải có ít nhất 6 kí tự",
-    "matchPassword": "Mật khẩu không khớp"
+    "min6": "Phải có ít nhất 6 kí tự"
+  },
+  "UserManagement": {
+    "users": "Người dùng",
+    "import": "Nhập dữ liệu",
+    "export": "Xuất dữ liệu",
+    "firstName": "Họ",
+    "lastName": "Tên",
+    "email": "Email",
+    "role": "Vai trò",
+    "status": "Trạng thái",
+    "active": "Hiệu lực",
+    "inactive": "Không hiệu lực",
+    "dob": "Ngày sinh",
+    "phone": "Số điện thoại",
+    "actions": "Thao tác",
+    "UserDialog": {
+      "addUser": "Thêm người dùng",
+      "editUser": "Sửa người dùng",
+      "deleteUser": "Xóa người dùng",
+      "saveBtn": "Lưu",
+      "cancelBtn": "Hủy"
+    }
   }
 }
