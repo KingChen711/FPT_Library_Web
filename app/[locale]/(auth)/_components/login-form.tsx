@@ -1,17 +1,22 @@
 "use client"
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTransition } from "react"
-import Script from "next/script"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useGoogleLogin } from "@react-oauth/google"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
+import { type ReactFacebookLoginInfo } from "react-facebook-login"
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
 import { login } from "@/actions/auth/login"
+import { loginFacebook } from "@/actions/auth/login-facebook"
 import { loginGoogle } from "@/actions/auth/login-google"
 import { Button } from "@/components/ui/button"
 import {
@@ -82,53 +87,40 @@ function LoginForm() {
     })
   }
 
-  // useEffect(() => {
-  //   // Initialize Facebook SDK
-  //   window.fbAsyncInit = function () {
-  //     window.FB.init({
-  //       appId: "YOUR_APP_ID", // Replace with your App ID
-  //       cookie: true, // Enable cookies
-  //       xfbml: true, // Parse social plugins on this page
-  //       version: "v16.0", // Use the latest Graph API version
-  //     })
-  //   }
-  // }, [])
+  const handleFacebookLogin = (response: ReactFacebookLoginInfo) => {
+    startTransition(async () => {
+      //@ts-ignore
+      const res = await loginFacebook(response.accessToken, response.expiresIn)
 
-  // const handleLogin = () => {
-  //   window.FB.login(
-  //     (response) => {
-  //       if (response.status === "connected") {
-  //         console.log("Access Token:", response.authResponse.accessToken)
-  //         alert(`Access Token: ${response.authResponse.accessToken}`)
-  //       } else {
-  //         console.error("User not authenticated")
-  //       }
-  //     },
-  //     { scope: "email,public_profile" }
-  //   ) // Request specific permissions
-  // }
+      if (res.isSuccess) {
+        router.push(`/`)
+        return
+      }
+
+      handleServerActionError(res, locale, form)
+    })
+  }
 
   return (
     <>
-      <Script
-        async
-        defer
-        crossOrigin="anonymous"
-        src={`https://connect.facebook.net/${locale === "vi" ? "vi" : "en-US"}/sdk.js`}
-      ></Script>
-
       <div className="flex flex-wrap gap-3">
-        <Button
-          // onClick={handleLogin}
-          variant="outline"
-          size="sm"
-          className="w-full min-w-40 flex-1"
-          disabled={pending}
-        >
-          <Icons.Facebook className="mr-1 size-3" />
-          Facebook
-        </Button>
-
+        <FacebookLogin
+          appId="924316922705111"
+          autoLoad={false}
+          callback={handleFacebookLogin}
+          render={(renderProps) => (
+            <Button
+              onClick={renderProps.onClick}
+              variant="outline"
+              size="sm"
+              className="w-full min-w-40 flex-1"
+              // disabled={pending}
+            >
+              <Icons.Facebook className="mr-1 size-3" />
+              Facebook
+            </Button>
+          )}
+        />
         <Button
           onClick={handleGoogleLogin}
           variant="outline"
