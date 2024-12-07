@@ -4,11 +4,12 @@ import { useEffect, useState, useTransition } from "react"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
 import { otpSchema, type TOtpSchema } from "@/lib/validations/auth/otp"
-import { useToast } from "@/hooks/use-toast"
+import { loginByOtp } from "@/actions/auth/login-by-otp"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -24,11 +25,15 @@ import {
   InputOTPSlot,
 } from "@/components/ui/input-otp"
 
-function VerifyOtpForm() {
-  const t = useTranslations("ResetPasswordPage")
+type Props = {
+  email: string
+}
+
+function LoginOtpForm({ email }: Props) {
+  const t = useTranslations("LoginPage.OtpMethodPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
-  const { toast } = useToast()
+  const locale = useLocale()
   const [timeDisableResend, setTimeDisableResend] = useState(0)
 
   const form = useForm<TOtpSchema>({
@@ -39,15 +44,15 @@ function VerifyOtpForm() {
   })
 
   function onSubmit(values: TOtpSchema) {
-    console.log({ startTransition })
+    startTransition(async () => {
+      const res = await loginByOtp(email, values.pin)
 
-    toast({
-      title: "You submitted the following values:",
-      description: (
-        <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(values, null, 2)}</code>
-        </pre>
-      ),
+      if (res.isSuccess) {
+        router.push(`/`)
+        return
+      }
+
+      handleServerActionError(res, locale, form)
     })
   }
 
@@ -106,13 +111,8 @@ function VerifyOtpForm() {
             </FormItem>
           )}
         />
-        <Button
-          disabled={pending}
-          // type="submit"
-          className="w-full"
-          onClick={() => router.push("/verify-otp-success")}
-        >
-          {t("Continue")}{" "}
+        <Button disabled={pending} type="submit" className="w-full">
+          {t("Login")}
           {pending && <Loader2 className="size-4 animate-spin" />}
         </Button>
 
@@ -127,4 +127,4 @@ function VerifyOtpForm() {
   )
 }
 
-export default VerifyOtpForm
+export default LoginOtpForm
