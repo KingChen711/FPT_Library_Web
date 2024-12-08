@@ -10,6 +10,8 @@ export const userTableData: User[] = [
     phone: "0123456789",
     avatar: "https://i.pravatar.cc/150?u=u8gr56j7",
     isActive: true,
+    gender: "Male",
+    role: "User",
   },
   {
     userId: "v2yt34e8",
@@ -20,6 +22,8 @@ export const userTableData: User[] = [
     phone: "0123456789",
     avatar: "https://i.pravatar.cc/150?u=v2yt34e8",
     isActive: false,
+    gender: "Female",
+    role: "User",
   },
   {
     userId: "a9bt21l0",
@@ -30,6 +34,8 @@ export const userTableData: User[] = [
     phone: "0359874612",
     avatar: "https://i.pravatar.cc/150?u=a9bt21l0",
     isActive: true,
+    gender: "Male",
+    role: "Employee",
   },
   {
     userId: "j5mq47o3",
@@ -40,6 +46,8 @@ export const userTableData: User[] = [
     phone: "0984516732",
     avatar: "https://i.pravatar.cc/150?u=j5mq47o3",
     isActive: true,
+    gender: "Male",
+    role: "User",
   },
   {
     userId: "k8hr52w2",
@@ -50,5 +58,7 @@ export const userTableData: User[] = [
     phone: "0846597132",
     avatar: "https://i.pravatar.cc/150?u=k8hr52w2",
     isActive: false,
+    gender: "Female",
+    role: "User",
   },
 ]

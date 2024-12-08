@@ -73,14 +73,29 @@
     "Account": {
       "Profile": {
         "profile": "Profile",
-        "security": "Security",
+        "setting": "Setting",
         "interface": "Interface",
-        "notification": "Notification"
+        "notification": "Notification",
+        "yourProfilePicture": "Your profile picture",
+        "changePicture": "Change picture",
+        "contribution": "Contribution",
+        "reading": "Reading",
+        "fullName": "Full name",
+        "collegeEmailId": "College email ID",
+        "studentCode": "Student code",
+        "phoneNumber": "Phone number",
+        "dob": "Date of birth",
+        "gender": "Gender",
+        "male": "Male",
+        "female": "Female",
+        "bio": "Bio",
+        "updateBtn": "Update Profile",
+        "resetBtn": "Reset"
       }
     }
   },
   "UserManagement": {
-    "users": "Users",
+    "users": "User Management",
     "import": "Import",
     "export": "Export",
     "firstName": "First name",
@@ -93,6 +108,34 @@
     "dob": "Date of birth",
     "phone": "Phone number",
     "actions": "Actions",
+    "UserDialogImport": {
+      "importBtn": "Import",
+      "title": "Import User",
+      "importSettings": "Import Settings",
+      "file": "File",
+      "encodingType": "Encoding Type",
+      "SelectEncodingType": {
+        "placeholder": "Type",
+        "utf-8": "UTF-7",
+        "ascii": "ASCII"
+      },
+      "columnSeparator": "Column Separator",
+      "SelectColumnSeparator": {
+        "placeholder": "Type",
+        "comma": "Mark ,",
+        "tab": "Tab",
+        "semicolon": "Mark ;",
+        "colon": "Mark :"
+      },
+      "importTemplate": "Import Template",
+      "download": "Download",
+      "downloadTemplate": "Download Template",
+      "duplicateControl": "Duplicate Control",
+      "scanning": "Scanning",
+      "duplicateHandle": "Duplicate handle",
+      "import": "Import",
+      "cancel": "Cancel"
+    },
     "UserDialog": {
       "addUser": "Add user",
       "editUser": "Edit user",
