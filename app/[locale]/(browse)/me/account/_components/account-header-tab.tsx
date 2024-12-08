@@ -13,20 +13,20 @@ type AccountHeaderTabProps = {
 
 const accountRoutes = [
   {
-    label: "Account Setting",
+    label: "Profile",
     route: ESystemRoutes.PROFILE_MANAGEMENT,
   },
   {
-    label: "Login & Security",
+    label: "Setting",
     route: ESystemRoutes.SECURITY_MANAGEMENT,
-  },
-  {
-    label: "Notification",
-    route: ESystemRoutes.NOTIFICATION_MANAGEMENT,
   },
   {
     label: "Interface",
     route: ESystemRoutes.INTERFACE_MANAGEMENT,
+  },
+  {
+    label: "Notification",
+    route: ESystemRoutes.NOTIFICATION_MANAGEMENT,
   },
 ]
 
@@ -42,7 +42,7 @@ const AccountHeaderTab = ({ locale }: AccountHeaderTabProps) => {
           key={route.label}
           href={`/${locale}${route.route}`}
           className={cn(
-            "w-[140px] border-b-2 pb-1 text-center text-base font-semibold text-muted-foreground hover:border-primary hover:text-primary",
+            "w-[120px] border-b-2 pb-1 text-center text-base font-semibold text-muted-foreground hover:border-primary hover:text-primary",
             isActive(route.route) && "border-primary text-primary"
           )}
         >

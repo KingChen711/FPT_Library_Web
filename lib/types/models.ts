@@ -9,6 +9,8 @@ export type User = {
   phone: string
   avatar: string
   isActive: boolean
+  gender: string
+  role: string // User, Employee
 }
 
 export type Role = {
