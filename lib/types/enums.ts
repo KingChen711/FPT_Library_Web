@@ -9,10 +9,13 @@ export enum ESystemRoutes {
   // Management
   MANAGEMENT = "/management",
 
+  // User management
+  USER_MANAGEMENT = "/management/users",
+
   // Account
-  ACCOUNT_MANAGEMENT = "/management/account",
-  PROFILE_MANAGEMENT = "/management/account/profile",
-  SECURITY_MANAGEMENT = "/management/account/security",
-  INTERFACE_MANAGEMENT = "/management/account/interface",
-  NOTIFICATION_MANAGEMENT = "/management/account/notification",
+  ACCOUNT_MANAGEMENT = "/me/account",
+  PROFILE_MANAGEMENT = "/me/account/profile",
+  SECURITY_MANAGEMENT = "/me/account/setting",
+  INTERFACE_MANAGEMENT = "/me/account/interface",
+  NOTIFICATION_MANAGEMENT = "/me/account/notification",
 }

@@ -1,9 +1,7 @@
-import React from "react"
+import React, { Suspense } from "react"
 
 import LeftSidebar from "./_component/left-sidebar"
 import ManagementNavbar from "./_component/management-navbar"
-
-// import ManagementNavbar from "./_components/management-navbar"
 
 type Props = {
   children: React.ReactNode
@@ -15,8 +13,10 @@ function ManagementLayout({ children }: Props) {
       <ManagementNavbar />
       <div className="flex">
         <LeftSidebar />
-        <section className="flex min-h-screen flex-1 flex-col px-6 pb-6 pt-20 max-md:pb-14 sm:px-8">
-          <div className="mx-auto size-full max-w-[1400px]">{children}</div>
+        <section className="flex min-h-screen flex-1 flex-col bg-slate-200 px-6 pb-6 pt-20 max-md:pb-14 sm:px-8">
+          <div className="mx-auto size-full max-w-[1400px]">
+            <Suspense>{children}</Suspense>
+          </div>
         </section>
       </div>
     </main>
