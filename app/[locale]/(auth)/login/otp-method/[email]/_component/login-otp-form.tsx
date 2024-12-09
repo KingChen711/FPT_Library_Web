@@ -10,6 +10,8 @@ import { useForm } from "react-hook-form"
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { otpSchema, type TOtpSchema } from "@/lib/validations/auth/otp"
 import { loginByOtp } from "@/actions/auth/login-by-otp"
+import { resendOtp } from "@/actions/auth/resend-otp"
+import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -32,6 +34,7 @@ type Props = {
 function LoginOtpForm({ email }: Props) {
   const t = useTranslations("LoginPage.OtpMethodPage")
   const [pending, startTransition] = useTransition()
+  const [pendingResendOtp, startResendOtp] = useTransition()
   const router = useRouter()
   const locale = useLocale()
   const [timeDisableResend, setTimeDisableResend] = useState(0)
@@ -62,6 +65,19 @@ function LoginOtpForm({ email }: Props) {
     e.preventDefault()
     e.stopPropagation()
     setTimeDisableResend(30)
+
+    startResendOtp(async () => {
+      const res = await resendOtp(email)
+
+      if (res.isSuccess) {
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data,
+          variant: "success",
+        })
+        return
+      }
+    })
   }
 
   useEffect(() => {
@@ -99,7 +115,7 @@ function LoginOtpForm({ email }: Props) {
               <FormDescription>
                 <Button
                   onClick={handleResendCode}
-                  disabled={timeDisableResend > 0}
+                  disabled={timeDisableResend > 0 || pendingResendOtp}
                   className="min-h-0 min-w-0 p-0 hover:bg-transparent hover:underline"
                   variant="ghost"
                 >
