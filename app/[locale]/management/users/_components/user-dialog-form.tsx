@@ -27,7 +27,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Switch } from "@/components/ui/switch"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 type UserDialogFormProps = {
   mode: "create" | "edit"
@@ -42,6 +48,7 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
   const form = useForm<TUserDialogSchema>({
     resolver: zodResolver(userDialogSchema),
     defaultValues: {
+      role: "",
       email: "",
       firstName: "",
       lastName: "",
@@ -49,6 +56,7 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
       phone: "",
       avatar: "",
       isActive: false,
+      gender: "Male",
     },
   })
 
@@ -70,9 +78,9 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
           {mode === "create" ? tUserDialog("addUser") : tUserDialog("editUser")}
         </DialogTrigger>
       </Button>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>
+      <DialogContent className="m-0 overflow-hidden p-0 pb-4">
+        <DialogHeader className="w-full space-y-4 bg-primary p-4">
+          <DialogTitle className="text-center text-primary-foreground">
             {mode === "create"
               ? tUserDialog("addUser")
               : tUserDialog("editUser")}
@@ -86,14 +94,39 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
             <div className="space-y-2">
               <FormField
                 control={form.control}
+                name="role"
+                render={({ field }) => (
+                  <FormItem className="flex w-full flex-col justify-between">
+                    <div className="flex w-full justify-between gap-8">
+                      <FormLabel className="flex w-1/4 items-center text-nowrap">
+                        {tUserManagement("role")}
+                      </FormLabel>
+                      <FormControl className="flex-1">
+                        <Select {...field} onValueChange={field.onChange}>
+                          <SelectTrigger className="flex-1">
+                            <SelectValue placeholder="Role" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Male">Male</SelectItem>
+                            <SelectItem value="Female">Female</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
+                    </div>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem className="flex w-full flex-col justify-between">
                     <div className="flex w-full justify-between gap-8">
-                      <FormLabel className="flex w-1/3 items-center text-nowrap">
+                      <FormLabel className="flex w-1/4 items-center text-nowrap">
                         {tUserManagement("email")}
                       </FormLabel>
-                      <FormControl>
+                      <FormControl className="flex-1">
                         <Input
                           disabled={pending}
                           {...field}
@@ -112,10 +145,10 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
                 render={({ field }) => (
                   <FormItem className="flex w-full flex-col justify-between">
                     <div className="flex w-full justify-between gap-8">
-                      <FormLabel className="flex w-1/3 items-center text-nowrap">
+                      <FormLabel className="flex w-1/4 items-center text-nowrap">
                         {tUserManagement("firstName")}
                       </FormLabel>
-                      <FormControl>
+                      <FormControl className="flex-1">
                         <Input
                           disabled={pending}
                           {...field}
@@ -134,10 +167,10 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
                 render={({ field }) => (
                   <FormItem className="flex w-full flex-col justify-between">
                     <div className="flex w-full justify-between gap-8">
-                      <FormLabel className="flex w-1/3 items-center text-nowrap">
+                      <FormLabel className="flex w-1/4 items-center text-nowrap">
                         {tUserManagement("lastName")}
                       </FormLabel>
-                      <FormControl>
+                      <FormControl className="flex-1">
                         <Input
                           disabled={pending}
                           {...field}
@@ -156,10 +189,10 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
                 render={({ field }) => (
                   <FormItem className="flex w-full flex-col justify-between">
                     <div className="flex w-full justify-between gap-8">
-                      <FormLabel className="flex w-1/3 items-center text-nowrap">
+                      <FormLabel className="flex w-1/4 items-center text-nowrap">
                         {tUserManagement("phone")}
                       </FormLabel>
-                      <FormControl>
+                      <FormControl className="flex-1">
                         <Input
                           disabled={pending}
                           {...field}
@@ -178,11 +211,12 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
                 render={({ field }) => (
                   <FormItem className="flex w-full flex-col justify-between">
                     <div className="flex w-full justify-between gap-8">
-                      <FormLabel className="flex w-1/3 items-center text-nowrap">
+                      <FormLabel className="flex w-1/4 items-center text-nowrap">
                         {tUserManagement("dob")}
                       </FormLabel>
-                      <FormControl>
+                      <FormControl className="flex-1">
                         <Input
+                          type="date"
                           disabled={pending}
                           {...field}
                           placeholder="Enter date of birth"
@@ -194,24 +228,25 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
                   </FormItem>
                 )}
               />
-              <FormField
+              {/* <FormField
                 control={form.control}
                 name="isActive"
                 render={({ field }) => (
-                  <FormItem className="flex w-full">
-                    <FormLabel className="mt-2 flex w-1/3 items-center text-nowrap">
+                  <FormItem className="flex items-center gap-4">
+                    <FormLabel className="w-1/3">
                       {tUserManagement("active")}
                     </FormLabel>
                     <FormControl>
                       <Switch
                         checked={field.value}
                         onCheckedChange={field.onChange}
+                        className="w-10"
                       />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
-              />
+              /> */}
             </div>
             <div className="flex w-full items-center justify-end gap-4">
               <Button disabled={pending} type="submit">

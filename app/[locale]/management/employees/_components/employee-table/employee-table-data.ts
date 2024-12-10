@@ -1,6 +1,6 @@
 import { type User } from "@/lib/types/models"
 
-export const userTableData: User[] = [
+export const employeeTableData: User[] = [
   {
     userId: "u8gr56j7",
     email: "ken.adams@gmail.com",
@@ -11,7 +11,8 @@ export const userTableData: User[] = [
     avatar: "https://i.pravatar.cc/150?u=u8gr56j7",
     isActive: true,
     gender: "Male",
-    role: "User",
+    role: "Employee",
+    address: "123 Main St, Anytown, USA",
   },
   {
     userId: "v2yt34e8",
@@ -23,7 +24,8 @@ export const userTableData: User[] = [
     avatar: "https://i.pravatar.cc/150?u=v2yt34e8",
     isActive: false,
     gender: "Female",
-    role: "User",
+    role: "Employee",
+    address: "456 Elm St, Anytown, USA",
   },
   {
     userId: "a9bt21l0",
@@ -36,6 +38,7 @@ export const userTableData: User[] = [
     isActive: true,
     gender: "Male",
     role: "Employee",
+    address: "789 Oak St, Anytown, USA",
   },
   {
     userId: "j5mq47o3",
@@ -47,7 +50,8 @@ export const userTableData: User[] = [
     avatar: "https://i.pravatar.cc/150?u=j5mq47o3",
     isActive: true,
     gender: "Male",
-    role: "User",
+    role: "Employee",
+    address: "101 Pine St, Anytown, USA",
   },
   {
     userId: "k8hr52w2",
@@ -59,6 +63,7 @@ export const userTableData: User[] = [
     avatar: "https://i.pravatar.cc/150?u=k8hr52w2",
     isActive: false,
     gender: "Female",
-    role: "User",
+    role: "Employee",
+    address: "202 Maple St, Anytown, USA",
   },
 ]

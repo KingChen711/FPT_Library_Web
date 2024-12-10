@@ -71,7 +71,9 @@
     "email": "Email không hợp lệ",
     "min2": "Phải có ít nhất 2 kí tự",
     "max50": "Phải có không quá 50 kí tự",
-    "min6": "Phải có ít nhất 6 kí tự"
+    "min6": "Phải có ít nhất 6 kí tự",
+    "length_10": "Phải có 10 kí tự",
+    "required": "Bắt buộc"
   },
   "Me": {
     "Account": {
@@ -99,7 +101,8 @@
     }
   },
   "UserManagement": {
-    "users": "Quản lí người dùng",
+    "userManagement": "Quản lí người dùng",
+    "employeeManagement": "Quản lí nhân viên",
     "import": "Nhập dữ liệu",
     "export": "Xuất dữ liệu",
     "firstName": "Họ",
@@ -126,10 +129,10 @@
       "columnSeparator": "Ngăn cách cột",
       "SelectColumnSeparator": {
         "placeholder": "Ngăn cách cột",
-        "comma": "Phép ,",
-        "tab": "Tab",
-        "semicolon": "Phép;",
-        "colon": "Phép:"
+        "comma": "Dấu phẩy",
+        "tab": "Dấu tab",
+        "semicolon": "Dấu chấm phẫy",
+        "colon": "Dấu phẩy"
       },
       "importTemplate": "Nhập kiểu mẫu",
       "download": "Tải về",
@@ -144,6 +147,13 @@
       "addUser": "Thêm người dùng",
       "editUser": "Sửa người dùng",
       "deleteUser": "Xóa người dùng",
+      "saveBtn": "Lưu",
+      "cancelBtn": "Hủy"
+    },
+    "EmployeeDialog": {
+      "addUser": "Thêm nhân viên",
+      "editUser": "Sửa nhân viên",
+      "deleteUser": "Xóa nhân viên",
       "saveBtn": "Lưu",
       "cancelBtn": "Hủy"
     }
