@@ -24,7 +24,7 @@ const UserManagementPage = async ({ params }: UserManagementPageProps) => {
           <h1 className="text-2xl font-semibold">{t("users")}</h1>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="outline">
+          <Button variant="outline" className="bg-primary-foreground">
             <FileUp size={16} /> {t("export")}
           </Button>
           <UserDialogImport />
@@ -32,7 +32,6 @@ const UserManagementPage = async ({ params }: UserManagementPageProps) => {
         </div>
       </div>
       <div className="w-full rounded-lg bg-primary-foreground p-4">
-        {/* <UserHeaderTab locale={params.locale} /> */}
         <UserTable />
       </div>
     </div>

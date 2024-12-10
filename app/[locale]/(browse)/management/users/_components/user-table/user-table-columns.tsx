@@ -1,16 +1,17 @@
 import { type ColumnDef } from "@tanstack/react-table"
 import {
   ArrowUpDown,
-  Eye,
   EyeOff,
   MoreHorizontal,
   SquarePen,
+  Trash,
+  User2,
 } from "lucide-react"
 
 import { type User } from "@/lib/types/models"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -20,38 +21,46 @@ import {
 
 const UserTableColumns: ColumnDef<User>[] = [
   {
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={
-          table.getIsAllPageRowsSelected() ||
-          (table.getIsSomePageRowsSelected() && "indeterminate")
-        }
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-      />
+    accessorKey: "userId",
+    header: ({ column }) => (
+      <div className="flex w-full items-center gap-2 font-semibold">No</div>
     ),
+    cell: ({ row }) => <div>{row.index + 1}</div>,
+  },
+  {
+    accessorKey: "email",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex w-full cursor-pointer items-center gap-2 font-semibold"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Email
+          <ArrowUpDown size={16} />
+        </div>
+      )
+    },
     cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-      />
+      <div className="flex items-center gap-2 lowercase">
+        <Avatar className="size-8">
+          <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+        <div>{row.getValue("email")}</div>
+      </div>
     ),
-    enableSorting: false,
-    enableHiding: false,
   },
   {
     accessorKey: "firstName",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
+        <div
+          className="flex w-full cursor-pointer items-center gap-2 font-semibold"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           First name
-          <ArrowUpDown />
-        </Button>
+          <ArrowUpDown size={16} />
+        </div>
       )
     },
     cell: ({ row }) => (
@@ -62,48 +71,31 @@ const UserTableColumns: ColumnDef<User>[] = [
     accessorKey: "lastName",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          className="w-full"
+        <div
+          className="flex w-full cursor-pointer items-center gap-2 font-semibold"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Last Name
-          <ArrowUpDown />
-        </Button>
+          Last name
+          <ArrowUpDown size={16} />
+        </div>
       )
     },
     cell: ({ row }) => (
       <div className="lowercase">{row.getValue("lastName")}</div>
     ),
   },
-  {
-    accessorKey: "email",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          className="w-full"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Email
-          <ArrowUpDown />
-        </Button>
-      )
-    },
-    cell: ({ row }) => <div className="lowercase">{row.getValue("email")}</div>,
-  },
+
   {
     accessorKey: "dob",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          className="w-full"
+        <div
+          className="flex w-full cursor-pointer items-center justify-center gap-2 font-semibold"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Date of birth
-          <ArrowUpDown />
-        </Button>
+          <ArrowUpDown size={16} />
+        </div>
       )
     },
     cell: ({ row }) => (
@@ -116,14 +108,13 @@ const UserTableColumns: ColumnDef<User>[] = [
     accessorKey: "phone",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          className="w-full"
+        <div
+          className="flex w-full cursor-pointer items-center justify-center gap-2 font-semibold"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
           Phone number
-          <ArrowUpDown />
-        </Button>
+          <ArrowUpDown size={16} />
+        </div>
       )
     },
     cell: ({ row }) => (
@@ -133,37 +124,70 @@ const UserTableColumns: ColumnDef<User>[] = [
     ),
   },
   {
-    accessorKey: "isActive",
+    accessorKey: "phone",
     header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          className="w-full"
+        <div
+          className="flex w-full cursor-pointer items-center justify-center gap-2 font-semibold"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Status
-          <ArrowUpDown />
-        </Button>
+          Phone number
+          <ArrowUpDown size={16} />
+        </div>
+      )
+    },
+    cell: ({ row }) => (
+      <div className="w-full text-center lowercase">
+        {row.getValue("phone")}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "address",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex w-full cursor-pointer items-center justify-center gap-2 font-semibold"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Address
+          <ArrowUpDown size={16} />
+        </div>
       )
     },
     cell: ({ row }) => (
       <div className="flex w-full justify-center text-center capitalize">
-        {row.getValue("isActive") ? (
-          <Badge className="flex w-4/5 justify-center bg-success text-center hover:bg-success">
-            Active
-          </Badge>
-        ) : (
-          <Badge className="flex w-4/5 justify-center text-center">
-            Inactive
-          </Badge>
-        )}
+        {row.getValue("address")}
       </div>
+    ),
+  },
+  {
+    accessorKey: "role",
+    header: ({ column }) => {
+      return (
+        <div
+          className="flex w-full cursor-pointer items-center justify-center gap-2 font-semibold"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Role
+          <ArrowUpDown size={16} />
+        </div>
+      )
+    },
+    cell: ({ row }) => (
+      <Badge className="flex w-full justify-center text-center capitalize">
+        {row.getValue("role")}
+      </Badge>
     ),
   },
   {
     id: "actions",
     enableHiding: false,
-    header: () => <div className="w-full text-center">Actions</div>,
+    header: () => (
+      <div className="flex w-full cursor-pointer items-center justify-center gap-2 font-semibold">
+        Actions
+      </div>
+    ),
     cell: ({ row }) => {
       const payment = row.original
       console.log("🚀 ~ payment:", payment)
@@ -171,7 +195,10 @@ const UserTableColumns: ColumnDef<User>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="size-8 p-0">
+            <Button
+              variant="ghost"
+              className="flex size-8 w-full justify-center p-0"
+            >
               <MoreHorizontal />
             </Button>
           </DropdownMenuTrigger>
@@ -180,10 +207,13 @@ const UserTableColumns: ColumnDef<User>[] = [
               <SquarePen /> Edit
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
-              <Eye /> Activate
+              <User2 /> Change role
             </DropdownMenuItem>
             <DropdownMenuItem className="cursor-pointer">
-              <EyeOff /> Deactivate
+              <EyeOff /> De-activate user
+            </DropdownMenuItem>
+            <DropdownMenuItem className="cursor-pointer">
+              <Trash /> Delete
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -12,6 +12,7 @@ export const userTableData: User[] = [
     isActive: true,
     gender: "Male",
     role: "User",
+    address: "123 Main St, Anytown, USA",
   },
   {
     userId: "v2yt34e8",
@@ -24,6 +25,7 @@ export const userTableData: User[] = [
     isActive: false,
     gender: "Female",
     role: "User",
+    address: "456 Elm St, Anytown, USA",
   },
   {
     userId: "a9bt21l0",
@@ -35,7 +37,8 @@ export const userTableData: User[] = [
     avatar: "https://i.pravatar.cc/150?u=a9bt21l0",
     isActive: true,
     gender: "Male",
-    role: "Employee",
+    role: "User",
+    address: "789 Oak St, Anytown, USA",
   },
   {
     userId: "j5mq47o3",
@@ -48,6 +51,7 @@ export const userTableData: User[] = [
     isActive: true,
     gender: "Male",
     role: "User",
+    address: "101 Pine St, Anytown, USA",
   },
   {
     userId: "k8hr52w2",
@@ -60,5 +64,6 @@ export const userTableData: User[] = [
     isActive: false,
     gender: "Female",
     role: "User",
+    address: "202 Maple St, Anytown, USA",
   },
 ]
