@@ -97,7 +97,8 @@
     }
   },
   "UserManagement": {
-    "users": "User Management",
+    "userManagement": "User Management",
+    "employeeManagement": "Employee Management",
     "import": "Import",
     "export": "Export",
     "firstName": "First name",
@@ -142,6 +143,13 @@
       "addUser": "Add user",
       "editUser": "Edit user",
       "deleteUser": "Delete user",
+      "saveBtn": "Save",
+      "cancelBtn": "Cancel"
+    },
+    "EmployeeDialog": {
+      "addUser": "Add employee",
+      "editUser": "Edit employee",
+      "deleteUser": "Delete employee",
       "saveBtn": "Save",
       "cancelBtn": "Cancel"
     }

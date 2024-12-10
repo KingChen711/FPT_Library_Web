@@ -22,7 +22,7 @@ import {
 const UserTableColumns: ColumnDef<User>[] = [
   {
     accessorKey: "userId",
-    header: ({ column }) => (
+    header: () => (
       <div className="flex w-full items-center gap-2 font-semibold">No</div>
     ),
     cell: ({ row }) => <div>{row.index + 1}</div>,

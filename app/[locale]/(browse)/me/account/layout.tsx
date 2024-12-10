@@ -1,7 +1,8 @@
 import React, { type ReactNode } from "react"
 
-import LeftSidebar from "../../management/_component/left-sidebar"
-import ManagementNavbar from "../../management/_component/management-navbar"
+import LeftSidebar from "@/app/[locale]/management/_components/left-sidebar"
+import ManagementNavbar from "@/app/[locale]/management/_components/management-navbar"
+
 import HeaderTabAccount from "./_components/account-header-tab"
 
 type AccountLayoutProps = {

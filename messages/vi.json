@@ -101,7 +101,8 @@
     }
   },
   "UserManagement": {
-    "users": "Quản lí người dùng",
+    "userManagement": "Quản lí người dùng",
+    "employeeManagement": "Quản lí nhân viên",
     "import": "Nhập dữ liệu",
     "export": "Xuất dữ liệu",
     "firstName": "Họ",
@@ -146,6 +147,13 @@
       "addUser": "Thêm người dùng",
       "editUser": "Sửa người dùng",
       "deleteUser": "Xóa người dùng",
+      "saveBtn": "Lưu",
+      "cancelBtn": "Hủy"
+    },
+    "EmployeeDialog": {
+      "addUser": "Thêm nhân viên",
+      "editUser": "Sửa nhân viên",
+      "deleteUser": "Xóa nhân viên",
       "saveBtn": "Lưu",
       "cancelBtn": "Hủy"
     }

@@ -21,7 +21,7 @@ const UserManagementPage = async ({ params }: UserManagementPageProps) => {
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-8">
-          <h1 className="text-2xl font-semibold">{t("users")}</h1>
+          <h1 className="text-2xl font-semibold">{t("userManagement")}</h1>
         </div>
         <div className="flex items-center gap-4">
           <Button variant="outline" className="bg-primary-foreground">
