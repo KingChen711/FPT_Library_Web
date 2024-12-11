@@ -1,5 +1,6 @@
 import React from "react"
 import Image from "next/image"
+import { routing } from "@/i18n/routing"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
 import { setRequestLocale } from "next-intl/server"
 
@@ -9,6 +10,10 @@ import LoginForm from "../_components/login-form"
 
 type Props = {
   params: { locale: string }
+}
+
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }))
 }
 
 async function LoginPage({ params: { locale } }: Props) {

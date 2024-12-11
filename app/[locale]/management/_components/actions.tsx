@@ -1,5 +1,7 @@
 "use client"
 
+import { ThemeToggle } from "@/components/theme-toggle"
+
 // import { ClerkLoaded, ClerkLoading, SignedIn } from "@clerk/clerk-react"
 // import { Loader2 } from "lucide-react"
 
@@ -20,6 +22,7 @@ function Actions() {
       </ClerkLoaded>
 
       <MobileNavbar /> */}
+      <ThemeToggle />
       <div className="size-9 rounded-full bg-red-500"></div>
     </div>
   )

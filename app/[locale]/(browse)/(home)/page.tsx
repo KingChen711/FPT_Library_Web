@@ -1,5 +1,6 @@
-import { getTranslations, setRequestLocale } from "next-intl/server"
+import { setRequestLocale } from "next-intl/server"
 
+import { getTranslations } from "@/lib/get-translations"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 type Props = {

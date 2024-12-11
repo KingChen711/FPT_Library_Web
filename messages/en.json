@@ -143,5 +143,31 @@
       "saveBtn": "Save",
       "cancelBtn": "Cancel"
     }
+  },
+  "RoleManagement": {
+    "Roles": "Roles",
+    "Role horizontal": "Role horizontal",
+    "Role vertical": "Role vertical",
+    "Create role": "Create role",
+    "English name": "English name",
+    "Vietnamese name": "Vietnamese name",
+    "Role type": "Role type",
+    "User": "User",
+    "Employee": "Employee",
+    "Cancel": "Cancel",
+    "Create": "Create",
+    "Feature": "Feature",
+    "Role": "Role",
+    "Edit": "Edit",
+    "Save": "Save",
+    "Delete": "Delete",
+    "Edit role": "Edit role",
+    "Delete role": "Delete role",
+    "Type": "Type",
+    "to confirm.": "to confirm.",
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm.",
+    "Update access level": "Update access level",
+    "message confirm change access level": "If you confirm, the access level of <role>{role}</role> will be changed to <permission>{permission}</permission> for the <feature>{feature}</feature> feature.",
+    "Confirm": "Confirm"
   }
 }

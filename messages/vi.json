@@ -147,5 +147,29 @@
       "saveBtn": "Lưu",
       "cancelBtn": "Hủy"
     }
+  },
+  "RoleManagement": {
+    "Roles": "Vai trò",
+    "Role horizontal": "Vai trò ngang",
+    "Role vertical": "Vai trò dọc",
+    "Create role": "Tạo vai trò",
+    "English name": "Tên tiếng Anh",
+    "Vietnamese name": "Tên tiếng Việt",
+    "Role type": "Loại vai trò",
+    "User": "Người dùng",
+    "Employee": "Nhân viên",
+    "Cancel": "Hủy",
+    "Create": "Tạo",
+    "Feature": "Tính năng",
+    "Role": "Vai trò",
+    "Edit": "Chỉnh sửa",
+    "Save": "Lưu",
+    "Delete": "Xóa",
+    "Edit role": "Chỉnh sửa vai trò",
+    "Delete role": "Xóa vai trò",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận.",
+    "Update access level": "Chỉnh sửa mức độ truy cập",
+    "message confirm change access level": "Nếu bạn xác nhận, mức độ truy cập của <role>{role}</role> sẽ thay đổi thành <permission>{permission}</permission> cho tính năng <feature>{feature}</feature>.",
+    "Confirm": "Xác nhận"
   }
 }

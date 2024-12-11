@@ -19,11 +19,12 @@ const getUserPermissions = async (
 ): Promise<TUserPermissions> => {
   try {
     const { data } = await http.get<TUserPermissions>(
-      `/api/roles/user-permissions?isRoleVerticalLayout=${isRoleVerticalLayout}`
-    )
-
-    data.columnHeaders.unshift(
-      isRoleVerticalLayout ? "Role name" : "Feature name"
+      `/api/roles/user-permissions?isRoleVerticalLayout=${isRoleVerticalLayout}`,
+      {
+        next: {
+          tags: ["user-permissions"],
+        },
+      }
     )
 
     return data

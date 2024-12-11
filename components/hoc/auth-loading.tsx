@@ -1,20 +1,20 @@
-"use client"
+// "use client"
 
-import React from "react"
-import { useAuth } from "@/contexts/auth-provider"
+// import React from "react"
+// import { useAuth } from "@/contexts/auth-provider"
 
-type Props = {
-  children: React.ReactNode
-}
+// type Props = {
+//   children: React.ReactNode
+// }
 
-function AuthLoading({ children }: Props) {
-  const { isLoadingAuth } = useAuth()
+// function AuthLoading({ children }: Props) {
+//   const { isLoadingAuth } = useAuth()
 
-  if (!isLoadingAuth) {
-    return null
-  }
+//   if (!isLoadingAuth) {
+//     return null
+//   }
 
-  return <>{children}</>
-}
+//   return <>{children}</>
+// }
 
-export default AuthLoading
+// export default AuthLoading

@@ -1,7 +1,7 @@
 import Link from "next/link"
 import { FileDown } from "lucide-react"
-import { getTranslations } from "next-intl/server"
 
+import { getTranslations } from "@/lib/get-translations"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
