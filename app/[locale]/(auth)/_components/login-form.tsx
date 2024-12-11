@@ -106,7 +106,7 @@ function LoginForm() {
       <div className="flex flex-wrap gap-3">
         {/* @ts-ignore */}
         <FacebookLogin
-          appId="924316922705111"
+          appId="598749422623507"
           autoLoad={false}
           callback={handleFacebookLogin}
           render={(renderProps) => (
