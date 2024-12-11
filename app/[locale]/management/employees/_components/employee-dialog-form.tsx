@@ -7,9 +7,9 @@ import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import {
-  userDialogSchema,
-  type TUserDialogSchema,
-} from "@/lib/validations/auth/user-dialog"
+  employeeDialogSchema,
+  type TEmployeeDialogSchema,
+} from "@/lib/validations/auth/employee-dialog"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -35,18 +35,18 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-type UserDialogFormProps = {
+type EmployeeDialogFormProps = {
   mode: "create" | "edit"
 }
 
-const UserDialogForm = ({ mode }: UserDialogFormProps) => {
-  const tUserDialog = useTranslations("UserManagement.UserDialog")
+const EmployeeDialogForm = ({ mode }: EmployeeDialogFormProps) => {
+  const EmployeeDialog = useTranslations("UserManagement.EmployeeDialog")
   const tUserManagement = useTranslations("UserManagement")
 
   const [pending, startTransition] = useTransition()
 
-  const form = useForm<TUserDialogSchema>({
-    resolver: zodResolver(userDialogSchema),
+  const form = useForm<TEmployeeDialogSchema>({
+    resolver: zodResolver(employeeDialogSchema),
     defaultValues: {
       role: "",
       email: "",
@@ -60,7 +60,7 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
     },
   })
 
-  const onSubmit = async (values: TUserDialogSchema) => {
+  const onSubmit = async (values: TEmployeeDialogSchema) => {
     startTransition(async () => {
       console.log(values)
     })
@@ -75,15 +75,17 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
       <Button asChild>
         <DialogTrigger>
           <Plus size={16} />
-          {mode === "create" ? tUserDialog("addUser") : tUserDialog("editUser")}
+          {mode === "create"
+            ? EmployeeDialog("addUser")
+            : EmployeeDialog("editUser")}
         </DialogTrigger>
       </Button>
       <DialogContent className="m-0 overflow-hidden p-0 pb-4">
         <DialogHeader className="w-full space-y-4 bg-primary p-4">
           <DialogTitle className="text-center text-primary-foreground">
             {mode === "create"
-              ? tUserDialog("addUser")
-              : tUserDialog("editUser")}
+              ? EmployeeDialog("addUser")
+              : EmployeeDialog("editUser")}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -228,29 +230,10 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
                   </FormItem>
                 )}
               />
-              {/* <FormField
-                control={form.control}
-                name="isActive"
-                render={({ field }) => (
-                  <FormItem className="flex items-center gap-4">
-                    <FormLabel className="w-1/3">
-                      {tUserManagement("active")}
-                    </FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        className="w-10"
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              /> */}
             </div>
             <div className="flex w-full items-center justify-end gap-4">
               <Button disabled={pending} type="submit">
-                {tUserDialog("saveBtn")}
+                {EmployeeDialog("saveBtn")}
                 {pending && <Loader2 className="size-4 animate-spin" />}
               </Button>
               <Button
@@ -258,7 +241,7 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
                 disabled={pending}
                 variant={"ghost"}
               >
-                {tUserDialog("cancelBtn")}
+                {EmployeeDialog("cancelBtn")}
                 {pending && <Loader2 className="size-4 animate-spin" />}
               </Button>
             </div>
@@ -269,4 +252,4 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
   )
 }
 
-export default UserDialogForm
+export default EmployeeDialogForm

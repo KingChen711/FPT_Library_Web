@@ -19,7 +19,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-const UserTableColumns: ColumnDef<User>[] = [
+const EmployeeTableColumns: ColumnDef<User>[] = [
   {
     accessorKey: "userId",
     header: () => (
@@ -222,4 +222,4 @@ const UserTableColumns: ColumnDef<User>[] = [
   },
 ]
 
-export default UserTableColumns
+export default EmployeeTableColumns

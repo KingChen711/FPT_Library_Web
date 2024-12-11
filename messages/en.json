@@ -67,7 +67,9 @@
     "email": "Invalid email",
     "min2": "Must contain at least 2 character(s)",
     "max50": "Must contain at most 50 character(s)",
-    "min6": "Must contain at least 6 character(s)"
+    "min6": "Must contain at least 6 character(s)",
+    "length_10": "Must contain 10 character(s)",
+    "required": "Required"
   },
   "Me": {
     "Account": {
@@ -95,7 +97,8 @@
     }
   },
   "UserManagement": {
-    "users": "User Management",
+    "userManagement": "User Management",
+    "employeeManagement": "Employee Management",
     "import": "Import",
     "export": "Export",
     "firstName": "First name",
@@ -121,11 +124,11 @@
       },
       "columnSeparator": "Column Separator",
       "SelectColumnSeparator": {
-        "placeholder": "Type",
-        "comma": "Mark ,",
+        "placeholder": "Type separator",
+        "comma": "Comma",
         "tab": "Tab",
-        "semicolon": "Mark ;",
-        "colon": "Mark :"
+        "semicolon": "Semicolon",
+        "colon": "Colon"
       },
       "importTemplate": "Import Template",
       "download": "Download",
@@ -140,6 +143,13 @@
       "addUser": "Add user",
       "editUser": "Edit user",
       "deleteUser": "Delete user",
+      "saveBtn": "Save",
+      "cancelBtn": "Cancel"
+    },
+    "EmployeeDialog": {
+      "addUser": "Add employee",
+      "editUser": "Edit employee",
+      "deleteUser": "Delete employee",
       "saveBtn": "Save",
       "cancelBtn": "Cancel"
     }

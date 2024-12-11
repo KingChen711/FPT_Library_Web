@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 
-const UserDialogImport = () => {
+const EmployeeDialogImport = () => {
   const t = useTranslations("UserManagement.UserDialogImport")
   const tUserManagement = useTranslations("UserManagement")
 
@@ -175,4 +175,4 @@ const UserDialogImport = () => {
   )
 }
 
-export default UserDialogImport
+export default EmployeeDialogImport

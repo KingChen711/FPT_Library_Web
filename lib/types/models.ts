@@ -9,6 +9,7 @@ export type User = {
   isActive: boolean
   gender: string
   role: string // User, Employee
+  address: string
 }
 
 export type Role = {

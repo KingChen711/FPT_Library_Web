@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const userDialogSchema = z.object({
+export const employeeDialogSchema = z.object({
   email: z
     .string()
     .email({ message: "email" })
@@ -28,4 +28,4 @@ export const userDialogSchema = z.object({
   role: z.string().min(1, { message: "required" }),
 })
 
-export type TUserDialogSchema = z.infer<typeof userDialogSchema>
+export type TEmployeeDialogSchema = z.infer<typeof employeeDialogSchema>

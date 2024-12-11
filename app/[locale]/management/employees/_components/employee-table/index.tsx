@@ -48,19 +48,19 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import UserTableColumns from "./user-table-columns"
-import { userTableData } from "./user-table-data"
-import UserTableFilter from "./user-table-filter"
+import EmployeeTableColumns from "./employee-table-columns"
+import { employeeTableData } from "./employee-table-data"
+import EmployeeTableFilter from "./employee-table-filter"
 
-const UserTable = () => {
+const EmployeeTable = () => {
   const [sorting, setSorting] = useState<SortingState>([])
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({})
   const [rowSelection, setRowSelection] = useState({})
 
   const table = useReactTable({
-    data: userTableData,
-    columns: UserTableColumns,
+    data: employeeTableData,
+    columns: EmployeeTableColumns,
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
@@ -88,7 +88,7 @@ const UserTable = () => {
           }
           className="max-w-sm"
         />
-        <UserTableFilter />
+        <EmployeeTableFilter />
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" className="ml-auto">
@@ -158,7 +158,7 @@ const UserTable = () => {
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={UserTableColumns.length}
+                  colSpan={EmployeeTableColumns.length}
                   className="h-24 text-center"
                 >
                   No results.
@@ -217,4 +217,4 @@ const UserTable = () => {
   )
 }
 
-export default UserTable
+export default EmployeeTable
