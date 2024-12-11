@@ -1,10 +1,9 @@
 import React from "react"
 import getUserPermissions from "@/queries/roles/get-user-permissions"
-import { Plus } from "lucide-react"
 import { z } from "zod"
 
+import { getTranslations } from "@/lib/get-translations"
 import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
 import {
   Table,
   TableBody,
@@ -14,7 +13,11 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import AccessLevelDropdown from "./_components/access-level-dropdown"
+import AccessLevelContextMenu from "./_components/access-level-context-menu"
+import CreateRoleDialog from "./_components/create-role-dialog"
+import DiagonalTableCell from "./_components/diagonal-table-cell"
+import RoleActionContextMenu from "./_components/role-action-context-menu"
+import RoleLayoutDropdown from "./_components/role-layout-dropdown"
 
 const rolesManagementSchema = z.object({
   isRoleVerticalLayout: z.enum(["true", "false"]).catch("false"),
@@ -29,86 +32,91 @@ type Props = {
 async function RolesManagementPage({ searchParams }: Props) {
   const { isRoleVerticalLayout } = rolesManagementSchema.parse(searchParams)
 
-  const tableData = await getUserPermissions(Boolean(isRoleVerticalLayout))
+  const t = await getTranslations("RoleManagement")
+  const tableData = await getUserPermissions(isRoleVerticalLayout === "true")
 
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-        <h3 className="text-2xl font-semibold">Roles</h3>
+        <h3 className="text-2xl font-semibold">{t("Roles")}</h3>
         <div className="flex items-center gap-x-4">
-          {/* <Button
-            variant="outline"
-            onClick={() => setUpdateMode((prev) => !prev)}
-          >
-            {updateMode ? "Cancel" : "Update permissions"}
-          </Button> */}
-          <Button className="flex items-center justify-end gap-x-1 leading-none">
-            <Plus />
-            <div>Create role</div>
-          </Button>
+          <RoleLayoutDropdown />
+          <CreateRoleDialog />
         </div>
       </div>
       <div className="my-4 grid w-full">
         <div className="relative overflow-x-auto">
-          {/* {isPending ? (
-            <Table className="mb-2 border-collapse">
-              <TableHeader className="rounded-t-xl bg-primary">
-                <TableRow>
-                  {Array(10)
-                    .fill(0)
-                    .map((_, i) => (
-                      <TableHead key={i}>
-                        <Skeleton className="h-6 w-28"></Skeleton>
-                      </TableHead>
-                    ))}
-                </TableRow>
-              </TableHeader>
-              <TableBody className="rounded-b-xl bg-card">
-                <TableRowsSkeleton pageSize={7} colSpan={10} />
-              </TableBody>
-            </Table>
-          ) : ( */}
-          <Table className="mb-2 border-collapse">
-            <TableHeader className="rounded-t-xl bg-primary">
+          <Table className="mb-2 border-collapse rounded-xl border-y border-r">
+            <TableHeader
+              className={cn(
+                isRoleVerticalLayout === "false"
+                  ? "bottom-2 left-2"
+                  : "right-2 top-2"
+              )}
+            >
               <TableRow>
+                <DiagonalTableCell />
                 {tableData?.columnHeaders.map((headerContent, i) => (
-                  <TableHead
-                    key={headerContent}
-                    className={cn(i === 0 && "sticky left-0 bg-primary")}
-                  >
-                    <div
-                      className={cn(
-                        "text-nowrap pl-4 font-bold text-primary-foreground",
-                        i === 0 && "pl-1"
-                      )}
-                    >
-                      {headerContent}
-                    </div>
+                  <TableHead key={headerContent}>
+                    {isRoleVerticalLayout === "false" ? (
+                      <RoleActionContextMenu
+                        roleId={tableData.dataRows[0].cells[i + 1].colId}
+                        roleName={headerContent}
+                      />
+                    ) : (
+                      <div className="text-nowrap pl-4 font-bold text-primary">
+                        {headerContent}
+                      </div>
+                    )}
                   </TableHead>
                 ))}
               </TableRow>
             </TableHeader>
             <TableBody className="rounded-b-xl bg-card">
-              {tableData?.dataRows.map((row) => (
+              {tableData?.dataRows.map((row, rowIdx) => (
                 <TableRow key={row.cells[1].rowId}>
-                  {row.cells.map((cell) => (
+                  {row.cells.map((cell, colIdx) => (
                     <TableCell
                       key={cell.colId}
                       className={cn(
-                        "z-0 w-[200xp] text-nowrap font-medium",
-                        (!cell.colId || !cell.rowId) &&
-                          "sticky left-0 z-[1000] bg-card"
+                        "z-10 w-[200xp] text-nowrap font-medium",
+                        (!cell.colId || !cell.rowId) && "sticky left-0 bg-card"
                       )}
                     >
                       {cell.colId && cell.rowId ? (
-                        <AccessLevelDropdown
-                          // disabled={!updateMode}
+                        <AccessLevelContextMenu
+                          roleName={
+                            isRoleVerticalLayout === "true"
+                              ? row.cells[0].cellContent
+                              : tableData?.columnHeaders[colIdx]
+                          }
+                          featureName={
+                            isRoleVerticalLayout === "true"
+                              ? tableData?.columnHeaders[colIdx]
+                              : row.cells[0].cellContent
+                          }
+                          colId={cell.colId}
+                          rowId={cell.rowId}
+                          isRoleVerticalLayout={isRoleVerticalLayout === "true"}
                           initPermissionId={cell.permissionId}
                         />
                       ) : (
-                        <div className="text-nowrap pl-1 font-bold">
-                          {cell.cellContent}
-                        </div>
+                        <>
+                          {isRoleVerticalLayout === "true" ? (
+                            <RoleActionContextMenu
+                              roleId={
+                                tableData?.dataRows[rowIdx].cells[1].rowId
+                              }
+                              roleName={cell.cellContent}
+                            />
+                          ) : (
+                            <div className="text-nowrap pl-1 font-bold text-primary">
+                              {cell.cellContent}
+                            </div>
+                          )}
+
+                          <div className="absolute inset-0 -z-10 border-x"></div>
+                        </>
                       )}
                     </TableCell>
                   ))}
@@ -116,7 +124,6 @@ async function RolesManagementPage({ searchParams }: Props) {
               ))}
             </TableBody>
           </Table>
-          {/* )} */}
         </div>
       </div>
     </div>

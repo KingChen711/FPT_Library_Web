@@ -19,7 +19,7 @@
 
 # production
 /build
-package-lock.json
+
 
 # misc
 .DS_Store
@@ -41,3 +41,4 @@ yarn-error.log*
 next-env.d.ts
 
 bun.lockb
+
