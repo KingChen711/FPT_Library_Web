@@ -1,21 +1,65 @@
 import "server-only"
 
-import { getPlaiceholder } from "plaiceholder"
+import jwt from "jsonwebtoken"
 
-export default async function getBase64(imageUrl: string) {
+// import { getPlaiceholder } from "plaiceholder"
+
+interface DecodedToken {
+  email: string
+  exp: number
+  //...
+}
+
+// export default async function getBase64(imageUrl: string) {
+//   try {
+//     const res = await fetch(imageUrl)
+
+//     if (!res.ok) {
+//       throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`)
+//     }
+
+//     const buffer = await res.arrayBuffer()
+
+//     const { base64 } = await getPlaiceholder(Buffer.from(buffer))
+
+//     return base64
+//   } catch (e) {
+//     if (e instanceof Error) console.log(e.stack)
+//   }
+// }
+
+export function isTokenExpiringSoon(token: string): boolean {
   try {
-    const res = await fetch(imageUrl)
+    // Decode token để lấy payload
+    const decoded = verifyToken(token)
 
-    if (!res.ok) {
-      throw new Error(`Failed to fetch image: ${res.status} ${res.statusText}`)
+    if (!decoded?.exp) {
+      throw new Error("Token không chứa exp")
     }
 
-    const buffer = await res.arrayBuffer()
+    // Thời gian hiện tại (tính bằng giây)
+    const currentTime = Math.floor(Date.now() / 1000)
 
-    const { base64 } = await getPlaiceholder(Buffer.from(buffer))
+    // Thời gian còn lại (tính bằng giây)
+    const timeLeft = decoded.exp - currentTime
 
-    return base64
-  } catch (e) {
-    if (e instanceof Error) console.log(e.stack)
+    // Kiểm tra nếu thời gian hết hạn còn dưới 1 tiếng (3600 giây)
+    return timeLeft <= 3600
+  } catch {
+    //default return true to trigger refresh token
+    return true
+  }
+}
+
+export function verifyToken(token: string): DecodedToken | null {
+  try {
+    const verified = jwt.verify(
+      token,
+      process.env.JWT_SECRET_KEY!
+    ) as DecodedToken
+
+    return verified
+  } catch {
+    return null
   }
 }

@@ -1,3 +1,5 @@
+import { type ERoleType } from "./enums"
+
 export type User = {
   userId: string
   email: string
@@ -15,5 +17,5 @@ export type User = {
 export type Role = {
   englishName: string
   vietnameseName: string
-  roleTypeIdx: number
+  roleType: ERoleType
 }

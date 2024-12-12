@@ -1,109 +1,82 @@
-// import "server-only"
+import "server-only"
 
-// import { cache } from "react"
-// import { cookies } from "next/headers"
-// import { redirect } from "@/i18n/routing"
-// import jwt from "jsonwebtoken"
-// import { getLocale } from "next-intl/server"
+import { cache } from "react"
+import { cookies } from "next/headers"
+import { redirect } from "@/i18n/routing"
+import { getLocale } from "next-intl/server"
 
-// import { http } from "@/lib/http"
-// import { type Role, type User } from "@/lib/types/models"
+import { http } from "@/lib/http"
+import { verifyToken } from "@/lib/server-utils"
+import { type ERoleType } from "@/lib/types/enums"
 
-// interface DecodedToken {
-//   userId: string
-//   email: string
+let isAuthenticated = false
 
-//   exp: number
-//   iat: number
-// }
+const getAccessToken = () => {
+  const cookieStore = cookies()
+  const token = cookieStore.get("accessToken")?.value ?? null
+  return token
+}
 
-// function verifyToken(token: string): DecodedToken | null {
-//   try {
-//     const verified = jwt.verify(
-//       token,
-//       process.env.JWT_SECRET_KEY!
-//     ) as DecodedToken
+const protect = async (feature?: string) => {
+  if (!isAuthenticated) {
+    redirect({
+      href: "/login",
+      locale: await getLocale(),
+    })
+  }
 
-//     return verified
-//   } catch {
-//     return null
-//   }
-// }
+  //TODO:handle check feature
+  console.log(feature)
+}
 
-// let isAuthenticated = false
-// let role: ERole | null = null
-// const isAdmin = () => role === ERole.ADMIN
-// const isStaff = () => role === ERole.STAFF
-// const isTeacher = () => role === ERole.TEACHER
-// const isStudent = () => role === ERole.STUDENT
-// const getToken = () => {
-//   const cookieStore = cookies()
-//   const token = cookieStore.get("accessToken")?.value ?? null
-//   return token
-// }
-// const protect = async (inputRole?: ERole) => {
-//   if (!isAuthenticated) {
-//     redirect({
-//       href: "/login",
-//       locale: await getLocale(),
-//     })
-//   }
+type CurrentUser = {
+  email: string
+  firstName: string
+  lastName: string
+  avatar: string
+  role: {
+    englishName: string
+    vietnameseName: string
+    roleType: ERoleType
+  }
+} | null
 
-//   if (!role) return
+const whoAmI = cache(async (): Promise<CurrentUser | null> => {
+  try {
+    const { data } = await http.get<CurrentUser>("/api/auth/current-user", {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+      next: {
+        revalidate: 60,
+        tags: ["who-am-i"],
+      },
+    })
 
-//   if (role !== inputRole)
-//     redirect({
-//       href: "/",
-//       locale: await getLocale(),
-//     })
-// }
+    return data || null
+  } catch {
+    return null
+  }
+})
 
-// type WhoAmIResponse = User & { role: Role }
+export const auth = () => {
+  const token = getAccessToken()
 
-// const whoAmI = cache(async (): Promise<WhoAmIResponse | null> => {
-//   try {
-//     const { data } = await http.get<WhoAmIResponse>("/api/users/who-am-i", {
-//       headers: {
-//         Authorization: `Bearer ${getToken()}`,
-//       },
-//       next: {
-//         revalidate: 60,
-//         tags: ["who-am-i"],
-//       },
-//     })
+  if (!token) {
+    isAuthenticated = false
+  } else {
+    const decodeToken = verifyToken(token)
+    if (!decodeToken) {
+      isAuthenticated = false
+    } else {
+      isAuthenticated = true
+    }
+  }
 
-//     return data || null
-//   } catch {
-//     return null
-//   }
-// })
-
-// export const auth = () => {
-//   const token = getToken()
-
-//   if (!token) {
-//     isAuthenticated = false
-//     role = null
-//   } else {
-//     const decodeToken = verifyToken(token)
-//     if (!decodeToken) {
-//       isAuthenticated = false
-//       role = null
-//     } else {
-//       isAuthenticated = true
-//       role = decodeToken.role
-//     }
-//   }
-
-//   return {
-//     isAuthenticated,
-//     role,
-//     isAdmin,
-//     isStaff,
-//     isTeacher,
-//     isStudent,
-//     getToken,
-//     protect,
-//     whoAmI,
-//   }
-// }
+  return {
+    isAuthenticated,
+    getAccessToken,
+    protect,
+    whoAmI,
+  }
+}

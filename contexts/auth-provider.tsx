@@ -1,117 +1,123 @@
-// "use client"
+"use client"
 
-// import React, { createContext, useContext, useEffect, useMemo } from "react"
-// import {
-//   keepPreviousData,
-//   useQuery,
-//   useQueryClient,
-// } from "@tanstack/react-query"
+import React, { createContext, useContext, useEffect, useMemo } from "react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 
-// import { ERole } from "@/lib/types/enums"
-// import { type Role, type User } from "@/lib/types/models"
+import { http } from "@/lib/http"
+import { type ERoleType } from "@/lib/types/enums"
 
-// type UserWithRole = {
-//   userId: string
-//   role: ERole
-// }
+type Token = {
+  accessToken: string
+  refreshToken: string
+}
 
-// type Token = {
-//   accessToken: string
-//   refreshToken: string
-// }
+type CurrentUser = {
+  email: string
+  firstName: string
+  lastName: string
+  avatar: string
+  role: {
+    englishName: string
+    vietnameseName: string
+    roleType: ERoleType
+  }
+} | null
 
-// type WhoAmIResponse = (User & { role: Role }) | null
+type AuthProviderProps = {
+  children: React.ReactNode
+}
 
-// type AuthProviderProps = {
-//   children: React.ReactNode
-// }
+type AuthContextType = {
+  getAccessToken: () => string | null
+  isLoadingAuth: boolean
+  user: CurrentUser | null
+}
 
-// type AuthContextType = {
-//   getAccessToken: () => string | null
-//   isLoadingAuth: boolean
-//   user: UserWithRole | null
-// }
+export const AuthContext = createContext<AuthContextType | null>(null)
 
-// export const AuthContext = createContext<AuthContextType | null>(null)
+const AuthProvider = ({ children }: AuthProviderProps) => {
+  const queryClient = useQueryClient()
 
-// const AuthProvider = ({ children }: AuthProviderProps) => {
-//   const queryClient = useQueryClient()
+  const { data: token, isFetching: isLoadingToken } = useQuery<
+    Token | undefined
+  >({
+    queryKey: ["token"],
+    queryFn: async () => {
+      try {
+        const res: Token = await fetch("/api/token").then((res) => res.json())
+        return res || undefined
+      } catch {
+        return undefined
+      }
+    },
+  })
 
-//   const { data: token, isLoading: isLoadingToken } = useQuery<Token>({
-//     queryKey: ["token"],
-//     placeholderData: keepPreviousData,
-//     queryFn: () =>
-//       fetch("/api/token")
-//         .then((res) => res.json() ?? undefined)
-//         .catch(() => undefined),
-//   })
+  const { data: userData, isLoading: isLoadingUser } = useQuery({
+    queryKey: ["auth", "who-am-i", token],
+    enabled: token !== undefined,
+    queryFn: async () =>
+      http
+        .get<CurrentUser>("/api/auth/current-user", {
+          headers: {
+            Authorization: `Bearer ${token?.accessToken}`,
+          },
+        })
+        .then((res) => res.data),
+  })
 
-//   const { data: userData, isLoading: isLoadingUser } = useQuery({
-//     queryKey: ["auth", "who-am-i", token],
-//     enabled: token !== undefined,
-//     // queryFn: async () =>
-//     //   axios
-//     //     .get<WhoAmIResponse>("/api/users/who-am-i", {
-//     //       headers: {
-//     //         Authorization: `Bearer ${token}`,
-//     //       },
-//     //     })
-//     //     .then((res) => res.data),
+  const user = useMemo(() => {
+    if (!userData) return null
 
-//     queryFn: () =>
-//       token
-//         ? ({
-//             userId: "user id",
-//             role: { roleName: ERole.ADMIN },
-//           } as WhoAmIResponse)
-//         : null,
-//   })
+    return userData
+  }, [userData])
 
-//   const user = useMemo(() => {
-//     if (!userData) return null
+  const getAccessToken = () => {
+    return token?.accessToken ?? null
+  }
 
-//     return {
-//       ...userData,
-//       role: userData.role.roleName,
-//     }
-//   }, [userData])
+  //refresh token
+  useEffect(() => {
+    const timer = setInterval(
+      () => {
+        queryClient.invalidateQueries({
+          queryKey: ["token"],
+        })
+      },
+      1000 * 60 * 20
+    )
 
-//   const getAccessToken = () => {
-//     return token?.accessToken ?? null
-//   }
+    return () => {
+      clearInterval(timer)
+    }
+  }, [queryClient])
 
-//   //refresh token
-//   useEffect(() => {
-//     const timer = setInterval(() => {
-//       queryClient.invalidateQueries({
-//         queryKey: ["token"],
-//       })
-//     }, 1000 * 60)
+  useEffect(() => {
+    console.log({
+      isLoadingToken,
+      isLoadingUser,
+      user,
+    })
+  }, [isLoadingToken, isLoadingUser, user])
 
-//     return () => {
-//       clearInterval(timer)
-//     }
-//   }, [queryClient])
+  return (
+    <AuthContext.Provider
+      value={{
+        getAccessToken,
+        isLoadingAuth: isLoadingToken || isLoadingUser,
+        user,
+      }}
+    >
+      {children}
+    </AuthContext.Provider>
+  )
+}
 
-//   return (
-//     <AuthContext.Provider
-//       value={{
-//         getAccessToken,
-//         isLoadingAuth: isLoadingToken || isLoadingUser,
-//         user,
-//       }}
-//     >
-//       {children}
-//     </AuthContext.Provider>
-//   )
-// }
+export default AuthProvider
 
-// export default AuthProvider
-
-// export const useAuth = () => {
-//   const context = useContext(AuthContext)
-//   if (!context) {
-//     throw new Error("useAuth must be used within a AuthProvider")
-//   }
-//   return context
-// }
+export const useAuth = () => {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error("useAuth must be used within a AuthProvider")
+  }
+  return context
+}

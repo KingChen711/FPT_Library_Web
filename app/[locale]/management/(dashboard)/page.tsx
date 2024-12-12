@@ -1,6 +1,8 @@
 import React from "react"
+import { auth } from "@/queries/auth"
 
-function Dashboard() {
+async function Dashboard() {
+  await auth().protect()
   return <div>Dashboard</div>
 }
 
