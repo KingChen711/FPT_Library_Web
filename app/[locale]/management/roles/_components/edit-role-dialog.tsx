@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { ERoleType, IndexToERoleType } from "@/lib/types/enums"
+import { ERoleType } from "@/lib/types/enums"
 import {
   mutateRoleSchema,
   type TMutateRoleSchema,
@@ -66,7 +66,8 @@ function EditRoleDialog({ openEdit, setOpenEdit, roleId }: Props) {
     (data) => {
       form.setValue("englishName", data.englishName)
       form.setValue("vietnameseName", data.vietnameseName)
-      form.setValue("roleTypeIdx", IndexToERoleType.get(data.roleTypeIdx)!)
+      form.setValue("roleTypeIdx", data.roleType)
+      console.log(form.getValues("roleTypeIdx"))
     },
     openEdit
   )
@@ -136,8 +137,8 @@ function EditRoleDialog({ openEdit, setOpenEdit, roleId }: Props) {
                       <FormLabel>{t("Role type")}</FormLabel>
                       <FormControl>
                         <RadioGroup
+                          value={field.value}
                           onValueChange={field.onChange}
-                          defaultValue={field.value}
                           className="flex flex-col space-y-1"
                         >
                           <FormItem className="flex items-center space-x-3 space-y-0">
@@ -145,7 +146,7 @@ function EditRoleDialog({ openEdit, setOpenEdit, roleId }: Props) {
                               <RadioGroupItem value={ERoleType.USER} />
                             </FormControl>
                             <FormLabel className="cursor-pointer font-normal">
-                              {ERoleType.USER}
+                              {t(ERoleType.USER)}
                             </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0">
@@ -153,7 +154,7 @@ function EditRoleDialog({ openEdit, setOpenEdit, roleId }: Props) {
                               <RadioGroupItem value={ERoleType.EMPLOYEE} />
                             </FormControl>
                             <FormLabel className="cursor-pointer font-normal">
-                              {ERoleType.EMPLOYEE}
+                              {t(ERoleType.EMPLOYEE)}
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>

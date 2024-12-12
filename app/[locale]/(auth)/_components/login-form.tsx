@@ -7,6 +7,7 @@ import { useTransition } from "react"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useGoogleLogin } from "@react-oauth/google"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { type ReactFacebookLoginInfo } from "react-facebook-login"
@@ -36,6 +37,7 @@ function LoginForm() {
   const t = useTranslations("LoginPage")
   const locale = useLocale()
   const router = useRouter()
+  const queryClient = useQueryClient()
 
   const [pending, startTransition] = useTransition()
 
@@ -45,6 +47,9 @@ function LoginForm() {
         const res = await loginGoogle(googleRes.code)
 
         if (res.isSuccess) {
+          queryClient.invalidateQueries({
+            queryKey: ["token"],
+          })
           router.push(`/`)
           return
         }
@@ -93,6 +98,9 @@ function LoginForm() {
       const res = await loginFacebook(response.accessToken, response.expiresIn)
 
       if (res.isSuccess) {
+        queryClient.invalidateQueries({
+          queryKey: ["token"],
+        })
         router.push(`/`)
         return
       }
@@ -115,7 +123,7 @@ function LoginForm() {
               variant="outline"
               size="sm"
               className="w-full min-w-40 flex-1"
-              // disabled={pending}
+              disabled={pending}
             >
               <Icons.Facebook className="mr-1 size-3" />
               Facebook
