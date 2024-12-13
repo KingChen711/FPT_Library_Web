@@ -179,5 +179,17 @@
     "Update access level": "Update access level",
     "message confirm change access level": "If you confirm, the access level of <role>{role}</role> will be changed to <permission>{permission}</permission> for the <feature>{feature}</feature> feature.",
     "Confirm": "Confirm"
+  },
+  "Routes": {
+    "Dashboard": "Dashboard",
+    "Books": "Books",
+    "Borrows": "Borrows",
+    "Transactions": "Transactions",
+    "Fines": "Fines",
+    "Users": "Users",
+    "Employees": "Employees",
+    "Roles": "Roles",
+    "System Health": "System health",
+    "System Configuration": "System configuration"
   }
 }
