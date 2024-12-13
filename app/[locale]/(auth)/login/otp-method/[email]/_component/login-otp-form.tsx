@@ -3,6 +3,7 @@
 import { useEffect, useState, useTransition } from "react"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -37,6 +38,7 @@ function LoginOtpForm({ email }: Props) {
   const [pendingResendOtp, startResendOtp] = useTransition()
   const router = useRouter()
   const locale = useLocale()
+  const queryClient = useQueryClient()
   const [timeDisableResend, setTimeDisableResend] = useState(0)
 
   const form = useForm<TOtpSchema>({
@@ -51,6 +53,9 @@ function LoginOtpForm({ email }: Props) {
       const res = await loginByOtp(email, values.pin)
 
       if (res.isSuccess) {
+        queryClient.invalidateQueries({
+          queryKey: ["token"],
+        })
         router.push(`/`)
         return
       }

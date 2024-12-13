@@ -1,11 +1,16 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client"
 
 import { useState, useTransition } from "react"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useGoogleLogin } from "@react-oauth/google"
+import { useQueryClient } from "@tanstack/react-query"
 import { EyeClosedIcon, EyeIcon, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
+import { type ReactFacebookLoginInfo } from "react-facebook-login"
+import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
@@ -33,6 +38,7 @@ function RegisterForm() {
   const t = useTranslations("RegisterPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -63,10 +69,12 @@ function RegisterForm() {
   const handleGoogleLogin = useGoogleLogin({
     onSuccess: (googleRes) => {
       startTransition(async () => {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         const res = await loginGoogle(googleRes.code)
 
         if (res.isSuccess) {
+          queryClient.invalidateQueries({
+            queryKey: ["token"],
+          })
           router.push(`/`)
           return
         }
@@ -77,18 +85,44 @@ function RegisterForm() {
     flow: "auth-code",
   })
 
+  const handleFacebookLogin = (response: ReactFacebookLoginInfo) => {
+    startTransition(async () => {
+      //@ts-ignore
+      const res = await loginFacebook(response.accessToken, response.expiresIn)
+
+      if (res.isSuccess) {
+        queryClient.invalidateQueries({
+          queryKey: ["token"],
+        })
+        router.push(`/`)
+        return
+      }
+
+      handleServerActionError(res, locale, form)
+    })
+  }
+
   return (
     <>
       <div className="flex flex-wrap gap-3">
-        <Button
-          variant="outline"
-          size="sm"
-          className="w-full min-w-40 flex-1"
-          disabled={pending}
-        >
-          <Icons.Facebook className="mr-1 size-3" />
-          Facebook
-        </Button>
+        {/* @ts-ignore */}
+        <FacebookLogin
+          appId="598749422623507"
+          autoLoad={false}
+          callback={handleFacebookLogin}
+          render={(renderProps) => (
+            <Button
+              onClick={renderProps.onClick}
+              variant="outline"
+              size="sm"
+              className="w-full min-w-40 flex-1"
+              disabled={pending}
+            >
+              <Icons.Facebook className="mr-1 size-3" />
+              Facebook
+            </Button>
+          )}
+        />
         <Button
           onClick={handleGoogleLogin}
           variant="outline"

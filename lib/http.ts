@@ -2,6 +2,7 @@
 import { getLocale } from "next-intl/server"
 
 import { type ServerActionError } from "./types/action-response"
+import { getClientSideCookie } from "./utils"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type CustomOptions = RequestInit & {
@@ -95,7 +96,10 @@ const request = async <TData = undefined>(
   if (typeof window === "undefined") {
     baseHeaders["Accept-Language"] = await getLocale()
   } else {
-    baseHeaders["Accept-Language"] = options?.lang ?? "vi"
+    baseHeaders["Accept-Language"] =
+      options?.lang ?? getClientSideCookie("NEXT_LOCALE") ?? "vi"
+
+    console.log({ lang: baseHeaders["Accept-Language"] })
   }
 
   const baseUrl =
@@ -103,7 +107,9 @@ const request = async <TData = undefined>(
       ? process.env.NEXT_PUBLIC_API_ENDPOINT
       : options.baseUrl
 
-  const res = await fetch(`${baseUrl}${url}`, {
+  const searchParams = new URLSearchParams(options?.searchParams)
+
+  const res = await fetch(`${baseUrl}${url}?${searchParams.toString()}`, {
     ...options,
     headers: {
       ...baseHeaders,

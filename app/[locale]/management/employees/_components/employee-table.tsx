@@ -30,7 +30,6 @@ import {
 
 import EmployeePagination from "./employee-pagination"
 import EmployeeRowPage from "./employee-row-page"
-import { studentDummy } from "./student-dummy"
 
 type EmployyeeTableProps = {
   tableData: TGetEmployeesData

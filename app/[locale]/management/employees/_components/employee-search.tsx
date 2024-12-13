@@ -9,7 +9,7 @@ import { useDebouncedCallback } from "use-debounce"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-import EmployeeTableFilter from "./employee-table/employee-table-filter"
+import EmployeeTableFilter from "./employee-table-filter"
 
 const EmployeeSearch = () => {
   const searchParams = useSearchParams()

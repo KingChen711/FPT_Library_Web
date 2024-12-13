@@ -3,6 +3,7 @@
 import React, { useTransition } from "react"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -32,6 +33,7 @@ function LoginPasswordForm({ email }: Props) {
   const t = useTranslations("LoginPage.PasswordMethodPage")
   const router = useRouter()
   const locale = useLocale()
+  const queryClient = useQueryClient()
 
   const [pending, startTransition] = useTransition()
 
@@ -48,6 +50,9 @@ function LoginPasswordForm({ email }: Props) {
       const res = await loginByPassword(values)
 
       if (res.isSuccess) {
+        queryClient.invalidateQueries({
+          queryKey: ["token"],
+        })
         router.push("/")
         return
       }

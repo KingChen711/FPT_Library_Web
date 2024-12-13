@@ -3,13 +3,11 @@ import localFont from "next/font/local"
 
 import "./globals.css"
 
-import Image from "next/image"
 import { notFound } from "next/navigation"
+import AuthProvider from "@/contexts/auth-provider"
 import { ReactQueryProvider } from "@/contexts/react-query-provider"
 import { ThemeProvider } from "@/contexts/theme-provider"
 import { routing } from "@/i18n/routing"
-import bgDark from "@/public/assets/images/bg-dark.jpg"
-import bgLight from "@/public/assets/images/bg-light.jpg"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, setRequestLocale } from "next-intl/server"
 
@@ -60,38 +58,16 @@ export default async function RootLayout({
       >
         <ReactQueryProvider>
           <NextIntlClientProvider messages={messages}>
-            {/* <AuthProvider> */}
-            <ThemeProvider
-              attribute="class"
-              defaultTheme="system"
-              enableSystem
-              disableTransitionOnChange
-            >
-              <div className="fixed -z-50 h-screen w-screen">
-                <Image
-                  alt="bg"
-                  fill
-                  priority
-                  src={bgLight}
-                  placeholder="blur"
-                  quality={100}
-                  sizes="100vw"
-                  className="object-cover dark:hidden"
-                />
-                <Image
-                  alt="bg"
-                  fill
-                  priority
-                  placeholder="blur"
-                  quality={100}
-                  src={bgDark}
-                  sizes="100vw"
-                  className="hidden object-cover dark:inline"
-                />
-              </div>
-              {children}
-            </ThemeProvider>
-            {/* </AuthProvider> */}
+            <AuthProvider>
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+            </AuthProvider>
           </NextIntlClientProvider>
         </ReactQueryProvider>
         <Toaster />

@@ -1,7 +1,4 @@
-export enum ERoleType {
-  USER = "User",
-  EMPLOYEE = "Employee",
-}
+import { type ERoleType } from "./enums"
 
 export type User = {
   userId: string
@@ -26,7 +23,7 @@ export type User = {
 export type Role = {
   englishName: string
   vietnameseName: string
-  roleTypeIdx: number
+  roleType: ERoleType
 }
 
 export type Employee = {

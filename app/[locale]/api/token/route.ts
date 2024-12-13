@@ -1,14 +1,33 @@
 import { cookies } from "next/headers"
 
-//TODO: refresh token nếu thời hạn sắp hết
+import { http } from "@/lib/http"
+import { isTokenExpiringSoon } from "@/lib/server-utils"
+
 export async function GET() {
-  await new Promise((res) => setTimeout(res, 3000))
+  try {
+    const cookieStore = cookies()
+    const accessToken = cookieStore.get("accessToken")?.value
+    const refreshToken = cookieStore.get("refreshToken")?.value
 
-  const cookieStore = cookies()
-  const accessToken = cookieStore.get("accessToken")?.value
-  const refreshToken = cookieStore.get("refreshToken")?.value
+    if (!refreshToken || !accessToken) {
+      throw new Error("Missing tokens")
+    }
 
-  if (!refreshToken || !accessToken) return Response.json(null)
+    if (!isTokenExpiringSoon(accessToken)) {
+      return Response.json({ accessToken, refreshToken })
+    }
 
-  return Response.json({ accessToken, refreshToken })
+    //need to refresh token
+    const { data } = await http.post<{
+      accessToken: string
+      refreshToken: string
+    }>("/api/auth/refresh-token", { refreshToken })
+
+    cookieStore.set("accessToken", data.accessToken)
+    cookieStore.set("refreshToken", data.refreshToken)
+
+    return Response.json(data)
+  } catch {
+    return Response.json(null)
+  }
 }
