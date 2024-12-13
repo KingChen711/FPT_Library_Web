@@ -46,7 +46,7 @@
     "LoginFailedTitle": "Đăng nhập thất bại",
     "StudentCode": "Mã số sinh viên",
     "Create your account": "Tạo tài khoản",
-    "Message": "Chào mừng! Vui lòng điền thông tin để bắt đầu.",
+    "Message": "Chào mừng! Vui lòng điền thông tin để bắt đầu",
     "Google": "Google",
     "or": "hoặc",
     "Already have an account?": "Đã có tài khoản?",
@@ -177,9 +177,9 @@
     "Delete": "Xóa",
     "Edit role": "Chỉnh sửa vai trò",
     "Delete role": "Xóa vai trò",
-    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận.",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
     "Update access level": "Chỉnh sửa mức độ truy cập",
-    "message confirm change access level": "Nếu bạn xác nhận, mức độ truy cập của <role>{role}</role> sẽ thay đổi thành <permission>{permission}</permission> cho tính năng <feature>{feature}</feature>.",
+    "message confirm change access level": "Nếu bạn xác nhận, mức độ truy cập của <role>{role}</role> sẽ thay đổi thành <permission>{permission}</permission> cho tính năng <feature>{feature}</feature>",
     "Confirm": "Xác nhận"
   },
   "Routes": {

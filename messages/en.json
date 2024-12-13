@@ -41,7 +41,7 @@
     "RegisterFailedTitle": "Register failed",
     "StudentCode": "Student Code",
     "Create your account": "Create your account",
-    "Message": "Welcome! Please fill in the details to get started.",
+    "Message": "Welcome! Please fill in the details to get started",
     "Google": "Google",
     "or": "or",
     "Already have an account?": "Already have an account?",
@@ -174,10 +174,10 @@
     "Edit role": "Edit role",
     "Delete role": "Delete role",
     "Type": "Type",
-    "to confirm.": "to confirm.",
-    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm.",
+    "to confirm": "to confirm",
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
     "Update access level": "Update access level",
-    "message confirm change access level": "If you confirm, the access level of <role>{role}</role> will be changed to <permission>{permission}</permission> for the <feature>{feature}</feature> feature.",
+    "message confirm change access level": "If you confirm, the access level of <role>{role}</role> will be changed to <permission>{permission}</permission> for the <feature>{feature}</feature> feature",
     "Confirm": "Confirm"
   },
   "Routes": {
