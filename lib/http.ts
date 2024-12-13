@@ -7,6 +7,7 @@ import { type ServerActionError } from "./types/action-response"
 type CustomOptions = RequestInit & {
   baseUrl?: string
   lang?: string
+  searchParams?: Record<string, string>
 }
 
 type OkResponse<TData = undefined> = {
