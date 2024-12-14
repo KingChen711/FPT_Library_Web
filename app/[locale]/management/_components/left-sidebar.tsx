@@ -20,23 +20,28 @@ function LeftSidebar() {
   return (
     <section
       className={cn(
-        "sticky left-0 top-0 flex h-screen w-fit shrink-0 flex-col justify-between overflow-y-auto border-r bg-card dark:shadow-none max-sm:hidden lg:w-[300px]",
-        isCollapsed && "lg:w-fit"
+        "sticky left-0 top-0 flex h-screen w-[100px] shrink-0 flex-col justify-between overflow-y-auto border-r bg-card transition-all dark:shadow-none max-sm:hidden lg:w-[300px]",
+        isCollapsed && "lg:w-[100px]"
       )}
     >
       <div className="flex flex-col">
         <Logo />
-        <div className={cn("h-0 w-full lg:h-2", isCollapsed && "lg:h-0")}></div>
         <div
           className={cn(
-            "flex flex-col max-lg:px-6 lg:px-3",
+            "h-0 w-full transition-all lg:h-2",
+            isCollapsed && "lg:h-0"
+          )}
+        ></div>
+        <div
+          className={cn(
+            "flex flex-col transition-all max-lg:px-6 lg:px-3",
             isCollapsed && "lg:px-6"
           )}
         >
           <div
             onClick={() => toggle()}
             className={cn(
-              "flex cursor-pointer items-center justify-start rounded-lg p-4 text-muted-foreground hover:bg-border/30",
+              "flex cursor-pointer items-center justify-start rounded-lg p-4 text-muted-foreground transition-all hover:bg-border/30",
               !isCollapsed && "absolute right-0 top-0"
             )}
           >
@@ -61,11 +66,11 @@ function LeftSidebar() {
                   isActive && "bg-border/30 text-primary"
                 )}
               >
-                <Icon className={cn("size-5")} />
+                <Icon className={cn("inline-block size-5")} />
 
                 <p
                   className={cn(
-                    "max-lg:hidden",
+                    "h-5 overflow-hidden text-nowrap transition-all max-lg:hidden",
                     isActive && "font-semibold",
                     isCollapsed && "hidden"
                   )}
