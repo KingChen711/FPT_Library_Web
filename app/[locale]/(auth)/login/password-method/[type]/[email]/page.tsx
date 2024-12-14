@@ -1,20 +1,28 @@
 import React from "react"
 import Image from "next/image"
+import { notFound } from "next/navigation"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
 
 import { getTranslations } from "@/lib/get-translations"
 
-import LoginPasswordForm from "./_component/login-password-form"
+import LoginPasswordForm from "./_components/login-password-form"
 
 type Props = {
   params: {
     email: string
+    type: "user" | "admin" | "employee"
   }
 }
 
 async function LoginPasswordMethodPage({ params }: Props) {
-  const t = await getTranslations("LoginPage.PasswordMethodPage")
   const email = decodeURIComponent(params.email)
+
+  if (!["user", "admin", "employee"].includes(params.type)) {
+    notFound()
+  }
+
+  const t = await getTranslations("LoginPage.PasswordMethodPage")
+
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-card shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
@@ -37,7 +45,7 @@ async function LoginPasswordMethodPage({ params }: Props) {
           </p>
           <p className="text-center text-sm text-muted-foreground">{email}</p>
         </div>
-        <LoginPasswordForm email={email} />
+        <LoginPasswordForm email={email} type={params.type} />
       </div>
     </div>
   )
