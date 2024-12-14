@@ -57,6 +57,7 @@ const EmployeeManagementPage = async ({
   ).toString()
 
   const tableData = await getEmployees(query)
+  console.log("🚀 ~ tableData:", tableData)
 
   return (
     <div className="space-y-4">

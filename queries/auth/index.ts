@@ -7,7 +7,7 @@ import { getLocale } from "next-intl/server"
 
 import { http } from "@/lib/http"
 import { verifyToken } from "@/lib/server-utils"
-import { type ERoleType } from "@/lib/types/enums"
+import { type Employee, type User } from "@/lib/types/models"
 
 let isAuthenticated = false
 
@@ -29,21 +29,9 @@ const protect = async (feature?: string) => {
   console.log(feature)
 }
 
-type CurrentUser = {
-  email: string
-  firstName: string
-  lastName: string
-  avatar: string
-  role: {
-    englishName: string
-    vietnameseName: string
-    roleType: ERoleType
-  }
-} | null
-
-const whoAmI = cache(async (): Promise<CurrentUser | null> => {
+const whoAmI = cache(async (): Promise<User | Employee | null> => {
   try {
-    const { data } = await http.get<CurrentUser>("/api/auth/current-user", {
+    const { data } = await http.get<User | Employee>("/api/auth/current-user", {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

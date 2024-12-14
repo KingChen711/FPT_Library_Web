@@ -1,23 +1,15 @@
 import { z } from "zod"
 
 export const profileSchema = z.object({
-  fullname: z
-    .string()
-    .min(6, { message: "Full name must be at least 6 characters" }),
-  collegeEmailId: z.string().email({ message: "Invalid email format" }),
-  studentCode: z
-    .string()
-    .min(4, { message: "Register number must be at least 4 characters" }),
-  phoneNumber: z
-    .string()
-    .min(10, { message: "Phone number must be at least 10 digits" }),
-  dob: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, {
-    message: "Date of birth must be in the format YYYY-MM-DD",
-  }),
-  gender: z.enum(["Male", "Female"], {
-    message: "Gender must be either Male or Female",
-  }),
-  bio: z.string().min(10, { message: "Bio must be at least 10 characters" }),
+  userCode: z.string().nullable().catch(null),
+  firstName: z.string().nonempty("First name is required"),
+  lastName: z.string().nonempty("Last name is required"),
+  email: z.string().email("Invalid email format").nullable().catch(null),
+  phone: z.string().nullable().catch(null),
+  avatar: z.string().url("Invalid URL format").nullable().catch(null),
+  address: z.string().nullable().catch(null),
+  gender: z.string().nullable().catch(null),
+  dob: z.string().nullable().catch(null), // ISO date format validation can be added if needed
 })
 
 export type TProfileSchema = z.infer<typeof profileSchema>
