@@ -107,17 +107,22 @@ const request = async <TData = undefined>(
       ? process.env.NEXT_PUBLIC_API_ENDPOINT
       : options.baseUrl
 
-  const searchParams = new URLSearchParams(options?.searchParams)
+  const searchParams = options?.searchParams
+    ? new URLSearchParams(options?.searchParams)
+    : null
 
-  const res = await fetch(`${baseUrl}${url}?${searchParams.toString()}`, {
-    ...options,
-    headers: {
-      ...baseHeaders,
-      ...options?.headers,
-    },
-    body,
-    method,
-  })
+  const res = await fetch(
+    `${baseUrl}${url}${searchParams ? `?${searchParams.toString()}` : ""}`,
+    {
+      ...options,
+      headers: {
+        ...baseHeaders,
+        ...options?.headers,
+      },
+      body,
+      method,
+    }
+  )
 
   const payload = (await res.json()) as OkResponse<TData>
 
