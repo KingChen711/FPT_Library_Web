@@ -2,15 +2,30 @@ import { type ERoleType } from "./enums"
 
 export type User = {
   userId: string
-  email: string
+  userCode: string | null
+  email: string | null
+  passwordHash: string | null
   firstName: string
   lastName: string
-  dob: string
-  phone: string
-  avatar: string
+  dob: string | null
+  phone: string | null
+  avatar: string | null
+  address: string | null
+  gender: string | null
   isActive: boolean
-  gender: string
-  address: string
+  isDeleted: boolean
+  createDate: string
+  modifiedDate: string | null
+  modifiedBy: string | null
+  twoFactorEnabled: boolean
+  phoneNumberConfirmed: boolean
+  emailConfirmed: boolean
+  twoFactorSecretKey: string | null
+  twoFactorBackupCodes: string | null
+  phoneVerificationCode: string | null
+  emailVerificationCode: string | null
+  phoneVerificationExpiry: string | null
+  roleId: number
   role: {
     roleId: number
     vietnameseName: string

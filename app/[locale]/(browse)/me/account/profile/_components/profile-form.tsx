@@ -6,6 +6,7 @@ import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import { type Employee, type User } from "@/lib/types/models"
 import {
   profileSchema,
   type TProfileSchema,
@@ -27,22 +28,26 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 
-const ProfileForm = () => {
+type ProfileFormProps = {
+  currentUser: User | Employee
+}
+
+const ProfileForm = ({ currentUser }: ProfileFormProps) => {
   const t = useTranslations("Me.Account.Profile")
   const [pending, startTransition] = useTransition()
 
   const form = useForm<TProfileSchema>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      fullname: "Doan Viet Thanh",
-      collegeEmailId: "thanhdvse171867@fpt.edu.vn",
-      studentCode: "SE171867",
-      phoneNumber: "0123456789",
-      bio: "I am a student",
-      dob: "2003-07-01",
-      gender: "Male",
+      firstName: currentUser.firstName as string,
+      lastName: currentUser.lastName as string,
+      email: currentUser.email || null,
+      phone: currentUser.phone || null,
+      avatar: currentUser.avatar || null,
+      address: currentUser.address || null,
+      gender: currentUser.gender || null,
+      dob: currentUser.dob || null,
     },
   })
 
@@ -66,10 +71,10 @@ const ProfileForm = () => {
           <div className="grid grid-cols-2 gap-4">
             <FormField
               control={form.control}
-              name="fullname"
+              name="firstName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("fullName")}</FormLabel>
+                  <FormLabel>{t("firstName")}</FormLabel>
                   <FormControl>
                     <Input disabled={pending} {...field} />
                   </FormControl>
@@ -79,10 +84,10 @@ const ProfileForm = () => {
             />
             <FormField
               control={form.control}
-              name="collegeEmailId"
+              name="lastName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("collegeEmailId")}</FormLabel>
+                  <FormLabel>{t("lastName")}</FormLabel>
                   <FormControl>
                     <Input disabled={pending} {...field} />
                   </FormControl>
@@ -92,30 +97,77 @@ const ProfileForm = () => {
             />
             <FormField
               control={form.control}
-              name="studentCode"
+              name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>{t("studentCode")}</FormLabel>
+                  <FormLabel>{t("email")}</FormLabel>
                   <FormControl>
-                    <Input disabled={pending} {...field} />
+                    <Input
+                      disabled={pending}
+                      {...field}
+                      value={field.value || ""} // Fix: Chuyển null thành chuỗi trống
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
             <FormField
               control={form.control}
-              name="phoneNumber"
+              name="phone"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("phoneNumber")}</FormLabel>
                   <FormControl>
-                    <Input disabled={pending} {...field} />
+                    <Input
+                      disabled={pending}
+                      {...field}
+                      value={field.value || ""} // Fix
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("address")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      disabled={pending}
+                      {...field}
+                      value={field.value || ""} // Fix
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="dob"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{t("dob")}</FormLabel>
+                  <FormControl>
+                    <Input
+                      type="date"
+                      disabled={pending}
+                      {...field}
+                      value={field.value || ""} // Fix
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name="gender"
@@ -123,8 +175,9 @@ const ProfileForm = () => {
                 <FormItem>
                   <FormLabel>{t("gender")}</FormLabel>
                   <Select
+                    disabled={pending}
                     onValueChange={field.onChange}
-                    defaultValue={field.value}
+                    defaultValue={field.value || ""}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -140,33 +193,7 @@ const ProfileForm = () => {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="dob"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("dob")}</FormLabel>
-                  <FormControl>
-                    <Input type="date" disabled={pending} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
           </div>
-          <FormField
-            control={form.control}
-            name="bio"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>{t("bio")}</FormLabel>
-                <FormControl>
-                  <Textarea disabled={pending} {...field} rows={3} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
           <div className="flex w-full items-center justify-end gap-4">
             <Button disabled={pending} type="submit">
               {t("updateBtn")}
