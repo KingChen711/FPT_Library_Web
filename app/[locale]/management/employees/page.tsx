@@ -17,18 +17,18 @@ enum EmployeeGender {
 }
 
 const employeeManagementSchema = z.object({
-  employeeCode: z.string().catch(""),
-  roleId: z.string().catch(""),
+  employeeCode: z.string().trim().catch(""),
+  roleId: z.string().trim().catch(""),
   gender: z.nativeEnum(EmployeeGender).optional().default(EmployeeGender.Male),
   isActive: z.boolean().catch(true),
   pageIndex: z.coerce.number().catch(1), // Coerce strings to numbers
   pageSize: z.coerce.number().catch(5), // Coerce strings to numbers
-  search: z.string().catch(""),
-  sort: z.string().catch(""),
-  dobRange: z.array(z.string()).catch([]),
-  createDateRange: z.array(z.string()).catch([]),
-  modifiedDateRange: z.array(z.string()).catch([]),
-  hireDateRange: z.array(z.string()).catch([]),
+  search: z.string().trim().catch(""),
+  sort: z.string().trim().catch(""),
+  dobRange: z.array(z.string().trim()).catch([]),
+  createDateRange: z.array(z.string().trim()).catch([]),
+  modifiedDateRange: z.array(z.string().trim()).catch([]),
+  hireDateRange: z.array(z.string().trim()).catch([]),
 })
 
 type EmployeeManagementPageProps = {

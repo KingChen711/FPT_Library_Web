@@ -14,7 +14,7 @@ type Props = {
 }
 
 const MfaPage = async ({ params }: Props) => {
-  const email = decodeURIComponent(params.email)
+  const email = decodeURIComponent(params.email).trim()
   const t = await getTranslations("MfaPage")
   const data = await getMfaQr(email)
 

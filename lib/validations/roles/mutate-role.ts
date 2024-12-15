@@ -3,8 +3,8 @@ import { z } from "zod"
 import { ERoleType } from "@/lib/types/enums"
 
 export const mutateRoleSchema = z.object({
-  englishName: z.string(),
-  vietnameseName: z.string(),
+  englishName: z.string().trim(),
+  vietnameseName: z.string().trim(),
   roleTypeIdx: z.nativeEnum(ERoleType),
 })
 
