@@ -14,7 +14,6 @@ type UserManagementPageProps = {
 }
 
 const UserManagementPage = async ({ params }: UserManagementPageProps) => {
-  console.log("🚀 ~ UserManagementPage ~ params:", params)
   const t = await getTranslations("UserManagement")
 
   return (

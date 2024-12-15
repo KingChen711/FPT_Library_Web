@@ -16,19 +16,22 @@ enum EmployeeGender {
   Female = "Female",
 }
 
+const DEFAULT_PAGE_INDEX = 1
+const DEFAULT_PAGE_SIZE = 5
+
 const employeeManagementSchema = z.object({
-  employeeCode: z.string().catch(""),
-  roleId: z.string().catch(""),
-  gender: z.nativeEnum(EmployeeGender).optional().default(EmployeeGender.Male),
-  isActive: z.boolean().catch(true),
-  pageIndex: z.coerce.number().catch(1), // Coerce strings to numbers
-  pageSize: z.coerce.number().catch(5), // Coerce strings to numbers
-  search: z.string().catch(""),
-  sort: z.string().catch(""),
-  dobRange: z.array(z.string()).catch([]),
-  createDateRange: z.array(z.string()).catch([]),
-  modifiedDateRange: z.array(z.string()).catch([]),
-  hireDateRange: z.array(z.string()).catch([]),
+  employeeCode: z.string().optional(),
+  roleId: z.string().optional(),
+  gender: z.nativeEnum(EmployeeGender).optional(),
+  isActive: z.string().optional(),
+  pageIndex: z.coerce.number().catch(DEFAULT_PAGE_INDEX),
+  pageSize: z.coerce.number().catch(DEFAULT_PAGE_SIZE),
+  search: z.string().optional(),
+  sort: z.string().optional(),
+  dobRange: z.array(z.string()).optional().catch([]),
+  createDateRange: z.array(z.string()).optional().catch([]),
+  modifiedDateRange: z.array(z.string()).optional().catch([]),
+  hireDateRange: z.array(z.string()).optional().catch([]),
 })
 
 type EmployeeManagementPageProps = {
@@ -57,7 +60,6 @@ const EmployeeManagementPage = async ({
   ).toString()
 
   const tableData = await getEmployees(query)
-  console.log("🚀 ~ tableData:", tableData)
 
   return (
     <div className="space-y-4">

@@ -12,8 +12,6 @@ const ProfileManagementPage = async () => {
   const currentUser = await whoAmI()
   if (!isAuthenticated || !currentUser) redirect("/login")
 
-  console.log("🚀 ~ ProfileManagementPage ~ currentUser:", currentUser)
-
   return (
     <div className="flex flex-col gap-4 overflow-y-auto">
       <div className="flex h-[150px] w-full items-center gap-8 overflow-hidden rounded-lg">
