@@ -36,7 +36,6 @@ type EmployyeeTableProps = {
 }
 
 const EmployeeTable = async ({ tableData }: EmployyeeTableProps) => {
-  console.log("🚀 ~ EmployeeTable ~ tableData:", tableData)
   const locale = await getLocale()
 
   return (

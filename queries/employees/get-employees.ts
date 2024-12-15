@@ -8,9 +8,11 @@ export type TGetEmployeesData = {
   pageIndex: number
   pageSize: number
   totalPage: number
+  count: number
 }
 
 export async function getEmployees(query: string): Promise<TGetEmployeesData> {
+  console.log(`/api/employees?${query}`)
   try {
     const { data } = await http.get<TGetEmployeesData>(
       `/api/employees?${query}`,
@@ -20,13 +22,14 @@ export async function getEmployees(query: string): Promise<TGetEmployeesData> {
         },
       }
     )
-    return data
+    return { ...data, count: data.sources.length }
   } catch {
     return {
       sources: [],
       pageIndex: 0,
       pageSize: 0,
       totalPage: 0,
+      count: 0,
     }
   }
 }
