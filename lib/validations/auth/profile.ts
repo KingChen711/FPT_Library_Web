@@ -1,32 +1,21 @@
 import { z } from "zod"
 
 export const profileSchema = z.object({
-  fullname: z
+  userCode: z.string().trim().nullable().catch(null),
+  firstName: z.string().trim().nonempty("First name is required"),
+  lastName: z.string().trim().nonempty("Last name is required"),
+  email: z
     .string()
     .trim()
-    .min(6, { message: "Full name must be at least 6 characters" }),
-  collegeEmailId: z.string().trim().email({ message: "Invalid email format" }),
-  studentCode: z
-    .string()
-    .trim()
-    .min(4, { message: "Register number must be at least 4 characters" }),
-  phoneNumber: z
-    .string()
-    .trim()
-    .min(10, { message: "Phone number must be at least 10 digits" }),
-  dob: z
-    .string()
-    .trim()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, {
-      message: "Date of birth must be in the format YYYY-MM-DD",
-    }),
-  gender: z.enum(["Male", "Female"], {
-    message: "Gender must be either Male or Female",
-  }),
-  bio: z
-    .string()
-    .trim()
-    .min(10, { message: "Bio must be at least 10 characters" }),
+    .email("Invalid email format")
+    .toLowerCase()
+    .nullable()
+    .catch(null),
+  phone: z.string().trim().nullable().catch(null),
+  avatar: z.string().trim().url("Invalid URL format").nullable().catch(null),
+  address: z.string().trim().nullable().catch(null),
+  gender: z.string().trim().nullable().catch(null),
+  dob: z.string().trim().nullable().catch(null), // ISO date format validation can be added if needed
 })
 
 export type TProfileSchema = z.infer<typeof profileSchema>

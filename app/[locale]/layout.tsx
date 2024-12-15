@@ -2,6 +2,8 @@ import type { Metadata } from "next"
 import localFont from "next/font/local"
 
 import "./globals.css"
+import "react-date-range/dist/styles.css"
+import "react-date-range/dist/theme/default.css"
 
 import { notFound } from "next/navigation"
 import AuthProvider from "@/contexts/auth-provider"

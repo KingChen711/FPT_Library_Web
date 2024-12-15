@@ -16,19 +16,22 @@ enum EmployeeGender {
   Female = "Female",
 }
 
+const DEFAULT_PAGE_INDEX = 1
+const DEFAULT_PAGE_SIZE = 5
+
 const employeeManagementSchema = z.object({
-  employeeCode: z.string().trim().catch(""),
-  roleId: z.string().trim().catch(""),
-  gender: z.nativeEnum(EmployeeGender).optional().default(EmployeeGender.Male),
-  isActive: z.boolean().catch(true),
-  pageIndex: z.coerce.number().catch(1), // Coerce strings to numbers
-  pageSize: z.coerce.number().catch(5), // Coerce strings to numbers
-  search: z.string().trim().catch(""),
-  sort: z.string().trim().catch(""),
-  dobRange: z.array(z.string().trim()).catch([]),
-  createDateRange: z.array(z.string().trim()).catch([]),
-  modifiedDateRange: z.array(z.string().trim()).catch([]),
-  hireDateRange: z.array(z.string().trim()).catch([]),
+  employeeCode: z.string().trim().optional(),
+  roleId: z.string().trim().optional(),
+  gender: z.nativeEnum(EmployeeGender).optional(),
+  isActive: z.string().trim().optional(),
+  pageIndex: z.coerce.number().catch(DEFAULT_PAGE_INDEX),
+  pageSize: z.coerce.number().catch(DEFAULT_PAGE_SIZE),
+  search: z.string().trim().optional(),
+  sort: z.string().trim().optional(),
+  dobRange: z.array(z.string().trim()).optional().catch([]),
+  createDateRange: z.array(z.string().trim()).optional().catch([]),
+  modifiedDateRange: z.array(z.string().trim()).optional().catch([]),
+  hireDateRange: z.array(z.string().trim()).optional().catch([]),
 })
 
 type EmployeeManagementPageProps = {

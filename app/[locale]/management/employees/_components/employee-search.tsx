@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/unbound-method */
 "use client"
 
-import React from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { ChevronDown } from "lucide-react"
 import { useDebouncedCallback } from "use-debounce"
@@ -9,7 +8,7 @@ import { useDebouncedCallback } from "use-debounce"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
-import EmployeeTableFilter from "./employee-table-filter"
+import EmployeeFilters from "./employee-filters"
 
 const EmployeeSearch = () => {
   const searchParams = useSearchParams()
@@ -18,7 +17,7 @@ const EmployeeSearch = () => {
 
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams)
-    params.set("pageIndex", "1")
+    // params.set("pageIndex", "1")
     if (term) {
       params.set("search", term)
     } else {
@@ -37,7 +36,7 @@ const EmployeeSearch = () => {
         className="max-w-sm"
         defaultValue={searchParams.get("search")?.toString()}
       />
-      <EmployeeTableFilter />
+      <EmployeeFilters />
       <Button variant="outline" className="ml-auto">
         Columns <ChevronDown />
       </Button>

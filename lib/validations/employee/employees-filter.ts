@@ -1,17 +1,33 @@
 import { z } from "zod"
 
+export enum EmployeeFilter {
+  EMPLOYEE_CODE = "employeeCode",
+  ROLE_ID = "roleId",
+  IS_ACTIVE = "isActive",
+  GENDER = "gender",
+  DOB_RANGE = "dobRange",
+  CREATE_DATE_RANGE = "createDateRange",
+  MODIFIED_DATE_RANGE = "modifieldDateRange",
+  HIRE_DATE_RANGE = "hireDateRange",
+  PAGE_INDEX = "pageIndex",
+  PAGE_SIZE = "pageSize",
+  SEARCH = "search",
+}
+
 export const employeesFilterSchema = z.object({
-  employeeCode: z.string().trim().optional(),
-  roleId: z.string().trim().optional(),
-  isActive: z.boolean().optional(),
-  gender: z.enum(["Male", "Female"]).optional(),
-  dobRange: z.array(z.string().trim()).optional(),
-  createDateRange: z.array(z.string().trim()).optional(),
-  modifieldDateRange: z.array(z.string().trim()).optional(),
-  hireDateRange: z.array(z.string().trim()).optional(),
-  pageIndex: z.number().optional(),
-  pageSize: z.number().optional(),
-  search: z.string().trim().optional(),
+  [EmployeeFilter.EMPLOYEE_CODE]: z.string().trim().optional(), // Done maybe
+  [EmployeeFilter.ROLE_ID]: z.string().trim().optional(), // Done
+  [EmployeeFilter.GENDER]: z.enum(["Male", "Female"]).optional(), // Done
+  [EmployeeFilter.IS_ACTIVE]: z.string().trim().optional(), // Done
+
+  [EmployeeFilter.DOB_RANGE]: z.array(z.string().trim()).optional(),
+  [EmployeeFilter.CREATE_DATE_RANGE]: z.array(z.string().trim()).optional(),
+  [EmployeeFilter.MODIFIED_DATE_RANGE]: z.array(z.string().trim()).optional(),
+  [EmployeeFilter.HIRE_DATE_RANGE]: z.array(z.string().trim()).optional(),
+
+  [EmployeeFilter.PAGE_INDEX]: z.number().optional(), // Done
+  [EmployeeFilter.PAGE_SIZE]: z.number().optional(), // Done
+  [EmployeeFilter.SEARCH]: z.string().trim().optional(), // Done
 })
 
 export type TEmployeesFilterSchema = z.infer<typeof employeesFilterSchema>

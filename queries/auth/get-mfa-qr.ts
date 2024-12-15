@@ -3,7 +3,7 @@ import { http } from "@/lib/http"
 import "server-only"
 
 export type TMfaQr = {
-  qrCodeImage: Base64URLString
+  qrCodeImage: string
   backupCodes: string[]
 }
 

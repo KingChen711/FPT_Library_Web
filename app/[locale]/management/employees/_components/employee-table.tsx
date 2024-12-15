@@ -36,7 +36,6 @@ type EmployyeeTableProps = {
 }
 
 const EmployeeTable = async ({ tableData }: EmployyeeTableProps) => {
-  console.log("🚀 ~ EmployeeTable ~ tableData:", tableData)
   const locale = await getLocale()
 
   return (
@@ -57,6 +56,7 @@ const EmployeeTable = async ({ tableData }: EmployyeeTableProps) => {
                 <TableHead>Address</TableHead>
                 <TableHead>Hire date</TableHead>
                 <TableHead>Role</TableHead>
+                <TableHead>Active</TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
@@ -101,7 +101,9 @@ const EmployeeTable = async ({ tableData }: EmployyeeTableProps) => {
                       ? employee.role.englishName
                       : employee.role.vietnameseName}
                   </TableCell>
-
+                  <TableCell>
+                    {employee.isActive ? "Active" : "Inactive"}
+                  </TableCell>
                   <TableCell>
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
