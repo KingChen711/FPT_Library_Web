@@ -1,24 +1,10 @@
 import Image from "next/image"
 import { type TGetEmployeesData } from "@/queries/employees/get-employees"
-import {
-  EyeOff,
-  MoreHorizontal,
-  SquarePen,
-  Trash,
-  User,
-  User2,
-} from "lucide-react"
+import { User } from "lucide-react"
 import { getLocale } from "next-intl/server"
 
 import { type Employee } from "@/lib/types/models"
 import { formatDate } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
   Table,
   TableBody,
@@ -28,6 +14,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import EmployeeAction from "./employee-action"
 import EmployeePagination from "./employee-pagination"
 import EmployeeRowPage from "./employee-row-page"
 
@@ -105,33 +92,7 @@ const EmployeeTable = async ({ tableData }: EmployyeeTableProps) => {
                     {employee.isActive ? "Active" : "Inactive"}
                   </TableCell>
                   <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button
-                          variant="ghost"
-                          className="flex size-8 w-full justify-center p-0"
-                        >
-                          <MoreHorizontal />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent
-                        align="end"
-                        className="bg-primary-foreground"
-                      >
-                        <DropdownMenuItem className="cursor-pointer">
-                          <SquarePen /> Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer">
-                          <User2 /> Change role
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer">
-                          <EyeOff /> De-activate user
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="cursor-pointer">
-                          <Trash /> Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <EmployeeAction employee={employee} />
                   </TableCell>
                 </TableRow>
               ))}

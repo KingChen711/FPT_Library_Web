@@ -17,7 +17,6 @@ const EmployeeSearch = () => {
 
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams)
-    // params.set("pageIndex", "1")
     if (term) {
       params.set("search", term)
     } else {
