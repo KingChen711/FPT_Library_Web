@@ -4,7 +4,7 @@ import fptLogo from "@/public/assets/images/fpt-logo.png"
 
 import { getTranslations } from "@/lib/get-translations"
 
-import LoginOtpForm from "./_component/login-otp-form"
+import LoginOtpForm from "./_components/login-otp-form"
 
 type Props = {
   params: {
@@ -14,7 +14,7 @@ type Props = {
 
 async function LoginOtpMethodPage({ params }: Props) {
   const t = await getTranslations("LoginPage.OtpMethodPage")
-  const email = decodeURIComponent(params.email)
+  const email = decodeURIComponent(params.email).trim()
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-card shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">

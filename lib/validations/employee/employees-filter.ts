@@ -15,19 +15,19 @@ export enum EmployeeFilter {
 }
 
 export const employeesFilterSchema = z.object({
-  [EmployeeFilter.EMPLOYEE_CODE]: z.string().optional(), // Done maybe
-  [EmployeeFilter.ROLE_ID]: z.string().optional(), // Done
+  [EmployeeFilter.EMPLOYEE_CODE]: z.string().trim().optional(), // Done maybe
+  [EmployeeFilter.ROLE_ID]: z.string().trim().optional(), // Done
   [EmployeeFilter.GENDER]: z.enum(["Male", "Female"]).optional(), // Done
-  [EmployeeFilter.IS_ACTIVE]: z.string().optional(), // Done
+  [EmployeeFilter.IS_ACTIVE]: z.string().trim().optional(), // Done
 
-  [EmployeeFilter.DOB_RANGE]: z.array(z.string()).optional(),
-  [EmployeeFilter.CREATE_DATE_RANGE]: z.array(z.string()).optional(),
-  [EmployeeFilter.MODIFIED_DATE_RANGE]: z.array(z.string()).optional(),
-  [EmployeeFilter.HIRE_DATE_RANGE]: z.array(z.string()).optional(),
+  [EmployeeFilter.DOB_RANGE]: z.array(z.string().trim()).optional(),
+  [EmployeeFilter.CREATE_DATE_RANGE]: z.array(z.string().trim()).optional(),
+  [EmployeeFilter.MODIFIED_DATE_RANGE]: z.array(z.string().trim()).optional(),
+  [EmployeeFilter.HIRE_DATE_RANGE]: z.array(z.string().trim()).optional(),
 
   [EmployeeFilter.PAGE_INDEX]: z.number().optional(), // Done
   [EmployeeFilter.PAGE_SIZE]: z.number().optional(), // Done
-  [EmployeeFilter.SEARCH]: z.string().optional(), // Done
+  [EmployeeFilter.SEARCH]: z.string().trim().optional(), // Done
 })
 
 export type TEmployeesFilterSchema = z.infer<typeof employeesFilterSchema>

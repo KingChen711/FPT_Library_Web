@@ -27,9 +27,10 @@ import { Input } from "@/components/ui/input"
 
 type Props = {
   email: string
+  type: "user" | "admin" | "employee"
 }
 
-function LoginPasswordForm({ email }: Props) {
+function LoginPasswordForm({ email, type }: Props) {
   const t = useTranslations("LoginPage.PasswordMethodPage")
   const router = useRouter()
   const locale = useLocale()
@@ -47,7 +48,7 @@ function LoginPasswordForm({ email }: Props) {
 
   function onSubmit(values: TLoginByPasswordSchema) {
     startTransition(async () => {
-      const res = await loginByPassword(values)
+      const res = await loginByPassword(values, type)
 
       if (res.isSuccess) {
         queryClient.invalidateQueries({

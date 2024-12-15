@@ -1,10 +1,9 @@
-import React from "react"
 import Image from "next/image"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
 
 import { getTranslations } from "@/lib/get-translations"
 
-import LoginPasswordForm from "./_component/login-password-form"
+import MfaForm from "../../_components/mfa-form"
 
 type Props = {
   params: {
@@ -12,11 +11,11 @@ type Props = {
   }
 }
 
-async function LoginPasswordMethodPage({ params }: Props) {
-  const t = await getTranslations("LoginPage.PasswordMethodPage")
-  const email = decodeURIComponent(params.email)
+const MfaPage = async ({ params }: Props) => {
+  const email = decodeURIComponent(params.email).trim()
+  const t = await getTranslations("MfaPage")
   return (
-    <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-card shadow-lg">
+    <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
         <div className="flex justify-center">
           <Image
@@ -30,17 +29,16 @@ async function LoginPasswordMethodPage({ params }: Props) {
         </div>
         <div className="flex flex-col gap-y-1">
           <h1 className="text-center text-lg font-semibold">
-            {t("Enter your password")}
+            {t("Verify MFA")}
           </h1>
           <p className="text-center text-sm text-muted-foreground">
             {t("Message")}
           </p>
-          <p className="text-center text-sm text-muted-foreground">{email}</p>
         </div>
-        <LoginPasswordForm email={email} />
+        <MfaForm email={email} />
       </div>
     </div>
   )
 }
 
-export default LoginPasswordMethodPage
+export default MfaPage
