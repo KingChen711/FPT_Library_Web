@@ -1,6 +1,7 @@
 "use client"
 
 import { useTransition } from "react"
+import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
@@ -35,6 +36,7 @@ type ProfileFormProps = {
 
 const ProfileForm = ({ currentUser }: ProfileFormProps) => {
   const t = useTranslations("Me.Account.Profile")
+
   const [pending, startTransition] = useTransition()
 
   const form = useForm<TProfileSchema>({

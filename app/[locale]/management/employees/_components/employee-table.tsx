@@ -1,10 +1,15 @@
+"use client"
+
 import Image from "next/image"
+import { useRouter, useSearchParams } from "next/navigation"
+import { usePathname } from "@/i18n/routing"
 import { type TGetEmployeesData } from "@/queries/employees/get-employees"
-import { User } from "lucide-react"
-import { getLocale } from "next-intl/server"
+import { ArrowDownUp, User } from "lucide-react"
+import { useLocale } from "next-intl"
 
 import { type Employee } from "@/lib/types/models"
 import { formatDate } from "@/lib/utils"
+import { EmployeeFilter } from "@/lib/validations/employee/employees-filter"
 import {
   Table,
   TableBody,
@@ -22,28 +27,101 @@ type EmployyeeTableProps = {
   tableData: TGetEmployeesData
 }
 
-const EmployeeTable = async ({ tableData }: EmployyeeTableProps) => {
-  const locale = await getLocale()
+const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
+  const locale = useLocale()
+  const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+
+  const handleSortParams = (key: string) => {
+    const params = new URLSearchParams(searchParams)
+    const currentSort = params.get("sort")
+
+    const newSort =
+      currentSort === `-${key}` ? key : currentSort === key ? `-${key}` : key
+
+    params.set("sort", newSort)
+    router.replace(`${pathname}?${params.toString()}`)
+  }
 
   return (
-    <div>
-      <div className="my-4 grid w-full">
-        <div className="relative overflow-x-auto">
-          <Table className="mb-2 border-collapse rounded-xl border-y border-r">
+    <div className="w-full overflow-hidden">
+      <div className="mb-4 w-full overflow-x-auto">
+        <div className="w-full overflow-x-auto">
+          <Table className="border-collapse rounded-xl border-y border-r">
             <TableHeader>
               <TableRow>
                 <TableHead>No</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>First name</TableHead>
-                <TableHead>Last name</TableHead>
-                <TableHead>Employee Code</TableHead>
-                <TableHead>Phone</TableHead>
-                <TableHead>Date of birth</TableHead>
-                <TableHead>Gender</TableHead>
+                <TableHead
+                  className="flex items-center gap-x-2"
+                  onClick={() => handleSortParams(EmployeeFilter.EMAIL)}
+                >
+                  Email <ArrowDownUp size={16} className="cursor-pointer" />
+                </TableHead>
+                <TableHead
+                  onClick={() => handleSortParams(EmployeeFilter.FIRST_NAME)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    First name
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+                <TableHead
+                  onClick={() => handleSortParams(EmployeeFilter.LAST_NAME)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Last name
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+                <TableHead
+                  onClick={() => handleSortParams(EmployeeFilter.EMPLOYEE_CODE)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Employee Code
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+                <TableHead
+                  onClick={() => handleSortParams(EmployeeFilter.PHONE)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Phone
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+                <TableHead onClick={() => handleSortParams(EmployeeFilter.DOB)}>
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Date of birth
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+                <TableHead
+                  onClick={() => handleSortParams(EmployeeFilter.GENDER)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Gender
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
                 <TableHead>Address</TableHead>
                 <TableHead>Hire date</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Active</TableHead>
+                <TableHead
+                  onClick={() => handleSortParams(EmployeeFilter.ROLE)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Role
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+                <TableHead
+                  onClick={() => handleSortParams(EmployeeFilter.IS_ACTIVE)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Status
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
                 <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>

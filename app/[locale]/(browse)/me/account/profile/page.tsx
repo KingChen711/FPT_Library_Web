@@ -1,4 +1,3 @@
-import { redirect } from "next/navigation"
 import { auth } from "@/queries/auth"
 
 import ContributionCard from "./_components/contribution-card"
@@ -7,10 +6,13 @@ import ProfileForm from "./_components/profile-form"
 import ReadingCard from "./_components/reading-card"
 
 const ProfileManagementPage = async () => {
-  const { isAuthenticated, whoAmI } = auth()
+  const { whoAmI, protect } = auth()
+  await protect()
 
   const currentUser = await whoAmI()
-  if (!isAuthenticated || !currentUser) redirect("/login")
+  if (!currentUser) {
+    throw new Error("Current User not found")
+  }
 
   return (
     <div className="flex flex-col gap-4 overflow-y-auto">

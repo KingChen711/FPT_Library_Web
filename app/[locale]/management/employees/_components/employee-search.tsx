@@ -2,10 +2,8 @@
 "use client"
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { ChevronDown } from "lucide-react"
 import { useDebouncedCallback } from "use-debounce"
 
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 
 import EmployeeFilters from "./employee-filters"
@@ -36,9 +34,6 @@ const EmployeeSearch = () => {
         defaultValue={searchParams.get("search")?.toString()}
       />
       <EmployeeFilters />
-      <Button variant="outline" className="ml-auto">
-        Columns <ChevronDown />
-      </Button>
     </div>
   )
 }

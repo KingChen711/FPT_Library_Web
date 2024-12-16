@@ -1,6 +1,7 @@
 "use server"
 
 import { revalidateTag } from "next/cache"
+import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
@@ -8,9 +9,16 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function softDeleteEmployee(
   employeeId: string
 ): Promise<ActionResponse<string>> {
+  const { getAccessToken } = auth()
+
   try {
     const { message } = await http.delete(
-      `/api/employees/${employeeId}/soft-delete`
+      `/api/employees/${employeeId}/soft-delete`,
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
     )
 
     revalidateTag("employees")
