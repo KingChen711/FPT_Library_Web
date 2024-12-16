@@ -2,11 +2,13 @@
 import { getLocale } from "next-intl/server"
 
 import { type ServerActionError } from "./types/action-response"
+import { getClientSideCookie } from "./utils"
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 type CustomOptions = RequestInit & {
   baseUrl?: string
   lang?: string
+  searchParams?: Record<string, string>
 }
 
 type OkResponse<TData = undefined> = {
@@ -94,7 +96,10 @@ const request = async <TData = undefined>(
   if (typeof window === "undefined") {
     baseHeaders["Accept-Language"] = await getLocale()
   } else {
-    baseHeaders["Accept-Language"] = options?.lang ?? "vi"
+    baseHeaders["Accept-Language"] =
+      options?.lang ?? getClientSideCookie("NEXT_LOCALE") ?? "vi"
+
+    console.log({ lang: baseHeaders["Accept-Language"] })
   }
 
   const baseUrl =
@@ -102,20 +107,31 @@ const request = async <TData = undefined>(
       ? process.env.NEXT_PUBLIC_API_ENDPOINT
       : options.baseUrl
 
-  const res = await fetch(`${baseUrl}${url}`, {
-    ...options,
-    headers: {
-      ...baseHeaders,
-      ...options?.headers,
-    },
-    body,
-    method,
-  })
+  const searchParams = options?.searchParams
+    ? new URLSearchParams(options?.searchParams)
+    : null
+
+  const res = await fetch(
+    `${baseUrl}${url}${searchParams ? `?${searchParams.toString()}` : ""}`,
+    {
+      ...options,
+      headers: {
+        ...baseHeaders,
+        ...options?.headers,
+      },
+      body,
+      method,
+    }
+  )
 
   const payload = (await res.json()) as OkResponse<TData>
 
-  console.log({ body: body ? JSON.parse(body) : null })
-  console.log({ payload })
+  console.log({
+    url: `${baseUrl}${url}${searchParams ? `?${searchParams.toString()}` : ""}`,
+    headers: baseHeaders,
+    body: body ? JSON.parse(body) : null,
+    payload,
+  })
 
   if (!res.ok || !payload.resultCode.includes("Success")) {
     if (res.ok) {

@@ -71,21 +71,35 @@ function LoginForm() {
     startTransition(async () => {
       const res = await login(values)
 
+      console.log({ res })
+
       if (res.isSuccess) {
-        if (res.data === "Auth.Success0003") {
-          router.push(`/login/password-method/${values.email}`)
+        if (res.data.resultCode === "Auth.Success0003") {
+          router.push(
+            `/login/password-method/${res.data.userType.toLocaleLowerCase()}/${values.email}`
+          )
           return
         }
 
-        router.push(`/login/otp-method/${values.email}`)
+        if (res.data.resultCode === "Auth.Success0004") {
+          router.push(`/login/otp-method/${values.email}`)
+          return
+        }
+
+        console.log("Something went wrong")
         return
       }
 
-      if (
-        res.typeError === "warning" &&
-        res.resultCode === "Auth.Warning0008"
-      ) {
-        router.push(`/verify-email/${values.email}`)
+      if (res.typeError === "warning") {
+        if (res.resultCode === "Auth.Warning0008") {
+          router.push(`/verify-email/${values.email}`)
+          return
+        }
+
+        if (res.resultCode === "Auth.Warning0011") {
+          router.push(`/mfa/${values.email}/enable`)
+          return
+        }
       }
 
       handleServerActionError(res, locale, form)

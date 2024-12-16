@@ -46,7 +46,7 @@
     "LoginFailedTitle": "Đăng nhập thất bại",
     "StudentCode": "Mã số sinh viên",
     "Create your account": "Tạo tài khoản",
-    "Message": "Chào mừng! Vui lòng điền thông tin để bắt đầu.",
+    "Message": "Chào mừng! Vui lòng điền thông tin để bắt đầu",
     "Google": "Google",
     "or": "hoặc",
     "Already have an account?": "Đã có tài khoản?",
@@ -61,7 +61,8 @@
     "No code": "Không nhận được mã? Gửi lại",
     "Back to login": "Về trang đăng nhập",
     "Password": "Mật khẩu",
-    "ConfirmedPassword": "Nhập lại mật khẩu"
+    "ConfirmedPassword": "Nhập lại mật khẩu",
+    "Missing mfa": "Mất thiết bị kích hoạt MFA?"
   },
   "VerifyEmailPage": {
     "Verify your email": "Xác minh email",
@@ -86,7 +87,11 @@
         "changePicture": "Thay ảnh",
         "contribution": "Đóng góp",
         "reading": "Đang đọc",
+        "email": "Email",
+        "firstName": "Tên",
+        "lastName": "Họ",
         "fullName": "Họ và tên",
+        "address": "Địa chỉ",
         "collegeEmailId": "Email sinh viên",
         "studentCode": "Mã số sinh viên",
         "phoneNumber": "Số điện thoại",
@@ -177,9 +182,38 @@
     "Delete": "Xóa",
     "Edit role": "Chỉnh sửa vai trò",
     "Delete role": "Xóa vai trò",
-    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận.",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
     "Update access level": "Chỉnh sửa mức độ truy cập",
-    "message confirm change access level": "Nếu bạn xác nhận, mức độ truy cập của <role>{role}</role> sẽ thay đổi thành <permission>{permission}</permission> cho tính năng <feature>{feature}</feature>.",
+    "message confirm change access level": "Nếu bạn xác nhận, mức độ truy cập của <role>{role}</role> sẽ thay đổi thành <permission>{permission}</permission> cho tính năng <feature>{feature}</feature>",
     "Confirm": "Xác nhận"
+  },
+  "Routes": {
+    "Dashboard": "Bảng điều khiển",
+    "Books": "Sách",
+    "Borrows": "Mượn trả sách",
+    "Transactions": "Giao dịch",
+    "Fines": "Phí",
+    "Users": "Người dùng",
+    "Employees": "Nhân viên",
+    "Roles": "Vai trò",
+    "System Health": "Tình trạng hệ thống",
+    "System Configuration": "Cấu hình hệ thống"
+  },
+  "MfaPage": {
+    "Verify MFA": "Xác thực MFA",
+    "Active MFA": "Kích hoạt MFA",
+    "Message": "Tài khoản của bạn được bảo vệ bằng xác thực đa yếu tố (MFA)",
+    "Message enable": "Cài đặt ứng dụng tương thích như Google Authenticator, Duo Mobile hoặc ứng dụng Authy trên thiết bị di động hoặc máy tính của bạn.",
+    "Message enable 2": "Mở ứng dụng xác thực, sau đó sử dụng ứng dụng để quét QR và nhận được mã MFA.",
+    "Message enable 3": "Vui lòng lưu một trong các mã bên dưới trong trường hợp bạn làm mất thiết bị đã sử dụng để kích hoạt MFA. Có thể tạo 5 mã mới trong Hồ sơ > Bảo mật.",
+    "Message enable 4": "Nhập mã MFA bên dưới"
+  },
+  "RecoveryMfaPage": {
+    "Recovery MFA": "Khôi phục MFA",
+    "Message": "Nhập mã dự phòng của bạn để tiếp tục",
+    "Continue": "Tiếp tục",
+    "BackupCode": "Mã dự phòng",
+    "Back to login": "Về trang đăng nhập",
+    "Missing mfa": "Mất thiết bị kích hoạt MFA?"
   }
 }

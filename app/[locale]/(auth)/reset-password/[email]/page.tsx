@@ -12,7 +12,7 @@ type Props = {
 }
 
 const ResetPasswordPage = async ({ params }: Props) => {
-  const email = decodeURIComponent(params.email)
+  const email = decodeURIComponent(params.email).trim()
   const t = await getTranslations("ResetPasswordPage")
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">

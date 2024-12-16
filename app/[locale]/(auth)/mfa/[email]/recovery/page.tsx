@@ -4,17 +4,15 @@ import fptLogo from "@/public/assets/images/fpt-logo.png"
 
 import { getTranslations } from "@/lib/get-translations"
 
-import LoginPasswordForm from "./_component/login-password-form"
+import RecoveryMfaForm from "../../../_components/recovery-mfa-form"
 
 type Props = {
-  params: {
-    email: string
-  }
+  params: { email: string }
 }
 
-async function LoginPasswordMethodPage({ params }: Props) {
-  const t = await getTranslations("LoginPage.PasswordMethodPage")
-  const email = decodeURIComponent(params.email)
+async function RecoveryMfaPage({ params }: Props) {
+  const email = decodeURIComponent(params.email).trim()
+  const t = await getTranslations("RecoveryMfaPage")
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-card shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
@@ -30,17 +28,16 @@ async function LoginPasswordMethodPage({ params }: Props) {
         </div>
         <div className="flex flex-col gap-y-1">
           <h1 className="text-center text-lg font-semibold">
-            {t("Enter your password")}
+            {t("Recovery MFA")}
           </h1>
           <p className="text-center text-sm text-muted-foreground">
             {t("Message")}
           </p>
-          <p className="text-center text-sm text-muted-foreground">{email}</p>
         </div>
-        <LoginPasswordForm email={email} />
+        <RecoveryMfaForm email={email} />
       </div>
     </div>
   )
 }
 
-export default LoginPasswordMethodPage
+export default RecoveryMfaPage

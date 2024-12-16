@@ -14,8 +14,6 @@ export async function GET() {
     }
 
     if (!isTokenExpiringSoon(accessToken)) {
-      console.log("not isTokenExpiringSoon", { accessToken, refreshToken })
-
       return Response.json({ accessToken, refreshToken })
     }
 
@@ -28,7 +26,6 @@ export async function GET() {
     cookieStore.set("accessToken", data.accessToken)
     cookieStore.set("refreshToken", data.refreshToken)
 
-    console.log("fine", data)
     return Response.json(data)
   } catch {
     return Response.json(null)

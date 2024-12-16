@@ -7,6 +7,17 @@ const withBundleAnalyzer = createBundleAnalyzerPlugin({
 const withNextIntl = createNextIntlPlugin()
 
 /** @type {import('next').NextConfig} */
-const nextConfig = {}
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+        port: "",
+        pathname: "**",
+      },
+    ],
+  },
+}
 
 export default withBundleAnalyzer(withNextIntl(nextConfig))

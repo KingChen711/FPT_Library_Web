@@ -46,9 +46,7 @@ function ResetPasswordForm({ email }: Props) {
   useQuery({
     queryKey: ["forgot-password", email],
     queryFn: async () =>
-      await http.get(`/api/auth/forgot-password?Email=${email}`, {
-        lang: locale,
-      }),
+      await http.get(`/api/auth/forgot-password?Email=${email}`),
     refetchOnWindowFocus: false,
   })
 

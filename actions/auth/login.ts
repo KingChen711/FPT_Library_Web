@@ -6,15 +6,23 @@ import { type TLoginSchema } from "@/lib/validations/auth/login"
 
 import { resendOtp } from "./resend-otp"
 
-export async function login(
-  body: TLoginSchema
-): Promise<ActionResponse<string>> {
+export async function login(body: TLoginSchema): Promise<
+  ActionResponse<{
+    resultCode: string
+    userType: "User" | "Employee" | "Admin"
+  }>
+> {
   try {
-    const { resultCode } = await http.post("/api/auth/sign-in", body)
+    const { resultCode, data } = await http.post<{
+      userType: "User" | "Employee" | "Admin"
+    }>("/api/auth/sign-in", body)
 
     return {
       isSuccess: true,
-      data: resultCode,
+      data: {
+        resultCode,
+        userType: data.userType,
+      },
     }
   } catch (error) {
     const resError = handleHttpError(error)

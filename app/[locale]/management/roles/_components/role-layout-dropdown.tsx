@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { useRouter } from "@/i18n/routing"
 import {
@@ -39,11 +39,16 @@ const layouts = [
 function RoleLayoutDropdown() {
   const [open, setOpen] = useState(false)
   const searchParams = useSearchParams()
+  const isRoleVerticalLayout = searchParams.get("isRoleVerticalLayout")
   const [value, setValue] = useState(
     searchParams.get("isRoleVerticalLayout") === "true" ? "true" : "false"
   )
   const router = useRouter()
   const t = useTranslations("RoleManagement")
+
+  useEffect(() => {
+    setValue(isRoleVerticalLayout === "true" ? "true" : "false")
+  }, [isRoleVerticalLayout])
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
