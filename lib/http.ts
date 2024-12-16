@@ -126,8 +126,12 @@ const request = async <TData = undefined>(
 
   const payload = (await res.json()) as OkResponse<TData>
 
-  console.log({ body: body ? JSON.parse(body) : null })
-  console.log({ payload })
+  console.log({
+    url: `${baseUrl}${url}${searchParams ? `?${searchParams.toString()}` : ""}`,
+    headers: baseHeaders,
+    body: body ? JSON.parse(body) : null,
+    payload,
+  })
 
   if (!res.ok || !payload.resultCode.includes("Success")) {
     if (res.ok) {

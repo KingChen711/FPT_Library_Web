@@ -1,5 +1,8 @@
 "use client"
 
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTransition } from "react"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -9,45 +12,44 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { otpSchema, type TOtpSchema } from "@/lib/validations/auth/otp"
-import { validateMfa } from "@/actions/auth/validate-mfa"
+import {
+  recoveryMfaSchema,
+  type TRecoveryMfaSchema,
+} from "@/lib/validations/auth/recovery-mfa-schema"
+import { validateBackupCode } from "@/actions/auth/validate-backup-code"
 import { Button } from "@/components/ui/button"
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
+  FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  InputOTP,
-  InputOTPGroup,
-  InputOTPSlot,
-} from "@/components/ui/input-otp"
+import { Input } from "@/components/ui/input"
 
 type Props = {
   email: string
-  validatePage?: boolean
 }
 
-function MfaForm({ email, validatePage = false }: Props) {
-  const t = useTranslations("ResetPasswordPage")
-  const [pending, startTransition] = useTransition()
+function RecoveryMfaForm({ email }: Props) {
+  const t = useTranslations("RecoveryMfaPage")
   const router = useRouter()
   const locale = useLocale()
   const queryClient = useQueryClient()
 
-  const form = useForm<TOtpSchema>({
-    resolver: zodResolver(otpSchema),
+  const [pending, startTransition] = useTransition()
+
+  const form = useForm<TRecoveryMfaSchema>({
+    resolver: zodResolver(recoveryMfaSchema),
     defaultValues: {
-      pin: "",
+      backupCode: "",
     },
   })
 
-  function onSubmit(values: TOtpSchema) {
+  function onSubmit(values: TRecoveryMfaSchema) {
     startTransition(async () => {
-      const res = await validateMfa(email, values.pin)
+      const res = await validateBackupCode(email, values.backupCode)
 
       if (res.isSuccess) {
         queryClient.invalidateQueries({
@@ -66,37 +68,20 @@ function MfaForm({ email, validatePage = false }: Props) {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
         <FormField
           control={form.control}
-          name="pin"
+          name="backupCode"
           render={({ field }) => (
-            <FormItem className="flex flex-col items-center">
+            <FormItem>
+              <FormLabel>{t("BackupCode")}</FormLabel>
               <FormControl>
-                <InputOTP maxLength={6} {...field}>
-                  <InputOTPGroup>
-                    <InputOTPSlot index={0} />
-                    <InputOTPSlot index={1} />
-                    <InputOTPSlot index={2} />
-                    <InputOTPSlot index={3} />
-                    <InputOTPSlot index={4} />
-                    <InputOTPSlot index={5} />
-                  </InputOTPGroup>
-                </InputOTP>
+                <Input disabled={pending} {...field} />
               </FormControl>
-              {validatePage && (
-                <FormDescription>
-                  <Link
-                    href={`/mfa/${email}/recovery`}
-                    className="min-h-0 min-w-0 p-0 hover:bg-transparent hover:underline"
-                  >
-                    {t("Missing mfa")}
-                  </Link>
-                </FormDescription>
-              )}
               <FormMessage />
             </FormItem>
           )}
         />
+
         <Button disabled={pending} type="submit" className="w-full">
-          {t("Continue")}{" "}
+          {t("Continue")}
           {pending && <Loader2 className="size-4 animate-spin" />}
         </Button>
 
@@ -111,4 +96,4 @@ function MfaForm({ email, validatePage = false }: Props) {
   )
 }
 
-export default MfaForm
+export default RecoveryMfaForm
