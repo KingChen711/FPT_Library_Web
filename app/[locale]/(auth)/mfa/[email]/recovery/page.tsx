@@ -1,21 +1,20 @@
+import React from "react"
 import Image from "next/image"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
 
 import { getTranslations } from "@/lib/get-translations"
 
-import MfaForm from "../../_components/mfa-form"
+import RecoveryMfaForm from "../../../_components/recovery-mfa-form"
 
 type Props = {
-  params: {
-    email: string
-  }
+  params: { email: string }
 }
 
-const MfaPage = async ({ params }: Props) => {
+async function RecoveryMfaPage({ params }: Props) {
   const email = decodeURIComponent(params.email).trim()
-  const t = await getTranslations("MfaPage")
+  const t = await getTranslations("RecoveryMfaPage")
   return (
-    <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
+    <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-card shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
         <div className="flex justify-center">
           <Image
@@ -29,16 +28,16 @@ const MfaPage = async ({ params }: Props) => {
         </div>
         <div className="flex flex-col gap-y-1">
           <h1 className="text-center text-lg font-semibold">
-            {t("Verify MFA")}
+            {t("Recovery MFA")}
           </h1>
           <p className="text-center text-sm text-muted-foreground">
             {t("Message")}
           </p>
         </div>
-        <MfaForm email={email} validatePage />
+        <RecoveryMfaForm email={email} />
       </div>
     </div>
   )
 }
 
-export default MfaPage
+export default RecoveryMfaPage

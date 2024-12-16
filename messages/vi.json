@@ -61,7 +61,8 @@
     "No code": "Không nhận được mã? Gửi lại",
     "Back to login": "Về trang đăng nhập",
     "Password": "Mật khẩu",
-    "ConfirmedPassword": "Nhập lại mật khẩu"
+    "ConfirmedPassword": "Nhập lại mật khẩu",
+    "Missing mfa": "Mất thiết bị kích hoạt MFA?"
   },
   "VerifyEmailPage": {
     "Verify your email": "Xác minh email",
@@ -204,7 +205,15 @@
     "Message": "Tài khoản của bạn được bảo vệ bằng xác thực đa yếu tố (MFA)",
     "Message enable": "Cài đặt ứng dụng tương thích như Google Authenticator, Duo Mobile hoặc ứng dụng Authy trên thiết bị di động hoặc máy tính của bạn.",
     "Message enable 2": "Mở ứng dụng xác thực, sau đó sử dụng ứng dụng để quét QR và nhận được mã MFA.",
-    "Message enable 3": "Vui lòng lưu một trong các mã bên dưới trong trường hợp bạn làm mất thiết bị đã sử dụng để kích hoạt MFA.",
+    "Message enable 3": "Vui lòng lưu một trong các mã bên dưới trong trường hợp bạn làm mất thiết bị đã sử dụng để kích hoạt MFA. Có thể tạo 5 mã mới trong Hồ sơ > Bảo mật.",
     "Message enable 4": "Nhập mã MFA bên dưới"
+  },
+  "RecoveryMfaPage": {
+    "Recovery MFA": "Khôi phục MFA",
+    "Message": "Nhập mã dự phòng của bạn để tiếp tục",
+    "Continue": "Tiếp tục",
+    "BackupCode": "Mã dự phòng",
+    "Back to login": "Về trang đăng nhập",
+    "Missing mfa": "Mất thiết bị kích hoạt MFA?"
   }
 }

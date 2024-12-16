@@ -96,13 +96,8 @@ function LoginForm() {
           return
         }
 
-        if (res.resultCode === "Auth.Warning0010") {
-          router.push(`/mfa/${values.email}`)
-          return
-        }
-
         if (res.resultCode === "Auth.Warning0011") {
-          router.push(`/mfa/enable/${values.email}`)
+          router.push(`/mfa/${values.email}/enable`)
           return
         }
       }

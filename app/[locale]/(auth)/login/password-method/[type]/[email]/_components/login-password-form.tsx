@@ -58,6 +58,14 @@ function LoginPasswordForm({ email, type }: Props) {
         return
       }
 
+      if (
+        res.typeError === "warning" &&
+        res.resultCode === "Auth.Warning0010"
+      ) {
+        router.push(`/mfa/${values.email}`)
+        return
+      }
+
       handleServerActionError(res, locale, form)
     })
   }
