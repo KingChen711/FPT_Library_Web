@@ -2,6 +2,8 @@ import { http } from "@/lib/http"
 
 import "server-only"
 
+import { auth } from "../auth"
+
 export type TUserPermissions = {
   columnHeaders: string[]
   dataRows: {
@@ -10,6 +12,7 @@ export type TUserPermissions = {
       rowId: number
       permissionId: number
       cellContent: string
+      isModifiable: boolean
     }[]
   }[]
 }
@@ -17,12 +20,16 @@ export type TUserPermissions = {
 const getUserPermissions = async (
   isRoleVerticalLayout: boolean
 ): Promise<TUserPermissions> => {
+  const { getAccessToken } = auth()
   try {
     const { data } = await http.get<TUserPermissions>(
-      `/api/roles/user-permissions?isRoleVerticalLayout=${isRoleVerticalLayout}`,
+      `/api/management/roles/user-permissions?isRoleVerticalLayout=${isRoleVerticalLayout}`,
       {
         next: {
           tags: ["user-permissions"],
+        },
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       }
     )

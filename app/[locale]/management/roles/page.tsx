@@ -85,6 +85,7 @@ async function RolesManagementPage({ searchParams }: Props) {
                     >
                       {cell.colId && cell.rowId ? (
                         <AccessLevelContextMenu
+                          isModifiable={cell.isModifiable}
                           roleName={
                             isRoleVerticalLayout === "true"
                               ? row.cells[0].cellContent

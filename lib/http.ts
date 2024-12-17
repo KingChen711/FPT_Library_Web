@@ -98,8 +98,6 @@ const request = async <TData = undefined>(
   } else {
     baseHeaders["Accept-Language"] =
       options?.lang ?? getClientSideCookie("NEXT_LOCALE") ?? "vi"
-
-    console.log({ lang: baseHeaders["Accept-Language"] })
   }
 
   const baseUrl =

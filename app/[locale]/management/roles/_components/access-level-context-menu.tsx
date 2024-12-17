@@ -61,6 +61,7 @@ type Props = {
   isRoleVerticalLayout: boolean
   roleName: string
   featureName: string
+  isModifiable: boolean
 }
 
 function AccessLevelContextMenu({
@@ -70,6 +71,7 @@ function AccessLevelContextMenu({
   rowId,
   roleName,
   featureName,
+  isModifiable,
 }: Props) {
   const t = useTranslations("RoleManagement")
   const [permissionId, setPermissionId] = useState(initPermissionId)
@@ -176,8 +178,17 @@ function AccessLevelContextMenu({
       </Dialog>
       <ContextMenu>
         <ContextMenuTrigger asChild>
-          <div className="min-w-[180px]">
-            <Button variant="ghost" className="w-fit gap-x-2">
+          <div
+            className={cn(
+              "min-w-[180px]",
+              !isModifiable && "pointer-events-none cursor-not-allowed"
+            )}
+          >
+            <Button
+              disabled={!isModifiable}
+              variant="ghost"
+              className="w-fit gap-x-2"
+            >
               {permissionId
                 ? levelList.find((item) => +item.value === permissionId)?.ICon()
                 : null}

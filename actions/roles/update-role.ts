@@ -1,6 +1,7 @@
 "use server"
 
 import { revalidatePath } from "next/cache"
+import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
@@ -12,10 +13,19 @@ export async function updateRole(
   body: TMutateRoleSchema
 ): Promise<ActionResponse<string>> {
   try {
-    const { message } = await http.put(`/api/roles/${roleId}`, {
-      ...body,
-      roleTypeIdx: ERoleTypeToIndex.get(body.roleTypeIdx),
-    })
+    const { getAccessToken } = auth()
+    const { message } = await http.put(
+      `/api/management/roles/${roleId}`,
+      {
+        ...body,
+        roleTypeIdx: ERoleTypeToIndex.get(body.roleTypeIdx),
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
 
     revalidatePath("/management/roles")
 

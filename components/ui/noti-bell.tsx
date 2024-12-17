@@ -1,11 +1,25 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { useCallback, useEffect, useState } from "react"
+import { useAuth } from "@/contexts/auth-provider"
+import { type HubConnection } from "@microsoft/signalr"
+import { useQueryClient } from "@tanstack/react-query"
 import { format } from "date-fns"
+import { AnimatePresence, motion } from "framer-motion"
 import { Bell, Loader2 } from "lucide-react"
 import { useInView } from "react-intersection-observer"
 
+import { connectToSignalR, disconnectSignalR } from "@/lib/signalR"
+import {
+  offReceiveNotification,
+  onReceiveNotification,
+  type SocketNotification,
+} from "@/lib/signalR/receive-notification-signalR"
+import { ENotificationType } from "@/lib/types/enums"
+import { type Notification } from "@/lib/types/models"
+import useInfiniteNotifications from "@/hooks/notifications/use-infinite-notifications"
+import useResetUnread from "@/hooks/notifications/use-reset-unread"
+import useUnreadAmount from "@/hooks/notifications/use-unread-amount"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -15,82 +29,112 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-type NotificationType = "event" | "due date" | "announcement"
-
-interface Notification {
-  id: string
-  title: string
-  message: string
-  createdDate: Date
-  type: NotificationType
-  read: boolean
-}
-
-type FetchNotificationsFunction = (page: number) => Promise<Notification[]>
-
-const pageSize = 8
-
-// Mock data for notifications
-const mockNotifications: Notification[] = Array.from(
-  { length: 52 },
-  (_, i) => ({
-    id: `${i + 1}`,
-    title: `Notification ${i + 1}`,
-    message: `This is the message for notification ${i + 1}.`,
-    createdDate: new Date(Date.now() - Math.floor(Math.random() * 10000000000)),
-    type: ["event", "due date", "announcement"][
-      Math.floor(Math.random() * 3)
-    ] as Notification["type"],
-    read: Math.random() > 0.5,
-  })
-)
-
-export const fetchNotifications: FetchNotificationsFunction = async (
-  page: number
-) => {
-  console.log("call fetchNotifications")
-
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1000))
-
-  // Return 10 items per page
-  return mockNotifications.slice((page - 1) * pageSize, page * pageSize)
+const getTypeColor = (type: ENotificationType): string => {
+  switch (type) {
+    case ENotificationType.EVENT:
+      return "bg-success"
+    case ENotificationType.NOTICE:
+      return "bg-info"
+    case ENotificationType.REMINDER:
+      return "bg-danger"
+    default:
+      return "bg-primary"
+  }
 }
 
 export function NotificationBell() {
+  const { accessToken } = useAuth()
+  const [connection, setConnection] = useState<HubConnection | null>(null)
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const { ref, inView } = useInView()
+  const [newNotifications, setNewNotifications] = useState<Notification[]>([])
+  const [isShaking, setIsShaking] = useState(false)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useInfiniteQuery({
-      queryKey: ["notifications"],
-      queryFn: ({ pageParam }) => fetchNotifications(pageParam),
-      initialPageParam: 1,
-      getNextPageParam: (lastPage, allPages) => {
-        return lastPage.length === pageSize ? allPages.length + 1 : undefined
-      },
-    })
+    useInfiniteNotifications()
 
   const notifications = data?.pages.flat() ?? []
 
-  const getTypeColor = (type: NotificationType): string => {
-    switch (type) {
-      case "event":
-        return "bg-success"
-      case "due date":
-        return "bg-danger"
-      case "announcement":
-        return "bg-info"
-      default:
-        return "bg-primary"
+  const { data: unreadAmountData } = useUnreadAmount()
+  const [unreadAmount, setUnreadAmount] = useState(0)
+
+  const { mutate: resetUnread } = useResetUnread()
+
+  const handleShake = useCallback(() => {
+    if (!isShaking) {
+      setIsShaking(true)
+      setTimeout(() => setIsShaking(false), 500) // Reset after animation
     }
-  }
+  }, [isShaking])
+
+  useEffect(() => {
+    console.log({ isShaking })
+  }, [isShaking])
 
   useEffect(() => {
     if (inView && hasNextPage && !isFetchingNextPage) {
       fetchNextPage()
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
+
+  useEffect(() => {
+    if (open) {
+      setUnreadAmount(0)
+      resetUnread(undefined, {
+        onSuccess: () => {
+          queryClient.invalidateQueries({
+            queryKey: ["unread-notifications-amount"],
+          })
+        },
+      })
+    }
+  }, [open, resetUnread, queryClient])
+
+  useEffect(() => {
+    setUnreadAmount(unreadAmountData || 0)
+  }, [unreadAmountData])
+
+  useEffect(() => {
+    if (!accessToken) return
+
+    const connection = connectToSignalR("notificationHub", accessToken)
+    setConnection(connection)
+
+    return () => {
+      disconnectSignalR(connection)
+    }
+  }, [accessToken])
+
+  useEffect(() => {
+    if (!connection) return
+
+    const callback = (notification: SocketNotification) => {
+      handleShake()
+      if (!open) {
+        setUnreadAmount((prev) => prev + 1)
+      }
+      setNewNotifications((prev) => [
+        {
+          createDate: new Date(notification.timestamp),
+          createdBy: "",
+          isPublic: false,
+          message: notification.message,
+          notificationId: notification.notificationId,
+          notificationRecipients: [],
+          title: notification.title,
+          notificationType: notification.notificationType,
+        },
+        ...prev,
+      ])
+    }
+
+    onReceiveNotification(connection, callback)
+
+    return () => {
+      offReceiveNotification(connection, callback)
+    }
+  }, [connection, open, handleShake])
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
@@ -99,15 +143,34 @@ export function NotificationBell() {
           variant="ghost"
           className="relative"
           size="icon"
-          aria-label={`${8} unread notifications`}
+          aria-label={`${unreadAmount} unread notifications`}
         >
-          <Bell className="size-5" />
-          {8 > 0 && (
+          <AnimatePresence>
+            <motion.div
+              key="bell"
+              animate={isShaking ? "shake" : "idle"}
+              variants={{
+                idle: { rotate: 0 },
+                shake: {
+                  rotate: [0, 15, -15, 0],
+                  transition: {
+                    duration: 0.5,
+                    times: [0, 0.2, 0.8, 1],
+                  },
+                },
+              }}
+              onClick={handleShake}
+              className="cursor-pointer"
+            >
+              <Bell className="size-5" />
+            </motion.div>
+          </AnimatePresence>
+          {unreadAmount > 0 && (
             <Badge
               variant="destructive"
               className="absolute -right-1 -top-1 flex size-5 items-center justify-center px-1"
             >
-              {8}
+              {unreadAmount}
             </Badge>
           )}
         </Button>
@@ -127,9 +190,9 @@ export function NotificationBell() {
           <DropdownMenuItem>No notifications</DropdownMenuItem>
         ) : (
           <>
-            {notifications.map((notification) => (
+            {[...newNotifications, ...notifications].map((notification) => (
               <DropdownMenuItem
-                key={notification.id}
+                key={notification.notificationId}
                 className="flex flex-col items-start border-b p-2"
               >
                 <div className="flex w-full items-start justify-between">
@@ -137,22 +200,20 @@ export function NotificationBell() {
                     {notification.title}
                   </span>
                   <Badge
-                    className={`text-xs ${getTypeColor(notification.type)}`}
+                    className={`text-xs ${getTypeColor(notification.notificationType)}`}
                   >
-                    {notification.type}
+                    {notification.notificationType}
                   </Badge>
                 </div>
                 <p className="mt-1 line-clamp-3 text-sm text-card-foreground">
                   {notification.message}
                 </p>
                 <span className="mt-1 text-xs text-muted-foreground">
-                  {format(notification.createdDate, "MMM d, yyyy h:mm a")}
+                  {format(
+                    new Date(notification.createDate),
+                    "MMM d, yyyy h:mm a"
+                  )}
                 </span>
-                {!notification.read && (
-                  <Badge variant="secondary" className="mt-1">
-                    New
-                  </Badge>
-                )}
               </DropdownMenuItem>
             ))}
             {hasNextPage ? (

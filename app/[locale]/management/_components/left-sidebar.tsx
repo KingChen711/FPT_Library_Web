@@ -41,7 +41,7 @@ function LeftSidebar() {
           <div
             onClick={() => toggle()}
             className={cn(
-              "flex cursor-pointer items-center justify-start rounded-lg p-4 text-muted-foreground transition-all hover:bg-border/30",
+              "flex cursor-pointer items-center justify-start rounded-lg p-4 text-muted-foreground transition-all hover:bg-border/30 max-lg:hidden",
               !isCollapsed && "absolute right-0 top-0"
             )}
           >
