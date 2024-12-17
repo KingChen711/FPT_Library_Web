@@ -1,5 +1,6 @@
 "use client"
 
+import { NotificationBell } from "@/components/ui/noti-bell"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 // import { ClerkLoaded, ClerkLoading, SignedIn } from "@clerk/clerk-react"
@@ -22,6 +23,7 @@ function Actions() {
       </ClerkLoaded>
 
       <MobileNavbar /> */}
+      <NotificationBell />
       <ThemeToggle />
       <div className="size-9 rounded-full bg-red-500"></div>
     </div>

@@ -7,13 +7,7 @@ import UserDialogForm from "./_components/user-dialog-form"
 import UserDialogImport from "./_components/user-dialog-import"
 import UserTable from "./_components/user-table"
 
-type UserManagementPageProps = {
-  params: {
-    locale: string
-  }
-}
-
-const UserManagementPage = async ({ params }: UserManagementPageProps) => {
+const UserManagementPage = async () => {
   const t = await getTranslations("UserManagement")
 
   return (

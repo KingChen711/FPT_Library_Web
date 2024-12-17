@@ -17,11 +17,13 @@ export async function GET() {
       return Response.json({ accessToken, refreshToken })
     }
 
+    console.log("need to refresh token")
+
     //need to refresh token
     const { data } = await http.post<{
       accessToken: string
       refreshToken: string
-    }>("/api/auth/refresh-token", { refreshToken })
+    }>("/api/auth/refresh-token", { accessToken, refreshToken })
 
     cookieStore.set("accessToken", data.accessToken)
     cookieStore.set("refreshToken", data.refreshToken)

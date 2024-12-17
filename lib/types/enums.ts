@@ -28,7 +28,7 @@ export enum ESystemRoutes {
   NOTIFICATION_MANAGEMENT = "/me/account/notification",
 }
 
-export enum FEATURE {
+export enum EFeature {
   USER_MANAGEMENT = 1,
   EMPLOYEE_MANAGEMENT = 2,
   ROLE_MANAGEMENT = 3,
@@ -38,4 +38,10 @@ export enum FEATURE {
   TRANSACTION_MANAGEMENT = 7,
   SYSTEM_CONFIGURATION_MANAGEMENT = 8,
   SYSTEM_HEALTH_MANAGEMENT = 9,
+}
+
+export enum ENotificationType {
+  EVENT = "Event",
+  REMINDER = "Reminder",
+  NOTICE = "Notice",
 }

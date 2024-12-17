@@ -12,6 +12,7 @@ type Token = {
 }
 
 type CurrentUser = {
+  userId: string
   email: string
   firstName: string
   lastName: string
@@ -28,7 +29,7 @@ type AuthProviderProps = {
 }
 
 type AuthContextType = {
-  getAccessToken: () => string | null
+  accessToken: string | null
   isLoadingAuth: boolean
   user: CurrentUser | null
 }
@@ -71,9 +72,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     return userData
   }, [userData])
 
-  const getAccessToken = () => {
-    return token?.accessToken ?? null
-  }
+  const accessToken = useMemo(() => token?.accessToken ?? null, [token])
 
   //refresh token
   useEffect(() => {
@@ -102,7 +101,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        getAccessToken,
+        accessToken,
         isLoadingAuth: isLoadingToken || isLoadingUser,
         user,
       }}
