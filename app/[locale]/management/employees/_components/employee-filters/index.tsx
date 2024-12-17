@@ -58,9 +58,8 @@ const EmployeeFilters = () => {
           <FilterIcon /> Filter
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="h-[500px] min-w-[600px] overflow-y-auto bg-primary-foreground">
+      <PopoverContent className="h-[400px] min-w-[600px] overflow-y-auto bg-primary-foreground">
         <div className="flex flex-col gap-4">
-          {/* Employee Code */}
           <EmployeeFilterInput
             label="Employee Code"
             placeholder="Enter employee code"
@@ -68,7 +67,22 @@ const EmployeeFilters = () => {
             handleAddTextSearchParams={handleAddTextSearchParams}
             handleDeleteSearchParam={handleDeleteSearchParam}
           />
-          {/* TODO: First Name, Last Name,... */}
+
+          <EmployeeFilterInput
+            label="Employee first name"
+            placeholder="Enter first name"
+            enumField={EmployeeFilter.FIRST_NAME}
+            handleAddTextSearchParams={handleAddTextSearchParams}
+            handleDeleteSearchParam={handleDeleteSearchParam}
+          />
+
+          <EmployeeFilterInput
+            label="Employee last name"
+            placeholder="Enter last name"
+            enumField={EmployeeFilter.LAST_NAME}
+            handleAddTextSearchParams={handleAddTextSearchParams}
+            handleDeleteSearchParam={handleDeleteSearchParam}
+          />
 
           <EmployeeFilterRoleId
             handleAddTextSearchParams={handleAddTextSearchParams}

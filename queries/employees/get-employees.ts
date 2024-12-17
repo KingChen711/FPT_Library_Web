@@ -3,6 +3,8 @@ import "server-only"
 import { http } from "@/lib/http"
 import { type Employee } from "@/lib/types/models"
 
+import { auth } from "../auth"
+
 export type TGetEmployeesData = {
   sources: Employee[]
   pageIndex: number
@@ -12,13 +14,16 @@ export type TGetEmployeesData = {
 }
 
 export async function getEmployees(query: string): Promise<TGetEmployeesData> {
-  console.log(`/api/employees?${query}`)
+  const { getAccessToken } = auth()
   try {
     const { data } = await http.get<TGetEmployeesData>(
-      `/api/employees?${query}`,
+      `/api/management/employees?${query}`,
       {
         next: {
           tags: ["employees"],
+        },
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
         },
       }
     )

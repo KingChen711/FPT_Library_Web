@@ -137,7 +137,10 @@
         "comma": "Dấu phẩy",
         "tab": "Dấu tab",
         "semicolon": "Dấu chấm phẫy",
-        "colon": "Dấu phẩy"
+        "colon": "Dấu phẩy",
+        "art": "Dấu @",
+        "dot": "Dấu chấm",
+        "exclamation": "Dấu chấm than"
       },
       "importTemplate": "Nhập kiểu mẫu",
       "download": "Tải về",

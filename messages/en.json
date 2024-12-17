@@ -130,10 +130,13 @@
       "columnSeparator": "Column Separator",
       "SelectColumnSeparator": {
         "placeholder": "Type separator",
-        "comma": "Comma",
-        "tab": "Tab",
-        "semicolon": "Semicolon",
-        "colon": "Colon"
+        "comma": "Comma point",
+        "tab": "Tab point",
+        "semicolon": "Semicolon point",
+        "colon": "Colon point",
+        "art": "Art Point",
+        "dot": "Dot point",
+        "exclamation": "Exclamation point"
       },
       "importTemplate": "Import Template",
       "download": "Download",
