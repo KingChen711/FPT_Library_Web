@@ -1,81 +1,58 @@
-// "use client"
+"use client"
 
-// import Link from "next/link"
-// import { usePathname, useSearchParams } from "next/navigation"
+import { usePathname, useRouter, useSearchParams } from "next/navigation"
+import { useDebouncedCallback } from "use-debounce"
 
-// import { ERole, ESystemRoutes } from "@/lib/types/enums"
-// import { cn } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 
-// type UserHeaderTabProps = {
-//   locale: string
-// }
+const EmployeeHeaderTab = () => {
+  const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
 
-// const userManagementRoutes = [
-//   {
-//     label: "All",
-//     route: `${ESystemRoutes.USER_MANAGEMENT}`,
-//   },
-//   {
-//     label: ERole.ADMIN,
-//     route: `${ESystemRoutes.USER_MANAGEMENT}?role=${ERole.ADMIN.toLowerCase()}`,
-//   },
-//   {
-//     label: ERole.STAFF,
-//     route: `${ESystemRoutes.USER_MANAGEMENT}?role=${ERole.STAFF.toLowerCase()}`,
-//   },
-//   {
-//     label: ERole.TEACHER,
-//     route: `${ESystemRoutes.USER_MANAGEMENT}?role=${ERole.TEACHER.toLowerCase()}`,
-//   },
-//   {
-//     label: ERole.STUDENT,
-//     route: `${ESystemRoutes.USER_MANAGEMENT}?role=${ERole.STUDENT.toLowerCase()}`,
-//   },
-// ]
+  const handleShowDeleted = useDebouncedCallback((value: string) => {
+    const params = new URLSearchParams(searchParams)
+    if (value) {
+      params.set("isDeleted", value)
+    } else {
+      params.delete("isDeleted")
+    }
+    router.replace(`${pathname}?${params.toString()}`)
+  }, 300)
 
-// const UserHeaderTab = ({ locale }: UserHeaderTabProps) => {
-//   const pathname = usePathname()
-//   const searchParams = useSearchParams()
+  return (
+    <div className="flex px-4 pt-4">
+      <div
+        onClick={() => handleShowDeleted("")}
+        className={cn(
+          "w-[120px] cursor-pointer text-nowrap border-b-2 pb-1 text-center text-base font-semibold text-muted-foreground hover:border-primary hover:text-primary",
+          !searchParams.has("isDeleted") && "border-primary text-primary"
+        )}
+      >
+        All
+      </div>
+      <div
+        onClick={() => handleShowDeleted("true")}
+        className={cn(
+          "w-[120px] cursor-pointer text-nowrap border-b-2 pb-1 text-center text-base font-semibold text-muted-foreground hover:border-primary hover:text-primary",
+          searchParams.get("isDeleted") === "true" &&
+            "border-primary text-primary"
+        )}
+      >
+        Deleted
+      </div>
+      <div
+        onClick={() => handleShowDeleted("false")}
+        className={cn(
+          "w-[120px] cursor-pointer text-nowrap border-b-2 pb-1 text-center text-base font-semibold text-muted-foreground hover:border-primary hover:text-primary",
+          searchParams.get("isDeleted") === "false" &&
+            "border-primary text-primary"
+        )}
+      >
+        Not-Deleted
+      </div>
+    </div>
+  )
+}
 
-//   const isActive = (route: string) => {
-//     const [routePath, routeQuery] = route.split("?")
-//     const currentPath = `/${locale}${routePath}`
-
-//     // Nếu là "All", kiểm tra cả hai trường hợp
-//     if (route === `${ESystemRoutes.USER_MANAGEMENT}`) {
-//       const roleParam = searchParams.get("role")
-//       return (
-//         pathname === currentPath && (roleParam === null || roleParam === "")
-//       )
-//     }
-
-//     // Kiểm tra các route khác
-//     if (pathname !== currentPath) return false
-
-//     const queryParams = new URLSearchParams(routeQuery || "")
-//     for (const [key, value] of queryParams) {
-//       if (searchParams.get(key) !== value) return false
-//     }
-
-//     return true
-//   }
-
-//   return (
-//     <div className="flex items-center">
-//       {userManagementRoutes.map((route) => (
-//         <Link
-//           key={route.label}
-//           href={`/${locale}${route.route}`}
-//           className={cn(
-//             "w-[120px] border-b-2 pb-1 text-center text-base font-semibold text-muted-foreground hover:border-primary hover:text-primary",
-//             isActive(route.route) && "border-primary text-primary"
-//           )}
-//         >
-//           {route.label}
-//         </Link>
-//       ))}
-//     </div>
-//   )
-// }
-
-// export default UserHeaderTab
+export default EmployeeHeaderTab

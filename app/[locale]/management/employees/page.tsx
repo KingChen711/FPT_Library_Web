@@ -1,13 +1,13 @@
 import { Suspense } from "react"
 import { getEmployees } from "@/queries/employees/get-employees"
-import { FileUp } from "lucide-react"
 import { z } from "zod"
 
 import { getTranslations } from "@/lib/get-translations"
-import { Button } from "@/components/ui/button"
 
 import EmployeeDialogForm from "./_components/employee-dialog-form"
 import EmployeeDialogImport from "./_components/employee-dialog-import"
+import EmployeeExport from "./_components/employee-export"
+import EmployeeHeaderTab from "./_components/employee-header-tab"
 import EmployeeSearch from "./_components/employee-search"
 import EmployeeTable from "./_components/employee-table"
 
@@ -28,6 +28,7 @@ const employeeManagementSchema = z.object({
   pageSize: z.coerce.number().catch(DEFAULT_PAGE_SIZE),
   search: z.string().trim().optional(),
   sort: z.string().trim().optional(),
+  isDeleted: z.string().trim().optional(),
   dobRange: z.array(z.string().trim()).optional().catch([]),
   createDateRange: z.array(z.string().trim()).optional().catch([]),
   modifiedDateRange: z.array(z.string().trim()).optional().catch([]),
@@ -59,7 +60,7 @@ const EmployeeManagementPage = async ({
     }, new URLSearchParams())
   ).toString()
 
-  const tableData = await getEmployees(query)
+  const tableData = await getEmployees(`${query}`)
 
   return (
     <div className="space-y-4">
@@ -68,9 +69,7 @@ const EmployeeManagementPage = async ({
           <h1 className="text-2xl font-semibold">{t("employeeManagement")}</h1>
         </div>
         <div className="flex items-center gap-4">
-          <Button variant="outline" className="bg-primary-foreground">
-            <FileUp size={16} /> {t("export")}
-          </Button>
+          <EmployeeExport />
           <EmployeeDialogImport />
           <EmployeeDialogForm mode="create" />
         </div>
@@ -80,6 +79,7 @@ const EmployeeManagementPage = async ({
           <EmployeeSearch />
           <div className="rounded-md border">
             <Suspense fallback={<div>Loading...</div>}>
+              <EmployeeHeaderTab />
               <EmployeeTable tableData={tableData} />
             </Suspense>
           </div>
