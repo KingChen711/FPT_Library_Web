@@ -14,11 +14,10 @@ export type TGetEmployeesData = {
 }
 
 export async function getEmployees(query: string): Promise<TGetEmployeesData> {
-  console.log(`/api/employees?${query}`)
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<TGetEmployeesData>(
-      `/api/employees?${query}`,
+      `/api/management/employees?${query}`,
       {
         next: {
           tags: ["employees"],

@@ -10,11 +10,9 @@ export async function changeEmployeeStatus(
   employeeId: string
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
-  console.log("🚀 ~ getAccessToken:", getAccessToken())
-  console.log(123)
   try {
     const { message } = await http.patch(
-      `/api/employees/${employeeId}/status`,
+      `/api/management/employees/${employeeId}/status`,
       {},
       {
         headers: {

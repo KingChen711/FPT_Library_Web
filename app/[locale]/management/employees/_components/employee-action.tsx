@@ -15,6 +15,7 @@ import handleServerActionError from "@/lib/handle-server-action-error"
 import { type Employee } from "@/lib/types/models"
 import { changeEmployeeStatus } from "@/actions/employees/change-status"
 import { softDeleteEmployee } from "@/actions/employees/soft-delete"
+import { undoDeleteEmployee } from "@/actions/employees/undo-delete"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -32,6 +33,7 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
   const locale = useLocale()
   const [pendingChangeStatus, startChangeStatus] = useTransition()
   const [pendingSoftDelete, startSoftDelete] = useTransition()
+  const [pendingUndoDelete, startUndoDelete] = useTransition()
 
   const handleDeactive = () => {
     startChangeStatus(async () => {
@@ -53,7 +55,22 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
       const res = await softDeleteEmployee(employee.employeeId as string)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Soft delete success",
+          title: locale === "vi" ? "Thành công" : "Soft delete successfully",
+          description: res.data,
+          variant: "success",
+        })
+        return
+      }
+      handleServerActionError(res, locale)
+    })
+  }
+
+  const handleUndoDelete = () => {
+    startUndoDelete(async () => {
+      const res = await undoDeleteEmployee(employee.employeeId as string)
+      if (res.isSuccess) {
+        toast({
+          title: locale === "vi" ? "Thành công" : "Undo delete successfully",
           description: res.data,
           variant: "success",
         })
@@ -87,16 +104,32 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
         >
           <EyeOff /> De-activate user
         </DropdownMenuItem>
-        <DropdownMenuItem
-          className="cursor-pointer"
-          onClick={handleSoftDelete}
-          disabled={pendingSoftDelete}
-        >
-          <Trash /> Move to trash
-        </DropdownMenuItem>
-        <DropdownMenuItem className="cursor-pointer">
-          <Trash2 /> Delete permanently
-        </DropdownMenuItem>
+
+        {!employee?.isDeleted && (
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={handleSoftDelete}
+            disabled={pendingSoftDelete}
+          >
+            <Trash /> Move to trash
+          </DropdownMenuItem>
+        )}
+
+        {employee?.isDeleted && (
+          <DropdownMenuItem
+            className="cursor-pointer"
+            onClick={handleUndoDelete}
+            disabled={pendingUndoDelete}
+          >
+            <Trash /> Undo delete
+          </DropdownMenuItem>
+        )}
+
+        {employee?.isDeleted && (
+          <DropdownMenuItem className="cursor-pointer">
+            <Trash2 /> Delete permanently
+          </DropdownMenuItem>
+        )}
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -5,7 +5,7 @@ export const employeeImportSchema = z.object({
   duplicateHandle: z.enum(["0", "1", "2"]),
   columnSeparator: z.enum([",", ".", "@", "!"]),
   encodingType: z.enum(["UTF8", "ASCII"]),
-  scanningFields: z.enum(["Email", "Phone"]),
+  scanningFields: z.array(z.enum(["Email", "Phone"])),
 })
 
 export type TEmployeeImport = z.infer<typeof employeeImportSchema>
