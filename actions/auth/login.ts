@@ -21,7 +21,7 @@ export async function login(body: TLoginSchema): Promise<
       isSuccess: true,
       data: {
         resultCode,
-        userType: data.userType,
+        userType: data?.userType,
       },
     }
   } catch (error) {

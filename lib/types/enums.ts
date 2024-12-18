@@ -23,7 +23,7 @@ export enum ESystemRoutes {
   // Account
   ACCOUNT_MANAGEMENT = "/me/account",
   PROFILE_MANAGEMENT = "/me/account/profile",
-  SECURITY_MANAGEMENT = "/me/account/setting",
+  SECURITY_MANAGEMENT = "/me/account/security",
   INTERFACE_MANAGEMENT = "/me/account/interface",
   NOTIFICATION_MANAGEMENT = "/me/account/notification",
 }

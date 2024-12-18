@@ -17,7 +17,7 @@ type OkResponse<TData = undefined> = {
   data: TData
 }
 
-class HttpError extends Error {
+export class HttpError extends Error {
   resultCode: string
   type: "unknown" | "warning" | "error" | "form"
   fieldErrors: Record<string, string[]>

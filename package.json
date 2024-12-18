@@ -50,6 +50,7 @@
     "framer-motion": "^11.15.0",
     "input-otp": "^1.4.1",
     "jsonwebtoken": "^9.0.2",
+    "jwt-decode": "^4.0.0",
     "library": "file:",
     "lint-staged": "^15.2.10",
     "lucide-react": "^0.460.0",
@@ -73,6 +74,7 @@
     "tailwind-merge": "^2.5.4",
     "tailwindcss-animate": "^1.0.7",
     "use-debounce": "^10.0.4",
+    "usehooks-ts": "^3.1.0",
     "zod": "^3.23.8",
     "zustand": "^5.0.2"
   },

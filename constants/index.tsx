@@ -136,7 +136,7 @@ export const managementRoutes = [
 
 export const browseRoutes = [
   {
-    route: "/",
+    route: "",
     label: "Home",
     Icon: (props: { className?: string }) => {
       return <Icons.Home {...props} />
