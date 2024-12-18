@@ -189,6 +189,7 @@
     "Confirm": "Confirm"
   },
   "Routes": {
+    "Home": "Home",
     "Dashboard": "Dashboard",
     "Books": "Books",
     "Borrows": "Borrows",

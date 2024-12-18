@@ -133,3 +133,34 @@ export const managementRoutes = [
     },
   },
 ] as const
+
+export const browseRoutes = [
+  {
+    route: "/",
+    label: "Home",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Home {...props} />
+    },
+  },
+  {
+    route: "/books",
+    label: "Books",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Book {...props} />
+    },
+  },
+  {
+    route: "/authors",
+    label: "Authors",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Author {...props} />
+    },
+  },
+  {
+    route: "/resources",
+    label: "Resources",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Resource {...props} />
+    },
+  },
+] as const
