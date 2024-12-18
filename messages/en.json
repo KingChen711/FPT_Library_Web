@@ -198,7 +198,13 @@
     "Employees": "Employees",
     "Roles": "Roles",
     "System Health": "System health",
-    "System Configuration": "System configuration"
+    "System Configuration": "System configuration",
+    "Authors": "Authors",
+    "Categories": "Categories",
+    "Resources": "Resources",
+    "Notifications": "Notifications",
+    "Returns": "Returns",
+    "System Messages": "System messages"
   },
   "MfaPage": {
     "Verify MFA": "Verify MFA",
