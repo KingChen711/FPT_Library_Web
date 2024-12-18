@@ -1,10 +1,12 @@
 "use server"
 
-import { revalidateTag } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
+import { managementRoutes } from "@/constants"
 import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
+import { type EFeature } from "@/lib/types/enums"
 
 type TUpdateRolePermissions = {
   colId: number
@@ -28,7 +30,18 @@ export async function updateRolePermissions(
       }
     )
 
+    //*Start: revalidate path updated management feature
+    const featureId: EFeature = body.isRoleVerticalLayout
+      ? body.colId
+      : body.rowId
+    const path = managementRoutes.find((i) => i.feature === featureId)?.route
+    if (path) {
+      revalidatePath(path)
+    }
+    //*End: revalidate path updated management feature
+
     revalidateTag("user-permissions")
+    revalidateTag("access-level")
 
     return {
       isSuccess: true,

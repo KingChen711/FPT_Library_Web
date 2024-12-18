@@ -7,6 +7,7 @@ import { getLocale } from "next-intl/server"
 
 import { http } from "@/lib/http"
 import { verifyToken } from "@/lib/server-utils"
+import { EAccessLevel, type EFeature } from "@/lib/types/enums"
 import { type Employee, type User } from "@/lib/types/models"
 
 let isAuthenticated = false
@@ -17,7 +18,7 @@ const getAccessToken = () => {
   return token
 }
 
-const protect = async (feature?: string) => {
+const protect = async (feature?: EFeature) => {
   if (!isAuthenticated) {
     redirect({
       href: "/login",
@@ -25,8 +26,15 @@ const protect = async (feature?: string) => {
     })
   }
 
-  //TODO:handle check feature
-  console.log(feature)
+  if (!feature) return
+
+  const accessLevel = await getAccessLevel(feature)
+  if (accessLevel === EAccessLevel.ACCESS_DENIED) {
+    redirect({
+      href: "/login",
+      locale: await getLocale(),
+    })
+  }
 }
 
 const whoAmI = cache(async (): Promise<User | Employee | null> => {
@@ -47,6 +55,32 @@ const whoAmI = cache(async (): Promise<User | Employee | null> => {
   }
 })
 
+const getAccessLevel = async (feature: EFeature): Promise<EAccessLevel> => {
+  try {
+    const { data } = await http.get<{ permissionLevel: EAccessLevel }>(
+      `/api/features/${feature}/authorized-permission`,
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+        cache: "no-store",
+        next: {
+          revalidate: 0,
+        },
+      }
+    )
+
+    return data.permissionLevel || EAccessLevel.ACCESS_DENIED
+  } catch {
+    return EAccessLevel.ACCESS_DENIED
+  }
+}
+
+export const havePermission = async (
+  feature: EFeature,
+  accessLevel: EAccessLevel
+) => (await getAccessLevel(feature)) >= accessLevel
+
 export const auth = () => {
   const token = getAccessToken()
 
@@ -66,5 +100,6 @@ export const auth = () => {
     getAccessToken,
     protect,
     whoAmI,
+    getAccessLevel,
   }
 }

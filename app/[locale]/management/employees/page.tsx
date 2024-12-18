@@ -1,8 +1,10 @@
 import { Suspense } from "react"
+import { auth } from "@/queries/auth"
 import { getEmployees } from "@/queries/employees/get-employees"
 import { z } from "zod"
 
 import { getTranslations } from "@/lib/get-translations"
+import { EFeature } from "@/lib/types/enums"
 
 import EmployeeDialogForm from "./_components/employee-dialog-form"
 import EmployeeDialogImport from "./_components/employee-dialog-import"
@@ -44,6 +46,8 @@ type SearchParamsData = z.infer<typeof employeeManagementSchema>
 const EmployeeManagementPage = async ({
   searchParams,
 }: EmployeeManagementPageProps) => {
+  await auth().protect(EFeature.EMPLOYEE_MANAGEMENT)
+
   const t = await getTranslations("UserManagement")
 
   const searchParamsData: SearchParamsData =

@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState, useTransition } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 import {
   BanIcon,
   Check,
@@ -81,6 +82,7 @@ function AccessLevelContextMenu({
   >(null)
   const [, startTransition] = useTransition()
   const locale = useLocale()
+  const queryClient = useQueryClient()
 
   const handleSelectPermission = (permissionValue: string) => {
     console.log(+permissionValue, initPermissionId)
@@ -111,6 +113,10 @@ function AccessLevelContextMenu({
             title: locale === "vi" ? "Thành công" : "Success",
             description: res.data,
             variant: "success",
+          })
+
+          queryClient.invalidateQueries({
+            queryKey: ["accessible-features"],
           })
           return
         }

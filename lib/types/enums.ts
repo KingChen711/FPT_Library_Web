@@ -29,6 +29,7 @@ export enum ESystemRoutes {
 }
 
 export enum EFeature {
+  DASHBOARD_MANAGEMENT = 0,
   USER_MANAGEMENT = 1,
   EMPLOYEE_MANAGEMENT = 2,
   ROLE_MANAGEMENT = 3,
@@ -38,6 +39,14 @@ export enum EFeature {
   TRANSACTION_MANAGEMENT = 7,
   SYSTEM_CONFIGURATION_MANAGEMENT = 8,
   SYSTEM_HEALTH_MANAGEMENT = 9,
+}
+
+export enum EAccessLevel {
+  ACCESS_DENIED = 0,
+  VIEW = 1,
+  MODIFY = 2,
+  CREATE = 3,
+  FULL_ACCESS = 4,
 }
 
 export enum ENotificationType {
