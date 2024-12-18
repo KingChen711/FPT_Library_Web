@@ -1,7 +1,7 @@
 import React from "react"
 
-import LeftSidebar from "../management/_components/left-sidebar"
-import ManagementNavbar from "../management/_components/management-navbar"
+import LeftSidebar from "./_components/left-sidebar"
+import ManagementNavbar from "./_components/management-navbar"
 
 type Props = {
   children: React.ReactNode

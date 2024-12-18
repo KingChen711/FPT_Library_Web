@@ -16,10 +16,6 @@ function useHasPermission(feature: EFeature, accessLevel: EAccessLevel) {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
-            cache: "no-store",
-            next: {
-              revalidate: 0,
-            },
           }
         )
 

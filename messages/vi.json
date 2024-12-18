@@ -192,6 +192,7 @@
   },
   "Routes": {
     "Dashboard": "Bảng điều khiển",
+    "Home": "Trang chủ",
     "Books": "Sách",
     "Borrows": "Mượn sách",
     "Transactions": "Giao dịch",
