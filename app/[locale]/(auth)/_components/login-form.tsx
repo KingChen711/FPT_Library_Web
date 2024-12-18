@@ -81,7 +81,7 @@ function LoginForm() {
           return
         }
 
-        if (res.data.resultCode === "Auth.Success0004") {
+        if (res.data.resultCode === "Auth.Success0005") {
           router.push(`/login/otp-method/${values.email}`)
           return
         }

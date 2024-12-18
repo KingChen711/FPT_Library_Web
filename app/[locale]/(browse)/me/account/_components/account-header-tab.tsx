@@ -17,7 +17,7 @@ const accountRoutes = [
     route: ESystemRoutes.PROFILE_MANAGEMENT,
   },
   {
-    label: "Setting",
+    label: "Security",
     route: ESystemRoutes.SECURITY_MANAGEMENT,
   },
   {

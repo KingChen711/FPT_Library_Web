@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidateTag } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { cookies } from "next/headers"
 
 import { handleHttpError, http } from "@/lib/http"
@@ -26,6 +26,9 @@ export async function validateMfa(
     cookiesStore.set("refreshToken", data.refreshToken)
 
     revalidateTag("who-am-i")
+    revalidatePath("/me/account/security")
+    revalidatePath("/en/me/account/security")
+    revalidatePath("/vi/me/account/security")
 
     return {
       isSuccess: true,

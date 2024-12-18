@@ -3,7 +3,7 @@ import { type ENotificationType, type ERoleType } from "./enums"
 export type User = {
   userId: string
   userCode: string | null
-  email: string | null
+  email: string
   passwordHash: string | null
   firstName: string
   lastName: string
@@ -44,7 +44,7 @@ export type Role = {
 export type Employee = {
   employeeId: string | null
   employeeCode: string | null
-  email: string | null
+  email: string
   passwordHash: string | null
   firstName: string | null
   lastName: string | null

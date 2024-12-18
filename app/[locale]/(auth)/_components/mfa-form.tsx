@@ -29,9 +29,14 @@ import {
 type Props = {
   email: string
   validatePage?: boolean
+  hideBackToLogin?: boolean
 }
 
-function MfaForm({ email, validatePage = false }: Props) {
+function MfaForm({
+  email,
+  validatePage = false,
+  hideBackToLogin = false,
+}: Props) {
   const t = useTranslations("ResetPasswordPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
@@ -53,7 +58,9 @@ function MfaForm({ email, validatePage = false }: Props) {
         queryClient.invalidateQueries({
           queryKey: ["token"],
         })
-        router.push("/")
+        if (!hideBackToLogin) {
+          router.push("/")
+        }
         return
       }
 
@@ -100,12 +107,14 @@ function MfaForm({ email, validatePage = false }: Props) {
           {pending && <Loader2 className="size-4 animate-spin" />}
         </Button>
 
-        <Link
-          href="/login"
-          className="block cursor-pointer text-center text-sm font-bold hover:underline"
-        >
-          {t("Back to login")}
-        </Link>
+        {!hideBackToLogin && (
+          <Link
+            href="/login"
+            className="block cursor-pointer text-center text-sm font-bold hover:underline"
+          >
+            {t("Back to login")}
+          </Link>
+        )}
       </form>
     </Form>
   )

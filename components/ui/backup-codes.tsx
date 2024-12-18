@@ -3,13 +3,15 @@
 import React from "react"
 import { useLocale } from "next-intl"
 
+import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
 
 type Props = {
   codes: string[]
+  className?: string
 }
 
-function BackupCodes({ codes }: Props) {
+function BackupCodes({ codes, className }: Props) {
   const locale = useLocale()
   const handleCopyCode = (code: string) => {
     navigator.clipboard.writeText(code)
@@ -24,7 +26,7 @@ function BackupCodes({ codes }: Props) {
     })
   }
   return (
-    <div className="mt-3 flex flex-wrap justify-center gap-2">
+    <div className={cn("mt-3 flex flex-wrap justify-center gap-2", className)}>
       {codes.map((code) => (
         <div
           key={code}

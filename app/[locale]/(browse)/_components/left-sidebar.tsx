@@ -54,8 +54,8 @@ function LeftSidebar() {
 
           {browseRoutes.map(({ Icon, label, route }) => {
             const isActive =
-              (pathname.slice(3).startsWith(route) && route !== "/") ||
-              (pathname.slice(3) === "/" && route === "/")
+              (pathname.slice(3).startsWith(route) && route !== "") ||
+              (pathname.slice(3) === "" && route === "")
 
             return (
               <Link
