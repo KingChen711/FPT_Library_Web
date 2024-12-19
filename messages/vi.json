@@ -236,5 +236,8 @@
     "Cancel": "Hủy",
     "MFA": "MFA",
     "Active MFA": "Kích hoạt MFA"
+  },
+  "NotificationsPage": {
+    "Search": "Tìm kiếm..."
   }
 }

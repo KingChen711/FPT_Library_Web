@@ -1,6 +1,6 @@
 import { Bell } from "lucide-react"
 
-import { EFeature } from "@/lib/types/enums"
+import { EFeature, ENotificationType } from "@/lib/types/enums"
 import { Icons } from "@/components/ui/icons"
 
 export const managementRoutes = [
@@ -164,3 +164,16 @@ export const browseRoutes = [
     },
   },
 ] as const
+
+export const getTypeColor = (type: ENotificationType): string => {
+  switch (type) {
+    case ENotificationType.EVENT:
+      return "bg-success"
+    case ENotificationType.NOTICE:
+      return "bg-info"
+    case ENotificationType.REMINDER:
+      return "bg-danger"
+    default:
+      return "bg-primary"
+  }
+}

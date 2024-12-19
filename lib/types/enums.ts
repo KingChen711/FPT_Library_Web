@@ -25,7 +25,7 @@ export enum ESystemRoutes {
   PROFILE_MANAGEMENT = "/me/account/profile",
   SECURITY_MANAGEMENT = "/me/account/security",
   INTERFACE_MANAGEMENT = "/me/account/interface",
-  NOTIFICATION_MANAGEMENT = "/me/account/notification",
+  NOTIFICATION_MANAGEMENT = "/me/account/notifications",
 }
 
 export enum EFeature {

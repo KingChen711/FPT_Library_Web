@@ -234,5 +234,8 @@
     "Cancel": "Cancel",
     "MFA": "MFA",
     "Active MFA": "Active MFA"
+  },
+  "NotificationsPage": {
+    "Search": "Search..."
   }
 }
