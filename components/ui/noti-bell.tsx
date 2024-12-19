@@ -52,7 +52,7 @@ export function NotificationBell() {
   const [isShaking, setIsShaking] = useState(false)
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
-    useInfiniteNotifications()
+    useInfiniteNotifications({})
 
   const notifications = data?.pages.flat() ?? []
 
@@ -66,10 +66,6 @@ export function NotificationBell() {
       setIsShaking(true)
       setTimeout(() => setIsShaking(false), 500) // Reset after animation
     }
-  }, [isShaking])
-
-  useEffect(() => {
-    console.log({ isShaking })
   }, [isShaking])
 
   useEffect(() => {

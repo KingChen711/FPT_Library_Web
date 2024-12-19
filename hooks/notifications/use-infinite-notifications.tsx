@@ -1,12 +1,12 @@
 "use client"
 
 import { useAuth } from "@/contexts/auth-provider"
-import { useInfiniteQuery } from "@tanstack/react-query"
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
 import { type Notification } from "@/lib/types/models"
 
-const pageSize = 8
+const PAGE_SIZE = 8
 
 export type ApiNotificationsResponse = {
   sources: Notification[]
@@ -17,31 +17,46 @@ export type ApiNotificationsResponse = {
 
 export const fetchNotifications = async (
   page: number,
-  token: string | null
+  token: string | null,
+  search: string
 ) => {
-  if (!token) return []
-  const { data } = await http.get<ApiNotificationsResponse>(
-    `/api/management/notifications?PageIndex=${page}&PageSize=8`,
-    {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  )
+  try {
+    if (!token) return []
+    const { data } = await http.get<ApiNotificationsResponse>(
+      `/api/management/notifications?PageIndex=${page}&PageSize=${PAGE_SIZE}&Search=${search}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    )
 
-  return data.sources
+    return data.sources
+  } catch {
+    return []
+  }
 }
 
-function useInfiniteNotifications() {
+type TSearchNotification = {
+  pageSize?: number
+  search?: string
+}
+
+function useInfiniteNotifications({
+  pageSize = PAGE_SIZE,
+  search = "",
+}: TSearchNotification) {
   const { accessToken } = useAuth()
 
   return useInfiniteQuery({
-    queryKey: ["infinite-notifications", accessToken],
-    queryFn: ({ pageParam }) => fetchNotifications(pageParam, accessToken),
+    queryKey: ["infinite-notifications", { pageSize, search }, accessToken],
+    queryFn: ({ pageParam }) =>
+      fetchNotifications(pageParam, accessToken, search),
     initialPageParam: 1,
     getNextPageParam: (lastPage, allPages) => {
       return lastPage.length === pageSize ? allPages.length + 1 : undefined
     },
+    placeholderData: keepPreviousData,
   })
 }
 

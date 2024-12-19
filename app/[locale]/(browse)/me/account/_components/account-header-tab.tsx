@@ -25,7 +25,7 @@ const accountRoutes = [
     route: ESystemRoutes.INTERFACE_MANAGEMENT,
   },
   {
-    label: "Notification",
+    label: "Notifications",
     route: ESystemRoutes.NOTIFICATION_MANAGEMENT,
   },
 ]
