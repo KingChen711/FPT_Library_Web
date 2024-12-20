@@ -10,7 +10,6 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function exportEmployee(
   searchParams: string
 ): Promise<ActionResponse<Blob>> {
-  console.log("🚀🚀🚀 ~ searchParams:", searchParams)
   const { getAccessToken } = auth()
 
   try {
@@ -23,7 +22,6 @@ export async function exportEmployee(
         responseType: "blob",
       }
     )
-    console.log("🚀 ~ res:", res)
     const url = URL.createObjectURL(res)
     const a = document.createElement("a")
     a.href = url

@@ -5,27 +5,25 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
+import { type TEmployeeDialogSchema } from "@/lib/validations/employee/employee-dialog"
 
-export async function softDeleteEmployee(
-  employeeId: string
-): Promise<ActionResponse<string>> {
+export async function updateEmployee(
+  employeeId: string,
+  body: TEmployeeDialogSchema
+): Promise<ActionResponse> {
   const { getAccessToken } = auth()
 
   try {
-    const { message } = await http.patch(
-      `/api/management/employees/${employeeId}/soft-delete`,
-      {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      }
-    )
+    await http.post(`/api/management/employees/${employeeId}`, body, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    })
 
     revalidateTag("employees")
 
     return {
       isSuccess: true,
-      data: message,
     }
   } catch (error) {
     return handleHttpError(error)

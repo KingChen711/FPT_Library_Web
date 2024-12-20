@@ -50,9 +50,16 @@ const EmployeeManagementPage = async ({
 
   const t = await getTranslations("UserManagement")
 
-  const searchParamsData: SearchParamsData =
-    employeeManagementSchema.parse(searchParams)
+  const defaultParams = {
+    ...searchParams,
+    isDeleted: searchParams.isDeleted ?? "false",
+  }
 
+  // Parse searchParams với schema
+  const searchParamsData: SearchParamsData =
+    employeeManagementSchema.parse(defaultParams)
+
+  // Create query string from searchParamsData
   const query = new URLSearchParams(
     Object.entries(searchParamsData).reduce((acc, [key, value]) => {
       if (Array.isArray(value)) {
@@ -67,25 +74,27 @@ const EmployeeManagementPage = async ({
   const tableData = await getEmployees(`${query}`)
 
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-8">
-          <h1 className="text-2xl font-semibold">{t("employeeManagement")}</h1>
-        </div>
-        <div className="flex items-center gap-4">
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+        <h3 className="text-2xl font-semibold">{t("employeeManagement")}</h3>
+        <div className="flex items-center gap-x-4">
           <EmployeeExport />
           <EmployeeDialogImport />
           <EmployeeDialogForm mode="create" />
         </div>
       </div>
-      <div className="w-full rounded-lg bg-primary-foreground p-4">
-        <div>
-          <EmployeeSearch />
-          <div className="rounded-md border">
-            <Suspense fallback={<div>Loading...</div>}>
-              <EmployeeHeaderTab />
-              <EmployeeTable tableData={tableData} />
-            </Suspense>
+      <div className="my-4 grid w-full">
+        <div className="relative overflow-x-auto">
+          <div className="w-full rounded-lg bg-primary-foreground p-4">
+            <div>
+              <EmployeeSearch />
+              <div className="rounded-md border">
+                <Suspense fallback={<div>Loading...</div>}>
+                  <EmployeeHeaderTab />
+                  <EmployeeTable tableData={tableData} />
+                </Suspense>
+              </div>
+            </div>
           </div>
         </div>
       </div>

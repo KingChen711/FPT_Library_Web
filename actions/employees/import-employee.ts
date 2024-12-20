@@ -19,7 +19,6 @@ export async function importEmployee(
     })
 
     revalidateTag("employees")
-    console.log("🚀 ~ res:", res)
 
     return {
       isSuccess: true,

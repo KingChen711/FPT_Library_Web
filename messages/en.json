@@ -159,7 +159,8 @@
       "editUser": "Edit employee",
       "deleteUser": "Delete employee",
       "saveBtn": "Save",
-      "cancelBtn": "Cancel"
+      "cancelBtn": "Cancel",
+      "fileEmptyMessage": "Data not found or empty"
     }
   },
   "RoleManagement": {

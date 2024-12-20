@@ -1,6 +1,7 @@
 "use client"
 
 import { usePathname, useSearchParams } from "next/navigation"
+import { useRouter } from "@/i18n/routing"
 
 import { cn } from "@/lib/utils"
 import {
@@ -19,6 +20,7 @@ type EmployeePaginationProps = {
 const EmployeePagination = ({ totalPages }: EmployeePaginationProps) => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
+  const router = useRouter()
   const currentPage = Number(searchParams.get("pageIndex")) || 1
 
   const createPageURL = (pageNumber: number | string) => {
@@ -33,7 +35,8 @@ const EmployeePagination = ({ totalPages }: EmployeePaginationProps) => {
       const params = new URLSearchParams(searchParams)
       params.set("pageIndex", previousPage.toString())
       const url = `${pathname}?${params.toString()}`
-      window.location.href = url
+      router.push(url)
+      // window.location.href = url
     }
   }
 
@@ -43,7 +46,8 @@ const EmployeePagination = ({ totalPages }: EmployeePaginationProps) => {
       const params = new URLSearchParams(searchParams)
       params.set("pageIndex", nextPage.toString())
       const url = `${pathname}?${params.toString()}`
-      window.location.href = url
+      // window.location.href = url
+      router.push(url)
     }
   }
 

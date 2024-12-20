@@ -14,19 +14,18 @@ const EmployeeHeaderTab = () => {
     const params = new URLSearchParams(searchParams)
     if (value) {
       params.set("isDeleted", value)
-    } else {
-      params.delete("isDeleted")
     }
     router.replace(`${pathname}?${params.toString()}`)
   }, 300)
 
   return (
-    <div className="flex px-4 pt-4">
+    <div className="flex pt-4">
       <div
-        onClick={() => handleShowDeleted("")}
+        onClick={() => handleShowDeleted("false")}
         className={cn(
           "w-[120px] cursor-pointer text-nowrap border-b-2 pb-1 text-center text-base font-semibold text-muted-foreground hover:border-primary hover:text-primary",
-          !searchParams.has("isDeleted") && "border-primary text-primary"
+          searchParams.get("isDeleted") !== "true" &&
+            "border-primary text-primary"
         )}
       >
         All
@@ -39,17 +38,7 @@ const EmployeeHeaderTab = () => {
             "border-primary text-primary"
         )}
       >
-        Deleted
-      </div>
-      <div
-        onClick={() => handleShowDeleted("false")}
-        className={cn(
-          "w-[120px] cursor-pointer text-nowrap border-b-2 pb-1 text-center text-base font-semibold text-muted-foreground hover:border-primary hover:text-primary",
-          searchParams.get("isDeleted") === "false" &&
-            "border-primary text-primary"
-        )}
-      >
-        Not-Deleted
+        Trash
       </div>
     </div>
   )
