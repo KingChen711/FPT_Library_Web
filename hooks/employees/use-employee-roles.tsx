@@ -12,7 +12,7 @@ export type TGetEmployeeRolesData = {
 }[]
 
 const useEmployeeRoles = () => {
-  const { getAccessToken } = useAuth()
+  const { accessToken } = useAuth()
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["employee-roles"],
@@ -21,14 +21,13 @@ const useEmployeeRoles = () => {
         const data = await http
           .get<TGetEmployeeRolesData>(`/api/management/roles/employees`, {
             headers: {
-              Authorization: `Bearer ${getAccessToken()}`,
+              Authorization: `Bearer ${accessToken}`,
             },
           })
           .then((res) => res.data)
 
         return data
       } catch (error) {
-        console.error(error)
         throw error
       }
     },

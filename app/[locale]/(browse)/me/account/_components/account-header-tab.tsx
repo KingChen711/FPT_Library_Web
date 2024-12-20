@@ -17,7 +17,7 @@ const accountRoutes = [
     route: ESystemRoutes.PROFILE_MANAGEMENT,
   },
   {
-    label: "Setting",
+    label: "Security",
     route: ESystemRoutes.SECURITY_MANAGEMENT,
   },
   {
@@ -25,7 +25,7 @@ const accountRoutes = [
     route: ESystemRoutes.INTERFACE_MANAGEMENT,
   },
   {
-    label: "Notification",
+    label: "Notifications",
     route: ESystemRoutes.NOTIFICATION_MANAGEMENT,
   },
 ]

@@ -17,7 +17,7 @@ type OkResponse<TData = undefined> = {
   data: TData
 }
 
-class HttpError extends Error {
+export class HttpError extends Error {
   resultCode: string
   type: "unknown" | "warning" | "error" | "form"
   fieldErrors: Record<string, string[]>
@@ -98,8 +98,6 @@ const request = async <TData = undefined>(
   } else {
     baseHeaders["Accept-Language"] =
       options?.lang ?? getClientSideCookie("NEXT_LOCALE") ?? "vi"
-
-    console.log({ lang: baseHeaders["Accept-Language"] })
   }
 
   const baseUrl =

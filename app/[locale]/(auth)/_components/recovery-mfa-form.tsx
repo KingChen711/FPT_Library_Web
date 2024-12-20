@@ -34,8 +34,8 @@ type Props = {
 
 function RecoveryMfaForm({ email }: Props) {
   const t = useTranslations("RecoveryMfaPage")
-  const router = useRouter()
   const locale = useLocale()
+  const router = useRouter()
   const queryClient = useQueryClient()
 
   const [pending, startTransition] = useTransition()

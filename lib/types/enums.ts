@@ -23,12 +23,13 @@ export enum ESystemRoutes {
   // Account
   ACCOUNT_MANAGEMENT = "/me/account",
   PROFILE_MANAGEMENT = "/me/account/profile",
-  SECURITY_MANAGEMENT = "/me/account/setting",
+  SECURITY_MANAGEMENT = "/me/account/security",
   INTERFACE_MANAGEMENT = "/me/account/interface",
-  NOTIFICATION_MANAGEMENT = "/me/account/notification",
+  NOTIFICATION_MANAGEMENT = "/me/account/notifications",
 }
 
-export enum FEATURE {
+export enum EFeature {
+  DASHBOARD_MANAGEMENT = 0,
   USER_MANAGEMENT = 1,
   EMPLOYEE_MANAGEMENT = 2,
   ROLE_MANAGEMENT = 3,
@@ -38,4 +39,18 @@ export enum FEATURE {
   TRANSACTION_MANAGEMENT = 7,
   SYSTEM_CONFIGURATION_MANAGEMENT = 8,
   SYSTEM_HEALTH_MANAGEMENT = 9,
+}
+
+export enum EAccessLevel {
+  ACCESS_DENIED = 0,
+  VIEW = 1,
+  MODIFY = 2,
+  CREATE = 3,
+  FULL_ACCESS = 4,
+}
+
+export enum ENotificationType {
+  EVENT = "Event",
+  REMINDER = "Reminder",
+  NOTICE = "Notice",
 }

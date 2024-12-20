@@ -94,6 +94,7 @@ const EmployeeDialogForm = ({ mode }: EmployeeDialogFormProps) => {
 
   const handleCancel = () => {
     form.reset()
+    setOpen(false)
   }
 
   return (

@@ -5,7 +5,7 @@ import getMfaQr from "@/queries/auth/get-mfa-qr"
 import { getTranslations } from "@/lib/get-translations"
 
 import MfaForm from "../../../_components/mfa-form"
-import BackupCodes from "./_components/backup-codes"
+import BackupCodes from "../../../../../../components/ui/backup-codes"
 
 type Props = {
   params: {

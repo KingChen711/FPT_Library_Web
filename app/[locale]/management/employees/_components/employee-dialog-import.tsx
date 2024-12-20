@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useTransition, type ChangeEvent } from "react"
-import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FileDown, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -26,7 +25,6 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -283,7 +281,7 @@ const EmployeeDialogImport = () => {
                 <FormField
                   control={form.control}
                   name="duplicateHandle"
-                  render={({ field }) => (
+                  render={({}) => (
                     <FormItem className="flex items-center gap-4">
                       <FormLabel className="w-1/3">{t("scanning")}</FormLabel>
                       <FormControl className="flex-1">

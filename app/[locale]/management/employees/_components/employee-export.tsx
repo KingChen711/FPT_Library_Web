@@ -15,7 +15,7 @@ const EmployeeExport = () => {
   // const locale = useLocale()
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
-  const { getAccessToken } = useAuth()
+  const { accessToken } = useAuth()
 
   const handleExportEmployee = () => {
     startTransition(async () => {
@@ -25,7 +25,7 @@ const EmployeeExport = () => {
           `/api/management/employees/export?${searchParams.toString()}`,
           {
             headers: {
-              Authorization: `Bearer ${getAccessToken()}`,
+              Authorization: `Bearer ${accessToken}`,
             },
             responseType: "blob",
           }

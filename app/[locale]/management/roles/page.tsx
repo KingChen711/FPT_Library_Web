@@ -1,8 +1,10 @@
 import React from "react"
+import { auth } from "@/queries/auth"
 import getUserPermissions from "@/queries/roles/get-user-permissions"
 import { z } from "zod"
 
 import { getTranslations } from "@/lib/get-translations"
+import { EFeature } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import {
   Table,
@@ -30,6 +32,8 @@ type Props = {
 }
 
 async function RolesManagementPage({ searchParams }: Props) {
+  await auth().protect(EFeature.ROLE_MANAGEMENT)
+
   const { isRoleVerticalLayout } = rolesManagementSchema.parse(searchParams)
 
   const t = await getTranslations("RoleManagement")
@@ -85,6 +89,7 @@ async function RolesManagementPage({ searchParams }: Props) {
                     >
                       {cell.colId && cell.rowId ? (
                         <AccessLevelContextMenu
+                          isModifiable={cell.isModifiable}
                           roleName={
                             isRoleVerticalLayout === "true"
                               ? row.cells[0].cellContent

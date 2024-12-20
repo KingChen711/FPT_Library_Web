@@ -1,9 +1,9 @@
-import { type ERoleType } from "./enums"
+import { type ENotificationType, type ERoleType } from "./enums"
 
 export type User = {
   userId: string
   userCode: string | null
-  email: string | null
+  email: string
   passwordHash: string | null
   firstName: string
   lastName: string
@@ -44,7 +44,7 @@ export type Role = {
 export type Employee = {
   employeeId: string | null
   employeeCode: string | null
-  email: string | null
+  email: string
   passwordHash: string | null
   firstName: string | null
   lastName: string | null
@@ -76,4 +76,15 @@ export type Employee = {
     roleType: ERoleType
     rolePermissions: []
   }
+}
+
+export type Notification = {
+  notificationId: number
+  title: string
+  message: string
+  isPublic: boolean
+  createDate: Date
+  createdBy: string
+  notificationType: ENotificationType
+  notificationRecipients: []
 }
