@@ -10,6 +10,7 @@ import { useLocale } from "next-intl"
 import { type Employee } from "@/lib/types/models"
 import { formatDate } from "@/lib/utils"
 import { EmployeeFilter } from "@/lib/validations/employee/employees-filter"
+import { Badge } from "@/components/ui/badge"
 import {
   Table,
   TableBody,
@@ -53,7 +54,7 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
               <TableRow>
                 <TableHead>No</TableHead>
                 <TableHead
-                  className="flex items-center gap-x-2"
+                  className="flex items-center gap-x-2 text-nowrap"
                   onClick={() => handleSortParams(EmployeeFilter.EMAIL)}
                 >
                   Email <ArrowDownUp size={16} className="cursor-pointer" />
@@ -130,7 +131,7 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
                 <TableRow key={employee.employeeId}>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 pr-8">
                       <Image
                         src={employee.avatar || "https://github.com/shadcn.png"}
                         alt="avatar"
@@ -149,7 +150,7 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
                     {employee?.dob && formatDate(employee?.dob)}
                   </TableCell>
                   <TableCell className="text-center">
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center text-nowrap">
                       {employee.gender === "Male" ? (
                         <User color="blue" />
                       ) : (
@@ -166,8 +167,14 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
                       ? employee.role.englishName
                       : employee.role.vietnameseName}
                   </TableCell>
-                  <TableCell>
-                    {employee.isActive ? "Active" : "Inactive"}
+                  <TableCell className="flex items-center justify-center text-nowrap">
+                    {employee.isActive ? (
+                      <Badge className="bg-success hover:bg-success">
+                        Active
+                      </Badge>
+                    ) : (
+                      <Badge variant="default">Inactive</Badge>
+                    )}
                   </TableCell>
                   <TableCell>
                     <EmployeeAction employee={employee} />

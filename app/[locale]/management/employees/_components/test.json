@@ -1,0 +1,12 @@
+{
+  "employeeCode": "EM000002",
+  "email": "test2@gmail.com",
+  "firstName": "employ",
+  "lastName": "test 1",
+  "dob": "2000-01-01",
+  "phone": "0123456789",
+  "address": "Thu Duc",
+  "gender": 1,
+  "hireDate": "2000-01-01",
+  "roleId": 5
+}

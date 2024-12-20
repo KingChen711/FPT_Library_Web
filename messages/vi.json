@@ -163,7 +163,8 @@
       "editUser": "Sửa nhân viên",
       "deleteUser": "Xóa nhân viên",
       "saveBtn": "Lưu",
-      "cancelBtn": "Hủy"
+      "cancelBtn": "Hủy",
+      "fileEmptyMessage": "Không tìm thấy dữ liệu hoặc dữ liệu rỗng"
     }
   },
   "RoleManagement": {

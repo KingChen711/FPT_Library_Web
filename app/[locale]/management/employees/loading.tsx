@@ -36,7 +36,7 @@ function ManagementEmployeesLoading() {
               </TableRow>
             </TableHeader>
             <TableBody className="rounded-b-xl bg-card">
-              {[...Array(9)].map((_, rowIdx) => (
+              {[...Array(4)].map((_, rowIdx) => (
                 <TableRow key={rowIdx}>
                   {[...Array(10)].map((_, colIdx) => (
                     <TableCell key={colIdx} className="w-[200px]">
