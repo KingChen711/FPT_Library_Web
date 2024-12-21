@@ -6,12 +6,12 @@ import { z } from "zod"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 
-import EmployeeDialogForm from "./_components/employee-dialog-form"
+import EmployeeDialogForm from "./_components/employee-dialog"
 import EmployeeDialogImport from "./_components/employee-dialog-import"
 import EmployeeExport from "./_components/employee-export"
-import EmployeeHeaderTab from "./_components/employee-header-tab"
-import EmployeeSearch from "./_components/employee-search"
+import EmployeeSearch from "./_components/employee-filters/employee-search"
 import EmployeeTable from "./_components/employee-table"
+import EmployeeHeaderTab from "./_components/employee-table/employee-header-tab"
 
 enum EmployeeGender {
   Male = "Male",

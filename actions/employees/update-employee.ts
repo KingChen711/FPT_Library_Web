@@ -14,7 +14,7 @@ export async function updateEmployee(
   const { getAccessToken } = auth()
 
   try {
-    await http.post(`/api/management/employees/${employeeId}`, body, {
+    await http.put(`/api/management/employees/${employeeId}`, body, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

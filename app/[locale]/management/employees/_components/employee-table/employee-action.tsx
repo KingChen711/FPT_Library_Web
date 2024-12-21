@@ -1,6 +1,6 @@
 "use client"
 
-import { useTransition } from "react"
+import { useState, useTransition } from "react"
 import {
   EyeOff,
   MoreHorizontal,
@@ -13,6 +13,7 @@ import { useLocale } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { type Employee } from "@/lib/types/models"
+import { type TEmployeeDialogSchema } from "@/lib/validations/employee/employee-dialog"
 import { changeEmployeeStatus } from "@/actions/employees/change-status"
 import { softDeleteEmployee } from "@/actions/employees/soft-delete"
 import { undoDeleteEmployee } from "@/actions/employees/undo-delete"
@@ -25,8 +26,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+import EmployeeDialogForm from "../employee-dialog"
+
 type EmployeeActionProps = {
   employee: Employee
+}
+
+const parseNumber = (value: string | null, fallback: number): number => {
+  const parsed = Number(value)
+  return isNaN(parsed) ? fallback : parsed
 }
 
 const EmployeeAction = ({ employee }: EmployeeActionProps) => {
@@ -34,6 +42,20 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
   const [pendingChangeStatus, startChangeStatus] = useTransition()
   const [pendingSoftDelete, startSoftDelete] = useTransition()
   const [pendingUndoDelete, startUndoDelete] = useTransition()
+  const [updatingEmployee] = useState<TEmployeeDialogSchema>(() => ({
+    employeeCode: employee.employeeCode as string,
+    email: employee.email,
+    firstName: employee.firstName as string,
+    lastName: employee.lastName as string,
+    dob: employee.dob as string,
+    phone: employee.phone as string,
+    address: employee.address as string,
+    gender: parseNumber(employee.gender, 0),
+    hireDate: employee.hireDate as string,
+    roleId: employee.roleId,
+  }))
+
+  if (!employee) return null
 
   const handleDeactive = () => {
     startChangeStatus(async () => {
@@ -91,8 +113,12 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="bg-primary-foreground">
-        <DropdownMenuItem className="cursor-pointer">
-          <SquarePen /> Edit
+        <DropdownMenuItem className="cursor-pointer" asChild>
+          <EmployeeDialogForm
+            mode="edit"
+            employee={updatingEmployee}
+            employeeId={employee.employeeId as string}
+          />
         </DropdownMenuItem>
         <DropdownMenuItem className="cursor-pointer">
           <User2 /> Change role
