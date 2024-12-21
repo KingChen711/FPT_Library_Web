@@ -14,6 +14,7 @@ export async function softDeleteEmployee(
   try {
     const { message } = await http.patch(
       `/api/management/employees/${employeeId}/soft-delete`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,

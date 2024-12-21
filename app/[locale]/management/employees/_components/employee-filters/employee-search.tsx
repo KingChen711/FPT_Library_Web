@@ -6,7 +6,7 @@ import { useDebouncedCallback } from "use-debounce"
 
 import { Input } from "@/components/ui/input"
 
-import EmployeeFilters from "./employee-filters"
+import EmployeeFilters from "."
 
 const EmployeeSearch = () => {
   const searchParams = useSearchParams()
