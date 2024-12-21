@@ -240,5 +240,27 @@
   },
   "NotificationsPage": {
     "Search": "Tìm kiếm..."
+  },
+  "CategoriesManagementPage": {
+    "Categories": "Thể loại",
+    "Category": "Thể loại",
+    "Create category": "Tạo thể loại",
+    "English name": "Tên tiếng Anh",
+    "Vietnamese name": "Tên tiếng Việt",
+    "Description": "Mô tả",
+    "Cancel": "Hủy",
+    "Create": "Tạo",
+    "Edit": "Chỉnh sửa",
+    "Save": "Lưu",
+    "Delete": "Xóa",
+    "Edit category": "Chỉnh sửa thể loại",
+    "Delete category": "Xóa thể loại",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
+    "Search": "Tìm kiếm...",
+    "Sort by": "Sắp xếp theo",
+    "A-Z": "A-Z",
+    "Z-A": "Z-A",
+    "Id ascending": "Id tăng dần",
+    "Id descending": "Id giảm dần"
   }
 }

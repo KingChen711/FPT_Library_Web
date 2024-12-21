@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken"
 interface DecodedToken {
   email: string
   exp: number
+  userType: "user" | "employee"
   //...
 }
 

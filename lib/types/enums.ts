@@ -29,7 +29,7 @@ export enum ESystemRoutes {
 }
 
 export enum EFeature {
-  DASHBOARD_MANAGEMENT = 0,
+  DASHBOARD_MANAGEMENT = 99,
   USER_MANAGEMENT = 1,
   EMPLOYEE_MANAGEMENT = 2,
   ROLE_MANAGEMENT = 3,

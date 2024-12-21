@@ -1,8 +1,7 @@
 import React from "react"
-import { auth } from "@/queries/auth"
 
 async function Dashboard() {
-  await auth().protect()
+  // await auth().protect(EFeature.DASHBOARD_MANAGEMENT)
   return <div>Dashboard</div>
 }
 

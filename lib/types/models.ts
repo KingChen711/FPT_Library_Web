@@ -88,3 +88,10 @@ export type Notification = {
   notificationType: ENotificationType
   notificationRecipients: []
 }
+
+export type Category = {
+  categoryId: number
+  englishName: string
+  vietnameseName: string
+  description: string
+}
