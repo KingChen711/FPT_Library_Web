@@ -62,6 +62,8 @@ function RegisterForm() {
         return
       }
 
+      console.log(res)
+
       handleServerActionError(res, locale, form)
     })
   }
