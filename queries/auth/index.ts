@@ -7,10 +7,11 @@ import { getLocale } from "next-intl/server"
 
 import { http } from "@/lib/http"
 import { verifyToken } from "@/lib/server-utils"
-import { EAccessLevel, type EFeature } from "@/lib/types/enums"
+import { EAccessLevel, EFeature } from "@/lib/types/enums"
 import { type Employee, type User } from "@/lib/types/models"
 
 let isAuthenticated = false
+let userType: "user" | "employee" | null = null
 
 const getAccessToken = () => {
   const cookieStore = cookies()
@@ -19,17 +20,29 @@ const getAccessToken = () => {
 }
 
 const protect = async (feature?: EFeature) => {
-  if (!isAuthenticated) {
-    redirect({
-      href: "/login",
-      locale: await getLocale(),
-    })
-  }
+  try {
+    if (!isAuthenticated) {
+      throw new Error("User is not authenticated")
+    }
 
-  if (!feature) return
+    if (!feature) return
 
-  const accessLevel = await getAccessLevel(feature)
-  if (accessLevel === EAccessLevel.ACCESS_DENIED) {
+    if (feature === EFeature.DASHBOARD_MANAGEMENT && userType === "user") {
+      throw new Error(
+        "User have type 'user' does not permission to access this feature"
+      )
+    }
+
+    const accessLevel = await getAccessLevel(feature)
+    if (accessLevel === EAccessLevel.ACCESS_DENIED) {
+      throw new Error("User does not have permission to access this feature")
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message)
+    } else {
+      console.log("Error: ", error)
+    }
     redirect({
       href: "/login",
       locale: await getLocale(),
@@ -86,17 +99,21 @@ export const auth = () => {
 
   if (!token) {
     isAuthenticated = false
+    userType = null
   } else {
     const decodeToken = verifyToken(token)
     if (!decodeToken) {
       isAuthenticated = false
+      userType = null
     } else {
       isAuthenticated = true
+      userType = decodeToken.userType
     }
   }
 
   return {
     isAuthenticated,
+    userType,
     getAccessToken,
     protect,
     whoAmI,

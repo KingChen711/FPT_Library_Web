@@ -238,5 +238,29 @@
   },
   "NotificationsPage": {
     "Search": "Search..."
+  },
+  "CategoriesManagementPage": {
+    "Categories": "Categories",
+    "Create category": "Create category",
+    "Edit category": "Edit category",
+    "Delete category": "Delete category",
+    "Type": "Type",
+    "to confirm": "to confirm",
+    "Confirm": "Confirm",
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "English name": "English name",
+    "Vietnamese name": "Vietnamese name",
+    "Description": "Description",
+    "Cancel": "Cancel",
+    "Create": "Create",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "Save": "Save",
+    "Search": "Search...",
+    "Sort by": "Sort by",
+    "A-Z": "A-Z",
+    "Z-A": "Z-A",
+    "Id ascending": "Id ascending",
+    "Id descending": "Id descending"
   }
 }
