@@ -3,6 +3,11 @@ export enum ERoleType {
   EMPLOYEE = "Employee",
 }
 
+export enum EGender {
+  MALE = "Male",
+  FEMALE = "Female",
+}
+
 export const ERoleTypeToIndex: Map<ERoleType, number> = new Map([
   [ERoleType.USER, 0],
   [ERoleType.EMPLOYEE, 1],

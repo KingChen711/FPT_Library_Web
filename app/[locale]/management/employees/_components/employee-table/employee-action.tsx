@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { EyeOff, MoreHorizontal, Trash, Trash2, User2 } from "lucide-react"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { type Employee } from "@/lib/types/models"
@@ -33,6 +33,8 @@ const parseNumber = (value: string | null, fallback: number): number => {
 
 const EmployeeAction = ({ employee }: EmployeeActionProps) => {
   const locale = useLocale()
+  const tGeneralManagement = useTranslations("GeneralManagement")
+
   const [pendingChangeStatus, startChangeStatus] = useTransition()
   const [pendingUndoDelete, startUndoDelete] = useTransition()
 
@@ -44,9 +46,9 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
     email: employee.email,
     firstName: employee.firstName as string,
     lastName: employee.lastName as string,
-    dob: employee.dob as string,
-    phone: employee.phone as string,
-    address: employee.address as string,
+    dob: employee.dob,
+    phone: employee.phone,
+    address: employee.address,
     gender: parseNumber(employee.gender, 0),
     hireDate: employee.hireDate as string,
     roleId: employee.roleId,
@@ -54,7 +56,7 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
 
   if (!employee) return null
 
-  const handleDeactive = () => {
+  const handleDeactivate = () => {
     startChangeStatus(async () => {
       const res = await changeEmployeeStatus(employee.employeeId)
       if (res.isSuccess) {
@@ -110,26 +112,26 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>
                 <EmployeeDialogForm
-                  mode="edit"
+                  mode="update"
                   employee={updatingEmployee}
                   employeeId={employee.employeeId}
                 />
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
-                <User2 /> Change role
+                <User2 /> {tGeneralManagement("change role")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
-                onClick={handleDeactive}
+                onClick={handleDeactivate}
                 disabled={pendingChangeStatus}
               >
-                <EyeOff /> De-activate user
+                <EyeOff /> {tGeneralManagement("de-activate")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => setOpenSoftDelete(true)}
               >
-                <Trash /> Move to trash
+                <Trash /> {tGeneralManagement("move to trash")}
               </DropdownMenuItem>
             </>
           ) : (
@@ -139,14 +141,14 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
                 onClick={handleUndoDelete}
                 disabled={pendingUndoDelete}
               >
-                <Trash /> Undo delete
+                <Trash /> {tGeneralManagement("undo delete")}
               </DropdownMenuItem>
 
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => setOpenDelete(true)}
               >
-                <Trash2 /> Delete permanently
+                <Trash2 /> {tGeneralManagement("delete permanently")}
               </DropdownMenuItem>
             </>
           )}

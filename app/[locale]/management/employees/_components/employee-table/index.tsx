@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation"
 import { usePathname } from "@/i18n/routing"
 import { type TGetEmployeesData } from "@/queries/employees/get-employees"
 import { ArrowDownUp, User } from "lucide-react"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import { type Employee } from "@/lib/types/models"
 import { formatDate } from "@/lib/utils"
@@ -26,7 +26,7 @@ import EmployeeAction from "./employee-action"
 import EmployeePagination from "./employee-pagination"
 import EmployeeRowPage from "./employee-row-page"
 
-type EmployyeeTableProps = {
+type EmployeeTableProps = {
   tableData: TGetEmployeesData
   selectedIds: string[]
   setSelectedIds: Dispatch<SetStateAction<string[]>>
@@ -36,10 +36,11 @@ const EmployeeTable = ({
   tableData,
   selectedIds,
   setSelectedIds,
-}: EmployyeeTableProps) => {
+}: EmployeeTableProps) => {
   const locale = useLocale()
   const pathname = usePathname()
   const router = useRouter()
+  const t = useTranslations("GeneralManagement")
   const searchParams = useSearchParams()
 
   const handleSortParams = (key: string) => {
@@ -74,7 +75,11 @@ const EmployeeTable = ({
   }
 
   if (tableData.sources.length === 0) {
-    return <div>There is no data</div>
+    return (
+      <div className="p-4 text-center text-xl font-semibold text-destructive">
+        {t("no data")}
+      </div>
+    )
   }
 
   return (
@@ -95,13 +100,14 @@ const EmployeeTable = ({
                   className="flex items-center gap-x-2 text-nowrap"
                   onClick={() => handleSortParams(EmployeeFilter.EMAIL)}
                 >
-                  Email <ArrowDownUp size={16} className="cursor-pointer" />
+                  {t("fields.email")}{" "}
+                  <ArrowDownUp size={16} className="cursor-pointer" />
                 </TableHead>
                 <TableHead
                   onClick={() => handleSortParams(EmployeeFilter.FIRST_NAME)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    First name
+                    {t("fields.firstName")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
@@ -109,7 +115,7 @@ const EmployeeTable = ({
                   onClick={() => handleSortParams(EmployeeFilter.LAST_NAME)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Last name
+                    {t("fields.lastName")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
@@ -117,7 +123,7 @@ const EmployeeTable = ({
                   onClick={() => handleSortParams(EmployeeFilter.EMPLOYEE_CODE)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Employee Code
+                    {t("fields.employeeCode")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
@@ -125,13 +131,13 @@ const EmployeeTable = ({
                   onClick={() => handleSortParams(EmployeeFilter.PHONE)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Phone
+                    {t("fields.phone")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
                 <TableHead onClick={() => handleSortParams(EmployeeFilter.DOB)}>
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Date of birth
+                    {t("fields.dob")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
@@ -139,7 +145,7 @@ const EmployeeTable = ({
                   onClick={() => handleSortParams(EmployeeFilter.GENDER)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Gender
+                    {t("fields.gender")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
@@ -147,14 +153,15 @@ const EmployeeTable = ({
                   onClick={() => handleSortParams(EmployeeFilter.ADDRESS)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Address <ArrowDownUp size={16} className="cursor-pointer" />
+                    {t("fields.address")}
+                    <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
                 <TableHead
                   onClick={() => handleSortParams(EmployeeFilter.HIRE_DATE)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Hire date
+                    {t("fields.hireDate")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
@@ -164,7 +171,7 @@ const EmployeeTable = ({
                   }
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Termination date
+                    {t("fields.terminationDate")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
@@ -172,7 +179,7 @@ const EmployeeTable = ({
                   onClick={() => handleSortParams(EmployeeFilter.ROLE)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Role
+                    {t("fields.role")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
@@ -180,11 +187,11 @@ const EmployeeTable = ({
                   onClick={() => handleSortParams(EmployeeFilter.ACTIVE)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    Status
+                    {t("fields.status")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
-                <TableHead>Action</TableHead>
+                <TableHead className="text-nowrap"> {t("action")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody className="rounded-b-xl">

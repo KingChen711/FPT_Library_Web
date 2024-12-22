@@ -78,6 +78,21 @@ export type Employee = {
   }
 }
 
+export type Author = {
+  authorId: number
+  authorCode: string
+  authorImage: string
+  fullName: string
+  biography: string
+  dob: string
+  dateOfDeath: string
+  nationality: string
+  createDate: string
+  updateDate: string
+  isDeleted: false
+  bookEditionAuthors: unknown[]
+}
+
 export type Notification = {
   notificationId: number
   title: string

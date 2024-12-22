@@ -3,6 +3,9 @@ import { Bell } from "lucide-react"
 import { EFeature, ENotificationType } from "@/lib/types/enums"
 import { Icons } from "@/components/ui/icons"
 
+export const DEFAULT_PAGE_INDEX = 1
+export const DEFAULT_PAGE_SIZE = 5
+
 export const managementRoutes = [
   {
     feature: EFeature.DASHBOARD_MANAGEMENT,
