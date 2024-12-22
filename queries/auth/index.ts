@@ -57,7 +57,7 @@ const whoAmI = cache(async (): Promise<User | Employee | null> => {
         Authorization: `Bearer ${getAccessToken()}`,
       },
       next: {
-        revalidate: 60,
+        revalidate: 0,
         tags: ["who-am-i"],
       },
     })

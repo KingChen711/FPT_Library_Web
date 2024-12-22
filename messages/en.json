@@ -101,68 +101,10 @@
       }
     }
   },
-  "UserManagement": {
-    "userManagement": "User Management",
-    "employeeManagement": "Employee Management",
-    "import": "Import",
-    "export": "Export",
-    "firstName": "First name",
-    "lastName": "Last name",
-    "email": "Email",
-    "role": "Role",
-    "status": "Status",
-    "active": "Active",
-    "inactive": "Inactive",
-    "dob": "Date of birth",
-    "phone": "Phone number",
-    "actions": "Actions",
-    "UserDialogImport": {
-      "importBtn": "Import",
-      "title": "Import User",
-      "importSettings": "Import Settings",
-      "file": "File",
-      "encodingType": "Encoding Type",
-      "SelectEncodingType": {
-        "placeholder": "Type",
-        "utf-8": "UTF-7",
-        "ascii": "ASCII"
-      },
-      "columnSeparator": "Column Separator",
-      "SelectColumnSeparator": {
-        "placeholder": "Type separator",
-        "comma": "Comma point",
-        "tab": "Tab point",
-        "semicolon": "Semicolon point",
-        "colon": "Colon point",
-        "art": "Art Point",
-        "dot": "Dot point",
-        "exclamation": "Exclamation point"
-      },
-      "importTemplate": "Import Template",
-      "download": "Download",
-      "downloadTemplate": "Download Template",
-      "duplicateControl": "Duplicate Control",
-      "scanning": "Scanning",
-      "duplicateHandle": "Duplicate handle",
-      "import": "Import",
-      "cancel": "Cancel"
-    },
-    "UserDialog": {
-      "addUser": "Add user",
-      "editUser": "Edit user",
-      "deleteUser": "Delete user",
-      "saveBtn": "Save",
-      "cancelBtn": "Cancel"
-    },
-    "EmployeeDialog": {
-      "addUser": "Add employee",
-      "editUser": "Edit employee",
-      "deleteUser": "Delete employee",
-      "saveBtn": "Save",
-      "cancelBtn": "Cancel",
-      "fileEmptyMessage": "Data not found or empty"
-    }
-  },
+  "GeneralManagement": {},
+  "UserManagement": {},
+  "EmployeeManagement": {},
+  "AuthorManagement": {},
   "RoleManagement": {
     "Roles": "Roles",
     "Role horizontal": "Role horizontal",

@@ -1,21 +1,21 @@
 import { z } from "zod"
 
 export const profileSchema = z.object({
-  userCode: z.string().trim().nullable().catch(null),
-  firstName: z.string().trim().nonempty("First name is required"),
-  lastName: z.string().trim().nonempty("Last name is required"),
-  email: z
+  firstName: z
     .string()
     .trim()
-    .email("Invalid email format")
-    .toLowerCase()
-    .nullable()
-    .catch(null),
-  phone: z.string().trim().nullable().catch(null),
-  avatar: z.string().trim().url("Invalid URL format").nullable().catch(null),
-  address: z.string().trim().nullable().catch(null),
-  gender: z.string().trim().nullable().catch(null),
-  dob: z.string().trim().nullable().catch(null), // ISO date format validation can be added if needed
+    .min(2, { message: "min2" })
+    .max(50, { message: "max50" }),
+  lastName: z
+    .string()
+    .trim()
+    .min(2, { message: "min2" })
+    .max(50, { message: "max50" }),
+  dob: z.string().trim().min(1, { message: "Date of birth is required" }),
+  phone: z.string().trim().length(10, { message: "length_10" }),
+  address: z.string().trim().min(1, { message: "Address is required" }),
+  gender: z.number().min(0, { message: "Invalid gender value" }), // Giá trị tối thiểu 0
+  avatar: z.string().trim().nullable().catch(""),
 })
 
 export type TProfileSchema = z.infer<typeof profileSchema>
