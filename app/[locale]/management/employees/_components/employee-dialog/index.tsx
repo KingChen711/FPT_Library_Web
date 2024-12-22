@@ -3,7 +3,7 @@
 import { useEffect, useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Plus, SquarePen } from "lucide-react"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
@@ -29,7 +29,7 @@ import EmployeeDialogInput from "./employee-dialog-input"
 import EmployeeDialogRole from "./employee-dialog-role"
 
 type EmployeeDialogFormProps = {
-  mode: "create" | "edit"
+  mode: "create" | "update"
   employee?: TEmployeeDialogSchema
   employeeId?: string
 }
@@ -39,9 +39,11 @@ const EmployeeDialogForm = ({
   employee,
   employeeId,
 }: EmployeeDialogFormProps) => {
+  const locale = useLocale()
   const [pending, startTransition] = useTransition()
   const [isOpen, setOpen] = useState<boolean>(false)
-  const locale = useLocale()
+  const tEmployeeManagement = useTranslations("EmployeeManagement")
+  const tGeneralManagement = useTranslations("GeneralManagement")
 
   const form = useForm<TEmployeeDialogSchema>({
     resolver: zodResolver(employeeDialogSchema),
@@ -94,15 +96,15 @@ const EmployeeDialogForm = ({
         <DialogTrigger asChild>
           <Button>
             <Plus size={16} />
-            Create employee
+            {tEmployeeManagement("create employee")}
           </Button>
         </DialogTrigger>
       )}
 
-      {mode === "edit" && employee && (
+      {mode === "update" && employee && (
         <DialogTrigger asChild>
           <div className="flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent">
-            <SquarePen size={16} /> Edit
+            <SquarePen size={16} /> {tEmployeeManagement("update employee")}
           </div>
         </DialogTrigger>
       )}
@@ -110,7 +112,9 @@ const EmployeeDialogForm = ({
       <DialogContent className="m-0 overflow-hidden p-0 pb-4">
         <DialogHeader className="w-full space-y-4 bg-primary p-4">
           <DialogTitle className="text-center text-primary-foreground">
-            {mode === "create" ? "Add employee" : "Edit employee"}
+            {mode === "create"
+              ? tEmployeeManagement("create employee")
+              : tEmployeeManagement("update employee")}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -123,82 +127,82 @@ const EmployeeDialogForm = ({
                 form={form}
                 fieldName="employeeCode"
                 pending={pending}
-                formLabel="Employee Code"
-                inputPlaceholder="Enter employee code"
+                formLabel={tGeneralManagement("fields.employeeCode")}
+                inputPlaceholder={tGeneralManagement("placeholder.code")}
               />
               <EmployeeDialogInput
                 form={form}
                 fieldName="email"
                 pending={pending}
-                formLabel="Email"
                 inputType="email"
-                inputPlaceholder="Enter employee email"
+                formLabel={tGeneralManagement("fields.email")}
+                inputPlaceholder={tGeneralManagement("placeholder.email")}
               />
               <EmployeeDialogInput
                 form={form}
                 fieldName="firstName"
                 pending={pending}
-                formLabel="First name"
-                inputPlaceholder="Enter employee first name"
+                formLabel={tGeneralManagement("fields.firstName")}
+                inputPlaceholder={tGeneralManagement("placeholder.firstName")}
               />
               <EmployeeDialogInput
                 form={form}
                 fieldName="lastName"
                 pending={pending}
-                formLabel="Last name"
-                inputPlaceholder="Enter employee last name"
+                formLabel={tGeneralManagement("fields.lastName")}
+                inputPlaceholder={tGeneralManagement("placeholder.lastName")}
               />
               <EmployeeDialogInput
                 form={form}
                 fieldName="phone"
                 pending={pending}
-                formLabel="Phone number"
-                inputPlaceholder="Enter employee phone number"
+                formLabel={tGeneralManagement("fields.phone")}
+                inputPlaceholder={tGeneralManagement("placeholder.phone")}
               />
               <EmployeeDialogInput
                 form={form}
                 fieldName="address"
                 pending={pending}
-                formLabel="Address"
-                inputPlaceholder="Enter employee address"
+                formLabel={tGeneralManagement("fields.address")}
+                inputPlaceholder={tGeneralManagement("placeholder.address")}
               />
               <EmployeeDialogInput
                 form={form}
                 fieldName="dob"
                 pending={pending}
-                formLabel="Date of birth"
                 inputType="date"
-                inputPlaceholder="Enter employee date of birth"
+                formLabel={tGeneralManagement("fields.dob")}
+                inputPlaceholder={tGeneralManagement("placeholder.dob")}
               />
               <EmployeeDialogInput
                 form={form}
                 fieldName="hireDate"
                 pending={pending}
-                formLabel="Date of hiring date"
                 inputType="date"
-                inputPlaceholder="Enter employee date of hiring date"
+                formLabel={tGeneralManagement("fields.hireDate")}
+                inputPlaceholder={tGeneralManagement("placeholder.hireDate")}
               />
 
               <EmployeeDialogGender
                 form={form}
                 fieldName="gender"
                 pending={pending}
-                formLabel="Gender"
-                selectPlaceholder="Select gender"
+                formLabel={tGeneralManagement("fields.gender")}
+                selectPlaceholder={tGeneralManagement("placeholder.gender")}
               />
 
               <EmployeeDialogRole
                 form={form}
                 fieldName="roleId"
                 pending={pending}
-                formLabel="Role"
-                selectPlaceholder="Select role"
+                formLabel={tGeneralManagement("fields.role")}
+                selectPlaceholder={tGeneralManagement("placeholder.role")}
               />
             </div>
 
             <div className="flex w-full items-center justify-end gap-4">
               <Button disabled={pending} type="submit">
-                Save
+                {tGeneralManagement("btn.save")}
                 {pending && <Loader2 className="size-4 animate-spin" />}
               </Button>
               <Button
@@ -206,7 +210,7 @@ const EmployeeDialogForm = ({
                 disabled={pending}
                 variant={"ghost"}
               >
-                Cancel
+                {tGeneralManagement("btn.cancel")}
                 {pending && <Loader2 className="size-4 animate-spin" />}
               </Button>
             </div>

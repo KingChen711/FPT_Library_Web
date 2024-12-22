@@ -1,27 +1,20 @@
+import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from "@/constants"
 import { auth } from "@/queries/auth"
 import { getEmployees } from "@/queries/employees/get-employees"
 import { z } from "zod"
 
 import { getTranslations } from "@/lib/get-translations"
-import { EFeature } from "@/lib/types/enums"
+import { EFeature, EGender } from "@/lib/types/enums"
 
 import EmployeeContainer from "./_components/employee-container"
 import EmployeeDialogForm from "./_components/employee-dialog"
 import EmployeeDialogImport from "./_components/employee-dialog-import"
 import EmployeeExport from "./_components/employee-export"
 
-enum EmployeeGender {
-  Male = "Male",
-  Female = "Female",
-}
-
-const DEFAULT_PAGE_INDEX = 1
-const DEFAULT_PAGE_SIZE = 5
-
 const employeeManagementSchema = z.object({
   employeeCode: z.string().trim().optional(),
   roleId: z.string().trim().optional(),
-  gender: z.nativeEnum(EmployeeGender).optional(),
+  gender: z.nativeEnum(EGender).optional(),
   isActive: z.string().trim().optional(),
   pageIndex: z.coerce.number().catch(DEFAULT_PAGE_INDEX),
   pageSize: z.coerce.number().catch(DEFAULT_PAGE_SIZE),
@@ -45,7 +38,7 @@ const EmployeeManagementPage = async ({
 }: EmployeeManagementPageProps) => {
   await auth().protect(EFeature.EMPLOYEE_MANAGEMENT)
 
-  const t = await getTranslations("UserManagement")
+  const tGeneralManagement = await getTranslations("GeneralManagement")
 
   const defaultParams = {
     ...searchParams,
@@ -73,7 +66,9 @@ const EmployeeManagementPage = async ({
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-        <h3 className="text-2xl font-semibold">{t("employeeManagement")}</h3>
+        <h3 className="text-2xl font-semibold">
+          {tGeneralManagement("employee management")}
+        </h3>
         <div className="flex items-center gap-x-4">
           <EmployeeExport />
           <EmployeeDialogImport />

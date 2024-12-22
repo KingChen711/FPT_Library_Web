@@ -1,37 +1,41 @@
 /* eslint-disable @typescript-eslint/unbound-method */
-
 "use client"
 
-import React from "react"
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useDebouncedCallback } from "use-debounce"
 
 import { Input } from "@/components/ui/input"
 
-const SearchInput = () => {
+import EmployeeFilters from "."
+
+const EmployeeSearch = () => {
+  const searchParams = useSearchParams()
   const pathname = usePathname()
   const { replace } = useRouter()
-  const searchParams = useSearchParams()
 
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams)
     if (term) {
-      params.set("query", term)
+      params.set("search", term)
     } else {
-      params.delete("query")
+      params.delete("search")
     }
     replace(`${pathname}?${params.toString()}`)
   }, 300)
 
   return (
-    <div className="w-full">
+    <div className="flex w-full items-center gap-4 py-4">
       <Input
-        placeholder="Search..."
-        className="bg-white"
-        onChange={(e) => handleSearch(e.target.value)}
+        placeholder="Filter emails..."
+        onChange={(e) => {
+          handleSearch(e.target.value)
+        }}
+        className="max-w-md"
+        defaultValue={searchParams.get("search")?.toString()}
       />
+      <EmployeeFilters />
     </div>
   )
 }
 
-export default SearchInput
+export default EmployeeSearch

@@ -9,7 +9,7 @@ export enum EmployeeFilter {
   GENDER = "gender",
   DOB_RANGE = "dobRange",
   CREATE_DATE_RANGE = "createDateRange",
-  MODIFIED_DATE_RANGE = "modifieldDateRange",
+  MODIFIED_DATE_RANGE = "modifiedDateRange",
   HIRE_DATE_RANGE = "hireDateRange",
   PAGE_INDEX = "pageIndex",
   PAGE_SIZE = "pageSize",

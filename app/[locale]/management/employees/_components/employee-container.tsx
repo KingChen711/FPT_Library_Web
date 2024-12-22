@@ -3,6 +3,7 @@
 import { Suspense, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { type TGetEmployeesData } from "@/queries/employees/get-employees"
+import { Loader2 } from "lucide-react"
 
 import EmployeeSearch from "./employee-filters/employee-search"
 import EmployeeTable from "./employee-table"
@@ -39,7 +40,7 @@ const EmployeeContainer = ({ tableData }: EmployeeContainerProps) => {
               ))}
           </div>
           <div className="rounded-md border">
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<Loader2 className="animate-spin" />}>
               <EmployeeHeaderTab />
               <EmployeeTable
                 tableData={tableData}
