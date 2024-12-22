@@ -48,10 +48,10 @@ export type Employee = {
   passwordHash: string | null
   firstName: string | null
   lastName: string | null
-  dob: string | null
-  phone: string | null
-  avatar: string | null
-  address: string | null
+  dob: string
+  phone: string
+  avatar: string
+  address: string
   gender: "Male" | "Female" | null
   hireDate: string | null
   terminationDate: string | null

@@ -107,8 +107,8 @@ const UserDialogForm = ({ mode }: UserDialogFormProps) => {
                             <SelectValue placeholder="Role" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Male">Male</SelectItem>
-                            <SelectItem value="Female">Female</SelectItem>
+                            <SelectItem value="0">Male</SelectItem>
+                            <SelectItem value="1">Female</SelectItem>
                           </SelectContent>
                         </Select>
                       </FormControl>

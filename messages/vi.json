@@ -105,68 +105,10 @@
       }
     }
   },
-  "UserManagement": {
-    "userManagement": "Quản lí người dùng",
-    "employeeManagement": "Quản lí nhân viên",
-    "import": "Nhập dữ liệu",
-    "export": "Xuất dữ liệu",
-    "firstName": "Họ",
-    "lastName": "Tên",
-    "email": "Email",
-    "role": "Vai trò",
-    "status": "Trạng thái",
-    "active": "Hiệu lực",
-    "inactive": "Không hiệu lực",
-    "dob": "Ngày sinh",
-    "phone": "Số điện thoại",
-    "actions": "Thao tác",
-    "UserDialogImport": {
-      "importBtn": "Nhập dữ liệu",
-      "title": "Nhập dữ liệu người dùng",
-      "importSettings": "Cài đặt dữ liệu",
-      "file": "File",
-      "encodingType": "Loại bộ dữ liệu",
-      "SelectEncodingType": {
-        "placeholder": "Loại",
-        "utf-8": "UTF-7",
-        "ascii": "ASCII"
-      },
-      "columnSeparator": "Ngăn cách cột",
-      "SelectColumnSeparator": {
-        "placeholder": "Ngăn cách cột",
-        "comma": "Dấu phẩy",
-        "tab": "Dấu tab",
-        "semicolon": "Dấu chấm phẫy",
-        "colon": "Dấu phẩy",
-        "art": "Dấu @",
-        "dot": "Dấu chấm",
-        "exclamation": "Dấu chấm than"
-      },
-      "importTemplate": "Nhập kiểu mẫu",
-      "download": "Tải về",
-      "downloadTemplate": "Tải kiểu mẫu",
-      "duplicateControl": "Điều khiển copy",
-      "scanning": "Scanning",
-      "duplicateHandle": "Xử lí copy",
-      "import": "Nhập",
-      "cancel": "Hủy"
-    },
-    "UserDialog": {
-      "addUser": "Thêm người dùng",
-      "editUser": "Sửa người dùng",
-      "deleteUser": "Xóa người dùng",
-      "saveBtn": "Lưu",
-      "cancelBtn": "Hủy"
-    },
-    "EmployeeDialog": {
-      "addUser": "Thêm nhân viên",
-      "editUser": "Sửa nhân viên",
-      "deleteUser": "Xóa nhân viên",
-      "saveBtn": "Lưu",
-      "cancelBtn": "Hủy",
-      "fileEmptyMessage": "Không tìm thấy dữ liệu hoặc dữ liệu rỗng"
-    }
-  },
+  "GeneralManagement": {},
+  "UserManagement": {},
+  "EmployeeManagement": {},
+  "AuthorManagement": {},
   "RoleManagement": {
     "Roles": "Vai trò",
     "Role horizontal": "Vai trò ngang",
