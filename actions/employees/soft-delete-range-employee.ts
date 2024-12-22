@@ -6,23 +6,29 @@ import { auth } from "@/queries/auth"
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 
-export async function importEmployee(
-  formData: FormData
-): Promise<ActionResponse> {
-  console.log("🚀 ~ formData:", formData)
+export async function softDeleteRangeEmployee(
+  employeeIds: string[]
+): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
-  try {
-    const res = await http.post(`/api/management/employees/import`, formData, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    })
 
-    console.log("🚀 ~ res:", res)
+  try {
+    const { message } = await http.patch(
+      `/api/management/employees/soft-delete-range`,
+      {
+        ids: employeeIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
+
     revalidateTag("employees")
 
     return {
       isSuccess: true,
+      data: message,
     }
   } catch (error) {
     return handleHttpError(error)

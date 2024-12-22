@@ -1,5 +1,6 @@
 "use client"
 
+import { type Dispatch, type SetStateAction } from "react"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
 import { usePathname } from "@/i18n/routing"
@@ -11,6 +12,7 @@ import { type Employee } from "@/lib/types/models"
 import { formatDate } from "@/lib/utils"
 import { EmployeeFilter } from "@/lib/validations/employee/employees-filter"
 import { Badge } from "@/components/ui/badge"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Table,
   TableBody,
@@ -26,9 +28,15 @@ import EmployeeRowPage from "./employee-row-page"
 
 type EmployyeeTableProps = {
   tableData: TGetEmployeesData
+  selectedIds: string[]
+  setSelectedIds: Dispatch<SetStateAction<string[]>>
 }
 
-const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
+const EmployeeTable = ({
+  tableData,
+  selectedIds,
+  setSelectedIds,
+}: EmployyeeTableProps) => {
   const locale = useLocale()
   const pathname = usePathname()
   const router = useRouter()
@@ -45,6 +53,30 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
     router.replace(`${pathname}?${params.toString()}`)
   }
 
+  const isAllSelected =
+    tableData.sources.length > 0 &&
+    selectedIds.length === tableData.sources.length
+
+  const toggleAll = () => {
+    if (isAllSelected) {
+      setSelectedIds([])
+    } else {
+      setSelectedIds(tableData.sources.map((employee) => employee.employeeId))
+    }
+  }
+
+  const toggleRow = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id)
+        ? prev.filter((selectedId) => selectedId !== id)
+        : [...prev, id]
+    )
+  }
+
+  if (tableData.sources.length === 0) {
+    return <div>There is no data</div>
+  }
+
   return (
     <div className="w-full overflow-hidden">
       <div className="mb-4 w-full overflow-x-auto">
@@ -52,6 +84,12 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
           <Table className="border-collapse rounded-xl border-y border-r">
             <TableHeader>
               <TableRow>
+                <TableHead>
+                  <Checkbox
+                    checked={isAllSelected}
+                    onCheckedChange={toggleAll}
+                  />
+                </TableHead>
                 <TableHead>No</TableHead>
                 <TableHead
                   className="flex items-center gap-x-2 text-nowrap"
@@ -105,8 +143,31 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
-                <TableHead>Address</TableHead>
-                <TableHead>Hire date</TableHead>
+                <TableHead
+                  onClick={() => handleSortParams(EmployeeFilter.ADDRESS)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Address <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+                <TableHead
+                  onClick={() => handleSortParams(EmployeeFilter.HIRE_DATE)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Hire date
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+                <TableHead
+                  onClick={() =>
+                    handleSortParams(EmployeeFilter.TERMINATION_DATE)
+                  }
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    Termination date
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
                 <TableHead
                   onClick={() => handleSortParams(EmployeeFilter.ROLE)}
                 >
@@ -116,7 +177,7 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
                   </div>
                 </TableHead>
                 <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.IS_ACTIVE)}
+                  onClick={() => handleSortParams(EmployeeFilter.ACTIVE)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
                     Status
@@ -129,6 +190,12 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
             <TableBody className="rounded-b-xl">
               {tableData.sources.map((employee: Employee, index: number) => (
                 <TableRow key={employee.employeeId}>
+                  <TableCell>
+                    <Checkbox
+                      checked={selectedIds.includes(employee.employeeId)}
+                      onCheckedChange={() => toggleRow(employee.employeeId)}
+                    />
+                  </TableCell>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
                     <div className="flex gap-2 pr-8">
@@ -158,22 +225,30 @@ const EmployeeTable = ({ tableData }: EmployyeeTableProps) => {
                       )}
                     </div>
                   </TableCell>
-                  <TableCell>{employee.address}</TableCell>
+                  <TableCell className="text-nowrap">
+                    {employee.address}
+                  </TableCell>
                   <TableCell>
                     {employee?.hireDate && formatDate(employee?.hireDate)}
+                  </TableCell>
+                  <TableCell>
+                    {employee?.terminationDate &&
+                      formatDate(employee?.terminationDate)}
                   </TableCell>
                   <TableCell>
                     {locale === "en"
                       ? employee.role.englishName
                       : employee.role.vietnameseName}
                   </TableCell>
-                  <TableCell className="flex items-center justify-center text-nowrap">
+                  <TableCell className="flex h-full items-center justify-center text-nowrap">
                     {employee.isActive ? (
-                      <Badge className="bg-success hover:bg-success">
+                      <Badge className="h-full bg-success hover:bg-success">
                         Active
                       </Badge>
                     ) : (
-                      <Badge variant="default">Inactive</Badge>
+                      <Badge variant="default" className="h-full">
+                        Inactive
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell>

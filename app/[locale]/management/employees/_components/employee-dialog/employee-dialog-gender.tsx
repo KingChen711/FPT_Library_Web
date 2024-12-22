@@ -56,7 +56,6 @@ const EmployeeDialogGender = ({
                 <SelectContent>
                   <SelectItem value="0">Male</SelectItem>
                   <SelectItem value="1">Female</SelectItem>
-                  <SelectItem value="2">Other</SelectItem>
                 </SelectContent>
               </Select>
             </FormControl>

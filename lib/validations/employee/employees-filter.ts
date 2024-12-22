@@ -21,6 +21,10 @@ export enum EmployeeFilter {
   DOB = "dob",
   PHONE = "phone",
   CREATE_DATE = "createDate",
+  ADDRESS = "address",
+  TERMINATION_DATE = "terminationDate",
+  HIRE_DATE = "hireDate",
+  ACTIVE = "active",
 }
 
 export const employeesFilterSchema = z.object({

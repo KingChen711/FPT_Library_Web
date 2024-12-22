@@ -42,7 +42,7 @@ export type Role = {
 }
 
 export type Employee = {
-  employeeId: string | null
+  employeeId: string
   employeeCode: string | null
   email: string
   passwordHash: string | null
