@@ -49,31 +49,80 @@ const EmployeeDialogImport = () => {
 
   const [pendingSubmit, startTransition] = useTransition()
   const [open, setOpen] = useState<boolean>(false)
+  const [isCSV, setIsCSV] = useState<boolean>(false)
+  const [hasEmailChecked, setHasEmailChecked] = useState<boolean>(false)
+
   const form = useForm<TEmployeeImport>({
     resolver: zodResolver(employeeImportSchema),
     defaultValues: {
       duplicateHandle: "0",
-      columnSeparator: ",",
-      encodingType: "UTF8",
+      columnSeparator: null,
+      encodingType: null,
       scanningFields: [],
     },
   })
 
-  const handleCancel = () => {}
+  const handleCancel = () => {
+    form.reset()
+    form.clearErrors()
+    setOpen(false)
+  }
+
+  const handleUploadFile = (
+    e: ChangeEvent<HTMLInputElement>,
+    fieldChange: (file: File) => void
+  ) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      fieldChange(file)
+      form.setValue("file", file)
+
+      const fileType = file.name.split(".").pop()?.toLowerCase()
+      setIsCSV(fileType === "csv")
+      if (fileType === "xlsx") {
+        form.setValue("columnSeparator", null)
+        form.setValue("encodingType", null)
+      }
+    }
+  }
+
+  const handleCheckboxChange = (
+    checked: boolean | string,
+    value: string,
+    currentValues: string[],
+    onChange: (values: string[]) => void
+  ) => {
+    const updatedValues = checked
+      ? [...currentValues, value]
+      : currentValues.filter((item) => item !== value)
+    onChange(updatedValues)
+
+    if (value === "email") {
+      setHasEmailChecked(checked as boolean)
+    }
+  }
 
   function onSubmit(values: TEmployeeImport) {
     console.log(values)
     startTransition(async () => {
       const formData = new FormData()
-      formData.append("duplicateHandle", values.duplicateHandle)
-      formData.append("columnSeparator", values.columnSeparator)
-      formData.append("encodingType", values.encodingType)
-      values.scanningFields.forEach((field) => {
-        formData.append("scanningFields", field)
-      })
       if (values.file) {
         formData.append("file", values.file)
       }
+
+      formData.append("duplicateHandle", values.duplicateHandle)
+
+      if (values.columnSeparator) {
+        formData.append("columnSeparator", values.columnSeparator)
+      }
+
+      if (values.encodingType) {
+        formData.append("encodingType", values.encodingType)
+      }
+
+      values.scanningFields.forEach((field) => {
+        formData.append("scanningFields", field)
+      })
 
       const res = await importEmployee(formData)
       if (res.isSuccess) {
@@ -87,29 +136,6 @@ const EmployeeDialogImport = () => {
       }
       handleServerActionError(res, locale, form)
     })
-  }
-
-  const handleUploadFile = (
-    e: ChangeEvent<HTMLInputElement>,
-    fieldChange: (file: File) => void
-  ) => {
-    const file = e.target.files?.[0]
-    if (file) {
-      fieldChange(file) // Updates the form field value
-      form.setValue("file", file) // Explicitly sets the value in FormData
-    }
-  }
-
-  const handleCheckboxChange = (
-    checked: boolean | string,
-    value: string,
-    currentValues: string[],
-    onChange: (values: string[]) => void
-  ) => {
-    const updatedValues = checked
-      ? [...currentValues, value] // Add the value if checked
-      : currentValues.filter((item) => item !== value) // Remove the value if unchecked
-    onChange(updatedValues) // Update the form field
   }
 
   return (
@@ -145,6 +171,7 @@ const EmployeeDialogImport = () => {
                         <Input
                           type="file"
                           placeholder="Import file"
+                          accept=".csv, .xlsx"
                           onChange={(e) => handleUploadFile(e, field.onChange)}
                         />
                       </FormControl>
@@ -153,75 +180,86 @@ const EmployeeDialogImport = () => {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="encodingType"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-4">
-                      <FormLabel className="w-1/3">
-                        {t("encodingType")}
-                      </FormLabel>
-                      <FormControl className="flex-1">
-                        <Select {...field} onValueChange={field.onChange}>
-                          <SelectTrigger className="flex-1">
-                            <SelectValue
-                              placeholder={t("SelectEncodingType.placeholder")}
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="UTF8">
-                              {t("SelectEncodingType.utf-8")}
-                            </SelectItem>
-                            <SelectItem value="ASCII">
-                              {t("SelectEncodingType.ascii")}
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                {isCSV && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="encodingType"
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-4">
+                          <FormLabel className="w-1/3">
+                            {t("encodingType")}
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Select
+                              {...field}
+                              value={field.value || undefined}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger className="flex-1">
+                                <SelectValue
+                                  placeholder={t(
+                                    "SelectEncodingType.placeholder"
+                                  )}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="UTF-8">UTF-8</SelectItem>
+                                <SelectItem value="ASCII">ASCII</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
-                <FormField
-                  control={form.control}
-                  name="columnSeparator"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-4">
-                      <FormLabel className="w-1/3">
-                        {t("encodingType")}
-                      </FormLabel>
-                      <FormControl className="flex-1">
-                        <Select {...field} onValueChange={field.onChange}>
-                          <SelectTrigger className="flex-1">
-                            <SelectValue
-                              placeholder={t(
-                                "SelectColumnSeparator.placeholder"
-                              )}
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value=",">
-                              {t("SelectColumnSeparator.comma")} (,)
-                            </SelectItem>
-                            <SelectItem value=".">
-                              {t("SelectColumnSeparator.dot")} (.)
-                            </SelectItem>
-                            <SelectItem value="@">
-                              {t("SelectColumnSeparator.art")} (@)
-                            </SelectItem>
-                            <SelectItem value="!">
-                              {t("SelectColumnSeparator.exclamation")} (!)
-                            </SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                    <FormField
+                      control={form.control}
+                      name="columnSeparator"
+                      render={({ field }) => (
+                        <FormItem className="flex items-center gap-4">
+                          <FormLabel className="w-1/3">
+                            Column Separator
+                          </FormLabel>
+                          <FormControl className="flex-1">
+                            <Select
+                              {...field}
+                              value={field.value || undefined}
+                              onValueChange={field.onChange}
+                            >
+                              <SelectTrigger className="flex-1">
+                                <SelectValue
+                                  placeholder={t(
+                                    "SelectColumnSeparator.placeholder"
+                                  )}
+                                />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value=",">
+                                  {t("SelectColumnSeparator.comma")} (,)
+                                </SelectItem>
+                                <SelectItem value=".">
+                                  {t("SelectColumnSeparator.dot")} (.)
+                                </SelectItem>
+                                <SelectItem value="@">
+                                  {t("SelectColumnSeparator.art")} (@)
+                                </SelectItem>
+                                <SelectItem value="!">
+                                  {t("SelectColumnSeparator.exclamation")} (!)
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
               </div>
 
+              {/* Remaining form fields */}
               <div className="space-y-4 p-4">
                 <Label>{t("duplicateControl")}</Label>
                 <Separator />
@@ -238,11 +276,11 @@ const EmployeeDialogImport = () => {
                           <div className="flex items-center space-x-2">
                             <Checkbox
                               id="email"
-                              checked={field.value?.includes("Email")}
+                              checked={field.value?.includes("email")}
                               onCheckedChange={(checked) =>
                                 handleCheckboxChange(
                                   checked,
-                                  "Email",
+                                  "email",
                                   field.value || [],
                                   field.onChange
                                 )
@@ -257,11 +295,11 @@ const EmployeeDialogImport = () => {
                           <div className="flex items-center space-x-2">
                             <Checkbox
                               id="phone"
-                              checked={field.value?.includes("Phone")}
+                              checked={field.value?.includes("phone")}
                               onCheckedChange={(checked) =>
                                 handleCheckboxChange(
                                   checked,
-                                  "Phone",
+                                  "phone",
                                   field.value || [],
                                   field.onChange
                                 )
@@ -283,14 +321,18 @@ const EmployeeDialogImport = () => {
                   name="duplicateHandle"
                   render={({}) => (
                     <FormItem className="flex items-center gap-4">
-                      <FormLabel className="w-1/3">{t("scanning")}</FormLabel>
+                      <FormLabel className="w-1/3">Duplicate Handle</FormLabel>
                       <FormControl className="flex-1">
                         <RadioGroup
-                          defaultValue="option-one"
+                          defaultValue="0"
                           className="flex items-center gap-4"
                         >
                           <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="0" id="option-one" />
+                            <RadioGroupItem
+                              value="0"
+                              id="option-one"
+                              disabled={hasEmailChecked}
+                            />
                             <Label className="font-normal" htmlFor="option-one">
                               Allow
                             </Label>

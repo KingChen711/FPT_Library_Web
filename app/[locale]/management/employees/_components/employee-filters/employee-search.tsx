@@ -24,13 +24,13 @@ const EmployeeSearch = () => {
   }, 300)
 
   return (
-    <div className="flex items-center gap-4 py-4">
+    <div className="flex w-full items-center gap-4 py-4">
       <Input
         placeholder="Filter emails..."
         onChange={(e) => {
           handleSearch(e.target.value)
         }}
-        className="max-w-sm"
+        className="max-w-md"
         defaultValue={searchParams.get("search")?.toString()}
       />
       <EmployeeFilters />

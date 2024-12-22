@@ -1,4 +1,3 @@
-import { Suspense } from "react"
 import { auth } from "@/queries/auth"
 import { getEmployees } from "@/queries/employees/get-employees"
 import { z } from "zod"
@@ -6,12 +5,10 @@ import { z } from "zod"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 
+import EmployeeContainer from "./_components/employee-container"
 import EmployeeDialogForm from "./_components/employee-dialog"
 import EmployeeDialogImport from "./_components/employee-dialog-import"
 import EmployeeExport from "./_components/employee-export"
-import EmployeeSearch from "./_components/employee-filters/employee-search"
-import EmployeeTable from "./_components/employee-table"
-import EmployeeHeaderTab from "./_components/employee-table/employee-header-tab"
 
 enum EmployeeGender {
   Male = "Male",
@@ -83,21 +80,7 @@ const EmployeeManagementPage = async ({
           <EmployeeDialogForm mode="create" />
         </div>
       </div>
-      <div className="my-4 grid w-full">
-        <div className="relative overflow-x-auto">
-          <div className="w-full rounded-lg bg-primary-foreground p-4">
-            <div>
-              <EmployeeSearch />
-              <div className="rounded-md border">
-                <Suspense fallback={<div>Loading...</div>}>
-                  <EmployeeHeaderTab />
-                  <EmployeeTable tableData={tableData} />
-                </Suspense>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <EmployeeContainer tableData={tableData} />
     </div>
   )
 }

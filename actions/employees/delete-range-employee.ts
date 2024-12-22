@@ -6,23 +6,29 @@ import { auth } from "@/queries/auth"
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 
-export async function importEmployee(
-  formData: FormData
-): Promise<ActionResponse> {
-  console.log("🚀 ~ formData:", formData)
+export async function deleteRangeEmployee(
+  employeeIds: string[]
+): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
-  try {
-    const res = await http.post(`/api/management/employees/import`, formData, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    })
 
-    console.log("🚀 ~ res:", res)
+  try {
+    const { message } = await http.multiDelete(
+      `/api/management/employees`,
+      {
+        ids: employeeIds,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
+
     revalidateTag("employees")
 
     return {
       isSuccess: true,
+      data: message,
     }
   } catch (error) {
     return handleHttpError(error)
