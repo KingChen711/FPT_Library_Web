@@ -1,18 +1,25 @@
 import Image from "next/image"
+import { notFound } from "next/navigation"
 import fptLogo from "@/public/assets/images/fpt-logo.png"
 
 import { getTranslations } from "@/lib/get-translations"
 
-import ResetPasswordForm from "../../_components/reset-password-form"
+import ResetPasswordForm from "../../../_components/reset-password-form"
 
 type Props = {
   params: {
     email: string
+    type: "user" | "employee"
   }
 }
 
 const ResetPasswordPage = async ({ params }: Props) => {
   const email = decodeURIComponent(params.email).trim()
+
+  if (!["user", "employee"].includes(params.type)) {
+    notFound()
+  }
+
   const t = await getTranslations("ResetPasswordPage")
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
@@ -36,7 +43,7 @@ const ResetPasswordPage = async ({ params }: Props) => {
           </p>
           <p className="text-center text-sm text-muted-foreground">{email}</p>
         </div>
-        <ResetPasswordForm email={email} />
+        <ResetPasswordForm type={params.type} email={email} />
       </div>
     </div>
   )

@@ -62,7 +62,12 @@
     "Back to login": "Về trang đăng nhập",
     "Password": "Mật khẩu",
     "ConfirmedPassword": "Nhập lại mật khẩu",
-    "Missing mfa": "Mất thiết bị kích hoạt MFA?"
+    "Missing mfa": "Mất thiết bị kích hoạt MFA?",
+    "New password": "Mật khẩu mới",
+    "Update password": "Đổi mật khẩu",
+    "Cancel": "Hủy",
+    "OTP": "OTP",
+    "OTP message": "Nhập mã OTP được gửi đến email của bạn"
   },
   "VerifyEmailPage": {
     "Verify your email": "Xác minh email",
@@ -319,8 +324,9 @@
     "Check your email for verification code": "Kiểm tra email để lấy mã xác thực",
     "Continue": "Tiếp tục",
     "Cancel": "Hủy",
-    "MFA": "MFA",
-    "Active MFA": "Kích hoạt MFA"
+    "MFA": "Xác thực nhiều yếu tố (MFA)",
+    "Active MFA": "Kích hoạt MFA",
+    "Password": "Mật khẩu"
   },
   "NotificationsPage": {
     "Search": "Tìm kiếm..."
@@ -346,5 +352,43 @@
     "Z-A": "Z-A",
     "Id ascending": "Id tăng dần",
     "Id descending": "Id giảm dần"
+  },
+  "FinesManagementPage": {
+    "Fines": "Phí",
+    "Condition type": "Loại điều kiện",
+    "Fixed fine amount": "Số tiền cố định",
+    "Fine amount per day": "Số tiền phạt mỗi ngày",
+    "Description": "Mô tả",
+    "Cancel": "Hủy",
+    "Create": "Tạo",
+    "Save": "Lưu",
+    "Create fine": "Tạo phí",
+    "Edit fine": "Chỉnh sửa phí",
+    "Actions": "Hành động",
+    "Edit": "Chỉnh sửa",
+    "Delete": "Xóa",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
+    "Delete fine": "Xóa phí",
+    "fines selected": "{amount} phí được chọn"
+  },
+  "NotificationsManagementPage": {
+    "Notifications": "Thông báo",
+    "Create notification": "Tạo thông báo",
+    "Cancel": "Hủy",
+    "Create": "Tạo",
+    "Title": "Tiêu đề",
+    "Message": "Thông báo",
+    "Notification type": "Loại thông báo",
+    "Event": "Sự kiện",
+    "Notice": "Thông báo",
+    "Reminder": "Nhắc nhở",
+    "Private notification": "Thông báo riêng",
+    "Notifications will be sent to the emails you specify": "Thông báo sẽ được gửi đến email bạn chỉ định",
+    "Recipients": "Người nhận",
+    "Add emails message": "Thêm các email mà thông báo này sẽ được gửi đến. Bạn cần nhấn 'Enter' để thêm email."
+  },
+  "Paginator": {
+    "Showing message": "Hiển thị {from} đến {to} của {total} dữ liệu",
+    "rows per page": "số hàng mỗi trang"
   }
 }

@@ -28,9 +28,10 @@ import { Input } from "@/components/ui/input"
 type Props = {
   changePasswordToken: string
   email: string
+  type: "user" | "employee"
 }
 
-function NewPassForm({ changePasswordToken, email }: Props) {
+function NewPassForm({ changePasswordToken, email, type }: Props) {
   const t = useTranslations("ResetPasswordPage")
   const locale = useLocale()
   const router = useRouter()
@@ -54,7 +55,8 @@ function NewPassForm({ changePasswordToken, email }: Props) {
       const res = await changePassword(
         email,
         values.password,
-        changePasswordToken
+        changePasswordToken,
+        type
       )
 
       if (res.isSuccess) {

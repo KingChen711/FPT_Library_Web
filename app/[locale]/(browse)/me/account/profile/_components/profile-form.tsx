@@ -51,7 +51,7 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
     defaultValues: {
       firstName: currentUser.firstName || "",
       lastName: currentUser.lastName || "",
-      dob: currentUser.dob as string,
+      dob: currentUser.dob,
       phone: currentUser.phone || "",
       address: currentUser.address || "",
       gender: currentUser.gender ? Number(currentUser.gender) : 0,

@@ -104,6 +104,14 @@ export type Notification = {
   notificationRecipients: []
 }
 
+export type Fine = {
+  finePolicyId: number
+  conditionType: string
+  fineAmountPerDay: number
+  fixedFineAmount: number
+  description: string | null
+}
+
 export type Category = {
   categoryId: number
   englishName: string

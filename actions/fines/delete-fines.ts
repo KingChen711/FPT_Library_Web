@@ -6,18 +6,22 @@ import { auth } from "@/queries/auth"
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 
-export async function deleteRole(
-  roleId: number
+export async function deleteFines(
+  ids: number[]
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
-    const { message } = await http.delete(`/api/management/roles/${roleId}`, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    })
+    const { message } = await http.multiDelete(
+      `/api/management/fines/policy`,
+      { ids },
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
 
-    revalidatePath("/management/roles")
+    revalidatePath("/management/fines")
 
     return {
       isSuccess: true,
