@@ -5,7 +5,7 @@ import { Loader2, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { softDeleteRangeEmployee } from "@/actions/employees/soft-delete-range-employee"
+import { softDeleteRangeUser } from "@/actions/users/soft-delete-range-user"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,13 +18,13 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 
-type EmployeeSoftDeleteConfirmProps = {
+type UserSoftDeleteConfirmProps = {
   selectedIds: string[]
 }
 
-const EmployeeSoftDeleteRangeConfirm = ({
+const UserSoftDeleteRangeConfirm = ({
   selectedIds,
-}: EmployeeSoftDeleteConfirmProps) => {
+}: UserSoftDeleteConfirmProps) => {
   const locale = useLocale()
   const message = `${locale === "vi" ? "Chuyển vào thùng rác" : "move to trash"}`
   const t = useTranslations("GeneralManagement")
@@ -40,7 +40,7 @@ const EmployeeSoftDeleteRangeConfirm = ({
 
   const handleSubmit = () => {
     startDelete(async () => {
-      const res = await softDeleteRangeEmployee(selectedIds)
+      const res = await softDeleteRangeUser(selectedIds)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Move to trash successfully",
@@ -105,4 +105,4 @@ const EmployeeSoftDeleteRangeConfirm = ({
   )
 }
 
-export default EmployeeSoftDeleteRangeConfirm
+export default UserSoftDeleteRangeConfirm

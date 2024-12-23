@@ -193,6 +193,7 @@
       "active": "Kích hoạt",
       "inactive": "Bất hoạt",
       "studentCode": "Mã số sinh viên",
+      "userCode": "Mã số người dùng",
       "employeeCode": "Mã số nhân viên",
       "authorCode": "Mã số tác giả",
       "collegeEmailId": "Email sinh viên",
@@ -219,7 +220,14 @@
       "exclamation": "Dấu chấm than"
     }
   },
-  "UserManagement": {},
+  "UserManagement": {
+    "create user": "Tạo người dùng",
+    "update user": "Chỉnh sửa người dùng",
+    "delete user": "Xóa người dùng",
+    "soft delete user": "Xóa mềm người dùng",
+    "restore user": "Khôi phục người dùng",
+    "undo delete user": "Khôi phúc xóa người dùng"
+  },
   "EmployeeManagement": {
     "create employee": "Tạo nhân viên",
     "update employee": "Chỉnh sửa nhân viên",
@@ -228,7 +236,14 @@
     "restore employee": "Khôi phục nhân viên",
     "undo delete employee": "Khôi phúc xóa nhân viên"
   },
-  "AuthorManagement": {},
+  "AuthorManagement": {
+    "create author": "Tạo người tác giả",
+    "update author": "Chỉnh sửa người tác giả",
+    "delete author": "Xóa người tác giả",
+    "soft delete author": "Xóa mềm người tác giả",
+    "restore author": "Khôi phục người tác giả",
+    "undo delete author": "Khôi phúc xóa tác giả"
+  },
   "RoleManagement": {
     "Roles": "Vai trò",
     "Role horizontal": "Vai trò ngang",

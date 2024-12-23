@@ -1,7 +1,7 @@
 import { useTranslations } from "next-intl"
 import type { UseFormReturn } from "react-hook-form"
 
-import type { TEmployeeDialogSchema } from "@/lib/validations/employee/employee-dialog"
+import { type TUserDialogSchema } from "@/lib/validations/auth/user-dialog"
 import {
   FormControl,
   FormField,
@@ -17,21 +17,21 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-type EmployeeDialogGenderProps = {
-  form: UseFormReturn<TEmployeeDialogSchema, unknown, undefined>
-  fieldName: Extract<keyof TEmployeeDialogSchema, "gender">
+type UserDialogGenderProps = {
+  form: UseFormReturn<TUserDialogSchema, unknown, undefined>
+  fieldName: Extract<keyof TUserDialogSchema, "gender">
   formLabel: string
   pending: boolean
   selectPlaceholder: string
 }
 
-const EmployeeDialogGender = ({
+const UserDialogGender = ({
   form,
   pending,
   fieldName,
   formLabel,
   selectPlaceholder,
-}: EmployeeDialogGenderProps) => {
+}: UserDialogGenderProps) => {
   const tGeneralManagement = useTranslations("GeneralManagement")
 
   return (
@@ -74,4 +74,4 @@ const EmployeeDialogGender = ({
   )
 }
 
-export default EmployeeDialogGender
+export default UserDialogGender

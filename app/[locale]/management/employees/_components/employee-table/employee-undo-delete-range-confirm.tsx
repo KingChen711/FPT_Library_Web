@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
-import { Loader2, RotateCw, Trash } from "lucide-react"
+import { Loader2, RotateCw } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
@@ -25,7 +25,7 @@ type Props = {
 const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const locale = useLocale()
   const message = `${locale === "vi" ? "khôi phục" : "undo delete"}`
-  const t = useTranslations("CategoriesManagementPage")
+  const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)
   const [pending, startDelete] = useTransition()

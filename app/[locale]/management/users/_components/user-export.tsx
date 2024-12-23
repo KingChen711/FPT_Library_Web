@@ -10,17 +10,17 @@ import { httpBlob } from "@/lib/http-blob"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 
-const EmployeeExport = () => {
+const UserExport = () => {
   const tGeneralManagement = useTranslations("GeneralManagement")
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
   const { accessToken } = useAuth()
 
-  const handleExportEmployee = () => {
+  const handleExportUser = () => {
     startTransition(async () => {
       try {
         const res = await httpBlob.get<Blob>(
-          `/api/management/employees/export?${searchParams.toString()}`,
+          `/api/management/users/export?${searchParams.toString()}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -41,11 +41,11 @@ const EmployeeExport = () => {
         const url = URL.createObjectURL(res)
         const a = document.createElement("a")
         a.href = url
-        a.download = "Authors.xlsx"
+        a.download = "Users.xlsx"
         a.click()
         URL.revokeObjectURL(url)
       } catch (error) {
-        console.error("Error exporting Authors:", error)
+        console.error("Error exporting Users:", error)
       }
     })
   }
@@ -54,7 +54,7 @@ const EmployeeExport = () => {
     <Button
       variant="outline"
       className="bg-primary-foreground"
-      onClick={handleExportEmployee}
+      onClick={handleExportUser}
       disabled={isPending}
     >
       <FileUp size={16} /> {tGeneralManagement("btn.export")}
@@ -62,4 +62,4 @@ const EmployeeExport = () => {
   )
 }
 
-export default EmployeeExport
+export default UserExport

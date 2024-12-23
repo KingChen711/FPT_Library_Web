@@ -21,7 +21,7 @@ import EmployeeFilterGender from "./user-filter-gender"
 import EmployeeFilterInput from "./user-filter-input"
 import EmployeeFilterRoleId from "./user-filter-roleId"
 
-const EmployeeFilters = () => {
+const UserFilters = () => {
   const tGeneralManagement = useTranslations("GeneralManagement")
   const pathname = usePathname()
   const { replace } = useRouter()
@@ -63,7 +63,7 @@ const EmployeeFilters = () => {
       <PopoverContent className="h-[400px] min-w-[600px] overflow-y-auto bg-primary-foreground">
         <div className="flex flex-col gap-4">
           <EmployeeFilterInput
-            label={tGeneralManagement("fields.employeeCode")}
+            label={tGeneralManagement("fields.userCode")}
             placeholder={tGeneralManagement("placeholder.code")}
             enumField={EmployeeFilter.EMPLOYEE_CODE}
             handleAddTextSearchParams={handleAddTextSearchParams}
@@ -109,10 +109,6 @@ const EmployeeFilters = () => {
             label={tGeneralManagement("fields.updatedDate")}
             enumField={EmployeeFilter.MODIFIED_DATE_RANGE}
           />
-          <EmployeeFilterDateRange
-            label={tGeneralManagement("fields.hireDate")}
-            enumField={EmployeeFilter.HIRE_DATE_RANGE}
-          />
 
           <div className="flex justify-end gap-2">
             <Button
@@ -128,4 +124,4 @@ const EmployeeFilters = () => {
   )
 }
 
-export default EmployeeFilters
+export default UserFilters

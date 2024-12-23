@@ -1,11 +1,11 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
-import { Loader2, RotateCw, Trash } from "lucide-react"
+import { Loader2, RotateCw } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { undoDeleteRangeEmployee } from "@/actions/employees/undo-delete-range-employee"
+import { undoDeleteRangeUser } from "@/actions/users/undo-delete-range-user"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,10 +22,10 @@ type Props = {
   selectedIds: string[]
 }
 
-const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
+const UserUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const locale = useLocale()
   const message = `${locale === "vi" ? "khôi phục" : "undo delete"}`
-  const t = useTranslations("CategoriesManagementPage")
+  const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)
   const [pending, startDelete] = useTransition()
@@ -38,7 +38,7 @@ const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
 
   const handleSubmit = () => {
     startDelete(async () => {
-      const res = await undoDeleteRangeEmployee(selectedIds)
+      const res = await undoDeleteRangeUser(selectedIds)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Undo delete successfully",
@@ -103,4 +103,4 @@ const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
   )
 }
 
-export default EmployeeUndoDeleteRangeConfirm
+export default UserUndoDeleteRangeConfirm

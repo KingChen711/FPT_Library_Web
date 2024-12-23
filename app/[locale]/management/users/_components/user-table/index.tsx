@@ -4,13 +4,13 @@ import { type Dispatch, type SetStateAction } from "react"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
 import { usePathname } from "@/i18n/routing"
-import { type TGetEmployeesData } from "@/queries/employees/get-employees"
-import { ArrowDownUp, User } from "lucide-react"
+import { type TGetUSersData } from "@/queries/users/get-users"
+import { ArrowDownUp, User as UserIcon } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
-import { type Employee } from "@/lib/types/models"
+import { type User } from "@/lib/types/models"
 import { formatDate } from "@/lib/utils"
-import { EmployeeFilter } from "@/lib/validations/employee/employees-filter"
+import { UserFilter } from "@/lib/validations/user/user-filter"
 import { Badge } from "@/components/ui/badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -22,21 +22,21 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import EmployeeAction from "./user-action"
-import EmployeePagination from "./user-pagination"
-import EmployeeRowPage from "./user-row-page"
+import UserAction from "./user-action"
+import UserPagination from "./user-pagination"
+import UserRowPage from "./user-row-page"
 
-type EmployeeTableProps = {
-  tableData: TGetEmployeesData
+type UserTableProps = {
+  tableData: TGetUSersData
   selectedIds: string[]
   setSelectedIds: Dispatch<SetStateAction<string[]>>
 }
 
-const EmployeeTable = ({
+const UserTable = ({
   tableData,
   selectedIds,
   setSelectedIds,
-}: EmployeeTableProps) => {
+}: UserTableProps) => {
   const locale = useLocale()
   const pathname = usePathname()
   const router = useRouter()
@@ -62,7 +62,7 @@ const EmployeeTable = ({
     if (isAllSelected) {
       setSelectedIds([])
     } else {
-      setSelectedIds(tableData.sources.map((employee) => employee.employeeId))
+      setSelectedIds(tableData.sources.map((user) => user.userId))
     }
   }
 
@@ -98,13 +98,13 @@ const EmployeeTable = ({
                 <TableHead>No</TableHead>
                 <TableHead
                   className="flex items-center gap-x-2 text-nowrap"
-                  onClick={() => handleSortParams(EmployeeFilter.EMAIL)}
+                  onClick={() => handleSortParams(UserFilter.EMAIL)}
                 >
-                  {t("fields.email")}{" "}
+                  {t("fields.email")}
                   <ArrowDownUp size={16} className="cursor-pointer" />
                 </TableHead>
                 <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.FIRST_NAME)}
+                  onClick={() => handleSortParams(UserFilter.FIRST_NAME)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
                     {t("fields.firstName")}
@@ -112,7 +112,7 @@ const EmployeeTable = ({
                   </div>
                 </TableHead>
                 <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.LAST_NAME)}
+                  onClick={() => handleSortParams(UserFilter.LAST_NAME)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
                     {t("fields.lastName")}
@@ -120,72 +120,45 @@ const EmployeeTable = ({
                   </div>
                 </TableHead>
                 <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.EMPLOYEE_CODE)}
+                  onClick={() => handleSortParams(UserFilter.USER_CODE)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    {t("fields.employeeCode")}
+                    {t("fields.userCode")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
-                <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.PHONE)}
-                >
+                <TableHead onClick={() => handleSortParams(UserFilter.PHONE)}>
                   <div className="flex items-center gap-x-2 text-nowrap">
                     {t("fields.phone")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
-                <TableHead onClick={() => handleSortParams(EmployeeFilter.DOB)}>
+                <TableHead onClick={() => handleSortParams(UserFilter.DOB)}>
                   <div className="flex items-center gap-x-2 text-nowrap">
                     {t("fields.dob")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
-                <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.GENDER)}
-                >
+                <TableHead onClick={() => handleSortParams(UserFilter.GENDER)}>
                   <div className="flex items-center gap-x-2 text-nowrap">
                     {t("fields.gender")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
-                <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.ADDRESS)}
-                >
+                <TableHead onClick={() => handleSortParams(UserFilter.ADDRESS)}>
                   <div className="flex items-center gap-x-2 text-nowrap">
                     {t("fields.address")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
-                <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.HIRE_DATE)}
-                >
-                  <div className="flex items-center gap-x-2 text-nowrap">
-                    {t("fields.hireDate")}
-                    <ArrowDownUp size={16} className="cursor-pointer" />
-                  </div>
-                </TableHead>
-                <TableHead
-                  onClick={() =>
-                    handleSortParams(EmployeeFilter.TERMINATION_DATE)
-                  }
-                >
-                  <div className="flex items-center gap-x-2 text-nowrap">
-                    {t("fields.terminationDate")}
-                    <ArrowDownUp size={16} className="cursor-pointer" />
-                  </div>
-                </TableHead>
-                <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.ROLE)}
-                >
+
+                <TableHead onClick={() => handleSortParams(UserFilter.ROLE)}>
                   <div className="flex items-center gap-x-2 text-nowrap">
                     {t("fields.role")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
-                <TableHead
-                  onClick={() => handleSortParams(EmployeeFilter.ACTIVE)}
-                >
+                <TableHead onClick={() => handleSortParams(UserFilter.ACTIVE)}>
                   <div className="flex items-center gap-x-2 text-nowrap">
                     {t("fields.status")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
@@ -195,60 +168,52 @@ const EmployeeTable = ({
               </TableRow>
             </TableHeader>
             <TableBody className="rounded-b-xl">
-              {tableData.sources.map((employee: Employee, index: number) => (
-                <TableRow key={employee.employeeId}>
+              {tableData.sources.map((user: User, index: number) => (
+                <TableRow key={user.userId}>
                   <TableCell>
                     <Checkbox
-                      checked={selectedIds.includes(employee.employeeId)}
-                      onCheckedChange={() => toggleRow(employee.employeeId)}
+                      checked={selectedIds.includes(user.userId)}
+                      onCheckedChange={() => toggleRow(user.userId)}
                     />
                   </TableCell>
                   <TableCell>{index + 1}</TableCell>
                   <TableCell>
                     <div className="flex gap-2 pr-8">
                       <Image
-                        src={employee.avatar || "https://github.com/shadcn.png"}
+                        src={user.avatar || "https://github.com/shadcn.png"}
                         alt="avatar"
                         width={20}
                         height={20}
                         className="rounded-full"
                       />
-                      <p>{employee.email}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell>{employee.firstName}</TableCell>
-                  <TableCell>{employee.lastName}</TableCell>
-                  <TableCell>{employee.employeeCode}</TableCell>
-                  <TableCell>{employee.phone}</TableCell>
-                  <TableCell>
-                    {employee?.dob && formatDate(employee?.dob)}
-                  </TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex items-center justify-center text-nowrap">
-                      {employee.gender === "Male" ? (
-                        <User color="blue" />
-                      ) : (
-                        <User color="red" />
-                      )}
+                      <p>{user.email}</p>
                     </div>
                   </TableCell>
                   <TableCell className="text-nowrap">
-                    {employee.address}
+                    {user.firstName}
                   </TableCell>
-                  <TableCell>
-                    {employee?.hireDate && formatDate(employee?.hireDate)}
+                  <TableCell className="text-nowrap">{user.lastName}</TableCell>
+                  <TableCell>{user.userCode}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user?.dob && formatDate(user?.dob)}</TableCell>
+                  <TableCell className="text-center">
+                    <div className="flex items-center justify-center text-nowrap">
+                      {user.gender === "Male" ? (
+                        <UserIcon color="blue" />
+                      ) : (
+                        <UserIcon color="red" />
+                      )}
+                    </div>
                   </TableCell>
-                  <TableCell>
-                    {employee?.terminationDate &&
-                      formatDate(employee?.terminationDate)}
-                  </TableCell>
-                  <TableCell>
+                  <TableCell className="text-nowrap">{user.address}</TableCell>
+
+                  <TableCell className="text-nowrap">
                     {locale === "en"
-                      ? employee.role.englishName
-                      : employee.role.vietnameseName}
+                      ? user.role.englishName
+                      : user.role.vietnameseName}
                   </TableCell>
                   <TableCell className="flex h-full items-center justify-center text-nowrap">
-                    {employee.isActive ? (
+                    {user.isActive ? (
                       <Badge className="h-full bg-success hover:bg-success">
                         Active
                       </Badge>
@@ -259,7 +224,7 @@ const EmployeeTable = ({
                     )}
                   </TableCell>
                   <TableCell>
-                    <EmployeeAction employee={employee} />
+                    <UserAction user={user} />
                   </TableCell>
                 </TableRow>
               ))}
@@ -270,12 +235,12 @@ const EmployeeTable = ({
 
       <div className="mt-8 flex w-full items-center justify-end p-4">
         <div className="flex w-2/3 items-center justify-between">
-          <EmployeePagination totalPages={tableData.totalPage} />
-          <EmployeeRowPage />
+          <UserPagination totalPages={tableData.totalPage} />
+          <UserRowPage />
         </div>
       </div>
     </div>
   )
 }
 
-export default EmployeeTable
+export default UserTable

@@ -5,8 +5,8 @@ import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Employee } from "@/lib/types/models"
-import { softDeleteEmployee } from "@/actions/employees/soft-delete"
+import { type User } from "@/lib/types/models"
+import { softDeleteUser } from "@/actions/users/soft-delete"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,19 +18,19 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 
-type EmployeeSoftDeleteConfirmProps = {
+type UserSoftDeleteConfirmProps = {
   openDelete: boolean
   setOpenDelete: (value: boolean) => void
-  employee: Employee
+  user: User
 }
 
-const EmployeeSoftDeleteConfirm = ({
-  employee,
+const UserSoftDeleteConfirm = ({
+  user,
   openDelete,
   setOpenDelete,
-}: EmployeeSoftDeleteConfirmProps) => {
+}: UserSoftDeleteConfirmProps) => {
   const locale = useLocale()
-  const message = `${employee.email}`
+  const message = `${user.email}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
 
@@ -38,7 +38,7 @@ const EmployeeSoftDeleteConfirm = ({
 
   const handleSoftDelete = () => {
     startSoftDelete(async () => {
-      const res = await softDeleteEmployee(employee.employeeId)
+      const res = await softDeleteUser(user.userId)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Soft delete successfully",
@@ -93,4 +93,4 @@ const EmployeeSoftDeleteConfirm = ({
   )
 }
 
-export default EmployeeSoftDeleteConfirm
+export default UserSoftDeleteConfirm
