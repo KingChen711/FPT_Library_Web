@@ -2,16 +2,16 @@ import { type ENotificationType, type ERoleType } from "./enums"
 
 export type User = {
   userId: string
-  userCode: string | null
+  userCode: string
   email: string
-  passwordHash: string | null
+  passwordHash: string
   firstName: string
   lastName: string
-  dob: string | null
-  phone: string | null
-  avatar: string | null
-  address: string | null
-  gender: string | null
+  dob: string
+  phone: string
+  avatar: string
+  address: string
+  gender: string
   isActive: boolean
   isDeleted: boolean
   createDate: string

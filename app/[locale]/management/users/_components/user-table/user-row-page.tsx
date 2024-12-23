@@ -13,7 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-const EmployeeRowPage = () => {
+const UserRowPage = () => {
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
@@ -50,4 +50,4 @@ const EmployeeRowPage = () => {
   )
 }
 
-export default EmployeeRowPage
+export default UserRowPage

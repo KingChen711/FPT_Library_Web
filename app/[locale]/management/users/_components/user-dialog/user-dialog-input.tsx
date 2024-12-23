@@ -1,6 +1,6 @@
 import type { UseFormReturn } from "react-hook-form"
 
-import type { TEmployeeDialogSchema } from "@/lib/validations/employee/employee-dialog"
+import { type TUserDialogSchema } from "@/lib/validations/auth/user-dialog"
 import {
   FormControl,
   FormField,
@@ -10,23 +10,23 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 
-type EmployeeDialogInputProps = {
-  form: UseFormReturn<TEmployeeDialogSchema, unknown, undefined>
-  fieldName: keyof TEmployeeDialogSchema
+type UserDialogInputProps = {
+  form: UseFormReturn<TUserDialogSchema, unknown, undefined>
+  fieldName: keyof TUserDialogSchema
   formLabel: string
   pending: boolean
   inputType?: "text" | "number" | "email" | "password" | "date"
   inputPlaceholder: string
 }
 
-const EmployeeDialogInput = ({
+const UserDialogInput = ({
   form,
   fieldName,
   pending,
   formLabel,
   inputType = "text",
   inputPlaceholder,
-}: EmployeeDialogInputProps) => {
+}: UserDialogInputProps) => {
   return (
     <FormField
       control={form.control}
@@ -55,4 +55,4 @@ const EmployeeDialogInput = ({
   )
 }
 
-export default EmployeeDialogInput
+export default UserDialogInput

@@ -5,10 +5,10 @@ import { EyeOff, MoreHorizontal, Trash, Trash2, User2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Employee } from "@/lib/types/models"
-import { type TEmployeeDialogSchema } from "@/lib/validations/employee/employee-dialog"
-import { changeEmployeeStatus } from "@/actions/employees/change-status"
-import { undoDeleteEmployee } from "@/actions/employees/undo-delete"
+import { type User } from "@/lib/types/models"
+import { type TUserDialogSchema } from "@/lib/validations/auth/user-dialog"
+import { changeUserStatus } from "@/actions/users/change-status"
+import { undoDeleteUser } from "@/actions/users/undo-delete"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,12 +18,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import EmployeeDialogForm from "../user-dialog"
-import EmployeeDeleteConfirm from "./user-delete-confirm"
-import EmployeeSoftDeleteConfirm from "./user-soft-delete-confirm"
+import UserDialogForm from "../user-dialog"
+import UserDeleteConfirm from "./user-delete-confirm"
+import UserSoftDeleteConfirm from "./user-soft-delete-confirm"
 
-type EmployeeActionProps = {
-  employee: Employee
+type UserActionProps = {
+  user: User
 }
 
 const parseNumber = (value: string | null, fallback: number): number => {
@@ -31,7 +31,7 @@ const parseNumber = (value: string | null, fallback: number): number => {
   return isNaN(parsed) ? fallback : parsed
 }
 
-const EmployeeAction = ({ employee }: EmployeeActionProps) => {
+const UserAction = ({ user }: UserActionProps) => {
   const locale = useLocale()
   const tGeneralManagement = useTranslations("GeneralManagement")
 
@@ -41,24 +41,22 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
   const [openDelete, setOpenDelete] = useState(false)
   const [openSoftDelete, setOpenSoftDelete] = useState(false)
 
-  const [updatingEmployee] = useState<TEmployeeDialogSchema>(() => ({
-    employeeCode: employee.employeeCode as string,
-    email: employee.email,
-    firstName: employee.firstName as string,
-    lastName: employee.lastName as string,
-    dob: employee.dob,
-    phone: employee.phone,
-    address: employee.address,
-    gender: parseNumber(employee.gender, 0),
-    hireDate: employee.hireDate as string,
-    roleId: employee.roleId,
+  const [updatingUser] = useState<TUserDialogSchema>(() => ({
+    email: user.email,
+    address: user.address,
+    phone: user.phone,
+    dob: user.dob,
+    gender: parseNumber(user.gender, 0),
+    firstName: user.firstName,
+    lastName: user.lastName,
+    userCode: user.userCode,
   }))
 
-  if (!employee) return null
+  if (!user) return null
 
   const handleDeactivate = () => {
     startChangeStatus(async () => {
-      const res = await changeEmployeeStatus(employee.employeeId)
+      const res = await changeUserStatus(user.userId)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Change status success",
@@ -73,7 +71,7 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
 
   const handleUndoDelete = () => {
     startUndoDelete(async () => {
-      const res = await undoDeleteEmployee(employee.employeeId)
+      const res = await undoDeleteUser(user.userId)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Undo delete successfully",
@@ -88,13 +86,13 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
 
   return (
     <>
-      <EmployeeDeleteConfirm
-        employee={employee}
+      <UserDeleteConfirm
+        user={user}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
       />
-      <EmployeeSoftDeleteConfirm
-        employee={employee}
+      <UserSoftDeleteConfirm
+        user={user}
         openDelete={openSoftDelete}
         setOpenDelete={setOpenSoftDelete}
       />
@@ -108,13 +106,13 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="bg-primary-foreground">
-          {!employee?.isDeleted ? (
+          {!user?.isDeleted ? (
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>
-                <EmployeeDialogForm
+                <UserDialogForm
                   mode="update"
-                  employee={updatingEmployee}
-                  employeeId={employee.employeeId}
+                  user={updatingUser}
+                  userId={user.userId}
                 />
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
@@ -158,4 +156,4 @@ const EmployeeAction = ({ employee }: EmployeeActionProps) => {
   )
 }
 
-export default EmployeeAction
+export default UserAction

@@ -188,6 +188,7 @@
       "active": "Active",
       "inactive": "Inactive",
       "studentCode": "Student code",
+      "userCode": "User code",
       "employeeCode": "Employee code",
       "authorCode": "Author code",
       "collegeEmailId": "College email ID",
@@ -214,7 +215,14 @@
       "exclamation": "Exclamation mark"
     }
   },
-  "UserManagement": {},
+  "UserManagement": {
+    "create user": "Create user",
+    "update user": "Edit user",
+    "delete user": "Delete user",
+    "soft delete user": "Soft delete user",
+    "restore user": "Restore user",
+    "undo delete user": "Undo delete user"
+  },
   "EmployeeManagement": {
     "create employee": "Create Employee",
     "update employee": "Edit Employee",
@@ -223,7 +231,14 @@
     "restore employee": "Restore Employee",
     "undo delete employee": "Undo delete Employee"
   },
-  "AuthorManagement": {},
+  "AuthorManagement": {
+    "create author": "Create author",
+    "update author": "Edit author",
+    "delete author": "Delete author",
+    "soft delete author": "Soft delete author",
+    "restore author": "Restore author",
+    "undo delete author": "Undo delete author"
+  },
   "RoleManagement": {
     "Roles": "Roles",
     "Role horizontal": "Role horizontal",

@@ -1,17 +1,17 @@
 import { DEFAULT_PAGE_INDEX, DEFAULT_PAGE_SIZE } from "@/constants"
 import { auth } from "@/queries/auth"
-import { getEmployees } from "@/queries/employees/get-employees"
+import { getUsers } from "@/queries/users/get-users"
 import { z } from "zod"
 
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature, EGender } from "@/lib/types/enums"
 
-import EmployeeContainer from "./_components/user-container"
-import EmployeeDialogForm from "./_components/user-dialog"
-import EmployeeDialogImport from "./_components/user-dialog-import"
-import EmployeeExport from "./_components/user-export"
+import UserContainer from "./_components/user-container"
+import UserDialogForm from "./_components/user-dialog"
+import UserDialogImport from "./_components/user-dialog-import"
+import UserExport from "./_components/user-export"
 
-const employeeManagementSchema = z.object({
+const userManagementSchema = z.object({
   employeeCode: z.string().trim().optional(),
   roleId: z.string().trim().optional(),
   gender: z.nativeEnum(EGender).optional(),
@@ -24,18 +24,17 @@ const employeeManagementSchema = z.object({
   dobRange: z.array(z.string().trim()).optional().catch([]),
   createDateRange: z.array(z.string().trim()).optional().catch([]),
   modifiedDateRange: z.array(z.string().trim()).optional().catch([]),
-  hireDateRange: z.array(z.string().trim()).optional().catch([]),
 })
 
-type EmployeeManagementPageProps = {
-  searchParams: Partial<z.infer<typeof employeeManagementSchema>>
+type UserManagementPageProps = {
+  searchParams: Partial<z.infer<typeof userManagementSchema>>
 }
 
-type SearchParamsData = z.infer<typeof employeeManagementSchema>
+type SearchParamsData = z.infer<typeof userManagementSchema>
 
-const EmployeeManagementPage = async ({
+const UserManagementPage = async ({
   searchParams,
-}: EmployeeManagementPageProps) => {
+}: UserManagementPageProps) => {
   await auth().protect(EFeature.EMPLOYEE_MANAGEMENT)
 
   const tGeneralManagement = await getTranslations("GeneralManagement")
@@ -47,7 +46,7 @@ const EmployeeManagementPage = async ({
 
   // Parse searchParams với schema
   const searchParamsData: SearchParamsData =
-    employeeManagementSchema.parse(defaultParams)
+    userManagementSchema.parse(defaultParams)
 
   // Create query string from searchParamsData
   const query = new URLSearchParams(
@@ -61,23 +60,23 @@ const EmployeeManagementPage = async ({
     }, new URLSearchParams())
   ).toString()
 
-  const tableData = await getEmployees(`${query}`)
+  const tableData = await getUsers(`${query}`)
 
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <h3 className="text-2xl font-semibold">
-          {tGeneralManagement("employee management")}
+          {tGeneralManagement("user management")}
         </h3>
         <div className="flex items-center gap-x-4">
-          <EmployeeExport />
-          <EmployeeDialogImport />
-          <EmployeeDialogForm mode="create" />
+          <UserExport />
+          <UserDialogImport />
+          <UserDialogForm mode="create" />
         </div>
       </div>
-      <EmployeeContainer tableData={tableData} />
+      <UserContainer tableData={tableData} />
     </div>
   )
 }
 
-export default EmployeeManagementPage
+export default UserManagementPage

@@ -8,11 +8,11 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import {
-  employeeDialogSchema,
-  type TEmployeeDialogSchema,
-} from "@/lib/validations/employee/employee-dialog"
-import { createEmployee } from "@/actions/employees/create-employee"
-import { updateEmployee } from "@/actions/employees/update-employee"
+  userDialogSchema,
+  type TUserDialogSchema,
+} from "@/lib/validations/auth/user-dialog"
+import { createUser } from "@/actions/users/create-user"
+import { updateUser } from "@/actions/users/update-user"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,40 +24,33 @@ import {
 } from "@/components/ui/dialog"
 import { Form } from "@/components/ui/form"
 
-import EmployeeDialogGender from "./user-dialog-gender"
-import EmployeeDialogInput from "./user-dialog-input"
-import EmployeeDialogRole from "./user-dialog-role"
+import UserDialogGender from "./user-dialog-gender"
+import UserDialogInput from "./user-dialog-input"
 
-type EmployeeDialogFormProps = {
+type UserDialogFormProps = {
   mode: "create" | "update"
-  employee?: TEmployeeDialogSchema
-  employeeId?: string
+  user?: TUserDialogSchema
+  userId?: string
 }
 
-const EmployeeDialogForm = ({
-  mode,
-  employee,
-  employeeId,
-}: EmployeeDialogFormProps) => {
+const UserDialogForm = ({ mode, user, userId }: UserDialogFormProps) => {
   const locale = useLocale()
   const [pending, startTransition] = useTransition()
   const [isOpen, setOpen] = useState<boolean>(false)
-  const tEmployeeManagement = useTranslations("EmployeeManagement")
+  const tUserManagement = useTranslations("UserManagement")
   const tGeneralManagement = useTranslations("GeneralManagement")
 
-  const form = useForm<TEmployeeDialogSchema>({
-    resolver: zodResolver(employeeDialogSchema),
+  const form = useForm<TUserDialogSchema>({
+    resolver: zodResolver(userDialogSchema),
     defaultValues: {
-      employeeCode: employee?.employeeCode ?? "",
-      email: employee?.email ?? "",
-      firstName: employee?.firstName ?? "",
-      lastName: employee?.lastName ?? "",
-      dob: employee?.dob ?? "",
-      phone: employee?.phone ?? "",
-      address: employee?.address ?? "",
-      gender: employee?.gender ?? -1,
-      hireDate: employee?.hireDate ?? "",
-      roleId: employee?.roleId ?? -1,
+      userCode: user?.userCode ?? "",
+      email: user?.email ?? "",
+      firstName: user?.firstName ?? "",
+      lastName: user?.lastName ?? "",
+      dob: user?.dob ?? "",
+      phone: user?.phone ?? "",
+      address: user?.address ?? "",
+      gender: user?.gender ?? -1,
     },
   })
 
@@ -66,12 +59,12 @@ const EmployeeDialogForm = ({
     form.clearErrors()
   }, [form, isOpen])
 
-  const onSubmit = async (values: TEmployeeDialogSchema) => {
+  const onSubmit = async (values: TUserDialogSchema) => {
     startTransition(async () => {
       const res =
         mode === "create"
-          ? await createEmployee(values)
-          : await updateEmployee(employeeId as string, values)
+          ? await createUser(values)
+          : await updateUser(userId as string, values)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
@@ -96,15 +89,15 @@ const EmployeeDialogForm = ({
         <DialogTrigger asChild>
           <Button>
             <Plus size={16} />
-            {tEmployeeManagement("create employee")}
+            {tUserManagement("create user")}
           </Button>
         </DialogTrigger>
       )}
 
-      {mode === "update" && employee && (
+      {mode === "update" && user && (
         <DialogTrigger asChild>
           <div className="flex cursor-pointer select-none items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-none hover:bg-accent">
-            <SquarePen size={16} /> {tEmployeeManagement("update employee")}
+            <SquarePen size={16} /> {tUserManagement("update user")}
           </div>
         </DialogTrigger>
       )}
@@ -113,8 +106,8 @@ const EmployeeDialogForm = ({
         <DialogHeader className="w-full space-y-4 bg-primary p-4">
           <DialogTitle className="text-center text-primary-foreground">
             {mode === "create"
-              ? tEmployeeManagement("create employee")
-              : tEmployeeManagement("update employee")}
+              ? tUserManagement("create user")
+              : tUserManagement("update user")}
           </DialogTitle>
         </DialogHeader>
         <Form {...form}>
@@ -123,14 +116,14 @@ const EmployeeDialogForm = ({
             className="container h-[60vh] space-y-4 overflow-y-auto px-4"
           >
             <div className="space-y-2">
-              <EmployeeDialogInput
+              <UserDialogInput
                 form={form}
-                fieldName="employeeCode"
+                fieldName="userCode"
                 pending={pending}
-                formLabel={tGeneralManagement("fields.employeeCode")}
+                formLabel={tGeneralManagement("fields.userCode")}
                 inputPlaceholder={tGeneralManagement("placeholder.code")}
               />
-              <EmployeeDialogInput
+              <UserDialogInput
                 form={form}
                 fieldName="email"
                 pending={pending}
@@ -138,35 +131,35 @@ const EmployeeDialogForm = ({
                 formLabel={tGeneralManagement("fields.email")}
                 inputPlaceholder={tGeneralManagement("placeholder.email")}
               />
-              <EmployeeDialogInput
+              <UserDialogInput
                 form={form}
                 fieldName="firstName"
                 pending={pending}
                 formLabel={tGeneralManagement("fields.firstName")}
                 inputPlaceholder={tGeneralManagement("placeholder.firstName")}
               />
-              <EmployeeDialogInput
+              <UserDialogInput
                 form={form}
                 fieldName="lastName"
                 pending={pending}
                 formLabel={tGeneralManagement("fields.lastName")}
                 inputPlaceholder={tGeneralManagement("placeholder.lastName")}
               />
-              <EmployeeDialogInput
+              <UserDialogInput
                 form={form}
                 fieldName="phone"
                 pending={pending}
                 formLabel={tGeneralManagement("fields.phone")}
                 inputPlaceholder={tGeneralManagement("placeholder.phone")}
               />
-              <EmployeeDialogInput
+              <UserDialogInput
                 form={form}
                 fieldName="address"
                 pending={pending}
                 formLabel={tGeneralManagement("fields.address")}
                 inputPlaceholder={tGeneralManagement("placeholder.address")}
               />
-              <EmployeeDialogInput
+              <UserDialogInput
                 form={form}
                 fieldName="dob"
                 pending={pending}
@@ -174,29 +167,13 @@ const EmployeeDialogForm = ({
                 formLabel={tGeneralManagement("fields.dob")}
                 inputPlaceholder={tGeneralManagement("placeholder.dob")}
               />
-              <EmployeeDialogInput
-                form={form}
-                fieldName="hireDate"
-                pending={pending}
-                inputType="date"
-                formLabel={tGeneralManagement("fields.hireDate")}
-                inputPlaceholder={tGeneralManagement("placeholder.hireDate")}
-              />
 
-              <EmployeeDialogGender
+              <UserDialogGender
                 form={form}
                 fieldName="gender"
                 pending={pending}
                 formLabel={tGeneralManagement("fields.gender")}
                 selectPlaceholder={tGeneralManagement("placeholder.gender")}
-              />
-
-              <EmployeeDialogRole
-                form={form}
-                fieldName="roleId"
-                pending={pending}
-                formLabel={tGeneralManagement("fields.role")}
-                selectPlaceholder={tGeneralManagement("placeholder.role")}
               />
             </div>
 
@@ -221,4 +198,4 @@ const EmployeeDialogForm = ({
   )
 }
 
-export default EmployeeDialogForm
+export default UserDialogForm

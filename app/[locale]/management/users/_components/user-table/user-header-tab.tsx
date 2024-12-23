@@ -6,7 +6,7 @@ import { useDebouncedCallback } from "use-debounce"
 
 import { cn } from "@/lib/utils"
 
-const EmployeeHeaderTab = () => {
+const UserHeaderTab = () => {
   const pathname = usePathname()
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -46,4 +46,4 @@ const EmployeeHeaderTab = () => {
   )
 }
 
-export default EmployeeHeaderTab
+export default UserHeaderTab

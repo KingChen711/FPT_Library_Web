@@ -13,11 +13,11 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination"
 
-type EmployeePaginationProps = {
+type UserPaginationProps = {
   totalPages: number
 }
 
-const EmployeePagination = ({ totalPages }: EmployeePaginationProps) => {
+const UserPagination = ({ totalPages }: UserPaginationProps) => {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -82,4 +82,4 @@ const EmployeePagination = ({ totalPages }: EmployeePaginationProps) => {
   )
 }
 
-export default EmployeePagination
+export default UserPagination

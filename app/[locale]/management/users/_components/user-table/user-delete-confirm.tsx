@@ -5,7 +5,7 @@ import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Employee } from "@/lib/types/models"
+import { type User } from "@/lib/types/models"
 import { deleteEmployee } from "@/actions/employees/delete-employee"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -18,28 +18,28 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 
-type EmployeeDeleteConfirmProps = {
+type UserDeleteConfirmProps = {
   openDelete: boolean
   setOpenDelete: (value: boolean) => void
-  employee: Employee
+  user: User
 }
 
-const EmployeeDeleteConfirm = ({
-  employee,
+const UserDeleteConfirm = ({
+  user: user,
   openDelete,
   setOpenDelete,
-}: EmployeeDeleteConfirmProps) => {
+}: UserDeleteConfirmProps) => {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "xóa" : "delete"} ${employee.email}`
+  const message = `${locale === "vi" ? "xóa" : "delete"} ${user.email}`
   const tGeneralManagement = useTranslations("GeneralManagement")
-  const EmployeeManagement = useTranslations("EmployeeManagement")
+  const tUserManagement = useTranslations("UserManagement")
   const [value, setValue] = useState<string>("")
 
   const [pending, startDelete] = useTransition()
 
   const handleDelete = () => {
     startDelete(async () => {
-      const res = await deleteEmployee(employee.employeeId)
+      const res = await deleteEmployee(user.userId)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Delete successfully",
@@ -57,7 +57,7 @@ const EmployeeDeleteConfirm = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-1">
-            {EmployeeManagement("delete employee")}
+            {tUserManagement("delete employee")}
           </DialogTitle>
           <DialogDescription>
             <div
@@ -97,4 +97,4 @@ const EmployeeDeleteConfirm = ({
   )
 }
 
-export default EmployeeDeleteConfirm
+export default UserDeleteConfirm
