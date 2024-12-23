@@ -5,10 +5,10 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TEmployeeDialogSchema } from "@/lib/validations/employee/employee-dialog"
+import { type TAuthorDialogSchema } from "@/lib/validations/author/author-dialog"
 
 export async function createAuthor(
-  body: TEmployeeDialogSchema
+  body: TAuthorDialogSchema
 ): Promise<ActionResponse> {
   const { getAccessToken } = auth()
 

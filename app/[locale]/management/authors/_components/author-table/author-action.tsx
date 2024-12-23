@@ -1,14 +1,13 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { EyeOff, MoreHorizontal, Trash, Trash2, User2 } from "lucide-react"
+import { MoreHorizontal, Trash, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Author, type Employee } from "@/lib/types/models"
-import { type TEmployeeDialogSchema } from "@/lib/validations/employee/employee-dialog"
-import { changeEmployeeStatus } from "@/actions/employees/change-status"
-import { undoDeleteEmployee } from "@/actions/employees/undo-delete"
+import { type Author } from "@/lib/types/models"
+import { type TAuthorDialogSchema } from "@/lib/validations/author/author-dialog"
+import { undoDeleteAuthor } from "@/actions/authors/undo-delete"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,63 +18,37 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import AuthorDialogForm from "../author-dialog"
+import AuthorDeleteConfirm from "./author-delete-confirm"
+import AuthorSoftDeleteConfirm from "./author-soft-delete-confirm"
 
-// import EmployeeDialogForm from "../employee-dialog"
-// import EmployeeDeleteConfirm from "./employee-delete-confirm"
-// import EmployeeSoftDeleteConfirm from "./employee-soft-delete-confirm"
-
-type EmployeeActionProps = {
+type AuthorActionProps = {
   author: Author
 }
 
-const parseNumber = (value: string | null, fallback: number): number => {
-  const parsed = Number(value)
-  return isNaN(parsed) ? fallback : parsed
-}
-
-const AuthorAction = ({ author }: EmployeeActionProps) => {
+const AuthorAction = ({ author }: AuthorActionProps) => {
   const locale = useLocale()
   const tGeneralManagement = useTranslations("GeneralManagement")
 
-  const [pendingChangeStatus, startChangeStatus] = useTransition()
   const [pendingUndoDelete, startUndoDelete] = useTransition()
 
   const [openDelete, setOpenDelete] = useState(false)
   const [openSoftDelete, setOpenSoftDelete] = useState(false)
 
-  // const [updatingEmployee] = useState<TEmployeeDialogSchema>(() => ({
-  //   employeeCode: author.employeeCode as string,
-  //   email: author.email,
-  //   firstName: author.firstName as string,
-  //   lastName: author.lastName as string,
-  //   dob: author.dob,
-  //   phone: author.phone,
-  //   address: author.address,
-  //   gender: parseNumber(author.gender, 0),
-  //   hireDate: author.hireDate as string,
-  //   roleId: author.roleId,
-  // }))
+  const [updatingAuthor] = useState<TAuthorDialogSchema>(() => ({
+    authorCode: author.authorCode,
+    fullName: author.fullName,
+    dob: author.dob,
+    dateOfDeath: author.dateOfDeath,
+    nationality: author.nationality,
+    biography: author.biography,
+    authorImage: author.authorImage,
+  }))
 
   if (!author) return null
 
-  const handleDeactivate = () => {
-    startChangeStatus(async () => {
-      const res = await changeEmployeeStatus(author.authorId.toString())
-      if (res.isSuccess) {
-        toast({
-          title: locale === "vi" ? "Thành công" : "Change status success",
-          description: res.data,
-          variant: "success",
-        })
-        return
-      }
-      handleServerActionError(res, locale)
-    })
-  }
-
   const handleUndoDelete = () => {
     startUndoDelete(async () => {
-      const res = await undoDeleteEmployee(author.authorId.toString())
+      const res = await undoDeleteAuthor(author.authorId.toString())
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Undo delete successfully",
@@ -90,16 +63,16 @@ const AuthorAction = ({ author }: EmployeeActionProps) => {
 
   return (
     <>
-      {/* <EmployeeDeleteConfirm
-        employee={employee}
+      <AuthorDeleteConfirm
+        author={author}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
       />
-      <EmployeeSoftDeleteConfirm
-        employee={employee}
+      <AuthorSoftDeleteConfirm
+        author={author}
         openDelete={openSoftDelete}
         setOpenDelete={setOpenSoftDelete}
-      /> */}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -113,12 +86,11 @@ const AuthorAction = ({ author }: EmployeeActionProps) => {
           {!author?.isDeleted ? (
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>
-                {/* <AuthorDialogForm
+                <AuthorDialogForm
                   mode="update"
-                  employee={updatingEmployee}
-                  employeeId={employee.employeeId}
-                /> */}
-                Update
+                  author={updatingAuthor}
+                  authorId={author.authorId.toString()}
+                />
               </DropdownMenuItem>
 
               <DropdownMenuItem
