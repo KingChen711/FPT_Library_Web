@@ -98,38 +98,22 @@ const AuthorTable = ({
                 <TableHead>No</TableHead>
                 <TableHead
                   className="flex items-center gap-x-2 text-nowrap"
-                  onClick={() => handleSortParams(AuthorFilter.AUTHOR_CODE)}
+                  onClick={() => handleSortParams(AuthorFilter.FULL_NAME)}
                 >
-                  {t("fields.authorCode")}
+                  {t("fields.fullName")}
                   <ArrowDownUp size={16} className="cursor-pointer" />
                 </TableHead>
                 <TableHead
-                  onClick={() => handleSortParams(AuthorFilter.FULL_NAME)}
+                  onClick={() => handleSortParams(AuthorFilter.AUTHOR_CODE)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
-                    {t("fields.fullName")}
-                    <ArrowDownUp size={16} className="cursor-pointer" />
-                  </div>
-                </TableHead>
-                <TableHead
-                  onClick={() => handleSortParams(AuthorFilter.BIOGRAPHY)}
-                >
-                  <div className="flex items-center gap-x-2 text-nowrap">
-                    {t("fields.biography")}
+                    {t("fields.authorCode")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
                 <TableHead onClick={() => handleSortParams(AuthorFilter.DOB)}>
                   <div className="flex items-center gap-x-2 text-nowrap">
                     {t("fields.dob")}
-                    <ArrowDownUp size={16} className="cursor-pointer" />
-                  </div>
-                </TableHead>
-                <TableHead
-                  onClick={() => handleSortParams(AuthorFilter.DATE_OF_DEATH)}
-                >
-                  <div className="flex items-center gap-x-2 text-nowrap">
-                    {t("fields.date of death")}
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
@@ -142,6 +126,15 @@ const AuthorTable = ({
                   </div>
                 </TableHead>
                 <TableHead
+                  onClick={() => handleSortParams(AuthorFilter.BIOGRAPHY)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    {t("fields.biography")}
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+
+                <TableHead
                   onClick={() => handleSortParams(AuthorFilter.CREATE_DATE)}
                 >
                   <div className="flex items-center gap-x-2 text-nowrap">
@@ -149,6 +142,16 @@ const AuthorTable = ({
                     <ArrowDownUp size={16} className="cursor-pointer" />
                   </div>
                 </TableHead>
+
+                <TableHead
+                  onClick={() => handleSortParams(AuthorFilter.DATE_OF_DEATH)}
+                >
+                  <div className="flex items-center gap-x-2 text-nowrap">
+                    {t("fields.dateOfDeath")}
+                    <ArrowDownUp size={16} className="cursor-pointer" />
+                  </div>
+                </TableHead>
+
                 <TableHead
                   onClick={() => handleSortParams(AuthorFilter.UPDATE_DATE)}
                 >
@@ -164,7 +167,7 @@ const AuthorTable = ({
             <TableBody className="rounded-b-xl">
               {tableData.sources.map((author: Author, index: number) => (
                 <TableRow key={author.authorId}>
-                  <TableCell>
+                  <TableCell className="text-nowrap">
                     <Checkbox
                       checked={selectedIds.includes(author.authorId.toString())}
                       onCheckedChange={() =>
@@ -172,27 +175,43 @@ const AuthorTable = ({
                       }
                     />
                   </TableCell>
-                  <TableCell>{index + 1}</TableCell>
-                  <TableCell>{author.authorCode}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-nowrap">{index + 1}</TableCell>
+                  <TableCell className="text-nowrap">
                     <div className="flex gap-2 pr-8">
                       <Image
+                        // src={author.authorImage || "https://github.com/shadcn.png"}
                         src={"https://github.com/shadcn.png"}
                         alt="avatar"
                         width={20}
                         height={20}
                         className="rounded-full"
                       />
-                      <p className="text-nowrap">{author.fullName}</p>
+                      <p>{author.fullName}</p>
                     </div>
                   </TableCell>
-                  <TableCell>{author.biography}</TableCell>
-                  <TableCell>{formatDate(author.dob)}</TableCell>
-                  <TableCell>{author.nationality}</TableCell>
-                  <TableCell>{formatDate(author.createDate)}</TableCell>
-                  <TableCell>{formatDate(author.updateDate)}</TableCell>
-                  <TableCell>{formatDate(author.dateOfDeath)}</TableCell>
-
+                  <TableCell className="text-nowrap text-center">
+                    {author.authorCode}
+                  </TableCell>
+                  <TableCell className="text-nowrap text-center">
+                    {author.dob ? formatDate(author.dob) : "-"}
+                  </TableCell>
+                  <TableCell className="text-nowrap text-center">
+                    {author.nationality}
+                  </TableCell>
+                  <TableCell className="text-nowrap">
+                    <div
+                      dangerouslySetInnerHTML={{ __html: author.biography }}
+                    />
+                  </TableCell>
+                  <TableCell className="text-nowrap text-center">
+                    {author.createDate ? formatDate(author.createDate) : "-"}
+                  </TableCell>
+                  <TableCell className="text-nowrap text-center">
+                    {author.dateOfDeath ? formatDate(author.dateOfDeath) : "-"}
+                  </TableCell>
+                  <TableCell className="text-nowrap text-center">
+                    {author.updateDate ? formatDate(author.updateDate) : "-"}
+                  </TableCell>
                   <TableCell>
                     <AuthorAction author={author} />
                   </TableCell>

@@ -12,7 +12,7 @@ export async function softDeleteRangeUser(
   const { getAccessToken } = auth()
 
   try {
-    const { message } = await http.patch(
+    const { message } = await http.multiDelete(
       `/api/management/users/soft-delete-range`,
       {
         ids: userIds,

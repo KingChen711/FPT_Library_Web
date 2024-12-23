@@ -164,6 +164,12 @@
     "placeholder": {
       "code": "Nhập mã số",
       "email": "Nhập email",
+      "fullName": "Nhập họ và tên",
+      "nationality": "Nhập quốc tịch",
+      "biography": "Nhập tiểu sử",
+      "username": "Nhập tên người dùng",
+      "password": "Nhập mật khẩu",
+      "confirmedPassword": "Nhập lại mật khẩu",
       "firstName": "Nhập tên",
       "lastName": "Nhập họ",
       "phone": "Nhập số diện thoại",
@@ -202,6 +208,7 @@
       "status": "Tình trạng",
       "createdDate": "Ngày tạo",
       "updatedDate": "Ngày sửa",
+      "dateOfDeath": "Ngày mất",
       "hireDate": "Ngày thuê",
       "terminationDate": "Ngày nghỉ",
       "biography": "Tiểu sử",
@@ -237,11 +244,11 @@
     "undo delete employee": "Khôi phúc xóa nhân viên"
   },
   "AuthorManagement": {
-    "create author": "Tạo người tác giả",
-    "update author": "Chỉnh sửa người tác giả",
-    "delete author": "Xóa người tác giả",
-    "soft delete author": "Xóa mềm người tác giả",
-    "restore author": "Khôi phục người tác giả",
+    "create author": "Tạo tác giả",
+    "update author": "Chỉnh sửa tác giả",
+    "delete author": "Xóa tác giả",
+    "soft delete author": "Xóa mềm tác giả",
+    "restore author": "Khôi phục tác giả",
     "undo delete author": "Khôi phúc xóa tác giả"
   },
   "RoleManagement": {

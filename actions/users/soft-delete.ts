@@ -12,9 +12,8 @@ export async function softDeleteUser(
   const { getAccessToken } = auth()
 
   try {
-    const { message } = await http.patch(
+    const { message } = await http.delete(
       `/api/management/users/${userId}/soft-delete`,
-      {},
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,

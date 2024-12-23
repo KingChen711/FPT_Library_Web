@@ -11,7 +11,8 @@ import {
   authorImportSchema,
   type TAuthorImport,
 } from "@/lib/validations/author/author-import"
-import { importAuthor } from "@/actions/authors/import-author"
+import { type TEmployeeImport } from "@/lib/validations/employee/employee-import"
+import { importEmployee } from "@/actions/employees/import-employee"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -101,7 +102,7 @@ const AuthorDialogImport = () => {
     }
   }
 
-  function onSubmit(values: TAuthorImport) {
+  function onSubmit(values: TEmployeeImport) {
     console.log(values)
     startTransition(async () => {
       const formData = new FormData()
@@ -123,7 +124,7 @@ const AuthorDialogImport = () => {
         formData.append("scanningFields", field)
       })
 
-      const res = await importAuthor(formData)
+      const res = await importEmployee(formData)
       if (res.isSuccess) {
         toast({
           title: tGeneralManagement("btn.import"),

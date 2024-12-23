@@ -5,7 +5,8 @@ import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Author } from "@/lib/types/models"
+import { type Author, type Employee } from "@/lib/types/models"
+import { deleteAuthor } from "@/actions/authors/delete-author"
 import { deleteEmployee } from "@/actions/employees/delete-employee"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -32,14 +33,14 @@ const AuthorDeleteConfirm = ({
   const locale = useLocale()
   const message = `${locale === "vi" ? "xóa" : "delete"} ${author.fullName}`
   const tGeneralManagement = useTranslations("GeneralManagement")
-  const EmployeeManagement = useTranslations("EmployeeManagement")
+  const tAuthorManagement = useTranslations("AuthorManagement")
   const [value, setValue] = useState<string>("")
 
   const [pending, startDelete] = useTransition()
 
   const handleDelete = () => {
     startDelete(async () => {
-      const res = await deleteEmployee(author.authorId.toString())
+      const res = await deleteAuthor(author.authorId.toString())
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Delete successfully",
@@ -57,7 +58,7 @@ const AuthorDeleteConfirm = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-1">
-            {EmployeeManagement("delete employee")}
+            {tAuthorManagement("delete author")}
           </DialogTitle>
           <DialogDescription>
             <div

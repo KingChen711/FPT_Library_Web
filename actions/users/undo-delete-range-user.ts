@@ -12,7 +12,7 @@ export async function undoDeleteRangeUser(
   const { getAccessToken } = auth()
 
   try {
-    const { message } = await http.patch(
+    const { message } = await http.multiDelete(
       `/api/management/users/undo-delete-range`,
       {
         ids: userIds,

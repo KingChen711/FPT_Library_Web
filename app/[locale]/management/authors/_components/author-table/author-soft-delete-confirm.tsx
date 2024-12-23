@@ -5,7 +5,8 @@ import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Employee } from "@/lib/types/models"
+import { type Author } from "@/lib/types/models"
+import { softDeleteAuthor } from "@/actions/authors/soft-delete"
 import { softDeleteEmployee } from "@/actions/employees/soft-delete"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -21,16 +22,16 @@ import { Input } from "@/components/ui/input"
 type AuthorSoftDeleteConfirmProps = {
   openDelete: boolean
   setOpenDelete: (value: boolean) => void
-  employee: Employee
+  author: Author
 }
 
 const AuthorSoftDeleteConfirm = ({
-  employee,
+  author: author,
   openDelete,
   setOpenDelete,
 }: AuthorSoftDeleteConfirmProps) => {
   const locale = useLocale()
-  const message = `${employee.email}`
+  const message = `${author.fullName}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
 
@@ -38,7 +39,7 @@ const AuthorSoftDeleteConfirm = ({
 
   const handleSoftDelete = () => {
     startSoftDelete(async () => {
-      const res = await softDeleteEmployee(employee.employeeId)
+      const res = await softDeleteAuthor(author.authorId.toString())
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Soft delete successfully",
