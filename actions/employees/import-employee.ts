@@ -9,15 +9,16 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function importEmployee(
   formData: FormData
 ): Promise<ActionResponse> {
+  console.log("🚀 ~ formData:", formData)
   const { getAccessToken } = auth()
   try {
     const res = await http.post(`/api/management/employees/import`, formData, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
-        "Content-Type": "multipart/form-data",
       },
     })
 
+    console.log("🚀 ~ res:", res)
     revalidateTag("employees")
 
     return {

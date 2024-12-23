@@ -3,6 +3,11 @@ export enum ERoleType {
   EMPLOYEE = "Employee",
 }
 
+export enum EGender {
+  MALE = "Male",
+  FEMALE = "Female",
+}
+
 export const ERoleTypeToIndex: Map<ERoleType, number> = new Map([
   [ERoleType.USER, 0],
   [ERoleType.EMPLOYEE, 1],
@@ -29,7 +34,7 @@ export enum ESystemRoutes {
 }
 
 export enum EFeature {
-  DASHBOARD_MANAGEMENT = 0,
+  DASHBOARD_MANAGEMENT = 99,
   USER_MANAGEMENT = 1,
   EMPLOYEE_MANAGEMENT = 2,
   ROLE_MANAGEMENT = 3,

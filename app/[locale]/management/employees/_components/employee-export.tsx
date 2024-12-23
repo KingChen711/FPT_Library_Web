@@ -11,8 +11,7 @@ import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 
 const EmployeeExport = () => {
-  const t = useTranslations("UserManagement")
-  // const locale = useLocale()
+  const tGeneralManagement = useTranslations("GeneralManagement")
   const searchParams = useSearchParams()
   const [isPending, startTransition] = useTransition()
   const { accessToken } = useAuth()
@@ -20,7 +19,6 @@ const EmployeeExport = () => {
   const handleExportEmployee = () => {
     startTransition(async () => {
       try {
-        // Gọi API trực tiếp từ frontend
         const res = await httpBlob.get<Blob>(
           `/api/management/employees/export?${searchParams.toString()}`,
           {
@@ -33,23 +31,21 @@ const EmployeeExport = () => {
 
         if (res.size == 0) {
           toast({
-            title: t("error"),
-            description: t("EmployeeDialog.fileEmptyMessage"),
+            title: tGeneralManagement("error"),
+            description: tGeneralManagement("fileEmptyMessage"),
             variant: "danger",
           })
           return
         }
 
-        // Xử lý file download trên client
-
         const url = URL.createObjectURL(res)
         const a = document.createElement("a")
         a.href = url
-        a.download = "Employees.xlsx"
+        a.download = "Authors.xlsx"
         a.click()
         URL.revokeObjectURL(url)
       } catch (error) {
-        console.error("Error exporting employees:", error)
+        console.error("Error exporting Authors:", error)
       }
     })
   }
@@ -61,7 +57,7 @@ const EmployeeExport = () => {
       onClick={handleExportEmployee}
       disabled={isPending}
     >
-      <FileUp size={16} /> {t("export")}
+      <FileUp size={16} /> {tGeneralManagement("btn.export")}
     </Button>
   )
 }

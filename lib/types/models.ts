@@ -2,16 +2,16 @@ import { type ENotificationType, type ERoleType } from "./enums"
 
 export type User = {
   userId: string
-  userCode: string | null
+  userCode: string
   email: string
-  passwordHash: string | null
+  passwordHash: string
   firstName: string
   lastName: string
-  dob: string | null
-  phone: string | null
-  avatar: string | null
-  address: string | null
-  gender: string | null
+  dob: string
+  phone: string
+  avatar: string
+  address: string
+  gender: string
   isActive: boolean
   isDeleted: boolean
   createDate: string
@@ -42,16 +42,16 @@ export type Role = {
 }
 
 export type Employee = {
-  employeeId: string | null
+  employeeId: string
   employeeCode: string | null
   email: string
   passwordHash: string | null
   firstName: string | null
   lastName: string | null
-  dob: string | null
-  phone: string | null
-  avatar: string | null
-  address: string | null
+  dob: string
+  phone: string
+  avatar: string
+  address: string
   gender: "Male" | "Female" | null
   hireDate: string | null
   terminationDate: string | null
@@ -78,6 +78,21 @@ export type Employee = {
   }
 }
 
+export type Author = {
+  authorId: number
+  authorCode: string
+  authorImage: string
+  fullName: string
+  biography: string
+  dob: string
+  dateOfDeath: string
+  nationality: string
+  createDate: string
+  updateDate: string
+  isDeleted: false
+  bookEditionAuthors: unknown[]
+}
+
 export type Notification = {
   notificationId: number
   title: string
@@ -94,5 +109,11 @@ export type Fine = {
   conditionType: string
   fineAmountPerDay: number
   fixedFineAmount: number
+}
+
+export type Category = {
+  categoryId: number
+  englishName: string
+  vietnameseName: string
   description: string
 }

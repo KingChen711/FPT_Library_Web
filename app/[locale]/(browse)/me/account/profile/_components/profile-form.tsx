@@ -1,16 +1,21 @@
+/* eslint-disable @typescript-eslint/no-unsafe-enum-comparison */
 "use client"
 
 import { useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
 import { type Employee, type User } from "@/lib/types/models"
 import {
   profileSchema,
   type TProfileSchema,
 } from "@/lib/validations/auth/profile"
+import { updateProfile } from "@/actions/auth/update-profile"
+import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -21,6 +26,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -34,27 +40,39 @@ type ProfileFormProps = {
 }
 
 const ProfileForm = ({ currentUser }: ProfileFormProps) => {
+  console.log("🚀 ~ ProfileForm ~ currentUser:", currentUser)
   const t = useTranslations("Me.Account.Profile")
-
+  const locale = useLocale()
   const [pending, startTransition] = useTransition()
+  const queryClient = useQueryClient()
 
   const form = useForm<TProfileSchema>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
-      firstName: currentUser.firstName as string,
-      lastName: currentUser.lastName as string,
-      email: currentUser.email || null,
-      phone: currentUser.phone || null,
-      avatar: currentUser.avatar || null,
-      address: currentUser.address || null,
-      gender: currentUser.gender || null,
-      dob: currentUser.dob || null,
+      firstName: currentUser.firstName || "",
+      lastName: currentUser.lastName || "",
+      dob: currentUser.dob,
+      phone: currentUser.phone || "",
+      address: currentUser.address || "",
+      gender: currentUser.gender ? Number(currentUser.gender) : 0,
+      avatar: currentUser.avatar || "",
     },
   })
 
   function onSubmit(values: TProfileSchema) {
     startTransition(async () => {
-      console.log(values)
+      const res = await updateProfile(values)
+      if (res.isSuccess) {
+        queryClient.invalidateQueries({
+          queryKey: ["who-am-i"],
+        })
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          variant: "success",
+        })
+        return
+      }
+      handleServerActionError(res, locale, form)
     })
   }
 
@@ -70,6 +88,15 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
           className="container space-y-4 px-4"
         >
           <div className="grid grid-cols-2 gap-4">
+            <div>
+              <Label>Email</Label>
+              <Input
+                disabled
+                value={currentUser.email}
+                className="mt-2 cursor-not-allowed"
+              />
+            </div>
+
             <FormField
               control={form.control}
               name="firstName"
@@ -91,23 +118,6 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                   <FormLabel>{t("lastName")}</FormLabel>
                   <FormControl>
                     <Input disabled={pending} {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>{t("email")}</FormLabel>
-                  <FormControl>
-                    <Input
-                      disabled={pending}
-                      {...field}
-                      value={field.value || ""} // Fix: Chuyển null thành chuỗi trống
-                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -177,8 +187,10 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                   <FormLabel>{t("gender")}</FormLabel>
                   <Select
                     disabled={pending}
-                    onValueChange={field.onChange}
-                    defaultValue={field.value || ""}
+                    onValueChange={(value) => field.onChange(Number(value))} // Ensure numeric value
+                    defaultValue={
+                      field.value?.toString() === "Male" ? "0" : "1"
+                    } // Convert to string for `defaultValue`
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -186,8 +198,8 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="Male">{t("male")}</SelectItem>
-                      <SelectItem value="Female">{t("female")}</SelectItem>
+                      <SelectItem value="0">{t("male")}</SelectItem>
+                      <SelectItem value="1">{t("female")}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

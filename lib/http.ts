@@ -185,4 +185,11 @@ export const http = {
   delete<Response>(url: string, options?: Omit<CustomOptions, "body">) {
     return request<Response>("DELETE", url, options)
   },
+  multiDelete<Response>(
+    url: string,
+    body: any,
+    options?: Omit<CustomOptions, "body">
+  ) {
+    return request<Response>("DELETE", url, { ...options, body })
+  },
 }
