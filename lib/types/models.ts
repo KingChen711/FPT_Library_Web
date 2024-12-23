@@ -109,6 +109,7 @@ export type Fine = {
   conditionType: string
   fineAmountPerDay: number
   fixedFineAmount: number
+  description: string | null
 }
 
 export type Category = {

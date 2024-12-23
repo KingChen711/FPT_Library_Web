@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getLocale } from "next-intl/server"
+import queryString from "query-string"
 
 import { type ServerActionError } from "./types/action-response"
 import { getClientSideCookie } from "./utils"
@@ -8,7 +9,7 @@ import { getClientSideCookie } from "./utils"
 type CustomOptions = RequestInit & {
   baseUrl?: string
   lang?: string
-  searchParams?: Record<string, string>
+  searchParams?: queryString.StringifiableRecord | undefined
 }
 
 type OkResponse<TData = undefined> = {
@@ -105,27 +106,30 @@ const request = async <TData = undefined>(
       ? process.env.NEXT_PUBLIC_API_ENDPOINT
       : options.baseUrl
 
-  const searchParams = options?.searchParams
-    ? new URLSearchParams(options?.searchParams)
-    : null
-
-  const res = await fetch(
-    `${baseUrl}${url}${searchParams ? `?${searchParams.toString()}` : ""}`,
-    {
-      ...options,
-      headers: {
-        ...baseHeaders,
-        ...options?.headers,
+  const fetchUrl =
+    baseUrl +
+    queryString.stringifyUrl(
+      {
+        url: url,
+        query: options?.searchParams,
       },
-      body,
-      method,
-    }
-  )
+      { skipNull: true, skipEmptyString: true }
+    )
+
+  const res = await fetch(fetchUrl, {
+    ...options,
+    headers: {
+      ...baseHeaders,
+      ...options?.headers,
+    },
+    body,
+    method,
+  })
 
   const payload = (await res.json()) as OkResponse<TData>
 
   console.log({
-    url: `${baseUrl}${url}${searchParams ? `?${searchParams.toString()}` : ""}`,
+    url: fetchUrl,
     headers: {
       ...baseHeaders,
       ...options?.headers,

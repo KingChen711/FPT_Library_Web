@@ -7,13 +7,13 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Category } from "@/lib/types/models"
+import { type Fine } from "@/lib/types/models"
 import {
-  mutateCategorySchema,
-  type TMutateCategorySchema,
-} from "@/lib/validations/categories/mutate-category"
-import { createCategory } from "@/actions/categories/create-category"
-import { updateCategory } from "@/actions/categories/update-category"
+  mutateFineSchema,
+  type TMutateFineSchema,
+} from "@/lib/validations/fines/mutation-fine"
+import { createFine } from "@/actions/fines/create-fine"
+import { updateFine } from "@/actions/fines/update-fine"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -38,7 +38,7 @@ import { Textarea } from "@/components/ui/textarea"
 
 type Props = {
   type: "create" | "update"
-  category?: Category
+  fine?: Fine
   openEdit?: boolean
   setOpenEdit?: (value: boolean) => void
 } & (
@@ -47,19 +47,14 @@ type Props = {
     }
   | {
       type: "update"
-      category: Category
+      fine: Fine
       openEdit: boolean
       setOpenEdit: (value: boolean) => void
     }
 )
 
-function MutateCategoryDialog({
-  type,
-  category,
-  openEdit,
-  setOpenEdit,
-}: Props) {
-  const t = useTranslations("CategoriesManagementPage")
+function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
+  const t = useTranslations("FinesManagementPage")
   const locale = useLocale()
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -73,21 +68,22 @@ function MutateCategoryDialog({
     setOpenEdit(value)
   }
 
-  const form = useForm<TMutateCategorySchema>({
-    resolver: zodResolver(mutateCategorySchema),
+  const form = useForm<TMutateFineSchema>({
+    resolver: zodResolver(mutateFineSchema),
     defaultValues: {
-      englishName: type === "update" ? category.englishName : "",
-      vietnameseName: type === "update" ? category.vietnameseName : "",
-      description: type === "update" ? category.description : "",
+      conditionType: type === "update" ? fine.conditionType : "",
+      description: type === "update" ? fine.description || "" : "",
+      fineAmountPerDay: type === "update" ? fine.fineAmountPerDay : 0,
+      fixedFineAmount: type === "update" ? fine.fixedFineAmount : 0,
     },
   })
 
-  const onSubmit = async (values: TMutateCategorySchema) => {
+  const onSubmit = async (values: TMutateFineSchema) => {
     startTransition(async () => {
       const res =
         type === "create"
-          ? await createCategory(values)
-          : await updateCategory({ ...values, categoryId: category.categoryId })
+          ? await createFine(values)
+          : await updateFine({ ...values, id: fine.finePolicyId })
 
       if (res.isSuccess) {
         toast({
@@ -95,13 +91,11 @@ function MutateCategoryDialog({
           description: res.data,
           variant: "success",
         })
-
         if (type === "create") {
           setOpen(false)
         } else {
           setOpenEdit(false)
         }
-
         return
       }
       handleServerActionError(res, locale, form)
@@ -117,15 +111,15 @@ function MutateCategoryDialog({
         <DialogTrigger asChild>
           <Button className="flex items-center justify-end gap-x-1 leading-none">
             <Plus />
-            <div>
-              {t(type === "create" ? "Create category" : "Edit category")}
-            </div>
+            <div>{t("Create fine")}</div>
           </Button>
         </DialogTrigger>
       )}
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("Create category")}</DialogTitle>
+          <DialogTitle>
+            {t(type === "create" ? "Create fine" : "Edit fine")}
+          </DialogTitle>
           <DialogDescription>
             <Form {...form}>
               <form
@@ -134,10 +128,10 @@ function MutateCategoryDialog({
               >
                 <FormField
                   control={form.control}
-                  name="englishName"
+                  name="conditionType"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("English name")}</FormLabel>
+                      <FormLabel>{t("Condition type")}</FormLabel>
                       <FormControl>
                         <Input disabled={isPending} {...field} />
                       </FormControl>
@@ -148,12 +142,26 @@ function MutateCategoryDialog({
 
                 <FormField
                   control={form.control}
-                  name="vietnameseName"
+                  name="fixedFineAmount"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("Vietnamese name")}</FormLabel>
+                      <FormLabel>{t("Fixed fine amount")}</FormLabel>
                       <FormControl>
-                        <Input disabled={isPending} {...field} />
+                        <Input type="number" disabled={isPending} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="fineAmountPerDay"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start">
+                      <FormLabel>{t("Fine amount per day")}</FormLabel>
+                      <FormControl>
+                        <Input type="number" disabled={isPending} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -205,4 +213,4 @@ function MutateCategoryDialog({
   )
 }
 
-export default MutateCategoryDialog
+export default MutateFineDialog

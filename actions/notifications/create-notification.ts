@@ -5,24 +5,20 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TMutateFineSchema } from "@/lib/validations/fines/mutation-fine"
+import { type TCreateNotificationSchema } from "@/lib/validations/notifications/create-notification"
 
-export async function updateFine(
-  body: TMutateFineSchema & { id: number }
+export async function createNotification(
+  body: TCreateNotificationSchema
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
-    const { message } = await http.patch(
-      `/api/management/fines/policy/${body.id}`,
-      body,
-      {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      }
-    )
+    const { message } = await http.post("/api/management/notifications", body, {
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+    })
 
-    revalidatePath("/management/fines")
+    revalidatePath("/management/notifications")
 
     return {
       isSuccess: true,

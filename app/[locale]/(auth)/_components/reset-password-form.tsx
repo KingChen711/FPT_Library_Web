@@ -31,9 +31,10 @@ import NewPassForm from "./new-password-form"
 
 type Props = {
   email: string
+  type: "user" | "employee"
 }
 
-function ResetPasswordForm({ email }: Props) {
+function ResetPasswordForm({ email, type }: Props) {
   const t = useTranslations("ResetPasswordPage")
   const [pending, startTransition] = useTransition()
 
@@ -146,7 +147,11 @@ function ResetPasswordForm({ email }: Props) {
           </form>
         </Form>
       ) : (
-        <NewPassForm email={email} changePasswordToken={changePasswordToken} />
+        <NewPassForm
+          type={type}
+          email={email}
+          changePasswordToken={changePasswordToken}
+        />
       )}
     </>
   )

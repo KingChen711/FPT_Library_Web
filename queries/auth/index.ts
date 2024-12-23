@@ -76,7 +76,6 @@ const getAccessLevel = async (feature: EFeature): Promise<EAccessLevel> => {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
-        cache: "no-store",
         next: {
           revalidate: 0,
         },

@@ -5,16 +5,15 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TMutateFineSchema } from "@/lib/validations/fines/mutation-fine"
 
-export async function updateFine(
-  body: TMutateFineSchema & { id: number }
+export async function deleteFines(
+  ids: number[]
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
-    const { message } = await http.patch(
-      `/api/management/fines/policy/${body.id}`,
-      body,
+    const { message } = await http.multiDelete(
+      `/api/management/fines/policy`,
+      { ids },
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,

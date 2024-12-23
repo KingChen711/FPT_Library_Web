@@ -90,7 +90,7 @@ function LoginPasswordForm({ email, type }: Props) {
                 <div className="flex flex-wrap items-center justify-between gap-1">
                   <FormLabel>{t("Password")}</FormLabel>
                   <Link
-                    href={`/reset-password/${email}`}
+                    href={`/reset-password/${type === "employee" ? "employee" : "user"}/${email}`}
                     className="text-xs hover:underline"
                   >
                     {t("Forgot password?")}

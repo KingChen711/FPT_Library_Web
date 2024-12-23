@@ -7,14 +7,18 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function changePassword(
   email: string,
   password: string,
-  token: string
+  token: string,
+  type: "user" | "employee"
 ): Promise<ActionResponse<string>> {
   try {
-    const { message } = await http.patch("/api/auth/change-password", {
-      email,
-      password,
-      token,
-    })
+    const { message } = await http.patch(
+      `/api/auth${type === "employee" ? "/employee" : ""}/change-password`,
+      {
+        email,
+        password,
+        token,
+      }
+    )
 
     return {
       isSuccess: true,

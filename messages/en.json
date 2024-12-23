@@ -52,13 +52,18 @@
     "Reset password": "Reset password",
     "Message": "First, enter the code sent to your email address",
     "Password": "Password",
+    "New password": "New password",
     "ConfirmedPassword": "Confirmed password",
     "Email": "Email",
     "ForgotPasswordFailedTitle": "Forgot password failed",
     "Continue": "Continue",
     "No code": "Didn't receive a code? Resend",
     "Back to login": "Back to login",
-    "Missing mfa": "Lost MFA enabled device?"
+    "Missing mfa": "Lost MFA enabled device?",
+    "Update password": "Update password",
+    "Cancel": "Cancel",
+    "OTP": "OTP",
+    "OTP message": "Enter the verification code sent to your email"
   },
   "VerifyEmailPage": {
     "Verify your email": "Verify your email",
@@ -309,8 +314,9 @@
     "Check your email for verification code": "Check your email for verification code",
     "Continue": "Continue",
     "Cancel": "Cancel",
-    "MFA": "MFA",
-    "Active MFA": "Active MFA"
+    "MFA": "Multi-factor authentication (MFA)",
+    "Active MFA": "Active MFA",
+    "Password": "Password"
   },
   "NotificationsPage": {
     "Search": "Search..."
@@ -338,5 +344,43 @@
     "Z-A": "Z-A",
     "Id ascending": "Id ascending",
     "Id descending": "Id descending"
+  },
+  "FinesManagementPage": {
+    "Fines": "Fines",
+    "Condition type": "Condition type",
+    "Fixed fine amount": "Fixed fine amount",
+    "Fine amount per day": "Fine amount per day",
+    "Description": "Description",
+    "Cancel": "Cancel",
+    "Create": "Create",
+    "Save": "Save",
+    "Create fine": "Create fine",
+    "Edit fine": "Edit fine",
+    "Actions": "Actions",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "Delete fine": "Delete fine",
+    "fines selected": "{amount, plural, one {# fine selected} other {# fines selected}}"
+  },
+  "NotificationsManagementPage": {
+    "Notifications": "Notifications",
+    "Create notification": "Create notification",
+    "Cancel": "Cancel",
+    "Create": "Create",
+    "Title": "Title",
+    "Message": "Message",
+    "Notification type": "Notification type",
+    "Event": "Event",
+    "Notice": "Notice",
+    "Reminder": "Reminder",
+    "Private notification": "Private notification",
+    "Notifications will be sent to the emails you specify": "Notifications will be sent to the emails you specify",
+    "Recipients": "Recipients",
+    "Add emails message": "Add emails this notification will be sent to. You need to press 'Enter' to add a email."
+  },
+  "Paginator": {
+    "Showing message": "Showing {from} to {to} of {total} items",
+    "rows per page": "rows per page"
   }
 }

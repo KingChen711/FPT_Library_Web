@@ -8,6 +8,7 @@ import BackupCodes from "@/components/ui/backup-codes"
 import { Label } from "@/components/ui/label"
 
 import ActiveMfaButton from "./_components/active-mfa-button"
+import ChangePassForm from "./_components/change-password-form"
 import GenerateNewCodesButton from "./_components/generate-new-codes-button"
 
 async function SecurityPage() {
@@ -34,6 +35,10 @@ async function SecurityPage() {
 
   return (
     <div className="flex flex-col gap-y-6 md:px-2">
+      <div className="flex flex-col gap-y-2">
+        <Label>{t("Password")}</Label>
+        <ChangePassForm />
+      </div>
       {!hasActiveMfa && (
         <>
           <div className="flex flex-col gap-y-2">
