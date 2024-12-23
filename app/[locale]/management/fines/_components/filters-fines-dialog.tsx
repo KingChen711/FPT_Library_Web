@@ -1,34 +1,16 @@
 "use client"
 
-import React, { useState, useTransition } from "react"
+import React, { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
-import {
-  CalendarIcon,
-  Check,
-  ChevronsUpDown,
-  Filter,
-  Loader2,
-  Plus,
-} from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { CalendarIcon, Filter } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import handleServerActionError from "@/lib/handle-server-action-error"
-import { EGender, ERoleType } from "@/lib/types/enums"
 import { cn, formUrlQuery } from "@/lib/utils"
-import { createRole } from "@/actions/roles/create-role"
-import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
-import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
 import {
   Dialog,
   DialogClose,
@@ -46,13 +28,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import {
   Select,
   SelectContent,
@@ -73,13 +53,8 @@ export type TFilterFineSchema = z.infer<typeof filterFineSchema>
 function FiltersFinesDialog() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
-  const searchParams = useSearchParams()
 
-  const handleOpenChange = (value: boolean) => {
-    if (isPending) return
-    setOpen(value)
-  }
+  const searchParams = useSearchParams()
 
   const form = useForm<TFilterFineSchema>({
     resolver: zodResolver(filterFineSchema),
@@ -109,7 +84,7 @@ function FiltersFinesDialog() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="h-full rounded-l-none" variant="outline">
           <Filter />
@@ -242,16 +217,11 @@ function FiltersFinesDialog() {
 
                 <div className="flex justify-end gap-x-4">
                   <DialogClose asChild>
-                    <Button
-                      disabled={isPending}
-                      variant="secondary"
-                      className="float-right mt-4"
-                    >
+                    <Button variant="secondary" className="float-right mt-4">
                       Cancel
                     </Button>
                   </DialogClose>
                   <Button
-                    disabled={isPending}
                     variant="secondary"
                     className="float-right mt-4"
                     onClick={(e) => {
@@ -262,15 +232,8 @@ function FiltersFinesDialog() {
                   >
                     Reset
                   </Button>
-                  <Button
-                    disabled={isPending}
-                    type="submit"
-                    className="float-right mt-4"
-                  >
+                  <Button type="submit" className="float-right mt-4">
                     Apply{" "}
-                    {isPending && (
-                      <Loader2 className="ml-1 size-4 animate-spin" />
-                    )}
                   </Button>
                 </div>
               </form>
