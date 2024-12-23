@@ -188,7 +188,6 @@ const UserDialogForm = ({ mode, user, userId }: UserDialogFormProps) => {
                 variant={"ghost"}
               >
                 {tGeneralManagement("btn.cancel")}
-                {pending && <Loader2 className="size-4 animate-spin" />}
               </Button>
             </div>
           </form>

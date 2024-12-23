@@ -9,7 +9,6 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function importAuthor(
   formData: FormData
 ): Promise<ActionResponse> {
-  console.log("🚀 ~ formData:", formData)
   const { getAccessToken } = auth()
   try {
     const res = await http.post(`/api/management/authors/import`, formData, {
@@ -18,7 +17,6 @@ export async function importAuthor(
       },
     })
 
-    console.log("🚀 ~ res:", res)
     revalidateTag("authors")
 
     return {

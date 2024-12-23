@@ -21,7 +21,7 @@ import EmployeeFilterGender from "./author-filter-gender"
 import EmployeeFilterInput from "./author-filter-input"
 import EmployeeFilterRoleId from "./author-filter-roleId"
 
-const EmployeeFilters = () => {
+const AuthorFilters = () => {
   const tGeneralManagement = useTranslations("GeneralManagement")
   const pathname = usePathname()
   const { replace } = useRouter()
@@ -63,7 +63,7 @@ const EmployeeFilters = () => {
       <PopoverContent className="h-[400px] min-w-[600px] overflow-y-auto bg-primary-foreground">
         <div className="flex flex-col gap-4">
           <EmployeeFilterInput
-            label={tGeneralManagement("fields.employeeCode")}
+            label={tGeneralManagement("fields.authorCode")}
             placeholder={tGeneralManagement("placeholder.code")}
             enumField={EmployeeFilter.EMPLOYEE_CODE}
             handleAddTextSearchParams={handleAddTextSearchParams}
@@ -128,4 +128,4 @@ const EmployeeFilters = () => {
   )
 }
 
-export default EmployeeFilters
+export default AuthorFilters

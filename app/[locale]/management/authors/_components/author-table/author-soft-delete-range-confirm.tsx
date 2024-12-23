@@ -6,6 +6,7 @@ import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { softDeleteRangeAuthor } from "@/actions/authors/soft-delete-range-author"
+import { softDeleteRangeEmployee } from "@/actions/employees/soft-delete-range-employee"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {

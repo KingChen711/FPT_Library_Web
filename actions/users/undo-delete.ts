@@ -12,9 +12,8 @@ export async function undoDeleteUser(
   const { getAccessToken } = auth()
 
   try {
-    const { message } = await http.patch(
+    const { message } = await http.delete(
       `/api/management/users/${userId}/undo-delete`,
-      {},
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,

@@ -6,9 +6,9 @@ import { useDebouncedCallback } from "use-debounce"
 
 import { Input } from "@/components/ui/input"
 
-import EmployeeFilters from "."
+import AuthorFilters from "."
 
-const EmployeeSearch = () => {
+const AuthorSearch = () => {
   const searchParams = useSearchParams()
   const pathname = usePathname()
   const { replace } = useRouter()
@@ -33,9 +33,9 @@ const EmployeeSearch = () => {
         className="max-w-md"
         defaultValue={searchParams.get("search")?.toString()}
       />
-      <EmployeeFilters />
+      <AuthorFilters />
     </div>
   )
 }
 
-export default EmployeeSearch
+export default AuthorSearch
