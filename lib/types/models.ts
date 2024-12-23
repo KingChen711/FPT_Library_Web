@@ -88,3 +88,11 @@ export type Notification = {
   notificationType: ENotificationType
   notificationRecipients: []
 }
+
+export type Fine = {
+  finePolicyId: number
+  conditionType: string
+  fineAmountPerDay: number
+  fixedFineAmount: number
+  description: string
+}

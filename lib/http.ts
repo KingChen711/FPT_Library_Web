@@ -126,7 +126,10 @@ const request = async <TData = undefined>(
 
   console.log({
     url: `${baseUrl}${url}${searchParams ? `?${searchParams.toString()}` : ""}`,
-    headers: baseHeaders,
+    headers: {
+      ...baseHeaders,
+      ...options?.headers,
+    },
     body: body ? JSON.parse(body) : null,
     payload,
   })
