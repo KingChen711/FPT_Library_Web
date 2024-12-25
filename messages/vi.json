@@ -150,14 +150,21 @@
     "type": "type",
     "to confirm": "to confirm",
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "filter": {
+      "title": "Tìm kiếm",
+      "author": "Tìm tác giả",
+      "employee": "Tìm nhân viên",
+      "user": "Tìm người dùng"
+    },
     "btn": {
       "import": "Nhập dữ liệu",
       "export": "Xuất dữ liệu",
       "filter": "Tìm kiếm",
       "search": "Tìm kiếm",
       "create": "Tạo mô tả",
-      "update": "Chỉnh sự",
+      "update": "Chỉnh sửa",
       "delete": "Xóa",
+      "undo delete": "Khôi phục",
       "cancel": "Hủy",
       "confirm": "Xác nhận",
       "save": "Lưu",
@@ -246,7 +253,23 @@
     "delete employee": "Xóa nhân viên",
     "soft delete employee": "Xóa mềm nhân viên",
     "restore employee": "Khôi phục nhân viên",
-    "undo delete employee": "Khôi phúc xóa nhân viên"
+    "undo delete employee": "Khôi phúc xóa nhân viên",
+
+    "Employees": "Nhân viên",
+    "Condition type": "Loại điều kiện",
+    "Fixed employee amount": "Số nhân viên cố định",
+    "Employee amount per day": "Số nhân viên mỗi ngày",
+    "Description": "Mô tả",
+    "Cancel": "Hủy",
+    "Create": "Tạo",
+    "Save": "Lưu",
+    "Create employee": "Tạo Nhân viên",
+    "Edit employee": "Chỉnh sửa Nhân viên",
+    "Actions": "Hành động",
+    "Edit": "Chỉnh sửa",
+    "Delete": "Xóa",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
+    "Employees selected": "Đang chọn ({amount})"
   },
   "AuthorManagement": {
     "create author": "Tạo tác giả",
