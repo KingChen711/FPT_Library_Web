@@ -41,11 +41,11 @@ const EmployeeExport = () => {
         const url = URL.createObjectURL(res)
         const a = document.createElement("a")
         a.href = url
-        a.download = "Authors.xlsx"
+        a.download = "Employees.xlsx"
         a.click()
         URL.revokeObjectURL(url)
       } catch (error) {
-        console.error("Error exporting Authors:", error)
+        console.error("Error exporting Employees:", error)
       }
     })
   }

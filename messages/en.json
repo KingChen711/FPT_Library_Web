@@ -146,6 +146,12 @@
     "type": "type",
     "to confirm": "to confirm",
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "filter": {
+      "title": "Filter",
+      "author": "Filter Author",
+      "employee": "Filter Employee",
+      "user": "Filter User"
+    },
     "btn": {
       "filter": "Filter",
       "import": "Import",
@@ -154,6 +160,7 @@
       "create": "Create",
       "update": "Update",
       "delete": "Delete",
+      "undo delete": "Undo delete",
       "cancel": "Cancel",
       "confirm": "Confirm",
       "save": "Save",
@@ -241,7 +248,24 @@
     "delete employee": "Delete Employee",
     "soft delete employee": "Soft delete Employee",
     "restore employee": "Restore Employee",
-    "undo delete employee": "Undo delete Employee"
+    "undo delete employee": "Undo delete Employee",
+
+    "Employees": "Employees",
+    "Condition type": "Condition type",
+    "Fixed employee amount": "Fixed employee amount",
+    "Employee amount per day": "employee amount per day",
+    "Description": "Description",
+    "Cancel": "Cancel",
+    "Create": "Create",
+    "Save": "Save",
+    "Create employee": "Create employee",
+    "Edit employee": "Edit employee",
+    "Actions": "Actions",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "Delete employee": "Delete employee",
+    "Employees selected": "{amount, plural, one {# employee selected} other {# employees selected}}"
   },
   "AuthorManagement": {
     "create author": "Create author",
