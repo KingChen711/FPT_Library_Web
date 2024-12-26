@@ -1,19 +1,20 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { type TEmployeeRole } from "@/queries/roles/get-employee-roles"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Fine } from "@/lib/types/models"
+import { type Employee } from "@/lib/types/models"
 import {
-  mutateFineSchema,
-  type TMutateFineSchema,
-} from "@/lib/validations/fines/mutation-fine"
-import { createFine } from "@/actions/fines/create-fine"
-import { updateFine } from "@/actions/fines/update-fine"
+  mutateEmployeeSchema,
+  type TMutateEmployeeSchema,
+} from "@/lib/validations/employee/mutate-employee"
+import { createEmployee } from "@/actions/employees/create-employee"
+import { updateEmployee } from "@/actions/employees/update-employee"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -34,27 +35,42 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 type Props = {
   type: "create" | "update"
-  fine?: Fine
+  employee?: Employee
   openEdit?: boolean
   setOpenEdit?: (value: boolean) => void
 } & (
   | {
       type: "create"
+      employeeRoles: TEmployeeRole[]
     }
   | {
       type: "update"
-      fine: Fine
+      employee: Employee
       openEdit: boolean
       setOpenEdit: (value: boolean) => void
+      employeeRoles: TEmployeeRole[]
     }
 )
 
-function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
-  const t = useTranslations("FinesManagementPage")
+function MutateEmployeeDialog({
+  type,
+  employee,
+  openEdit,
+  setOpenEdit,
+  employeeRoles,
+}: Props) {
+  const t = useTranslations("GeneralManagement")
+  const tEmployeeManagement = useTranslations("EmployeeManagement")
   const locale = useLocale()
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -68,27 +84,40 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
     setOpenEdit(value)
   }
 
-  const form = useForm<TMutateFineSchema>({
-    resolver: zodResolver(mutateFineSchema),
+  const form = useForm<TMutateEmployeeSchema>({
+    resolver: zodResolver(mutateEmployeeSchema),
     defaultValues: {
-      conditionType: type === "update" ? fine.conditionType : "",
-      description: type === "update" ? fine.description || "" : "",
-      fineAmountPerDay: type === "update" ? fine.fineAmountPerDay : 0,
-      fixedFineAmount: type === "update" ? fine.fixedFineAmount : 0,
+      employeeCode: type === "update" ? employee.employeeCode : "",
+      email: type === "update" ? employee.email : "",
+      roleId: type === "update" ? employee.roleId : 0,
+
+      firstName: type === "update" ? employee.firstName : "",
+      lastName: type === "update" ? employee.lastName : "",
+      dob: type === "update" ? employee.dob : "",
+      phone: type === "update" ? employee.phone : "",
+      address: type === "update" ? employee.address : "",
+      gender: type === "update" ? employee.gender : "Male",
+      avatar: type === "update" ? employee.avatar : "",
+      hireDate: type === "update" ? employee.hireDate : "",
+      terminationDate: type === "update" ? employee.terminationDate : "",
     },
   })
 
-  const onSubmit = async (values: TMutateFineSchema) => {
+  if (employeeRoles.length === 0)
+    return <Loader2 className="size-8 animate-spin" />
+
+  console.log(employeeRoles)
+
+  const onSubmit = async (values: TMutateEmployeeSchema) => {
     startTransition(async () => {
       const res =
         type === "create"
-          ? await createFine(values)
-          : await updateFine({ ...values, id: fine.finePolicyId })
+          ? await createEmployee(values)
+          : await updateEmployee(employee.employeeId, values)
 
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
-          description: res.data,
           variant: "success",
         })
         if (type === "create") {
@@ -111,14 +140,16 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
         <DialogTrigger asChild>
           <Button className="flex items-center justify-end gap-x-1 leading-none">
             <Plus />
-            <div>{t("Create fine")}</div>
+            <div>{tEmployeeManagement("create employee")}</div>
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent>
+      <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {t(type === "create" ? "Create fine" : "Edit fine")}
+            {tEmployeeManagement(
+              type === "create" ? "create employee" : "update employee"
+            )}
           </DialogTitle>
           <DialogDescription>
             <Form {...form}>
@@ -128,10 +159,133 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
               >
                 <FormField
                   control={form.control}
-                  name="conditionType"
+                  name="employeeCode"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("Condition type")}</FormLabel>
+                      <FormLabel>{t("fields.employeeCode")}</FormLabel>
+
+                      <FormControl>
+                        <Input
+                          disabled={isPending || type === "update"}
+                          {...field}
+                          placeholder={t("placeholder.code")}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="roleId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("fields.role")}</FormLabel>
+                      <Select
+                        value={field.value.toString()}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value.toString()}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder={t("fields.role")} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {employeeRoles.map((role) => (
+                            <SelectItem
+                              key={role.roleId}
+                              value={role.roleId.toString()}
+                            >
+                              {locale === "en"
+                                ? role.englishName
+                                : role.vietnameseName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start">
+                      <FormLabel>{t("fields.email")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          disabled={isPending || type === "update"}
+                          {...field}
+                          placeholder={t("placeholder.email")}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="firstName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("fields.firstName")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder={t("placeholder.firstName")}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="lastName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("fields.lastName")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder={t("placeholder.lastName")}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="dob"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start">
+                      <FormLabel>{t("fields.dob")}</FormLabel>
+                      <FormControl>
+                        <Input type="date" disabled={isPending} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="phone"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start">
+                      <FormLabel>{t("fields.phone")}</FormLabel>
                       <FormControl>
                         <Input disabled={isPending} {...field} />
                       </FormControl>
@@ -142,12 +296,16 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="fixedFineAmount"
+                  name="address"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("Fixed fine amount")}</FormLabel>
+                      <FormLabel>{t("fields.address")}</FormLabel>
                       <FormControl>
-                        <Input type="number" disabled={isPending} {...field} />
+                        <Input
+                          disabled={isPending}
+                          {...field}
+                          placeholder={t("placeholder.address")}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -156,12 +314,12 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="fineAmountPerDay"
+                  name="hireDate"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("Fine amount per day")}</FormLabel>
+                      <FormLabel>{t("fields.hireDate")}</FormLabel>
                       <FormControl>
-                        <Input type="number" disabled={isPending} {...field} />
+                        <Input type="date" disabled={isPending} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -170,12 +328,12 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="description"
+                  name="terminationDate"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("Description")}</FormLabel>
+                      <FormLabel>{t("fields.terminationDate")}</FormLabel>
                       <FormControl>
-                        <Textarea disabled={isPending} {...field} />
+                        <Input type="date" disabled={isPending} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -189,7 +347,7 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
                       variant="secondary"
                       className="float-right mt-4"
                     >
-                      {t("Cancel")}
+                      {t("btn.cancel")}
                     </Button>
                   </DialogClose>
 
@@ -198,7 +356,7 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
                     type="submit"
                     className="float-right mt-4"
                   >
-                    {t(type === "create" ? "Create" : "Save")}{" "}
+                    {t(type === "create" ? "btn.create" : "btn.save")}
                     {isPending && (
                       <Loader2 className="ml-1 size-4 animate-spin" />
                     )}
@@ -213,4 +371,4 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
   )
 }
 
-export default MutateFineDialog
+export default MutateEmployeeDialog
