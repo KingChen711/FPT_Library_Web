@@ -5,11 +5,11 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TEmployeeDialogSchema } from "@/lib/validations/employee/employee-dialog"
+import { type TMutateEmployeeSchema } from "@/lib/validations/employee/mutate-employee"
 
 export async function updateEmployee(
   employeeId: string,
-  body: TEmployeeDialogSchema
+  body: Omit<TMutateEmployeeSchema, "employeeCode" | "email" | "roleId">
 ): Promise<ActionResponse> {
   const { getAccessToken } = auth()
 

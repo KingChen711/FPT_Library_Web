@@ -29,6 +29,7 @@ import EmployeeHeaderTab from "./_components/employee-header-tab"
 import EmployeeImportDialog from "./_components/employee-import-dialog"
 import EmployeeRangeControl from "./_components/employee-range-control"
 import FilterEmployeesDialog from "./_components/filter-employees-dialog"
+import MutateEmployeeDialog from "./_components/mutate-employee-dialog"
 import SelectedEmployeeIdsIndicator from "./_components/selected-employee-ids-indicator"
 
 type Props = {
@@ -86,11 +87,9 @@ async function EmployeesManagementPage({ searchParams }: Props) {
           <SelectedEmployeeIdsIndicator />
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
-          {/* <DeleteEmployeesButton /> */}
-          {/* <MutateEmployeeDialog type="create" /> */}
           <EmployeeExport />
           <EmployeeImportDialog />
-          {/* <EmployeeDialogForm mode="create" /> */}
+          <MutateEmployeeDialog type="create" employeeRoles={employeeRoles} />
         </div>
       </div>
 
@@ -238,7 +237,10 @@ async function EmployeesManagementPage({ searchParams }: Props) {
                   </TableCell>
 
                   <TableCell className="flex justify-center">
-                    <EmployeeActionDropdown employee={employee} />
+                    <EmployeeActionDropdown
+                      employee={employee}
+                      employeeRoles={employeeRoles}
+                    />
                   </TableCell>
                 </TableRow>
               ))}

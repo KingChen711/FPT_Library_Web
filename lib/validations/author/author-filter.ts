@@ -21,7 +21,7 @@ export enum AuthorFilter {
   SEARCH = "search",
 }
 
-export const employeesFilterSchema = z.object({
+export const authorsFilterSchema = z.object({
   [AuthorFilter.AUTHOR_CODE]: z.string().trim().optional(),
 
   [AuthorFilter.FULL_NAME]: z.string().trim().optional(),
@@ -41,4 +41,4 @@ export const employeesFilterSchema = z.object({
   [AuthorFilter.SEARCH]: z.string().trim().optional(),
 })
 
-export type TEmployeesFilterSchema = z.infer<typeof employeesFilterSchema>
+export type TAuthorsFilterSchema = z.infer<typeof authorsFilterSchema>

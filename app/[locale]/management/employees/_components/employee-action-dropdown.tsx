@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { type TEmployeeRole } from "@/queries/roles/get-employee-roles"
 import {
   EyeOff,
   MoreHorizontal,
@@ -27,13 +28,16 @@ import {
 
 import EmployeeDeleteConfirm from "./employee-delete-confirm"
 import EmployeeSoftDeleteConfirm from "./employee-soft-delete-confirm"
+import MutateEmployeeDialog from "./mutate-employee-dialog"
 
 type Props = {
   employee: Employee
+  employeeRoles: TEmployeeRole[]
 }
 
-function EmployeeActionDropdown({ employee }: Props) {
+function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
   const t = useTranslations("GeneralManagement")
+
   const locale = useLocale()
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
@@ -83,6 +87,13 @@ function EmployeeActionDropdown({ employee }: Props) {
         employee={employee}
         openDelete={openSoftDelete}
         setOpenDelete={setOpenSoftDelete}
+      />
+      <MutateEmployeeDialog
+        openEdit={openEdit}
+        setOpenEdit={setOpenEdit}
+        type="update"
+        employee={employee}
+        employeeRoles={employeeRoles}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
