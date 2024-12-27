@@ -7,10 +7,6 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import {
-  authorImportSchema,
-  type TAuthorImport,
-} from "@/lib/validations/author/author-import"
 import { type TEmployeeImport } from "@/lib/validations/employee/employee-import"
 import { importEmployee } from "@/actions/employees/import-employee"
 import { toast } from "@/hooks/use-toast"

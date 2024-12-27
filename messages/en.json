@@ -75,7 +75,8 @@
     "max50": "Must contain at most 50 character(s)",
     "min6": "Must contain at least 6 character(s)",
     "length_10": "Must contain 10 character(s)",
-    "required": "Required"
+    "required": "Required",
+    "invalid": "Invalid"
   },
   "Me": {
     "Account": {
@@ -135,6 +136,7 @@
     "setting": "Setting",
     "change role": "Change role",
     "change password": "Change password",
+    "pick a date": "Pick a date",
     "move to trash": "Move to trash",
     "de-activate": "De-activate",
     "undo delete": "Undo delete",
@@ -165,9 +167,11 @@
       "confirm": "Confirm",
       "save": "Save",
       "reset": "Reset",
-      "close": "Close"
+      "close": "Close",
+      "upload": "Upload"
     },
     "placeholder": {
+      "avatar": "Select avatar",
       "code": "Enter code",
       "email": "Enter email",
       "fullName": "Enter full name",

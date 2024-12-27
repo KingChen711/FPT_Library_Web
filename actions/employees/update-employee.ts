@@ -14,11 +14,15 @@ export async function updateEmployee(
   const { getAccessToken } = auth()
 
   try {
-    await http.put(`/api/management/employees/${employeeId}`, body, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    })
+    await http.put(
+      `/api/management/employees/${employeeId}`,
+      { ...body, gender: body.gender === "Male" ? 0 : 1 },
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
 
     revalidateTag("employees")
 

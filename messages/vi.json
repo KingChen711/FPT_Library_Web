@@ -79,7 +79,8 @@
     "max50": "Phải có không quá 50 kí tự",
     "min6": "Phải có ít nhất 6 kí tự",
     "length_10": "Phải có 10 kí tự",
-    "required": "Bắt buộc"
+    "required": "Bắt buộc",
+    "invalid": "Không hợp lệ"
   },
   "Me": {
     "Account": {
@@ -139,6 +140,7 @@
     "setting": "Cài đặt",
     "change role": "Thay đổi vai trò",
     "change password": "Thay đổi mật khâu",
+    "pick a date": "Chọn ngày",
     "move to trash": "Chuyển vào thùng rác",
     "de-activate": "Thay đổi trang thái",
     "undo delete": "Khôi phục",
@@ -171,9 +173,11 @@
       "reset": "Khôi phục",
       "close": "Đóng",
       "previous": "Trước",
-      "next": "Sau"
+      "next": "Sau",
+      "upload": "Tải lên"
     },
     "placeholder": {
+      "avatar": "Chọn ảnh đại diện",
       "code": "Nhập mã số",
       "email": "Nhập email",
       "fullName": "Nhập họ và tên",

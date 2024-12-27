@@ -13,11 +13,19 @@ export async function createEmployee(
   const { getAccessToken } = auth()
 
   try {
-    await http.post("/api/management/employees", body, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
+    await http.post(
+      "/api/management/employees",
+      {
+        ...body,
+        gender: body.gender === "Male" ? 0 : 1,
+        roleId: Number(body.roleId),
       },
-    })
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
 
     revalidateTag("employees")
 

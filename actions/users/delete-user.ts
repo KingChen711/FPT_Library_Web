@@ -6,7 +6,7 @@ import { auth } from "@/queries/auth"
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 
-export async function deleteUsers(
+export async function deleteUser(
   userId: string
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()

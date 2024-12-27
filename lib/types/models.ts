@@ -11,7 +11,7 @@ export type User = {
   phone: string
   avatar: string
   address: string
-  gender: string
+  gender: "Male" | "Female" | "Other"
   isActive: boolean
   isDeleted: boolean
   createDate: string

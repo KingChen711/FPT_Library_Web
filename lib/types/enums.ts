@@ -3,6 +3,12 @@ export enum ERoleType {
   EMPLOYEE = "Employee",
 }
 
+export enum ResourceType {
+  Profile = "Profile",
+  BookImage = "BookImage",
+  BookAudio = "BookAudio",
+}
+
 export enum EGender {
   MALE = "Male",
   FEMALE = "Female",

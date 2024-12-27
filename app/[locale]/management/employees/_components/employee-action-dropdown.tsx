@@ -5,7 +5,6 @@ import { type TEmployeeRole } from "@/queries/roles/get-employee-roles"
 import {
   EyeOff,
   MoreHorizontal,
-  PencilIcon,
   SquarePen,
   Trash,
   Trash2,
@@ -110,7 +109,10 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
               <DropdownMenuItem className="cursor-pointer" asChild>
                 <DropdownMenuItem className="cursor-pointer">
                   <div
-                    onClick={() => setOpenEdit(true)}
+                    onClick={() => {
+                      console.log(123)
+                      setOpenEdit(true)
+                    }}
                     className="flex items-center gap-x-2"
                   >
                     <SquarePen className="size-4" />
