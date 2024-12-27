@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-export const authorImportSchema = z.object({
+export const employeeImportSchema = z.object({
   file: z.instanceof(File).optional(),
   duplicateHandle: z.enum(["0", "1", "2"]),
   columnSeparator: z.union([z.enum([",", ".", "@", "!"]), z.null()]),
@@ -8,7 +8,7 @@ export const authorImportSchema = z.object({
   scanningFields: z.array(z.enum(["email", "phone"])),
 })
 
-export type TAuthorImport = z.infer<typeof authorImportSchema>
+export type TEmployeeImport = z.infer<typeof employeeImportSchema>
 
 /**
  * Note:

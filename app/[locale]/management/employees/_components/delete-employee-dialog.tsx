@@ -30,7 +30,7 @@ function DeleteEmployeeDialog({
 }: Props) {
   const locale = useLocale()
   const message = `${locale === "vi" ? "xóa" : "delete"} ${fineName}`
-  const t = useTranslations("EmployeesManagementPage")
+  const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState("")
 
   const [pending, startTransition] = useTransition()
@@ -80,7 +80,7 @@ function DeleteEmployeeDialog({
             disabled={value !== message || pending}
             className="flex-1"
           >
-            {t("Delete")}
+            {t("btn.delete")}
             {pending && <Loader2 className="ml-2 size-4" />}
           </Button>
           <Button
@@ -90,7 +90,7 @@ function DeleteEmployeeDialog({
             }}
             variant="secondary"
           >
-            {t("Cancel")}
+            {t("btn.cancel")}
           </Button>
         </div>
       </DialogContent>

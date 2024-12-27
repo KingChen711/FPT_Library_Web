@@ -1,40 +1,47 @@
+import { http } from "@/lib/http"
+
 import "server-only"
 
-import { http } from "@/lib/http"
 import { type User } from "@/lib/types/models"
+import { type TSearchUsersSchema } from "@/lib/validations/user/search-user"
 
 import { auth } from "../auth"
 
-export type TGetUSersData = {
+export type Users = User[]
+
+export type TGetUsersData = {
   sources: User[]
   pageIndex: number
   pageSize: number
   totalPage: number
-  count: number
+  totalActualItem: number
 }
 
-export async function getUsers(query: string): Promise<TGetUSersData> {
+const getUsers = async (
+  searchParams: TSearchUsersSchema
+): Promise<TGetUsersData> => {
   const { getAccessToken } = auth()
   try {
-    const { data } = await http.get<TGetUSersData>(
-      `/api/management/users?${query}`,
-      {
-        next: {
-          tags: ["users"],
-        },
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      }
-    )
-    return { ...data, count: data.sources.length }
+    const { data } = await http.get<TGetUsersData>(`/api/management/users`, {
+      next: {
+        tags: ["users"],
+      },
+      headers: {
+        Authorization: `Bearer ${getAccessToken()}`,
+      },
+      searchParams,
+    })
+
+    return data
   } catch {
     return {
       sources: [],
       pageIndex: 0,
       pageSize: 0,
       totalPage: 0,
-      count: 0,
+      totalActualItem: 0,
     }
   }
 }
+
+export default getUsers

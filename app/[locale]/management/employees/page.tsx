@@ -68,6 +68,8 @@ async function EmployeesManagementPage({ searchParams }: Props) {
     getEmployeeRoles(),
   ])
 
+  console.log("🚀 ~ EmployeesManagementPage ~ employeesData:", employeesData)
+
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
@@ -227,11 +229,11 @@ async function EmployeesManagementPage({ searchParams }: Props) {
                   <TableCell>
                     {employee.isActive ? (
                       <Badge className="h-full bg-success hover:bg-success">
-                        Active
+                        {t("fields.active")}
                       </Badge>
                     ) : (
                       <Badge variant="default" className="h-full">
-                        Inactive
+                        {t("fields.inactive")}
                       </Badge>
                     )}
                   </TableCell>

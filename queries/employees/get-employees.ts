@@ -20,7 +20,6 @@ export type TGetEmployeesData = {
 const getEmployees = async (
   searchParams: TSearchEmployeeSchema
 ): Promise<TGetEmployeesData> => {
-  console.log("🚀 ~ searchParams:", searchParams)
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<TGetEmployeesData>(
