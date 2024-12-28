@@ -26,7 +26,6 @@ import EmployeeActionDropdown from "./_components/employee-action-dropdown"
 import EmployeeCheckbox from "./_components/employee-checkbox"
 import EmployeeExport from "./_components/employee-export"
 import EmployeeHeaderTab from "./_components/employee-header-tab"
-import EmployeeImportDialog from "./_components/employee-import-dialog"
 import EmployeeRangeControl from "./_components/employee-range-control"
 import FilterEmployeesDialog from "./_components/filter-employees-dialog"
 import MutateEmployeeDialog from "./_components/mutate-employee-dialog"
@@ -68,8 +67,6 @@ async function EmployeesManagementPage({ searchParams }: Props) {
     getEmployeeRoles(),
   ])
 
-  console.log("🚀 ~ EmployeesManagementPage ~ employeesData:", employeesData)
-
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
@@ -90,7 +87,7 @@ async function EmployeesManagementPage({ searchParams }: Props) {
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
           <EmployeeExport />
-          <EmployeeImportDialog />
+          {/* <EmployeeImportDialog /> */}
           <MutateEmployeeDialog type="create" employeeRoles={employeeRoles} />
         </div>
       </div>

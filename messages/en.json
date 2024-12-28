@@ -69,6 +69,9 @@
     "Verify your email": "Verify your email",
     "Message": "Enter the verification code sent to your email"
   },
+  "HomePage": {
+    "welcome": "Welcome to ELibrary!"
+  },
   "Zod": {
     "email": "Invalid email",
     "min2": "Must contain at least 2 character(s)",
@@ -355,6 +358,31 @@
   },
   "NotificationsPage": {
     "Search": "Search..."
+  },
+  "BookPage": {
+    "fields": {
+      "title": "Title",
+      "author": "Author",
+      "publisher": "Publisher",
+      "category": "Category",
+      "description": "Description",
+      "image": "Image",
+      "ratings": "Ratings",
+      "status": "Status",
+      "createdDate": "Created Date",
+      "updatedDate": "Updated Date",
+      "price": "Price",
+      "quantity": "Quantity",
+      "borrowedQuantity": "Borrowed quantity",
+      "availability": "Availability",
+      "preview": "Preview"
+    },
+    "filter": {
+      "engineering": "Engineering",
+      "art-science": "Art & Science",
+      "architecture": "Architecture",
+      "law": "Law"
+    }
   },
   "CategoriesManagementPage": {
     "Categories": "Categories",
