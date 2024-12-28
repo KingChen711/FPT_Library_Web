@@ -48,7 +48,7 @@ const EmployeeImportDialog = () => {
   const [isCSV, setIsCSV] = useState<boolean>(false)
   const [hasEmailChecked, setHasEmailChecked] = useState<boolean>(false)
 
-  const form = useForm<TAuthorImport>({
+  const form = useForm<TEmployeeImport>({
     resolver: zodResolver(authorImportSchema),
     defaultValues: {
       duplicateHandle: "0",

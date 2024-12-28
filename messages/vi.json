@@ -73,6 +73,9 @@
     "Verify your email": "Xác minh email",
     "Message": "Nhập OTP được gửi đến email của bạn"
   },
+  "HomePage": {
+    "welcome": "Chào mừng đến với ELibrary!"
+  },
   "Zod": {
     "email": "Email không hợp lệ",
     "min2": "Phải có ít nhất 2 kí tự",
@@ -357,6 +360,31 @@
   },
   "NotificationsPage": {
     "Search": "Tìm kiếm..."
+  },
+  "BookPage": {
+    "fields": {
+      "title": "Tiêu đề",
+      "author": "Tác giả",
+      "publisher": "Nhà xuất bản",
+      "category": "Thể loại",
+      "description": "Mô tả",
+      "image": "Ảnh minh họa",
+      "ratings": "Đánh giá",
+      "status": "Tình trạng",
+      "createdDate": "Ngày tạo",
+      "updatedDate": "Ngày cập nhật",
+      "price": "Giá",
+      "quantity": "Số lượng",
+      "borrowedQuantity": "Số lượng muôn",
+      "availability": "Có sẵn",
+      "preview": "Xem trước"
+    },
+    "filter": {
+      "engineering": "Kĩ thuật",
+      "art-science": "Nghệ thuật, Khoa học",
+      "architecture": "Kiến trúc",
+      "law": "Luật"
+    }
   },
   "CategoriesManagementPage": {
     "Categories": "Thể loại",
