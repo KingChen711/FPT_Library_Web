@@ -59,3 +59,19 @@ export enum ENotificationType {
   REMINDER = "Reminder",
   NOTICE = "Notice",
 }
+
+export enum EResourceBookType {
+  AUDIO_BOOK = "AudioBook",
+  EBOOK = "EBook",
+}
+
+export enum EBookFormat {
+  PAPERBACK = "Paperback",
+  HARD_COVER = "HardCover",
+}
+
+export enum EBookConditionStatus {
+  GOOD = "Good",
+  WORN = "Worn",
+  DAMAGE = "Damage",
+}

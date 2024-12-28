@@ -88,7 +88,11 @@ const request = async <TData = undefined>(
   url: string,
   options?: CustomOptions
 ) => {
-  const body = options?.body ? JSON.stringify(options.body) : undefined
+  const body = options?.body
+    ? options.body instanceof FormData
+      ? options.body
+      : JSON.stringify(options.body)
+    : undefined
   const baseHeaders = {
     "Content-Type": "application/json",
     "Accept-Language": "",
@@ -134,7 +138,7 @@ const request = async <TData = undefined>(
       ...baseHeaders,
       ...options?.headers,
     },
-    body: body ? JSON.parse(body) : null,
+    body: body ? (body instanceof FormData ? body : JSON.parse(body)) : null,
     payload,
   })
 

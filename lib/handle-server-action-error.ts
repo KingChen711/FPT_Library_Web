@@ -41,7 +41,9 @@ function handleServerActionError(
   const keys = Object.keys(error.fieldErrors)
   keys.forEach((key) =>
     //@ts-ignore
-    form.setError(key, { message: error.fieldErrors[key][0] })
+    form.setError(key.replace("[", ".").replace("]", ""), {
+      message: error.fieldErrors[key][0],
+    })
   )
   //@ts-ignore
   form.setFocus(keys[0])
