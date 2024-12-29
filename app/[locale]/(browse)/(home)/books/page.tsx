@@ -1,10 +1,10 @@
 import Image from "next/image"
-import { CheckCircle2, CircleX, Heart, MapPin } from "lucide-react"
+import { Link } from "@/i18n/routing"
+import { CheckCircle2, CircleX, Heart, MapPin, User } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import { Label } from "@/components/ui/label"
 import Paginator from "@/components/ui/paginator"
 import {
   Select,
@@ -18,9 +18,12 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+
+import { dummyBooks } from "../_components/dummy-books"
 
 type Props = {
   searchParams: {
@@ -35,6 +38,7 @@ type Props = {
 const BookPage = async ({ searchParams }: Props) => {
   const { pageIndex, pageSize, search, sort } = searchParams
   const t = await getTranslations("BookPage")
+
   return (
     <div>
       <Select>
@@ -42,18 +46,20 @@ const BookPage = async ({ searchParams }: Props) => {
           <SelectValue placeholder="Categories" />
         </SelectTrigger>
         <SelectContent className="bg-primary-foreground capitalize">
-          <SelectItem value="engineering">{t("engineering")}</SelectItem>
-          <SelectItem value="art-science">{t("art-science")}</SelectItem>
-          <SelectItem value="architecture">{t("architecture")}</SelectItem>
-          <SelectItem value="law">{t("law")}</SelectItem>
+          <SelectItem value="engineering">{t("filter.engineering")}</SelectItem>
+          <SelectItem value="art-science">{t("filter.art-science")}</SelectItem>
+          <SelectItem value="architecture">
+            {t("filter.architecture")}
+          </SelectItem>
+          <SelectItem value="law">{t("filter.law")}</SelectItem>
         </SelectContent>
       </Select>
 
       <div className="mt-4 grid w-full">
         <div className="overflow-x-auto rounded-md">
           <Table className="border-separate border-spacing-x-0 border-spacing-y-4 overflow-hidden">
-            <TableHeader className="">
-              <TableRow className="border-none">
+            <TableHeader className="bg-primary-foreground hover:bg-primary-foreground/95">
+              <TableRow className="border-none hover:bg-primary-foreground/95">
                 <SortableTableHead
                   currentSort={sort}
                   label={t("fields.title")}
@@ -79,18 +85,24 @@ const BookPage = async ({ searchParams }: Props) => {
                   label={t("fields.status")}
                   sortKey="status"
                 />
+                <SortableTableHead
+                  currentSort={sort}
+                  label={t("fields.liked")}
+                  sortKey="heart"
+                />
+                <TableHead>Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {[...Array(4)].map((item, index) => (
+              {dummyBooks.map((item, index) => (
                 <TableRow
                   key={index}
-                  className="mt-4 overflow-hidden rounded-lg border-2 bg-primary-foreground px-8 shadow-md"
+                  className="mt-4 overflow-hidden rounded-lg border-2 bg-primary-foreground px-8 shadow-md hover:bg-primary-foreground/95"
                 >
                   <TableCell className="flex items-center gap-2">
                     <div className="flex gap-4 pl-2">
                       <Image
-                        src="https://upload.wikimedia.org/wikibooks/vi/a/a6/B%C3%ACa_s%C3%A1ch_Harry_Potter_ph%E1%BA%A7n_6.jpg"
+                        src={item.image}
                         priority
                         alt="Logo"
                         width={50}
@@ -98,11 +110,17 @@ const BookPage = async ({ searchParams }: Props) => {
                         className="object-cover duration-150 ease-in-out hover:scale-105"
                       />
                       <div className="flex flex-col justify-center gap-2">
-                        <Label className="text-xl font-semibold text-primary">
-                          Harry Potter
-                        </Label>
-                        <p className="italic">J.K. Rowling, 2005</p>
-                        <p className="font-semibold">Second Edition</p>
+                        <Link
+                          href={`/books/${item.id}`}
+                          className="truncate text-nowrap text-xl font-semibold text-primary hover:underline"
+                        >
+                          {item.title}
+                        </Link>
+                        <p className="flex items-center gap-2 font-semibold italic">
+                          <User size={16} fill="gray" color="gray" /> by &nbsp;
+                          {item.author}
+                        </p>
+                        <p>Second Edition</p>
                       </div>
                     </div>
                   </TableCell>

@@ -1,6 +1,7 @@
 "use client"
 
 import React from "react"
+import Image from "next/image"
 import Autoplay from "embla-carousel-autoplay"
 
 import { Card, CardContent } from "@/components/ui/card"
@@ -11,6 +12,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+
+import { dummyBooks } from "./dummy-books"
 
 const quotes = [
   {
@@ -81,11 +84,26 @@ const BannerHome = () => {
         </Carousel>
       </div>
 
-      <div className="col-span-2 flex h-full rounded-lg border-2 border-primary bg-primary-foreground shadow-lg">
+      <div className="col-span-2 flex h-full rounded-lg border-8 border-primary bg-primary-foreground shadow-lg">
         <div className="flex w-1/12 items-center justify-center bg-primary text-xl font-semibold text-accent">
           <p className="-rotate-90 text-nowrap">New Arrivals</p>
         </div>
-        <div className="flex gap-8 overflow-x-auto p-4">List of books...</div>
+        <div className="flex w-full gap-8 overflow-hidden overflow-x-auto rounded-r-lg bg-primary-foreground p-4">
+          {dummyBooks.map((item) => (
+            <div
+              key={item.id}
+              className="relative flex w-1/5 shrink-0 overflow-hidden rounded-lg border p-2 shadow-lg"
+            >
+              <Image
+                src={item.image}
+                priority
+                alt="Logo"
+                fill
+                className="object-cover duration-150 ease-in-out hover:scale-105"
+              />
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
