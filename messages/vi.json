@@ -377,7 +377,8 @@
       "quantity": "Số lượng",
       "borrowedQuantity": "Số lượng muôn",
       "availability": "Có sẵn",
-      "preview": "Xem trước"
+      "preview": "Xem trước",
+      "liked": "Đã thích"
     },
     "filter": {
       "engineering": "Kĩ thuật",

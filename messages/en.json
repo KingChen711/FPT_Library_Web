@@ -375,7 +375,8 @@
       "quantity": "Quantity",
       "borrowedQuantity": "Borrowed quantity",
       "availability": "Availability",
-      "preview": "Preview"
+      "preview": "Preview",
+      "liked": "Liked"
     },
     "filter": {
       "engineering": "Engineering",
