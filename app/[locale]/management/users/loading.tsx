@@ -10,7 +10,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-function ManagementEmployeesLoading() {
+function ManagementUsersLoading() {
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
@@ -53,4 +53,4 @@ function ManagementEmployeesLoading() {
   )
 }
 
-export default ManagementEmployeesLoading
+export default ManagementUsersLoading

@@ -12,6 +12,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from "./command"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 
 const rowsPerPageOptions = [
+  { label: "5", value: "5" },
   { label: "10", value: "10" },
   { label: "30", value: "30" },
   { label: "50", value: "50" },
@@ -23,9 +24,16 @@ type Props = {
   totalPage: number
   pageSize: number
   className?: string
+  totalActualItem?: number
 }
 
-function Paginator({ pageIndex, pageSize, totalPage, className }: Props) {
+function Paginator({
+  pageIndex,
+  pageSize,
+  totalPage,
+  className,
+  totalActualItem,
+}: Props) {
   const router = useRouter()
   const t = useTranslations("Paginator")
   const searchParams = useSearchParams()
@@ -60,9 +68,9 @@ function Paginator({ pageIndex, pageSize, totalPage, className }: Props) {
     <div className={cn("flex flex-wrap items-center gap-4", className)}>
       <div className="flex-1 text-sm">
         {t("Showing message", {
-          from: 20,
-          to: 30,
-          total: 100,
+          from: (pageIndex - 1) * pageSize + 1,
+          to: Math.min(pageIndex * pageSize, totalActualItem || 0),
+          total: totalActualItem || 0,
         })}
       </div>
       <ReactPaginate

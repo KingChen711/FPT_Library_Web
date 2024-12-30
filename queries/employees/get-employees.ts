@@ -1,23 +1,29 @@
+import { http } from "@/lib/http"
+
 import "server-only"
 
-import { http } from "@/lib/http"
 import { type Employee } from "@/lib/types/models"
+import { type TSearchEmployeeSchema } from "@/lib/validations/employee/search-employee"
 
 import { auth } from "../auth"
+
+export type Employees = Employee[]
 
 export type TGetEmployeesData = {
   sources: Employee[]
   pageIndex: number
   pageSize: number
   totalPage: number
-  count: number
+  totalActualItem: number
 }
 
-export async function getEmployees(query: string): Promise<TGetEmployeesData> {
+const getEmployees = async (
+  searchParams: TSearchEmployeeSchema
+): Promise<TGetEmployeesData> => {
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<TGetEmployeesData>(
-      `/api/management/employees?${query}`,
+      `/api/management/employees`,
       {
         next: {
           tags: ["employees"],
@@ -25,16 +31,20 @@ export async function getEmployees(query: string): Promise<TGetEmployeesData> {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
+        searchParams,
       }
     )
-    return { ...data, count: data.sources.length }
+
+    return data
   } catch {
     return {
       sources: [],
       pageIndex: 0,
       pageSize: 0,
       totalPage: 0,
-      count: 0,
+      totalActualItem: 0,
     }
   }
 }
+
+export default getEmployees

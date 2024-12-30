@@ -73,6 +73,9 @@
     "Verify your email": "Xác minh email",
     "Message": "Nhập OTP được gửi đến email của bạn"
   },
+  "HomePage": {
+    "welcome": "Chào mừng đến với ELibrary!"
+  },
   "Zod": {
     "min1": "Bắt buộc",
     "min2": "Phải có ít nhất 2 kí tự",
@@ -89,7 +92,8 @@
     "copiesMin1": "Cần ít nhất 1 mã bản sao",
     "gt0": "Phải lớn hơn 0",
     "publicationYear": "Năm xuất bản không hợp lệ",
-    "isbn": "Định dạng ISBN hoặc checksum không hợp lệ"
+    "isbn": "Định dạng ISBN hoặc checksum không hợp lệ",
+    "invalid": "Không hợp lệ"
   },
   "Me": {
     "Account": {
@@ -149,6 +153,7 @@
     "setting": "Cài đặt",
     "change role": "Thay đổi vai trò",
     "change password": "Thay đổi mật khâu",
+    "pick a date": "Chọn ngày",
     "move to trash": "Chuyển vào thùng rác",
     "de-activate": "Thay đổi trang thái",
     "undo delete": "Khôi phục",
@@ -160,23 +165,32 @@
     "type": "type",
     "to confirm": "to confirm",
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "filter": {
+      "title": "Tìm kiếm",
+      "author": "Tìm tác giả",
+      "employee": "Tìm nhân viên",
+      "user": "Tìm người dùng"
+    },
     "btn": {
       "import": "Nhập dữ liệu",
       "export": "Xuất dữ liệu",
       "filter": "Tìm kiếm",
       "search": "Tìm kiếm",
       "create": "Tạo mô tả",
-      "update": "Chỉnh sự",
+      "update": "Chỉnh sửa",
       "delete": "Xóa",
+      "undo delete": "Khôi phục",
       "cancel": "Hủy",
       "confirm": "Xác nhận",
       "save": "Lưu",
       "reset": "Khôi phục",
       "close": "Đóng",
       "previous": "Trước",
-      "next": "Sau"
+      "next": "Sau",
+      "upload": "Tải lên"
     },
     "placeholder": {
+      "avatar": "Chọn ảnh đại diện",
       "code": "Nhập mã số",
       "email": "Nhập email",
       "fullName": "Nhập họ và tên",
@@ -256,7 +270,23 @@
     "delete employee": "Xóa nhân viên",
     "soft delete employee": "Xóa mềm nhân viên",
     "restore employee": "Khôi phục nhân viên",
-    "undo delete employee": "Khôi phúc xóa nhân viên"
+    "undo delete employee": "Khôi phúc xóa nhân viên",
+
+    "Employees": "Nhân viên",
+    "Condition type": "Loại điều kiện",
+    "Fixed employee amount": "Số nhân viên cố định",
+    "Employee amount per day": "Số nhân viên mỗi ngày",
+    "Description": "Mô tả",
+    "Cancel": "Hủy",
+    "Create": "Tạo",
+    "Save": "Lưu",
+    "Create employee": "Tạo Nhân viên",
+    "Edit employee": "Chỉnh sửa Nhân viên",
+    "Actions": "Hành động",
+    "Edit": "Chỉnh sửa",
+    "Delete": "Xóa",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
+    "Employees selected": "Đang chọn ({amount})"
   },
   "AuthorManagement": {
     "create author": "Tạo tác giả",
@@ -340,6 +370,32 @@
   },
   "NotificationsPage": {
     "Search": "Tìm kiếm..."
+  },
+  "BookPage": {
+    "fields": {
+      "title": "Tiêu đề",
+      "author": "Tác giả",
+      "publisher": "Nhà xuất bản",
+      "category": "Thể loại",
+      "description": "Mô tả",
+      "image": "Ảnh minh họa",
+      "ratings": "Đánh giá",
+      "status": "Tình trạng",
+      "createdDate": "Ngày tạo",
+      "updatedDate": "Ngày cập nhật",
+      "price": "Giá",
+      "quantity": "Số lượng",
+      "borrowedQuantity": "Số lượng muôn",
+      "availability": "Có sẵn",
+      "preview": "Xem trước",
+      "liked": "Đã thích"
+    },
+    "filter": {
+      "engineering": "Kĩ thuật",
+      "art-science": "Nghệ thuật, Khoa học",
+      "architecture": "Kiến trúc",
+      "law": "Luật"
+    }
   },
   "CategoriesManagementPage": {
     "Categories": "Thể loại",

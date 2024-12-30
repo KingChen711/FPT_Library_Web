@@ -11,7 +11,7 @@ export type User = {
   phone: string
   avatar: string
   address: string
-  gender: string
+  gender: "Male" | "Female" | "Other"
   isActive: boolean
   isDeleted: boolean
   createDate: string
@@ -43,18 +43,18 @@ export type Role = {
 
 export type Employee = {
   employeeId: string
-  employeeCode: string | null
+  employeeCode: string
   email: string
   passwordHash: string | null
-  firstName: string | null
-  lastName: string | null
+  firstName: string
+  lastName: string
   dob: string
   phone: string
   avatar: string
   address: string
-  gender: "Male" | "Female" | null
-  hireDate: string | null
-  terminationDate: string | null
+  gender: "Male" | "Female"
+  hireDate: string
+  terminationDate: string
   isActive: boolean | null
   isDeleted: boolean | null
   createDate: string | null
