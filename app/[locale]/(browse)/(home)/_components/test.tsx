@@ -1,14 +1,15 @@
 "use client"
 
-import React from "react"
-
 import { EWebsocketEventEnum } from "@/lib/types/socket"
-import useWebSocketConnectionHook from "@/hooks/socket/use-socket"
+import useSocket from "@/hooks/socket/use-socket"
 
 function Test() {
-  useWebSocketConnectionHook((message: string) => {
-    // console.log("useWebSocketConnectionHook", message)
+  useSocket((message: string) => {
+    console.log("useSocket1", message)
   }, EWebsocketEventEnum.MESSAGE)
+  // useSocket((message: string) => {
+  //   console.log("useSocket2", message)
+  // }, EWebsocketEventEnum.MESSAGE)
 
   return null
 }

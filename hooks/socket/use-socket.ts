@@ -1,48 +1,25 @@
-import { useEffect, useRef } from "react"
-import { io } from "socket.io-client"
+import { useEffect } from "react"
 
+import { socket } from "@/lib/socket"
 import { type EWebsocketEventEnum } from "@/lib/types/socket"
 
-const useWebSocketConnectionHook = (
+const useSocket = (
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cb: (arg: any) => void,
   event: EWebsocketEventEnum
 ) => {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const socketRef = useRef<any>(null)
-
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  function socketClient() {
-    const socket = io({
-      transports: ["websocket"],
-    })
-
-    socket.on("connect", () => {
-      socket.on(event as unknown as string, (data) => {
-        cb(data)
-      })
-      console.log("Connected")
-    })
-
-    socket.on("disconnect", () => {
-      console.log("Disconnected")
-    })
-
-    socket.on("connect_error", async (err) => {
-      console.log(`connect_error due to ${err.message}`)
-      await fetch("/api/socket")
-    })
-
-    socketRef.current = socket
-  }
-
   useEffect(() => {
-    socketClient()
+    console.log("Connected Socket")
+    socket.on(event as unknown as string, cb)
+
     return () => {
-      socketRef?.current?.disconnect()
+      if (socket) {
+        socket.off(event as unknown as string, cb)
+      }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [cb, event])
+
+  return socket
 }
 
-export default useWebSocketConnectionHook
+export default useSocket

@@ -128,15 +128,16 @@ const request = async <TData = undefined>(
 
   const payload = (await res.json()) as OkResponse<TData>
 
-  console.log({
-    url: fetchUrl,
-    headers: {
-      ...baseHeaders,
-      ...options?.headers,
-    },
-    body: body ? JSON.parse(body) : null,
-    payload,
-  })
+  if (process.env.NEXT_PUBLIC_LOG_FETCH !== "false")
+    console.log({
+      url: fetchUrl,
+      headers: {
+        ...baseHeaders,
+        ...options?.headers,
+      },
+      body: body ? JSON.parse(body) : null,
+      payload,
+    })
 
   if (!res.ok || !payload.resultCode.includes("Success")) {
     if (res.ok) {
