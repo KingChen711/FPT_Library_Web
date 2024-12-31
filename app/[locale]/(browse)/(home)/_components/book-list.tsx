@@ -40,7 +40,7 @@ const BookList = ({ title, totalBooks }: Props) => {
             </div>
             <div className="overflow-hidden p-4">
               <Link
-                href={`#`}
+                href={`/books/${item.id}`}
                 className="truncate text-lg font-semibold hover:text-primary"
               >
                 {item.title}

@@ -2,11 +2,13 @@ import React from "react"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+import BookOverviewTab from "./book-overview"
+
 const BookTabs = () => {
   return (
     <Tabs
-      defaultValue="account"
-      className="h-[500px] w-full rounded-lg bg-primary-foreground p-4 shadow-lg"
+      defaultValue="overview"
+      className="w-full rounded-lg bg-primary-foreground p-4 shadow-lg"
     >
       <TabsList className="flex justify-between">
         <TabsTrigger className="w-full" value="overview">
@@ -28,7 +30,9 @@ const BookTabs = () => {
           Related Book
         </TabsTrigger>
       </TabsList>
-      <TabsContent value="overview">Overview content</TabsContent>
+      <TabsContent value="overview">
+        <BookOverviewTab />
+      </TabsContent>
       <TabsContent value="view-edition">View edition content</TabsContent>
       <TabsContent value="detail">Detail content</TabsContent>
       <TabsContent value="review">Review content</TabsContent>

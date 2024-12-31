@@ -1,4 +1,5 @@
 import Image from "next/image"
+import { Link } from "@/i18n/routing"
 import {
   ArrowLeft,
   BookOpen,
@@ -6,6 +7,7 @@ import {
   CheckCircle2,
   CircleX,
   Headphones,
+  Heart,
   MapPin,
   Notebook,
   NotebookPen,
@@ -18,6 +20,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 
 import { dummyBooks } from "../../_components/dummy-books"
+import BookBorrowDialog from "./_components/book-borrow-dialog"
 import BookTabs from "./_components/book-tabs"
 
 type Props = {
@@ -41,7 +44,7 @@ const BookDetailPage = ({ params: { bookId } }: Props) => {
 
       <div className="flex h-full gap-4">
         {/* Picture */}
-        <div className="h-full w-1/4">
+        <section className="h-full w-1/4">
           <div className="flex h-[56vh] flex-col justify-between overflow-hidden rounded-lg bg-primary-foreground shadow-lg">
             <div className="flex flex-1 shrink-0 items-center justify-center overflow-hidden rounded-t-lg p-4">
               <Image
@@ -64,19 +67,24 @@ const BookDetailPage = ({ params: { bookId } }: Props) => {
               </div>
             </div>
           </div>
-        </div>
+        </section>
 
         {/* Info */}
-        <div className="h-full flex-1 space-y-4">
+        <section className="h-full flex-1 space-y-4">
           <div className="flex h-[56vh] gap-4">
             {/* Info */}
             <div className="flex w-3/5 flex-col justify-between rounded-lg bg-primary-foreground p-4 shadow-lg">
               <div className="space-y-6">
-                <h1 className="text-2xl font-semibold text-primary">
-                  {book?.title}
-                </h1>
+                <div className="flex items-center justify-between">
+                  <h1 className="line-clamp-1 text-2xl font-semibold text-primary">
+                    {book?.title}
+                  </h1>
+                  <Heart size={24} />
+                </div>
                 <p className="text-sm italic">by {book?.author}, 2000</p>
-                <Badge className="w-fit">Second Edition</Badge>
+                <Badge variant={"secondary"} className="w-fit">
+                  Second Edition
+                </Badge>
                 <div className="flex justify-between text-sm">
                   <div>⭐⭐⭐⭐⭐ 5/5 Ratings</div>
                   <div>
@@ -123,16 +131,17 @@ const BookDetailPage = ({ params: { bookId } }: Props) => {
                 </div>
               </div>
               <div className="flex items-center gap-4">
-                <Button className="bg-danger">
-                  <BookOpen /> Borrow
-                </Button>
-                <Button>
-                  <Headphones /> Read now
+                <BookBorrowDialog />
+                <Button asChild variant={"destructive"}>
+                  <Link href={`/books/${book.id}/ebook`}>
+                    <Headphones />
+                    <span className="border-l-2 pl-2">Read now</span>
+                  </Link>
                 </Button>
               </div>
             </div>
             {/* Author */}
-            <div className="h-full flex-1 rounded-lg bg-primary-foreground p-4 shadow-lg">
+            <section className="h-full flex-1 rounded-lg bg-primary-foreground p-4 shadow-lg">
               <h1 className="text-xl font-semibold capitalize">
                 <span className="text-primary">About</span> Author
               </h1>
@@ -174,11 +183,11 @@ const BookDetailPage = ({ params: { bookId } }: Props) => {
                   </div>
                 ))}
               </div>
-            </div>
+            </section>
           </div>
 
           <BookTabs />
-        </div>
+        </section>
       </div>
     </div>
   )
