@@ -1,26 +1,16 @@
 "use client"
 
-import { format } from "date-fns"
-import { CalendarIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 
-import { cn } from "@/lib/utils"
 import { type TEmployeesFilterSchema } from "@/lib/validations/employee/employees-filter"
-import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import { DateTimePicker } from "@/components/ui/date-time-picker"
 import {
-  FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 
 type Props = {
   form: UseFormReturn<TEmployeesFilterSchema, unknown, undefined>
@@ -38,79 +28,26 @@ const FilterDateEmployee = ({ form, label, name }: Props) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>{t(label)}</FormLabel>
-
           <div className="flex w-fit flex-wrap items-center justify-between gap-3">
-            <Popover>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-[200px] pl-3 text-left font-normal",
-                      !field.value[0] && "text-muted-foreground"
-                    )}
-                  >
-                    {field.value[0] ? (
-                      format(new Date(field.value[0]), "PPP")
-                    ) : (
-                      <span>{t("pick a date")}</span>
-                    )}
-                    <CalendarIcon className="ml-auto size-4 opacity-50" />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={
-                    field.value[0] ? new Date(field.value[0]) : undefined
-                  }
-                  onSelect={(date) =>
-                    field.onChange([date || null, field.value[1]])
-                  }
-                  disabled={(date) =>
-                    !!field.value[1] && date > new Date(field.value[1])
-                  }
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <DateTimePicker
+              jsDate={field.value[0] || undefined}
+              onJsDateChange={(date) =>
+                field.onChange([date || null, field.value[1]])
+              }
+              disabled={(date) =>
+                !!field.value[1] && date > new Date(field.value[1])
+              }
+            />
             <div>-</div>
-            <Popover>
-              <PopoverTrigger asChild>
-                <FormControl>
-                  <Button
-                    variant={"outline"}
-                    className={cn(
-                      "w-[200px] pl-3 text-left font-normal",
-                      !field.value[1] && "text-muted-foreground"
-                    )}
-                  >
-                    {field.value[1] ? (
-                      format(new Date(field.value[1]), "PPP")
-                    ) : (
-                      <span>{t("pick a date")}</span>
-                    )}
-                    <CalendarIcon className="ml-auto size-4 opacity-50" />
-                  </Button>
-                </FormControl>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={
-                    field.value[1] ? new Date(field.value[1]) : undefined
-                  }
-                  onSelect={(date) =>
-                    field.onChange([field.value[0], date || null])
-                  }
-                  disabled={(date) =>
-                    !!field.value[0] && date < new Date(field.value[0])
-                  }
-                  initialFocus
-                />
-              </PopoverContent>
-            </Popover>
+            <DateTimePicker
+              jsDate={field.value[1] || undefined}
+              onJsDateChange={(date) =>
+                field.onChange([field.value[0], date || null])
+              }
+              disabled={(date) =>
+                !!field.value[0] && date < new Date(field.value[0])
+              }
+            />
           </div>
           <FormMessage />
         </FormItem>

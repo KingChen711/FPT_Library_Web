@@ -7,7 +7,7 @@
     "LoginFailedTitle": "Login failed",
     "ConfirmPassword": "Confirm Password",
     "Welcome back!": "Welcome back!",
-    "Message": "Sign in to continue to FPT e-Library System",
+    "Message": "Sign in to continue to FPT E-Library System",
     "Google": "Google",
     "Enter your email": "Enter your email",
     "Don’t have an account?": "Don’t have an account?",
@@ -15,7 +15,7 @@
     "Homepage": "Homepage",
     "PasswordMethodPage": {
       "Enter your password": "Enter your password",
-      "Message": "to continue to Prep4IELTS",
+      "Message": "to continue to E-Library",
       "Password": "Password",
       "Login": "Continue",
       "Forgot password?": "Forgot password?",
@@ -23,7 +23,7 @@
     },
     "OtpMethodPage": {
       "Check your email": "Check your email",
-      "Message": "to continue to Prep4IELTS",
+      "Message": "to continue to E-Library",
       "Password": "Password",
       "Login": "Continue",
       "No code": "Didn't receive a code? Resend",
@@ -70,7 +70,7 @@
     "Message": "Enter the verification code sent to your email"
   },
   "HomePage": {
-    "welcome": "Welcome to ELibrary!"
+    "welcome": "Welcome to E-Library!"
   },
   "Zod": {
     "email": "Invalid email",
@@ -111,17 +111,17 @@
     }
   },
   "GeneralManagement": {
-    "employee management": "Employee Management",
-    "user management": "User Management",
-    "role management": "Role Management",
-    "author management": "Author Management",
-    "category management": "Category Management",
-    "resource management": "Resource Management",
-    "notification management": "Notification Management",
-    "return management": "Return Management",
-    "borrow management": "Borrow Management",
-    "transaction management": "Transaction Management",
-    "report management": "Report Management",
+    "employee management": "Employee management",
+    "user management": "User management",
+    "role management": "Role management",
+    "author management": "Author management",
+    "category management": "Category management",
+    "resource management": "Resource management",
+    "notification management": "Notification management",
+    "return management": "Return management",
+    "borrow management": "Borrow management",
+    "transaction management": "Transaction management",
+    "report management": "Report management",
     "success": "Success",
     "error": "Error",
     "fileEmptyMessage": "File is empty",
@@ -153,9 +153,9 @@
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
     "filter": {
       "title": "Filter",
-      "author": "Filter Author",
-      "employee": "Filter Employee",
-      "user": "Filter User"
+      "author": "Filter author",
+      "employee": "Filter employee",
+      "user": "Filter user"
     },
     "btn": {
       "filter": "Filter",
@@ -250,17 +250,17 @@
     "undo delete user": "Undo delete user"
   },
   "EmployeeManagement": {
-    "create employee": "Create Employee",
-    "update employee": "Edit Employee",
-    "delete employee": "Delete Employee",
-    "soft delete employee": "Soft delete Employee",
-    "restore employee": "Restore Employee",
-    "undo delete employee": "Undo delete Employee",
+    "create employee": "Create employee",
+    "update employee": "Edit employee",
+    "delete employee": "Delete employee",
+    "soft delete employee": "Soft delete employee",
+    "restore employee": "Restore employee",
+    "undo delete employee": "Undo delete employee",
 
     "Employees": "Employees",
     "Condition type": "Condition type",
     "Fixed employee amount": "Fixed employee amount",
-    "Employee amount per day": "employee amount per day",
+    "Employee amount per day": "Employee amount per day",
     "Description": "Description",
     "Cancel": "Cancel",
     "Create": "Create",
@@ -369,8 +369,8 @@
       "image": "Image",
       "ratings": "Ratings",
       "status": "Status",
-      "createdDate": "Created Date",
-      "updatedDate": "Updated Date",
+      "createdDate": "Created date",
+      "updatedDate": "Updated date",
       "price": "Price",
       "quantity": "Quantity",
       "borrowedQuantity": "Borrowed quantity",
