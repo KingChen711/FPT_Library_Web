@@ -23,7 +23,6 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
   DialogHeader,
@@ -105,7 +104,12 @@ function BookCopiesDialog({
   const [selectedCodes, setSelectedCodes] = useState<string[]>([])
   const [searchTerm, setSearchTerm] = useState("")
   const [inputs, setInputs] = useState([createInput()])
+
   const [openWarning, setOpenWarning] = useState(false)
+  const [tempChangedCopy, setTempChangedCopy] = useState<{
+    inputId: string
+    val: EBookConditionStatus
+  } | null>(null)
 
   const handleOnPasteInput = (e: React.ClipboardEvent<HTMLInputElement>) => {
     try {
@@ -215,10 +219,18 @@ function BookCopiesDialog({
                     <Select
                       value={input.conditionStatus}
                       onValueChange={(val: EBookConditionStatus) => {
-                        if (!hasConfirmedAboutChangeStatus) {
-                          setHasConfirmedAboutChangeStatus(true)
+                        if (
+                          val !== EBookConditionStatus.GOOD &&
+                          !hasConfirmedAboutChangeStatus
+                        ) {
+                          setTempChangedCopy({
+                            inputId: input.id,
+                            val: val as EBookConditionStatus,
+                          })
                           setOpenWarning(true)
+                          return
                         }
+
                         setInputs((prev) => {
                           const clone = structuredClone(prev)
                           clone.forEach((item) => {
@@ -251,9 +263,15 @@ function BookCopiesDialog({
                           </SelectItem>
                           <SelectItem
                             className="cursor-pointer"
-                            value={EBookConditionStatus.DAMAGE}
+                            value={EBookConditionStatus.DAMAGED}
                           >
-                            {t(EBookConditionStatus.DAMAGE)}
+                            {t(EBookConditionStatus.DAMAGED)}
+                          </SelectItem>
+                          <SelectItem
+                            className="cursor-pointer"
+                            value={EBookConditionStatus.LOST}
+                          >
+                            {t(EBookConditionStatus.LOST)}
                           </SelectItem>
                         </SelectGroup>
                       </SelectContent>
@@ -327,11 +345,19 @@ function BookCopiesDialog({
                         </DropdownMenuCheckboxItem>
                         <DropdownMenuCheckboxItem
                           onClick={() =>
-                            handleChangeStatus(EBookConditionStatus.DAMAGE)
+                            handleChangeStatus(EBookConditionStatus.DAMAGED)
                           }
                           className="cursor-pointer"
                         >
-                          {t(EBookConditionStatus.DAMAGE)}
+                          {t(EBookConditionStatus.DAMAGED)}
+                        </DropdownMenuCheckboxItem>
+                        <DropdownMenuCheckboxItem
+                          onClick={() =>
+                            handleChangeStatus(EBookConditionStatus.LOST)
+                          }
+                          className="cursor-pointer"
+                        >
+                          {t(EBookConditionStatus.LOST)}
                         </DropdownMenuCheckboxItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -410,12 +436,39 @@ function BookCopiesDialog({
         <Dialog open={openWarning} onOpenChange={setOpenWarning}>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{t("Be careful when changing status")}</DialogTitle>
+              <DialogTitle>
+                {t(
+                  "Are you sure you want to set the status of this copy to WornDamage"
+                )}
+              </DialogTitle>
               <DialogDescription>
                 <div className="flex justify-end">
-                  <DialogClose>
-                    <Button>{t("I known")}</Button>
-                  </DialogClose>
+                  <Button
+                    variant="outline"
+                    onClick={() => {
+                      setOpenWarning(false)
+                    }}
+                  >
+                    {t("Cancel")}
+                  </Button>
+                  <Button
+                    className="ml-4"
+                    onClick={() => {
+                      setOpenWarning(false)
+                      setHasConfirmedAboutChangeStatus(true)
+                      setInputs((prev) => {
+                        const clone = structuredClone(prev)
+                        clone.forEach((item) => {
+                          if (item.id !== tempChangedCopy?.inputId) return
+                          item.conditionStatus = tempChangedCopy.val
+                        })
+                        return clone
+                      })
+                      // setTempChangedCopy(null)
+                    }}
+                  >
+                    {t("Yes")}
+                  </Button>
                 </div>
               </DialogDescription>
             </DialogHeader>

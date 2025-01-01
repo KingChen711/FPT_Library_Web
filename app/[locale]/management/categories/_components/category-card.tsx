@@ -43,7 +43,7 @@ function CategoryCard({ category }: Props) {
       />
       <ContextMenu>
         <ContextMenuTrigger asChild>
-          <div className="col-span-12 h-full flex-1 rounded-md bg-card p-4 shadow sm:col-span-6 lg:col-span-3 2xl:col-span-2">
+          <div className="col-span-12 h-full flex-1 rounded-md bg-card p-4 shadow sm:col-span-6 lg:col-span-3">
             <div className="flex">
               <div className="text-sm">
                 Id: <strong>{category.categoryId}</strong>

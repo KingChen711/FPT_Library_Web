@@ -2,7 +2,9 @@
 
 import React, { useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
+import { editorPlugin } from "@/constants"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Editor } from "@tinymce/tinymce-react"
 import { Loader2, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -17,6 +19,7 @@ import { createBook } from "@/actions/books/create-book"
 import { uploadMedias } from "@/actions/books/upload-medias"
 import useCategories from "@/hooks/categories/use-categories"
 import { toast } from "@/hooks/use-toast"
+import useActualTheme from "@/hooks/utils/use-actual-theme"
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -40,7 +43,6 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { Textarea } from "@/components/ui/textarea"
 
 import BookEditionFields, { createBookEdition } from "./book-edition-fields"
 import BookResourceFields from "./book-resource-fields"
@@ -50,12 +52,14 @@ import { ProgressTabBar } from "./progress-stage-bar"
 type Tab = "General" | "Resources" | "Editions"
 
 function CreateBookForm() {
+  const theme = useActualTheme()
   const t = useTranslations("BooksManagementPage")
   const router = useRouter()
   const locale = useLocale()
   const [isPending, startTransition] = useTransition()
 
   const [currentTab, setCurrentTab] = useState<Tab>("General")
+  const [currentEditionIndex, setCurrentEditionIndex] = useState(0)
 
   const { data: categoryItems } = useCategories()
   const [openCategoriesCombobox, setOpenCategoriesCombobox] = useState(false)
@@ -93,6 +97,7 @@ function CreateBookForm() {
       }
 
       if (res.typeError === "form") {
+        console.log(res.fieldErrors)
         if (
           Object.keys(res.fieldErrors).some((key) =>
             ["title", "subTitle", "summary", "categoryIds"].includes(key)
@@ -107,6 +112,35 @@ function CreateBookForm() {
           setCurrentTab("Resources")
         } else {
           setCurrentTab("Editions")
+
+          const keyBookEditions = Object.keys(res.fieldErrors).find((key) =>
+            key.startsWith("bookEditions")
+          )
+          if (keyBookEditions) {
+            setCurrentEditionIndex(
+              +keyBookEditions.split("bookEditions[")[1][0]
+            )
+          }
+
+          const indexToMessage = new Map<number, string>()
+          Object.keys(res.fieldErrors)
+            .filter(
+              (key) =>
+                key.startsWith("bookEditions") && key.includes("bookCopies")
+            )
+            .forEach((key, i) => {
+              const index = +key.split("bookEditions[")[1][0]
+              const val = indexToMessage.get(index) || ""
+              indexToMessage.set(
+                index,
+                val + (i !== 0 ? ", " : "") + res.fieldErrors[key][0]
+              )
+              delete res.fieldErrors[key]
+            })
+
+          indexToMessage.forEach((value, key) => {
+            form.setError(`bookEditions.${key}.bookCopies`, { message: value })
+          })
         }
       }
       handleServerActionError(res, locale, form)
@@ -208,6 +242,7 @@ function CreateBookForm() {
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="summary"
@@ -217,7 +252,19 @@ function CreateBookForm() {
                       {t("Summary")}
                     </FormLabel>
                     <FormControl>
-                      <Textarea disabled={isPending} {...field} />
+                      <Editor
+                        disabled={isPending}
+                        apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
+                        init={{
+                          ...editorPlugin,
+                          skin: theme === "dark" ? "oxide-dark" : undefined,
+                          content_css: theme === "dark" ? "dark" : undefined,
+                          width: "100%",
+                          language: locale,
+                        }}
+                        onEditorChange={field.onChange}
+                        value={field.value}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -362,7 +409,12 @@ function CreateBookForm() {
                       </span>
                     </FormLabel>
                     <FormControl>
-                      <BookEditionFields form={form} isPending={isPending} />
+                      <BookEditionFields
+                        currentEditionIndex={currentEditionIndex}
+                        setCurrentEditionIndex={setCurrentEditionIndex}
+                        form={form}
+                        isPending={isPending}
+                      />
                     </FormControl>
                   </FormItem>
                 )}

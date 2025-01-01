@@ -93,7 +93,8 @@
     "gt0": "Phải lớn hơn 0",
     "publicationYear": "Năm xuất bản không hợp lệ",
     "isbn": "Định dạng ISBN hoặc checksum không hợp lệ",
-    "invalid": "Không hợp lệ"
+    "invalid": "Không hợp lệ",
+    "atLeastOneRecipient": "Cần ít nhất một người nhận"
   },
   "Me": {
     "Account": {
@@ -164,7 +165,7 @@
     "trash": "Thùng rác",
     "type": "type",
     "to confirm": "to confirm",
-    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
     "filter": {
       "title": "Tìm kiếm",
       "author": "Tìm tác giả",
@@ -451,7 +452,19 @@
     "Private notification": "Thông báo riêng",
     "Notifications will be sent to the emails you specify": "Thông báo sẽ được gửi đến email bạn chỉ định",
     "Recipients": "Người nhận",
-    "Add emails message": "Thêm các email mà thông báo này sẽ được gửi đến. Bạn cần nhấn 'Enter' để thêm email."
+    "Add emails message": "Thêm các email mà thông báo này sẽ được gửi đến. Bạn cần nhấn 'Enter' để thêm email.",
+    "View content": "Xem nội dung",
+    "Message content": "Nội dung thông báo",
+    "Visibility": "Hiển thị",
+    "Created date": "Ngày tạo",
+    "Created by": "Tạo bởi",
+    "Type": "Loại",
+    "View recipients": "Xem người nhận",
+    "Filters": "Bộ lọc",
+    "Filter notifications": "Bộ lọc thông báo",
+    "All": "Tất cả",
+    "Public": "Công khai",
+    "Private": "Riêng tư"
   },
   "Paginator": {
     "Showing message": "Hiển thị {from} đến {to} của {total} dữ liệu",
@@ -510,7 +523,8 @@
     "Actions": "Hành động",
     "Good": "Tốt",
     "Worn": "Rách",
-    "Damage": "Hỏng",
+    "Damaged": "Hỏng",
+    "Lost": "Mất",
     "Save": "Lưu",
     "Add another": "Thêm bản sao khác",
     "Current copies": "Các bản sao hiện tại",
@@ -518,13 +532,71 @@
     "Change status": "Đổi trạng thái",
     "Empty copies": "Chưa có bản sao nào",
     "Be careful when changing status": "Hãy cẩn thận khi thay đổi trạng thái",
-    "I known": "Tôi biết rồi"
+    "I known": "Tôi biết rồi",
+    "Book id": "Mã sách",
+    "Edition id": "Mã ấn bản",
+    "Total copies": "Tổng bản sao",
+    "Available copies": "Tổng bản sao có sẵn",
+    "Request copies": "Tổng bản sao yêu cầu",
+    "Reserved copies": "Tổng bản sao được đặt",
+    "Shelf": "Kệ sách",
+    "Create by": "Tạo bởi",
+    "Created at": "Ngày tạo",
+    "Update by": "Cập nhật bởi",
+    "Updated at": "Ngày cập nhật",
+    "Can borrow": "Có thể mượn",
+    "Format": "Định dạng",
+    "books selected": "{amount} sách được chọn",
+    "View book detail": "Xem chi tiết sách",
+    "View edition detail": "Xem chi tiết ấn bản",
+    "Are you sure you want to set the status of this copy to WornDamage": "Bạn có chắc chắn muốn đặt trạng thái của bản sao này thành Rách/Hỏng không?",
+    "Yes": "Có",
+    "Book information": "Thông tin sách",
+    "AI train code": "Mã train AI",
+    "View content": "Xem nội dung",
+    "Summary content": "Tóm tắt nội dung",
+    "Resource type": "Loại tài nguyên",
+    "Size": "Kích thước",
+    "Created by": "Tạo bởi",
+    "Open": "Mở",
+    "Cover": "Bìa",
+    "Edit information": "Chỉnh sửa thông tin",
+    "Delete book": "Xóa sách",
+    "Edit book": "Chỉnh sửa thông tin sách",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
+    "Summary book": "Tóm tắt sách",
+    "Summary edition": "Tóm tắt ấn bản",
+    "Copies": "Bản sao",
+    "Total": "Tổng",
+    "View cover image": "Xem bìa sách",
+    "Copies inventory": "Kho bản sao",
+    "Author code": "Author code",
+    "Full name": "Tên",
+    "Date of birth": "Ngày sinh",
+    "Date of death": "Ngày mất",
+    "Nationality": "Quốc tịch",
+    "Available status": "Tình trạng sẵn sàng",
+    "Condition status": "Tình trạng hư hại"
   },
   "Badges": {
     "BookConditionStatus": {
       "Good": "Tốt",
       "Worn": "Rách",
-      "Damage": "Hỏng"
+      "Damaged": "Hỏng",
+      "Lost": "Mất"
+    },
+    "NotificationType": {
+      "Event": "Sự kiện",
+      "Notice": "Thông báo",
+      "Reminder": "Nhắc nhở"
+    },
+    "ResourceBookType": {
+      "AudioBook": "Sách nói",
+      "EBook": "Sách điện tử"
+    },
+    "BookFormat": {
+      "Paperback": "Bìa giấy",
+      "HardCover": "Bìa cứng"
     }
   }
 }

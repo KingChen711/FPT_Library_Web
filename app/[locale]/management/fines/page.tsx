@@ -5,7 +5,7 @@ import getFines from "@/queries/fines/get-fines"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { formatPrice } from "@/lib/utils"
-import { searchFinesSchema } from "@/lib/validations/fines/search-fine"
+import { searchFinesSchema } from "@/lib/validations/fines/search-fines"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -39,7 +39,11 @@ async function FinesManagementPage({ searchParams }: Props) {
     searchFinesSchema.parse(searchParams)
   await auth().protect(EFeature.FINE_MANAGEMENT)
   const t = await getTranslations("FinesManagementPage")
-  const fines = await getFines({ search, pageIndex, sort, pageSize })
+  const {
+    sources: fines,
+    totalActualItem,
+    totalPage,
+  } = await getFines({ search, pageIndex, sort, pageSize })
 
   return (
     <div>
@@ -120,7 +124,8 @@ async function FinesManagementPage({ searchParams }: Props) {
         <Paginator
           pageSize={+pageSize}
           pageIndex={pageIndex}
-          totalPage={100}
+          totalPage={totalPage}
+          totalActualItem={totalActualItem}
           className="mt-6"
         />
       </div>

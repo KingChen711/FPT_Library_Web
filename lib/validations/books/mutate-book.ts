@@ -11,6 +11,8 @@ export const bookCopySchema = z.object({
   conditionStatus: z.nativeEnum(EBookConditionStatus),
 })
 
+// TODO:Fix isbn
+
 export type TBookCopySchema = z.infer<typeof bookCopySchema>
 
 export const bookEditionSchema = z.object({

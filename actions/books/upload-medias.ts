@@ -6,8 +6,6 @@ import { EResourceBookType } from "@/lib/types/enums"
 import { getClientSideCookie } from "@/lib/utils"
 import { type TMutateBookSchema } from "@/lib/validations/books/mutate-book"
 
-const MB = 1024 * 1024
-
 export async function uploadMedias(book: TMutateBookSchema) {
   try {
     const uploadBookResourcePromises = book.bookResources.map(async (br) => {
@@ -18,14 +16,14 @@ export async function uploadMedias(book: TMutateBookSchema) {
         if (data) {
           br.resourceUrl = data.secureUrl
           br.providerPublicId = data.publicId
-          br.resourceSize = Math.round(br.file.size / MB)
+          br.resourceSize = Math.round(br.file.size)
         }
       } else {
         const data = await uploadBookImage(br.file)
         if (data) {
           br.resourceUrl = data.secureUrl
           br.providerPublicId = data.publicId
-          br.resourceSize = Math.round(br.file.size / MB)
+          br.resourceSize = Math.round(br.file.size)
         }
       }
 

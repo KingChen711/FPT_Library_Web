@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react"
 import Image from "next/image"
+import { editorPlugin } from "@/constants"
+import { Editor } from "@tinymce/tinymce-react"
 import { Plus, Trash2, UploadIcon, X } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useFieldArray, type UseFormReturn } from "react-hook-form"
 
 import { EBookFormat } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import { type TMutateBookSchema } from "@/lib/validations/books/mutate-book"
+import useActualTheme from "@/hooks/utils/use-actual-theme"
 import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -24,7 +27,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 
 import AuthorsField from "./authors-field"
 import BookCopiesDialog from "./book-copies-dialog"
@@ -32,10 +34,19 @@ import BookCopiesDialog from "./book-copies-dialog"
 type Props = {
   form: UseFormReturn<TMutateBookSchema>
   isPending: boolean
+  currentEditionIndex: number
+  setCurrentEditionIndex: (val: number) => void
 }
 
-function BookEditionFields({ form, isPending }: Props) {
-  const [currentEditionIndex, setCurrentEditionIndex] = useState(0)
+function BookEditionFields({
+  form,
+  isPending,
+  currentEditionIndex,
+  setCurrentEditionIndex,
+}: Props) {
+  const theme = useActualTheme()
+  const locale = useLocale()
+
   const [hasConfirmedAboutChangeStatus, setHasConfirmedAboutChangeStatus] =
     useState(false)
 
@@ -92,6 +103,10 @@ function BookEditionFields({ form, isPending }: Props) {
   useEffect(() => {
     form.setValue("bookEditions.0.editionSummary", summary)
   }, [form, summary])
+
+  useEffect(() => {
+    console.log(form.formState.errors)
+  }, [form])
 
   return (
     <>
@@ -362,13 +377,20 @@ function BookEditionFields({ form, isPending }: Props) {
                   </FormLabel>
 
                   <FormControl>
-                    <Textarea
-                      {...field}
+                    <Editor
+                      disabled={isPending || index === 0}
+                      apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
+                      init={{
+                        ...editorPlugin,
+                        skin: theme === "dark" ? "oxide-dark" : undefined,
+                        content_css: theme === "dark" ? "dark" : undefined,
+                        width: "100%",
+                        language: locale,
+                      }}
+                      onEditorChange={field.onChange}
                       value={
                         index === 0 ? form.getValues("summary") : field.value
                       }
-                      disabled={isPending || index === 0}
-                      className="min-w-96 max-w-full"
                     />
                   </FormControl>
                   <FormMessage />

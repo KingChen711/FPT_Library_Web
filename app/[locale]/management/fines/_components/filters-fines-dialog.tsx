@@ -3,14 +3,18 @@
 import React, { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { getLocalTimeZone } from "@internationalized/date"
 import { format } from "date-fns"
-import { CalendarIcon, Filter } from "lucide-react"
+import { Filter } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { cn, formUrlQuery } from "@/lib/utils"
+import { formUrlQuery } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/ui/date-time-picker/index"
 import {
   Dialog,
   DialogClose,
@@ -29,11 +33,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -51,6 +50,7 @@ export const filterFineSchema = z.object({
 export type TFilterFineSchema = z.infer<typeof filterFineSchema>
 
 function FiltersFinesDialog() {
+  const timezone = getLocalTimeZone()
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
@@ -139,76 +139,34 @@ function FiltersFinesDialog() {
                     <FormItem>
                       <FormLabel>Created date</FormLabel>
 
-                      <div className="flex w-fit flex-wrap items-center justify-between gap-3">
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-[200px] pl-3 text-left font-normal",
-                                  !field.value[0] && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value[0] ? (
-                                  format(field.value[0], "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto size-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value[0] || undefined}
-                              onSelect={(date) =>
-                                field.onChange([date || null, field.value[1]])
-                              }
-                              disabled={(date) =>
-                                !!field.value[1] &&
-                                date > new Date(field.value[1])
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
+                      <div className="flex items-center justify-between gap-3">
+                        <DateTimePicker
+                          value={createCalendarDate(field.value[0])}
+                          onChange={(date) =>
+                            field.onChange([
+                              date ? date.toDate(timezone) : null,
+                              field.value[1],
+                            ])
+                          }
+                          disabled={(date) =>
+                            !!field.value[1] && date > new Date(field.value[1])
+                          }
+                        />
+
                         <div>-</div>
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant={"outline"}
-                                className={cn(
-                                  "w-[200px] pl-3 text-left font-normal",
-                                  !field.value[1] && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value[1] ? (
-                                  format(field.value[1], "PPP")
-                                ) : (
-                                  <span>Pick a date</span>
-                                )}
-                                <CalendarIcon className="ml-auto size-4 opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent className="w-auto p-0" align="start">
-                            <Calendar
-                              mode="single"
-                              selected={field.value[1] || undefined}
-                              onSelect={(date) =>
-                                field.onChange([field.value[0], date || null])
-                              }
-                              disabled={(date) =>
-                                !!field.value[0] &&
-                                date < new Date(field.value[0])
-                              }
-                              initialFocus
-                            />
-                          </PopoverContent>
-                        </Popover>
+
+                        <DateTimePicker
+                          value={createCalendarDate(field.value[1])}
+                          onChange={(date) =>
+                            field.onChange([
+                              field.value[0],
+                              date ? date.toDate(timezone) : null,
+                            ])
+                          }
+                          disabled={(date) =>
+                            !!field.value[0] && date < new Date(field.value[0])
+                          }
+                        />
                       </div>
                       <FormMessage />
                     </FormItem>
@@ -246,3 +204,5 @@ function FiltersFinesDialog() {
 }
 
 export default FiltersFinesDialog
+
+//TODO: pick date not work

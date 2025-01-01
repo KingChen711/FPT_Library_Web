@@ -2,7 +2,6 @@
 
 import React, { useEffect, useState } from "react"
 import Link from "next/link"
-import { getTypeColor } from "@/constants"
 import { useAuth } from "@/contexts/auth-provider"
 import { useRouter } from "@/i18n/routing"
 import { format } from "date-fns"
@@ -12,12 +11,15 @@ import { useInView } from "react-intersection-observer"
 import { useDebounce } from "use-debounce"
 
 import useInfiniteNotifications from "@/hooks/notifications/use-infinite-notifications"
-import { Badge } from "@/components/ui/badge"
+import useFormatLocale from "@/hooks/utils/use-format-locale"
 import { Input } from "@/components/ui/input"
+import NotificationTypeBadge from "@/components/ui/notification-type-badge"
 
 const NotificationManagementPage = () => {
   const t = useTranslations("NotificationsPage")
   const router = useRouter()
+  const formatLocale = useFormatLocale()
+
   const { isLoadingAuth, user } = useAuth()
   const { ref, inView } = useInView()
   const [searchTerm, setSearchTerm] = useState("")
@@ -77,11 +79,7 @@ const NotificationManagementPage = () => {
                 <span className="line-clamp-2 font-semibold">
                   {notification.title}
                 </span>
-                <Badge
-                  className={`text-xs ${getTypeColor(notification.notificationType)}`}
-                >
-                  {notification.notificationType}
-                </Badge>
+                <NotificationTypeBadge type={notification.notificationType} />
               </div>
               <p className="mt-1 line-clamp-3 text-sm text-card-foreground">
                 {notification.message}
@@ -89,7 +87,8 @@ const NotificationManagementPage = () => {
               <span className="mt-1 text-xs text-muted-foreground">
                 {format(
                   new Date(notification.createDate),
-                  "MMM d, yyyy h:mm a"
+                  "MMM d, yyyy h:mm a",
+                  { locale: formatLocale }
                 )}
               </span>
             </Link>

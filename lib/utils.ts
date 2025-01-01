@@ -73,3 +73,17 @@ export function formUrlQuery({
 export function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
 }
+
+export function formatFileSize(bytes: number): string {
+  if (bytes < 0) return "0 B"
+
+  const units = ["B", "KB", "MB", "GB", "TB", "PB"]
+  let unitIndex = 0
+
+  while (bytes >= 1024 && unitIndex < units.length - 1) {
+    bytes /= 1024
+    unitIndex++
+  }
+
+  return `${bytes.toFixed(1)} ${units[unitIndex]}`
+}

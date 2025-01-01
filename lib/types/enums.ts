@@ -79,5 +79,11 @@ export enum EBookFormat {
 export enum EBookConditionStatus {
   GOOD = "Good",
   WORN = "Worn",
-  DAMAGE = "Damage",
+  DAMAGED = "Damaged",
+  LOST = "Lost",
+}
+
+export enum EVisibility {
+  PUBLIC = "Public",
+  PRIVATE = "Private",
 }

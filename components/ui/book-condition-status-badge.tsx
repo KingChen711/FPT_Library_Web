@@ -11,19 +11,25 @@ type Props = {
   status: EBookConditionStatus
 }
 
+const getTypeColor = (type: EBookConditionStatus) => {
+  switch (type) {
+    case EBookConditionStatus.DAMAGED:
+      return "danger"
+    case EBookConditionStatus.GOOD:
+      return "success"
+    case EBookConditionStatus.LOST:
+      return "progress"
+    case EBookConditionStatus.WORN:
+      return "warning"
+    default:
+      return "default"
+  }
+}
+
 function BookConditionStatusBadge({ status }: Props) {
   const t = useTranslations("Badges.BookConditionStatus")
   return (
-    <Badge
-      variant={
-        status === EBookConditionStatus.GOOD
-          ? "success"
-          : status === EBookConditionStatus.WORN
-            ? "warning"
-            : "danger"
-      }
-      className="flex w-16 justify-center"
-    >
+    <Badge variant={getTypeColor(status)} className="flex w-16 justify-center">
       {t(status)}
     </Badge>
   )

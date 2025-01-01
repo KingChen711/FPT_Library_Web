@@ -4,8 +4,8 @@ import { ENotificationType } from "@/lib/types/enums"
 
 export const createNotificationSchema = z
   .object({
-    title: z.string().trim(),
-    message: z.string().trim().optional(),
+    title: z.string().trim().min(1, "min1"),
+    message: z.string().trim().min(1, "min1"),
     isPublic: z.coerce.boolean(),
     createBy: z.string().trim(),
     notificationType: z.nativeEnum(ENotificationType),

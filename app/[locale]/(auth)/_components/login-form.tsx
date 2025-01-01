@@ -82,6 +82,10 @@ function LoginForm() {
         }
 
         if (res.data.resultCode === "Auth.Success0005") {
+          if (res.data.userType === "Employee") {
+            router.push(`/reset-password/employee/${values.email}`)
+            return
+          }
           router.push(`/login/otp-method/${values.email}`)
           return
         }
