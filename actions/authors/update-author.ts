@@ -5,11 +5,12 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TAuthorDialogSchema } from "@/lib/validations/author/author-dialog"
 
 export async function updateAuthor(
   userId: string,
-  body: TAuthorDialogSchema
+  //TODO: fix any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body: any
 ): Promise<ActionResponse> {
   const { getAccessToken } = auth()
 
