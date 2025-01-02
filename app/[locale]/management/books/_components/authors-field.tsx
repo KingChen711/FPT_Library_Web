@@ -38,14 +38,21 @@ type Props = {
   form: UseFormReturn<TMutateBookSchema>
   isPending: boolean
   index: number
+  selectedAuthors: Author[]
+  setSelectedAuthors: React.Dispatch<React.SetStateAction<Author[]>>
 }
 
 //TODO:fix author image
 
-function AuthorsField({ form, isPending, index }: Props) {
+function AuthorsField({
+  form,
+  isPending,
+  index,
+  selectedAuthors,
+  setSelectedAuthors,
+}: Props) {
   const t = useTranslations("BooksManagementPage")
 
-  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
   const [open, setOpen] = useState(false)
 
   const [searchTerm, setSearchTerm] = useState("")
@@ -106,9 +113,6 @@ function AuthorsField({ form, isPending, index }: Props) {
                             .getValues(`bookEditions.${index}.authorIds`)
                             .filter((t) => t !== authorId)
                         )
-                        setSelectedAuthors((prev) =>
-                          prev.filter((a) => a.authorId !== authorId)
-                        )
                       }}
                       className="absolute right-2 top-2 size-4 cursor-pointer"
                     />
@@ -159,7 +163,15 @@ function AuthorsField({ form, isPending, index }: Props) {
                       <div
                         key={author.authorId}
                         onClick={() => {
-                          setSelectedAuthors((prev) => [...prev, author])
+                          setSelectedAuthors((prev) => {
+                            if (
+                              prev.find((t) => t.authorId === author.authorId)
+                            )
+                              return prev
+
+                            return [...prev, author]
+                          })
+
                           form.setValue(
                             `bookEditions.${index}.authorIds`,
                             Array.from(

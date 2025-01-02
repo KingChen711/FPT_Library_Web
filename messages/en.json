@@ -90,7 +90,8 @@
     "publicationYear": "Invalid publication year",
     "isbn": "Invalid ISBN format or checksum",
     "invalid": "Invalid",
-    "atLeastOneRecipient": "Need at least one recipient"
+    "atLeastOneRecipient": "Need at least one recipient",
+    "validImageAI": "Image does not match information"
   },
   "Me": {
     "Account": {
@@ -577,7 +578,19 @@
     "Date of death": "Date of death",
     "Nationality": "Nationality",
     "Available status": "Available status",
-    "Condition status": "Condition status"
+    "Condition status": "Condition status",
+    "You need to enter title, publisher, authors before uploading cover image": "You need to enter title, publisher, authors before uploading cover image.",
+    "Check cover image result": "Check cover image result",
+    "No image uploaded yet": "No image uploaded yet",
+    "Checking": "Checking",
+    "Average point": "Average point:",
+    "Matched point": "Matched point:",
+    "Author": "Author",
+    "Result": "Result:",
+    "Check": "Check",
+    "Passed": "Passed",
+    "Failed": "Failed",
+    "Train AI": "Train AI"
   },
   "Badges": {
     "BookConditionStatus": {

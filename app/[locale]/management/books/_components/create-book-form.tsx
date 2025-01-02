@@ -1,8 +1,9 @@
 "use client"
 
-import React, { useState, useTransition } from "react"
+import React, { useEffect, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { editorPlugin } from "@/constants"
+import { useSocket } from "@/contexts/socket-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Editor } from "@tinymce/tinymce-react"
 import { Loader2, X } from "lucide-react"
@@ -10,6 +11,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { type Author } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import {
   mutateBookSchema,
@@ -49,9 +51,14 @@ import BookResourceFields from "./book-resource-fields"
 import { ProgressTabBar } from "./progress-stage-bar"
 
 // const TABS = ["General", "Resources", "Editions"] as const
-type Tab = "General" | "Resources" | "Editions"
+type Tab = "General" | "Resources" | "Editions" | "Train AI"
+
+type TTrainAIEdition = {
+  trainingCode: string
+}
 
 function CreateBookForm() {
+  const { authenticated, socket } = useSocket()
   const theme = useActualTheme()
   const t = useTranslations("BooksManagementPage")
   const router = useRouter()
@@ -63,6 +70,9 @@ function CreateBookForm() {
 
   const { data: categoryItems } = useCategories()
   const [openCategoriesCombobox, setOpenCategoriesCombobox] = useState(false)
+  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
+
+  const [trainAIData, setTrainAIData] = useState([])
 
   const form = useForm<TMutateBookSchema>({
     resolver: zodResolver(mutateBookSchema),
@@ -91,7 +101,7 @@ function CreateBookForm() {
           variant: "success",
         })
 
-        router.push("/management/books")
+        setCurrentTab("Train AI")
 
         return
       }
@@ -181,6 +191,18 @@ function CreateBookForm() {
 
     return trigger
   }
+
+  useEffect(() => {
+    if (!authenticated || !socket) return
+
+    socket.on("isbn-scanned", (isbn: string) => {
+      alert("Received a isbn: " + isbn)
+    })
+
+    return () => {
+      socket.off("isbn-scanned")
+    }
+  }, [authenticated, socket])
 
   return (
     <div>
@@ -410,6 +432,8 @@ function CreateBookForm() {
                     </FormLabel>
                     <FormControl>
                       <BookEditionFields
+                        selectedAuthors={selectedAuthors}
+                        setSelectedAuthors={setSelectedAuthors}
                         currentEditionIndex={currentEditionIndex}
                         setCurrentEditionIndex={setCurrentEditionIndex}
                         form={form}

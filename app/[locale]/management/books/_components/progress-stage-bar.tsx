@@ -13,13 +13,16 @@ interface Tab {
 
 interface ProgressTabBarProps {
   currentTab: string
-  setCurrentTab: (val: "General" | "Resources" | "Editions") => void
+  setCurrentTab: (
+    val: "General" | "Resources" | "Editions" | "Train AI"
+  ) => void
 }
 
 const tabs: Tab[] = [
   { id: 1, title: "General" },
   { id: 2, title: "Resources" },
   { id: 3, title: "Editions" },
+  { id: 4, title: "Train AI" },
 ] as const
 
 export function ProgressTabBar({

@@ -1,12 +1,12 @@
-import { useEffect, useState } from "react"
-import Image from "next/image"
+import { useEffect, useState, type SetStateAction } from "react"
 import { editorPlugin } from "@/constants"
 import { Editor } from "@tinymce/tinymce-react"
-import { Plus, Trash2, UploadIcon, X } from "lucide-react"
+import { Plus, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useFieldArray, type UseFormReturn } from "react-hook-form"
 
 import { EBookFormat } from "@/lib/types/enums"
+import { type Author } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { type TMutateBookSchema } from "@/lib/validations/books/mutate-book"
 import useActualTheme from "@/hooks/utils/use-actual-theme"
@@ -30,12 +30,15 @@ import {
 
 import AuthorsField from "./authors-field"
 import BookCopiesDialog from "./book-copies-dialog"
+import CoverImageField from "./cover-image-field"
 
 type Props = {
   form: UseFormReturn<TMutateBookSchema>
   isPending: boolean
   currentEditionIndex: number
   setCurrentEditionIndex: (val: number) => void
+  selectedAuthors: Author[]
+  setSelectedAuthors: React.Dispatch<SetStateAction<Author[]>>
 }
 
 function BookEditionFields({
@@ -43,6 +46,8 @@ function BookEditionFields({
   isPending,
   currentEditionIndex,
   setCurrentEditionIndex,
+  selectedAuthors,
+  setSelectedAuthors,
 }: Props) {
   const theme = useActualTheme()
   const locale = useLocale()
@@ -55,42 +60,6 @@ function BookEditionFields({
     name: "bookEditions",
     control: form.control,
   })
-
-  const handleImageChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void,
-    index: number
-  ) => {
-    e.preventDefault()
-
-    const fileReader = new FileReader()
-
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0]
-
-      if (!file.type.includes("image")) return
-
-      if (file.size >= 10 * 1024 * 1024) {
-        form.setError(`bookEditions.${index}.coverImage`, {
-          message: "Ảnh quá lớn.",
-        })
-        return
-      }
-
-      form.clearErrors(`bookEditions.${index}.coverImage`)
-
-      form.setValue(`bookEditions.${index}.file`, file)
-
-      fileReader.onload = async () => {
-        // const imageDataUrl =
-        //   typeof event.target?.result === "string" ? event.target.result : ""
-        const url = URL.createObjectURL(file)
-        fieldChange(url)
-      }
-
-      fileReader.readAsDataURL(file)
-    }
-  }
 
   const title = form.getValues("title")
 
@@ -168,6 +137,7 @@ function BookEditionFields({
 
       {fields.map((field, index) => {
         if (index !== currentEditionIndex) return null
+
         return (
           <div key={field.id} className="mt-4 flex flex-col space-y-6">
             <div className="flex flex-wrap justify-between gap-6">
@@ -398,110 +368,43 @@ function BookEditionFields({
               )}
             />
 
-            <div className="flex gap-6">
-              <FormField
-                control={form.control}
-                name={`bookEditions.${index}.coverImage`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      <div>
-                        {t("Cover image")} (&lt;10MB)
-                        <span className="ml-1 text-xl font-bold leading-none text-primary">
-                          *
-                        </span>
-                      </div>
-                      {field.value ? (
-                        <div
-                          className={cn(
-                            "group relative mt-2 flex size-64 items-center justify-center rounded-md border-2",
-                            isPending && "pointer-events-none opacity-80"
-                          )}
-                        >
-                          <Image
-                            src={field.value}
-                            alt="imageUrl"
-                            width={240}
-                            height={240}
-                            className="rounded-md object-contain group-hover:opacity-90"
-                          />
-                          <Button
-                            onClick={(e) => {
-                              e.preventDefault()
-                              field.onChange("")
-                            }}
-                            variant="ghost"
-                            size="icon"
-                            className="absolute right-2 top-2"
-                          >
-                            <Trash2 className="text-danger" />
-                          </Button>
-                        </div>
-                      ) : (
-                        <div
-                          className={cn(
-                            "mt-2 flex size-64 cursor-pointer flex-col items-center justify-center gap-y-2 rounded-md border-[3px] border-dashed",
-                            isPending && "pointer-events-none opacity-80"
-                          )}
-                        >
-                          <UploadIcon className="size-12" />
-                          <p>{t("Upload")}</p>
-                        </div>
-                      )}
-                    </FormLabel>
+            <FormField
+              control={form.control}
+              name={`bookEditions.${index}.bookFormat`}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>
+                    {t("Book format")}
+                    <span className="ml-1 text-xl font-bold leading-none text-primary">
+                      *
+                    </span>
+                  </FormLabel>
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <FormControl>
-                      <Input
-                        disabled={isPending}
-                        type="file"
-                        accept="image/*"
-                        placeholder="Add profile photo"
-                        className="hidden"
-                        onChange={(e) =>
-                          handleImageChange(e, field.onChange, index)
-                        }
-                      />
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
                     </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name={`bookEditions.${index}.bookFormat`}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      {t("Book format")}
-                      <span className="ml-1 text-xl font-bold leading-none text-primary">
-                        *
-                      </span>
-                    </FormLabel>
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {[EBookFormat.PAPERBACK, EBookFormat.HARD_COVER].map(
-                          (option) => (
-                            <SelectItem key={option} value={option}>
-                              {t(option)}
-                            </SelectItem>
-                          )
-                        )}
-                      </SelectContent>
-                    </Select>
+                    <SelectContent>
+                      {[EBookFormat.PAPERBACK, EBookFormat.HARD_COVER].map(
+                        (option) => (
+                          <SelectItem key={option} value={option}>
+                            {t(option)}
+                          </SelectItem>
+                        )
+                      )}
+                    </SelectContent>
+                  </Select>
 
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
             <FormField
               control={form.control}
               name={`bookEditions.${index}.bookCopies`}
@@ -557,7 +460,20 @@ function BookEditionFields({
               )}
             />
 
-            <AuthorsField form={form} index={index} isPending={isPending} />
+            <AuthorsField
+              selectedAuthors={selectedAuthors}
+              setSelectedAuthors={setSelectedAuthors}
+              form={form}
+              index={index}
+              isPending={isPending}
+            />
+
+            <CoverImageField
+              selectedAuthors={selectedAuthors}
+              form={form}
+              index={index}
+              isPending={isPending}
+            />
           </div>
         )
       })}
@@ -577,11 +493,12 @@ export const createBookEdition = () => {
     editionSummary: "",
     editionTitle: "",
     estimatedPrice: 0,
-    file: new File([], ""),
+    file: undefined,
     isbn: "",
     language: "",
     pageCount: 0,
     publicationYear: 0,
     publisher: "",
+    validImage: false,
   }
 }
