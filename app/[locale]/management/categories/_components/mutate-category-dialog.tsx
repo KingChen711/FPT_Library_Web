@@ -78,7 +78,7 @@ function MutateCategoryDialog({
     defaultValues: {
       englishName: type === "update" ? category.englishName : "",
       vietnameseName: type === "update" ? category.vietnameseName : "",
-      description: type === "update" ? category.description : "",
+      description: type === "update" ? category.description || "" : "",
     },
   })
 

@@ -9,7 +9,6 @@ import { format } from "date-fns"
 import { Check, X } from "lucide-react"
 import { getLocale } from "next-intl/server"
 
-import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import BookFormatBadge from "@/components/ui/book-format-badge"
@@ -53,7 +52,6 @@ async function BookDetailPage({ params }: Props) {
 
   const t = await getTranslations("BooksManagementPage")
   const locale = await getLocale()
-  const formatLocale = await getFormatLocale()
 
   const book = await getBook(+params.id)
 

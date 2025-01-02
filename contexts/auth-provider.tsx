@@ -90,14 +90,6 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   }, [queryClient])
 
-  useEffect(() => {
-    console.log({
-      isLoadingToken,
-      isLoadingUser,
-      user,
-    })
-  }, [isLoadingToken, isLoadingUser, user])
-
   return (
     <AuthContext.Provider
       value={{

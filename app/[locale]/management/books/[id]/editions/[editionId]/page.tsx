@@ -1,15 +1,11 @@
 import React from "react"
 import Image from "next/image"
 import { notFound } from "next/navigation"
-import { Link } from "@/i18n/routing"
 import defaultAuthor from "@/public/assets/images/default-author.png"
-import defaultBookCover from "@/public/assets/images/default-book-cover.jpg"
 import { auth } from "@/queries/auth"
-import getBook from "@/queries/books/get-book"
 import getBookEdition from "@/queries/books/get-book-edition"
 import { format } from "date-fns"
-import { Book, Check, X } from "lucide-react"
-import { getLocale } from "next-intl/server"
+import { Check, X } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
@@ -26,7 +22,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Icons } from "@/components/ui/icons"
 import ImageWithFallback from "@/components/ui/image-with-fallback"
 import NoData from "@/components/ui/no-data"
 import ParseHtml from "@/components/ui/parse-html"
@@ -52,7 +47,7 @@ async function BookDetailPage({ params }: Props) {
   await auth().protect(EFeature.BOOK_MANAGEMENT)
 
   const t = await getTranslations("BooksManagementPage")
-  const locale = await getLocale()
+
   const formatLocale = await getFormatLocale()
 
   const edition = await getBookEdition(+params.editionId)

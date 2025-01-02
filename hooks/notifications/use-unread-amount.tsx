@@ -12,13 +12,15 @@ function useUnreadAmount() {
       try {
         if (!accessToken) return 0
 
-        return await http
+        const { data } = await http
           .get<number>(`/api/privacy/unread-noti`, {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
           })
-          .then((res) => res.data)
+          .catch(() => ({ data: 0 }))
+
+        return data
       } catch {
         return 0
       }

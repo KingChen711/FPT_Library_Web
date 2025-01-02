@@ -4,10 +4,8 @@ import Link from "next/link"
 import defaultBookCover from "@/public/assets/images/default-book-cover.jpg"
 import { auth } from "@/queries/auth"
 import getBookEditions from "@/queries/books/get-book-editions"
-import { format } from "date-fns"
 import { Check, Plus, X } from "lucide-react"
 
-import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { searchBookEditionsSchema } from "@/lib/validations/books/search-book-editions"
@@ -48,8 +46,6 @@ async function BooksManagementPage({ searchParams }: Props) {
     totalActualItem,
     totalPage,
   } = await getBookEditions({ search, pageIndex, sort, pageSize })
-
-  const formatLocale = await getFormatLocale()
 
   return (
     <div>
