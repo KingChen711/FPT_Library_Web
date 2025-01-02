@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { FileDown, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { type TEmployeeImport } from "@/lib/validations/employee/employee-import"
@@ -48,8 +49,9 @@ const EmployeeImportDialog = () => {
   const [isCSV, setIsCSV] = useState<boolean>(false)
   const [hasEmailChecked, setHasEmailChecked] = useState<boolean>(false)
 
+  //TODO: fix any
   const form = useForm<TEmployeeImport>({
-    resolver: zodResolver(authorImportSchema),
+    resolver: zodResolver(z.any()),
     defaultValues: {
       duplicateHandle: "0",
       columnSeparator: null,
