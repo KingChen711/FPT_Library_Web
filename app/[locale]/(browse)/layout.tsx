@@ -3,6 +3,9 @@ import React from "react"
 import LeftSidebar from "./_components/left-sidebar"
 import ManagementNavbar from "./_components/management-navbar"
 
+import "@react-pdf-viewer/core/lib/styles/index.css"
+import "@react-pdf-viewer/default-layout/lib/styles/index.css"
+
 type Props = {
   children: React.ReactNode
 }
