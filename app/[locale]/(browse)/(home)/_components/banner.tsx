@@ -47,7 +47,7 @@ const quotes = [
 const BannerHome = () => {
   return (
     <div className="grid h-[240px] w-full grid-cols-3 gap-4">
-      <div className="col-span-1 h-full overflow-hidden rounded-lg bg-red-50">
+      <div className="col-span-1 h-full overflow-hidden rounded-lg">
         <Carousel
           opts={{
             loop: true,
@@ -79,8 +79,8 @@ const BannerHome = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="absolute left-2 top-1/2 size-6 -translate-y-1/2 rounded-full" />
-          <CarouselNext className="absolute right-2 top-1/2 size-6 -translate-y-1/2 rounded-full" />
+          <CarouselPrevious className="absolute left-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
+          <CarouselNext className="absolute right-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
         </Carousel>
       </div>
 
@@ -88,21 +88,34 @@ const BannerHome = () => {
         <div className="flex w-1/12 items-center justify-center bg-primary text-xl font-semibold text-accent">
           <p className="-rotate-90 text-nowrap">New Arrivals</p>
         </div>
-        <div className="flex w-full gap-8 overflow-hidden overflow-x-auto rounded-r-lg bg-primary-foreground p-4">
-          {dummyBooks.map((item) => (
-            <div
-              key={item.id}
-              className="relative flex w-1/5 shrink-0 overflow-hidden rounded-lg border p-2 shadow-lg"
-            >
-              <Image
-                src={item.image}
-                priority
-                alt="Logo"
-                fill
-                className="object-cover duration-150 ease-in-out hover:scale-105"
-              />
-            </div>
-          ))}
+
+        <div className="flex flex-1 items-center justify-center">
+          <Carousel
+            opts={{
+              align: "start",
+              loop: true,
+            }}
+            className="w-full max-w-2xl"
+          >
+            <CarouselContent className="flex h-full space-x-4">
+              {dummyBooks.map((item) => (
+                <CarouselItem key={item.id} className="h-full basis-1/4">
+                  <div className="flex h-[180px] items-center justify-center overflow-hidden rounded-lg p-4 shadow-lg">
+                    <Image
+                      src={item.image}
+                      priority
+                      alt="Logo"
+                      width={240}
+                      height={320}
+                      className="object-cover duration-150 ease-in-out hover:scale-105"
+                    />
+                  </div>
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+            <CarouselPrevious className="absolute left-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
+            <CarouselNext className="absolute right-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
+          </Carousel>
         </div>
       </div>
     </div>

@@ -1,9 +1,23 @@
 import Image from "next/image"
 import { Link } from "@/i18n/routing"
-import { CheckCircle2, CircleX, Heart, MapPin, User } from "lucide-react"
+import {
+  CheckCircle2,
+  ChevronRight,
+  CircleX,
+  Heart,
+  MapPin,
+  User,
+} from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
 import { Badge } from "@/components/ui/badge"
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
 import Paginator from "@/components/ui/paginator"
 import {
@@ -40,7 +54,20 @@ const BookPage = async ({ searchParams }: Props) => {
   const t = await getTranslations("BookPage")
 
   return (
-    <div>
+    <div className="space-y-4">
+      <Breadcrumb>
+        <BreadcrumbList>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+          </BreadcrumbItem>
+          <BreadcrumbSeparator>
+            <ChevronRight />
+          </BreadcrumbSeparator>
+          <BreadcrumbItem>
+            <BreadcrumbLink href="/books">Books</BreadcrumbLink>
+          </BreadcrumbItem>
+        </BreadcrumbList>
+      </Breadcrumb>
       <Select>
         <SelectTrigger className="w-[180px] bg-primary-foreground">
           <SelectValue placeholder="Categories" />
