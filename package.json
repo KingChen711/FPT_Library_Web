@@ -80,6 +80,7 @@
     "react-hook-form": "^7.53.2",
     "react-intersection-observer": "^9.14.0",
     "react-paginate": "^8.2.0",
+    "react-shorten": "^1.1.5",
     "react-signalr": "^0.2.24",
     "react-stately": "^3.34.0",
     "sharp": "^0.33.5",

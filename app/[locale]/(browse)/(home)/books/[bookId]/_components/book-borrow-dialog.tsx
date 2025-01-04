@@ -1,10 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { BookOpen, CalendarIcon, QrCode } from "lucide-react"
+import { Book } from "lucide-react"
 
+import { BORROW_OPTIONS } from "@/lib/validations/book/book-borrow"
 import { Button } from "@/components/ui/button"
-import { Calendar } from "@/components/ui/calendar"
 import {
   Dialog,
   DialogContent,
@@ -12,13 +12,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
@@ -26,78 +20,53 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
+
+import BookLibraryBorrow from "./book-library-borrow"
+import BookRequestBorrow from "./book-request-borrow"
 
 const BookBorrowDialog = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false)
+  const [borrowOption, setBorrowOption] = useState<BORROW_OPTIONS>(
+    BORROW_OPTIONS.LIBRARY
+  )
+
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant={"default"}>
-          <BookOpen /> <span className="border-l-2 pl-2">Borrow</span>
+          <Book /> <span>Borrow</span>
         </Button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="md:max-w-xl">
         <DialogHeader>
-          <DialogTitle className="text-center text-primary">
+          <DialogTitle className="text-center capitalize text-primary">
             Book Borrow Confirmation
           </DialogTitle>
         </DialogHeader>
-        <section>
-          <Label>Option(*)</Label>
-          <Select>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Borrowing" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">In library borrowing</SelectItem>
-              <SelectItem value="2">Request to borrow</SelectItem>
-            </SelectContent>
-          </Select>
-        </section>
 
-        <section>
-          <Label>Date</Label>
-          <Popover>
-            <PopoverTrigger asChild>
-              <Button variant={"outline"} className="w-full">
-                <span>Pick a Date</span>
-                <CalendarIcon className="ml-auto size-4 opacity-50" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="w-auto p-0" align="start">
-              <Calendar mode="single" initialFocus />
-            </PopoverContent>
-          </Popover>
-        </section>
+        <div className="max-h-[80vh] overflow-y-auto">
+          <section className="space-y-2">
+            <Label>Option(*)</Label>
+            <Select
+              value={borrowOption}
+              onValueChange={(value: BORROW_OPTIONS) => setBorrowOption(value)}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Borrowing" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value={BORROW_OPTIONS.LIBRARY}>
+                  In library borrowing
+                </SelectItem>
+                <SelectItem value={BORROW_OPTIONS.REQUEST}>
+                  Request to borrow
+                </SelectItem>
+              </SelectContent>
+            </Select>
+          </section>
 
-        <section>
-          <Label>Book Serial No. *</Label>
-          <div className="relative h-10 w-full">
-            <QrCode
-              size={24}
-              className="absolute left-3 top-1/2 z-10 -translate-y-1/2 text-primary"
-            />
-            <Input
-              type="text"
-              placeholder="Enter 6 digit serial No. or Scan barcode"
-              className="w-full rounded border border-gray-300 py-2 pl-12 pr-3 text-lg shadow-sm"
-            />
-          </div>
-        </section>
-
-        <section>
-          <Label>Description</Label>
-          <Textarea
-            className="w-full rounded border border-gray-300 py-2 text-lg shadow-sm"
-            placeholder="Enter description"
-            rows={3}
-          />
-        </section>
-
-        <div className="flex items-center gap-4">
-          <Button>Borrow</Button>
-          <Button variant={"secondary"}>Cancel</Button>
+          {borrowOption === BORROW_OPTIONS.LIBRARY && <BookLibraryBorrow />}
+          {borrowOption === BORROW_OPTIONS.REQUEST && <BookRequestBorrow />}
         </div>
       </DialogContent>
     </Dialog>
