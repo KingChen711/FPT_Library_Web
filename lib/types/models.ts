@@ -80,9 +80,9 @@ export type Employee = {
 
 export type Author = {
   authorId: number
+  fullName: string
   authorCode: string
   authorImage: string
-  fullName: string
   biography: string
   dob: string
   dateOfDeath: string

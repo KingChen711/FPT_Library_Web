@@ -7,7 +7,7 @@ import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 
 export async function softDeleteAuthor(
-  authorId: string
+  authorId: number
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
 

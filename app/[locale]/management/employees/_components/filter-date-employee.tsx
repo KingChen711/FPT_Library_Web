@@ -28,7 +28,7 @@ const FilterDateEmployee = ({ form, label, name }: Props) => {
       render={({ field }) => (
         <FormItem>
           <FormLabel>{t(label)}</FormLabel>
-          <div className="flex w-fit flex-wrap items-center justify-between gap-3">
+          <div className="flex w-full flex-wrap items-center justify-between gap-3">
             <DateTimePicker
               jsDate={field.value[0] || undefined}
               onJsDateChange={(date) =>
@@ -38,7 +38,7 @@ const FilterDateEmployee = ({ form, label, name }: Props) => {
                 !!field.value[1] && date > new Date(field.value[1])
               }
             />
-            <div>-</div>
+            <div>---</div>
             <DateTimePicker
               jsDate={field.value[1] || undefined}
               onJsDateChange={(date) =>

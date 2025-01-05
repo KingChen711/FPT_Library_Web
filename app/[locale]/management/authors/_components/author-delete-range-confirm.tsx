@@ -5,6 +5,7 @@ import { Loader2, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { deleteRangeAuthor } from "@/actions/authors/delete-range-author"
 import { deleteRangeEmployee } from "@/actions/employees/delete-range-employee"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -22,7 +23,7 @@ type Props = {
   selectedIds: string[]
 }
 
-const EmployeeDeleteRangeConfirm = ({ selectedIds }: Props) => {
+const AuthorDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const locale = useLocale()
   const message = `${locale === "vi" ? "xóa" : "delete"}`
   const t = useTranslations("GeneralManagement")
@@ -38,10 +39,10 @@ const EmployeeDeleteRangeConfirm = ({ selectedIds }: Props) => {
 
   const handleSubmit = () => {
     startDelete(async () => {
-      const res = await deleteRangeEmployee(selectedIds)
+      const res = await deleteRangeAuthor(selectedIds)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
@@ -103,4 +104,4 @@ const EmployeeDeleteRangeConfirm = ({ selectedIds }: Props) => {
   )
 }
 
-export default EmployeeDeleteRangeConfirm
+export default AuthorDeleteRangeConfirm

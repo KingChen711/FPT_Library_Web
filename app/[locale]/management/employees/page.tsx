@@ -26,6 +26,7 @@ import EmployeeActionDropdown from "./_components/employee-action-dropdown"
 import EmployeeCheckbox from "./_components/employee-checkbox"
 import EmployeeExport from "./_components/employee-export"
 import EmployeeHeaderTab from "./_components/employee-header-tab"
+import EmployeeImportDialog from "./_components/employee-import-dialog"
 import EmployeeRangeControl from "./_components/employee-range-control"
 import FilterEmployeesDialog from "./_components/filter-employees-dialog"
 import MutateEmployeeDialog from "./_components/mutate-employee-dialog"
@@ -87,7 +88,7 @@ async function EmployeesManagementPage({ searchParams }: Props) {
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
           <EmployeeExport />
-          {/* <EmployeeImportDialog /> */}
+          <EmployeeImportDialog />
           <MutateEmployeeDialog type="create" employeeRoles={employeeRoles} />
         </div>
       </div>
@@ -217,7 +218,7 @@ async function EmployeesManagementPage({ searchParams }: Props) {
                       : "__"}
                   </TableCell>
 
-                  <TableCell>
+                  <TableCell className="text-nowrap">
                     {locale === "en"
                       ? employee.role.englishName
                       : employee.role.vietnameseName}
@@ -225,11 +226,14 @@ async function EmployeesManagementPage({ searchParams }: Props) {
 
                   <TableCell>
                     {employee.isActive ? (
-                      <Badge className="h-full bg-success hover:bg-success">
+                      <Badge className="flex h-full w-[100px] justify-center text-nowrap bg-success text-center hover:bg-success">
                         {t("fields.active")}
                       </Badge>
                     ) : (
-                      <Badge variant="default" className="h-full">
+                      <Badge
+                        variant="default"
+                        className="flex h-full w-[100px] justify-center text-nowrap text-center"
+                      >
                         {t("fields.inactive")}
                       </Badge>
                     )}

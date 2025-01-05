@@ -23,10 +23,10 @@ export const mutateEmployeeSchema = z.object({
   phone: z.string().trim().length(10, { message: "length_10" }),
   address: z.string().trim().min(1, { message: "required" }),
   gender: z.enum(["Male", "Female"]).catch("Female"),
-  avatar: z.string().trim().min(1, { message: "required" }),
+  // avatar: z.string().trim().min(1, { message: "required" }),
   hireDate: z.string().trim().min(1, { message: "required" }),
   terminationDate: z.string().trim().min(1, { message: "required" }),
-  roleId: z.number().min(1, { message: "invalid" }), // Giá trị tối thiểu 1
+  roleId: z.number().min(1, { message: "invalid" }),
 })
 
 export type TMutateEmployeeSchema = z.infer<typeof mutateEmployeeSchema>

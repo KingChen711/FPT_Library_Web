@@ -77,6 +77,7 @@
     "min2": "Must contain at least 2 character(s)",
     "max50": "Must contain at most 50 character(s)",
     "min6": "Must contain at least 6 character(s)",
+    "min10": "Must contain at least 10 character(s)",
     "length_10": "Must contain 10 character(s)",
     "required": "Required",
     "invalid": "Invalid"

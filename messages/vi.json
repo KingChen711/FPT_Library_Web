@@ -81,6 +81,7 @@
     "min2": "Phải có ít nhất 2 kí tự",
     "max50": "Phải có không quá 50 kí tự",
     "min6": "Phải có ít nhất 6 kí tự",
+    "min10": "Phải có ít nhất 10 kí tự",
     "length_10": "Phải có 10 kí tự",
     "required": "Bắt buộc",
     "invalid": "Không hợp lệ"
@@ -166,7 +167,7 @@
       "export": "Xuất dữ liệu",
       "filter": "Tìm kiếm",
       "search": "Tìm kiếm",
-      "create": "Tạo mô tả",
+      "create": "Tạo",
       "update": "Chỉnh sửa",
       "delete": "Xóa",
       "undo delete": "Khôi phục",

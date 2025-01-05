@@ -5,7 +5,7 @@ import { Loader2, RotateCw } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { undoDeleteRangeEmployee } from "@/actions/employees/undo-delete-range-employee"
+import { undoDeleteRangeAuthor } from "@/actions/authors/undo-delete-range-author"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,7 +22,7 @@ type Props = {
   selectedIds: string[]
 }
 
-const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
+const AuthorUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const locale = useLocale()
   const message = `${locale === "vi" ? "khôi phục" : "undo delete"}`
   const t = useTranslations("GeneralManagement")
@@ -38,7 +38,7 @@ const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
 
   const handleSubmit = () => {
     startDelete(async () => {
-      const res = await undoDeleteRangeEmployee(selectedIds)
+      const res = await undoDeleteRangeAuthor(selectedIds)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Undo delete successfully",
@@ -103,4 +103,4 @@ const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
   )
 }
 
-export default EmployeeUndoDeleteRangeConfirm
+export default AuthorUndoDeleteRangeConfirm
