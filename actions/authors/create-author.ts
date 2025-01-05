@@ -5,11 +5,10 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
+import { type TMutateAuthorSchema } from "@/lib/validations/author/mutate-author"
 
 export async function createAuthor(
-  //TODO: fix any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body: any
+  body: TMutateAuthorSchema
 ): Promise<ActionResponse> {
   const { getAccessToken } = auth()
 

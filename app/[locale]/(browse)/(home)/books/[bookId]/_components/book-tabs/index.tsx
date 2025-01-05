@@ -2,7 +2,8 @@ import React from "react"
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
-import BookOverviewTab from "./book-overview"
+import BookEditionTab from "./book-edition-tab"
+import BookOverviewTab from "./book-overview-tab"
 
 const BookTabs = () => {
   return (
@@ -33,7 +34,9 @@ const BookTabs = () => {
       <TabsContent value="overview">
         <BookOverviewTab />
       </TabsContent>
-      <TabsContent value="view-edition">View edition content</TabsContent>
+      <TabsContent value="view-edition">
+        <BookEditionTab />
+      </TabsContent>
       <TabsContent value="detail">Detail content</TabsContent>
       <TabsContent value="review">Review content</TabsContent>
       <TabsContent value="list">List content</TabsContent>

@@ -40,7 +40,7 @@ import {
 } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 
-const EmployeeImportDialog = () => {
+const AuthorImportDialog = () => {
   const tGeneralManagement = useTranslations("GeneralManagement")
   const locale = useLocale()
 
@@ -386,4 +386,4 @@ const EmployeeImportDialog = () => {
   )
 }
 
-export default EmployeeImportDialog
+export default AuthorImportDialog

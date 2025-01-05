@@ -29,7 +29,6 @@ import UserActionDropdown from "./_components/user-action-dropdown"
 import UserCheckbox from "./_components/user-checkbox"
 import UserExport from "./_components/user-export"
 import UserHeaderTab from "./_components/user-header-tab"
-import UserImportDialog from "./_components/user-import-dialog"
 import UserRangeControl from "./_components/user-range-control"
 
 type Props = {

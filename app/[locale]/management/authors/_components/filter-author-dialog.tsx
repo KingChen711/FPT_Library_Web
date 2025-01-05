@@ -2,11 +2,10 @@
 
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { type TEmployeeRole } from "@/queries/roles/get-employee-roles"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { Filter } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import { formUrlQuery } from "@/lib/utils"
@@ -33,24 +32,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
-import FilterDateEmployee from "./filter-date-author"
-
-type Props = {
-  employeeRoles: TEmployeeRole[]
-}
-
-function FiltersEmployeesDialog({ employeeRoles }: Props) {
+function FiltersAuthorsDialog() {
   const t = useTranslations("GeneralManagement")
   const router = useRouter()
-  const locale = useLocale()
   const [open, setOpen] = useState(false)
   const searchParams = useSearchParams()
 
@@ -180,65 +165,6 @@ function FiltersEmployeesDialog({ employeeRoles }: Props) {
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="roleId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("fields.role")}</FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder={t("placeholder.role")} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {employeeRoles.map((role) => (
-                            <SelectItem
-                              key={role.roleId}
-                              value={role.roleId.toString()}
-                            >
-                              {locale === "en"
-                                ? role.englishName
-                                : role.vietnameseName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FilterDateEmployee
-                  form={form}
-                  label="fields.dob"
-                  name="dobRange"
-                />
-
-                <FilterDateEmployee
-                  form={form}
-                  label="fields.createDate"
-                  name="createDateRange"
-                />
-
-                <FilterDateEmployee
-                  form={form}
-                  label="fields.updatedDate"
-                  name="modifiedDateRange"
-                />
-
-                <FilterDateEmployee
-                  form={form}
-                  label="fields.hireDate"
-                  name="hireDateRange"
-                />
-
                 <div className="flex justify-end gap-x-4">
                   <DialogClose asChild>
                     <Button variant="secondary" className="float-right mt-4">
@@ -269,4 +195,4 @@ function FiltersEmployeesDialog({ employeeRoles }: Props) {
   )
 }
 
-export default FiltersEmployeesDialog
+export default FiltersAuthorsDialog

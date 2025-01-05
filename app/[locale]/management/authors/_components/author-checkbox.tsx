@@ -1,6 +1,6 @@
 "use client"
 
-import { useManagementEmployeesStore } from "@/stores/employees/use-management-employees"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 
 import { Checkbox } from "@/components/ui/checkbox"
 
@@ -8,8 +8,8 @@ type Props = {
   id: string
 }
 
-function EmployeeCheckbox({ id }: Props) {
-  const { selectedIds, toggleId } = useManagementEmployeesStore()
+function AuthorCheckbox({ id }: Props) {
+  const { selectedIds, toggleId } = useManagementAuthorsStore()
 
   return (
     <Checkbox
@@ -19,4 +19,4 @@ function EmployeeCheckbox({ id }: Props) {
   )
 }
 
-export default EmployeeCheckbox
+export default AuthorCheckbox

@@ -4,9 +4,9 @@ import { useManagementEmployeesStore } from "@/stores/employees/use-management-e
 import { CheckSquare, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-function SelectedEmployeeIdsIndicator() {
+function SelectedAuthorIdsIndicator() {
   const { selectedIds, clear } = useManagementEmployeesStore()
-  const t = useTranslations("EmployeeManagement")
+  const t = useTranslations("AuthorManagement")
 
   if (selectedIds.length === 0) return null
 
@@ -21,4 +21,4 @@ function SelectedEmployeeIdsIndicator() {
   )
 }
 
-export default SelectedEmployeeIdsIndicator
+export default SelectedAuthorIdsIndicator

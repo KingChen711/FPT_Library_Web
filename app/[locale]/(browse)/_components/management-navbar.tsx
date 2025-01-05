@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import AdvancedBookFilter from "@/components/advanced-book-filter"
 
 import Actions from "./actions"
 
@@ -38,7 +39,7 @@ function ManagementNavbar() {
         )}
       >
         <div className="flex flex-1 items-center overflow-hidden rounded-2xl bg-primary-foreground shadow-lg">
-          <Select>
+          {/* <Select>
             <SelectTrigger className="w-[120px] rounded-none border-none bg-primary-foreground pl-8">
               <SelectValue placeholder="Filter" />
             </SelectTrigger>
@@ -49,7 +50,8 @@ function ManagementNavbar() {
               <SelectItem value="text">Text</SelectItem>
               <SelectItem value="subjects">Subjects</SelectItem>
             </SelectContent>
-          </Select>
+          </Select> */}
+          <AdvancedBookFilter />
           <div className="relative flex-1 border-x-2">
             <Input
               placeholder="Search"

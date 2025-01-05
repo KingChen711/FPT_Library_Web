@@ -15,7 +15,7 @@ const EmployeeRangeControl = () => {
 
   return (
     <div>
-      {selectedIds.length > 1 &&
+      {selectedIds.length > 0 &&
         (isDeleted === "true" ? (
           <div className="flex items-center gap-4">
             <EmployeeDeleteRangeConfirm selectedIds={selectedIds} />
