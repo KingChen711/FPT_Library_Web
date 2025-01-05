@@ -92,7 +92,6 @@ function UserActionDropdown({ user, userRoles }: Props) {
         setOpenEdit={setOpenEdit}
         type="update"
         user={user}
-        userRoles={userRoles}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

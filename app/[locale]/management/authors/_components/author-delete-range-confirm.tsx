@@ -1,12 +1,12 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 import { Loader2, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { deleteRangeAuthor } from "@/actions/authors/delete-range-author"
-import { deleteRangeEmployee } from "@/actions/employees/delete-range-employee"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -30,6 +30,7 @@ const AuthorDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)
   const [pending, startDelete] = useTransition()
+  const { clear } = useManagementAuthorsStore()
 
   useEffect(() => {
     if (isOpen) {
@@ -46,6 +47,7 @@ const AuthorDeleteRangeConfirm = ({ selectedIds }: Props) => {
           description: res.data,
           variant: "success",
         })
+        clear()
         setIsOpen(false)
         return
       }

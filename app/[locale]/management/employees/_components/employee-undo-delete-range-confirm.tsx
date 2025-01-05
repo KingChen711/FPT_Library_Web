@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { useManagementEmployeesStore } from "@/stores/employees/use-management-employees"
 import { Loader2, RotateCw } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -29,6 +30,7 @@ const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)
   const [pending, startDelete] = useTransition()
+  const { clear } = useManagementEmployeesStore()
 
   useEffect(() => {
     if (isOpen) {
@@ -45,6 +47,7 @@ const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
           description: res.data,
           variant: "success",
         })
+        clear()
         setIsOpen(false)
         return
       }

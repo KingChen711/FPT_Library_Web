@@ -5,15 +5,15 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TUserDialogSchema } from "@/lib/validations/auth/user-dialog"
+import { type TMutateUserSchema } from "@/lib/validations/user/mutate-user"
 
 export async function createUser(
-  body: TUserDialogSchema
-): Promise<ActionResponse> {
+  body: TMutateUserSchema
+): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
 
   try {
-    await http.post("/api/management/users", body, {
+    const { message } = await http.post("/api/management/users", body, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
@@ -23,6 +23,7 @@ export async function createUser(
 
     return {
       isSuccess: true,
+      data: message,
     }
   } catch (error) {
     return handleHttpError(error)

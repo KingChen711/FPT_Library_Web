@@ -13,7 +13,7 @@ function SelectedEmployeeIdsIndicator() {
   return (
     <div className="flex h-10 items-center justify-center gap-x-2 rounded-md bg-primary px-2 py-1 text-sm text-primary-foreground">
       <CheckSquare className="size-4" />
-      {t("Employees selected", {
+      {t("employees selected", {
         amount: selectedIds.length.toString(),
       })}
       <X className="size-4 cursor-pointer" onClick={() => clear()} />

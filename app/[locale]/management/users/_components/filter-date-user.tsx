@@ -39,7 +39,7 @@ const FilterDateUser = ({ form, label, name }: Props) => {
         <FormItem>
           <FormLabel>{t(label)}</FormLabel>
 
-          <div className="flex w-fit flex-wrap items-center justify-between gap-3">
+          <div className="flex w-full flex-wrap items-center justify-between gap-3">
             <Popover>
               <PopoverTrigger asChild>
                 <FormControl>

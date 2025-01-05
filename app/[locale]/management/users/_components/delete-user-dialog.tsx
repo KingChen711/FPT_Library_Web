@@ -1,4 +1,5 @@
 import { useState, useTransition } from "react"
+import { useManagementUsersStore } from "@/stores/users/use-management-user"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -32,8 +33,8 @@ function DeleteUserDialog({
   const message = `${locale === "vi" ? "xóa" : "delete"} ${fineName}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState("")
-
   const [pending, startTransition] = useTransition()
+  const { clear } = useManagementUsersStore()
 
   const handleDeleteFine = () => {
     startTransition(async () => {
@@ -45,6 +46,7 @@ function DeleteUserDialog({
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }

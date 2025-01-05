@@ -1,4 +1,5 @@
 import { useState, useTransition } from "react"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -32,8 +33,8 @@ function DeleteAuthorDialog({
   const message = `${locale === "vi" ? "xóa" : "delete"} ${fineName}`
   const t = useTranslations("AuthorsManagementPage")
   const [value, setValue] = useState("")
-
   const [pending, startTransition] = useTransition()
+  const { clear } = useManagementAuthorsStore()
 
   const handleDeleteFine = () => {
     startTransition(async () => {
@@ -45,6 +46,7 @@ function DeleteAuthorDialog({
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }

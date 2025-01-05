@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { useManagementEmployeesStore } from "@/stores/employees/use-management-employees"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -33,7 +34,7 @@ const EmployeeSoftDeleteConfirm = ({
   const message = `${employee.email}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
-
+  const { clear } = useManagementEmployeesStore()
   const [pending, startSoftDelete] = useTransition()
 
   const handleSoftDelete = () => {
@@ -45,6 +46,7 @@ const EmployeeSoftDeleteConfirm = ({
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }
