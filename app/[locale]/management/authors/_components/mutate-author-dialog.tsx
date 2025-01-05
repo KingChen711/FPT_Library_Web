@@ -99,7 +99,7 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
     },
   })
 
-  const handleUploadImage = async (file: File) => {
+  const handleUploadImage = async (file: File): Promise<TUploadImageData> => {
     const formData = new FormData()
     formData.append("file", file)
     formData.append("resourceType", ResourceType.Profile)
@@ -115,13 +115,13 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
     )
 
     const data = res.data as TUploadImageData
-    console.log("🚀 ~ handleUploadImage ~ data:", data)
-    form.setValue("authorImage", data.data.secureUrl)
-    setAvatar(data.data.secureUrl)
+    return data
+    // console.log("🚀 ~ handleUploadImage ~ data.data.secureUrl:", data.data.secureUrl)
+    // form.setValue("authorImage", data.data.secureUrl)
+    // setAvatar(data.data.secureUrl)
   }
 
   const onSubmit = async (values: TMutateAuthorSchema) => {
-    console.log("🚀 ~ onSubmit ~ values:", values)
     if (!file) {
       toast({
         title: "Please upload image",
@@ -139,8 +139,18 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
           })
           return
         }
-        await handleUploadImage(file)
-        const res = await createAuthor({ ...values })
+        const imageData = await handleUploadImage(file)
+        console.log("🚀 ~ onSubmit ~ values:", values)
+        console.log("🚀 ~ startTransition ~ imageData:", imageData)
+        console.log({
+          ...values,
+          authorImage: imageData.data.secureUrl,
+        })
+
+        const res = await createAuthor({
+          ...values,
+          authorImage: imageData.data.secureUrl,
+        })
         console.log("🚀 ~ startTransition ~ res:", res)
         if (res.isSuccess) {
           form.reset()
@@ -307,7 +317,7 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
                   control={form.control}
                   name="fullName"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex flex-col items-start">
                       <FormLabel>{t("fields.fullName")}</FormLabel>
                       <FormControl>
                         <Input
@@ -325,7 +335,7 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
                   control={form.control}
                   name="biography"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex flex-col items-start">
                       <FormLabel>{t("fields.biography")}</FormLabel>
                       <FormControl>
                         <Input
@@ -343,7 +353,7 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
                   control={form.control}
                   name="nationality"
                   render={({ field }) => (
-                    <FormItem>
+                    <FormItem className="flex flex-col items-start">
                       <FormLabel>{t("fields.nationality")}</FormLabel>
                       <FormControl>
                         <Input

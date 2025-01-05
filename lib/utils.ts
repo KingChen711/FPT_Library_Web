@@ -3,6 +3,8 @@ import { jwtDecode } from "jwt-decode"
 import queryString from "query-string"
 import { twMerge } from "tailwind-merge"
 
+import { USER_GENDER } from "./types/models"
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -72,4 +74,15 @@ export function formUrlQuery({
 
 export function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
+}
+
+export function convertUserGender(gender: USER_GENDER): number {
+  switch (gender) {
+    case USER_GENDER.MALE:
+      return 0
+    case USER_GENDER.FEMALE:
+      return 1
+    default:
+      return 0
+  }
 }

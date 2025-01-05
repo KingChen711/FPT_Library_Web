@@ -7,9 +7,11 @@ import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
+import { USER_GENDER } from "@/lib/types/models"
 import { formatDate } from "@/lib/utils"
 import { searchUsersSchema } from "@/lib/validations/user/search-user"
 import { Badge } from "@/components/ui/badge"
+import { Icons } from "@/components/ui/icons"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -88,7 +90,7 @@ async function UsersManagementPage({ searchParams }: Props) {
         <div className="flex flex-wrap items-center gap-x-4">
           <UserExport />
           {/* <UserImportDialog /> */}
-          <MutateUserDialog type="create" userRoles={userRoles} />
+          <MutateUserDialog type="create" />
         </div>
       </div>
 
@@ -142,17 +144,6 @@ async function UsersManagementPage({ searchParams }: Props) {
                   label={t("fields.address")}
                   sortKey="address"
                 />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.hireDate")}
-                  sortKey="hireDate"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.terminationDate")}
-                  sortKey="terminationDate"
-                />
 
                 <SortableTableHead
                   currentSort={sort}
@@ -196,16 +187,20 @@ async function UsersManagementPage({ searchParams }: Props) {
                   <TableCell>{user?.dob && formatDate(user?.dob)}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center text-nowrap">
-                      {user.gender === "Male" ? (
+                      {user.gender === USER_GENDER.MALE && (
+                        <Icons.Male className="size-6 text-info" />
+                      )}
+                      {user.gender === USER_GENDER.FEMALE && (
+                        <Icons.Female className="size-6 text-danger" />
+                      )}
+                      {user.gender === USER_GENDER.OTHER && (
                         <User color="blue" />
-                      ) : (
-                        <User color="red" />
                       )}
                     </div>
                   </TableCell>
                   <TableCell className="text-nowrap">{user.address}</TableCell>
 
-                  <TableCell>
+                  <TableCell className="text-nowrap">
                     {locale === "en"
                       ? user.role.englishName
                       : user.role.vietnameseName}
@@ -213,11 +208,14 @@ async function UsersManagementPage({ searchParams }: Props) {
 
                   <TableCell>
                     {user.isActive ? (
-                      <Badge className="h-full bg-success hover:bg-success">
+                      <Badge className="flex h-full w-[100px] justify-center text-nowrap bg-success text-center hover:bg-success">
                         {t("fields.active")}
                       </Badge>
                     ) : (
-                      <Badge variant="default" className="h-full">
+                      <Badge
+                        variant="default"
+                        className="flex h-full w-[100px] justify-center text-nowrap text-center"
+                      >
                         {t("fields.inactive")}
                       </Badge>
                     )}

@@ -130,7 +130,7 @@ function MutateEmployeeDialog({
 
       if (type === "update") {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { employeeCode, email, roleId, ...rest } = values
+        const { email, roleId, ...rest } = values
         const res = await updateEmployee(employee.employeeId, rest)
         if (res.isSuccess) {
           form.reset()
@@ -181,7 +181,7 @@ function MutateEmployeeDialog({
 
                       <FormControl>
                         <Input
-                          disabled={isPending || type === "update"}
+                          disabled={isPending}
                           {...field}
                           placeholder={t("placeholder.code")}
                         />
@@ -217,6 +217,8 @@ function MutateEmployeeDialog({
                     <FormItem>
                       <FormLabel>{t("fields.role")}</FormLabel>
                       <Select
+                        // TODO: update employee not need to select role
+                        // disabled={isPending || type === "update"}
                         onValueChange={(value) => field.onChange(Number(value))}
                         defaultValue={field.value ? field.value.toString() : ""}
                       >

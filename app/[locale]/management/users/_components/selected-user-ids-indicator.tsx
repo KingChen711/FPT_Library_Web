@@ -1,11 +1,11 @@
 "use client"
 
-import { useManagementEmployeesStore } from "@/stores/employees/use-management-employees"
+import { useManagementUsersStore } from "@/stores/users/use-management-user"
 import { CheckSquare, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 function SelectedUserIdsIndicator() {
-  const { selectedIds, clear } = useManagementEmployeesStore()
+  const { selectedIds, clear } = useManagementUsersStore()
   const t = useTranslations("UserManagement")
 
   if (selectedIds.length === 0) return null
@@ -13,7 +13,7 @@ function SelectedUserIdsIndicator() {
   return (
     <div className="flex h-10 items-center justify-center gap-x-2 rounded-md bg-primary px-2 py-1 text-sm text-primary-foreground">
       <CheckSquare className="size-4" />
-      {t("Users selected", {
+      {t("users selected", {
         amount: selectedIds.length.toString(),
       })}
       <X className="size-4 cursor-pointer" onClick={() => clear()} />

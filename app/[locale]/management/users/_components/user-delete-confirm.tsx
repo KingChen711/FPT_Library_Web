@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { useManagementUsersStore } from "@/stores/users/use-management-user"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -34,8 +35,8 @@ const UserDeleteConfirm = ({
   const tGeneralManagement = useTranslations("GeneralManagement")
   const tUserManagement = useTranslations("UserManagement")
   const [value, setValue] = useState<string>("")
-
   const [pending, startDelete] = useTransition()
+  const { clear } = useManagementUsersStore()
 
   const handleDelete = () => {
     startDelete(async () => {
@@ -46,6 +47,7 @@ const UserDeleteConfirm = ({
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }

@@ -1,5 +1,17 @@
 import { type ENotificationType, type ERoleType } from "./enums"
 
+export enum USER_GENDER {
+  MALE = "Male",
+  FEMALE = "Female",
+  OTHER = "Other",
+}
+
+export enum MUTATE_USER_GENDER {
+  Male = 0,
+  Female = 1,
+  Unknown = 2,
+}
+
 export type User = {
   userId: string
   userCode: string
@@ -11,7 +23,7 @@ export type User = {
   phone: string
   avatar: string
   address: string
-  gender: "Male" | "Female" | "Other"
+  gender: USER_GENDER
   isActive: boolean
   isDeleted: boolean
   createDate: string

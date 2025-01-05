@@ -1,4 +1,5 @@
 import { useState, useTransition } from "react"
+import { useManagementEmployeesStore } from "@/stores/employees/use-management-employees"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -32,10 +33,10 @@ function DeleteEmployeeDialog({
   const message = `${locale === "vi" ? "xóa" : "delete"} ${fineName}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState("")
-
+  const { clear } = useManagementEmployeesStore()
   const [pending, startTransition] = useTransition()
 
-  const handleDeleteFine = () => {
+  const handleDeleteEmployee = () => {
     startTransition(async () => {
       const res = await deleteEmployee(fineId.toString())
 
@@ -45,6 +46,7 @@ function DeleteEmployeeDialog({
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }
@@ -76,7 +78,7 @@ function DeleteEmployeeDialog({
         </DialogHeader>
         <div className="flex items-center gap-4">
           <Button
-            onClick={handleDeleteFine}
+            onClick={handleDeleteEmployee}
             disabled={value !== message || pending}
             className="flex-1"
           >

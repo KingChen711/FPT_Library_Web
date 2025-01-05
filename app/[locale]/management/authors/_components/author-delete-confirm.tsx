@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -34,8 +35,8 @@ const AuthorDeleteConfirm = ({
   const tGeneralManagement = useTranslations("GeneralManagement")
   const tAuthorManagement = useTranslations("AuthorManagement")
   const [value, setValue] = useState<string>("")
-
   const [pending, startDelete] = useTransition()
+  const { clear } = useManagementAuthorsStore()
 
   const handleDelete = () => {
     startDelete(async () => {
@@ -46,6 +47,7 @@ const AuthorDeleteConfirm = ({
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }
@@ -58,7 +60,7 @@ const AuthorDeleteConfirm = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-1">
-            {tAuthorManagement("delete employee")}
+            {tAuthorManagement("delete author")}
           </DialogTitle>
           <DialogDescription>
             <div

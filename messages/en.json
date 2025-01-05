@@ -210,6 +210,7 @@
       "gender": "Gender",
       "male": "Male",
       "female": "Female",
+      "other": "Other",
       "address": "Address",
       "active": "Active",
       "inactive": "Inactive",
@@ -226,6 +227,10 @@
       "dateOfDeath": "Date of death",
       "hireDate": "Hire date",
       "terminationDate": "Termination date",
+      "dobRange": "Date of birth range",
+      "dateOfDeathRange": "Date of death range",
+      "createDateRange": "Create date range",
+      "modifiedDateRange": "Update date range",
       "biography": "Biography",
       "date of death": "Date of death",
       "nationality": "Nationality",
@@ -248,7 +253,8 @@
     "delete user": "Delete user",
     "soft delete user": "Soft delete user",
     "restore user": "Restore user",
-    "undo delete user": "Undo delete user"
+    "undo delete user": "Undo delete user",
+    "users selected": "{amount, plural, one {# user selected} other {# users selected}}"
   },
   "EmployeeManagement": {
     "create employee": "Create employee",
@@ -281,7 +287,8 @@
     "delete author": "Delete author",
     "soft delete author": "Soft delete author",
     "restore author": "Restore author",
-    "undo delete author": "Undo delete author"
+    "undo delete author": "Undo delete author",
+    "authors selected": "{amount, plural, one {# author selected} other {# authors selected}}"
   },
   "RoleManagement": {
     "Roles": "Roles",
