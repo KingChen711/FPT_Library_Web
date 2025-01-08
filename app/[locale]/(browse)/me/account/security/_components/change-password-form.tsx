@@ -64,8 +64,6 @@ function ChangePassForm() {
   })
 
   function onSubmit(values: TNewPassSchema) {
-    console.log(values)
-
     setShowOtpInput(true)
     setEnableForgetPassword(true)
 

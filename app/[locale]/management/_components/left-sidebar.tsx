@@ -25,7 +25,7 @@ function LeftSidebar() {
   return (
     <section
       className={cn(
-        "sticky left-0 top-0 flex h-screen w-[110px] shrink-0 flex-col justify-between overflow-y-auto border-r bg-card transition-all dark:shadow-none max-sm:hidden lg:w-[300px]",
+        "sticky left-0 top-0 z-20 flex h-screen w-[110px] shrink-0 flex-col justify-between overflow-y-auto border-r bg-card transition-all dark:shadow-none max-sm:hidden lg:w-[300px]",
         isCollapsed && "lg:w-[110px]"
       )}
     >

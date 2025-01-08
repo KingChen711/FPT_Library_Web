@@ -85,8 +85,6 @@ function AccessLevelContextMenu({
   const queryClient = useQueryClient()
 
   const handleSelectPermission = (permissionValue: string) => {
-    console.log(+permissionValue, initPermissionId)
-
     if (+permissionValue === initPermissionId) {
       return
     }

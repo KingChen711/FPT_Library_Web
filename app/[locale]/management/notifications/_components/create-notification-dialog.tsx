@@ -1,11 +1,14 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { editorPlugin } from "@/constants"
 import { useAuth } from "@/contexts/auth-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Editor } from "@tinymce/tinymce-react"
 import { Loader2, Plus, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { ENotificationType } from "@/lib/types/enums"
@@ -15,6 +18,7 @@ import {
 } from "@/lib/validations/notifications/create-notification"
 import { createNotification } from "@/actions/notifications/create-notification"
 import { toast } from "@/hooks/use-toast"
+import useActualTheme from "@/hooks/utils/use-actual-theme"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -37,7 +41,6 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import { Textarea } from "@/components/ui/textarea"
 
 function CreateNotificationDialog() {
   const t = useTranslations("NotificationsManagementPage")
@@ -45,6 +48,7 @@ function CreateNotificationDialog() {
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const { user } = useAuth()
+  const theme = useActualTheme()
 
   const handleOpenChange = (value: boolean) => {
     if (isPending) return
@@ -82,17 +86,23 @@ function CreateNotificationDialog() {
       const tagInput = e.target as HTMLInputElement
       const tagValue = tagInput.value.trim()
 
+      const emailSchema = z.string().trim().email().catch("")
+
       if (tagValue !== "") {
-        //TODO: check valid email instead of length
-        // if (tagValue.length > 15) {
-        //   return form.setError("listRecipient", {
-        //     type: "required",
-        //     message: "Tag must be less than 15 characters",
-        //   })
-        // }
+        const emails = tagValue
+          .split(" ")
+          .map((val) => {
+            const email = emailSchema.parse(val)
+            if (email === "") return false
+            return email
+          })
+          .filter(Boolean) as string[]
 
         if (!field.value.includes(tagValue as never)) {
-          form.setValue("listRecipient", [...field.value, tagValue])
+          form.setValue(
+            "listRecipient",
+            Array.from(new Set([...field.value, ...emails]))
+          )
           tagInput.value = ""
           form.clearErrors("listRecipient")
         }
@@ -133,7 +143,7 @@ function CreateNotificationDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh]">
+      <DialogContent className="max-h-[90vh] w-full max-w-2xl overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>{t("Create notification")}</DialogTitle>
           <DialogDescription>
@@ -160,10 +170,22 @@ function CreateNotificationDialog() {
                   control={form.control}
                   name="message"
                   render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
+                    <FormItem className="flex w-full flex-col items-start">
                       <FormLabel>{t("Message")}</FormLabel>
                       <FormControl>
-                        <Textarea disabled={isPending} {...field} />
+                        <Editor
+                          disabled={isPending}
+                          apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
+                          init={{
+                            ...editorPlugin,
+                            skin: theme === "dark" ? "oxide-dark" : undefined,
+                            content_css: theme === "dark" ? "dark" : undefined,
+                            width: "100%",
+                            language: locale,
+                          }}
+                          onEditorChange={field.onChange}
+                          value={field.value}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

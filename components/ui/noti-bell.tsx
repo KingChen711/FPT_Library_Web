@@ -17,9 +17,11 @@ import {
 } from "@/lib/signalR/receive-notification-signalR"
 import { ENotificationType } from "@/lib/types/enums"
 import { type Notification } from "@/lib/types/models"
+import { cn } from "@/lib/utils"
 import useInfiniteNotifications from "@/hooks/notifications/use-infinite-notifications"
 import useResetUnread from "@/hooks/notifications/use-reset-unread"
 import useUnreadAmount from "@/hooks/notifications/use-unread-amount"
+import useFormatLocale from "@/hooks/utils/use-format-locale"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -46,6 +48,7 @@ export function NotificationBell() {
   const { accessToken } = useAuth()
   const [connection, setConnection] = useState<HubConnection | null>(null)
   const queryClient = useQueryClient()
+  const formatLocale = useFormatLocale()
   const [open, setOpen] = useState(false)
   const { ref, inView } = useInView()
   const [newNotifications, setNewNotifications] = useState<Notification[]>([])
@@ -196,7 +199,9 @@ export function NotificationBell() {
                     {notification.title}
                   </span>
                   <Badge
-                    className={`text-xs ${getTypeColor(notification.notificationType)}`}
+                    className={cn(
+                      `text-xs ${getTypeColor(notification.notificationType)}`
+                    )}
                   >
                     {notification.notificationType}
                   </Badge>
@@ -207,7 +212,10 @@ export function NotificationBell() {
                 <span className="mt-1 text-xs text-muted-foreground">
                   {format(
                     new Date(notification.createDate),
-                    "MMM d, yyyy h:mm a"
+                    "MMM d, yyyy h:mm a",
+                    {
+                      locale: formatLocale,
+                    }
                   )}
                 </span>
               </DropdownMenuItem>

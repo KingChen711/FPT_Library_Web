@@ -3,6 +3,7 @@
 import React, { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { getLocalTimeZone } from "@internationalized/date"
 import { format } from "date-fns"
 import { Filter } from "lucide-react"
 import { useForm } from "react-hook-form"
@@ -10,7 +11,10 @@ import { z } from "zod"
 
 import { formUrlQuery } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { DateTimePicker } from "@/components/ui/date-time-picker"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/ui/date-time-picker/index"
 import {
   Dialog,
   DialogClose,
@@ -46,6 +50,7 @@ export const filterFineSchema = z.object({
 export type TFilterFineSchema = z.infer<typeof filterFineSchema>
 
 function FiltersFinesDialog() {
+  const timezone = getLocalTimeZone()
   const router = useRouter()
   const [open, setOpen] = useState(false)
 
@@ -134,11 +139,14 @@ function FiltersFinesDialog() {
                     <FormItem>
                       <FormLabel>Created date</FormLabel>
 
-                      <div className="flex w-fit flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center justify-between gap-3">
                         <DateTimePicker
-                          jsDate={field.value[0] || undefined}
-                          onJsDateChange={(date) =>
-                            field.onChange([date || null, field.value[1]])
+                          value={createCalendarDate(field.value[0])}
+                          onChange={(date) =>
+                            field.onChange([
+                              date ? date.toDate(timezone) : null,
+                              field.value[1],
+                            ])
                           }
                           disabled={(date) =>
                             !!field.value[1] && date > new Date(field.value[1])
@@ -148,9 +156,12 @@ function FiltersFinesDialog() {
                         <div>-</div>
 
                         <DateTimePicker
-                          jsDate={field.value[1] || undefined}
-                          onJsDateChange={(date) =>
-                            field.onChange([field.value[0], date || null])
+                          value={createCalendarDate(field.value[1])}
+                          onChange={(date) =>
+                            field.onChange([
+                              field.value[0],
+                              date ? date.toDate(timezone) : null,
+                            ])
                           }
                           disabled={(date) =>
                             !!field.value[0] && date < new Date(field.value[0])
@@ -193,3 +204,5 @@ function FiltersFinesDialog() {
 }
 
 export default FiltersFinesDialog
+
+//TODO: pick date not work

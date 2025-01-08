@@ -14,7 +14,7 @@ export const onReceiveNotification = (
   callback: (notification: SocketNotification) => void
 ) => {
   if (!connection) throw new Error("Connection is not established.")
-  console.log("onReceiveNotification")
+  // console.log("onReceiveNotification")
 
   connection.on("ReceiveNotification", callback)
 }
@@ -24,7 +24,7 @@ export const offReceiveNotification = (
   callback: (notification: SocketNotification) => void
 ) => {
   if (!connection) throw new Error("Connection is not established.")
-  console.log("offReceiveNotification")
+  // console.log("offReceiveNotification")
 
   connection.off("ReceiveNotification", callback)
 }

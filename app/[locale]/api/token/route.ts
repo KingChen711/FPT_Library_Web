@@ -17,8 +17,6 @@ export async function GET() {
       return Response.json({ accessToken, refreshToken })
     }
 
-    console.log("need to refresh token")
-
     //need to refresh token
     const { data } = await http.post<{
       accessToken: string

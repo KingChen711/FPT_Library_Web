@@ -83,7 +83,6 @@ function AuthorActionDropdown({ author }: Props) {
                 <DropdownMenuItem className="cursor-pointer">
                   <div
                     onClick={() => {
-                      console.log(123)
                       setOpenEdit(true)
                     }}
                     className="flex items-center gap-x-2"

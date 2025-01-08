@@ -36,7 +36,7 @@ function SearchForm({ search, className }: Props) {
       const newUrl = formUrlQuery({
         params: searchParams.toString(),
         updates: {
-          search: searchTerm,
+          search: searchTerm.trim(),
           pageIndex: "1",
         },
       })

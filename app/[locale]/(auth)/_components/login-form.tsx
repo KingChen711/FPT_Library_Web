@@ -71,8 +71,6 @@ function LoginForm() {
     startTransition(async () => {
       const res = await login(values)
 
-      console.log({ res })
-
       if (res.isSuccess) {
         if (res.data.resultCode === "Auth.Success0003") {
           router.push(
@@ -82,11 +80,14 @@ function LoginForm() {
         }
 
         if (res.data.resultCode === "Auth.Success0005") {
+          if (res.data.userType === "Employee") {
+            router.push(`/reset-password/employee/${values.email}`)
+            return
+          }
           router.push(`/login/otp-method/${values.email}`)
           return
         }
 
-        console.log("Something went wrong")
         return
       }
 

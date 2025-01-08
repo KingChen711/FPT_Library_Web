@@ -135,7 +135,7 @@ function TimeField(props: AriaTimeFieldProps<TimeValue>) {
 const TimePicker = React.forwardRef<
   HTMLDivElement,
   Omit<TimeFieldStateOptions<TimeValue>, "locale">
->((props, ref) => {
+>((props, _ref) => {
   return <TimeField {...props} />
 })
 

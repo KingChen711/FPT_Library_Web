@@ -14,7 +14,7 @@ export const connectToSignalR = (hubName: string, token: string) => {
   connection
     .start()
     .then(() => {
-      console.log("SignalR Connected.")
+      // console.log("SignalR Connected.")
     })
     .catch((err) => console.error("SignalR Connection Error: ", err))
 

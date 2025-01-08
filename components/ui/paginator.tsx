@@ -3,7 +3,7 @@
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Check, ChevronsUpDown } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import ReactPaginate from "react-paginate"
 
 import { Button, buttonVariants } from "../../components/ui/button"
@@ -23,8 +23,8 @@ type Props = {
   pageIndex: number
   totalPage: number
   pageSize: number
+  totalActualItem: number
   className?: string
-  totalActualItem?: number
 }
 
 function Paginator({
@@ -37,6 +37,7 @@ function Paginator({
   const router = useRouter()
   const t = useTranslations("Paginator")
   const searchParams = useSearchParams()
+  const locale = useLocale()
   const [open, setOpen] = useState(false)
 
   const paginate = ({ selected }: { selected: number }) => {
@@ -84,6 +85,8 @@ function Paginator({
         disabledClassName={"pointer-events-none opacity-50"}
         nextLinkClassName={buttonVariants({ variant: "link" })}
         activeLinkClassName={buttonVariants()}
+        previousLabel={locale === "vi" ? "Trước" : "Previous"}
+        nextLabel={locale === "vi" ? "Sau" : "Next"}
       />
       <div className="flex flex-1 items-center justify-end gap-x-2">
         <div className="text-sm">{t("rows per page")}</div>

@@ -23,7 +23,7 @@ export const fetchNotifications = async (
   try {
     if (!token) return []
     const { data } = await http.get<ApiNotificationsResponse>(
-      `/api/management/notifications?PageIndex=${page}&PageSize=${PAGE_SIZE}&Search=${search}`,
+      `/api/privacy/notifications?PageIndex=${page}&PageSize=${PAGE_SIZE}&Search=${search}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,

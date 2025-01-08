@@ -74,6 +74,36 @@ export function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
 }
 
+export function formatFileSize(bytes: number): string {
+  if (bytes < 0) return "0 B"
+
+  const units = ["B", "KB", "MB", "GB", "TB", "PB"]
+  let unitIndex = 0
+
+  while (bytes >= 1024 && unitIndex < units.length - 1) {
+    bytes /= 1024
+    unitIndex++
+  }
+
+  return `${bytes.toFixed(1)} ${units[unitIndex]}`
+}
+
+export async function fileUrlToFile(fileUrl: string, fileName: string) {
+  // Fetch the file from the URL
+  const response = await fetch(fileUrl)
+
+  // Ensure the response is OK
+  if (!response.ok) {
+    throw new Error(`Failed to fetch file from URL: ${response.statusText}`)
+  }
+
+  // Get the file blob from the response
+  const blob = await response.blob()
+
+  // Create a File object from the blob
+  return new File([blob], fileName, { type: blob.type })
+}
+
 export const convertGenderToNumber = (gender: string) => {
   switch (gender) {
     case "Male":

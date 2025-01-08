@@ -78,6 +78,21 @@ export default {
         "status-foreground": {
           DEFAULT: "hsl(var(--status-foreground))",
         },
+        dark: {
+          "100": "#000000",
+          "200": "#0F1117",
+          "300": "#151821",
+          "400": "#212734",
+          "500": "#101012",
+        },
+        light: {
+          "400": "#858EAD",
+          "500": "#7B8EC8",
+          "700": "#DCE3F1",
+          "800": "#F4F6F8",
+          "850": "#FDFDFD",
+          "900": "#FFFFFF",
+        },
       },
       width: {
         "1/8": "12.5%",
@@ -115,5 +130,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [require("tailwindcss-animate"), require("@tailwindcss/typography")],
 } satisfies Config

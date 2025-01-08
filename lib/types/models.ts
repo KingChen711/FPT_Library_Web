@@ -1,4 +1,11 @@
-import { type ENotificationType, type ERoleType } from "./enums"
+import {
+  type EBookCopyStatus,
+  type EBookEditionStatus,
+  type EBookFormat,
+  type ENotificationType,
+  type EResourceBookType,
+  type ERoleType,
+} from "./enums"
 
 export type User = {
   userId: string
@@ -121,5 +128,125 @@ export type Category = {
   categoryId: number
   englishName: string
   vietnameseName: string
-  description: string
+  description: string | null
+}
+
+export type BookEdition = {
+  bookId: number
+  bookCode: string
+  bookEditionId: number
+  editionNumber: number
+  publicationYear: number
+  pageCount: number
+  totalCopies?: number
+  availableCopies?: number
+  requestCopies?: number
+  reservedCopies?: number
+  borrowedCopies?: number
+  author: string
+  summary: string | null
+  editionSummary: string | null
+  title: string
+  editionTitle: string
+  subTitle: string
+  shelf: Shelf | null
+  format: EBookFormat | null //TODO
+  isbn: string
+  language: string
+  coverImage: string | null
+  publisher: string | null
+  createBy: string
+  canBorrow: boolean
+  createdAt: Date
+  updatedAt: Date | null
+  estimatedPrice: number
+  isDeleted: boolean
+  status: EBookEditionStatus
+  bookEditionInventory?: BookEditionInventory
+}
+
+export type Book = {
+  bookId: number
+  title: string
+  subTitle: string | null
+  summary: string
+  isDeleted: boolean
+  isDraft: boolean
+  bookCodeForAITraining: string | null
+  isTrained: boolean
+}
+
+export type BookResource = {
+  resourceId: number
+  bookId: number
+  resourceType: EResourceBookType
+  resourceUrl: string
+  resourceSize: number
+  fileFormat: EBookFormat
+  provider: "Cloudinary"
+  providerPublicId: string
+  providerMetadata: string | null
+  isDeleted: boolean
+  createdAt: Date
+  updatedAt: Date | null
+  createdBy: string
+  updatedBy: string | null
+}
+
+export type BookEditionInventory = {
+  bookEditionId: number
+  totalCopies: number
+  availableCopies: number
+  requestCopies: number
+  reservedCopies: number
+  borrowedCopies: number
+}
+
+export type BookEditionCopy = {
+  bookEditionCopyId: number
+  bookEditionId: number
+  barcode: string
+  status: EBookCopyStatus
+  createdAt: Date
+  updatedAt: Date | null
+  createdBy: string
+  updatedBy: string | null
+  isDeleted: boolean
+}
+
+export type Floor = {
+  floorId: number
+  floorNumber: string
+  createDate: Date
+  updateDate: Date | null
+  isDeleted: boolean
+}
+
+export type Zone = {
+  zoneId: number
+  floorId: number
+  zoneName: string
+  xCoordinate: number
+  yCoordinate: number
+  createDate: Date
+  updateDate: Date | null
+  isDeleted: boolean
+}
+
+export type Section = {
+  sectionId: number
+  zoneId: number
+  sectionName: string
+  createDate: Date
+  updateDate: Date | null
+  isDeleted: boolean
+}
+
+export type Shelf = {
+  shelfId: number
+  sectionId: number
+  shelfNumber: string
+  createDate: Date
+  updateDate: Date | null
+  isDeleted: boolean
 }
