@@ -5,6 +5,7 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
+import { convertGenderToNumber } from "@/lib/utils"
 import { type TMutateUserSchema } from "@/lib/validations/user/mutate-user"
 
 export async function updateUser(
@@ -16,7 +17,10 @@ export async function updateUser(
   try {
     const { message } = await http.put(
       `/api/management/users/${userId}`,
-      body,
+      {
+        ...body,
+        gender: convertGenderToNumber(body.gender),
+      },
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,

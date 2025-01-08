@@ -3,14 +3,22 @@
 import { useState, useTransition, type ChangeEvent } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FileDown, Loader2 } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 
-import handleServerActionError from "@/lib/handle-server-action-error"
-import { type TEmployeeImport } from "@/lib/validations/employee/employee-import"
-import { importEmployee } from "@/actions/employees/import-employee"
+import { type ImportError } from "@/lib/types/models"
+import {
+  authorImportSchema,
+  type TAuthorImport,
+} from "@/lib/validations/author/author-import"
+import { importAuthor } from "@/actions/authors/import-author"
 import { toast } from "@/hooks/use-toast"
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -42,17 +50,14 @@ import { Separator } from "@/components/ui/separator"
 
 const AuthorImportDialog = () => {
   const tGeneralManagement = useTranslations("GeneralManagement")
-  const locale = useLocale()
-
+  const [importErrors, setImportErrors] = useState<ImportError[]>([])
   const [pendingSubmit, startTransition] = useTransition()
   const [open, setOpen] = useState<boolean>(false)
   const [isCSV, setIsCSV] = useState<boolean>(false)
   const [hasEmailChecked, setHasEmailChecked] = useState<boolean>(false)
 
-  //TODO: fix any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const form = useForm<any>({
-    resolver: zodResolver(z.any()),
+  const form = useForm<TAuthorImport>({
+    resolver: zodResolver(authorImportSchema),
     defaultValues: {
       duplicateHandle: "0",
       columnSeparator: null,
@@ -64,6 +69,7 @@ const AuthorImportDialog = () => {
   const handleCancel = () => {
     form.reset()
     form.clearErrors()
+    setImportErrors([])
     setOpen(false)
   }
 
@@ -82,6 +88,7 @@ const AuthorImportDialog = () => {
         form.setValue("columnSeparator", null)
         form.setValue("encodingType", null)
       }
+      setImportErrors([])
     }
   }
 
@@ -101,8 +108,7 @@ const AuthorImportDialog = () => {
     }
   }
 
-  function onSubmit(values: TEmployeeImport) {
-    console.log(values)
+  function onSubmit(values: TAuthorImport) {
     startTransition(async () => {
       const formData = new FormData()
       if (values.file) {
@@ -123,7 +129,9 @@ const AuthorImportDialog = () => {
         formData.append("scanningFields", field)
       })
 
-      const res = await importEmployee(formData)
+      const res = await importAuthor(formData)
+      console.log("🚀 ~ startTransition ~ res:", res)
+
       if (res.isSuccess) {
         toast({
           title: tGeneralManagement("btn.import"),
@@ -132,8 +140,11 @@ const AuthorImportDialog = () => {
         })
         setOpen(false)
         return
+      } else if (Array.isArray(res)) {
+        setImportErrors(res as ImportError[])
+      } else {
+        setImportErrors([])
       }
-      handleServerActionError(res, locale, form)
     })
   }
 
@@ -145,7 +156,7 @@ const AuthorImportDialog = () => {
             <FileDown size={16} /> {tGeneralManagement("btn.import")}
           </DialogTrigger>
         </Button>
-        <DialogContent className="m-0 overflow-hidden p-0">
+        <DialogContent className="m-0 max-h-[80vh] overflow-y-auto p-0">
           <DialogHeader className="w-full space-y-4 bg-primary p-4">
             <DialogTitle className="text-center text-primary-foreground">
               {tGeneralManagement("btn.import")}
@@ -155,6 +166,45 @@ const AuthorImportDialog = () => {
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
               <div className="space-y-4 p-4">
+                <div>
+                  {importErrors.length > 0 && (
+                    <Dialog>
+                      <DialogTrigger className="w-full text-left text-sm font-semibold">
+                        <p className="text-danger">
+                          Invoke errors while import data &nbsp;
+                          <span className="text-secondary-foreground underline">
+                            view detail
+                          </span>
+                        </p>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Import Errors</DialogTitle>
+                        </DialogHeader>
+                        <div className="max-h-[80vh] w-full overflow-y-auto">
+                          <Accordion type="multiple" className="w-full p-4">
+                            {importErrors.map((error, index) => (
+                              <AccordionItem
+                                key={index}
+                                value={`item-${index + 2}`}
+                              >
+                                <AccordionTrigger className="font-semibold text-danger">
+                                  Row: {error.rowNumber}
+                                </AccordionTrigger>
+                                <AccordionContent className="flex flex-col gap-2">
+                                  {error.errors.map((err, index) => (
+                                    <p key={index}>{err}</p>
+                                  ))}
+                                </AccordionContent>
+                              </AccordionItem>
+                            ))}
+                          </Accordion>
+                        </div>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                </div>
+
                 <Label>{tGeneralManagement("setting")}</Label>
                 <Separator />
 
@@ -262,11 +312,9 @@ const AuthorImportDialog = () => {
                 )}
               </div>
 
-              {/* Remaining form fields */}
               <div className="space-y-4 p-4">
                 <Label>{tGeneralManagement("duplicate control")}</Label>
                 <Separator />
-
                 <FormField
                   control={form.control}
                   name="scanningFields"
@@ -277,41 +325,21 @@ const AuthorImportDialog = () => {
                       </FormLabel>
                       <FormControl className="flex-1">
                         <div className="flex items-center gap-4">
-                          {/* Email Checkbox */}
                           <div className="flex items-center space-x-2">
                             <Checkbox
-                              id="email"
-                              checked={field.value?.includes("email")}
+                              id="authorCode"
+                              checked={field.value?.includes("authorCode")}
                               onCheckedChange={(checked) =>
                                 handleCheckboxChange(
                                   checked,
-                                  "email",
+                                  "authorCode",
                                   field.value || [],
                                   field.onChange
                                 )
                               }
                             />
-                            <Label htmlFor="email" className="font-normal">
-                              {tGeneralManagement("fields.email")}
-                            </Label>
-                          </div>
-
-                          {/* Phone Checkbox */}
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="phone"
-                              checked={field.value?.includes("phone")}
-                              onCheckedChange={(checked) =>
-                                handleCheckboxChange(
-                                  checked,
-                                  "phone",
-                                  field.value || [],
-                                  field.onChange
-                                )
-                              }
-                            />
-                            <Label htmlFor="phone" className="font-normal">
-                              {tGeneralManagement("fields.phone")}
+                            <Label htmlFor="authorCode" className="font-normal">
+                              {tGeneralManagement("fields.authorCode")}
                             </Label>
                           </div>
                         </div>
@@ -366,14 +394,18 @@ const AuthorImportDialog = () => {
                   )}
                 />
 
-                <div className="flex justify-end gap-4">
-                  <Button type="submit">
+                <div className="flex items-center justify-end gap-4">
+                  <Button type="submit" disabled={pendingSubmit}>
                     {tGeneralManagement("btn.import")}
                     {pendingSubmit && (
                       <Loader2 className="ml-1 size-4 animate-spin" />
                     )}
                   </Button>
-                  <Button variant="outline" onClick={() => handleCancel()}>
+                  <Button
+                    variant="outline"
+                    disabled={pendingSubmit}
+                    onClick={() => handleCancel()}
+                  >
                     {tGeneralManagement("btn.cancel")}
                   </Button>
                 </div>

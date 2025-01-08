@@ -43,7 +43,7 @@ const AuthorUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
       const res = await undoDeleteRangeAuthor(selectedIds)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Undo delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })

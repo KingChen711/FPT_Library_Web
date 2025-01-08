@@ -43,7 +43,7 @@ const AuthorSoftDeleteRangeConfirm = ({ selectedIds }: Props) => {
       const res = await softDeleteRangeAuthor(selectedIds)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Move to trash successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })

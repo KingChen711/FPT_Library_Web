@@ -42,7 +42,7 @@ const AuthorSoftDeleteConfirm = ({
       const res = await softDeleteAuthor(author.authorId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Soft delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })

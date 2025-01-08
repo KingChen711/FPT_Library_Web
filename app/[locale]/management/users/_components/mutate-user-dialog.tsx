@@ -9,7 +9,6 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { type User } from "@/lib/types/models"
-import { convertUserGender } from "@/lib/utils"
 import {
   mutateUserSchema,
   type TMutateUserSchema,
@@ -62,6 +61,7 @@ type Props = {
 )
 
 function MutateUserDialog({ type, user, openEdit, setOpenEdit }: Props) {
+  console.log("🚀 ~ MutateUserDialog ~ user:", user)
   const locale = useLocale()
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -85,7 +85,7 @@ function MutateUserDialog({ type, user, openEdit, setOpenEdit }: Props) {
       lastName: type === "update" ? user.lastName : "",
       phone: type === "update" ? user.phone : "",
       address: type === "update" ? user.address : "",
-      gender: type === "update" ? convertUserGender(user.gender) : undefined, // Đặt mặc định là undefined
+      gender: type === "update" ? user.gender : undefined,
       dob: type === "update" ? format(new Date(user.dob), "yyyy-MM-dd") : "",
     },
   })
@@ -193,14 +193,12 @@ function MutateUserDialog({ type, user, openEdit, setOpenEdit }: Props) {
                     <FormItem>
                       <FormLabel>{t("fields.gender")}</FormLabel>
                       <Select
+                        value={field.value?.toString() || ""}
                         onValueChange={(value) =>
                           field.onChange(
-                            value !== undefined
-                              ? parseInt(value, 10)
-                              : undefined
+                            value !== undefined ? value : undefined
                           )
                         }
-                        value={field.value?.toString() || ""}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -210,11 +208,15 @@ function MutateUserDialog({ type, user, openEdit, setOpenEdit }: Props) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="0">{t("fields.male")}</SelectItem>
-                          <SelectItem value="1">
+                          <SelectItem value="Male">
+                            {t("fields.male")}
+                          </SelectItem>
+                          <SelectItem value="Female">
                             {t("fields.female")}
                           </SelectItem>
-                          <SelectItem value="2">{t("fields.other")}</SelectItem>
+                          <SelectItem value="Other">
+                            {t("fields.other")}
+                          </SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />

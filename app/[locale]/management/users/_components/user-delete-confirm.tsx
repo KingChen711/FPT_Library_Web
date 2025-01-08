@@ -43,7 +43,7 @@ const UserDeleteConfirm = ({
       const res = await deleteEmployee(user.userId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })

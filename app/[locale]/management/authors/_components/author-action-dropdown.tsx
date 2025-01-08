@@ -18,6 +18,7 @@ import {
 
 import AuthorDeleteConfirm from "./author-delete-confirm"
 import AuthorSoftDeleteConfirm from "./author-soft-delete-confirm"
+import MutateAuthorDialog from "./mutate-author-dialog"
 
 type Props = {
   author: Author
@@ -60,12 +61,12 @@ function AuthorActionDropdown({ author }: Props) {
         openDelete={openSoftDelete}
         setOpenDelete={setOpenSoftDelete}
       />
-      {/* <MutateAuthorDialog
+      <MutateAuthorDialog
+        type="update"
         openEdit={openEdit}
         setOpenEdit={setOpenEdit}
-        type="update"
-        employee={author}
-      /> */}
+        author={author}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button

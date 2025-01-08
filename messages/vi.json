@@ -224,6 +224,7 @@
       "employeeCode": "Mã số nhân viên",
       "authorCode": "Mã số tác giả",
       "collegeEmailId": "Email sinh viên",
+      "isSendEmail": "Nhận email",
       "role": "Vai trò",
       "avatar": "Ảnh đại diện",
       "status": "Tình trạng",

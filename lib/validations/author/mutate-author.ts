@@ -1,13 +1,13 @@
 import { z } from "zod"
 
 export const mutateAuthorSchema = z.object({
-  authorCode: z.string().trim().min(2, { message: "min2" }),
+  authorCode: z.string().trim().nullable().optional(),
   fullName: z
     .string()
     .trim()
     .min(2, { message: "min2" })
     .max(50, { message: "max50" }),
-  authorImage: z.string().trim().min(1, { message: "required" }),
+  authorImage: z.string().trim().nullable().optional(),
   dob: z.string().trim().min(1, { message: "required" }),
   dateOfDeath: z.string().trim().nullable().optional(),
   nationality: z.string().trim().min(1, { message: "required" }),

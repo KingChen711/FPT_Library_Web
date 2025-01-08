@@ -42,7 +42,7 @@ const UserSoftDeleteConfirm = ({
       const res = await softDeleteUser(user.userId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Soft delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })

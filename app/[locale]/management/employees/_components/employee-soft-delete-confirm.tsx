@@ -42,7 +42,7 @@ const EmployeeSoftDeleteConfirm = ({
       const res = await softDeleteEmployee(employee.employeeId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Soft delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })

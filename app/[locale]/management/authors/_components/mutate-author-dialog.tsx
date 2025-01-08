@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/no-base-to-string */
 "use client"
 
 import { useState, useTransition } from "react"
 import Image from "next/image"
+import { ServerUrl } from "@/constants"
 import { useAuth } from "@/contexts/auth-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import axios from "axios"
@@ -13,7 +15,7 @@ import { useForm } from "react-hook-form"
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { ResourceType } from "@/lib/types/enums"
 import { type Author } from "@/lib/types/models"
-import { cn } from "@/lib/utils"
+import { cn, isImageLinkValid } from "@/lib/utils"
 import {
   mutateAuthorSchema,
   type TMutateAuthorSchema,
@@ -72,7 +74,6 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
   const { accessToken } = useAuth()
   const locale = useLocale()
   const [open, setOpen] = useState(false)
-  const [avatar, setAvatar] = useState<string>("")
   const [isPending, startTransition] = useTransition()
   const [file, setFile] = useState<File | null>(null)
   const t = useTranslations("GeneralManagement")
@@ -90,7 +91,10 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
     resolver: zodResolver(mutateAuthorSchema),
     defaultValues: {
       fullName: type === "update" ? author.fullName : "",
-      authorImage: type === "update" ? author.authorImage : avatar,
+      authorImage:
+        type === "update" && isImageLinkValid(author.authorImage)
+          ? author.authorImage
+          : "https://res.cloudinary.com/heyset/image/upload/v1689582418/buukmenow-folder/no-image-icon-0.jpg",
       authorCode: type === "update" ? author.authorCode : "",
       biography: type === "update" ? author.biography : "",
       nationality: type === "update" ? author.nationality : "",
@@ -104,7 +108,7 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
     formData.append("file", file)
     formData.append("resourceType", ResourceType.Profile)
     const res = await axios.post(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/management/resources/images/upload`,
+      `${ServerUrl}/api/management/resources/images/upload`,
       formData,
       {
         headers: {
@@ -116,47 +120,28 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
 
     const data = res.data as TUploadImageData
     return data
-    // console.log("🚀 ~ handleUploadImage ~ data.data.secureUrl:", data.data.secureUrl)
-    // form.setValue("authorImage", data.data.secureUrl)
-    // setAvatar(data.data.secureUrl)
   }
 
   const onSubmit = async (values: TMutateAuthorSchema) => {
-    if (!file) {
-      toast({
-        title: "Please upload image",
-        variant: "danger",
-      })
-      return
-    }
-
     startTransition(async () => {
-      if (type === "create") {
-        if (!file) {
-          toast({
-            title: "Please upload image",
-            variant: "danger",
-          })
-          return
-        }
+      if (file) {
         const imageData = await handleUploadImage(file)
-        console.log("🚀 ~ onSubmit ~ values:", values)
-        console.log("🚀 ~ startTransition ~ imageData:", imageData)
-        console.log({
+        const payload = {
           ...values,
           authorImage: imageData.data.secureUrl,
-        })
-
-        const res = await createAuthor({
-          ...values,
-          authorImage: imageData.data.secureUrl,
-        })
-        console.log("🚀 ~ startTransition ~ res:", res)
+        }
+        let res
+        if (type === "create") {
+          res = await createAuthor(payload)
+        } else {
+          res = await updateAuthor(author.authorId, payload)
+        }
         if (res.isSuccess) {
           form.reset()
           setOpen(false)
           toast({
-            title: "Create author successfully",
+            title: locale === "vi" ? "Thành công" : "Success",
+            description: res.data,
             variant: "success",
           })
         } else {
@@ -164,19 +149,33 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
         }
       }
 
-      if (type === "update") {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        await handleUploadImage(file)
-        const res = await updateAuthor(author.authorId, values)
-        if (res.isSuccess) {
-          form.reset()
-          setOpenEdit(false)
-          toast({
-            title: "Update author successfully",
-            variant: "success",
-          })
-        } else {
-          handleServerActionError(res, locale, form)
+      if (!file) {
+        if (type === "create") {
+          const res = await createAuthor(values)
+          if (res.isSuccess) {
+            form.reset()
+            setOpen(false)
+            toast({
+              title: locale === "vi" ? "Thành công" : "Success",
+              description: res.data,
+              variant: "success",
+            })
+          } else {
+            handleServerActionError(res, locale, form)
+          }
+        } else if (type === "update") {
+          const res = await updateAuthor(author.authorId, values)
+          if (res.isSuccess) {
+            form.reset()
+            setOpen(false)
+            toast({
+              title: locale === "vi" ? "Thành công" : "Success",
+              description: res.data,
+              variant: "success",
+            })
+          } else {
+            handleServerActionError(res, locale, form)
+          }
         }
       }
     })
@@ -197,7 +196,6 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
       if (!file.type.includes("image")) return
 
       fileReader.onload = async (event) => {
-        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         const imageDataUrl = event.target?.result?.toString() || ""
         fieldChange(imageDataUrl)
       }
@@ -303,8 +301,9 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
 
                       <FormControl>
                         <Input
-                          disabled={isPending || type === "update"}
+                          disabled={isPending}
                           {...field}
+                          value={field.value ?? ""}
                           placeholder={t("placeholder.code")}
                         />
                       </FormControl>

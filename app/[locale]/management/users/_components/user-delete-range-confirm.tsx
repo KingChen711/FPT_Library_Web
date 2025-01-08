@@ -43,7 +43,7 @@ const UserDeleteRangeConfirm = ({ selectedIds }: Props) => {
       const res = await deleteRangeUser(selectedIds)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
