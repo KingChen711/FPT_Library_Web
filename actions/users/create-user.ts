@@ -5,6 +5,7 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
+import { convertGenderToNumber } from "@/lib/utils"
 import { type TMutateUserSchema } from "@/lib/validations/user/mutate-user"
 
 export async function createUser(
@@ -13,11 +14,18 @@ export async function createUser(
   const { getAccessToken } = auth()
 
   try {
-    const { message } = await http.post("/api/management/users", body, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
+    const { message } = await http.post(
+      "/api/management/users",
+      {
+        ...body,
+        gender: convertGenderToNumber(body.gender),
       },
-    })
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
 
     revalidateTag("users")
 

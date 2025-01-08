@@ -3,8 +3,6 @@ import { jwtDecode } from "jwt-decode"
 import queryString from "query-string"
 import { twMerge } from "tailwind-merge"
 
-import { USER_GENDER } from "./types/models"
-
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -76,13 +74,25 @@ export function formatPrice(price: number): string {
   return price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
 }
 
-export function convertUserGender(gender: USER_GENDER): number {
+export const convertGenderToNumber = (gender: string) => {
   switch (gender) {
-    case USER_GENDER.MALE:
+    case "Male":
       return 0
-    case USER_GENDER.FEMALE:
+    case "Female":
       return 1
+    case "Other":
+      return 2
     default:
-      return 0
+      return null
+  }
+}
+
+export function isImageLinkValid(link: string): boolean {
+  try {
+    const url = new URL(link)
+    const imageUrlRegex = /\.(jpeg|jpg|gif|png)$/i
+    return url.protocol === "https:" && imageUrlRegex.test(url.pathname)
+  } catch {
+    return false
   }
 }

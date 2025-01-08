@@ -7,7 +7,6 @@ import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
-import { USER_GENDER } from "@/lib/types/models"
 import { formatDate } from "@/lib/utils"
 import { searchUsersSchema } from "@/lib/validations/user/search-user"
 import { Badge } from "@/components/ui/badge"
@@ -31,6 +30,7 @@ import UserActionDropdown from "./_components/user-action-dropdown"
 import UserCheckbox from "./_components/user-checkbox"
 import UserExport from "./_components/user-export"
 import UserHeaderTab from "./_components/user-header-tab"
+import UserImportDialog from "./_components/user-import-dialog"
 import UserRangeControl from "./_components/user-range-control"
 
 type Props = {
@@ -89,7 +89,7 @@ async function UsersManagementPage({ searchParams }: Props) {
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
           <UserExport />
-          {/* <UserImportDialog /> */}
+          <UserImportDialog />
           <MutateUserDialog type="create" />
         </div>
       </div>
@@ -187,15 +187,9 @@ async function UsersManagementPage({ searchParams }: Props) {
                   <TableCell>{user?.dob && formatDate(user?.dob)}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center text-nowrap">
-                      {user.gender === USER_GENDER.MALE && (
-                        <Icons.Male className="size-6 text-info" />
-                      )}
-                      {user.gender === USER_GENDER.FEMALE && (
-                        <Icons.Female className="size-6 text-danger" />
-                      )}
-                      {user.gender === USER_GENDER.OTHER && (
-                        <User color="blue" />
-                      )}
+                      {user.gender === "Male" && <User color="blue" />}
+                      {user.gender === "Female" && <User color="red" />}
+                      {user.gender === "Other" && <User color="gray" />}
                     </div>
                   </TableCell>
                   <TableCell className="text-nowrap">{user.address}</TableCell>

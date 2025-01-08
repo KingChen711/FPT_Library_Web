@@ -87,9 +87,9 @@ function MutateEmployeeDialog({
   const form = useForm<TMutateEmployeeSchema>({
     resolver: zodResolver(mutateEmployeeSchema),
     defaultValues: {
-      employeeCode: type === "update" ? employee.employeeCode : "",
+      employeeCode: type === "update" ? employee.employeeCode : null,
       email: type === "update" ? employee.email : "",
-      roleId: type === "update" ? employee.roleId : 0,
+      roleId: type === "update" ? employee.role.roleId : 0,
       firstName: type === "update" ? employee.firstName : "",
       lastName: type === "update" ? employee.lastName : "",
       phone: type === "update" ? employee.phone : "",
@@ -112,7 +112,6 @@ function MutateEmployeeDialog({
     return <Loader2 className="size-8 animate-spin" />
 
   const onSubmit = async (values: TMutateEmployeeSchema) => {
-    console.log("🚀 ~ onSubmit ~ values:", values)
     startTransition(async () => {
       if (type === "create") {
         const res = await createEmployee(values)
@@ -183,6 +182,7 @@ function MutateEmployeeDialog({
                         <Input
                           disabled={isPending}
                           {...field}
+                          value={field.value ?? ""}
                           placeholder={t("placeholder.code")}
                         />
                       </FormControl>
@@ -217,8 +217,7 @@ function MutateEmployeeDialog({
                     <FormItem>
                       <FormLabel>{t("fields.role")}</FormLabel>
                       <Select
-                        // TODO: update employee not need to select role
-                        // disabled={isPending || type === "update"}
+                        disabled={isPending || type === "update"}
                         onValueChange={(value) => field.onChange(Number(value))}
                         defaultValue={field.value ? field.value.toString() : ""}
                       >

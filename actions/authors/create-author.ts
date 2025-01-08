@@ -9,11 +9,11 @@ import { type TMutateAuthorSchema } from "@/lib/validations/author/mutate-author
 
 export async function createAuthor(
   body: TMutateAuthorSchema
-): Promise<ActionResponse> {
+): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
 
   try {
-    await http.post("/api/management/authors", body, {
+    const { message } = await http.post("/api/management/authors", body, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
@@ -23,6 +23,7 @@ export async function createAuthor(
 
     return {
       isSuccess: true,
+      data: message,
     }
   } catch (error) {
     return handleHttpError(error)

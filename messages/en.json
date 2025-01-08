@@ -219,6 +219,7 @@
       "employeeCode": "Employee code",
       "authorCode": "Author code",
       "collegeEmailId": "College email ID",
+      "isSendEmail": "Is send email",
       "role": "Role",
       "avatar": "Avatar",
       "status": "Status",

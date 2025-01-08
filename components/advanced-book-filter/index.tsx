@@ -25,7 +25,10 @@ const AdvancedBookFilter = () => {
         <PopoverTrigger className="flex cursor-pointer items-center gap-2">
           <Filter size={16} /> Filter
         </PopoverTrigger>
-        <PopoverContent className="mx-4 mt-2 w-[50vw] space-y-4 bg-primary-foreground p-8">
+        <PopoverContent
+          align="start"
+          className="mx-4 mt-2 w-[50vw] space-y-4 bg-primary-foreground p-8"
+        >
           <h1 className="font-semibold text-primary">Advanced Filter</h1>
           {filterNumber > 0 &&
             Array.from({ length: filterNumber }).map((_, index) => (

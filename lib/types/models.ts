@@ -1,17 +1,5 @@
 import { type ENotificationType, type ERoleType } from "./enums"
 
-export enum USER_GENDER {
-  MALE = "Male",
-  FEMALE = "Female",
-  OTHER = "Other",
-}
-
-export enum MUTATE_USER_GENDER {
-  Male = 0,
-  Female = 1,
-  Unknown = 2,
-}
-
 export type User = {
   userId: string
   userCode: string
@@ -23,7 +11,7 @@ export type User = {
   phone: string
   avatar: string
   address: string
-  gender: USER_GENDER
+  gender: "Male" | "Female" | "Other"
   isActive: boolean
   isDeleted: boolean
   createDate: string
@@ -45,6 +33,11 @@ export type User = {
     roleType: ERoleType
     rolePermissions: []
   }
+}
+
+export type ImportError = {
+  rowNumber: number
+  errors: string[]
 }
 
 export type Role = {

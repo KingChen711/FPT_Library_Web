@@ -1,8 +1,9 @@
 import Image from "next/image"
 import { getAuthors } from "@/queries/authors/get-authors"
+import { ImageIcon } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
-import { formatDate } from "@/lib/utils"
+import { formatDate, isImageLinkValid } from "@/lib/utils"
 import { searchAuthorsSchema } from "@/lib/validations/author/search-author"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
@@ -20,6 +21,7 @@ import AuthorActionDropdown from "./_components/author-action-dropdown"
 import AuthorCheckbox from "./_components/author-checkbox"
 import AuthorExport from "./_components/author-export"
 import AuthorHeaderTab from "./_components/author-header-tab"
+import AuthorImportDialog from "./_components/author-import-dialog"
 import AuthorRangeControl from "./_components/author-range-control"
 import FiltersAuthorsDialog from "./_components/filter-author-dialog"
 import MutateAuthorDialog from "./_components/mutate-author-dialog"
@@ -56,6 +58,15 @@ async function AuthorsManagementPage({ searchParams }: Props) {
     isDeleted,
     ...rest,
   })
+  console.log("🚀 ~ AuthorsManagementPage ~ authorsData:", authorsData)
+
+  if (!authorsData) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <p>{t("no authors found")}</p>
+      </div>
+    )
+  }
 
   return (
     <div>
@@ -77,7 +88,7 @@ async function AuthorsManagementPage({ searchParams }: Props) {
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
           <AuthorExport />
-          {/* <AuthorImportDialog /> */}
+          <AuthorImportDialog />
           <MutateAuthorDialog type="create" />
         </div>
       </div>
@@ -148,13 +159,16 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                   </TableCell>
                   <TableCell>
                     <div className="flex gap-2 pr-8">
-                      <Image
-                        src={"https://github.com/shadcn.png"}
-                        alt="avatar"
-                        width={20}
-                        height={20}
-                        className="rounded-full"
-                      />
+                      {isImageLinkValid(author.authorImage) ? (
+                        <Image
+                          src={author.authorImage}
+                          alt="avatar"
+                          width={24}
+                          height={24}
+                        />
+                      ) : (
+                        <ImageIcon />
+                      )}
                       <p className="text-nowrap">{author.fullName}</p>
                     </div>
                   </TableCell>
