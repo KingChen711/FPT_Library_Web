@@ -2,18 +2,17 @@
 
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { type TEmployeeRole } from "@/queries/roles/get-employee-roles"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { Filter } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import { formUrlQuery } from "@/lib/utils"
 import {
-  employeesFilterSchema,
-  type TEmployeesFilterSchema,
-} from "@/lib/validations/employee/employees-filter"
+  authorsFilterSchema,
+  type TAuthorsFilterSchema,
+} from "@/lib/validations/author/authors-filter"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -33,76 +32,52 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
-import FilterDateEmployee from "./filter-date-author"
+import FilterDateAuthor from "./filter-date-author"
 
-type Props = {
-  employeeRoles: TEmployeeRole[]
-}
-
-function FiltersEmployeesDialog({ employeeRoles }: Props) {
+function FiltersAuthorsDialog() {
   const t = useTranslations("GeneralManagement")
   const router = useRouter()
-  const locale = useLocale()
   const [open, setOpen] = useState(false)
   const searchParams = useSearchParams()
 
-  const form = useForm<TEmployeesFilterSchema>({
-    resolver: zodResolver(employeesFilterSchema),
+  const form = useForm<TAuthorsFilterSchema>({
+    resolver: zodResolver(authorsFilterSchema),
     defaultValues: {
-      employeeCode: searchParams.get("employeeCode") || "",
+      authorCode: searchParams.get("authorCode") || "",
       dobRange: ["", ""],
-      roleId: searchParams.get("roleId") || "",
-      firstName: searchParams.get("firstName") || "",
-      lastName: searchParams.get("lastName") || "",
-      gender: "All",
-      isActive: "",
-      hireDateRange: ["", ""],
-      modifiedDateRange: ["", ""],
+      nationality: searchParams.get("nationality") || "",
+      dateOfDeathRange: ["", ""],
       createDateRange: ["", ""],
+      modifiedDateRange: ["", ""],
     },
   })
 
   const resetFilters = () => {
-    form.setValue("employeeCode", "")
+    form.setValue("authorCode", "")
     form.setValue("dobRange", ["", ""])
-    form.setValue("roleId", "")
-    form.setValue("firstName", "")
-    form.setValue("lastName", "")
-    form.setValue("gender", "All")
-    form.setValue("isActive", "")
-    form.setValue("hireDateRange", ["", ""])
-    form.setValue("modifiedDateRange", ["", ""])
+    form.setValue("nationality", "")
+    form.setValue("dateOfDeathRange", ["", ""])
     form.setValue("createDateRange", ["", ""])
+    form.setValue("modifiedDateRange", ["", ""])
   }
 
-  const onSubmit = async (values: TEmployeesFilterSchema) => {
+  const onSubmit = async (values: TAuthorsFilterSchema) => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        employeeCode: values.employeeCode,
-        roleId: values.roleId,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        isActive: values.isActive,
-        gender: values.gender,
-        createdDateRange: values.createDateRange.map((date) =>
+        authorCode: values.authorCode,
+        nationality: values.nationality,
+        dobRange: values.dobRange.map((date) =>
+          date ? format(new Date(date), "yyyy-MM-dd") : ""
+        ),
+        dateOfDeathRange: values.dateOfDeathRange.map((date) =>
+          date ? format(new Date(date), "yyyy-MM-dd") : ""
+        ),
+        createDateRange: values.createDateRange.map((date) =>
           date ? format(new Date(date), "yyyy-MM-dd") : ""
         ),
         modifiedDateRange: values.modifiedDateRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
-        ),
-        hireDateRange: values.hireDateRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
-        ),
-        dobRange: values.dobRange.map((date) =>
           date ? format(new Date(date), "yyyy-MM-dd") : ""
         ),
       },
@@ -131,10 +106,10 @@ function FiltersEmployeesDialog({ employeeRoles }: Props) {
               >
                 <FormField
                   control={form.control}
-                  name="employeeCode"
+                  name="authorCode"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("fields.employeeCode")}</FormLabel>
+                      <FormLabel>{t("fields.authorCode")}</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder={t("placeholder.code")} />
                       </FormControl>
@@ -146,97 +121,43 @@ function FiltersEmployeesDialog({ employeeRoles }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="firstName"
+                  name="nationality"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("fields.firstName")}</FormLabel>
+                      <FormLabel>{t("fields.nationality")}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder={t("placeholder.firstName")}
+                          placeholder={t("placeholder.nationality")}
                         />
                       </FormControl>
-
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("fields.lastName")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder={t("placeholder.lastName")}
-                        />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="roleId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("fields.role")}</FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder={t("placeholder.role")} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {employeeRoles.map((role) => (
-                            <SelectItem
-                              key={role.roleId}
-                              value={role.roleId.toString()}
-                            >
-                              {locale === "en"
-                                ? role.englishName
-                                : role.vietnameseName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FilterDateEmployee
+                <FilterDateAuthor
                   form={form}
                   label="fields.dob"
                   name="dobRange"
                 />
 
-                <FilterDateEmployee
+                <FilterDateAuthor
                   form={form}
-                  label="fields.createDate"
+                  label="fields.dateOfDeathRange"
+                  name="dateOfDeathRange"
+                />
+
+                <FilterDateAuthor
+                  form={form}
+                  label="fields.createDateRange"
                   name="createDateRange"
                 />
 
-                <FilterDateEmployee
+                <FilterDateAuthor
                   form={form}
-                  label="fields.updatedDate"
+                  label="fields.modifiedDateRange"
                   name="modifiedDateRange"
-                />
-
-                <FilterDateEmployee
-                  form={form}
-                  label="fields.hireDate"
-                  name="hireDateRange"
                 />
 
                 <div className="flex justify-end gap-x-4">
@@ -269,4 +190,4 @@ function FiltersEmployeesDialog({ employeeRoles }: Props) {
   )
 }
 
-export default FiltersEmployeesDialog
+export default FiltersAuthorsDialog

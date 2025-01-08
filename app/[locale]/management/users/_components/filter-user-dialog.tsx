@@ -57,28 +57,20 @@ function FilterUsersDialog({ userRoles }: Props) {
   const form = useForm<TUsersFilterSchema>({
     resolver: zodResolver(usersFilterSchema),
     defaultValues: {
-      userCode: searchParams.get("userCode") || "",
-      dobRange: ["", ""],
-      roleId: searchParams.get("roleId") || "",
       firstName: searchParams.get("firstName") || "",
       lastName: searchParams.get("lastName") || "",
-      gender: "All",
-      isActive: "",
-      hireDateRange: ["", ""],
+      gender: "Male",
+      dobRange: ["", ""],
       modifiedDateRange: ["", ""],
       createDateRange: ["", ""],
     },
   })
 
   const resetFilters = () => {
-    form.setValue("userCode", "")
-    form.setValue("dobRange", ["", ""])
-    form.setValue("roleId", "")
     form.setValue("firstName", "")
     form.setValue("lastName", "")
-    form.setValue("gender", "All")
-    form.setValue("isActive", "")
-    form.setValue("hireDateRange", ["", ""])
+    form.setValue("gender", "Male")
+    form.setValue("dobRange", ["", ""])
     form.setValue("modifiedDateRange", ["", ""])
     form.setValue("createDateRange", ["", ""])
   }
@@ -87,22 +79,16 @@ function FilterUsersDialog({ userRoles }: Props) {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        userCode: values.userCode,
-        roleId: values.roleId,
         firstName: values.firstName,
         lastName: values.lastName,
-        isActive: values.isActive,
         gender: values.gender,
-        createdDateRange: values.createDateRange.map((date) =>
+        dobRange: values.dobRange.map((date) =>
           date ? format(new Date(date), "yyyy-MM-dd") : ""
         ),
         modifiedDateRange: values.modifiedDateRange.map((date) =>
           date ? format(new Date(date), "yyyy-MM-dd") : ""
         ),
-        hireDateRange: values.hireDateRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
-        ),
-        dobRange: values.dobRange.map((date) =>
+        createDateRange: values.createDateRange.map((date) =>
           date ? format(new Date(date), "yyyy-MM-dd") : ""
         ),
       },
@@ -129,21 +115,6 @@ function FilterUsersDialog({ userRoles }: Props) {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="mt-2 space-y-6"
               >
-                <FormField
-                  control={form.control}
-                  name="userCode"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("fields.userCode")}</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder={t("placeholder.code")} />
-                      </FormControl>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
                 <FormField
                   control={form.control}
                   name="firstName"
@@ -182,33 +153,27 @@ function FilterUsersDialog({ userRoles }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="roleId"
+                  name="gender"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("fields.role")}</FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
+                      <FormLabel>{t("fields.gender")}</FormLabel>
+                      <FormControl>
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
                           <SelectTrigger>
-                            <SelectValue placeholder={t("placeholder.role")} />
+                            <SelectValue
+                              placeholder={t("placeholder.gender")}
+                            />
                           </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {userRoles.map((role) => (
-                            <SelectItem
-                              key={role.roleId}
-                              value={role.roleId.toString()}
-                            >
-                              {locale === "en"
-                                ? role.englishName
-                                : role.vietnameseName}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
+                          <SelectContent>
+                            <SelectItem value="Male">Male</SelectItem>
+                            <SelectItem value="Female">Female</SelectItem>
+                            <SelectItem value="Other">Other</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </FormControl>
 
                       <FormMessage />
                     </FormItem>
@@ -231,12 +196,6 @@ function FilterUsersDialog({ userRoles }: Props) {
                   form={form}
                   label="fields.updatedDate"
                   name="modifiedDateRange"
-                />
-
-                <FilterDateUser
-                  form={form}
-                  label="fields.hireDate"
-                  name="hireDateRange"
                 />
 
                 <div className="flex justify-end gap-x-4">

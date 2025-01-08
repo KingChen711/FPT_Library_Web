@@ -80,6 +80,7 @@
     "max500": "Must contain at most 500 character(s)",
     "max150": "Must contain at most 150 character(s)",
     "max2000": "Must contain at most 2000 character(s)",
+    "min10": "Must contain at least 10 character(s)",
     "length_10": "Must contain 10 character(s)",
     "email": "Invalid email",
     "required": "Required",
@@ -221,6 +222,7 @@
       "gender": "Gender",
       "male": "Male",
       "female": "Female",
+      "other": "Other",
       "address": "Address",
       "active": "Active",
       "inactive": "Inactive",
@@ -229,6 +231,7 @@
       "employeeCode": "Employee code",
       "authorCode": "Author code",
       "collegeEmailId": "College email ID",
+      "isSendEmail": "Is send email",
       "role": "Role",
       "avatar": "Avatar",
       "status": "Status",
@@ -237,6 +240,10 @@
       "dateOfDeath": "Date of death",
       "hireDate": "Hire date",
       "terminationDate": "Termination date",
+      "dobRange": "Date of birth range",
+      "dateOfDeathRange": "Date of death range",
+      "createDateRange": "Create date range",
+      "modifiedDateRange": "Update date range",
       "biography": "Biography",
       "date of death": "Date of death",
       "nationality": "Nationality",
@@ -259,7 +266,8 @@
     "delete user": "Delete user",
     "soft delete user": "Soft delete user",
     "restore user": "Restore user",
-    "undo delete user": "Undo delete user"
+    "undo delete user": "Undo delete user",
+    "users selected": "{amount, plural, one {# user selected} other {# users selected}}"
   },
   "EmployeeManagement": {
     "create employee": "Create employee",
@@ -292,7 +300,8 @@
     "delete author": "Delete author",
     "soft delete author": "Soft delete author",
     "restore author": "Restore author",
-    "undo delete author": "Undo delete author"
+    "undo delete author": "Undo delete author",
+    "authors selected": "{amount, plural, one {# author selected} other {# authors selected}}"
   },
   "RoleManagement": {
     "Roles": "Roles",

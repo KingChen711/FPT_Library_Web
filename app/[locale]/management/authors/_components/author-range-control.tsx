@@ -1,31 +1,30 @@
 "use client"
 
-import React from "react"
 import { useSearchParams } from "next/navigation"
-import { useManagementEmployeesStore } from "@/stores/employees/use-management-employees"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 
-import EmployeeDeleteRangeConfirm from "./author-delete-range-confirm"
-import EmployeeSoftDeleteRangeConfirm from "./author-soft-delete-range-confirm"
-import EmployeeUndoDeleteRangeConfirm from "./author-undo-delete-range-confirm"
+import AuthorDeleteRangeConfirm from "./author-delete-range-confirm"
+import AuthorSoftDeleteRangeConfirm from "./author-soft-delete-range-confirm"
+import AuthorUndoDeleteRangeConfirm from "./author-undo-delete-range-confirm"
 
-const EmployeeRangeControl = () => {
+const AuthorRangeControl = () => {
   const searchParams = useSearchParams()
-  const { selectedIds } = useManagementEmployeesStore()
+  const { selectedIds } = useManagementAuthorsStore()
   const isDeleted = searchParams.get("isDeleted")
 
   return (
     <div>
-      {selectedIds.length > 1 &&
+      {selectedIds.length > 0 &&
         (isDeleted === "true" ? (
           <div className="flex items-center gap-4">
-            <EmployeeDeleteRangeConfirm selectedIds={selectedIds} />
-            <EmployeeUndoDeleteRangeConfirm selectedIds={selectedIds} />
+            <AuthorDeleteRangeConfirm selectedIds={selectedIds} />
+            <AuthorUndoDeleteRangeConfirm selectedIds={selectedIds} />
           </div>
         ) : (
-          <EmployeeSoftDeleteRangeConfirm selectedIds={selectedIds} />
+          <AuthorSoftDeleteRangeConfirm selectedIds={selectedIds} />
         ))}
     </div>
   )
 }
 
-export default EmployeeRangeControl
+export default AuthorRangeControl

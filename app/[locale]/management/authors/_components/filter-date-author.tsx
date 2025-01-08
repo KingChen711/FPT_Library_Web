@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
-import { type TEmployeesFilterSchema } from "@/lib/validations/employee/employees-filter"
+import { type TAuthorsFilterSchema } from "@/lib/validations/author/authors-filter"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -23,12 +23,12 @@ import {
 } from "@/components/ui/popover"
 
 type Props = {
-  form: UseFormReturn<TEmployeesFilterSchema, unknown, undefined>
-  name: keyof TEmployeesFilterSchema
+  form: UseFormReturn<TAuthorsFilterSchema, unknown, undefined>
+  name: keyof TAuthorsFilterSchema
   label: string
 }
 
-const FilterDateEmployee = ({ form, label, name }: Props) => {
+const FilterDateAuthor = ({ form, label, name }: Props) => {
   const t = useTranslations("GeneralManagement")
 
   return (
@@ -39,7 +39,7 @@ const FilterDateEmployee = ({ form, label, name }: Props) => {
         <FormItem>
           <FormLabel>{t(label)}</FormLabel>
 
-          <div className="flex w-fit flex-wrap items-center justify-between gap-3">
+          <div className="flex w-full flex-wrap items-center justify-between gap-3">
             <Popover>
               <PopoverTrigger asChild>
                 <FormControl>
@@ -119,4 +119,4 @@ const FilterDateEmployee = ({ form, label, name }: Props) => {
   )
 }
 
-export default FilterDateEmployee
+export default FilterDateAuthor

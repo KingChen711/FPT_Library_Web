@@ -1,11 +1,12 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 import { Loader2, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { deleteRangeEmployee } from "@/actions/employees/delete-range-employee"
+import { deleteRangeAuthor } from "@/actions/authors/delete-range-author"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -22,13 +23,14 @@ type Props = {
   selectedIds: string[]
 }
 
-const EmployeeDeleteRangeConfirm = ({ selectedIds }: Props) => {
+const AuthorDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const locale = useLocale()
   const message = `${locale === "vi" ? "xóa" : "delete"}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)
   const [pending, startDelete] = useTransition()
+  const { clear } = useManagementAuthorsStore()
 
   useEffect(() => {
     if (isOpen) {
@@ -38,13 +40,14 @@ const EmployeeDeleteRangeConfirm = ({ selectedIds }: Props) => {
 
   const handleSubmit = () => {
     startDelete(async () => {
-      const res = await deleteRangeEmployee(selectedIds)
+      const res = await deleteRangeAuthor(selectedIds)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
+        clear()
         setIsOpen(false)
         return
       }
@@ -103,4 +106,4 @@ const EmployeeDeleteRangeConfirm = ({ selectedIds }: Props) => {
   )
 }
 
-export default EmployeeDeleteRangeConfirm
+export default AuthorDeleteRangeConfirm

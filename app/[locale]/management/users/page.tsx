@@ -29,6 +29,7 @@ import UserActionDropdown from "./_components/user-action-dropdown"
 import UserCheckbox from "./_components/user-checkbox"
 import UserExport from "./_components/user-export"
 import UserHeaderTab from "./_components/user-header-tab"
+import UserImportDialog from "./_components/user-import-dialog"
 import UserRangeControl from "./_components/user-range-control"
 
 type Props = {
@@ -87,8 +88,8 @@ async function UsersManagementPage({ searchParams }: Props) {
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
           <UserExport />
-          {/* <UserImportDialog /> */}
-          <MutateUserDialog type="create" userRoles={userRoles} />
+          <UserImportDialog />
+          <MutateUserDialog type="create" />
         </div>
       </div>
 
@@ -142,17 +143,6 @@ async function UsersManagementPage({ searchParams }: Props) {
                   label={t("fields.address")}
                   sortKey="address"
                 />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.hireDate")}
-                  sortKey="hireDate"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.terminationDate")}
-                  sortKey="terminationDate"
-                />
 
                 <SortableTableHead
                   currentSort={sort}
@@ -196,16 +186,14 @@ async function UsersManagementPage({ searchParams }: Props) {
                   <TableCell>{user?.dob && formatDate(user?.dob)}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center text-nowrap">
-                      {user.gender === "Male" ? (
-                        <User color="blue" />
-                      ) : (
-                        <User color="red" />
-                      )}
+                      {user.gender === "Male" && <User color="blue" />}
+                      {user.gender === "Female" && <User color="red" />}
+                      {user.gender === "Other" && <User color="gray" />}
                     </div>
                   </TableCell>
                   <TableCell className="text-nowrap">{user.address}</TableCell>
 
-                  <TableCell>
+                  <TableCell className="text-nowrap">
                     {locale === "en"
                       ? user.role.englishName
                       : user.role.vietnameseName}
@@ -213,11 +201,14 @@ async function UsersManagementPage({ searchParams }: Props) {
 
                   <TableCell>
                     {user.isActive ? (
-                      <Badge className="h-full bg-success hover:bg-success">
+                      <Badge className="flex h-full w-[100px] justify-center text-nowrap bg-success text-center hover:bg-success">
                         {t("fields.active")}
                       </Badge>
                     ) : (
-                      <Badge variant="default" className="h-full">
+                      <Badge
+                        variant="default"
+                        className="flex h-full w-[100px] justify-center text-nowrap text-center"
+                      >
                         {t("fields.inactive")}
                       </Badge>
                     )}

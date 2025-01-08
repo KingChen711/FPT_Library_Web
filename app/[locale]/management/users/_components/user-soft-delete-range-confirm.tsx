@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { useManagementUsersStore } from "@/stores/users/use-management-user"
 import { Loader2, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -31,6 +32,7 @@ const UserSoftDeleteRangeConfirm = ({
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)
   const [pending, startDelete] = useTransition()
+  const { clear } = useManagementUsersStore()
 
   useEffect(() => {
     if (isOpen) {
@@ -43,10 +45,11 @@ const UserSoftDeleteRangeConfirm = ({
       const res = await softDeleteRangeUser(selectedIds)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Move to trash successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
+        clear()
         setIsOpen(false)
         return
       }

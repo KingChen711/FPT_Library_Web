@@ -1,11 +1,12 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 import { Loader2, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { softDeleteRangeEmployee } from "@/actions/employees/soft-delete-range-employee"
+import { softDeleteRangeAuthor } from "@/actions/authors/soft-delete-range-author"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,19 +19,18 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 
-type EmployeeSoftDeleteConfirmProps = {
+type Props = {
   selectedIds: string[]
 }
 
-const EmployeeSoftDeleteRangeConfirm = ({
-  selectedIds,
-}: EmployeeSoftDeleteConfirmProps) => {
+const AuthorSoftDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "Chuyển vào thùng rác" : "move to trash"}`
+  const message = `${locale === "vi" ? "Chuyển vào thùng rác" : "Move to trash"}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)
   const [pending, startDelete] = useTransition()
+  const { clear } = useManagementAuthorsStore()
 
   useEffect(() => {
     if (isOpen) {
@@ -40,13 +40,14 @@ const EmployeeSoftDeleteRangeConfirm = ({
 
   const handleSubmit = () => {
     startDelete(async () => {
-      const res = await softDeleteRangeEmployee(selectedIds)
+      const res = await softDeleteRangeAuthor(selectedIds)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Move to trash successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
+        clear()
         setIsOpen(false)
         return
       }
@@ -105,4 +106,4 @@ const EmployeeSoftDeleteRangeConfirm = ({
   )
 }
 
-export default EmployeeSoftDeleteRangeConfirm
+export default AuthorSoftDeleteRangeConfirm

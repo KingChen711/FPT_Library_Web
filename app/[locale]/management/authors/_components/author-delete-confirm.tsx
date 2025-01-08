@@ -1,12 +1,13 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Employee } from "@/lib/types/models"
-import { deleteEmployee } from "@/actions/employees/delete-employee"
+import { type Author } from "@/lib/types/models"
+import { deleteAuthor } from "@/actions/authors/delete-author"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -18,34 +19,35 @@ import {
 } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
 
-type EmployeeDeleteConfirmProps = {
+type Props = {
   openDelete: boolean
   setOpenDelete: (value: boolean) => void
-  employee: Employee
+  author: Author
 }
 
-const EmployeeDeleteConfirm = ({
-  employee,
+const AuthorDeleteConfirm = ({
+  author: author,
   openDelete,
   setOpenDelete,
-}: EmployeeDeleteConfirmProps) => {
+}: Props) => {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "xóa" : "delete"} ${employee.email}`
+  const message = `${locale === "vi" ? "xóa" : "delete"} ${author.fullName}`
   const tGeneralManagement = useTranslations("GeneralManagement")
-  const EmployeeManagement = useTranslations("EmployeeManagement")
+  const tAuthorManagement = useTranslations("AuthorManagement")
   const [value, setValue] = useState<string>("")
-
   const [pending, startDelete] = useTransition()
+  const { clear } = useManagementAuthorsStore()
 
   const handleDelete = () => {
     startDelete(async () => {
-      const res = await deleteEmployee(employee.employeeId)
+      const res = await deleteAuthor(author.authorId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }
@@ -58,7 +60,7 @@ const EmployeeDeleteConfirm = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-1">
-            {EmployeeManagement("delete employee")}
+            {tAuthorManagement("delete author")}
           </DialogTitle>
           <DialogDescription>
             <div
@@ -98,4 +100,4 @@ const EmployeeDeleteConfirm = ({
   )
 }
 
-export default EmployeeDeleteConfirm
+export default AuthorDeleteConfirm

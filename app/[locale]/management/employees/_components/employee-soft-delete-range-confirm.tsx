@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { useManagementEmployeesStore } from "@/stores/employees/use-management-employees"
 import { Loader2, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -31,6 +32,7 @@ const EmployeeSoftDeleteRangeConfirm = ({
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)
   const [pending, startDelete] = useTransition()
+  const { clear } = useManagementEmployeesStore()
 
   useEffect(() => {
     if (isOpen) {
@@ -43,11 +45,12 @@ const EmployeeSoftDeleteRangeConfirm = ({
       const res = await softDeleteRangeEmployee(selectedIds)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Move to trash successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
         setIsOpen(false)
+        clear()
         return
       }
       handleServerActionError(res, locale)

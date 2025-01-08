@@ -42,6 +42,11 @@ export type User = {
   }
 }
 
+export type ImportError = {
+  rowNumber: number
+  errors: string[]
+}
+
 export type Role = {
   englishName: string
   vietnameseName: string
@@ -87,9 +92,9 @@ export type Employee = {
 
 export type Author = {
   authorId: number
+  fullName: string
   authorCode: string
   authorImage: string
-  fullName: string
   biography: string
   dob: string
   dateOfDeath: string

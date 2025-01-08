@@ -103,3 +103,26 @@ export async function fileUrlToFile(fileUrl: string, fileName: string) {
   // Create a File object from the blob
   return new File([blob], fileName, { type: blob.type })
 }
+
+export const convertGenderToNumber = (gender: string) => {
+  switch (gender) {
+    case "Male":
+      return 0
+    case "Female":
+      return 1
+    case "Other":
+      return 2
+    default:
+      return null
+  }
+}
+
+export function isImageLinkValid(link: string): boolean {
+  try {
+    const url = new URL(link)
+    const imageUrlRegex = /\.(jpeg|jpg|gif|png)$/i
+    return url.protocol === "https:" && imageUrlRegex.test(url.pathname)
+  } catch {
+    return false
+  }
+}

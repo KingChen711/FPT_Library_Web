@@ -54,7 +54,7 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
       dob: currentUser.dob,
       phone: currentUser.phone || "",
       address: currentUser.address || "",
-      gender: currentUser.gender ? Number(currentUser.gender) : 0,
+      // gender: currentUser.gender || undefined,
       avatar: currentUser.avatar || "",
     },
   })
@@ -186,11 +186,12 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                 <FormItem>
                   <FormLabel>{t("gender")}</FormLabel>
                   <Select
-                    disabled={pending}
-                    onValueChange={(value) => field.onChange(Number(value))} // Ensure numeric value
-                    defaultValue={
-                      field.value?.toString() === "Male" ? "0" : "1"
-                    } // Convert to string for `defaultValue`
+                    onValueChange={(value) =>
+                      field.onChange(
+                        value !== undefined ? parseInt(value, 10) : undefined
+                      )
+                    }
+                    value={field.value?.toString() || ""}
                   >
                     <FormControl>
                       <SelectTrigger>
@@ -198,8 +199,8 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="0">{t("male")}</SelectItem>
-                      <SelectItem value="1">{t("female")}</SelectItem>
+                      <SelectItem value="Male">{t("male")}</SelectItem>
+                      <SelectItem value="Female">{t("female")}</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />

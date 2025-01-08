@@ -1,21 +1,12 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import { type TEmployeeRole } from "@/queries/roles/get-employee-roles"
-import {
-  EyeOff,
-  MoreHorizontal,
-  SquarePen,
-  Trash,
-  Trash2,
-  User2,
-} from "lucide-react"
+import { MoreHorizontal, SquarePen, Trash, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type Employee } from "@/lib/types/models"
-import { changeEmployeeStatus } from "@/actions/employees/change-status"
-import { undoDeleteEmployee } from "@/actions/employees/undo-delete"
+import { type Author } from "@/lib/types/models"
+import { undoDeleteAuthor } from "@/actions/authors/undo-delete"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,16 +16,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import EmployeeDeleteConfirm from "./author-delete-confirm"
-import EmployeeSoftDeleteConfirm from "./author-soft-delete-confirm"
-import MutateEmployeeDialog from "./mutate-author-dialog"
+import AuthorDeleteConfirm from "./author-delete-confirm"
+import AuthorSoftDeleteConfirm from "./author-soft-delete-confirm"
+import MutateAuthorDialog from "./mutate-author-dialog"
 
 type Props = {
-  employee: Employee
-  employeeRoles: TEmployeeRole[]
+  author: Author
 }
 
-function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
+function AuthorActionDropdown({ author }: Props) {
   const t = useTranslations("GeneralManagement")
 
   const locale = useLocale()
@@ -42,30 +32,14 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
   const [openDelete, setOpenDelete] = useState(false)
   const [openSoftDelete, setOpenSoftDelete] = useState(false)
 
-  const [pendingChangeStatus, startChangeStatus] = useTransition()
   const [pendingUndoDelete, startUndoDelete] = useTransition()
-
-  const handleDeactivate = () => {
-    startChangeStatus(async () => {
-      const res = await changeEmployeeStatus(employee.employeeId)
-      if (res.isSuccess) {
-        toast({
-          title: locale === "vi" ? "Thành công" : "Change status success",
-          description: res.data,
-          variant: "success",
-        })
-        return
-      }
-      handleServerActionError(res, locale)
-    })
-  }
 
   const handleUndoDelete = () => {
     startUndoDelete(async () => {
-      const res = await undoDeleteEmployee(employee.employeeId)
+      const res = await undoDeleteAuthor(author.authorId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Undo delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
@@ -77,22 +51,21 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
 
   return (
     <>
-      <EmployeeDeleteConfirm
-        employee={employee}
+      <AuthorDeleteConfirm
+        author={author}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
       />
-      <EmployeeSoftDeleteConfirm
-        employee={employee}
+      <AuthorSoftDeleteConfirm
+        author={author}
         openDelete={openSoftDelete}
         setOpenDelete={setOpenSoftDelete}
       />
-      <MutateEmployeeDialog
+      <MutateAuthorDialog
+        type="update"
         openEdit={openEdit}
         setOpenEdit={setOpenEdit}
-        type="update"
-        employee={employee}
-        employeeRoles={employeeRoles}
+        author={author}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -104,7 +77,7 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="bg-primary-foreground">
-          {!employee?.isDeleted ? (
+          {!author?.isDeleted ? (
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>
                 <DropdownMenuItem className="cursor-pointer">
@@ -119,16 +92,7 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
-                <User2 /> {t("change role")}
-              </DropdownMenuItem>
-              <DropdownMenuItem
-                className="cursor-pointer"
-                onClick={handleDeactivate}
-                disabled={pendingChangeStatus}
-              >
-                <EyeOff /> {t("de-activate")}
-              </DropdownMenuItem>
+
               <DropdownMenuItem
                 className="cursor-pointer"
                 onClick={() => setOpenSoftDelete(true)}
@@ -160,4 +124,4 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
   )
 }
 
-export default EmployeeActionDropdown
+export default AuthorActionDropdown

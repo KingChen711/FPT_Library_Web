@@ -1,18 +1,18 @@
 "use client"
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation"
-import { useManagementEmployeesStore } from "@/stores/employees/use-management-employees"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 import { useTranslations } from "next-intl"
 import { useDebouncedCallback } from "use-debounce"
 
 import { cn } from "@/lib/utils"
 
-const EmployeeHeaderTab = () => {
+const AuthorHeaderTab = () => {
   const pathname = usePathname()
   const router = useRouter()
   const searchParams = useSearchParams()
   const t = useTranslations("GeneralManagement")
-  const { clear } = useManagementEmployeesStore()
+  const { clear } = useManagementAuthorsStore()
 
   const handleShowDeleted = useDebouncedCallback((value: string) => {
     clear()
@@ -49,4 +49,4 @@ const EmployeeHeaderTab = () => {
   )
 }
 
-export default EmployeeHeaderTab
+export default AuthorHeaderTab

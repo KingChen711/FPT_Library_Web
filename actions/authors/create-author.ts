@@ -5,16 +5,15 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
+import { type TMutateAuthorSchema } from "@/lib/validations/author/mutate-author"
 
 export async function createAuthor(
-  //TODO: fix any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  body: any
-): Promise<ActionResponse> {
+  body: TMutateAuthorSchema
+): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
 
   try {
-    await http.post("/api/management/authors", body, {
+    const { message } = await http.post("/api/management/authors", body, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
@@ -24,6 +23,7 @@ export async function createAuthor(
 
     return {
       isSuccess: true,
+      data: message,
     }
   } catch (error) {
     return handleHttpError(error)

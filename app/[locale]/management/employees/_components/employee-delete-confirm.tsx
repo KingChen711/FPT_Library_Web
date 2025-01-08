@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { useManagementEmployeesStore } from "@/stores/employees/use-management-employees"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -34,7 +35,7 @@ const EmployeeDeleteConfirm = ({
   const tGeneralManagement = useTranslations("GeneralManagement")
   const EmployeeManagement = useTranslations("EmployeeManagement")
   const [value, setValue] = useState<string>("")
-
+  const { clear } = useManagementEmployeesStore()
   const [pending, startDelete] = useTransition()
 
   const handleDelete = () => {
@@ -42,10 +43,11 @@ const EmployeeDeleteConfirm = ({
       const res = await deleteEmployee(employee.employeeId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }

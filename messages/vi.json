@@ -85,6 +85,7 @@
     "max150": "Phải có không quá 150 kí tự",
     "max2000": "Phải có không quá 2000 kí tự",
     "email": "Email không hợp lệ",
+    "min10": "Phải có ít nhất 10 kí tự",
     "length_10": "Phải có 10 kí tự",
     "required": "Bắt buộc",
     "categoriesMin1": "Cần ít nhất 1 thể loại",
@@ -178,7 +179,7 @@
       "export": "Xuất dữ liệu",
       "filter": "Tìm kiếm",
       "search": "Tìm kiếm",
-      "create": "Tạo mô tả",
+      "create": "Tạo",
       "update": "Chỉnh sửa",
       "delete": "Xóa",
       "undo delete": "Khôi phục",
@@ -226,6 +227,7 @@
       "gender": "Giới tính",
       "male": "Nam",
       "female": "Nữ",
+      "other": "Khác",
       "address": "Địa chỉ",
       "active": "Kích hoạt",
       "inactive": "Bất hoạt",
@@ -234,6 +236,7 @@
       "employeeCode": "Mã số nhân viên",
       "authorCode": "Mã số tác giả",
       "collegeEmailId": "Email sinh viên",
+      "isSendEmail": "Nhận email",
       "role": "Vai trò",
       "avatar": "Ảnh đại diện",
       "status": "Tình trạng",
@@ -242,6 +245,10 @@
       "dateOfDeath": "Ngày mất",
       "hireDate": "Ngày thuê",
       "terminationDate": "Ngày nghỉ",
+      "dobRange": "Khoâng thời gian sinh",
+      "dateOfDeathRange": "Ngày mất",
+      "createDateRange": "Khoâng thời gian tạo",
+      "modifiedDateRange": "Khoâng thời gian sửa",
       "biography": "Tiểu sử",
       "date of death": "Ngày mất",
       "nationality": "Quốc tịch",
@@ -264,7 +271,8 @@
     "delete user": "Xóa người dùng",
     "soft delete user": "Xóa mềm người dùng",
     "restore user": "Khôi phục người dùng",
-    "undo delete user": "Khôi phúc xóa người dùng"
+    "undo delete user": "Khôi phúc xóa người dùng",
+    "users selected": "Đang chọn ({amount})"
   },
   "EmployeeManagement": {
     "create employee": "Tạo nhân viên",
@@ -288,7 +296,7 @@
     "Edit": "Chỉnh sửa",
     "Delete": "Xóa",
     "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
-    "Employees selected": "Đang chọn ({amount})"
+    "employees selected": "Đang chọn ({amount})"
   },
   "AuthorManagement": {
     "create author": "Tạo tác giả",
@@ -296,7 +304,8 @@
     "delete author": "Xóa tác giả",
     "soft delete author": "Xóa mềm tác giả",
     "restore author": "Khôi phục tác giả",
-    "undo delete author": "Khôi phúc xóa tác giả"
+    "undo delete author": "Khôi phúc xóa tác giả",
+    "authors selected": "Đang chọn ({amount})"
   },
   "RoleManagement": {
     "Roles": "Vai trò",

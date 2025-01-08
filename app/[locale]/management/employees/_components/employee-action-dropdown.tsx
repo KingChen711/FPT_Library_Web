@@ -50,7 +50,7 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
       const res = await changeEmployeeStatus(employee.employeeId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Change status success",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
@@ -65,7 +65,7 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
       const res = await undoDeleteEmployee(employee.employeeId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Undo delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
@@ -109,9 +109,7 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
               <DropdownMenuItem className="cursor-pointer" asChild>
                 <DropdownMenuItem className="cursor-pointer">
                   <div
-                    onClick={() => {
-                      setOpenEdit(true)
-                    }}
+                    onClick={() => setOpenEdit(true)}
                     className="flex items-center gap-x-2"
                   >
                     <SquarePen className="size-4" />

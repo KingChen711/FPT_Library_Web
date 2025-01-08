@@ -5,25 +5,34 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TUserDialogSchema } from "@/lib/validations/auth/user-dialog"
+import { convertGenderToNumber } from "@/lib/utils"
+import { type TMutateUserSchema } from "@/lib/validations/user/mutate-user"
 
 export async function updateUser(
   userId: string,
-  body: TUserDialogSchema
-): Promise<ActionResponse> {
+  body: Omit<TMutateUserSchema, "email">
+): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
 
   try {
-    await http.put(`/api/management/users/${userId}`, body, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
+    const { message } = await http.put(
+      `/api/management/users/${userId}`,
+      {
+        ...body,
+        gender: convertGenderToNumber(body.gender),
       },
-    })
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
 
     revalidateTag("users")
 
     return {
       isSuccess: true,
+      data: message,
     }
   } catch (error) {
     return handleHttpError(error)

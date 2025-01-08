@@ -4,6 +4,7 @@ import { SquarePen } from "lucide-react"
 
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
+import { StyledReadMore } from "@/components/ui/read-more"
 import { Separator } from "@/components/ui/separator"
 
 const BookOverviewTab = () => {
@@ -33,22 +34,18 @@ const BookOverviewTab = () => {
           Preview available in &nbsp;
           <span className="font-semibold text-primary underline">English</span>
         </p>
-        <div>
-          <p className="line-clamp-3 text-justify">
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Minima
-            dolor qui fugiat optio sapiente reiciendis nihil atque vitae. Sint
-            debitis perspiciatis nam, at unde tempora! Porro eaque tenetur
-            repudiandae dicta possimus est voluptatem enim sunt explicabo. Nemo,
-            voluptate? Quas, porro quisquam similique explicabo sint, esse,
-            corrupti in vel ratione molestias aspernatur quia aliquam
-            reprehenderit aperiam quidem beatae iste fuga cum itaque eius
-            officia mollitia. Nulla enim atque provident officiis ut ullam ipsa
-            eum, impedit a unde exercitationem blanditiis beatae officia.
-          </p>
-          <p className="cursor-pointer text-right font-semibold text-danger underline">
-            Read More
-          </p>
-        </div>
+        <StyledReadMore truncate={120}>
+          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo
+          deleniti officiis harum veniam laudantium esse, accusantium nostrum
+          voluptatibus molestiae architecto et vero, recusandae nesciunt,
+          voluptatem eaque libero velit facere odit itaque quidem inventore
+          pariatur. Ipsam quis magni necessitatibus quam facilis in corporis
+          nam? Dolorem, id sunt sit modi veritatis quidem nisi distinctio,
+          doloremque consequuntur suscipit ipsum quibusdam eum dicta aliquid
+          totam quo dignissimos quaerat, repudiandae excepturi dolor
+          perspiciatis saepe! Aperiam modi et molestias fugiat, quo libero
+          aspernatur voluptate sit ratione.
+        </StyledReadMore>
 
         <div className="flex gap-4">
           <section className="flex-1 space-y-4 rounded-lg border bg-primary-foreground p-4 shadow-md">

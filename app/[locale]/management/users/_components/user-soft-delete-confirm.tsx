@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { useManagementUsersStore } from "@/stores/users/use-management-user"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -33,18 +34,19 @@ const UserSoftDeleteConfirm = ({
   const message = `${user.email}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
-
   const [pending, startSoftDelete] = useTransition()
+  const { clear } = useManagementUsersStore()
 
   const handleSoftDelete = () => {
     startSoftDelete(async () => {
       const res = await softDeleteUser(user.userId)
       if (res.isSuccess) {
         toast({
-          title: locale === "vi" ? "Thành công" : "Soft delete successfully",
+          title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }

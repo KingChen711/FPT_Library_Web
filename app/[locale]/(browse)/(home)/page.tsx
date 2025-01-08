@@ -11,7 +11,7 @@ export default async function Home() {
       <h1 className="mt-8 text-center text-2xl font-semibold text-primary">
         {t("welcome")}
       </h1>
-      <BookList title="Best seller" totalBooks={120} />
+      <BookList title="Best review" totalBooks={120} />
       <BookList title="Recommend for You" totalBooks={12} />
       <BookList title="Recent Reading" totalBooks={40} />
       <BookList title="Academic Book" totalBooks={24} />

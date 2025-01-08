@@ -1,10 +1,12 @@
+/* eslint-disable @typescript-eslint/no-base-to-string */
 "use client"
 
 import { useState, useTransition } from "react"
 import Image from "next/image"
+import { ServerUrl } from "@/constants"
 import { useAuth } from "@/contexts/auth-provider"
-import { type TEmployeeRole } from "@/queries/roles/get-employee-roles"
 import { zodResolver } from "@hookform/resolvers/zod"
+import axios from "axios"
 import { format } from "date-fns"
 import { Loader2, Plus, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -12,14 +14,14 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { ResourceType } from "@/lib/types/enums"
-import { type Employee } from "@/lib/types/models"
-import { cn } from "@/lib/utils"
+import { type Author } from "@/lib/types/models"
+import { cn, isImageLinkValid } from "@/lib/utils"
 import {
-  mutateEmployeeSchema,
-  type TMutateEmployeeSchema,
-} from "@/lib/validations/employee/mutate-employee"
-import { createEmployee } from "@/actions/employees/create-employee"
-import { updateEmployee } from "@/actions/employees/update-employee"
+  mutateAuthorSchema,
+  type TMutateAuthorSchema,
+} from "@/lib/validations/author/mutate-author"
+import { createAuthor } from "@/actions/authors/create-author"
+import { updateAuthor } from "@/actions/authors/update-author"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -41,30 +43,21 @@ import {
 } from "@/components/ui/form"
 import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 type Props = {
   type: "create" | "update"
-  employee?: Employee
+  author?: Author
   openEdit?: boolean
   setOpenEdit?: (value: boolean) => void
 } & (
   | {
       type: "create"
-      employeeRoles: TEmployeeRole[]
     }
   | {
       type: "update"
-      employee: Employee
+      author: Author
       openEdit: boolean
       setOpenEdit: (value: boolean) => void
-      employeeRoles: TEmployeeRole[]
     }
 )
 
@@ -77,21 +70,14 @@ type TUploadImageData = {
   }
 }
 
-function MutateEmployeeDialog({
-  type,
-  employee,
-  openEdit,
-  setOpenEdit,
-  employeeRoles,
-}: Props) {
+function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
   const { accessToken } = useAuth()
   const locale = useLocale()
   const [open, setOpen] = useState(false)
-  const [avatar, setAvatar] = useState<string>("")
   const [isPending, startTransition] = useTransition()
   const [file, setFile] = useState<File | null>(null)
   const t = useTranslations("GeneralManagement")
-  const tEmployeeManagement = useTranslations("EmployeeManagement")
+  const tAuthorManagement = useTranslations("AuthorManagement")
   const handleOpenChange = (value: boolean) => {
     if (isPending) return
     if (type === "create") {
@@ -101,93 +87,61 @@ function MutateEmployeeDialog({
     setOpenEdit(value)
   }
 
-  const form = useForm<TMutateEmployeeSchema>({
-    resolver: zodResolver(mutateEmployeeSchema),
+  const form = useForm<TMutateAuthorSchema>({
+    resolver: zodResolver(mutateAuthorSchema),
     defaultValues: {
-      employeeCode: type === "update" ? employee.employeeCode : "",
-      email: type === "update" ? employee.email : "",
-      roleId: type === "update" ? employee.roleId : 0,
-
-      firstName: type === "update" ? employee.firstName : "",
-      lastName: type === "update" ? employee.lastName : "",
-      phone: type === "update" ? employee.phone : "",
-      address: type === "update" ? employee.address : "",
-      gender: type === "update" ? employee.gender : "Male",
-      avatar: type === "update" ? employee.avatar : "",
-      dob:
-        type === "update"
-          ? format(new Date(employee.dob), "yyyy-MM-dd")
-          : "2025-07-07",
-      hireDate:
-        type === "update"
-          ? format(new Date(employee.hireDate), "yyyy-MM-dd")
-          : "2023-10-10",
-      terminationDate:
-        type === "update"
-          ? format(new Date(employee.terminationDate), "yyyy-MM-dd")
-          : "2025-07-07",
+      fullName: type === "update" ? author.fullName : "",
+      authorImage:
+        type === "update" && isImageLinkValid(author.authorImage)
+          ? author.authorImage
+          : "https://res.cloudinary.com/heyset/image/upload/v1689582418/buukmenow-folder/no-image-icon-0.jpg",
+      authorCode: type === "update" ? author.authorCode : "",
+      biography: type === "update" ? author.biography : "",
+      nationality: type === "update" ? author.nationality : "",
+      dateOfDeath: type === "update" ? author.dateOfDeath : null,
+      dob: type === "update" ? format(new Date(author.dob), "yyyy-MM-dd") : "",
     },
   })
 
-  if (employeeRoles.length === 0)
-    return <Loader2 className="size-8 animate-spin" />
-
-  const handleUploadImage = async (file: File) => {
+  const handleUploadImage = async (file: File): Promise<TUploadImageData> => {
     const formData = new FormData()
     formData.append("file", file)
     formData.append("resourceType", ResourceType.Profile)
-    const res = await fetch(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/management/resources/images/upload`,
+    const res = await axios.post(
+      `${ServerUrl}/api/management/resources/images/upload`,
+      formData,
       {
-        method: "POST",
         headers: {
           Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "multipart/form-data",
         },
-        body: formData,
       }
     )
-    const data = (await res.json()) as TUploadImageData
-    setAvatar(data.data.secureUrl)
 
-    // if (data.resultCode === "Cloud.Success0001") {
-    //   toast({
-    //     title: data.message,
-    //     variant: "success",
-    //   })
-    //   setAvatar(data.data.secureUrl)
-    // } else {
-    //   toast({
-    //     title: data.message,
-    //     variant: "danger",
-    //   })
-    // }
+    const data = res.data as TUploadImageData
+    return data
   }
 
-  const onSubmit = async (values: TMutateEmployeeSchema) => {
-    if (!file) {
-      toast({
-        title: "Please upload image",
-        variant: "danger",
-      })
-      return
-    }
-
+  const onSubmit = async (values: TMutateAuthorSchema) => {
     startTransition(async () => {
-      if (type === "create") {
-        if (!file) {
-          toast({
-            title: "Please upload image",
-            variant: "danger",
-          })
-          return
+      if (file) {
+        const imageData = await handleUploadImage(file)
+        const payload = {
+          ...values,
+          authorImage: imageData.data.secureUrl,
         }
-        await handleUploadImage(file)
-        const res = await createEmployee({ ...values, avatar })
+        let res
+        if (type === "create") {
+          res = await createAuthor(payload)
+        } else {
+          res = await updateAuthor(author.authorId, payload)
+        }
         if (res.isSuccess) {
           form.reset()
           setOpen(false)
           toast({
-            title: "Create employee successfully",
+            title: locale === "vi" ? "Thành công" : "Success",
+            description: res.data,
             variant: "success",
           })
         } else {
@@ -195,20 +149,33 @@ function MutateEmployeeDialog({
         }
       }
 
-      if (type === "update") {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { employeeCode, email, roleId, ...rest } = values
-        await handleUploadImage(file)
-        const res = await updateEmployee(employee.employeeId, rest)
-        if (res.isSuccess) {
-          form.reset()
-          setOpenEdit(false)
-          toast({
-            title: "Update employee successfully",
-            variant: "success",
-          })
-        } else {
-          handleServerActionError(res, locale, form)
+      if (!file) {
+        if (type === "create") {
+          const res = await createAuthor(values)
+          if (res.isSuccess) {
+            form.reset()
+            setOpen(false)
+            toast({
+              title: locale === "vi" ? "Thành công" : "Success",
+              description: res.data,
+              variant: "success",
+            })
+          } else {
+            handleServerActionError(res, locale, form)
+          }
+        } else if (type === "update") {
+          const res = await updateAuthor(author.authorId, values)
+          if (res.isSuccess) {
+            form.reset()
+            setOpen(false)
+            toast({
+              title: locale === "vi" ? "Thành công" : "Success",
+              description: res.data,
+              variant: "success",
+            })
+          } else {
+            handleServerActionError(res, locale, form)
+          }
         }
       }
     })
@@ -229,7 +196,6 @@ function MutateEmployeeDialog({
       if (!file.type.includes("image")) return
 
       fileReader.onload = async (event) => {
-        // eslint-disable-next-line @typescript-eslint/no-base-to-string
         const imageDataUrl = event.target?.result?.toString() || ""
         fieldChange(imageDataUrl)
       }
@@ -247,15 +213,15 @@ function MutateEmployeeDialog({
         <DialogTrigger asChild>
           <Button className="flex items-center justify-end gap-x-1 leading-none">
             <Plus />
-            <div>{tEmployeeManagement("create employee")}</div>
+            <div>{tAuthorManagement("create author")}</div>
           </Button>
         </DialogTrigger>
       )}
       <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
-            {tEmployeeManagement(
-              type === "create" ? "create employee" : "update employee"
+            {tAuthorManagement(
+              type === "create" ? "create author" : "update author"
             )}
           </DialogTitle>
           <DialogDescription>
@@ -266,7 +232,7 @@ function MutateEmployeeDialog({
               >
                 <FormField
                   control={form.control}
-                  name="avatar"
+                  name="authorImage"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>
@@ -328,15 +294,16 @@ function MutateEmployeeDialog({
 
                 <FormField
                   control={form.control}
-                  name="employeeCode"
+                  name="authorCode"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("fields.employeeCode")}</FormLabel>
+                      <FormLabel>{t("fields.authorCode")}</FormLabel>
 
                       <FormControl>
                         <Input
-                          disabled={isPending || type === "update"}
+                          disabled={isPending}
                           {...field}
+                          value={field.value ?? ""}
                           placeholder={t("placeholder.code")}
                         />
                       </FormControl>
@@ -347,101 +314,14 @@ function MutateEmployeeDialog({
 
                 <FormField
                   control={form.control}
-                  name="email"
+                  name="fullName"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("fields.email")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="email"
-                          disabled={isPending || type === "update"}
-                          {...field}
-                          placeholder={t("placeholder.email")}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="roleId"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("fields.role")}</FormLabel>
-                      <Select
-                        onValueChange={(value) => field.onChange(Number(value))}
-                        defaultValue={field.value ? field.value.toString() : ""}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue placeholder={t("placeholder.role")} />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {employeeRoles.map((role) => (
-                            <SelectItem
-                              key={role.roleId}
-                              value={role.roleId.toString()}
-                            >
-                              {locale === "en"
-                                ? role.englishName
-                                : role.vietnameseName}
-                              {role.roleId.toString()} -{" "}
-                              {field.value.toString()}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="gender"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("fields.gender")}</FormLabel>
-                      <Select
-                        onValueChange={field.onChange}
-                        defaultValue={field.value.toString()}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue
-                              placeholder={t("placeholder.gender")}
-                            />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="Male">
-                            {t("fields.male")}
-                          </SelectItem>
-                          <SelectItem value="Female">
-                            {t("fields.female")}
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("fields.firstName")}</FormLabel>
+                      <FormLabel>{t("fields.fullName")}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder={t("placeholder.firstName")}
+                          placeholder={t("placeholder.fullName")}
                         />
                       </FormControl>
 
@@ -452,14 +332,32 @@ function MutateEmployeeDialog({
 
                 <FormField
                   control={form.control}
-                  name="lastName"
+                  name="biography"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("fields.lastName")}</FormLabel>
+                    <FormItem className="flex flex-col items-start">
+                      <FormLabel>{t("fields.biography")}</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
-                          placeholder={t("placeholder.lastName")}
+                          placeholder={t("placeholder.biography")}
+                        />
+                      </FormControl>
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="nationality"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start">
+                      <FormLabel>{t("fields.nationality")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          {...field}
+                          placeholder={t("placeholder.nationality")}
                         />
                       </FormControl>
 
@@ -475,24 +373,11 @@ function MutateEmployeeDialog({
                     <FormItem className="flex flex-col items-start">
                       <FormLabel>{t("fields.dob")}</FormLabel>
                       <FormControl>
-                        <Input type="date" disabled={isPending} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("fields.phone")}</FormLabel>
-                      <FormControl>
                         <Input
+                          type="date"
                           disabled={isPending}
                           {...field}
-                          placeholder={t("placeholder.phone")}
+                          value={field.value ?? null}
                         />
                       </FormControl>
                       <FormMessage />
@@ -502,44 +387,17 @@ function MutateEmployeeDialog({
 
                 <FormField
                   control={form.control}
-                  name="address"
+                  name="dateOfDeath"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("fields.address")}</FormLabel>
+                      <FormLabel>{t("fields.dateOfDeath")}</FormLabel>
                       <FormControl>
                         <Input
+                          type="date"
                           disabled={isPending}
                           {...field}
-                          placeholder={t("placeholder.address")}
+                          value={field.value || ""}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="hireDate"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("fields.hireDate")}</FormLabel>
-                      <FormControl>
-                        <Input type="date" disabled={isPending} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="terminationDate"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("fields.terminationDate")}</FormLabel>
-                      <FormControl>
-                        <Input type="date" disabled={isPending} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -577,4 +435,4 @@ function MutateEmployeeDialog({
   )
 }
 
-export default MutateEmployeeDialog
+export default MutateAuthorDialog

@@ -1,9 +1,10 @@
 import { useState, useTransition } from "react"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { deleteEmployee } from "@/actions/employees/delete-employee"
+import { deleteAuthor } from "@/actions/authors/delete-author"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,25 +20,25 @@ type Props = {
   openDelete: boolean
   setOpenDelete: (value: boolean) => void
   fineName: string
-  fineId: number
+  authorId: number
 }
 
-function DeleteEmployeeDialog({
+function DeleteAuthorDialog({
   setOpenDelete,
   openDelete,
   fineName,
-  fineId,
+  authorId,
 }: Props) {
   const locale = useLocale()
   const message = `${locale === "vi" ? "xóa" : "delete"} ${fineName}`
-  const t = useTranslations("EmployeesManagementPage")
+  const t = useTranslations("AuthorsManagementPage")
   const [value, setValue] = useState("")
-
   const [pending, startTransition] = useTransition()
+  const { clear } = useManagementAuthorsStore()
 
   const handleDeleteFine = () => {
     startTransition(async () => {
-      const res = await deleteEmployee(fineId.toString())
+      const res = await deleteAuthor(authorId)
 
       if (res.isSuccess) {
         toast({
@@ -45,6 +46,7 @@ function DeleteEmployeeDialog({
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDelete(false)
         return
       }
@@ -57,7 +59,7 @@ function DeleteEmployeeDialog({
     <Dialog open={openDelete} onOpenChange={setOpenDelete}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="mb-1">{t("Delete fine")}</DialogTitle>
+          <DialogTitle className="mb-1">{t("Delete author")}</DialogTitle>
           <DialogDescription>
             <div
               className="select-none"
@@ -98,4 +100,4 @@ function DeleteEmployeeDialog({
   )
 }
 
-export default DeleteEmployeeDialog
+export default DeleteAuthorDialog

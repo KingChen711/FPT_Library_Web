@@ -4,6 +4,8 @@ import { Bell } from "lucide-react"
 import { EFeature } from "@/lib/types/enums"
 import { Icons } from "@/components/ui/icons"
 
+export const ServerUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
+
 // Pagination Configuration
 export const DEFAULT_PAGE_INDEX = 1
 export const DEFAULT_PAGE_SIZE = 5

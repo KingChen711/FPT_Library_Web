@@ -9,7 +9,7 @@ import { type TMutateEmployeeSchema } from "@/lib/validations/employee/mutate-em
 
 export async function updateEmployee(
   employeeId: string,
-  body: Omit<TMutateEmployeeSchema, "employeeCode" | "email" | "roleId">
+  body: Omit<TMutateEmployeeSchema, "email" | "roleId">
 ): Promise<ActionResponse> {
   const { getAccessToken } = auth()
 
