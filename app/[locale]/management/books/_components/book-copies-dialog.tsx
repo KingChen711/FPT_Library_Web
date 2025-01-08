@@ -11,7 +11,7 @@ import { type UseFormReturn } from "react-hook-form"
 import { v4 as uuidv4 } from "uuid"
 import { z } from "zod"
 
-import { EBookConditionStatus } from "@/lib/types/enums"
+import { EBookCopyConditionStatus } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import {
   type TBookCopySchema,
@@ -63,8 +63,8 @@ type Props = {
 
 const createInput = () => ({
   id: uuidv4(),
-  code: "",
-  conditionStatus: EBookConditionStatus.GOOD,
+  barcode: "",
+  conditionStatus: EBookCopyConditionStatus.GOOD,
 })
 
 function parseInput(input: string): (TBookCopySchema & { id: string })[] {
@@ -81,10 +81,10 @@ function parseInput(input: string): (TBookCopySchema & { id: string })[] {
 
     return {
       id: uuidv4(),
-      code: parts[0].replace("\r", ""),
+      barcode: parts[0].replace("\r", ""),
       conditionStatus: z
-        .nativeEnum(EBookConditionStatus)
-        .catch(EBookConditionStatus.GOOD)
+        .nativeEnum(EBookCopyConditionStatus)
+        .catch(EBookCopyConditionStatus.GOOD)
         .parse(parts[1]?.replace("\r", "")),
     }
   })
@@ -108,7 +108,7 @@ function BookCopiesDialog({
   const [openWarning, setOpenWarning] = useState(false)
   const [tempChangedCopy, setTempChangedCopy] = useState<{
     inputId: string
-    val: EBookConditionStatus
+    val: EBookCopyConditionStatus
   } | null>(null)
 
   const handleOnPasteInput = (e: React.ClipboardEvent<HTMLInputElement>) => {
@@ -136,16 +136,15 @@ function BookCopiesDialog({
     const cloneCopies = structuredClone(
       form.getValues(`bookEditions.${editionIndex}.bookCopies`)
     )
-    console.log({ inputs, cloneCopies })
 
     inputs.forEach((input) => {
-      if (!input.code) return
-      const index = cloneCopies.findIndex((c) => c.code === input.code)
+      if (!input.barcode) return
+      const index = cloneCopies.findIndex((c) => c.barcode === input.barcode)
       if (index !== -1) {
         cloneCopies[index].conditionStatus = input.conditionStatus
       } else {
         cloneCopies.unshift({
-          code: input.code,
+          barcode: input.barcode,
           conditionStatus: input.conditionStatus,
         })
       }
@@ -161,20 +160,20 @@ function BookCopiesDialog({
     )
 
     const newCopies = cloneCopies
-      .map((copy) => (selectedCodes.includes(copy.code) ? null : copy))
+      .map((copy) => (selectedCodes.includes(copy.barcode) ? null : copy))
       .filter(Boolean) as TBookCopySchema[]
 
     form.setValue(`bookEditions.${editionIndex}.bookCopies`, newCopies)
     setSelectedCodes([])
   }
 
-  const handleChangeStatus = (status: EBookConditionStatus) => {
+  const handleChangeStatus = (status: EBookCopyConditionStatus) => {
     const cloneCopies = structuredClone(
       form.getValues(`bookEditions.${editionIndex}.bookCopies`)
     )
 
     selectedCodes.forEach((selectedCode) => {
-      const copyIndex = cloneCopies.findIndex((c) => c.code === selectedCode)
+      const copyIndex = cloneCopies.findIndex((c) => c.barcode === selectedCode)
 
       if (copyIndex !== -1) {
         cloneCopies[copyIndex].conditionStatus = status
@@ -202,13 +201,13 @@ function BookCopiesDialog({
                   <div className="flex flex-1 items-center gap-2">
                     <Input
                       placeholder={t("placeholder code")}
-                      value={input.code}
+                      value={input.barcode}
                       onChange={(e) => {
                         setInputs((prev) => {
                           const clone = structuredClone(prev)
                           clone.forEach((item) => {
                             if (item.id !== input.id) return
-                            item.code = e.target.value
+                            item.barcode = e.target.value
                           })
                           return clone
                         })
@@ -218,14 +217,14 @@ function BookCopiesDialog({
                     />
                     <Select
                       value={input.conditionStatus}
-                      onValueChange={(val: EBookConditionStatus) => {
+                      onValueChange={(val: EBookCopyConditionStatus) => {
                         if (
-                          val !== EBookConditionStatus.GOOD &&
+                          val !== EBookCopyConditionStatus.GOOD &&
                           !hasConfirmedAboutChangeStatus
                         ) {
                           setTempChangedCopy({
                             inputId: input.id,
-                            val: val as EBookConditionStatus,
+                            val: val as EBookCopyConditionStatus,
                           })
                           setOpenWarning(true)
                           return
@@ -251,27 +250,21 @@ function BookCopiesDialog({
                         <SelectGroup>
                           <SelectItem
                             className="cursor-pointer"
-                            value={EBookConditionStatus.GOOD}
+                            value={EBookCopyConditionStatus.GOOD}
                           >
-                            {t(EBookConditionStatus.GOOD)}
+                            {t(EBookCopyConditionStatus.GOOD)}
                           </SelectItem>
                           <SelectItem
                             className="cursor-pointer"
-                            value={EBookConditionStatus.WORN}
+                            value={EBookCopyConditionStatus.WORN}
                           >
-                            {t(EBookConditionStatus.WORN)}
+                            {t(EBookCopyConditionStatus.WORN)}
                           </SelectItem>
                           <SelectItem
                             className="cursor-pointer"
-                            value={EBookConditionStatus.DAMAGED}
+                            value={EBookCopyConditionStatus.DAMAGED}
                           >
-                            {t(EBookConditionStatus.DAMAGED)}
-                          </SelectItem>
-                          <SelectItem
-                            className="cursor-pointer"
-                            value={EBookConditionStatus.LOST}
-                          >
-                            {t(EBookConditionStatus.LOST)}
+                            {t(EBookCopyConditionStatus.DAMAGED)}
                           </SelectItem>
                         </SelectGroup>
                       </SelectContent>
@@ -329,35 +322,27 @@ function BookCopiesDialog({
                       <DropdownMenuContent>
                         <DropdownMenuCheckboxItem
                           onClick={() =>
-                            handleChangeStatus(EBookConditionStatus.GOOD)
+                            handleChangeStatus(EBookCopyConditionStatus.GOOD)
                           }
                           className="cursor-pointer"
                         >
-                          {t(EBookConditionStatus.GOOD)}
+                          {t(EBookCopyConditionStatus.GOOD)}
                         </DropdownMenuCheckboxItem>
                         <DropdownMenuCheckboxItem
                           onClick={() =>
-                            handleChangeStatus(EBookConditionStatus.WORN)
+                            handleChangeStatus(EBookCopyConditionStatus.WORN)
                           }
                           className="cursor-pointer"
                         >
-                          {t(EBookConditionStatus.WORN)}
+                          {t(EBookCopyConditionStatus.WORN)}
                         </DropdownMenuCheckboxItem>
                         <DropdownMenuCheckboxItem
                           onClick={() =>
-                            handleChangeStatus(EBookConditionStatus.DAMAGED)
+                            handleChangeStatus(EBookCopyConditionStatus.DAMAGED)
                           }
                           className="cursor-pointer"
                         >
-                          {t(EBookConditionStatus.DAMAGED)}
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                          onClick={() =>
-                            handleChangeStatus(EBookConditionStatus.LOST)
-                          }
-                          className="cursor-pointer"
-                        >
-                          {t(EBookConditionStatus.LOST)}
+                          {t(EBookCopyConditionStatus.DAMAGED)}
                         </DropdownMenuCheckboxItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -391,7 +376,7 @@ function BookCopiesDialog({
                     .getValues(`bookEditions.${editionIndex}.bookCopies`)
                     .filter(
                       (copy) =>
-                        copy.code
+                        copy.barcode
                           .toLowerCase()
                           .includes(searchTerm.toLowerCase()) ||
                         t(copy.conditionStatus)
@@ -399,22 +384,25 @@ function BookCopiesDialog({
                           .includes(searchTerm)
                     )
                     ?.map((copy) => (
-                      <TableRow key={copy.code}>
+                      <TableRow key={copy.barcode}>
                         <TableCell className="">
                           <Checkbox
                             onCheckedChange={() => {
-                              if (selectedCodes.includes(copy.code)) {
+                              if (selectedCodes.includes(copy.barcode)) {
                                 setSelectedCodes((prev) =>
-                                  prev.filter((code) => code !== copy.code)
+                                  prev.filter((code) => code !== copy.barcode)
                                 )
                               } else {
-                                setSelectedCodes((prev) => [copy.code, ...prev])
+                                setSelectedCodes((prev) => [
+                                  copy.barcode,
+                                  ...prev,
+                                ])
                               }
                             }}
-                            checked={selectedCodes.includes(copy.code)}
+                            checked={selectedCodes.includes(copy.barcode)}
                           />
                         </TableCell>
-                        <TableCell>{copy.code}</TableCell>
+                        <TableCell>{copy.barcode}</TableCell>
 
                         <TableCell>
                           <BookConditionStatusBadge

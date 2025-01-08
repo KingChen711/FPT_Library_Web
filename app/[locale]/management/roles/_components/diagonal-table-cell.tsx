@@ -24,7 +24,6 @@ function DiagonalTableCell() {
       ).toFixed(2)
 
       diagonal.current.style.transform = `rotate(${deg}deg)`
-      console.log(diagonal.current.style.transform)
     }
   }, [cell, diagonal])
 

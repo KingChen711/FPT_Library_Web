@@ -140,7 +140,7 @@ const request = async <TData = undefined>(
         ...options?.headers,
       },
       body: body ? (body instanceof FormData ? body : JSON.parse(body)) : null,
-      payload,
+      payload: JSON.stringify(payload),
     })
 
   if (!res.ok || !payload.resultCode.includes("Success")) {

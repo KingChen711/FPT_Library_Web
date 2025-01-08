@@ -3,23 +3,21 @@
 import React from "react"
 import { useTranslations } from "next-intl"
 
-import { EBookConditionStatus } from "@/lib/types/enums"
+import { EBookCopyConditionStatus } from "@/lib/types/enums"
 
 import { Badge } from "./badge"
 
 type Props = {
-  status: EBookConditionStatus
+  status: EBookCopyConditionStatus
 }
 
-const getTypeColor = (type: EBookConditionStatus) => {
+const getTypeColor = (type: EBookCopyConditionStatus) => {
   switch (type) {
-    case EBookConditionStatus.DAMAGED:
+    case EBookCopyConditionStatus.DAMAGED:
       return "danger"
-    case EBookConditionStatus.GOOD:
+    case EBookCopyConditionStatus.GOOD:
       return "success"
-    case EBookConditionStatus.LOST:
-      return "progress"
-    case EBookConditionStatus.WORN:
+    case EBookCopyConditionStatus.WORN:
       return "warning"
     default:
       return "default"

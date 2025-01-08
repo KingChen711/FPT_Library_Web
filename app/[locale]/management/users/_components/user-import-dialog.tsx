@@ -102,7 +102,6 @@ const UserImportDialog = () => {
   //TODO: fix any
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   function onSubmit(values: any) {
-    console.log(values)
     startTransition(async () => {
       const formData = new FormData()
       if (values.file) {

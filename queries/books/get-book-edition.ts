@@ -12,7 +12,7 @@ import {
 import { auth } from "../auth"
 
 //TODO: fix another created date field name problem
-type BookEditionDetail = BookEdition & {
+export type BookEditionDetail = BookEdition & {
   bookEditionInventory: BookEditionInventory
   authors: Author[]
   bookEditionCopies: BookEditionCopy[]
@@ -26,6 +26,9 @@ const getBookEdition = async (
     const { data } = await http.get<BookEditionDetail>(
       `/api/management/books/editions/${id}`,
       {
+        next: {
+          tags: ["management-book-editions"],
+        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

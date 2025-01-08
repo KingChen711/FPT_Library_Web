@@ -20,8 +20,8 @@ export default function ImageWithFallback({
       {...rest}
       alt={alt}
       src={imgSrc}
-      onLoadingComplete={(result) => {
-        if (result.naturalWidth === 0) {
+      onLoad={(e) => {
+        if (e.currentTarget.naturalWidth < 5) {
           // Broken image
           setImgSrc(fallbackSrc)
         }

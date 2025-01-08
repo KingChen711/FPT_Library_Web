@@ -87,3 +87,19 @@ export function formatFileSize(bytes: number): string {
 
   return `${bytes.toFixed(1)} ${units[unitIndex]}`
 }
+
+export async function fileUrlToFile(fileUrl: string, fileName: string) {
+  // Fetch the file from the URL
+  const response = await fetch(fileUrl)
+
+  // Ensure the response is OK
+  if (!response.ok) {
+    throw new Error(`Failed to fetch file from URL: ${response.statusText}`)
+  }
+
+  // Get the file blob from the response
+  const blob = await response.blob()
+
+  // Create a File object from the blob
+  return new File([blob], fileName, { type: blob.type })
+}

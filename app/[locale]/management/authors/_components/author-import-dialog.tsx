@@ -102,7 +102,6 @@ const EmployeeImportDialog = () => {
   }
 
   function onSubmit(values: TEmployeeImport) {
-    console.log(values)
     startTransition(async () => {
       const formData = new FormData()
       if (values.file) {

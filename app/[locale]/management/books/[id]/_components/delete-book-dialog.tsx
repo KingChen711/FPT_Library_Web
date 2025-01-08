@@ -19,11 +19,12 @@ type Props = {
   open: boolean
   setOpen: (open: boolean) => void
   bookId: number
+  title: string
 }
 
-function DeleteBookDialog({ open, setOpen, bookId }: Props) {
+function DeleteBookDialog({ open, setOpen, bookId, title }: Props) {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "xóa sách" : "delete book"} ${bookId}`
+  const message = `${locale === "vi" ? "xóa" : "delete"} ${title}`
 
   const [value, setValue] = useState("")
 
@@ -52,7 +53,6 @@ function DeleteBookDialog({ open, setOpen, bookId }: Props) {
           <DialogTitle className="mb-1">{t("Delete book")}</DialogTitle>
           <DialogDescription>
             <div
-              className="select-none"
               dangerouslySetInnerHTML={{
                 __html: t.markup("type to confirm", {
                   message: () => `<strong>${message}</strong>`,

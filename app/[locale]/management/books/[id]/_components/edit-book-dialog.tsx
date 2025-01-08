@@ -78,6 +78,8 @@ function EditBookDialog({ open, setOpen, book }: Props) {
       subTitle: book.subTitle || "",
       summary: book.summary,
       categoryIds: book.categories.map((category) => category.categoryId),
+      bookEditions: [],
+      bookResources: [],
     },
   })
 
@@ -108,6 +110,24 @@ function EditBookDialog({ open, setOpen, book }: Props) {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="mt-4 space-y-6"
               >
+                <FormField
+                  control={form.control}
+                  name="bookCode"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start">
+                      <FormLabel className="flex items-center">
+                        {t("Book code")}
+                        <span className="ml-1 text-xl font-bold leading-none text-primary">
+                          *
+                        </span>
+                      </FormLabel>
+                      <FormControl>
+                        <Input disabled={isPending} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="title"

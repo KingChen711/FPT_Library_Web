@@ -1,14 +1,16 @@
 import { z } from "zod"
 
 import {
-  EBookConditionStatus,
+  EBookCopyConditionStatus,
   EBookFormat,
   EResourceBookType,
 } from "@/lib/types/enums"
 
+import { isbnSchema } from "../isbn"
+
 export const bookCopySchema = z.object({
-  code: z.string().trim(),
-  conditionStatus: z.nativeEnum(EBookConditionStatus),
+  barcode: z.string().trim(),
+  conditionStatus: z.nativeEnum(EBookCopyConditionStatus),
 })
 
 // TODO:Fix isbn
@@ -28,21 +30,12 @@ export const bookEditionSchema = z
       .gt(0, "gt0")
       .refine((data) => data <= new Date().getFullYear(), "publicationYear"),
     publisher: z.string().trim().min(1, "min1"),
-    isbn: z
-      .string()
-      .trim()
-      .transform((data) => data.replace("-", ""))
-      .refine(
-        (value) => /^(?:\d{9}[\dXx]|\d{13})$/.test(value) && isValidISBN(value),
-        {
-          message: "isbn",
-        }
-      ),
+    isbn: isbnSchema,
     coverImage: z.string().trim().min(1, "min1"),
     //client only
     file: z.instanceof(File).optional(),
     //client only
-    validImage: z.boolean(),
+    validImage: z.boolean().optional(),
     estimatedPrice: z.coerce.number().gt(0, "gt0"),
     authorIds: z.array(z.coerce.number()).min(1, "authorsMin1"),
     bookCopies: z.array(bookCopySchema).min(1, "copiesMin1"),
@@ -75,6 +68,7 @@ export const bookResourceSchema = z
 export type TBookResourceSchema = z.infer<typeof bookResourceSchema>
 
 export const mutateBookSchema = z.object({
+  bookCode: z.string(),
   title: z.string().trim().min(1, "min1").max(150, "max150"),
   subTitle: z.string().trim().max(100, "max100"),
   summary: z.string().trim().max(2000, "max2000"),
@@ -84,34 +78,3 @@ export const mutateBookSchema = z.object({
 })
 
 export type TMutateBookSchema = z.infer<typeof mutateBookSchema>
-
-function isValidISBN(isbn: string): boolean {
-  // Remove any hyphens (not typically part of raw ISBN input)
-  const cleanedISBN = isbn.replace(/-/g, "")
-
-  // Validate ISBN-10 checksum
-  if (cleanedISBN.length === 10) {
-    const checksum = cleanedISBN
-      .split("")
-      .slice(0, 9)
-      .reduce((acc, digit, idx) => acc + parseInt(digit) * (10 - idx), 0)
-    const checkDigit =
-      cleanedISBN[9].toUpperCase() === "X" ? 10 : parseInt(cleanedISBN[9])
-    return (checksum + checkDigit) % 11 === 0
-  }
-
-  // Validate ISBN-13 checksum
-  if (cleanedISBN.length === 13) {
-    const checksum = cleanedISBN
-      .split("")
-      .slice(0, 12)
-      .reduce(
-        (acc, digit, idx) => acc + parseInt(digit) * (idx % 2 === 0 ? 1 : 3),
-        0
-      )
-    const checkDigit = 10 - (checksum % 10)
-    return parseInt(cleanedISBN[12]) === (checkDigit === 10 ? 0 : checkDigit)
-  }
-
-  return false
-}

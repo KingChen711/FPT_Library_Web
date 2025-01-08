@@ -63,10 +63,6 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
     }
   }, [form, index, watchAuthorIds, watchEditionTitle, watchPublisher])
 
-  useEffect(() => {
-    console.log(disableImageField)
-  }, [disableImageField])
-
   const handleImageChange = (
     e: React.ChangeEvent<HTMLInputElement>,
     fieldChange: (value: string) => void,
@@ -142,6 +138,10 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
     })
   }
 
+  useEffect(() => {
+    form.setValue(`bookEditions.${index}.validImage`, undefined)
+  }, [form, watchEditionTitle, watchPublisher, watchAuthorIds, index])
+
   return (
     <div className="flex flex-row justify-start gap-6">
       <FormField
@@ -171,8 +171,8 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
                   <Image
                     src={field.value}
                     alt="imageUrl"
-                    width={240}
-                    height={240}
+                    width={168}
+                    height={252}
                     className="rounded-md object-contain group-hover:opacity-90"
                   />
                   <Button

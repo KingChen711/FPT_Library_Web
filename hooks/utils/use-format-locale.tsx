@@ -1,3 +1,5 @@
+"use client"
+
 import { enUS, vi } from "date-fns/locale"
 import { useLocale } from "next-intl"
 

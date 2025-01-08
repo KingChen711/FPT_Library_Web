@@ -1,4 +1,6 @@
 import {
+  type EBookCopyStatus,
+  type EBookEditionStatus,
   type EBookFormat,
   type ENotificationType,
   type EResourceBookType,
@@ -126,6 +128,7 @@ export type Category = {
 
 export type BookEdition = {
   bookId: number
+  bookCode: string
   bookEditionId: number
   editionNumber: number
   publicationYear: number
@@ -134,13 +137,14 @@ export type BookEdition = {
   availableCopies?: number
   requestCopies?: number
   reservedCopies?: number
+  borrowedCopies?: number
   author: string
   summary: string | null
   editionSummary: string | null
   title: string
   editionTitle: string
   subTitle: string
-  shelf: string | null
+  shelf: Shelf | null
   format: EBookFormat | null //TODO
   isbn: string
   language: string
@@ -151,6 +155,9 @@ export type BookEdition = {
   createdAt: Date
   updatedAt: Date | null
   estimatedPrice: number
+  isDeleted: boolean
+  status: EBookEditionStatus
+  bookEditionInventory?: BookEditionInventory
 }
 
 export type Book = {
@@ -187,16 +194,54 @@ export type BookEditionInventory = {
   availableCopies: number
   requestCopies: number
   reservedCopies: number
+  borrowedCopies: number
 }
 
 export type BookEditionCopy = {
   bookEditionCopyId: number
   bookEditionId: number
-  code: string
-  status: "Out Of Shelf"
+  barcode: string
+  status: EBookCopyStatus
   createdAt: Date
   updatedAt: Date | null
   createdBy: string
   updatedBy: string | null
+  isDeleted: boolean
+}
+
+export type Floor = {
+  floorId: number
+  floorNumber: string
+  createDate: Date
+  updateDate: Date | null
+  isDeleted: boolean
+}
+
+export type Zone = {
+  zoneId: number
+  floorId: number
+  zoneName: string
+  xCoordinate: number
+  yCoordinate: number
+  createDate: Date
+  updateDate: Date | null
+  isDeleted: boolean
+}
+
+export type Section = {
+  sectionId: number
+  zoneId: number
+  sectionName: string
+  createDate: Date
+  updateDate: Date | null
+  isDeleted: boolean
+}
+
+export type Shelf = {
+  shelfId: number
+  sectionId: number
+  shelfNumber: string
+  createDate: Date
+  updateDate: Date | null
   isDeleted: boolean
 }

@@ -1,16 +1,14 @@
 import React from "react"
 import Image from "next/image"
 import { notFound } from "next/navigation"
-import defaultAuthor from "@/public/assets/images/default-author.png"
 import { auth } from "@/queries/auth"
 import getBookEdition from "@/queries/books/get-book-edition"
-import { format } from "date-fns"
 import { Check, X } from "lucide-react"
 
-import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
-import { EFeature } from "@/lib/types/enums"
+import { EBookEditionStatus, EFeature } from "@/lib/types/enums"
 import { formatPrice } from "@/lib/utils"
+import BookEditionStatusBadge from "@/components/ui/book-edition-status-badge"
 import BookFormatBadge from "@/components/ui/book-format-badge"
 import { Button } from "@/components/ui/button"
 import Copitor from "@/components/ui/copitor"
@@ -22,19 +20,14 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import ImageWithFallback from "@/components/ui/image-with-fallback"
 import NoData from "@/components/ui/no-data"
 import ParseHtml from "@/components/ui/parse-html"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import ShelfBadge from "@/components/ui/shelf-badge"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+import AuthorsTabsContent from "./_components/authors-tabs-content"
+import CopiesTabsContent from "./_components/copies-tabs-content"
+import EditionDetailActionDropdown from "./_components/edition-detail-action-dropdown"
 import EditionDetailBreadCrumb from "./_components/edition-detail-bread-crumb"
 
 type Props = {
@@ -48,14 +41,12 @@ async function BookDetailPage({ params }: Props) {
 
   const t = await getTranslations("BooksManagementPage")
 
-  const formatLocale = await getFormatLocale()
-
   const edition = await getBookEdition(+params.editionId)
 
   if (!edition) notFound()
 
   return (
-    <div className="mt-4">
+    <div className="mt-4 pb-8">
       <div className="flex flex-col gap-4">
         <EditionDetailBreadCrumb
           title={edition.title}
@@ -66,13 +57,13 @@ async function BookDetailPage({ params }: Props) {
         <div className="flex flex-col gap-2">
           <div className="flex w-full flex-wrap items-center justify-between gap-4">
             <h3 className="text-2xl font-semibold">{edition.title}</h3>
-            {/* <BookDetailActionDropdown book={book} /> */}
+            <EditionDetailActionDropdown edition={edition} />
           </div>
         </div>
 
         <div className="flex flex-col gap-4 rounded-md border py-5">
           <h3 className="mx-5 text-lg font-semibold">
-            {t("Book information")}
+            {t("Edition information")}
           </h3>
           <div className="grid grid-cols-12 gap-y-6 text-sm">
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
@@ -185,8 +176,13 @@ async function BookDetailPage({ params }: Props) {
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
               <h4 className="font-bold">{t("Status")}</h4>
               <div className="flex gap-2">
-                {/*  2: is delete, draft */}
-                <p>TODO</p>
+                <BookEditionStatusBadge
+                  status={
+                    edition.isDeleted
+                      ? EBookEditionStatus.DELETED
+                      : edition.status
+                  }
+                />
               </div>
             </div>
 
@@ -203,7 +199,13 @@ async function BookDetailPage({ params }: Props) {
 
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
               <h4 className="font-bold">{t("Shelf")}</h4>
-              <div className="flex gap-2">TODO</div>
+              <div className="flex gap-2">
+                {edition.shelf?.shelfNumber ? (
+                  <ShelfBadge shelfNumber={edition.shelf.shelfNumber} />
+                ) : (
+                  <NoData />
+                )}
+              </div>
             </div>
 
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
@@ -321,6 +323,13 @@ async function BookDetailPage({ params }: Props) {
             </div>
 
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Borrowed copies")}</h4>
+              <div className="flex gap-2">
+                {edition?.bookEditionInventory?.borrowedCopies ?? <NoData />}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
               <h4 className="font-bold">{t("Total copies")}</h4>
               <div className="flex gap-2">
                 {edition?.bookEditionInventory?.totalCopies ?? <NoData />}
@@ -334,120 +343,16 @@ async function BookDetailPage({ params }: Props) {
             <TabsTrigger value="authors">{t("Authors")}</TabsTrigger>
             <TabsTrigger value="copies">{t("Copies")}</TabsTrigger>
           </TabsList>
-          <TabsContent value="authors">
-            <div className="mt-4 grid w-full">
-              <div className="overflow-x-auto rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[100px] text-nowrap font-bold">
-                        Id
-                      </TableHead>
-                      <TableHead className="text-nowrap font-bold">
-                        {t("Author code")}
-                      </TableHead>
-                      <TableHead className="text-nowrap font-bold">
-                        {t("Full name")}
-                      </TableHead>
-                      <TableHead className="text-nowrap font-bold">
-                        {t("Date of birth")}
-                      </TableHead>
-                      <TableHead className="text-nowrap font-bold">
-                        {t("Date of death")}
-                      </TableHead>
-                      <TableHead className="text-nowrap font-bold">
-                        {t("Nationality")}
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {edition.authors.map((author) => (
-                      <TableRow key={author.authorId}>
-                        <TableCell className="text-nowrap font-bold">
-                          {author.authorId}
-                        </TableCell>
-                        <TableCell className="text-nowrap">
-                          {author.authorCode}
-                        </TableCell>
-                        <TableCell className="text-nowrap">
-                          <div className="flex items-center">
-                            {/* //TODO:fix author image */}
-                            <ImageWithFallback
-                              src={defaultAuthor}
-                              alt={author.fullName}
-                              width={32}
-                              height={32}
-                              fallbackSrc={defaultAuthor}
-                              className="rounded-full"
-                            />
-                            <p className="ml-2">{author.fullName}</p>
-                          </div>
-                        </TableCell>
-                        <TableCell className="text-nowrap">
-                          {author.dob
-                            ? format(new Date(author.dob), "yyyy-MM-dd", {
-                                locale: formatLocale,
-                              })
-                            : "-"}
-                        </TableCell>
-                        <TableCell className="text-nowrap">
-                          {author.dob
-                            ? format(
-                                new Date(author.dateOfDeath),
-                                "yyyy-MM-dd",
-                                { locale: formatLocale }
-                              )
-                            : "-"}
-                        </TableCell>
-                        <TableCell className="text-nowrap">
-                          {author.nationality || "-"}
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </TabsContent>
-          <TabsContent value="copies">
-            <div className="mt-4 grid w-full">
-              <div className="overflow-x-auto rounded-md border">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead className="w-[100px] text-nowrap font-bold">
-                        Id
-                      </TableHead>
-                      <TableHead className="text-nowrap font-bold">
-                        {t("Copy code")}
-                      </TableHead>
-
-                      <TableHead className="text-nowrap font-bold">
-                        {t("Available status")}
-                      </TableHead>
-                      <TableHead className="text-nowrap font-bold">
-                        {t("Condition status")}
-                      </TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {edition.bookEditionCopies.map((copy) => (
-                      <TableRow key={copy.bookEditionCopyId}>
-                        <TableCell className="text-nowrap font-bold">
-                          {copy.bookEditionCopyId}
-                        </TableCell>
-                        <TableCell className="text-nowrap">
-                          {copy.code}
-                        </TableCell>
-                        <TableCell className="text-nowrap">TODO</TableCell>
-                        <TableCell className="text-nowrap">TODO</TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              </div>
-            </div>
-          </TabsContent>
+          <AuthorsTabsContent
+            authors={edition.authors}
+            bookId={edition.bookId}
+            editionId={edition.bookEditionId}
+          />
+          <CopiesTabsContent
+            copies={edition.bookEditionCopies}
+            bookId={edition.bookId}
+            editionId={edition.bookEditionId}
+          />
         </Tabs>
       </div>
     </div>

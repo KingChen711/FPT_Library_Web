@@ -68,7 +68,7 @@ export enum ENotificationType {
 
 export enum EResourceBookType {
   AUDIO_BOOK = "AudioBook",
-  EBOOK = "EBook",
+  EBOOK = "Ebook",
 }
 
 export enum EBookFormat {
@@ -76,14 +76,28 @@ export enum EBookFormat {
   HARD_COVER = "HardCover",
 }
 
-export enum EBookConditionStatus {
+export enum EBookCopyConditionStatus {
   GOOD = "Good",
   WORN = "Worn",
   DAMAGED = "Damaged",
-  LOST = "Lost",
+  // LOST = "Lost",
 }
 
 export enum EVisibility {
   PUBLIC = "Public",
   PRIVATE = "Private",
+}
+
+export enum EBookEditionStatus {
+  DRAFT = "Draft",
+  PUBLISHED = "Published",
+  DELETED = "Deleted",
+}
+
+export enum EBookCopyStatus {
+  IN_SHELF = "InShelf",
+  OUT_OF_SHELF = "OutOfShelf",
+  BORROWED = "Borrowed",
+  RESERVED = "Reserved",
+  DELETED = "Deleted",
 }

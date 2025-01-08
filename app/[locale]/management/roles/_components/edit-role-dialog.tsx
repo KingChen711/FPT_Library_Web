@@ -67,7 +67,6 @@ function EditRoleDialog({ openEdit, setOpenEdit, roleId }: Props) {
       form.setValue("englishName", data.englishName)
       form.setValue("vietnameseName", data.vietnameseName)
       form.setValue("roleTypeIdx", data.roleType)
-      console.log(form.getValues("roleTypeIdx"))
     },
     openEdit
   )

@@ -71,8 +71,6 @@ function LoginForm() {
     startTransition(async () => {
       const res = await login(values)
 
-      console.log({ res })
-
       if (res.isSuccess) {
         if (res.data.resultCode === "Auth.Success0003") {
           router.push(
@@ -90,7 +88,6 @@ function LoginForm() {
           return
         }
 
-        console.log("Something went wrong")
         return
       }
 

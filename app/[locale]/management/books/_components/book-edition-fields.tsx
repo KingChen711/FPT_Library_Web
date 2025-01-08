@@ -73,10 +73,6 @@ function BookEditionFields({
     form.setValue("bookEditions.0.editionSummary", summary)
   }, [form, summary])
 
-  useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form])
-
   return (
     <>
       <div className="mb-6 flex flex-wrap items-center gap-4">
@@ -437,12 +433,12 @@ function BookEditionFields({
                     )}
                     {field.value.map((bc) => (
                       <div
-                        key={bc.code}
+                        key={bc.barcode}
                         className="relative flex flex-row items-center gap-x-4 rounded-md border bg-muted px-2 py-1 text-muted-foreground"
                       >
                         <div className="flex flex-col text-sm">
                           <div>
-                            <strong>{t("Code")}:</strong> {bc.code}
+                            <strong>{t("Code")}:</strong> {bc.barcode}
                           </div>
                           <div className="flex items-center gap-2">
                             <strong>{t("Status")}:</strong>

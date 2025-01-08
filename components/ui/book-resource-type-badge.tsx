@@ -14,7 +14,7 @@ type Props = {
 const getTypeColor = (type: EResourceBookType) => {
   switch (type) {
     case EResourceBookType.AUDIO_BOOK:
-      return "success"
+      return "info"
     case EResourceBookType.EBOOK:
       return "progress"
     default:

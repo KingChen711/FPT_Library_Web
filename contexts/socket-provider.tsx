@@ -29,7 +29,6 @@ const SocketProvider = ({ children }: SocketProviderProps) => {
   useEffect(() => {
     socket.on("authenticated", () => {
       setAuthenticated(true)
-      console.log("Authenticated socket")
     })
 
     return () => {

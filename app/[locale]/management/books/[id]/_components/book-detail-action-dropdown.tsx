@@ -30,6 +30,7 @@ function BookDetailActionDropdown({ book }: Props) {
       <EditBookDialog open={openEdit} setOpen={setOpenEdit} book={book} />
 
       <DeleteBookDialog
+        title={book.title}
         open={openDelete}
         setOpen={setOpenDelete}
         bookId={book.bookId}

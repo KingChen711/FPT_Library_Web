@@ -84,6 +84,36 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  Publish: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 20 20"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M9.967 8.193L5 13h3v6h4v-6h3L9.967 8.193zM18 1H2C.9 1 0 1.9 0 3v12c0 1.1.9 2 2 2h4v-2H2V6h16v9h-4v2h4c1.1 0 2-.9 2-2V3c0-1.1-.9-2-2-2zM2.5 4.25a.75.75 0 1 1 0-1.5a.75.75 0 0 1 0 1.5zm2 0a.75.75 0 1 1 0-1.5a.75.75 0 0 1 0 1.5zM18 4H6V3h12.019L18 4z"
+      ></path>
+    </svg>
+  ),
+  Draft: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 1025 1024"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M960.85 1024h-896q-27 0-45.5-19T.85 960V704q0-27 18.5-45.5t45.5-18.5h128q20 0 38.5 8.5t25.5 23.5l33.5 100.5l30.5 91.5q8 20 24 26t45 6h249q29 0 43.5-6t22.5-26q51-154 64-192q13-32 64-32h128q26 0 45 18.5t19 45.5v256q0 26-18.5 45t-45.5 19zm-304-243q-9 21-32.5 36t-49.5 15h-121q-26 0-50-15t-33-36l-71-205h-235V64q0-27 18.5-45.5T128.85 0h768q27 0 45.5 18.5t18.5 45.5v512h-235zm-432-333h128q13 0 22.5-9.5t9.5-22.5t-9.5-22.5t-22.5-9.5h-128q-13 0-22.5 9.5t-9.5 22.5t9.5 22.5t22.5 9.5zm256-256h-256q-13 0-22.5 9.5t-9.5 22.5t9.5 22.5t22.5 9.5h256q13 0 22.5-9.5t9.5-22.5t-9.5-22.5t-22.5-9.5zm320 0h-192q-13 0-22.5 9.5t-9.5 22.5t9.5 22.5t22.5 9.5h192q13 0 22.5-9.5t9.5-22.5t-9.5-22.5t-22.5-9.5zm32 224q0-13-9.5-22.5t-22.5-9.5h-320q-13 0-22.5 9.5t-9.5 22.5t9.5 22.5t22.5 9.5h320q13 0 22.5-9.5t9.5-22.5z"
+      ></path>
+    </svg>
+  ),
   Category: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

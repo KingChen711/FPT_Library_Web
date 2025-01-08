@@ -50,7 +50,7 @@ export async function uploadMedias(book: TMutateBookSchema) {
   }
 }
 
-const uploadAudioBook = async (file: File) => {
+export const uploadAudioBook = async (file: File) => {
   const formData = new FormData()
   formData.append("file", file)
   formData.append("resourceType", "BookAudio")
@@ -74,7 +74,7 @@ const uploadAudioBook = async (file: File) => {
   }
 }
 
-const uploadBookImage = async (file: File) => {
+export const uploadBookImage = async (file: File) => {
   try {
     const formData = new FormData()
     formData.append("file", file)
