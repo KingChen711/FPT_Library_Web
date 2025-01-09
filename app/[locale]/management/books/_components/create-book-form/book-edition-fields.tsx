@@ -337,14 +337,14 @@ function BookEditionFields({
               control={form.control}
               name={`bookEditions.${index}.editionSummary`}
               render={({ field }) => (
-                <FormItem className="flex flex-1 flex-col items-start">
+                <FormItem className={cn("flex flex-1 flex-col items-start")}>
                   <FormLabel className="flex items-center">
                     {t("Edition summary")}
                   </FormLabel>
 
                   <FormControl>
                     <Editor
-                      disabled={isPending || index === 0}
+                      disabled={isPending}
                       apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                       init={{
                         ...editorPlugin,
@@ -354,9 +354,7 @@ function BookEditionFields({
                         language: locale,
                       }}
                       onEditorChange={field.onChange}
-                      value={
-                        index === 0 ? form.getValues("summary") : field.value
-                      }
+                      value={field.value}
                     />
                   </FormControl>
                   <FormMessage />

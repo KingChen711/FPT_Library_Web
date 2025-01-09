@@ -87,16 +87,19 @@
     "email": "Email không hợp lệ",
     "min10": "Phải có ít nhất 10 kí tự",
     "length_10": "Phải có 10 kí tự",
+    "length6": "Phải có 6 kí tự",
     "required": "Bắt buộc",
     "categoriesMin1": "Cần ít nhất 1 thể loại",
     "authorsMin1": "Cần ít nhất 1 tác giả",
+    "imagesMin4": "Cần ít nhất 4 ảnh",
     "copiesMin1": "Cần ít nhất 1 mã bản sao",
     "gt0": "Phải lớn hơn 0",
     "publicationYear": "Năm xuất bản không hợp lệ",
     "isbn": "Định dạng ISBN hoặc checksum không hợp lệ",
     "invalid": "Không hợp lệ",
     "atLeastOneRecipient": "Cần ít nhất một người nhận",
-    "validImageAI": "Ảnh không tương thích với thông tin"
+    "validImageAI": "Ảnh không tương thích với thông tin hoặc chưa được kiểm tra",
+    "not found isbn": "Không tìm thấy thông tin của {isbn}"
   },
   "Me": {
     "Account": {
@@ -679,6 +682,10 @@
       "Borrowed": "Đang mượn",
       "Reserved": "Đặt trước",
       "Deleted": "Đã xóa"
+    },
+    "Visibility": {
+      "Public": "Công khai",
+      "Private": "Riêng tư"
     }
   },
   "IsbnScanner": {

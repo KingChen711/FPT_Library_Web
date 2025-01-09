@@ -1,10 +1,10 @@
 "use client"
 
-import React, { useTransition } from "react"
+import React, { useState, useTransition } from "react"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
-import { Loader2 } from "lucide-react"
+import { EyeClosedIcon, EyeIcon, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
@@ -35,7 +35,7 @@ function LoginPasswordForm({ email, type }: Props) {
   const router = useRouter()
   const locale = useLocale()
   const queryClient = useQueryClient()
-
+  const [showPassword, setShowPassword] = useState(false)
   const [pending, startTransition] = useTransition()
 
   const form = useForm<TLoginByPasswordSchema>({
@@ -97,7 +97,25 @@ function LoginPasswordForm({ email, type }: Props) {
                   </Link>
                 </div>
                 <FormControl>
-                  <Input type="password" disabled={pending} {...field} />
+                  <div className="flex items-center gap-x-2 rounded-md border">
+                    <Input
+                      disabled={pending}
+                      type={showPassword ? "text" : "password"}
+                      {...field}
+                      className="border-none outline-none focus-visible:ring-transparent"
+                    />
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setShowPassword((prev) => !prev)
+                      }}
+                    >
+                      {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
+                    </Button>
+                  </div>
                 </FormControl>
                 <FormMessage />
               </FormItem>

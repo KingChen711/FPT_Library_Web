@@ -49,22 +49,22 @@ export default function ShelfSelector({ onChange, initShelfName }: Props) {
   const { data: sections, isFetching: fetchingSections } =
     useSections(selectedZone)
   const { data: shelves, isFetching: fetchingShelves } =
-    useShelves(selectedZone)
+    useShelves(selectedSection)
 
   useEffect(() => {
     setSelectedZone(undefined)
     setSelectedSection(undefined)
     setSelectedShelf(undefined)
-  }, [selectedFloor, setSelectedShelf])
+  }, [selectedFloor])
 
   useEffect(() => {
     setSelectedSection(undefined)
     setSelectedShelf(undefined)
-  }, [selectedZone, setSelectedShelf])
+  }, [selectedZone])
 
   useEffect(() => {
     setSelectedShelf(undefined)
-  }, [selectedSection, setSelectedShelf])
+  }, [selectedSection])
 
   if (!editMode) {
     return (

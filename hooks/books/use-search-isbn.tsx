@@ -8,11 +8,11 @@ type BookData = {
   isbn_13?: string[]
   publish_date?: string //string of year
   authors?: {
-    key: string
-    name: string
+    key?: string
+    name?: string
   }[]
   works?: {
-    key: string
+    key?: string
   }[]
 }
 
@@ -25,6 +25,7 @@ export type TSearchIsbnRes = {
   authors?: string
   summary?: string
   coverImage?: string
+  notFound: boolean
 }
 
 function useSearchIsbn(isbn: string) {
@@ -32,7 +33,7 @@ function useSearchIsbn(isbn: string) {
 
   return useQuery({
     queryKey: ["search-isbn", isbn],
-    queryFn: async (): Promise<TSearchIsbnRes | null> => {
+    queryFn: async (): Promise<TSearchIsbnRes> => {
       try {
         const { data } = await axios.get<{
           [key: string]: { details: BookData }
@@ -45,7 +46,7 @@ function useSearchIsbn(isbn: string) {
         let summary: string | undefined = undefined
 
         try {
-          if (bookData.works) {
+          if (bookData.works?.[0]?.key) {
             const { data } = await axios.get<{ description: string }>(
               `https://openlibrary.org${bookData.works[0].key}.json`
             )
@@ -57,7 +58,11 @@ function useSearchIsbn(isbn: string) {
 
         return {
           authors:
-            bookData.authors && bookData.authors.map((a) => a.name).join(", "),
+            bookData.authors &&
+            bookData.authors
+              .map((a) => a.name)
+              .filter(Boolean)
+              .join(", "),
           coverImage: `https://covers.openlibrary.org/b/isbn/${isbn}-M.jpg`,
           summary,
           isbn,
@@ -67,9 +72,12 @@ function useSearchIsbn(isbn: string) {
             : undefined,
           publishers: bookData.publishers && bookData.publishers.join(", "),
           title: bookData.title,
+          notFound: false,
         }
       } catch {
-        return null
+        return {
+          notFound: true,
+        }
       }
     },
     enabled: isbn !== "",

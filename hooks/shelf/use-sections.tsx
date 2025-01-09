@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts/auth-provider"
-import { keepPreviousData, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
 import { type Section } from "@/lib/types/models"
@@ -27,8 +27,6 @@ function useSections(zoneId: number | null | undefined) {
       }
     },
     enabled: !!zoneId,
-    placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false,
   })
 }
 

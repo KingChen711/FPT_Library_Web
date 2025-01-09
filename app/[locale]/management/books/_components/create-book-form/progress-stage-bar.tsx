@@ -13,9 +13,7 @@ interface Tab {
 
 interface ProgressTabBarProps {
   currentTab: string
-  setCurrentTab: (
-    val: "General" | "Resources" | "Editions" | "Train AI"
-  ) => void
+  setCurrentTab: React.Dispatch<React.SetStateAction<string>>
 }
 
 const tabs: Tab[] = [
@@ -27,23 +25,28 @@ const tabs: Tab[] = [
 
 export function ProgressTabBar({
   currentTab,
-  //   setCurrentTab,
+  setCurrentTab,
 }: ProgressTabBarProps) {
   const t = useTranslations("BooksManagementPage")
   const currentTabId = tabs.find((i) => i.title === currentTab)!.id
   const progress = ((currentTabId - 1) / (tabs.length - 1)) * 100
 
   return (
-    <div className="mx-auto w-full max-w-3xl">
-      <Progress value={progress} className="mb-4 h-2" />
-      <div className="flex justify-between">
+    <div className="mx-auto flex w-full max-w-3xl flex-col items-center">
+      <Progress value={progress} className="mb-4 h-2 w-[calc(100%-74px)]" />
+      <div className="flex w-full justify-between">
         {tabs.map((tab) => (
           <div
             key={tab.id}
+            onClick={() => {
+              if (tab.id >= currentTabId) return
+              setCurrentTab(tab.title)
+            }}
             className={cn(
               "relative flex flex-col items-center space-y-2",
               "transition-all duration-300 ease-in-out",
-              tab.id <= currentTabId ? "text-primary" : "text-muted-foreground"
+              tab.id <= currentTabId ? "text-primary" : "text-muted-foreground",
+              tab.id < currentTabId && "cursor-pointer"
             )}
           >
             <div

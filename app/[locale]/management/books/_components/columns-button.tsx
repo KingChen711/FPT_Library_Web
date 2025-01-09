@@ -73,23 +73,6 @@ function ColumnsButton({ columns: initColumns }: Props) {
               <Label className="flex cursor-pointer items-center gap-x-4 font-bold">
                 <Checkbox
                   className="size-5"
-                  checked={columns.includes(Column.BOOK_ID)}
-                  onCheckedChange={() => toggle(Column.BOOK_ID)}
-                />
-                {t("Book id")}
-              </Label>
-              <Label className="flex cursor-pointer items-center gap-x-4 font-bold">
-                <Checkbox
-                  className="size-5"
-                  checked={columns.includes(Column.BOOK_EDITION_ID)}
-                  onCheckedChange={() => toggle(Column.BOOK_EDITION_ID)}
-                />
-                {t("Edition id")}
-              </Label>
-
-              <Label className="flex cursor-pointer items-center gap-x-4 font-bold">
-                <Checkbox
-                  className="size-5"
                   checked={columns.includes(Column.BOOK_CODE)}
                   onCheckedChange={() => toggle(Column.BOOK_CODE)}
                 />

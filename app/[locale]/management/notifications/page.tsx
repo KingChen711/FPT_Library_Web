@@ -6,6 +6,7 @@ import { format } from "date-fns"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { searchNotificationsSchema } from "@/lib/validations/notifications/search-notifications"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -27,6 +28,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import VisibilityBadge from "@/components/ui/visibility-badge"
 
 import CreateNotificationDialog from "./_components/create-notification-dialog"
 import FiltersNotificationsDialog from "./_components/filters-notifications-dialog"
@@ -37,12 +39,17 @@ type Props = {
     pageIndex?: string
     pageSize?: string
     sort?: string
+    type?: string
+    visibility?: string
+    createDateRange?: string
   }
 }
 
 async function NotificationPage({ searchParams }: Props) {
-  const { search, pageIndex, sort, pageSize } =
+  const { search, pageIndex, sort, pageSize, ...rest } =
     searchNotificationsSchema.parse(searchParams)
+
+  console.log(searchNotificationsSchema.parse(searchParams))
 
   await auth().protect(EFeature.BORROW_MANAGEMENT)
 
@@ -52,7 +59,13 @@ async function NotificationPage({ searchParams }: Props) {
     sources: notifications,
     totalActualItem,
     totalPage,
-  } = await getNotifications({ search, pageIndex, sort, pageSize })
+  } = await getNotifications({
+    search,
+    pageIndex,
+    sort,
+    pageSize,
+    ...rest,
+  })
 
   return (
     <div>
@@ -82,11 +95,6 @@ async function NotificationPage({ searchParams }: Props) {
               <TableRow className="">
                 <SortableTableHead
                   currentSort={sort}
-                  label="Id"
-                  sortKey="NotificationId"
-                />
-                <SortableTableHead
-                  currentSort={sort}
                   label={t("Title")}
                   sortKey="Title"
                 />
@@ -94,7 +102,17 @@ async function NotificationPage({ searchParams }: Props) {
                   {t("Message")}
                 </TableHead>
                 <TableHead className="text-nowrap font-bold">
-                  {t("Visibility")}
+                  {t("Recipients")}
+                </TableHead>
+                <TableHead>
+                  <div className="flex justify-center text-nowrap font-bold">
+                    {t("Visibility")}
+                  </div>
+                </TableHead>
+                <TableHead className="text-nowrap font-bold">
+                  <div className="flex justify-center text-nowrap font-bold">
+                    {t("Type")}
+                  </div>
                 </TableHead>
                 <SortableTableHead
                   currentSort={sort}
@@ -104,26 +122,21 @@ async function NotificationPage({ searchParams }: Props) {
                 <TableHead className="text-nowrap font-bold">
                   {t("Created by")}
                 </TableHead>
-                <TableHead className="text-nowrap font-bold">
-                  {t("Type")}
-                </TableHead>
-                <TableHead className="text-nowrap font-bold">
-                  {t("Recipients")}
-                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {notifications.map((notification) => (
                 <TableRow key={notification.notificationId}>
-                  <TableCell className="font-extrabold">
-                    {notification.notificationId}
-                  </TableCell>
-                  <TableCell className="text-nowrap font-extrabold">
+                  <TableCell className="text-nowrap font-bold">
                     {notification.title}
                   </TableCell>
-                  <TableCell className="line-clamp-1 text-nowrap font-extrabold">
+                  <TableCell className="text-nowrap">
                     <Dialog>
-                      <DialogTrigger>{t("View content")}</DialogTrigger>
+                      <DialogTrigger asChild>
+                        <Button size="sm" variant="secondary">
+                          {t("View content")}
+                        </Button>
+                      </DialogTrigger>
                       <DialogContent>
                         <DialogHeader>
                           <DialogTitle>{t("Message content")}</DialogTitle>
@@ -134,38 +147,53 @@ async function NotificationPage({ searchParams }: Props) {
                       </DialogContent>
                     </Dialog>
                   </TableCell>
-                  <TableCell>isPublic</TableCell>
+                  <TableCell className="text-nowrap">
+                    {!notification.isPublic && (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="secondary">
+                            {t("View recipients")}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>{t("Recipients")}</DialogTitle>
+                            <DialogDescription>
+                              <div className="flex items-center gap-4">
+                                {notification.notificationRecipients.map(
+                                  (r) => (
+                                    <div
+                                      key={r}
+                                      className="rounded-md bg-muted px-2 py-1 text-muted-foreground"
+                                    >
+                                      {r}
+                                    </div>
+                                  )
+                                )}
+                              </div>
+                            </DialogDescription>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                    )}
+                  </TableCell>
+
+                  <TableCell>
+                    <div className="flex justify-center">
+                      <VisibilityBadge isPublic={notification.isPublic} />
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex justify-center">
+                      <NotificationTypeBadge
+                        type={notification.notificationType}
+                      />
+                    </div>
+                  </TableCell>
                   <TableCell>
                     {format(new Date(notification.createDate), "yyyy-MM-dd")}
                   </TableCell>
                   <TableCell>{notification.createdBy}</TableCell>
-                  <TableCell>
-                    <NotificationTypeBadge
-                      type={notification.notificationType}
-                    />
-                  </TableCell>
-                  <TableCell className="line-clamp-1 text-nowrap font-extrabold">
-                    <Dialog>
-                      <DialogTrigger>{t("View recipients")}</DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>{t("Recipients")}</DialogTitle>
-                          <DialogDescription>
-                            <div className="flex items-center gap-4">
-                              {notification.notificationRecipients.map((r) => (
-                                <div
-                                  key={r}
-                                  className="rounded-md bg-muted px-2 py-1 text-muted-foreground"
-                                >
-                                  {r}
-                                </div>
-                              ))}
-                            </div>
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

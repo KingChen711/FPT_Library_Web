@@ -3,8 +3,6 @@ import { z } from "zod"
 import { EBookEditionStatus } from "@/lib/types/enums"
 
 export enum Column {
-  BOOK_ID = "bookId",
-  BOOK_EDITION_ID = "bookEditionId",
   BOOK_CODE = "bookCode",
   COVER_IMAGE = "coverImage",
   TITLE = "title",

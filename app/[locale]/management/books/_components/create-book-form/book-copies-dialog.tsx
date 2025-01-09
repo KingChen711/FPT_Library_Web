@@ -365,10 +365,6 @@ function BookCopiesDialog({
                       {t("Copy code")}
                     </TableHead>
                     <TableHead className="font-bold">{t("Status")}</TableHead>
-
-                    <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
-                      {t("Actions")}
-                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -408,10 +404,6 @@ function BookCopiesDialog({
                           <BookConditionStatusBadge
                             status={copy.conditionStatus}
                           />
-                        </TableCell>
-
-                        <TableCell className="flex justify-center">
-                          <Trash2 className="size-5" />
                         </TableCell>
                       </TableRow>
                     ))}

@@ -1,12 +1,17 @@
 "use client"
 
-import React, { useState, useTransition } from "react"
+import React, {
+  useState,
+  useTransition,
+  type Dispatch,
+  type SetStateAction,
+} from "react"
 import { useRouter } from "next/navigation"
 import { editorPlugin } from "@/constants"
 import { useScanIsbn } from "@/stores/use-scan-isnb"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Editor } from "@tinymce/tinymce-react"
-import { Loader2, X } from "lucide-react"
+import { Check, Loader2, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
@@ -17,7 +22,7 @@ import {
   mutateBookSchema,
   type TMutateBookSchema,
 } from "@/lib/validations/books/mutate-book"
-import { createBook } from "@/actions/books/create-book"
+import { createBook, type TCreateBookRes } from "@/actions/books/create-book"
 import { uploadMedias } from "@/actions/books/upload-medias"
 import useSearchIsbn from "@/hooks/books/use-search-isbn"
 import useCategories from "@/hooks/categories/use-categories"
@@ -41,6 +46,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import IsbnScannerDialog from "@/components/ui/isbn-scanner-dialog"
 import { Label } from "@/components/ui/label"
 import {
   Popover,
@@ -49,18 +55,12 @@ import {
 } from "@/components/ui/popover"
 import ScannedBook from "@/components/ui/scanned-book"
 
+import TrainAIForm from "../train-ai-form"
 import BookEditionFields, { createBookEdition } from "./book-edition-fields"
 import BookResourceFields from "./book-resource-fields"
 import { ProgressTabBar } from "./progress-stage-bar"
 
-// const TABS = ["General", "Resources", "Editions"] as const
 type Tab = "General" | "Resources" | "Editions" | "Train AI"
-
-type TTrainAIEdition = {
-  editionId: number
-  trainingCode: string
-  imageUrls: string[]
-}
 
 function CreateBookForm() {
   const { isbn } = useScanIsbn()
@@ -79,15 +79,7 @@ function CreateBookForm() {
   const [openCategoriesCombobox, setOpenCategoriesCombobox] = useState(false)
   const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
 
-  const [trainAIData, setTrainAIData] = useState<TTrainAIEdition[]>([
-    {
-      editionId: 1,
-      imageUrls: [
-        "https://static.vecteezy.com/system/resources/thumbnails/019/900/152/small_2x/old-book-watercolor-illustration-png.png",
-      ],
-      trainingCode: "123",
-    },
-  ])
+  const [trainAIData, setTrainAIData] = useState<TCreateBookRes | null>(null)
 
   const form = useForm<TMutateBookSchema>({
     resolver: zodResolver(mutateBookSchema),
@@ -111,19 +103,25 @@ function CreateBookForm() {
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
-          description: res.data,
+          description: res.data.message,
           variant: "success",
         })
 
+        setTrainAIData(res.data)
         setCurrentTab("Train AI")
-
         return
       }
 
       if (res.typeError === "form") {
         if (
           Object.keys(res.fieldErrors).some((key) =>
-            ["title", "subTitle", "summary", "categoryIds"].includes(key)
+            [
+              "bookCode",
+              "title",
+              "subTitle",
+              "summary",
+              "categoryIds",
+            ].includes(key)
           )
         ) {
           setCurrentTab("General")
@@ -173,6 +171,7 @@ function CreateBookForm() {
 
   const triggerGeneralTab = async () => {
     const results = await Promise.all([
+      form.trigger("bookCode"),
       form.trigger("title"),
       form.trigger("subTitle"),
       form.trigger("summary"),
@@ -206,15 +205,18 @@ function CreateBookForm() {
     return trigger
   }
 
-  const handleTrainAI = () => {}
-
   return (
     <div>
-      <div className="mt-6 flex flex-wrap items-start gap-4">
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+      <div className="mt-4 flex flex-wrap items-start gap-4">
+        <div className="flex items-center gap-2">
           <h3 className="text-2xl font-semibold">{t("Create book")}</h3>
+          <IsbnScannerDialog />
         </div>
-        <ProgressTabBar currentTab={currentTab} setCurrentTab={setCurrentTab} />
+
+        <ProgressTabBar
+          currentTab={currentTab}
+          setCurrentTab={setCurrentTab as Dispatch<SetStateAction<string>>}
+        />
       </div>
 
       {isFetchingSearchIsbn && (
@@ -227,7 +229,11 @@ function CreateBookForm() {
       {scannedBook && (
         <div className="mt-4 flex flex-col gap-2">
           <Label>{t("Scanned book")}</Label>
-          <ScannedBook book={scannedBook} />
+          {scannedBook.notFound ? (
+            <div className="text-sm">{t("not found isbn", { isbn })}</div>
+          ) : (
+            <ScannedBook book={scannedBook} />
+          )}
         </div>
       )}
 
@@ -334,7 +340,7 @@ function CreateBookForm() {
                         {form.getValues("categoryIds").map((categoryId) => (
                           <div
                             key={categoryId}
-                            className="flex items-center gap-1 rounded-md bg-primary px-2 py-1 text-sm text-primary-foreground"
+                            className="flex items-center gap-1 rounded-md border bg-card px-2 py-1 text-sm text-card-foreground"
                             // disabled={pending}
                             // showX
                             // onClick={() => handleClickDeleteTestCategory(categoryId)}
@@ -394,6 +400,9 @@ function CreateBookForm() {
                                   {categoryItems?.map((category) => (
                                     <CommandItem
                                       key={category.categoryId}
+                                      disabled={form
+                                        .getValues("categoryIds")
+                                        .includes(category.categoryId)}
                                       onSelect={() => {
                                         form.setValue(
                                           "categoryIds",
@@ -411,6 +420,12 @@ function CreateBookForm() {
                                       {locale === "vi"
                                         ? category.vietnameseName
                                         : category.englishName}
+
+                                      {form
+                                        .getValues("categoryIds")
+                                        .includes(category.categoryId) && (
+                                        <Check />
+                                      )}
                                     </CommandItem>
                                   ))}
                                 </CommandGroup>
@@ -536,6 +551,8 @@ function CreateBookForm() {
           </form>
         </Form>
       )}
+
+      {currentTab === "Train AI" && <TrainAIForm trainAIData={trainAIData!} />}
     </div>
   )
 }
