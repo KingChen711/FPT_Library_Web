@@ -7,22 +7,31 @@ import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 import { type TMutateBookSchema } from "@/lib/validations/books/mutate-book"
 
+export type TCreateBookRes = {
+  bookCodeForAITraining: string
+  editionImages: string[]
+}
+
 export async function createBook(
   body: TMutateBookSchema
-): Promise<ActionResponse<string>> {
+): Promise<ActionResponse<{ message: string } & TCreateBookRes>> {
   const { getAccessToken } = auth()
   try {
-    const { message } = await http.post("/api/management/books", body, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    })
+    const { message, data } = await http.post<TCreateBookRes>(
+      "/api/management/books",
+      body,
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
 
     revalidatePath("/management/books")
 
     return {
       isSuccess: true,
-      data: message,
+      data: { ...data, message },
     }
   } catch (error) {
     return handleHttpError(error)

@@ -118,18 +118,6 @@ function CopyFields({ form, isPending }: Props) {
                         disabled={isPending}
                         value={field.value}
                         onValueChange={(val: EBookCopyConditionStatus) => {
-                          // if (
-                          //   val !== EBookCopyConditionStatus.GOOD &&
-                          //   !hasConfirmedAboutChangeStatus
-                          // ) {
-                          //   setTempChangedCopy({
-                          //     inputId: input.id,
-                          //     val: val as EBookCopyConditionStatus,
-                          //   })
-                          //   setOpenWarning(true)
-                          //   return
-                          // }
-
                           field.onChange(val)
                         }}
                       >

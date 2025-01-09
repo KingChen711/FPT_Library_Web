@@ -164,16 +164,16 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
               {field.value ? (
                 <div
                   className={cn(
-                    "group relative mt-2 flex size-64 items-center justify-center rounded-md border-2",
+                    "group relative mt-2 w-fit overflow-hidden rounded-md",
                     isPending && "pointer-events-none opacity-80"
                   )}
                 >
                   <Image
                     src={field.value}
                     alt="imageUrl"
-                    width={168}
-                    height={252}
-                    className="rounded-md object-contain group-hover:opacity-90"
+                    width={192}
+                    height={288}
+                    className="aspect-[2/3] object-fill group-hover:opacity-90"
                   />
                   <Button
                     onClick={(e) => {
@@ -183,7 +183,7 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
                     }}
                     variant="ghost"
                     size="icon"
-                    className="absolute right-2 top-2"
+                    className="absolute right-2 top-2 hidden group-hover:inline-flex"
                   >
                     <Trash2 className="text-danger" />
                   </Button>
@@ -191,7 +191,7 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
               ) : (
                 <div
                   className={cn(
-                    "mt-2 flex size-64 cursor-pointer flex-col items-center justify-center gap-y-2 rounded-md border-[3px] border-dashed",
+                    "mt-2 flex aspect-[2/3] h-72 cursor-pointer flex-col items-center justify-center gap-y-2 rounded-md border-[3px] border-dashed",
                     isPending && "pointer-events-none opacity-80"
                   )}
                 >
@@ -234,19 +234,23 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
           </div>
         )}
         <div className="flex flex-col gap-2 text-sm">
-          {watchFile && !checkingImage && (
-            <div className="flex items-center gap-2">
-              <strong>{t("Result")}</strong>
-              <div>{t(watchValidImage ? "Passed" : "Failed")}</div>
-              <div>
-                {watchValidImage ? (
-                  <Check className="text-success" />
-                ) : (
-                  <X className="text-danger" />
-                )}
+          {watchFile &&
+            !checkingImage &&
+            (watchValidImage === undefined ? (
+              <div>{t("Not checked yet")}</div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <strong>{t("Result")}</strong>
+                <div>{t(watchValidImage ? "Passed" : "Failed")}</div>
+                <div>
+                  {watchValidImage ? (
+                    <Check className="text-success" />
+                  ) : (
+                    <X className="text-danger" />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            ))}
           <Button
             onClick={(e) => {
               e.preventDefault()

@@ -16,7 +16,7 @@ const getNotifications = async (
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<Pagination<Notifications>>(
-      `/api/notifications/policy`,
+      `/api/management/notifications`,
       {
         next: {
           tags: ["management-notifications"],
@@ -24,7 +24,15 @@ const getNotifications = async (
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
-        searchParams,
+        searchParams: {
+          ...searchParams,
+          createDateRange: searchParams.createDateRange.map((d) =>
+            d ? d.toString() : d
+          ),
+          type: searchParams.type === "All" ? null : searchParams.type,
+          visibility:
+            searchParams.visibility === "All" ? null : searchParams.visibility,
+        },
       }
     )
 

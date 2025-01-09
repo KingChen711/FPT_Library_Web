@@ -231,7 +231,7 @@ async function BookDetailPage({ params }: Props) {
                               width={256}
                               height={384}
                               objectFit="cover"
-                              className="h-96 w-64 rounded-xl border object-cover"
+                              className="aspect-[2/3] h-96 w-64 rounded-xl border object-fill"
                             />
                           </div>
                         </DialogDescription>

@@ -3,16 +3,24 @@
 import React, { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { getLocalTimeZone } from "@internationalized/date"
 import { format } from "date-fns"
 import { Filter } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
 
-import { ENotificationType, EVisibility } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
+import {
+  filterNotificationSchema,
+  typeOptions,
+  visibilityOptions,
+  type TFilterNotificationSchema,
+} from "@/lib/validations/notifications/search-notifications"
 import { Button } from "@/components/ui/button"
-import { DateTimePicker } from "@/components/ui/date-time-picker"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/ui/date-time-picker/index"
 import {
   Dialog,
   DialogClose,
@@ -38,28 +46,8 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-const typeOptions = [
-  "All",
-  ENotificationType.EVENT,
-  ENotificationType.NOTICE,
-  ENotificationType.REMINDER,
-] as const
-
-const visibilityOptions = [
-  "All",
-  EVisibility.PUBLIC,
-  EVisibility.PRIVATE,
-] as const
-
-export const filterNotificationSchema = z.object({
-  type: z.enum(typeOptions).catch("All"),
-  visibility: z.enum(visibilityOptions).catch("All"),
-  CreateDateRange: z.array(z.date().or(z.null())).catch([null, null]),
-})
-
-export type TFilterNotificationSchema = z.infer<typeof filterNotificationSchema>
-
 function FiltersNotificationsDialog() {
+  const timezone = getLocalTimeZone()
   const router = useRouter()
   const t = useTranslations("NotificationsManagementPage")
   const [open, setOpen] = useState(false)
@@ -71,14 +59,14 @@ function FiltersNotificationsDialog() {
     defaultValues: {
       type: "All",
       visibility: "All",
-      CreateDateRange: [null, null],
+      createDateRange: [null, null],
     },
   })
 
   const resetFilters = () => {
     form.setValue("type", "All")
     form.setValue("visibility", "All")
-    form.setValue("CreateDateRange", [null, null])
+    form.setValue("createDateRange", [null, null])
   }
 
   const onSubmit = async (values: TFilterNotificationSchema) => {
@@ -87,7 +75,7 @@ function FiltersNotificationsDialog() {
       updates: {
         notificationType: values.type === "All" ? null : values.type,
         //TODO: filter visibility
-        CreateDateRange: values.CreateDateRange.map((date) =>
+        CreateDateRange: values.createDateRange.map((date) =>
           date ? format(date, "yyyy-MM-dd") : ""
         ),
       },
@@ -176,16 +164,19 @@ function FiltersNotificationsDialog() {
 
                 <FormField
                   control={form.control}
-                  name="CreateDateRange"
+                  name="createDateRange"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("Created date")}</FormLabel>
 
-                      <div className="flex w-fit flex-wrap items-center justify-between gap-3">
+                      <div className="flex items-center justify-between gap-3">
                         <DateTimePicker
-                          jsDate={field.value[0] || undefined}
-                          onJsDateChange={(date) =>
-                            field.onChange([date || null, field.value[1]])
+                          value={createCalendarDate(field.value[0])}
+                          onChange={(date) =>
+                            field.onChange([
+                              date ? date.toDate(timezone) : null,
+                              field.value[1],
+                            ])
                           }
                           disabled={(date) =>
                             !!field.value[1] && date > new Date(field.value[1])
@@ -195,9 +186,12 @@ function FiltersNotificationsDialog() {
                         <div>-</div>
 
                         <DateTimePicker
-                          jsDate={field.value[1] || undefined}
-                          onJsDateChange={(date) =>
-                            field.onChange([field.value[0], date || null])
+                          value={createCalendarDate(field.value[1])}
+                          onChange={(date) =>
+                            field.onChange([
+                              field.value[0],
+                              date ? date.toDate(timezone) : null,
+                            ])
                           }
                           disabled={(date) =>
                             !!field.value[0] && date < new Date(field.value[0])

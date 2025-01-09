@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts/auth-provider"
-import { keepPreviousData, useQuery } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
 import { type Zone } from "@/lib/types/models"
@@ -27,8 +27,6 @@ function useZones(floorId: number | null | undefined) {
       }
     },
     enabled: !!floorId,
-    placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false,
   })
 }
 

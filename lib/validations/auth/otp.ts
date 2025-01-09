@@ -1,8 +1,8 @@
 import { z } from "zod"
 
 export const otpSchema = z.object({
-  pin: z.string().trim().min(6, {
-    message: "Your one-time password must be 6 characters.",
+  pin: z.string().trim().length(6, {
+    message: "length6",
   }),
 })
 

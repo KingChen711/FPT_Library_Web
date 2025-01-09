@@ -109,17 +109,6 @@ async function BooksManagementPage({ searchParams }: Props) {
               <TableHeader className="">
                 <TableRow className="">
                   <TableHead></TableHead>
-                  <Hidable hide={!columns.includes(Column.BOOK_ID)}>
-                    <TableHead className="text-nowrap font-bold">
-                      {t("Book id")}
-                    </TableHead>
-                  </Hidable>
-
-                  <Hidable hide={!columns.includes(Column.BOOK_EDITION_ID)}>
-                    <TableHead className="text-nowrap font-bold">
-                      {t("Edition id")}
-                    </TableHead>
-                  </Hidable>
 
                   <Hidable hide={!columns.includes(Column.BOOK_CODE)}>
                     <TableHead className="text-nowrap font-bold">
@@ -322,22 +311,6 @@ async function BooksManagementPage({ searchParams }: Props) {
                     <TableCell className="">
                       <BookEditionCheckbox id={book.bookEditionId} />
                     </TableCell>
-
-                    <Hidable hide={!columns.includes(Column.BOOK_ID)}>
-                      <TableCell className="text-nowrap font-bold">
-                        <div className="flex justify-center pr-4">
-                          {book.bookId || "-"}
-                        </div>
-                      </TableCell>
-                    </Hidable>
-
-                    <Hidable hide={!columns.includes(Column.BOOK_EDITION_ID)}>
-                      <TableCell className="text-nowrap font-bold">
-                        <div className="flex justify-center pr-4">
-                          {book.bookEditionId || "-"}
-                        </div>
-                      </TableCell>
-                    </Hidable>
 
                     <Hidable hide={!columns.includes(Column.BOOK_CODE)}>
                       <TableCell className="text-nowrap font-bold">

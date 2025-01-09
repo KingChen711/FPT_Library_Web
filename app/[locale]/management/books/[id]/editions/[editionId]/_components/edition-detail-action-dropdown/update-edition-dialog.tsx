@@ -64,6 +64,8 @@ function UpdateEditionDialog({ edition, open, setOpen }: Props) {
   const locale = useLocale()
   const theme = useActualTheme()
 
+  const [mounted, setMounted] = useState(false)
+
   const [isPending, startTransition] = useTransition()
 
   const [disableImageField, setDisableImageField] = useState(false)
@@ -139,6 +141,10 @@ function UpdateEditionDialog({ edition, open, setOpen }: Props) {
     watchFile &&
     !checkingImage
   )
+
+  useEffect(() => {
+    console.log({ watchValidImage, watchEditionTitle, watchPublisher })
+  }, [watchValidImage, watchEditionTitle, watchPublisher])
 
   const handleCheckImage = () => {
     const formData = new FormData()
@@ -231,8 +237,14 @@ function UpdateEditionDialog({ edition, open, setOpen }: Props) {
   }, [form, watchEditionTitle, watchPublisher, hasConvertedUrlToFile])
 
   useEffect(() => {
+    if (!mounted) return
     form.setValue("validImage", undefined)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, watchEditionTitle, watchPublisher])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -524,6 +536,7 @@ function UpdateEditionDialog({ edition, open, setOpen }: Props) {
                       >
                         <FormLabel
                           className={cn(
+                            "flex flex-col",
                             disableImageField &&
                               "pointer-events-none cursor-not-allowed opacity-60"
                           )}

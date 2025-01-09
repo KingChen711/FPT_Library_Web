@@ -230,19 +230,23 @@ function CoverImageField({ form, isPending, selectedAuthors }: Props) {
           </div>
         )}
         <div className="flex flex-col gap-2 text-sm">
-          {watchFile && !checkingImage && (
-            <div className="flex items-center gap-2">
-              <strong>{t("Result")}</strong>
-              <div>{t(watchValidImage ? "Passed" : "Failed")}</div>
-              <div>
-                {watchValidImage ? (
-                  <Check className="text-success" />
-                ) : (
-                  <X className="text-danger" />
-                )}
+          {watchFile &&
+            !checkingImage &&
+            (watchValidImage === undefined ? (
+              <div>{t("Not checked yet")}</div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <strong>{t("Result")}</strong>
+                <div>{t(watchValidImage ? "Passed" : "Failed")}</div>
+                <div>
+                  {watchValidImage ? (
+                    <Check className="text-success" />
+                  ) : (
+                    <X className="text-danger" />
+                  )}
+                </div>
               </div>
-            </div>
-          )}
+            ))}
           <Button
             onClick={(e) => {
               e.preventDefault()

@@ -74,25 +74,27 @@
   },
   "Zod": {
     "min1": "Required",
-    "min2": "Must contain at least 2 character(s)",
-    "min6": "Must contain at least 6 character(s)",
-    "max50": "Must contain at most 50 character(s)",
-    "max500": "Must contain at most 500 character(s)",
-    "max150": "Must contain at most 150 character(s)",
-    "max2000": "Must contain at most 2000 character(s)",
-    "min10": "Must contain at least 10 character(s)",
-    "length_10": "Must contain 10 character(s)",
+    "min2": "Must contain at least 2 characters",
+    "min6": "Must contain at least 6 characters",
+    "max50": "Must contain at most 50 characters",
+    "max500": "Must contain at most 500 characters",
+    "max150": "Must contain at most 150 characters",
+    "max2000": "Must contain at most 2000 characters",
+    "min10": "Must contain at least 10 characters",
+    "length_10": "Must contain 10 characters",
+    "length6": "Must contain 6 characters",
     "email": "Invalid email",
     "required": "Required",
     "categoriesMin1": "Need at least 1 category",
     "authorsMin1": "Need at least 1 author",
+    "imagesMin4": "Need at least 4 images",
     "copiesMin1": "Need at least 1 copy code",
     "gt0": "Must larger than 0",
     "publicationYear": "Invalid publication year",
     "isbn": "Invalid ISBN format or checksum",
     "invalid": "Invalid",
     "atLeastOneRecipient": "Need at least one recipient",
-    "validImageAI": "Image does not match information"
+    "validImageAI": "Image does not match information or not checked yet"
   },
   "Me": {
     "Account": {
@@ -647,7 +649,8 @@
     "Reset default": "Reset default",
     "Apply": "Apply",
     "Updated by": "Updated by",
-    "Not checked yet": "Not checked yet"
+    "Not checked yet": "Not checked yet",
+    "not found isbn": "No information found for {isbn}"
   },
   "Badges": {
     "BookConditionStatus": {
@@ -680,6 +683,10 @@
       "Borrowed": "Borrowed",
       "Reserved": "Reserved",
       "Deleted": "Deleted"
+    },
+    "Visibility": {
+      "Public": "Public",
+      "Private": "Private"
     }
   },
   "IsbnScanner": {

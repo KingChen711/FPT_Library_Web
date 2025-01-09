@@ -1,6 +1,5 @@
 "use client"
 
-import IsbnScannerDialog from "@/components/ui/isbn-scanner-dialog"
 import { NotificationBell } from "@/components/ui/noti-bell"
 import { ThemeToggle } from "@/components/theme-toggle"
 
@@ -24,7 +23,7 @@ function Actions() {
       </ClerkLoaded>
 
       <MobileNavbar /> */}
-      <IsbnScannerDialog />
+
       <NotificationBell />
       <ThemeToggle />
       <div className="size-9 rounded-full bg-red-500"></div>
