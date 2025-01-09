@@ -25,7 +25,7 @@ type Props = {
 
 const AuthorSoftDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "Chuyển vào thùng rác" : "Move to trash"}`
+  const message = `${locale === "vi" ? "chuyển vào thùng rác" : "move to trash"}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)

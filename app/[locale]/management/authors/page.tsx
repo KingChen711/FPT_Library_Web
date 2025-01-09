@@ -145,7 +145,11 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                   label={t("fields.createDate")}
                   sortKey="createDate"
                 />
-
+                <SortableTableHead
+                  currentSort={sort}
+                  label={t("fields.updateDate")}
+                  sortKey="updateDate"
+                />
                 <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
                   {t("action")}
                 </TableHead>
@@ -158,7 +162,7 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                     <AuthorCheckbox id={author.authorId.toString()} />
                   </TableCell>
                   <TableCell>
-                    <div className="flex gap-2 pr-8">
+                    <div className="flex items-center gap-2 pr-8">
                       {isImageLinkValid(author.authorImage) ? (
                         <Image
                           src={author.authorImage}

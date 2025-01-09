@@ -294,7 +294,7 @@
     "Delete": "Delete",
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
     "Delete employee": "Delete employee",
-    "Employees selected": "{amount, plural, one {# employee selected} other {# employees selected}}"
+    "employees selected": "{amount, plural, one {# employee selected} other {# employees selected}}"
   },
   "AuthorManagement": {
     "create author": "Create author",
