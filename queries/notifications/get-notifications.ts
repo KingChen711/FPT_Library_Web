@@ -29,7 +29,10 @@ const getNotifications = async (
           createDateRange: searchParams.createDateRange.map((d) =>
             d ? d.toString() : d
           ),
-          type: searchParams.type === "All" ? null : searchParams.type,
+          notificationType:
+            searchParams.notificationType === "All"
+              ? null
+              : searchParams.notificationType,
           visibility:
             searchParams.visibility === "All" ? null : searchParams.visibility,
         },

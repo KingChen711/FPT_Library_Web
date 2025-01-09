@@ -49,6 +49,8 @@ async function NotificationPage({ searchParams }: Props) {
   const { search, pageIndex, sort, pageSize, ...rest } =
     searchNotificationsSchema.parse(searchParams)
 
+  console.log(searchNotificationsSchema.parse(searchParams))
+
   await auth().protect(EFeature.BORROW_MANAGEMENT)
 
   const t = await getTranslations("NotificationsManagementPage")
@@ -93,11 +95,6 @@ async function NotificationPage({ searchParams }: Props) {
               <TableRow className="">
                 <SortableTableHead
                   currentSort={sort}
-                  label="Id"
-                  sortKey="NotificationId"
-                />
-                <SortableTableHead
-                  currentSort={sort}
                   label={t("Title")}
                   sortKey="Title"
                 />
@@ -130,10 +127,7 @@ async function NotificationPage({ searchParams }: Props) {
             <TableBody>
               {notifications.map((notification) => (
                 <TableRow key={notification.notificationId}>
-                  <TableCell className="font-extrabold">
-                    {notification.notificationId}
-                  </TableCell>
-                  <TableCell className="text-nowrap">
+                  <TableCell className="text-nowrap font-bold">
                     {notification.title}
                   </TableCell>
                   <TableCell className="text-nowrap">

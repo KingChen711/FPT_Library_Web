@@ -57,14 +57,14 @@ function FiltersNotificationsDialog() {
   const form = useForm<TFilterNotificationSchema>({
     resolver: zodResolver(filterNotificationSchema),
     defaultValues: {
-      type: "All",
+      notificationType: "All",
       visibility: "All",
       createDateRange: [null, null],
     },
   })
 
   const resetFilters = () => {
-    form.setValue("type", "All")
+    form.setValue("notificationType", "All")
     form.setValue("visibility", "All")
     form.setValue("createDateRange", [null, null])
   }
@@ -73,7 +73,8 @@ function FiltersNotificationsDialog() {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        notificationType: values.type === "All" ? null : values.type,
+        notificationType:
+          values.notificationType === "All" ? null : values.notificationType,
         //TODO: filter visibility
         CreateDateRange: values.createDateRange.map((date) =>
           date ? format(date, "yyyy-MM-dd") : ""
@@ -104,7 +105,7 @@ function FiltersNotificationsDialog() {
               >
                 <FormField
                   control={form.control}
-                  name="type"
+                  name="notificationType"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("Notification type")}</FormLabel>
@@ -179,7 +180,9 @@ function FiltersNotificationsDialog() {
                             ])
                           }
                           disabled={(date) =>
-                            !!field.value[1] && date > new Date(field.value[1])
+                            (!!field.value[1] &&
+                              date > new Date(field.value[1])) ||
+                            date > new Date()
                           }
                         />
 
@@ -194,7 +197,9 @@ function FiltersNotificationsDialog() {
                             ])
                           }
                           disabled={(date) =>
-                            !!field.value[0] && date < new Date(field.value[0])
+                            (!!field.value[0] &&
+                              date < new Date(field.value[0])) ||
+                            date > new Date()
                           }
                         />
                       </div>

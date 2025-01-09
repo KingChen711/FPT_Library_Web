@@ -4,7 +4,6 @@ import React from "react"
 import { useTranslations } from "next-intl"
 
 import { ENotificationType } from "@/lib/types/enums"
-import { cn } from "@/lib/utils"
 
 import { Badge } from "./badge"
 
@@ -12,23 +11,25 @@ type Props = {
   type: ENotificationType
 }
 
-export const getTypeColor = (type: ENotificationType): string => {
+export const getTypeColor = (type: ENotificationType) => {
   switch (type) {
     case ENotificationType.EVENT:
-      return "bg-success"
+      return "success"
     case ENotificationType.NOTICE:
-      return "bg-info"
+      return "info"
     case ENotificationType.REMINDER:
-      return "bg-danger"
+      return "danger"
     default:
-      return "bg-primary"
+      return "default"
   }
 }
 
-function NotificationTypeBadge({ type: status }: Props) {
+function NotificationTypeBadge({ type }: Props) {
   const t = useTranslations("Badges.NotificationType")
   return (
-    <Badge className={cn(`text-xs ${getTypeColor(status)}`)}>{t(status)}</Badge>
+    <Badge variant={getTypeColor(type)} className="flex w-24 justify-center">
+      {t(type)}
+    </Badge>
   )
 }
 

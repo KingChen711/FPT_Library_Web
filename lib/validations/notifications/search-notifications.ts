@@ -16,7 +16,7 @@ export const visibilityOptions = [
 ] as const
 
 export const filterNotificationSchema = z.object({
-  type: z.enum(typeOptions).catch("All"),
+  notificationType: z.enum(typeOptions).catch("All"),
   visibility: z.enum(visibilityOptions).catch("All"),
   createDateRange: z.array(z.date().or(z.null())).catch([null, null]),
 })

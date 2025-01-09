@@ -31,6 +31,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+import ParseHtml from "./parse-html"
+
 const getTypeColor = (type: ENotificationType): string => {
   switch (type) {
     case ENotificationType.EVENT:
@@ -206,10 +208,10 @@ export function NotificationBell() {
                     {notification.notificationType}
                   </Badge>
                 </div>
-                <p className="mt-1 line-clamp-3 text-sm text-card-foreground">
-                  {notification.message}
+                <p className="line-clamp-3 text-sm leading-none text-card-foreground">
+                  <ParseHtml className="!text-sm" data={notification.message} />
                 </p>
-                <span className="mt-1 text-xs text-muted-foreground">
+                <span className="text-xs text-muted-foreground">
                   {format(
                     new Date(notification.createDate),
                     "MMM d, yyyy h:mm a",
