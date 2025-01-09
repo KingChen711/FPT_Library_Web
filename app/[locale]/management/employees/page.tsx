@@ -2,6 +2,7 @@ import Image from "next/image"
 import { auth } from "@/queries/auth"
 import getEmployees from "@/queries/employees/get-employees"
 import getEmployeeRoles from "@/queries/roles/get-employee-roles"
+import { User } from "lucide-react"
 import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
@@ -200,9 +201,9 @@ async function EmployeesManagementPage({ searchParams }: Props) {
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center text-nowrap">
                       {employee.gender === "Male" ? (
-                        <Icons.Male className="size-6 text-info" />
+                        <User color="blue" />
                       ) : (
-                        <Icons.Female className="size-6 text-danger" />
+                        <User color="red" />
                       )}
                     </div>
                   </TableCell>
