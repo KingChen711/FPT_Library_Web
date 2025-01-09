@@ -137,7 +137,7 @@ async function NotificationPage({ searchParams }: Props) {
                           {t("View content")}
                         </Button>
                       </DialogTrigger>
-                      <DialogContent>
+                      <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
                         <DialogHeader>
                           <DialogTitle>{t("Message content")}</DialogTitle>
                           <DialogDescription>
@@ -155,7 +155,7 @@ async function NotificationPage({ searchParams }: Props) {
                             {t("View recipients")}
                           </Button>
                         </DialogTrigger>
-                        <DialogContent>
+                        <DialogContent className="max-h-[80vh] overflow-y-auto">
                           <DialogHeader>
                             <DialogTitle>{t("Recipients")}</DialogTitle>
                             <DialogDescription>
