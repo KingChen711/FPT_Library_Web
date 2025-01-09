@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react"
 import { useAuth } from "@/contexts/auth-provider"
+import { Link } from "@/i18n/routing"
 import { type HubConnection } from "@microsoft/signalr"
 import { useQueryClient } from "@tanstack/react-query"
 import { format } from "date-fns"
@@ -195,31 +196,39 @@ export function NotificationBell() {
               <DropdownMenuItem
                 key={notification.notificationId}
                 className="flex flex-col items-start border-b p-2"
+                asChild
               >
-                <div className="flex w-full items-start justify-between">
-                  <span className="line-clamp-2 font-semibold">
-                    {notification.title}
-                  </span>
-                  <Badge
-                    className={cn(
-                      `text-xs ${getTypeColor(notification.notificationType)}`
+                <Link
+                  href={`/me/account/notifications/${notification.notificationId}`}
+                >
+                  <div className="flex w-full items-start justify-between">
+                    <span className="line-clamp-2 font-semibold">
+                      {notification.title}
+                    </span>
+                    <Badge
+                      className={cn(
+                        `text-xs ${getTypeColor(notification.notificationType)}`
+                      )}
+                    >
+                      {notification.notificationType}
+                    </Badge>
+                  </div>
+                  <p className="line-clamp-3 text-sm leading-none text-card-foreground">
+                    <ParseHtml
+                      className="!text-sm"
+                      data={notification.message}
+                    />
+                  </p>
+                  <span className="text-xs text-muted-foreground">
+                    {format(
+                      new Date(notification.createDate),
+                      "MMM d, yyyy h:mm a",
+                      {
+                        locale: formatLocale,
+                      }
                     )}
-                  >
-                    {notification.notificationType}
-                  </Badge>
-                </div>
-                <p className="line-clamp-3 text-sm leading-none text-card-foreground">
-                  <ParseHtml className="!text-sm" data={notification.message} />
-                </p>
-                <span className="text-xs text-muted-foreground">
-                  {format(
-                    new Date(notification.createDate),
-                    "MMM d, yyyy h:mm a",
-                    {
-                      locale: formatLocale,
-                    }
-                  )}
-                </span>
+                  </span>
+                </Link>
               </DropdownMenuItem>
             ))}
             {hasNextPage ? (

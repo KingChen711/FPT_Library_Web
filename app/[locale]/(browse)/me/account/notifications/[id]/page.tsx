@@ -5,6 +5,7 @@ import { format } from "date-fns"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import NotificationTypeBadge from "@/components/ui/notification-type-badge"
+import ParseHtml from "@/components/ui/parse-html"
 
 type Props = {
   params: {
@@ -23,7 +24,7 @@ async function NotificationDetailPage({ params: { id } }: Props) {
   return (
     <div className="flex flex-col">
       <h1 className="text-xl font-bold">{notification?.title}</h1>
-      <div className="flex flex-wrap items-center justify-between gap-4">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-4">
         <NotificationTypeBadge type={notification.notificationType} />
         <div className="mt-4 text-xs text-muted-foreground">
           {format(new Date(notification.createDate), "MMM d, yyyy h:mm a", {
@@ -31,7 +32,7 @@ async function NotificationDetailPage({ params: { id } }: Props) {
           })}
         </div>
       </div>
-      <p className="mt-4">{notification?.message}</p>
+      <ParseHtml className="mt-4" data={notification?.message} />
     </div>
   )
 }
