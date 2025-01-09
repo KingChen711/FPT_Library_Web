@@ -102,6 +102,8 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
   }
 
   const handleCheckImage = () => {
+    console.log("handleCheckImage")
+
     const formData = new FormData()
 
     const file = form.getValues(`bookEditions.${index}.file`)

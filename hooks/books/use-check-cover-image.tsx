@@ -21,7 +21,7 @@ function useCheckCoverImage() {
       const { data } = await axios.post<{
         data: TCheckCoverImageRes
       }>(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/management/book/ai/check-book-edition`,
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/management/books/ai/check-book-edition`,
         formData,
         {
           headers: {

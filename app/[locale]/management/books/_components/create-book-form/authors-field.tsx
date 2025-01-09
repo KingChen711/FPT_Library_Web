@@ -90,9 +90,9 @@ function AuthorsField({
                       alt="author"
                       height={40}
                       width={40}
-                      src={defaultAuthorAvatar}
+                      src={author.authorImage}
                       fallbackSrc={defaultAuthorAvatar}
-                      className="size-10 rounded-full border"
+                      className="size-10 shrink-0 rounded-full border"
                     />
 
                     <div className="flex w-full flex-col">
@@ -192,9 +192,9 @@ function AuthorsField({
                           alt="author"
                           height={40}
                           width={40}
-                          src={defaultAuthorAvatar}
+                          src={author.authorImage}
                           fallbackSrc={defaultAuthorAvatar}
-                          className="size-10 rounded-full border"
+                          className="size-10 shrink-0 rounded-full border"
                         />
 
                         <div className="flex w-full flex-col">
