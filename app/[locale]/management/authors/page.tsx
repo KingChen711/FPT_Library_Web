@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/table"
 
 import AuthorActionDropdown from "./_components/author-action-dropdown"
+import AuthorBioDialog from "./_components/author-bio-dialog"
 import AuthorCheckbox from "./_components/author-checkbox"
 import AuthorExport from "./_components/author-export"
 import AuthorHeaderTab from "./_components/author-header-tab"
@@ -112,6 +113,12 @@ async function AuthorsManagementPage({ searchParams }: Props) {
 
                 <SortableTableHead
                   currentSort={sort}
+                  label={t("fields.image")}
+                  sortKey="image"
+                  position="center"
+                />
+                <SortableTableHead
+                  currentSort={sort}
                   label={t("fields.authorCode")}
                   sortKey="authorCode"
                 />
@@ -161,26 +168,35 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                   <TableCell>
                     <AuthorCheckbox id={author.authorId.toString()} />
                   </TableCell>
+                  <TableCell className="text-nowrap">
+                    {author.fullName}
+                  </TableCell>
                   <TableCell>
-                    <div className="flex items-center gap-2 pr-8">
+                    <div className="flex items-center justify-center">
                       {isImageLinkValid(author.authorImage) ? (
                         <Image
                           src={author.authorImage}
                           alt="avatar"
-                          width={24}
-                          height={24}
+                          width={30}
+                          height={30}
                         />
                       ) : (
-                        <ImageIcon />
+                        <ImageIcon size={30} />
                       )}
-                      <p className="text-nowrap">{author.fullName}</p>
                     </div>
                   </TableCell>
                   <TableCell>{author.authorCode}</TableCell>
-                  <TableCell>
-                    <div
-                      dangerouslySetInnerHTML={{ __html: author.biography }}
-                    />
+                  <TableCell className="ml-0 flex items-center pl-0">
+                    <div className="flex items-center gap-2 overflow-hidden">
+                      {/* <Button variant={"link"} className="m-0 p-0">
+                        <Book />
+                      </Button> */}
+                      <AuthorBioDialog bio={author.biography} />
+                      <div
+                        className="line-clamp-1 max-w-[260px] flex-1 text-ellipsis"
+                        dangerouslySetInnerHTML={{ __html: author.biography }}
+                      />
+                    </div>
                   </TableCell>
 
                   <TableCell>
