@@ -17,7 +17,6 @@ import {
 } from "@/lib/validations/books/book-editions/create-edition"
 import { createEdition } from "@/actions/books/editions/create-edition"
 import { uploadBookImage } from "@/actions/books/upload-medias"
-import { type TCheckCoverImageRes } from "@/hooks/books/use-check-cover-image"
 import { toast } from "@/hooks/use-toast"
 import useActualTheme from "@/hooks/utils/use-actual-theme"
 import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
@@ -67,8 +66,6 @@ function CreateEditionDialog({ bookId }: Props) {
   const [hasConfirmedAboutChangeStatus, setHasConfirmedAboutChangeStatus] =
     useState(false)
   const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
-
-  useState<TCheckCoverImageRes | null>(null)
 
   const handleOpenChange = (value: boolean) => {
     if (isPending) return

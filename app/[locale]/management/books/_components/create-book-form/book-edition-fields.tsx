@@ -493,6 +493,6 @@ export const createBookEdition = () => {
     pageCount: 0,
     publicationYear: 0,
     publisher: "",
-    validImage: false,
+    validImage: undefined,
   }
 }
