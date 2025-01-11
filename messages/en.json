@@ -650,7 +650,7 @@
     "Apply": "Apply",
     "Updated by": "Updated by",
     "Not checked yet": "Not checked yet",
-    "not found isbn": "No information found for {isbn}"
+    "not found isbn": "No information found for isbn {isbn}"
   },
   "Badges": {
     "BookConditionStatus": {

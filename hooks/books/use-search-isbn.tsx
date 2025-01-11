@@ -47,10 +47,14 @@ function useSearchIsbn(isbn: string) {
 
         try {
           if (bookData.works?.[0]?.key) {
-            const { data } = await axios.get<{ description: string }>(
-              `https://openlibrary.org${bookData.works[0].key}.json`
-            )
-            summary = data?.description || undefined
+            const { data } = await axios.get<{
+              description: string | { value?: string }
+            }>(`https://openlibrary.org${bookData.works[0].key}.json`)
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            //@ts-ignore
+
+            summary = data?.description?.value || data?.description || undefined
+            console.log({ summary })
           }
         } catch (error) {
           console.log(error)
@@ -76,6 +80,7 @@ function useSearchIsbn(isbn: string) {
         }
       } catch {
         return {
+          isbn,
           notFound: true,
         }
       }

@@ -90,7 +90,7 @@ function AuthorsField({
                       alt="author"
                       height={40}
                       width={40}
-                      src={author.authorImage}
+                      src={author.authorImage || defaultAuthorAvatar}
                       fallbackSrc={defaultAuthorAvatar}
                       className="size-10 shrink-0 rounded-full border"
                     />
@@ -192,7 +192,7 @@ function AuthorsField({
                           alt="author"
                           height={40}
                           width={40}
-                          src={author.authorImage}
+                          src={author.authorImage || defaultAuthorAvatar}
                           fallbackSrc={defaultAuthorAvatar}
                           className="size-10 shrink-0 rounded-full border"
                         />

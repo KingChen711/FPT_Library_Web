@@ -98,8 +98,7 @@
     "isbn": "Định dạng ISBN hoặc checksum không hợp lệ",
     "invalid": "Không hợp lệ",
     "atLeastOneRecipient": "Cần ít nhất một người nhận",
-    "validImageAI": "Ảnh không tương thích với thông tin hoặc chưa được kiểm tra",
-    "not found isbn": "Không tìm thấy thông tin của {isbn}"
+    "validImageAI": "Ảnh không tương thích với thông tin hoặc chưa được kiểm tra"
   },
   "Me": {
     "Account": {
@@ -649,7 +648,8 @@
     "Reset default": "Khôi phục mặc định",
     "Apply": "Áp dụng",
     "Updated by": "Cập nhật bởi",
-    "Not checked yet": "Chưa kiểm tra"
+    "Not checked yet": "Chưa kiểm tra",
+    "not found isbn": "Không tìm thấy thông tin của isbn {isbn}"
   },
   "Badges": {
     "BookConditionStatus": {

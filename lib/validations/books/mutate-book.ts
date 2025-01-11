@@ -39,6 +39,22 @@ export const bookEditionSchema = z
     estimatedPrice: z.coerce.number().gt(0, "gt0"),
     authorIds: z.array(z.coerce.number()).min(1, "authorsMin1"),
     bookCopies: z.array(bookCopySchema).min(1, "copiesMin1"),
+
+    //client only
+    checkedResult: z
+      .object({
+        totalPoint: z.number(),
+        confidenceThreshold: z.number(),
+        fieldPoints: z.array(
+          z.object({
+            name: z.string(),
+            detail: z.string(),
+            matchedPoint: z.number(),
+            isPassed: z.boolean(),
+          })
+        ),
+      })
+      .optional(),
   })
   .refine((data) => data.validImage, {
     message: "validImageAI",

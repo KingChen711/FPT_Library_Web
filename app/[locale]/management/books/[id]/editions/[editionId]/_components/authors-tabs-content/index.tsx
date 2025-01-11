@@ -174,9 +174,8 @@ function AuthorsTabsContent({ authors, bookId, editionId }: Props) {
                   </TableCell>
                   <TableCell className="text-nowrap">
                     <div className="flex items-center">
-                      {/* //TODO:fix author image */}
                       <ImageWithFallback
-                        src={defaultAuthor}
+                        src={author.authorImage || defaultAuthor}
                         alt={author.fullName}
                         width={32}
                         height={32}

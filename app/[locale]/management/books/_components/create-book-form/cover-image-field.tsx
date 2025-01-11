@@ -7,9 +7,7 @@ import { type UseFormReturn } from "react-hook-form"
 import { type Author } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { type TMutateBookSchema } from "@/lib/validations/books/mutate-book"
-import useCheckCoverImage, {
-  type TCheckCoverImageRes,
-} from "@/hooks/books/use-check-cover-image"
+import useCheckCoverImage from "@/hooks/books/use-check-cover-image"
 import { Button } from "@/components/ui/button"
 import {
   FormControl,
@@ -32,16 +30,17 @@ type Props = {
 function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
   const t = useTranslations("BooksManagementPage")
   const [disableImageField, setDisableImageField] = useState(false)
-  const [checkedResult, setCheckedResult] =
-    useState<TCheckCoverImageRes | null>(null)
 
   const watchAuthorIds = form.watch(`bookEditions.${index}.authorIds`)
   const watchEditionTitle = form.watch(`bookEditions.${index}.editionTitle`)
   const watchPublisher = form.watch(`bookEditions.${index}.publisher`)
   const watchFile = form.watch(`bookEditions.${index}.file`)
   const watchValidImage = form.watch(`bookEditions.${index}.validImage`)
+  const watchCheckedResult = form.watch(`bookEditions.${index}.checkedResult`)
 
   const { mutate: checkImage, isPending: checkingImage } = useCheckCoverImage()
+
+  const [mounted, setMounted] = useState(false)
 
   const canCheck = !!(
     watchAuthorIds &&
@@ -130,7 +129,7 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
 
     checkImage(formData, {
       onSuccess: (data) => {
-        setCheckedResult(data)
+        form.setValue(`bookEditions.${index}.checkedResult`, data)
 
         form.setValue(
           `bookEditions.${index}.validImage`,
@@ -141,8 +140,20 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
   }
 
   useEffect(() => {
+    if (!mounted) return
     form.setValue(`bookEditions.${index}.validImage`, undefined)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, watchEditionTitle, watchPublisher, watchAuthorIds, index])
+
+  useEffect(() => {
+    if (index === 0) {
+      console.log({ watchFile, checkingImage, watchValidImage })
+    }
+  }, [watchFile, checkingImage, watchValidImage, index])
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
 
   return (
     <div className="flex flex-row justify-start gap-6">
@@ -265,14 +276,14 @@ function CoverImageField({ form, index, isPending, selectedAuthors }: Props) {
           >
             {t("Check")}
           </Button>
-          {watchFile && !checkingImage && checkedResult && (
+          {watchFile && !checkingImage && watchCheckedResult && (
             <>
               <div className="flex items-center gap-2">
                 <strong>{t("Average point")}</strong>
-                <div>{checkedResult.totalPoint.toFixed(2)}/100</div>
+                <div>{watchCheckedResult.totalPoint.toFixed(2)}/100</div>
               </div>
               <div className="flex flex-wrap items-center gap-4">
-                {checkedResult.fieldPoints.map((field) => {
+                {watchCheckedResult.fieldPoints.map((field) => {
                   const fieldName = field.name.includes("Author")
                     ? t("Author") + " " + field.name.split(" ")[1]
                     : t(field.name)

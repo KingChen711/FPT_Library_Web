@@ -140,12 +140,11 @@ function AddAuthorsDialog({
                               key={authorId}
                               className="relative flex w-60 gap-x-3 rounded-md border p-3 text-sm"
                             >
-                              {/* //TODO:fix author image */}
                               <ImageWithFallback
                                 alt="author"
                                 height={40}
                                 width={40}
-                                src={defaultAuthorAvatar}
+                                src={author.authorImage || defaultAuthorAvatar}
                                 fallbackSrc={defaultAuthorAvatar}
                                 className="size-10 rounded-full border"
                               />
@@ -261,7 +260,10 @@ function AddAuthorsDialog({
                                       alt="author"
                                       height={40}
                                       width={40}
-                                      src={defaultAuthorAvatar}
+                                      src={
+                                        author.authorImage ||
+                                        defaultAuthorAvatar
+                                      }
                                       fallbackSrc={defaultAuthorAvatar}
                                       className="size-10 rounded-full border"
                                     />

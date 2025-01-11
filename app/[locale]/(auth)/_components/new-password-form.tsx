@@ -8,13 +8,14 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { cn } from "@/lib/utils"
 import {
   newPassSchema,
   type TNewPassSchema,
 } from "@/lib/validations/auth/new-password"
 import { changePassword } from "@/actions/auth/change-password"
 import { useToast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -90,9 +91,10 @@ function NewPassForm({ changePasswordToken, email, type }: Props) {
                     {...field}
                     className="border-none outline-none focus-visible:ring-transparent"
                   />
-                  <Button
-                    size="icon"
-                    variant="ghost"
+                  <div
+                    className={cn(
+                      buttonVariants({ size: "icon", variant: "ghost" })
+                    )}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -100,7 +102,7 @@ function NewPassForm({ changePasswordToken, email, type }: Props) {
                     }}
                   >
                     {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                  </Button>
+                  </div>
                 </div>
               </FormControl>
               <FormMessage />
@@ -122,9 +124,10 @@ function NewPassForm({ changePasswordToken, email, type }: Props) {
                     {...field}
                     className="border-none outline-none focus-visible:ring-transparent"
                   />
-                  <Button
-                    size="icon"
-                    variant="ghost"
+                  <div
+                    className={cn(
+                      buttonVariants({ size: "icon", variant: "ghost" })
+                    )}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -132,7 +135,7 @@ function NewPassForm({ changePasswordToken, email, type }: Props) {
                     }}
                   >
                     {showConfirmPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                  </Button>
+                  </div>
                 </div>
               </FormControl>
               <FormMessage />

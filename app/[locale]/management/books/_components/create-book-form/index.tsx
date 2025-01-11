@@ -1,6 +1,7 @@
 "use client"
 
 import React, {
+  useEffect,
   useState,
   useTransition,
   type Dispatch,
@@ -8,7 +9,7 @@ import React, {
 } from "react"
 import { useRouter } from "next/navigation"
 import { editorPlugin } from "@/constants"
-import { useScanIsbn } from "@/stores/use-scan-isnb"
+import { useScanIsbn } from "@/stores/use-scan-isbn"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Editor } from "@tinymce/tinymce-react"
 import { Check, Loader2, X } from "lucide-react"
@@ -63,7 +64,7 @@ import { ProgressTabBar } from "./progress-stage-bar"
 type Tab = "General" | "Resources" | "Editions" | "Train AI"
 
 function CreateBookForm() {
-  const { isbn } = useScanIsbn()
+  const { isbn, scannedBooks, appendScannedBook, setIsbn } = useScanIsbn()
   const { data: scannedBook, isFetching: isFetchingSearchIsbn } =
     useSearchIsbn(isbn)
   const theme = useActualTheme()
@@ -205,6 +206,23 @@ function CreateBookForm() {
     return trigger
   }
 
+  useEffect(() => {
+    if (!scannedBook) return
+
+    console.log({ scannedBook })
+
+    setIsbn("")
+
+    if (scannedBook.notFound) {
+      toast({
+        description: t("not found isbn", { isbn: scannedBook.isbn }),
+      })
+      return
+    }
+
+    appendScannedBook(scannedBook)
+  }, [scannedBook, appendScannedBook, locale, t, setIsbn])
+
   return (
     <div>
       <div className="mt-4 flex flex-wrap items-start gap-4">
@@ -226,14 +244,27 @@ function CreateBookForm() {
         </div>
       )}
 
-      {scannedBook && (
-        <div className="mt-4 flex flex-col gap-2">
+      {scannedBooks.length > 0 && (
+        <div className="flex flex-col gap-2">
           <Label>{t("Scanned book")}</Label>
-          {scannedBook.notFound ? (
-            <div className="text-sm">{t("not found isbn", { isbn })}</div>
-          ) : (
-            <ScannedBook book={scannedBook} />
-          )}
+          <div className="grid">
+            <div className="flex gap-4 overflow-x-auto overflow-y-hidden pb-6">
+              {scannedBooks.map((book) => (
+                <div
+                  key={book.isbn}
+                  className="mt-4 flex h-full flex-col gap-2"
+                >
+                  {book.notFound ? (
+                    <div className="text-sm">
+                      {t("not found isbn", { isbn: book.isbn })}
+                    </div>
+                  ) : (
+                    <ScannedBook book={book} />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       )}
 

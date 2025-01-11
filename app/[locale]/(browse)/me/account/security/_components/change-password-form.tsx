@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { http } from "@/lib/http"
+import { cn } from "@/lib/utils"
 import {
   newPassSchema,
   type TNewPassSchema,
@@ -17,7 +18,7 @@ import {
 import { changePassword } from "@/actions/auth/change-password"
 import { verifyOtpChangePassword } from "@/actions/auth/verify-otp-change-password"
 import { useToast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -162,9 +163,10 @@ function ChangePassForm() {
                     {...field}
                     className="border-none outline-none focus-visible:ring-transparent"
                   />
-                  <Button
-                    size="icon"
-                    variant="ghost"
+                  <div
+                    className={cn(
+                      buttonVariants({ size: "icon", variant: "ghost" })
+                    )}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -172,7 +174,7 @@ function ChangePassForm() {
                     }}
                   >
                     {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                  </Button>
+                  </div>
                 </div>
               </FormControl>
               <FormMessage />
@@ -194,9 +196,10 @@ function ChangePassForm() {
                     {...field}
                     className="border-none outline-none focus-visible:ring-transparent"
                   />
-                  <Button
-                    size="icon"
-                    variant="ghost"
+                  <div
+                    className={cn(
+                      buttonVariants({ size: "icon", variant: "ghost" })
+                    )}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -204,7 +207,7 @@ function ChangePassForm() {
                     }}
                   >
                     {showConfirmPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                  </Button>
+                  </div>
                 </div>
               </FormControl>
               <FormMessage />

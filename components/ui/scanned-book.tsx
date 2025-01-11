@@ -51,7 +51,7 @@ function ScannedBook({ book }: Props) {
   }
 
   return (
-    <div className="max-w-2xl overflow-hidden rounded-lg border shadow-lg">
+    <div className="h-full w-[672px] overflow-hidden rounded-lg border shadow-lg">
       <div className="md:flex">
         <div className="group relative md:shrink-0">
           {book.coverImage ? (
@@ -69,11 +69,11 @@ function ScannedBook({ book }: Props) {
                 )}
               </Button>
               <ImageWithFallback
-                src={book.coverImage}
+                src={book.coverImage || defaultBookCover}
                 alt={`Cover of ${book.title}`}
                 width={192}
                 height={288}
-                className="z-0 h-72 w-48 object-cover"
+                className="z-0 h-72 w-48 rounded-md border object-cover"
                 fallbackSrc={defaultBookCover}
               />
             </>
@@ -123,7 +123,9 @@ function ScannedBook({ book }: Props) {
               <Copitor className="shrink-0" content={book.summary} />
             )}
             {book.summary && (
-              <p className="text-muted-foreground">{book.summary}</p>
+              <p className="line-clamp-5 text-muted-foreground">
+                {book.summary}
+              </p>
             )}
           </div>
 
