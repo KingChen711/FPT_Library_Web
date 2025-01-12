@@ -2,10 +2,25 @@
 
 import { useEffect, useState } from "react"
 import { useManagementSideBar } from "@/stores/use-management-sidebar"
-import { Calendar, Clock, Languages, QrCode, Search } from "lucide-react"
+import {
+  Book,
+  Bot,
+  Calendar,
+  Clock,
+  Languages,
+  Mic,
+  QrCode,
+  Search,
+} from "lucide-react"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -14,13 +29,19 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import VoiceToText from "@/components/ui/voice-to-text"
 import AdvancedBookFilter from "@/components/advanced-book-filter"
 
+import BookPredictionDialog from "../(home)/_components/book-prediction-dialog"
+import BookRecommendDialog from "../(home)/_components/book-recommend-dialog"
 import Actions from "./actions"
 
 function ManagementNavbar() {
   const { isCollapsed } = useManagementSideBar()
   const [currentDate, setCurrentDate] = useState(new Date())
+  const [openVoiceToText, setOpenVoiceToText] = useState(false)
+  const [openBookPrediction, setOpenBookPrediction] = useState(false)
+  const [openBookRecommend, setOpenBookRecommend] = useState(false)
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -39,18 +60,6 @@ function ManagementNavbar() {
         )}
       >
         <div className="flex flex-1 items-center overflow-hidden rounded-2xl bg-primary-foreground shadow-lg">
-          {/* <Select>
-            <SelectTrigger className="w-[120px] rounded-none border-none bg-primary-foreground pl-8">
-              <SelectValue placeholder="Filter" />
-            </SelectTrigger>
-            <SelectContent className="bg-primary-foreground">
-              <SelectItem value="all">All</SelectItem>
-              <SelectItem value="title">Title</SelectItem>
-              <SelectItem value="author">Author</SelectItem>
-              <SelectItem value="text">Text</SelectItem>
-              <SelectItem value="subjects">Subjects</SelectItem>
-            </SelectContent>
-          </Select> */}
           <AdvancedBookFilter />
           <div className="relative flex-1 border-x-2">
             <Input
@@ -63,9 +72,34 @@ function ManagementNavbar() {
             />
           </div>
 
-          <Button variant="ghost" className="rounded-none">
-            <QrCode size={40} className="mx-2" />
-          </Button>
+          <VoiceToText open={openVoiceToText} setOpen={setOpenVoiceToText} />
+          <BookPredictionDialog
+            open={openBookPrediction}
+            setOpen={setOpenBookPrediction}
+          />
+          <BookRecommendDialog
+            open={openBookRecommend}
+            setOpen={setOpenBookRecommend}
+          />
+
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" className="rounded-none">
+                <QrCode size={40} className="mx-2" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onClick={() => setOpenVoiceToText(true)}>
+                <Mic size={16} /> Voice to text
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenBookPrediction(true)}>
+                <Bot size={16} /> Prediction
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setOpenBookRecommend(true)}>
+                <Book size={16} /> Recommend
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
 
         <Select>
