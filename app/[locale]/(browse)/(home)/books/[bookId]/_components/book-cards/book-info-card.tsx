@@ -1,3 +1,4 @@
+import { Link } from "@/i18n/routing"
 import {
   BookOpen,
   CheckCircle2,
@@ -81,15 +82,15 @@ const BookInfoCard = ({ bookId }: Props) => {
       </div>
       <div className="flex items-center gap-4">
         <BookBorrowDialog />
-        <Button asChild variant={"destructive"}>
-          <div>
+        <Button asChild variant={"outline"}>
+          <Link href={`/books/${bookId}/ebook?audio=true`}>
             <Headphones /> Audio
-          </div>
+          </Link>
         </Button>
-        <Button asChild variant={"destructive"}>
-          <div>
+        <Button asChild variant={"outline"}>
+          <Link href={`/books/${bookId}/ebook?audio=false`}>
             <BookOpen /> Read now
-          </div>
+          </Link>
         </Button>
       </div>
     </div>

@@ -11,8 +11,8 @@ export const DEFAULT_PAGE_INDEX = 1
 export const DEFAULT_PAGE_SIZE = 5
 
 // PDF Version Configuration
-export const pdfjsVersion = packageJson.dependencies["pdfjs-dist"]
-export const workerUrl = `https://unpkg.com/pdfjs-dist@${pdfjsVersion.slice(1)}/build/pdf.worker.min.js`
+// export const pdfjsVersion = packageJson.dependencies["pdfjs-dist"]
+// export const workerUrl = `https://unpkg.com/pdfjs-dist@${pdfjsVersion.slice(1)}/build/pdf.worker.min.js`
 
 // Routes Configuration
 export const managementRoutes = [

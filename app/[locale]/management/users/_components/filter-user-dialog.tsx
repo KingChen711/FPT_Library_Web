@@ -6,7 +6,7 @@ import { type TUserRole } from "@/queries/users/get-user-roles"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { Filter } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import { formUrlQuery } from "@/lib/utils"
@@ -50,7 +50,6 @@ type Props = {
 function FilterUsersDialog({ userRoles }: Props) {
   const t = useTranslations("GeneralManagement")
   const router = useRouter()
-  const locale = useLocale()
   const [open, setOpen] = useState(false)
   const searchParams = useSearchParams()
 

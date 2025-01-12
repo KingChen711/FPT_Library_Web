@@ -1,6 +1,5 @@
-import React from "react"
 import Image from "next/image"
-import { Book, BookOpen, Earth, Headphones } from "lucide-react"
+import { Earth } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import Paginator from "@/components/ui/paginator"
@@ -20,7 +19,7 @@ const BookEditionTab = () => {
               height={90}
               className="object-contain duration-150 ease-in-out hover:scale-105"
             />
-            <div className="flex flex-1 justify-between">
+            <div className="flex flex-1 items-center justify-between">
               <div className="space-y-2">
                 <h1 className="text-lg font-semibold text-primary">
                   {book.title}
@@ -30,19 +29,7 @@ const BookEditionTab = () => {
                   <Earth size={16} className="text-primary" /> English
                 </p>
               </div>
-              <div className="flex flex-col gap-4">
-                <Button>
-                  <Book /> Borrow
-                </Button>
-                <div className="flex items-center gap-2">
-                  <Button variant="destructive">
-                    <Headphones />
-                  </Button>
-                  <Button variant="destructive">
-                    <BookOpen />
-                  </Button>
-                </div>
-              </div>
+              <Button variant="link">Detail</Button>
             </div>
           </div>
         </div>

@@ -117,6 +117,12 @@ export const convertGenderToNumber = (gender: string) => {
   }
 }
 
+export const formatTime = (time: number): string => {
+  const minutes = Math.floor(time / 60)
+  const seconds = Math.floor(time % 60)
+  return `${minutes}:${seconds.toString().padStart(2, "0")}`
+}
+
 export function isImageLinkValid(link: string): boolean {
   try {
     const url = new URL(link)

@@ -1,19 +1,30 @@
-import React from "react"
-import { pdfjsVersion } from "@/constants"
+"use client"
 
-import FlipBook from "./flip-book"
+import { useSearchParams } from "next/navigation"
 
-const Ebook = () => {
-  console.log("🚀 ~ pdfjsVersion:", pdfjsVersion)
+import BookAudio from "../_components/book-audio"
+
+type Props = {
+  params: {
+    bookId: string
+  }
+}
+
+const EbookPage = ({ params }: Props) => {
+  const searchParams = useSearchParams()
+  const isAudio = searchParams.get("audio")
 
   return (
-    <div>
-      <h1>Ebook {pdfjsVersion}</h1>
-      <FlipBook pdfUrl="https://file.nhasachmienphi.com/pdf/nhasachmienphi-206-mon-canh-dinh-duong-cho-tre-em.pdf" />
-      <FlipBook pdfUrl="/assets/files/test.pdf" />
-      {/* <FlipBook pdfUrl="/files/test.pdf" /> */}
+    <div className="flex h-full flex-col bg-secondary">
+      <div className="flex-1">
+        <iframe
+          className="m-0 size-full"
+          src="https://file.nhasachmienphi.com/pdf/nhasachmienphi-206-mon-canh-dinh-duong-cho-tre-em.pdf"
+        />
+      </div>
+      {isAudio === "true" && <BookAudio bookId={params.bookId} />}
     </div>
   )
 }
 
-export default Ebook
+export default EbookPage
