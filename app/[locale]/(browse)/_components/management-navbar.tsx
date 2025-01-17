@@ -30,7 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import VoiceToText from "@/components/ui/voice-to-text"
-import AdvancedBookFilter from "@/components/advanced-book-filter"
+import { BookFilterTabs } from "@/components/book-filter-tabs"
 
 import BookPredictionDialog from "../(home)/_components/book-prediction-dialog"
 import BookRecommendDialog from "../(home)/_components/book-recommend-dialog"
@@ -52,15 +52,15 @@ function ManagementNavbar() {
   }, [])
 
   return (
-    <nav className="fixed left-0 top-0 z-10 flex h-16 w-full items-center justify-between border-b bg-card px-6 lg:px-3">
+    <nav className="fixed left-0 top-0 z-10 flex h-16 w-full items-center justify-between border-b bg-card pl-6">
       <div
         className={cn(
           "flex w-full items-center justify-between gap-4 pl-[300px]",
           isCollapsed && "pl-[110px]"
         )}
       >
-        <div className="flex flex-1 items-center overflow-hidden rounded-2xl bg-primary-foreground shadow-lg">
-          <AdvancedBookFilter />
+        <div className="flex w-[650px] items-center overflow-hidden rounded-2xl bg-primary-foreground shadow-lg">
+          <BookFilterTabs />
           <div className="relative flex-1 border-x-2">
             <Input
               placeholder="Search"
@@ -112,7 +112,7 @@ function ManagementNavbar() {
             <SelectItem value="vi">Vietnamese</SelectItem>
           </SelectContent>
         </Select>
-        <section className="flex items-center gap-12 text-nowrap rounded-lg bg-primary-foreground p-1 text-muted-foreground lg:px-12">
+        <section className="flex items-center gap-4 text-nowrap rounded-lg bg-primary-foreground p-1 text-muted-foreground">
           <div className="flex items-center gap-2 text-muted-foreground">
             <Clock size={16} />
             {currentDate.toLocaleTimeString([], {
