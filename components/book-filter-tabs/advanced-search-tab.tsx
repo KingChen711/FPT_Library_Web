@@ -1,3 +1,5 @@
+"use client"
+
 import { useState } from "react"
 import { type EAdvancedFilterBookFields } from "@/constants/advanced-filter.constants"
 import { Plus } from "lucide-react"

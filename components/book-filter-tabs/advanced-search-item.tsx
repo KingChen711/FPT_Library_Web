@@ -257,7 +257,7 @@ const AdvancedSearchItem = ({ handleAddField, handleDeleteField }: Props) => {
       <div className="flex-1">{field && renderOperator(field)}</div>
       <Trash color="red" size={16} className="cursor-pointer" />
 
-      <Button onClick={handleLock}>
+      <Button variant="ghost" onClick={handleLock}>
         {isLocked ? <LockKeyhole /> : <LockKeyholeOpen />}
       </Button>
     </div>

@@ -67,6 +67,13 @@ export const AdvancedFilters: TAdvancedFilters[] = [
     field: EAdvancedFilterBookFields.PUBLICATION_YEAR,
     type: EAdvancedFilterType.DATE_TIME,
   },
+
+  /**
+   * F: PUBLICATION_YEAR
+   * V: "null,2025-01-01"
+   * O: 0-5
+   */
+
   {
     field: EAdvancedFilterBookFields.AVAILABLE_QUANTITY,
     type: EAdvancedFilterType.RANGE_NUMBER,

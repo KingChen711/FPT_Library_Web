@@ -1,4 +1,3 @@
-import packageJson from "@/package.json"
 import { Bell } from "lucide-react"
 
 import { EFeature } from "@/lib/types/enums"
@@ -9,10 +8,6 @@ export const ServerUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
 // Pagination Configuration
 export const DEFAULT_PAGE_INDEX = 1
 export const DEFAULT_PAGE_SIZE = 5
-
-// PDF Version Configuration
-// export const pdfjsVersion = packageJson.dependencies["pdfjs-dist"]
-// export const workerUrl = `https://unpkg.com/pdfjs-dist@${pdfjsVersion.slice(1)}/build/pdf.worker.min.js`
 
 // Routes Configuration
 export const managementRoutes = [

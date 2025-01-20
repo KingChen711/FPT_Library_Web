@@ -52,7 +52,7 @@ function ManagementNavbar() {
   }, [])
 
   return (
-    <nav className="fixed left-0 top-0 z-10 flex h-16 w-full items-center justify-between border-b bg-card pl-6">
+    <nav>
       <div
         className={cn(
           "flex w-full items-center justify-between gap-4 pl-[300px]",

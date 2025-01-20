@@ -14,7 +14,9 @@ import { routing } from "@/i18n/routing"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, setRequestLocale } from "next-intl/server"
 
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/toaster"
+import { AppSidebar } from "@/components/sidebar/app-sidebar"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -69,7 +71,14 @@ export default async function RootLayout({
                   enableSystem
                   disableTransitionOnChange
                 >
-                  {children}
+                  <SidebarProvider defaultOpen>
+                    <AppSidebar />
+                    <main className="bg-red-400">
+                      <SidebarTrigger />
+                      {children}
+                    </main>
+                  </SidebarProvider>
+                  {/* {children} */}
                 </ThemeProvider>
               </SocketProvider>
             </AuthProvider>

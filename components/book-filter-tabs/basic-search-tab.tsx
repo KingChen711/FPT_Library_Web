@@ -7,7 +7,6 @@ import { Input } from "../ui/input"
 const BasicSearchTab = () => {
   return (
     <div className="flex flex-col gap-4">
-      <div></div>
       <div className="grid grid-cols-3 gap-4">
         <div className="flex w-full flex-nowrap items-center">
           <Input placeholder="Nhan đề" className="border-dashed" />
