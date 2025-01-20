@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
 import localFont from "next/font/local"
 
-import "./globals.css"
 import "react-date-range/dist/styles.css"
 import "react-date-range/dist/theme/default.css"
+import "./globals.css"
 
 import { notFound } from "next/navigation"
 import AuthProvider from "@/contexts/auth-provider"
@@ -14,9 +14,7 @@ import { routing } from "@/i18n/routing"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, setRequestLocale } from "next-intl/server"
 
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
 import { Toaster } from "@/components/ui/toaster"
-import { AppSidebar } from "@/components/sidebar/app-sidebar"
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -71,14 +69,7 @@ export default async function RootLayout({
                   enableSystem
                   disableTransitionOnChange
                 >
-                  <SidebarProvider defaultOpen>
-                    <AppSidebar />
-                    <main className="bg-red-400">
-                      <SidebarTrigger />
-                      {children}
-                    </main>
-                  </SidebarProvider>
-                  {/* {children} */}
+                  {children}
                 </ThemeProvider>
               </SocketProvider>
             </AuthProvider>
