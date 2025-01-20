@@ -56,28 +56,28 @@ export default {
           "5": "hsl(var(--chart-5))",
         },
         success: {
-          DEFAULT: "hsl(var(--success))",
           "100": "hsl(var(--success-100))",
+          DEFAULT: "hsl(var(--success))",
         },
         info: {
-          DEFAULT: "hsl(var(--info))",
           "100": "hsl(var(--info-100))",
+          DEFAULT: "hsl(var(--info))",
         },
         warning: {
-          DEFAULT: "hsl(var(--warning))",
           "100": "hsl(var(--warning-100))",
+          DEFAULT: "hsl(var(--warning))",
         },
         danger: {
-          DEFAULT: "hsl(var(--danger))",
           "100": "hsl(var(--danger-100))",
+          DEFAULT: "hsl(var(--danger))",
         },
         draft: {
-          DEFAULT: "hsl(var(--draft))",
           "100": "hsl(var(--draft-100))",
+          DEFAULT: "hsl(var(--draft))",
         },
         progress: {
-          DEFAULT: "hsl(var(--progress))",
           "100": "hsl(var(--progress-100))",
+          DEFAULT: "hsl(var(--progress))",
         },
         "status-foreground": {
           DEFAULT: "hsl(var(--status-foreground))",
@@ -96,6 +96,16 @@ export default {
           "800": "#F4F6F8",
           "850": "#FDFDFD",
           "900": "#FFFFFF",
+        },
+        sidebar: {
+          DEFAULT: "hsl(var(--sidebar-background))",
+          foreground: "hsl(var(--sidebar-foreground))",
+          primary: "hsl(var(--sidebar-primary))",
+          "primary-foreground": "hsl(var(--sidebar-primary-foreground))",
+          accent: "hsl(var(--sidebar-accent))",
+          "accent-foreground": "hsl(var(--sidebar-accent-foreground))",
+          border: "hsl(var(--sidebar-border))",
+          ring: "hsl(var(--sidebar-ring))",
         },
       },
       width: {

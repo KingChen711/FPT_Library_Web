@@ -1,7 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import Image from "next/image"
+import { X } from "lucide-react"
+import { useDropzone } from "react-dropzone"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -11,8 +13,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 
 type Props = {
   open: boolean
@@ -20,34 +20,37 @@ type Props = {
 }
 
 const BookPredictionDialog = ({ open, setOpen }: Props) => {
+  const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
 
-  const handleOnChange = (value: boolean) => {
-    setOpen(value)
-  }
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    const file = acceptedFiles[0]
     if (file) {
+      setSelectedFile(file)
+
       const reader = new FileReader()
       reader.onload = () => {
-        setPreviewImage(reader.result as string) // Set the preview image URL
+        setPreviewImage(reader.result as string)
       }
       reader.readAsDataURL(file)
-    } else {
-      setPreviewImage(null) // Reset preview if no file is selected
     }
-  }
+  }, [])
 
-  const handleButtonClick = () => {
-    const fileInput = document.getElementById("file-input") as HTMLInputElement
-    if (fileInput) {
-      fileInput.click()
-    }
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [".jpeg", ".jpg", ".png"] },
+    maxFiles: 1,
+    maxSize: 10 * 1024 * 1024, // 10MB
+  })
+
+  const handleRemoveFile = (e: React.MouseEvent) => {
+    e.stopPropagation() // Ngăn sự kiện click từ vùng dropzone
+    setSelectedFile(null)
+    setPreviewImage(null)
   }
 
   return (
-    <Dialog open={open} onOpenChange={handleOnChange}>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Book Prediction</DialogTitle>
@@ -56,32 +59,47 @@ const BookPredictionDialog = ({ open, setOpen }: Props) => {
             for a few seconds.
           </DialogDescription>
         </DialogHeader>
-        <div className="flex flex-col gap-4">
-          <div className="border">
-            <Label>Preview</Label>
-            <div className="flex h-32 w-full items-center justify-center overflow-hidden border">
-              {previewImage ? (
-                <Image
-                  src={previewImage}
-                  alt="Selected preview"
-                  width={80}
-                  height={80}
-                  className="rounded border shadow-sm"
-                />
-              ) : (
-                <p>No image selected</p>
-              )}
+
+        <section
+          {...getRootProps()}
+          className={`flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed p-4 ${
+            isDragActive ? "border-primary bg-primary/10" : "border-primary"
+          }`}
+        >
+          <input {...getInputProps()} />
+          {!previewImage ? (
+            <div className="text-center font-semibold">
+              <h1>Drag and drop an image or</h1>
+              <h1 className="text-primary">browse to upload</h1>
             </div>
-          </div>
-          <Button onClick={handleButtonClick}>Upload</Button>
-          <Input
-            id="file-input"
-            type="file"
-            className="hidden"
-            accept="image/*"
-            onChange={handleFileChange}
-          />
-        </div>
+          ) : (
+            <div className="relative flex w-full max-w-sm justify-center">
+              <Image
+                src={previewImage}
+                alt="Preview"
+                className="rounded-md object-cover"
+                width={200}
+                height={200}
+              />
+              <Button
+                variant="destructive"
+                size="icon"
+                className="absolute right-2 top-2"
+                onClick={handleRemoveFile} // Sử dụng sự kiện với stopPropagation
+              >
+                <X />
+              </Button>
+            </div>
+          )}
+
+          <p className="text-sm">
+            File must be JPEG, JPG, or PNG and up to 10MB.
+          </p>
+        </section>
+
+        <Button className="mt-4 w-full" disabled={!selectedFile}>
+          Submit
+        </Button>
       </DialogContent>
     </Dialog>
   )

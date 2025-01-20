@@ -20,13 +20,6 @@ import {
 } from "@/components/ui/breadcrumb"
 import { Button } from "@/components/ui/button"
 import Paginator from "@/components/ui/paginator"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
   Table,
@@ -50,7 +43,7 @@ type Props = {
 }
 
 const BookPage = async ({ searchParams }: Props) => {
-  const { pageIndex, pageSize, search, sort } = searchParams
+  const { sort } = searchParams
   const t = await getTranslations("BookPage")
 
   return (
@@ -68,19 +61,6 @@ const BookPage = async ({ searchParams }: Props) => {
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
-      <Select>
-        <SelectTrigger className="w-[180px] bg-primary-foreground">
-          <SelectValue placeholder="Categories" />
-        </SelectTrigger>
-        <SelectContent className="bg-primary-foreground capitalize">
-          <SelectItem value="engineering">{t("filter.engineering")}</SelectItem>
-          <SelectItem value="art-science">{t("filter.art-science")}</SelectItem>
-          <SelectItem value="architecture">
-            {t("filter.architecture")}
-          </SelectItem>
-          <SelectItem value="law">{t("filter.law")}</SelectItem>
-        </SelectContent>
-      </Select>
 
       <div className="mt-4 grid w-full">
         <div className="overflow-x-auto rounded-md">
