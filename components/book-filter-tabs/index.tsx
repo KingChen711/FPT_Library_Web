@@ -21,7 +21,7 @@ export function BookFilterTabs() {
         align="start"
         className="mt-2 w-[650px] space-y-4 bg-primary-foreground p-4"
       >
-        <Tabs defaultValue="account" className="w-full">
+        <Tabs defaultValue="quick-search" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="quick-search">Quick search</TabsTrigger>
             <TabsTrigger value="basic-search">Basic search</TabsTrigger>
