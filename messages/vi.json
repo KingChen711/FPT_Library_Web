@@ -102,33 +102,32 @@
     "not found isbn": "Không tìm thấy thông tin của {isbn}"
   },
   "Me": {
-    "Account": {
-      "Profile": {
-        "profile": "Hồ sơ",
-        "setting": "Cài đặt",
-        "interface": "Giao diện",
-        "notification": "Thông báo",
-        "yourProfilePicture": "Ảnh hồ sơ",
-        "changePicture": "Thay ảnh",
-        "contribution": "Đóng góp",
-        "reading": "Đang đọc",
-        "email": "Email",
-        "firstName": "Tên",
-        "lastName": "Họ",
-        "fullName": "Họ và tên",
-        "address": "Địa chỉ",
-        "collegeEmailId": "Email sinh viên",
-        "studentCode": "Mã số sinh viên",
-        "phoneNumber": "Số điện thoại",
-        "dob": "Ngày sinh",
-        "gender": "Giới tính",
-        "male": "Nam",
-        "female": "Nữ",
-        "bio": "Bio",
-        "updateBtn": "Chỉnh sửa hồ sơ",
-        "resetBtn": "Khôi phục"
-      }
-    }
+    "account": "Tài khoản",
+    "profile": "Hồ sơ",
+    "setting": "Cài đặt",
+    "interface": "Giao diện",
+    "notification": "Thông báo",
+    "yourProfilePicture": "Ảnh hồ sơ",
+    "changePicture": "Thay ảnh",
+    "contribution": "Đóng góp",
+    "reading": "Đang đọc",
+    "email": "Email",
+    "firstName": "Tên",
+    "lastName": "Họ",
+    "fullName": "Họ và tên",
+    "address": "Địa chỉ",
+    "collegeEmailId": "Email sinh viên",
+    "studentCode": "Mã số sinh viên",
+    "phoneNumber": "Số điện thoại",
+    "dob": "Ngày sinh",
+    "gender": "Giới tính",
+    "male": "Nam",
+    "female": "Nữ",
+    "bio": "Bio",
+    "updateBtn": "Chỉnh sửa hồ sơ",
+    "resetBtn": "Khôi phục",
+    "login": "Đăng nhập",
+    "logout": "Đăng xuất"
   },
   "GeneralManagement": {
     "employee management": "Quản lí nhân viên",
@@ -171,6 +170,11 @@
     "type": "type",
     "to confirm": "to confirm",
     "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
+    "scan from mobile app": "Quét từ điện thoại",
+    "select from your cloud": "Chọn từ tài liệu",
+    "back to enter barcode": "Về nhập barcode",
+    "drag and drop and image or": "Kéo thả ảnh hoặc",
+    "browse to upload": "chọn ảnh để tải lên",
     "filter": {
       "title": "Tìm kiếm",
       "author": "Tìm tác giả",
@@ -193,7 +197,8 @@
       "close": "Đóng",
       "previous": "Trước",
       "next": "Sau",
-      "upload": "Tải lên"
+      "upload": "Tải lên",
+      "upload image": "Tải ảnh"
     },
     "placeholder": {
       "avatar": "Chọn ảnh đại diện",
@@ -218,7 +223,9 @@
       "encoding type": "Chọn loại mã",
       "column separator": "Chọn ngăn cách cột",
       "date range": "Chọn khoâng thời gian",
-      "status": "Chọn trạng thái"
+      "status": "Chọn trạng thái",
+      "description": "Nhập mô tả",
+      "book serial no": "Nhập số sách hay quét mã QR"
     },
     "fields": {
       "firstName": "Tên",
@@ -335,6 +342,7 @@
     "Confirm": "Xác nhận"
   },
   "Routes": {
+    "Navigator Bar": "Thanh điều hướng",
     "Dashboard": "Bảng điều khiển",
     "Home": "Trang chủ",
     "Books": "Sách",
@@ -402,14 +410,45 @@
       "borrowedQuantity": "Số lượng muôn",
       "availability": "Có sẵn",
       "preview": "Xem trước",
-      "liked": "Đã thích"
+      "liked": "Đã thích",
+      "action": "Hành động",
+      "reading": "Đang đọc",
+      "have read": "Đã đọc",
+      "hard copy": "Bản copy cứng",
+      "ebook": "Sách điện tử",
+      "audio book": "Sách nói",
+      "book serial no": "Số Seri sách",
+      "return date": "Ngày trả",
+      "pickup date": "Ngày nhận"
     },
     "filter": {
       "engineering": "Kĩ thuật",
       "art-science": "Nghệ thuật, Khoa học",
       "architecture": "Kiến trúc",
       "law": "Luật"
-    }
+    },
+    "Book not found": "Không tìm thấy sách",
+    "locate": "Vị trí",
+    "review": "Bình luận",
+    "share": "Chia sẻ",
+    "about": "Về",
+    "other books": "Sách khác",
+    "an edition of": "Ấn bản của",
+    "add to favorite": "Thêm vào yêu thích",
+    "audio": "Nghe",
+    "borrow": "Mượn",
+    "read now": "Đọc ngay",
+    "option": "Lựa chọn",
+    "book borrow confirmation": "Xác nhận mượn sách",
+    "in library borrowing": "Mượn sách tại thư viện",
+    "request to borrow": "Yêu cầu mượn",
+    "search book": "Tìm kiếm sách",
+    "scan barcode": "Quét mã vạch",
+    "by": "bởi",
+    "pause": "Dừng",
+    "play": "Phát",
+    "like": "Thích",
+    "cancel": "Hủy"
   },
   "CategoriesManagementPage": {
     "Categories": "Thể loại",

@@ -1,5 +1,8 @@
+"use client"
+
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import {
@@ -24,6 +27,9 @@ import { Textarea } from "@/components/ui/textarea"
 import { BookQrDialog } from "./book-qr-dialog"
 
 const BookRequestBorrow = () => {
+  const t = useTranslations("BookPage")
+  const tGeneralManagement = useTranslations("GeneralManagement")
+
   const [bookFile, setBookFile] = useState<File | null>(null)
   const [openBookQr, setOpenBookQr] = useState(false)
 
@@ -64,7 +70,7 @@ const BookRequestBorrow = () => {
               name="borrowPickupDate"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Pickup date</FormLabel>
+                  <FormLabel>{t("fields.pickup date")}</FormLabel>
                   <FormControl>
                     <Input {...field} type="date" />
                   </FormControl>
@@ -77,7 +83,7 @@ const BookRequestBorrow = () => {
               name="borrowReturnDate"
               render={({ field }) => (
                 <FormItem className="flex-1">
-                  <FormLabel>Return date</FormLabel>
+                  <FormLabel>{t("fields.return date")}</FormLabel>
                   <FormControl>
                     <Input {...field} type="date" />
                   </FormControl>
@@ -92,7 +98,7 @@ const BookRequestBorrow = () => {
             name="searchBook"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Search book</FormLabel>
+                <FormLabel>{t("search book")}</FormLabel>
                 <FormControl>
                   <div className="relative h-10 w-full">
                     <BookQrDialog
@@ -104,7 +110,7 @@ const BookRequestBorrow = () => {
                       {...field}
                       type="text"
                       className="pl-10"
-                      placeholder="Search book"
+                      placeholder={t("search book")}
                     />
                   </div>
                 </FormControl>
@@ -120,9 +126,12 @@ const BookRequestBorrow = () => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>{t("fields.description")}</FormLabel>
                 <FormControl>
-                  <Textarea {...field} placeholder="Enter description" />
+                  <Textarea
+                    {...field}
+                    placeholder={tGeneralManagement("placeholder.description")}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -130,9 +139,9 @@ const BookRequestBorrow = () => {
           />
 
           <div className="flex gap-x-4">
-            <Button type="submit">Borrow</Button>
+            <Button type="submit">{t("borrow")}</Button>
             <DialogClose asChild>
-              <Button variant="secondary">Cancel</Button>
+              <Button variant="secondary">{t("cancel")}</Button>
             </DialogClose>
           </div>
         </form>

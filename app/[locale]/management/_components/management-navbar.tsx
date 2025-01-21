@@ -30,7 +30,7 @@ function ManagementNavbar() {
   return (
     <nav className="relative mb-16">
       <div
-        className={`fixed top-0 z-10 flex h-16 w-full items-center justify-end border-b bg-card px-6 transition-all`}
+        className={`fixed top-0 z-10 flex h-16 w-full items-center justify-between border-b bg-card px-6 transition-all`}
         style={{
           left: open ? "var(--sidebar-width, 0)" : "3rem",
           width: open

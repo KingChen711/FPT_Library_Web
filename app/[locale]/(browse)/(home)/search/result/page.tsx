@@ -39,8 +39,8 @@ import { dummyBooks } from "../../_components/dummy-books"
 const SearchResult = () => {
   return (
     <div className="container flex size-full flex-col gap-4 overflow-y-auto">
-      <div className="w-full space-y-2">
-        <div className="relative w-full p-2">
+      <div className="w-full space-y-2 px-12">
+        <div className="relative w-full">
           <Input
             type="text"
             placeholder="Tìm kiếm các bài viết, sách, tạp chí và nhiều hơn nữa"

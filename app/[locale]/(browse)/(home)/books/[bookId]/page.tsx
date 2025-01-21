@@ -1,5 +1,6 @@
 import { ChevronRight } from "lucide-react"
 
+import { getTranslations } from "@/lib/get-translations"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -21,11 +22,13 @@ type Props = {
   }
 }
 
-const BookDetailPage = ({ params: { bookId } }: Props) => {
+const BookDetailPage = async ({ params: { bookId } }: Props) => {
+  const t = await getTranslations("BookPage")
+  const tRoute = await getTranslations("Routes")
   const book = dummyBooks.find((book) => book.id.toString() === bookId)
 
   if (!book) {
-    return <div>Book not found</div>
+    return <div>{t("Book not found")}</div>
   }
 
   return (
@@ -33,13 +36,13 @@ const BookDetailPage = ({ params: { bookId } }: Props) => {
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            <BreadcrumbLink href="/">{tRoute("Home")}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <ChevronRight />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/books">Books</BreadcrumbLink>
+            <BreadcrumbLink href="/books">{tRoute("Books")}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <ChevronRight />

@@ -97,33 +97,32 @@
     "validImageAI": "Image does not match information or not checked yet"
   },
   "Me": {
-    "Account": {
-      "Profile": {
-        "profile": "Profile",
-        "setting": "Setting",
-        "interface": "Interface",
-        "notification": "Notification",
-        "yourProfilePicture": "Your profile picture",
-        "changePicture": "Change picture",
-        "contribution": "Contribution",
-        "reading": "Reading",
-        "email": "Email",
-        "firstName": "First name",
-        "lastName": "Last name",
-        "fullName": "Full name",
-        "address": "Address",
-        "collegeEmailId": "College email ID",
-        "studentCode": "Student code",
-        "phoneNumber": "Phone number",
-        "dob": "Date of birth",
-        "gender": "Gender",
-        "male": "Male",
-        "female": "Female",
-        "bio": "Bio",
-        "updateBtn": "Update Profile",
-        "resetBtn": "Reset"
-      }
-    }
+    "account": "Account",
+    "profile": "Profile",
+    "setting": "Setting",
+    "interface": "Interface",
+    "notification": "Notification",
+    "yourProfilePicture": "Your profile picture",
+    "changePicture": "Change picture",
+    "contribution": "Contribution",
+    "reading": "Reading",
+    "email": "Email",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "fullName": "Full name",
+    "address": "Address",
+    "collegeEmailId": "College email ID",
+    "studentCode": "Student code",
+    "phoneNumber": "Phone number",
+    "dob": "Date of birth",
+    "gender": "Gender",
+    "male": "Male",
+    "female": "Female",
+    "bio": "Bio",
+    "updateBtn": "Update Profile",
+    "resetBtn": "Reset",
+    "login": "Login",
+    "logout": "Logout"
   },
   "GeneralManagement": {
     "employee management": "Employee management",
@@ -166,6 +165,11 @@
     "type": "type",
     "to confirm": "to confirm",
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "scan from mobile app": "Scan from mobile app",
+    "select from your cloud": "Select from your cloud",
+    "back to enter barcode": "Back to enter barcode",
+    "drag and drop and image or": "Drag and drop and image or",
+    "browse to upload": "Browse to upload",
     "filter": {
       "title": "Filter",
       "author": "Filter author",
@@ -186,7 +190,8 @@
       "save": "Save",
       "reset": "Reset",
       "close": "Close",
-      "upload": "Upload"
+      "upload": "Upload",
+      "upload image": "Upload image"
     },
     "placeholder": {
       "avatar": "Select avatar",
@@ -211,7 +216,9 @@
       "encoding type": "Select encoding type",
       "column separator": "Select column separator",
       "date range": "Select date range",
-      "status": "Select status"
+      "status": "Select status",
+      "description": "Enter description",
+      "book serial no": "Enter book serial number or scan QR code"
     },
 
     "fields": {
@@ -332,6 +339,7 @@
     "Confirm": "Confirm"
   },
   "Routes": {
+    "Navigator Bar": "Navigator bar",
     "Home": "Home",
     "Dashboard": "Dashboard",
     "Books": "Books",
@@ -399,14 +407,47 @@
       "borrowedQuantity": "Borrowed quantity",
       "availability": "Availability",
       "preview": "Preview",
-      "liked": "Liked"
+      "liked": "Liked",
+      "action": "Action",
+      "reading": "Reading",
+      "have read": "Have read",
+      "hard copy": "Hard copy",
+      "ebook": "Ebook",
+      "audio book": "Audio book",
+      "book serial no": "Book serial no",
+      "return date": "Return date",
+      "pickup date": "Pickup date"
     },
     "filter": {
       "engineering": "Engineering",
       "art-science": "Art & Science",
       "architecture": "Architecture",
       "law": "Law"
-    }
+    },
+    "Book not found": "Book not found",
+    "locate": "Locate",
+    "review": "Review",
+    "share": "Share",
+    "about": "About",
+    "other books": "Other books",
+    "an edition of": "An edition of",
+    "add to favorite": "Add to favorite",
+    "audio": "Audio",
+    "borrow": "Borrow",
+    "read now": "Read now",
+    "option": "Option",
+    "book borrow confirmation": "Book borrow confirmation",
+    "in library borrowing": "In library borrowing",
+    "request to borrow": "Request to borrow",
+    "search book": "Search book",
+    "scan barcode": "Scan barcode",
+    "scan from mobile app": "Scan from mobile app",
+    "Select from your cloud": "Select from your cloud",
+    "by": "by",
+    "pause": "Pause",
+    "play": "Play",
+    "like": "Like",
+    "cancel": "Cancel"
   },
   "CategoriesManagementPage": {
     "Categories": "Categories",

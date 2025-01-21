@@ -1,6 +1,6 @@
 import { Bell } from "lucide-react"
 
-import { EFeature } from "@/lib/types/enums"
+import { EFeature, type Route } from "@/lib/types/enums"
 import { Icons } from "@/components/ui/icons"
 
 export const ServerUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
@@ -10,7 +10,7 @@ export const DEFAULT_PAGE_INDEX = 1
 export const DEFAULT_PAGE_SIZE = 5
 
 // Routes Configuration
-export const managementRoutes = [
+export const managementRoutes: Route[] = [
   {
     feature: EFeature.DASHBOARD_MANAGEMENT,
     route: "/management",
@@ -18,6 +18,22 @@ export const managementRoutes = [
     Icon: (props: { className?: string }) => {
       return <Icons.Dashboard {...props} />
     },
+    subRoutes: [
+      {
+        route: "",
+        label: "Sub Dashboard 1",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Dashboard {...props} />
+        },
+      },
+      {
+        route: "",
+        label: "Sub Dashboard 2",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Dashboard {...props} />
+        },
+      },
+    ],
   },
   {
     feature: EFeature.BOOK_MANAGEMENT,
@@ -139,15 +155,31 @@ export const managementRoutes = [
       return <Icons.SystemConfiguration {...props} />
     },
   },
-] as const
+]
 
-export const browseRoutes = [
+export const browseRoutes: Route[] = [
   {
     route: "",
     label: "Home",
     Icon: (props: { className?: string }) => {
       return <Icons.Home {...props} />
     },
+    subRoutes: [
+      {
+        route: "",
+        label: "Sub Home 1",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Home {...props} />
+        },
+      },
+      {
+        route: "",
+        label: "Sub Home 2",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Home {...props} />
+        },
+      },
+    ],
   },
   {
     route: "/books",
@@ -170,7 +202,7 @@ export const browseRoutes = [
       return <Icons.Resource {...props} />
     },
   },
-] as const
+]
 
 export const editorPlugin = {
   plugins:

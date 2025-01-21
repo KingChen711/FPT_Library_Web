@@ -3,6 +3,7 @@
 import { useRef, useState } from "react"
 import Image from "next/image"
 import { Heart, Pause, Play, Share2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { formatTime } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -21,6 +22,8 @@ type Props = {
 }
 
 const BookAudio = ({ bookId }: Props) => {
+  const t = useTranslations("BookPage")
+
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -96,11 +99,11 @@ const BookAudio = ({ bookId }: Props) => {
           >
             {isPlaying ? (
               <>
-                <Pause className="size-5" /> Pause
+                <Pause className="size-5" /> {t("pause")}
               </>
             ) : (
               <>
-                <Play className="size-5" /> Play
+                <Play className="size-5" /> {t("play")}
               </>
             )}
           </Button>
@@ -117,7 +120,7 @@ const BookAudio = ({ bookId }: Props) => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Like</p>
+                <p>{t("like")}</p>
               </TooltipContent>
             </Tooltip>
 
@@ -128,7 +131,7 @@ const BookAudio = ({ bookId }: Props) => {
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Share</p>
+                <p>{t("share")}</p>
               </TooltipContent>
             </Tooltip>
           </div>

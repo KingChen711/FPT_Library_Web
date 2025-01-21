@@ -45,19 +45,20 @@ type Props = {
 const BookPage = async ({ searchParams }: Props) => {
   const { sort } = searchParams
   const t = await getTranslations("BookPage")
+  const tRoute = await getTranslations("Routes")
 
   return (
     <div className="space-y-4">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/">Home</BreadcrumbLink>
+            <BreadcrumbLink href="/">{tRoute("Home")}</BreadcrumbLink>
           </BreadcrumbItem>
           <BreadcrumbSeparator>
             <ChevronRight />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/books">Books</BreadcrumbLink>
+            <BreadcrumbLink href="/books">{tRoute("Books")}</BreadcrumbLink>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
@@ -97,7 +98,7 @@ const BookPage = async ({ searchParams }: Props) => {
                   label={t("fields.liked")}
                   sortKey="heart"
                 />
-                <TableHead>Action</TableHead>
+                <TableHead>{t("fields.action")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -184,7 +185,7 @@ const BookPage = async ({ searchParams }: Props) => {
                       variant={"outline"}
                       className="border-danger bg-primary-foreground text-danger"
                     >
-                      Preview
+                      {t("fields.preview")}
                     </Button>
                   </TableCell>
                 </TableRow>
