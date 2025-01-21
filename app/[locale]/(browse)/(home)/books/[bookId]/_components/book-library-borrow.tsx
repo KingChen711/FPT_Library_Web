@@ -1,6 +1,9 @@
+"use client"
+
 import { useState } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import {
@@ -25,6 +28,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { BookQrDialog } from "./book-qr-dialog"
 
 const BookLibraryBorrow = () => {
+  const t = useTranslations("BookPage")
+  const tGeneralManagement = useTranslations("GeneralManagement")
   const [bookFile, setBookFile] = useState<File | null>(null)
   const [openBookQr, setOpenBookQr] = useState(false)
   const form = useForm<TBookLibraryBorrowSchema>({
@@ -62,7 +67,7 @@ const BookLibraryBorrow = () => {
             name="returnDate"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Return date</FormLabel>
+                <FormLabel>{t("fields.return date")}</FormLabel>
                 <FormControl>
                   <Input
                     type="date"
@@ -84,7 +89,7 @@ const BookLibraryBorrow = () => {
             name="bookSerialNo"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Book Serial No</FormLabel>
+                <FormLabel>{t("fields.book serial no")}</FormLabel>
                 <FormControl>
                   <div className="relative h-10 w-full">
                     <BookQrDialog
@@ -96,7 +101,9 @@ const BookLibraryBorrow = () => {
                       {...field}
                       type="text"
                       className="pl-10"
-                      placeholder="Enter serial number or scan barcode"
+                      placeholder={tGeneralManagement(
+                        "placeholder.book serial no"
+                      )}
                     />
                   </div>
                 </FormControl>
@@ -112,9 +119,12 @@ const BookLibraryBorrow = () => {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Description</FormLabel>
+                <FormLabel>{t("fields.description")}</FormLabel>
                 <FormControl>
-                  <Textarea {...field} placeholder="Enter description" />
+                  <Textarea
+                    {...field}
+                    placeholder={tGeneralManagement("placeholder.description")}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -122,9 +132,9 @@ const BookLibraryBorrow = () => {
           />
 
           <div className="flex gap-x-4">
-            <Button type="submit">Borrow</Button>
+            <Button type="submit">{t("borrow")}</Button>
             <DialogClose asChild>
-              <Button variant="secondary">Cancel</Button>
+              <Button variant="secondary">{t("cancel")}</Button>
             </DialogClose>
           </div>
         </form>

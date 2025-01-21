@@ -1,7 +1,16 @@
 "use client"
 
 import { type ComponentProps } from "react"
-import { BadgeCheck, ChevronsUpDown, LogOut, School, User } from "lucide-react"
+import { useAuth } from "@/contexts/auth-provider"
+import {
+  BadgeCheck,
+  ChevronsUpDown,
+  Loader2,
+  LogOut,
+  School,
+  User,
+} from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
 
 import {
   DropdownMenu,
@@ -29,6 +38,9 @@ import ManagementSidebarContent from "./management-sidebar-content"
 export function ManagementSidebar({
   ...props
 }: ComponentProps<typeof Sidebar>) {
+  const locale = useLocale()
+  const { user } = useAuth()
+  const t = useTranslations("Me")
   const { isMobile } = useSidebar()
 
   return (
@@ -55,54 +67,66 @@ export function ManagementSidebar({
         <ManagementSidebarContent />
       </SidebarContent>
 
-      <SidebarFooter>
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <SidebarMenuButton
-                  size="lg"
-                  className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                >
-                  <User size={40} />
-                  <div className="grid flex-1 text-left text-sm leading-tight">
-                    <span className="truncate font-semibold">ThanhDoan</span>
-                    <span className="truncate text-xs">admin@fpt.edu.vn</span>
-                  </div>
-                  <ChevronsUpDown className="ml-auto size-4" />
-                </SidebarMenuButton>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent
-                className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                side={isMobile ? "bottom" : "right"}
-                align="end"
-                sideOffset={4}
-              >
-                <DropdownMenuLabel className="p-0 font-normal">
-                  <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+      {user ? (
+        <SidebarFooter>
+          <SidebarMenu>
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    size="lg"
+                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  >
                     <User size={40} />
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">ThanhDoan</span>
-                      <span className="truncate text-xs">admin@fpt.edu.vn</span>
+                      <span className="truncate font-semibold">{`${user?.firstName} ${user?.lastName}`}</span>
+                      <span className="truncate text-xs">
+                        {locale === "vi"
+                          ? user?.role.vietnameseName
+                          : user?.role.englishName}
+                      </span>
                     </div>
-                  </div>
-                </DropdownMenuLabel>
-                <DropdownMenuGroup>
+                    <ChevronsUpDown className="ml-auto size-4" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                  side={isMobile ? "bottom" : "right"}
+                  align="end"
+                  sideOffset={4}
+                >
+                  <DropdownMenuLabel className="p-0 font-normal">
+                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                      <User size={40} />
+                      <div className="grid flex-1 text-left text-sm leading-tight">
+                        <span className="truncate font-semibold">{`${user?.firstName} ${user?.lastName}`}</span>
+                        <span className="truncate text-xs">
+                          {locale === "vi"
+                            ? user?.role.vietnameseName
+                            : user?.role.englishName}
+                        </span>
+                      </div>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem>
+                      <BadgeCheck />
+                      {t("account")}
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    <BadgeCheck />
-                    Account
+                    <LogOut />
+                    {t("logout")}
                   </DropdownMenuItem>
-                </DropdownMenuGroup>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>
-                  <LogOut />
-                  Log out
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </SidebarMenuItem>
-        </SidebarMenu>
-      </SidebarFooter>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </SidebarMenuItem>
+          </SidebarMenu>
+        </SidebarFooter>
+      ) : (
+        <Loader2 className="animate-spin" />
+      )}
       <SidebarRail />
     </Sidebar>
   )

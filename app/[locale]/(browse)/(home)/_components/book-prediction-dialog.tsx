@@ -3,6 +3,7 @@
 import { useCallback, useState } from "react"
 import Image from "next/image"
 import { X } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useDropzone } from "react-dropzone"
 
 import { Button } from "@/components/ui/button"
@@ -20,6 +21,9 @@ type Props = {
 }
 
 const BookPredictionDialog = ({ open, setOpen }: Props) => {
+  const t = useTranslations("BookPage")
+  const tGeneralManagement = useTranslations("GeneralManagement")
+
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [previewImage, setPreviewImage] = useState<string | null>(null)
 
@@ -69,8 +73,10 @@ const BookPredictionDialog = ({ open, setOpen }: Props) => {
           <input {...getInputProps()} />
           {!previewImage ? (
             <div className="text-center font-semibold">
-              <h1>Drag and drop an image or</h1>
-              <h1 className="text-primary">browse to upload</h1>
+              <h1>{tGeneralManagement("drag and drop and image or")}</h1>
+              <h1 className="text-primary">
+                {tGeneralManagement("browse to upload")}
+              </h1>
             </div>
           ) : (
             <div className="relative flex w-full max-w-sm justify-center">

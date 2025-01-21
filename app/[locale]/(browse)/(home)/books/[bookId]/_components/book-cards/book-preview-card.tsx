@@ -2,6 +2,7 @@ import React from "react"
 import Image from "next/image"
 import { MapPin, NotebookPen, Share } from "lucide-react"
 
+import { getTranslations } from "@/lib/get-translations"
 import { Button } from "@/components/ui/button"
 
 import { dummyBooks } from "../../../../_components/dummy-books"
@@ -10,11 +11,12 @@ type Props = {
   bookId: string
 }
 
-const BookPreviewCard = ({ bookId }: Props) => {
+const BookPreviewCard = async ({ bookId }: Props) => {
+  const t = await getTranslations("BookPage")
   const book = dummyBooks.find((book) => book.id.toString() === bookId)
 
   if (!book) {
-    return <div>Book not found</div>
+    return <div>{t("Book not found")}</div>
   }
   return (
     <section className="h-full w-1/4">
@@ -30,15 +32,15 @@ const BookPreviewCard = ({ bookId }: Props) => {
         </div>
         <div className="flex flex-col border-t-2">
           <Button className="flex items-center rounded-none">
-            <MapPin /> Locate
+            <MapPin /> {t("locate")}
           </Button>
           <div className="flex items-center justify-between py-2">
             <div className="flex flex-1 cursor-pointer items-center justify-center gap-2 hover:text-primary">
-              <NotebookPen size={16} /> Review
+              <NotebookPen size={16} /> {t("review")}
             </div>
             <div className="h-6 w-0.5 bg-primary" />
             <div className="flex flex-1 cursor-pointer items-center justify-center gap-2 hover:text-primary">
-              <Share size={16} /> Share
+              <Share size={16} /> {t("share")}
             </div>
           </div>
         </div>

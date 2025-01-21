@@ -24,6 +24,14 @@ export const IndexToERoleType: Map<number, ERoleType> = new Map([
   [1, ERoleType.EMPLOYEE],
 ])
 
+export interface Route {
+  feature?: EFeature
+  route: string
+  label: string
+  Icon?: React.ComponentType
+  subRoutes?: Omit<Route, "feature">[]
+}
+
 export enum ESystemRoutes {
   // Management
   MANAGEMENT = "/management",

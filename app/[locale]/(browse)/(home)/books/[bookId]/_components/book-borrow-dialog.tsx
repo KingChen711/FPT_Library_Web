@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { Book } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { BORROW_OPTIONS } from "@/lib/validations/book/book-borrow"
 import { Button } from "@/components/ui/button"
@@ -25,6 +26,8 @@ import BookLibraryBorrow from "./book-library-borrow"
 import BookRequestBorrow from "./book-request-borrow"
 
 const BookBorrowDialog = () => {
+  const t = useTranslations("BookPage")
+
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const [borrowOption, setBorrowOption] = useState<BORROW_OPTIONS>(
     BORROW_OPTIONS.LIBRARY
@@ -34,19 +37,19 @@ const BookBorrowDialog = () => {
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant={"default"}>
-          <Book /> <span>Borrow</span>
+          <Book /> <span>{t("borrow")}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="md:max-w-xl">
         <DialogHeader>
           <DialogTitle className="text-center capitalize text-primary">
-            Book Borrow Confirmation
+            {t("book borrow confirmation")}
           </DialogTitle>
         </DialogHeader>
 
         <div className="max-h-[80vh] overflow-y-auto">
           <section className="space-y-2">
-            <Label>Option(*)</Label>
+            <Label>{t("option")}(*)</Label>
             <Select
               value={borrowOption}
               onValueChange={(value: BORROW_OPTIONS) => setBorrowOption(value)}
@@ -56,10 +59,10 @@ const BookBorrowDialog = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value={BORROW_OPTIONS.LIBRARY}>
-                  In library borrowing
+                  {t("in library borrowing")}
                 </SelectItem>
                 <SelectItem value={BORROW_OPTIONS.REQUEST}>
-                  Request to borrow
+                  {t("request to borrow")}
                 </SelectItem>
               </SelectContent>
             </Select>
