@@ -248,7 +248,7 @@ function UpdateEditionDialog({ edition, open, setOpen }: Props) {
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[90vh] w-full max-w-3xl overflow-y-auto overflow-x-hidden">
+      <DialogContent className="max-h-[80vh] w-full max-w-3xl overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>{t("Edit edition")}</DialogTitle>
           <DialogDescription>

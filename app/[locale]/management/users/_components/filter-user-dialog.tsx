@@ -106,7 +106,7 @@ function FilterUsersDialog({ userRoles }: Props) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] w-full overflow-y-auto">
+      <DialogContent className="max-h-[80vh] w-full overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("filter.user")}</DialogTitle>
           <DialogDescription>

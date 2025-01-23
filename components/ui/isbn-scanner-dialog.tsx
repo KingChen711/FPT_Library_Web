@@ -64,7 +64,7 @@ function IsbnScannerDialog() {
           <QrCode />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] w-fit overflow-y-auto overflow-x-hidden">
+      <DialogContent className="max-h-[80vh] w-fit overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>{t("ISBN scanner")}</DialogTitle>
           <DialogDescription>

@@ -4,49 +4,55 @@ import axios from "axios"
 
 import { EResourceBookType } from "@/lib/types/enums"
 import { getClientSideCookie } from "@/lib/utils"
-import { type TMutateBookSchema } from "@/lib/validations/books/mutate-book"
+import { type TBookEditionSchema } from "@/lib/validations/books/mutate-book"
 
-export async function uploadMedias(book: TMutateBookSchema) {
+export async function uploadMedias(book: TBookEditionSchema) {
   try {
-    const uploadBookResourcePromises = book.bookResources.map(async (br) => {
-      if (!br.file) return null
+    const uploadBookResourcePromises = book.libraryResources.map(async (lr) => {
+      if (!lr.file || lr.resourceUrl) return
 
-      if (br.resourceType === EResourceBookType.AUDIO_BOOK) {
-        const data = await uploadAudioBook(br.file)
+      if (lr.resourceType === EResourceBookType.AUDIO_BOOK) {
+        const data = await uploadAudioBook(lr.file)
         if (data) {
-          br.resourceUrl = data.secureUrl
-          br.providerPublicId = data.publicId
-          br.resourceSize = Math.round(br.file.size)
+          lr.resourceUrl = data.secureUrl
+          lr.providerPublicId = data.publicId
+          lr.resourceSize = Math.round(lr.file.size)
         }
       } else {
-        const data = await uploadBookImage(br.file)
+        const data = await uploadBookImage(lr.file)
         if (data) {
-          br.resourceUrl = data.secureUrl
-          br.providerPublicId = data.publicId
-          br.resourceSize = Math.round(br.file.size)
+          lr.resourceUrl = data.secureUrl
+          lr.providerPublicId = data.publicId
+          lr.resourceSize = Math.round(lr.file.size)
         }
       }
 
-      br.file = undefined
+      return
     })
 
-    const uploadBookImagesPromises = book.bookEditions.map(async (be) => {
-      if (!be.file) return null
+    // const uploadBookImagesPromises = book.bookEditions.map(async (be) => {
+    //   if (!be.file) return null
 
-      const data = await uploadBookImage(be.file)
-      if (data) {
-        be.coverImage = data.secureUrl
-      }
+    //   const data = await uploadBookImage(be.file)
+    //   if (data) {
+    //     be.coverImage = data.secureUrl
+    //   }
 
-      be.file = undefined
-    })
+    //   const file = be.file
+    //   be.file = undefined
+    //   return file
+    // })
 
+    // const coverFiles = (
     await Promise.all([
       ...uploadBookResourcePromises,
-      ...uploadBookImagesPromises,
+      // ...uploadBookImagesPromises,
     ])
+    // ).filter(Boolean) as File[]
+    // return coverFiles
   } catch (error) {
     console.log(error)
+    // return []
   }
 }
 

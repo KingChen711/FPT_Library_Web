@@ -101,3 +101,42 @@ export enum EBookCopyStatus {
   RESERVED = "Reserved",
   DELETED = "Deleted",
 }
+
+export enum ECategoryPrefix {
+  BC = "BC",
+  HT = "HT",
+  LA = "LA",
+  NC = "NC",
+  SD = "SD",
+  SB = "SB",
+  SCN = "SCN",
+  STK = "STK",
+  SNV = "SNV",
+  SVH = "SVH",
+  SMV = "SMV",
+  TC = "TC",
+}
+
+export enum EFineType {
+  OVER_DUE = "OverDue",
+  LOST = "Lost",
+  DAMAGE = "Damage",
+}
+
+export enum EDuplicateHandle {
+  ALLOW = "Allow",
+  REPLACE = "Replace",
+  SKIP = "Skip",
+}
+
+export const EDuplicateHandleToIndex: Map<EDuplicateHandle, number> = new Map([
+  [EDuplicateHandle.ALLOW, 0],
+  [EDuplicateHandle.REPLACE, 1],
+  [EDuplicateHandle.SKIP, 2],
+])
+
+export const EFineTypeToIndex: Map<EFineType, number> = new Map([
+  [EFineType.OVER_DUE, 0],
+  [EFineType.LOST, 1],
+  [EFineType.DAMAGE, 2],
+])

@@ -43,11 +43,16 @@ function CategoryCard({ category }: Props) {
       />
       <ContextMenu>
         <ContextMenuTrigger asChild>
-          <div className="col-span-12 h-full flex-1 rounded-md bg-card p-4 shadow sm:col-span-6 lg:col-span-3">
+          <div className="col-span-12 h-full flex-1 rounded-md border bg-card p-4 shadow sm:col-span-6 lg:col-span-3">
             <div className="flex">
               <div className="text-sm">
                 Id: <strong>{category.categoryId}</strong>
               </div>
+            </div>
+
+            <div className="line-clamp-2 text-sm font-medium text-muted-foreground">
+              {t("Prefix")}:{" "}
+              <span className="text-foreground">{category.prefix}</span>
             </div>
             <div className="line-clamp-2 font-bold">
               {locale === "en" ? category.englishName : category.vietnameseName}

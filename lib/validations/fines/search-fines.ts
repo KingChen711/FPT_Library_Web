@@ -8,6 +8,8 @@ export const searchFinesSchema = z.object({
     .enum([
       "FinePolicyId",
       "-FinePolicyId",
+      "FinePolicyTitle",
+      "-FinePolicyTitle",
       "ConditionType",
       "-ConditionType",
       "FineAmountPerDay",

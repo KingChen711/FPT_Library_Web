@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { ECategoryPrefix } from "@/lib/types/enums"
 import { type Category } from "@/lib/types/models"
 import {
   mutateCategorySchema,
@@ -79,6 +80,10 @@ function MutateCategoryDialog({
       englishName: type === "update" ? category.englishName : "",
       vietnameseName: type === "update" ? category.vietnameseName : "",
       description: type === "update" ? category.description || "" : "",
+      prefix:
+        type === "update"
+          ? category.prefix || ECategoryPrefix.BC
+          : ECategoryPrefix.BC,
     },
   })
 
@@ -117,21 +122,35 @@ function MutateCategoryDialog({
         <DialogTrigger asChild>
           <Button className="flex items-center justify-end gap-x-1 leading-none">
             <Plus />
-            <div>
-              {t(type === "create" ? "Create category" : "Edit category")}
-            </div>
+            <div>{t("Create category")}</div>
           </Button>
         </DialogTrigger>
       )}
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>{t("Create category")}</DialogTitle>
+          <DialogTitle>
+            {t(type === "create" ? "Create category" : "Edit category")}
+          </DialogTitle>
           <DialogDescription>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="mt-4 space-y-6"
               >
+                <FormField
+                  control={form.control}
+                  name="prefix"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start">
+                      <FormLabel>{t("Prefix")}</FormLabel>
+                      <FormControl>
+                        <Input disabled={isPending} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="englishName"

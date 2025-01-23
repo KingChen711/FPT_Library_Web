@@ -105,9 +105,7 @@ function ChangePassForm() {
     })
   }
 
-  function handleResendCode(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  function handleResendCode(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.preventDefault()
     e.stopPropagation()
     setTimeDisableResend(30)
@@ -229,15 +227,18 @@ function ChangePassForm() {
             <FormDescription>
               {t("OTP message")}
 
-              <Button
+              <div
                 onClick={handleResendCode}
-                disabled={timeDisableResend > 0}
-                className="min-h-0 min-w-0 p-0 text-sm hover:bg-transparent hover:underline"
-                variant="ghost"
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  "min-h-0 min-w-0 cursor-pointer p-0 hover:bg-transparent hover:underline",
+                  timeDisableResend > 0 &&
+                    "pointer-events-none text-muted-foreground"
+                )}
               >
                 {t("No code")}{" "}
                 {timeDisableResend > 0 ? `(${timeDisableResend})` : null}
-              </Button>
+              </div>
             </FormDescription>
             <FormMessage />
           </div>

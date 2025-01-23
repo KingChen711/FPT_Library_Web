@@ -43,10 +43,14 @@ function CategoryList({ categories }: Props) {
   const [open, setOpen] = useState(false)
 
   const filteredCategories = categories
-    .filter((category) =>
-      (locale === "vi" ? category.vietnameseName : category.englishName)
-        .toLowerCase()
-        .includes(debouncedSearchTerm.toLowerCase())
+    .filter(
+      (category) =>
+        (locale === "vi" ? category.vietnameseName : category.englishName)
+          .toLowerCase()
+          .includes(debouncedSearchTerm.toLowerCase()) ||
+        category.prefix
+          .toLowerCase()
+          .includes(debouncedSearchTerm.toLowerCase())
     )
     .toSorted((a, b) => {
       switch (orderBy) {

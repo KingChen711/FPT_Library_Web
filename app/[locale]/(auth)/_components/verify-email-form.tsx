@@ -8,11 +8,12 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { cn } from "@/lib/utils"
 import { otpSchema, type TOtpSchema } from "@/lib/validations/auth/otp"
 import { resendOtp } from "@/actions/auth/resend-otp"
 import { verifyEmail } from "@/actions/auth/verify-email"
 import { toast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -64,9 +65,7 @@ function VerifyEmailForm({ email }: Props) {
     })
   }
 
-  function handleResendCode(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  function handleResendCode(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.preventDefault()
     e.stopPropagation()
     setTimeDisableResend(30)
@@ -118,15 +117,18 @@ function VerifyEmailForm({ email }: Props) {
                 </InputOTP>
               </FormControl>
               <FormDescription>
-                <Button
+                <div
                   onClick={handleResendCode}
-                  disabled={timeDisableResend > 0 || pendingResendOtp}
-                  className="min-h-0 min-w-0 p-0 hover:bg-transparent hover:underline"
-                  variant="ghost"
+                  className={cn(
+                    buttonVariants({ variant: "ghost" }),
+                    "min-h-0 min-w-0 cursor-pointer p-0 hover:bg-transparent hover:underline",
+                    (timeDisableResend > 0 || pendingResendOtp) &&
+                      "pointer-events-none text-muted-foreground"
+                  )}
                 >
                   {t("No code")}{" "}
                   {timeDisableResend > 0 ? `(${timeDisableResend})` : null}
-                </Button>
+                </div>
               </FormDescription>
               <FormMessage />
             </FormItem>

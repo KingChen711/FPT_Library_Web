@@ -93,7 +93,7 @@ function FiltersFinesDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] w-full">
+      <DialogContent className="max-h-[80vh] w-full">
         <DialogHeader>
           <DialogTitle>Filter fines</DialogTitle>
           <DialogDescription>

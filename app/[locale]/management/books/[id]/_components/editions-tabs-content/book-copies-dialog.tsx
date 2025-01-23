@@ -182,7 +182,7 @@ function BookCopiesDialog({
           <Edit2Icon className="text-primary" />
         </div>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("Edit copies")}</DialogTitle>
           <DialogDescription>

@@ -103,7 +103,7 @@ async function BookDetailPage({ params }: Props) {
                         {t("View content")}
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="max-h-[90vh] overflow-y-auto overflow-x-hidden">
+                    <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
                       <DialogHeader>
                         <DialogTitle>{t("Summary content")}</DialogTitle>
                         <DialogDescription>

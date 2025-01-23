@@ -2,6 +2,8 @@ import {
   type EBookCopyStatus,
   type EBookEditionStatus,
   type EBookFormat,
+  type ECategoryPrefix,
+  type EFineType,
   type ENotificationType,
   type EResourceBookType,
   type ERoleType,
@@ -118,7 +120,8 @@ export type Notification = {
 
 export type Fine = {
   finePolicyId: number
-  conditionType: string
+  finePolicyTitle: string
+  conditionType: EFineType
   fineAmountPerDay: number
   fixedFineAmount: number
   description: string | null
@@ -126,6 +129,7 @@ export type Fine = {
 
 export type Category = {
   categoryId: number
+  prefix: ECategoryPrefix
   englishName: string
   vietnameseName: string
   description: string | null

@@ -137,7 +137,7 @@ function CreateResourceDialog({ bookId }: Props) {
           {t("Create resource")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] w-full max-w-3xl overflow-y-auto overflow-x-hidden">
+      <DialogContent className="max-h-[80vh] w-full max-w-3xl overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>{t("Create resource")}</DialogTitle>
           <DialogDescription>

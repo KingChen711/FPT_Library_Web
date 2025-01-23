@@ -46,7 +46,7 @@ function BookEditionActionDropdown({ bookEdition, hideViewBookDetail }: Props) {
   return (
     <>
       <Dialog open={showInventory} onOpenChange={setShowInventory}>
-        <DialogContent className="max-h-[90vh] w-fit overflow-y-auto">
+        <DialogContent className="max-h-[80vh] w-fit overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t("Inventory copies")}</DialogTitle>
             <DialogDescription asChild>

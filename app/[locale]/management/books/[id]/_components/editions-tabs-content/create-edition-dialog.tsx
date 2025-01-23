@@ -127,7 +127,7 @@ function CreateEditionDialog({ bookId }: Props) {
           {t("Create edition")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] w-full max-w-3xl overflow-y-auto overflow-x-hidden">
+      <DialogContent className="max-h-[80vh] w-full max-w-3xl overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>{t("Create edition")}</DialogTitle>
           <DialogDescription>
