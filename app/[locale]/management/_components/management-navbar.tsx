@@ -17,9 +17,11 @@ import Actions from "./actions"
 
 function ManagementNavbar() {
   const { open } = useSidebar()
-  const [currentDate, setCurrentDate] = useState(new Date())
+  const [currentDate, setCurrentDate] = useState<Date | null>(null)
 
   useEffect(() => {
+    setCurrentDate(new Date()) // Set the current date when the component mounts
+
     const interval = setInterval(() => {
       setCurrentDate(new Date())
     }, 1000)
@@ -51,22 +53,26 @@ function ManagementNavbar() {
             </SelectContent>
           </Select>
           <section className="flex items-center gap-4 text-nowrap rounded-lg bg-primary-foreground p-1 text-muted-foreground">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Clock size={16} />
-              {currentDate.toLocaleTimeString([], {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: true,
-              })}
-            </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Calendar size={16} />
-              {currentDate.toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-            </div>
+            {currentDate && ( // Render the date and time only if currentDate is available
+              <>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Clock size={16} />
+                  {currentDate.toLocaleTimeString([], {
+                    hour: "numeric",
+                    minute: "numeric",
+                    hour12: true,
+                  })}
+                </div>
+                <div className="flex items-center gap-2 text-muted-foreground">
+                  <Calendar size={16} />
+                  {currentDate.toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </div>
+              </>
+            )}
           </section>
         </div>
         <Actions />

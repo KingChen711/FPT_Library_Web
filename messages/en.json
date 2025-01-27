@@ -339,9 +339,12 @@
     "Confirm": "Confirm"
   },
   "Routes": {
+    "Dashboard": "Dashboard",
     "Navigator Bar": "Navigator bar",
     "Home": "Home",
-    "Dashboard": "Dashboard",
+    "AI": "AI",
+    "Search": "Search",
+    "My shelf": "My shelf",
     "Books": "Books",
     "Borrows": "Borrows",
     "Transactions": "Transactions",
