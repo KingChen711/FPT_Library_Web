@@ -40,14 +40,18 @@ import Actions from "./actions"
 function BrowseNavbar() {
   const { open } = useSidebar()
   const pathname = usePathname()
-  const [currentDate, setCurrentDate] = useState(new Date())
-  const [openVoiceToText, setOpenVoiceToText] = useState(false)
-  const [openBookPrediction, setOpenBookPrediction] = useState(false)
-  const [openBookRecommend, setOpenBookRecommend] = useState(false)
+  const [currentDate, setCurrentDate] = useState<string | null>(null)
 
   useEffect(() => {
+    // Update currentDate only on the client
     const interval = setInterval(() => {
-      setCurrentDate(new Date())
+      setCurrentDate(
+        new Date().toLocaleTimeString([], {
+          hour: "numeric",
+          minute: "numeric",
+          hour12: true,
+        })
+      )
     }, 1000)
 
     return () => clearInterval(interval)
@@ -86,15 +90,9 @@ function BrowseNavbar() {
               />
             </div>
 
-            <VoiceToText open={openVoiceToText} setOpen={setOpenVoiceToText} />
-            <BookPredictionDialog
-              open={openBookPrediction}
-              setOpen={setOpenBookPrediction}
-            />
-            <BookRecommendDialog
-              open={openBookRecommend}
-              setOpen={setOpenBookRecommend}
-            />
+            <VoiceToText open={false} setOpen={() => {}} />
+            <BookPredictionDialog open={false} setOpen={() => {}} />
+            <BookRecommendDialog open={false} setOpen={() => {}} />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -103,13 +101,13 @@ function BrowseNavbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setOpenVoiceToText(true)}>
+                <DropdownMenuItem onClick={() => {}}>
                   <Mic size={16} /> Voice to text
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setOpenBookPrediction(true)}>
+                <DropdownMenuItem onClick={() => {}}>
                   <Bot size={16} /> Prediction
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setOpenBookRecommend(true)}>
+                <DropdownMenuItem onClick={() => {}}>
                   <Book size={16} /> Recommend
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -129,15 +127,11 @@ function BrowseNavbar() {
           <section className="flex items-center gap-4 text-nowrap rounded-lg bg-primary-foreground p-1 text-muted-foreground">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Clock size={16} />
-              {currentDate.toLocaleTimeString([], {
-                hour: "numeric",
-                minute: "numeric",
-                hour12: true,
-              })}
+              {currentDate || "--:--"}
             </div>
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar size={16} />
-              {currentDate.toLocaleDateString("en-GB", {
+              {new Date().toLocaleDateString("en-GB", {
                 day: "numeric",
                 month: "short",
                 year: "numeric",

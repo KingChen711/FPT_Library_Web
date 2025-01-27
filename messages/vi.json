@@ -342,9 +342,12 @@
     "Confirm": "Xác nhận"
   },
   "Routes": {
-    "Navigator Bar": "Thanh điều hướng",
     "Dashboard": "Bảng điều khiển",
+    "Navigator Bar": "Thanh điều hướng",
     "Home": "Trang chủ",
+    "AI": "Trí tuệ nhân tạo",
+    "Search": "Tìm kiếm",
+    "My shelf": "Kệ sách",
     "Books": "Sách",
     "Borrows": "Mượn sách",
     "Transactions": "Giao dịch",

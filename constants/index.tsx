@@ -159,27 +159,41 @@ export const managementRoutes: Route[] = [
 
 export const browseRoutes: Route[] = [
   {
-    route: "",
+    route: "/",
     label: "Home",
     Icon: (props: { className?: string }) => {
       return <Icons.Home {...props} />
     },
+  },
+  {
+    route: "ai",
+    label: "AI",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Robot {...props} />
+    },
     subRoutes: [
       {
-        route: "",
-        label: "Sub Home 1",
+        route: "/ai-prediction",
+        label: "AI prediction",
         Icon: (props: { className?: string }) => {
-          return <Icons.Home {...props} />
+          return <Icons.Robot {...props} />
         },
       },
       {
-        route: "",
-        label: "Sub Home 2",
+        route: "/ai-recommendation",
+        label: "AI recommendation",
         Icon: (props: { className?: string }) => {
-          return <Icons.Home {...props} />
+          return <Icons.Robot {...props} />
         },
       },
     ],
+  },
+  {
+    route: "/search",
+    label: "Search",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Search {...props} />
+    },
   },
   {
     route: "/books",
@@ -200,6 +214,20 @@ export const browseRoutes: Route[] = [
     label: "Resources",
     Icon: (props: { className?: string }) => {
       return <Icons.Resource {...props} />
+    },
+  },
+  {
+    route: "/my-shelf",
+    label: "My shelf",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Shelf {...props} />
+    },
+  },
+  {
+    route: "/notifications",
+    label: "Notifications",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Bell {...props} />
     },
   },
 ]

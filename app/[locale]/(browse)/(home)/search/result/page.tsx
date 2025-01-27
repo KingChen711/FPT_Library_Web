@@ -1,10 +1,12 @@
 import Image from "next/image"
 import { Link } from "@/i18n/routing"
 import {
+  BookOpen,
   CheckCircle2,
+  ChevronDown,
   EllipsisVertical,
+  Headphones,
   ScrollText,
-  Search,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -15,7 +17,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import {
   Select,
   SelectContent,
@@ -40,17 +41,6 @@ const SearchResult = () => {
   return (
     <div className="container flex size-full flex-col gap-4 overflow-y-auto">
       <div className="w-full space-y-2 px-12">
-        <div className="relative w-full">
-          <Input
-            type="text"
-            placeholder="Tìm kiếm các bài viết, sách, tạp chí và nhiều hơn nữa"
-            className="w-full pr-12"
-          />
-          <Search
-            size={20}
-            className="absolute right-4 top-1/2 -translate-y-1/2"
-          />
-        </div>
         <SheetSearchBook />
       </div>
 
@@ -166,6 +156,23 @@ const SearchResult = () => {
                 </TableRow>
               </TableBody>
             </Table>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button className="mt-4 flex items-center gap-2">
+                  Resources <ChevronDown />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuItem>
+                  <Headphones /> Audio
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <BookOpen />
+                  Ebook
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         ))}
       </section>
