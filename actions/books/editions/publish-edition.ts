@@ -7,13 +7,12 @@ import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 
 export async function publishEdition(
-  bookId: number,
-  editionId: number
+  bookId: number
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.patch(
-      `/api/management/books/editions/${editionId}/status`,
+      `/api/management/library-items/${bookId}/status`,
       {},
       {
         headers: {
@@ -24,7 +23,6 @@ export async function publishEdition(
 
     revalidatePath("/management/books")
     revalidatePath(`/management/books/${bookId}`)
-    revalidatePath(`/management/books/${bookId}/editions/${editionId}`)
 
     return {
       isSuccess: true,

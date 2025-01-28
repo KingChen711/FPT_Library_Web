@@ -77,7 +77,7 @@ function FiltersNotificationsDialog() {
           values.notificationType === "All" ? null : values.notificationType,
         //TODO: filter visibility
         CreateDateRange: values.createDateRange.map((date) =>
-          date ? format(date, "yyyy-MM-dd") : ""
+          date ? format(date, "dd-MM-yyyy") : ""
         ),
       },
     })

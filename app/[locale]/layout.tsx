@@ -8,7 +8,7 @@ import "react-date-range/dist/theme/default.css"
 import { notFound } from "next/navigation"
 import AuthProvider from "@/contexts/auth-provider"
 import { ReactQueryProvider } from "@/contexts/react-query-provider"
-import SocketProvider from "@/contexts/socket-provider"
+// import SocketProvider from "@/contexts/socket-provider"
 import { ThemeProvider } from "@/contexts/theme-provider"
 import { routing } from "@/i18n/routing"
 import { NextIntlClientProvider } from "next-intl"
@@ -62,16 +62,16 @@ export default async function RootLayout({
         <ReactQueryProvider>
           <NextIntlClientProvider messages={messages}>
             <AuthProvider>
-              <SocketProvider>
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="system"
-                  enableSystem
-                  disableTransitionOnChange
-                >
-                  {children}
-                </ThemeProvider>
-              </SocketProvider>
+              {/* <SocketProvider> */}
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+              {/* </SocketProvider> */}
             </AuthProvider>
           </NextIntlClientProvider>
         </ReactQueryProvider>

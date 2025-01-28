@@ -69,16 +69,16 @@ function FiltersAuthorsDialog() {
         authorCode: values.authorCode,
         nationality: values.nationality,
         dobRange: values.dobRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
+          date ? format(new Date(date), "dd-MM-yyyy") : ""
         ),
         dateOfDeathRange: values.dateOfDeathRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
+          date ? format(new Date(date), "dd-MM-yyyy") : ""
         ),
         createDateRange: values.createDateRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
+          date ? format(new Date(date), "dd-MM-yyyy") : ""
         ),
         modifiedDateRange: values.modifiedDateRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
+          date ? format(new Date(date), "dd-MM-yyyy") : ""
         ),
       },
     })

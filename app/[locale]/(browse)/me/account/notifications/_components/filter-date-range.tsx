@@ -6,7 +6,7 @@ import { DateRangePicker, type RangeKeyDict } from "react-date-range"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-// Function to format date as 'YYYY-MM-DD'
+// Function to format date as 'dd-MM-yyyy'
 const formatDate = (date: Date | null) => {
   if (!date) return ""
   const year = date.getFullYear()

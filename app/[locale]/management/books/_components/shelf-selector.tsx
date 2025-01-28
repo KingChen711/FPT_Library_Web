@@ -23,9 +23,16 @@ import ShelfBadge from "@/components/ui/shelf-badge"
 type Props = {
   initShelfName: string | undefined
   onChange: (val: number | undefined) => void
+  open?: boolean
+  setOpen?: (val: boolean) => void
 }
 
-export default function ShelfSelector({ onChange, initShelfName }: Props) {
+export default function ShelfSelector({
+  onChange,
+  initShelfName,
+  open,
+  setOpen,
+}: Props) {
   const t = useTranslations("BooksManagementPage")
 
   const [editMode, setEditMode] = useState(false)
@@ -66,13 +73,18 @@ export default function ShelfSelector({ onChange, initShelfName }: Props) {
     setSelectedShelf(undefined)
   }, [selectedSection])
 
-  if (!editMode) {
+  if (!editMode && (open === undefined || !open)) {
     return (
       <div className="flex items-center gap-2">
         {shelfName ? <ShelfBadge shelfNumber={shelfName} /> : <NoData />}
         <Pencil
           className="size-4 cursor-pointer hover:text-primary"
-          onClick={() => setEditMode(true)}
+          onClick={() => {
+            setEditMode(true)
+            if (setOpen) {
+              setOpen(true)
+            }
+          }}
         />
       </div>
     )
@@ -205,6 +217,9 @@ export default function ShelfSelector({ onChange, initShelfName }: Props) {
             setSelectedZone(undefined)
             setSelectedSection(undefined)
             setSelectedShelf(undefined)
+            if (setOpen) {
+              setOpen(false)
+            }
           }}
         >
           {t("Cancel")}
@@ -221,6 +236,9 @@ export default function ShelfSelector({ onChange, initShelfName }: Props) {
             setSelectedZone(undefined)
             setSelectedSection(undefined)
             setSelectedShelf(undefined)
+            if (setOpen) {
+              setOpen(false)
+            }
           }}
         >
           {t("Save")}

@@ -21,7 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-import CategoryCard from "./category-card"
+import CategoryCard from "../../../../../components/ui/category-card"
 
 type Props = {
   categories: Category[]

@@ -6,8 +6,9 @@ import { type UseFormReturn } from "react-hook-form"
 
 import { type Author } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
-import { type TBookEditionSchema } from "@/lib/validations/books/mutate-book"
+import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 import useCheckCoverImage from "@/hooks/books/use-check-cover-image"
+import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   FormControl,
@@ -24,15 +25,23 @@ type Props = {
   form: UseFormReturn<TBookEditionSchema>
   isPending: boolean
   selectedAuthors: Author[]
+  isRequireImage: boolean
 }
 
-function CoverImageField({ form, isPending, selectedAuthors }: Props) {
+function CoverImageField({
+  form,
+  isPending,
+  selectedAuthors,
+  isRequireImage,
+}: Props) {
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
   const [disableImageField, setDisableImageField] = useState(false)
 
   const watchAuthorIds = form.watch(`authorIds`)
   const watchTitle = form.watch(`title`)
+  const watchSubTitle = form.watch(`subTitle`)
+  const watchGeneralNote = form.watch(`generalNote`)
   const watchPublisher = form.watch(`publisher`)
   const watchFile = form.watch(`file`)
   const watchValidImage = form.watch(`validImage`)
@@ -44,6 +53,7 @@ function CoverImageField({ form, isPending, selectedAuthors }: Props) {
 
   const canCheck = !!(
     watchAuthorIds &&
+    watchAuthorIds.length > 0 &&
     watchTitle &&
     watchPublisher &&
     watchFile &&
@@ -74,7 +84,14 @@ function CoverImageField({ form, isPending, selectedAuthors }: Props) {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0]
 
-      if (!file.type.includes("image")) return
+      if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
+        toast({
+          title: locale === "vi" ? "Thất bại" : "Failed",
+          description: locale === "vi" ? "Tệp không hợp lệ" : "Invalid file",
+          variant: "danger",
+        })
+        return
+      }
 
       if (file.size >= 10 * 1024 * 1024) {
         form.setError(`coverImage`, {
@@ -95,24 +112,21 @@ function CoverImageField({ form, isPending, selectedAuthors }: Props) {
       }
 
       fileReader.readAsDataURL(file)
-
-      handleCheckImage()
     }
   }
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCheckImage = () => {
-    console.log("handleCheckImage")
-
     const formData = new FormData()
 
-    const file = form.getValues(`file`)
+    if (!watchFile) return
 
-    if (!file) return
+    formData.append("Images", watchFile)
 
-    formData.append("Image", file)
-
-    const editionTitle = form.getValues(`title`)
-    const publisher = form.getValues(`publisher`)
+    const title = watchTitle
+    const subTitle = watchSubTitle
+    const generalNote = watchGeneralNote
+    const publisher = watchPublisher
     const authors = selectedAuthors
       .map((author) => {
         if (watchAuthorIds?.includes(author.authorId)) return author.fullName
@@ -120,18 +134,42 @@ function CoverImageField({ form, isPending, selectedAuthors }: Props) {
       })
       .filter((item) => item !== false)
 
-    formData.append("Title", editionTitle)
+    formData.append("Title", title)
+    if (subTitle) {
+      formData.append("SubTitle", subTitle)
+    }
+    if (generalNote) {
+      formData.append("GeneralNote", generalNote)
+    }
     formData.append("Publisher", publisher || "")
 
     authors.forEach((author) => {
       formData.append("Authors", author)
     })
 
+    console.log(formData)
+
     checkImage(formData, {
       onSuccess: (data) => {
-        form.setValue(`checkedResult`, data)
+        console.log(data)
 
-        form.setValue(`validImage`, data.totalPoint >= data.confidenceThreshold)
+        form.setValue(`checkedResult`, data[0])
+        form.setValue(
+          `validImage`,
+          data[0].totalPoint >= data[0].confidenceThreshold
+        )
+      },
+      onError: () => {
+        form.setValue(`checkedResult`, undefined)
+        form.setValue(`validImage`, false)
+        toast({
+          title: locale === "vi" ? "Thất bại" : "Failed",
+          description:
+            locale === "vi"
+              ? "Lỗi không xác định khi kiểm tra ảnh bìa"
+              : "Unknown error while checking cover image",
+          variant: "danger",
+        })
       },
     })
   }
@@ -140,11 +178,20 @@ function CoverImageField({ form, isPending, selectedAuthors }: Props) {
     if (!mounted) return
     form.setValue(`validImage`, undefined)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form, watchTitle, watchPublisher, watchAuthorIds])
+  }, [
+    form,
+    watchTitle,
+    watchPublisher,
+    watchAuthorIds,
+    watchSubTitle,
+    watchGeneralNote,
+  ])
 
   useEffect(() => {
     if (!mounted) return
     form.setValue(`coverImage`, undefined)
+    form.setValue("checkedResult", undefined)
+    form.setValue("validImage", undefined)
     form.clearErrors(`coverImage`)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form, watchFile])
@@ -168,9 +215,11 @@ function CoverImageField({ form, isPending, selectedAuthors }: Props) {
             >
               <div>
                 {t("Cover image")} (&lt;10MB)
-                {/* <span className="ml-1 text-xl font-bold leading-none text-primary">
-                  *
-                </span> */}
+                {isRequireImage && (
+                  <span className="ml-1 text-xl font-bold leading-none text-primary">
+                    *
+                  </span>
+                )}
               </div>
               {field.value ? (
                 <div
@@ -215,7 +264,7 @@ function CoverImageField({ form, isPending, selectedAuthors }: Props) {
               <Input
                 disabled={isPending}
                 type="file"
-                accept="image/*"
+                accept=".jpg,.jpeg,.png"
                 placeholder="Add profile photo"
                 className="hidden"
                 onChange={(e) => handleImageChange(e, field.onChange)}
@@ -281,7 +330,7 @@ function CoverImageField({ form, isPending, selectedAuthors }: Props) {
                 <div>{watchCheckedResult.totalPoint.toFixed(2)}/100</div>
               </div>
               <div className="flex flex-wrap items-center gap-4">
-                {watchCheckedResult.fieldPoints.map((field) => {
+                {watchCheckedResult.fieldPointsWithThreshole.map((field) => {
                   const fieldName = field.name.includes("Author")
                     ? t("Author") + " " + field.name.split(" ")[1]
                     : t(field.name)

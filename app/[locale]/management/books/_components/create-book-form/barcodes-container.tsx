@@ -2,7 +2,7 @@ import React from "react"
 import Barcode from "react-barcode"
 import { type UseFormReturn } from "react-hook-form"
 
-import { type TBookEditionSchema } from "@/lib/validations/books/mutate-book"
+import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 
 type Props = {
   form: UseFormReturn<TBookEditionSchema>
@@ -15,7 +15,10 @@ export const BarcodesContainer = React.forwardRef(
     const cutterNumber = form.watch("cutterNumber")
 
     return (
-      <div ref={ref} className="flex flex-wrap rounded-md border bg-white p-4">
+      <div
+        ref={ref}
+        className="flex flex-wrap rounded-md border bg-white p-4 text-black"
+      >
         {form.watch("libraryItemInstances").map((l) => (
           <div key={l.barcode} className="border border-black p-1">
             <div className="flex flex-col items-center justify-center border-4 border-black">
@@ -37,6 +40,7 @@ export const BarcodesContainer = React.forwardRef(
                   value={`${prefix}${l.barcode}`}
                   height={36}
                   fontSize={24}
+                  fontOptions="bold"
                 />
               </div>
             </div>

@@ -75,7 +75,7 @@ function FiltersFinesDialog() {
       updates: {
         gender: values.gender,
         createdDateRange: values.createdDateRange.map((date) =>
-          date ? format(date, "yyyy-MM-dd") : JSON.stringify(null)
+          date ? format(date, "dd-MM-yyyy") : JSON.stringify(null)
         ),
       },
     })

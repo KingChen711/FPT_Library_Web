@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 
 export type TCheckCoverImageRes = {
-  fieldPoints: {
+  fieldPointsWithThreshole: {
     name: string
     detail: string
     matchedPoint: number
@@ -19,17 +19,13 @@ function useCheckCoverImage() {
   return useMutation({
     mutationFn: async (formData: FormData) => {
       const { data } = await axios.post<{
-        data: TCheckCoverImageRes
-      }>(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/management/books/ai/check-book-edition`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
+        data: TCheckCoverImageRes[]
+      }>(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ocr`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
 
       return data.data
     },

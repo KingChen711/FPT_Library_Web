@@ -4,12 +4,15 @@ import axios from "axios"
 
 import { EResourceBookType } from "@/lib/types/enums"
 import { getClientSideCookie } from "@/lib/utils"
-import { type TBookEditionSchema } from "@/lib/validations/books/mutate-book"
+import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 
 export async function uploadMedias(book: TBookEditionSchema) {
   try {
     const uploadBookResourcePromises = book.libraryResources.map(async (lr) => {
-      if (!lr.file || lr.resourceUrl) return
+      if (!lr.file || lr.resourceUrl) {
+        lr.file = undefined
+        return
+      }
 
       if (lr.resourceType === EResourceBookType.AUDIO_BOOK) {
         const data = await uploadAudioBook(lr.file)
@@ -27,27 +30,30 @@ export async function uploadMedias(book: TBookEditionSchema) {
         }
       }
 
+      lr.file = undefined
       return
     })
 
-    // const uploadBookImagesPromises = book.bookEditions.map(async (be) => {
-    //   if (!be.file) return null
+    const uploadBookImagePromise = async () => {
+      if (
+        !book.file ||
+        (book.coverImage && !book.coverImage.startsWith("blob"))
+      ) {
+        book.file = undefined
+        return
+      }
 
-    //   const data = await uploadBookImage(be.file)
-    //   if (data) {
-    //     be.coverImage = data.secureUrl
-    //   }
+      const data = await uploadBookImage(book.file)
+      if (data) {
+        book.coverImage = data.secureUrl
+      }
 
-    //   const file = be.file
-    //   be.file = undefined
-    //   return file
-    // })
+      book.file = undefined
+      return
+    }
 
     // const coverFiles = (
-    await Promise.all([
-      ...uploadBookResourcePromises,
-      // ...uploadBookImagesPromises,
-    ])
+    await Promise.all([...uploadBookResourcePromises, uploadBookImagePromise()])
     // ).filter(Boolean) as File[]
     // return coverFiles
   } catch (error) {

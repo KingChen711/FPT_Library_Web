@@ -16,7 +16,7 @@ import { cn } from "@/lib/utils"
 import {
   type TBookCopySchema,
   type TBookEditionSchema,
-} from "@/lib/validations/books/mutate-book"
+} from "@/lib/validations/books/create-book"
 import { toast } from "@/hooks/use-toast"
 import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -126,7 +126,7 @@ function LiblibraryItemInstancesDialog({
         title: locale === "vi" ? "Lỗi" : "Error",
         description:
           locale === "vi"
-            ? "Đầu và có định dạng không hợp lệ"
+            ? "Đầu vào có định dạng không hợp lệ"
             : "Invalid input",
       })
     }
@@ -150,6 +150,9 @@ function LiblibraryItemInstancesDialog({
 
     setInputs([createInput()])
     form.setValue(`libraryItemInstances`, cloneCopies)
+    if (cloneCopies.length > 0) {
+      form.clearErrors("libraryItemInstances")
+    }
   }
 
   const handleDeleteSelectedCodes = () => {

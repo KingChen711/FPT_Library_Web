@@ -2,14 +2,22 @@ import { http } from "@/lib/http"
 
 import "server-only"
 
-import { type BookEdition, type Category } from "@/lib/types/models"
+import {
+  type Author,
+  type BookEdition,
+  type Category,
+  type LibraryItemAuthor,
+  type Shelf,
+} from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 import { type TSearchBookEditionsSchema } from "@/lib/validations/books/search-book-editions"
 
 import { auth } from "../auth"
 
 export type BookEditions = (BookEdition & {
-  categories: Category[]
+  category: Category
+  libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
+  shelf: Shelf | null
 })[]
 
 const getBookEditions = async (
@@ -18,7 +26,7 @@ const getBookEditions = async (
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<Pagination<BookEditions>>(
-      `/api/management/books/editions`,
+      `/api/management/library-items`,
       {
         next: {
           tags: ["management-book-editions"],

@@ -1,19 +1,21 @@
 import { z } from "zod"
 
-export const isbnSchema = z
-  .string()
-  .trim()
-  .refine(
-    (value) =>
-      /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(value) &&
-      isValidISBN(value),
-    {
-      message: "isbn",
-    }
-  )
-  .transform((data) => data.replace("-", ""))
+export const isbnSchema = z.string().trim()
 
-function isValidISBN(isbn: string): boolean {
+// export const isbnSchema = z
+//   .string()
+//   .trim()
+//   .transform((data) => data.replace("-", ""))
+//   .refine(
+//     (value) =>
+//       /^(?=(?:\D*\d){10}(?:(?:\D*\d){3})?$)[\d-]+$/.test(value) &&
+//       isValidISBN(value),
+//     {
+//       message: "isbn",
+//     }
+//   )
+
+export function isValidISBN(isbn: string): boolean {
   // Remove any hyphens (not typically part of raw ISBN input)
   const cleanedISBN = isbn.replace(/-/g, "")
 

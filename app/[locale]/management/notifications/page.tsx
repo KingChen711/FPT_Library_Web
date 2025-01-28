@@ -191,7 +191,7 @@ async function NotificationPage({ searchParams }: Props) {
                     </div>
                   </TableCell>
                   <TableCell>
-                    {format(new Date(notification.createDate), "yyyy-MM-dd")}
+                    {format(new Date(notification.createDate), "dd-MM-yyyy")}
                   </TableCell>
                   <TableCell>{notification.createdBy}</TableCell>
                 </TableRow>

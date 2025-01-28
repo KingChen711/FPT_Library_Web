@@ -5,7 +5,7 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TBookResourceSchema } from "@/lib/validations/books/mutate-book"
+import { type TBookResourceSchema } from "@/lib/validations/books/create-book"
 
 export async function createResource({
   bookId,
@@ -16,7 +16,7 @@ export async function createResource({
   const { getAccessToken } = auth()
   try {
     const { message } = await http.post(
-      `/api/management/books/${bookId}/resources`,
+      `/api/management/library-items/${bookId}/resources`,
       body,
       {
         headers: {

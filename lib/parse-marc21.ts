@@ -1,7 +1,5 @@
 import { z } from "zod"
 
-import { isbnSchema } from "./validations/isbn"
-
 // const languageMapping: { [key: string]: string } = {
 //   af: "Afrikaans",
 //   am: "አማርኛ",
@@ -178,8 +176,8 @@ const marcTemplate: Marc21Template = {
   estimatedPrice: {
     tag: "020",
     subfield: "c",
-    transform: (val: string) =>
-      val ? +val.replace("đ", "").replace(",", ".").trim() : undefined,
+    transform: (value: string) =>
+      value ? parseInt(value.match(/\d+/)?.[0] || "0", 10) : undefined,
   },
   language: {
     tag: "041",
@@ -208,13 +206,14 @@ const marcTemplate: Marc21Template = {
   publicationYear: {
     tag: "260",
     subfield: "c",
-    transform: (value) => (value ? +value : undefined),
+    transform: (value) =>
+      value ? parseInt(value.match(/\d+/)?.[0] || "0", 10) : undefined,
   },
   pageCount: {
     tag: "300",
     subfield: "a",
     transform: (value) =>
-      value ? +value.replace("tr.", "").replace("tr", "").trim() : undefined,
+      value ? parseInt(value.match(/\d+/)?.[0] || "0", 10) : undefined,
   },
   physicalDetails: { tag: "300", subfield: "b" },
   dimensions: { tag: "300", subfield: "c" },
@@ -335,7 +334,7 @@ export const bookEditionSchema = z.object({
   //082 b
   cutterNumber: z.string().trim().optional(),
   //020 a
-  isbn: isbnSchema.optional(),
+  isbn: z.string().trim().optional(),
   //024a
   ean: z.string().trim().optional(),
   //020 c

@@ -1,11 +1,17 @@
 import React from "react"
+import Image from "next/image"
 import { notFound } from "next/navigation"
 import { auth } from "@/queries/auth"
 import getBook from "@/queries/books/get-book"
+import { format } from "date-fns"
+import { Check, X } from "lucide-react"
 import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
-import { EFeature } from "@/lib/types/enums"
+import { EBookEditionStatus, EFeature } from "@/lib/types/enums"
+import { cn, formatPrice } from "@/lib/utils"
+import { Badge } from "@/components/ui/badge"
+import BookEditionStatusBadge from "@/components/ui/book-edition-status-badge"
 import { Button } from "@/components/ui/button"
 import Copitor from "@/components/ui/copitor"
 import {
@@ -18,11 +24,15 @@ import {
 } from "@/components/ui/dialog"
 import NoData from "@/components/ui/no-data"
 import ParseHtml from "@/components/ui/parse-html"
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import Rating from "@/components/ui/rating"
+import ShelfBadge from "@/components/ui/shelf-badge"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import TrainedBadge from "@/components/ui/trained-badge"
 
+import AuthorsTabsContent from "./_components/authors-tabs-content"
 import BookDetailActionDropdown from "./_components/book-detail-action-dropdown"
 import BookDetailBreadCrumb from "./_components/book-detail-breadcrumb"
-import EditionsTabsContent from "./_components/editions-tabs-content"
+import CopiesTabsContent from "./_components/copies-tabs-content"
 import ResourcesTabsContent from "./_components/resources-tabs-content"
 
 type Props = {
@@ -41,6 +51,13 @@ async function BookDetailPage({ params }: Props) {
 
   if (!book) notFound()
 
+  const authors =
+    book.authors.length > 0 ? (
+      book.authors.map((a) => a.fullName).join(", ")
+    ) : (
+      <NoData />
+    )
+
   return (
     <div className="mt-4 pb-8">
       <div className="flex flex-col gap-4">
@@ -56,95 +73,534 @@ async function BookDetailPage({ params }: Props) {
           )}
         </div>
 
-        <div className="flex flex-col gap-4 rounded-md border py-5">
-          <h3 className="mx-5 text-lg font-semibold">
-            {t("Book information")}
-          </h3>
-          <div className="grid grid-cols-12 gap-y-6 text-sm">
-            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-              <h4 className="font-bold">{t("Book id")}</h4>
-              <div className="flex gap-2">
-                <Copitor content={book.bookId.toString()} />
-                <p>{book.bookId}</p>
-              </div>
-            </div>
+        <Tabs defaultValue="basicInfo">
+          <TabsList>
+            <TabsTrigger value="basicInfo">{t("Basic info")}</TabsTrigger>
+            <TabsTrigger value="editionInfo">{t("Edition info")}</TabsTrigger>
+            <TabsTrigger value="classification">
+              {t("Classification")}
+            </TabsTrigger>
+            <TabsTrigger value="physicalDetails">
+              {t("Physical details")}
+            </TabsTrigger>
+            <TabsTrigger value="contentInfo">{t("Content info")}</TabsTrigger>
+            <TabsTrigger value="inventoryInfo">
+              {t("Inventory info")}
+            </TabsTrigger>
+            <TabsTrigger value="trainAI">Train AI</TabsTrigger>
+            <TabsTrigger value="metadata">Metadata</TabsTrigger>
+          </TabsList>
+          <TabsContent value="basicInfo">
+            <div className="flex flex-col gap-4 rounded-md border py-5">
+              <h3 className="mx-5 text-lg font-semibold">{t("Basic info")}</h3>
+              <div className="grid grid-cols-12 gap-y-6 text-sm">
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Title")}</h4>
+                  <div className="flex gap-2">
+                    <Copitor content={book.title.toString()} />
+                    <p>{book.title}</p>
+                  </div>
+                </div>
 
-            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
-              <h4 className="font-bold">{t("Title")}</h4>
-              <div className="flex gap-2">
-                <Copitor content={book.title.toString()} />
-                <p>{book.title}</p>
-              </div>
-            </div>
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">{t("Sub title")}</h4>
+                  <div className="flex gap-2">
+                    <Copitor content={book.subTitle} />
+                    <div>{book.subTitle || <NoData />}</div>
+                  </div>
+                </div>
 
-            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-              <h4 className="font-bold">{t("Sub title")}</h4>
-              <div className="flex gap-2">
-                <Copitor content={book.subTitle} />
-                <div>{book.subTitle || <NoData />}</div>
-              </div>
-            </div>
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Cover")}</h4>
+                  <div className="flex gap-2">
+                    {book.coverImage ? (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            {t("View cover image")}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-h-[80vh] w-fit overflow-y-auto overflow-x-hidden">
+                          <DialogHeader>
+                            <DialogTitle className="text-nowrap text-center">
+                              {t("Cover image")}
+                            </DialogTitle>
+                            <DialogDescription>
+                              <div className="mt-2 flex justify-center">
+                                <Image
+                                  src={book.coverImage}
+                                  alt={book.title}
+                                  width={256}
+                                  height={384}
+                                  objectFit="cover"
+                                  className="aspect-[2/3] h-96 w-64 rounded-xl border object-fill"
+                                />
+                              </div>
+                            </DialogDescription>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
+                      <NoData />
+                    )}
+                  </div>
+                </div>
 
-            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
-              <h4 className="font-bold">{t("AI train code")}</h4>
-              <div className="flex gap-2">
-                <Copitor content={book.bookCodeForAITraining} />
-                <div>{book.bookCodeForAITraining || <NoData />}</div>
-              </div>
-            </div>
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("avgReviewedRate")}</h4>
+                  <div className="flex gap-2">
+                    {book.avgReviewedRate ? (
+                      <div className="flex items-center gap-2">
+                        <div className="text-xl font-medium">
+                          {book.avgReviewedRate.toFixed(1)}
+                        </div>
+                        <div className="font-medium">/ 5</div>
+                        <Rating value={book.avgReviewedRate} />
+                      </div>
+                    ) : (
+                      <NoData />
+                    )}
+                  </div>
+                </div>
 
-            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-              <h4 className="font-bold">{t("Summary")}</h4>
-              <div className="flex gap-2">
-                {book.summary ? (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button variant="outline" size="sm">
-                        {t("View content")}
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
-                      <DialogHeader>
-                        <DialogTitle>{t("Summary content")}</DialogTitle>
-                        <DialogDescription>
-                          <ParseHtml data={book.summary} />
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
-                ) : (
-                  <NoData />
-                )}
-              </div>
-            </div>
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Authors")}</h4>
+                  <div className="flex gap-2">
+                    <div>{authors}</div>
+                  </div>
+                </div>
 
-            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
-              <h4 className="font-bold">{t("Categories")}</h4>
-              <div className="flex gap-2">
-                <div>
-                  {book.categories
-                    .map((c) =>
-                      locale === "vi" ? c.vietnameseName : c.englishName
-                    )
-                    .join(", ")}
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">{t("Additional authors")}</h4>
+                  <div className="flex gap-2">
+                    {book.additionalAuthors || <NoData />}
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Responsibility")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.responsibility || <NoData />}</div>
+                  </div>
+                </div>
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Shelf")}</h4>
+                  <div className="flex gap-2">
+                    <div>
+                      {book.shelf ? (
+                        <ShelfBadge shelfNumber={book.shelf.shelfNumber} />
+                      ) : (
+                        <NoData />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Can borrow")}</h4>
+                  <div className="flex gap-2">
+                    {book.canBorrow ? (
+                      <Check className="text-success" />
+                    ) : (
+                      <X className="text-danger" />
+                    )}
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Status")}</h4>
+                  <div className="flex gap-2">
+                    <BookEditionStatusBadge
+                      status={
+                        book.isDeleted
+                          ? EBookEditionStatus.DELETED
+                          : book.status
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
+          </TabsContent>
 
-        <Tabs defaultValue="resources">
+          <TabsContent value="editionInfo">
+            <div className="flex flex-col gap-4 rounded-md border py-5">
+              <h3 className="mx-5 text-lg font-semibold">
+                {t("Edition info")}
+              </h3>
+              <div className="grid grid-cols-12 gap-y-6 text-sm">
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Edition")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.edition || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">{t("Edition number")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.editionNumber || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Language")}</h4>
+                  <div className="flex gap-2">
+                    {book.language || <NoData />}
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Origin language")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.originLanguage || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Publication year")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.publicationYear || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">{t("Publisher")}</h4>
+                  <div className="flex gap-2">
+                    <Copitor content={book.publisher} />
+                    <div>{book.publisher || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Publication place")}</h4>
+                  <div className="flex gap-2">
+                    {book.publicationPlace || <NoData />}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="classification">
+            <div className="flex flex-col gap-4 rounded-md border py-5">
+              <h3 className="mx-5 text-lg font-semibold">
+                {t("Classification")}
+              </h3>
+              <div className="grid grid-cols-12 gap-y-6 text-sm">
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">ISBN</h4>
+                  <div className="flex gap-2">
+                    <Copitor content={book.isbn} />
+                    <div>{book.isbn || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">EAN</h4>
+                  <div className="flex gap-2">
+                    <Copitor content={book.ean} />
+                    <div>{book.ean || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Classification number")}</h4>
+                  <div className="flex gap-2">
+                    <Copitor content={book.classificationNumber} />
+                    <div>{book.classificationNumber || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Cutter number")}</h4>
+                  <div className="flex gap-2">
+                    <Copitor content={book.cutterNumber} />
+                    <div>{book.cutterNumber || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Category")}</h4>
+                  <div className="flex gap-2">
+                    <Badge variant="draft">
+                      {locale === "vi"
+                        ? book.category.vietnameseName
+                        : book.category.englishName}
+                    </Badge>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="physicalDetails">
+            <div className="flex flex-col gap-4 rounded-md border py-5">
+              <h3 className="mx-5 text-lg font-semibold">
+                {t("Physical details")}
+              </h3>
+              <div className="grid grid-cols-12 gap-y-6 text-sm">
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Physical details")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.physicalDetails || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">{t("Page count")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.pageCount || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Dimensions")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.dimensions || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("estimatedPrice")}</h4>
+                  <div className="flex gap-2">
+                    <div>
+                      {book.estimatedPrice ? (
+                        formatPrice(book.estimatedPrice)
+                      ) : (
+                        <NoData />
+                      )}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Accompanying material")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.accompanyingMaterial || <NoData />}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="contentInfo">
+            <div className="flex flex-col gap-4 rounded-md border py-5">
+              <h3 className="mx-5 text-lg font-semibold">
+                {t("Content info")}
+              </h3>
+              <div className="grid grid-cols-12 gap-y-6 text-sm">
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Genres")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.genres || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">{t("Topical terms")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.topicalTerms || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("General note")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.generalNote || <NoData />}</div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Bibliographical note")}</h4>
+                  <div className="flex gap-2">
+                    {book.bibliographicalNote || <NoData />}
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Summary")}</h4>
+                  <div className="flex gap-2">
+                    {book.summary ? (
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            {t("View content")}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
+                          <DialogHeader>
+                            <DialogTitle>{t("Summary")}</DialogTitle>
+                            <DialogDescription>
+                              <ParseHtml data={book.summary} />
+                            </DialogDescription>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                    ) : (
+                      <NoData />
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="inventoryInfo">
+            <div className="flex flex-col gap-4 rounded-md border py-5">
+              <h3 className="mx-5 text-lg font-semibold">
+                {t("Inventory info")}
+              </h3>
+              <div className="grid grid-cols-12 gap-y-6 text-sm">
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Total units")}</h4>
+                  <div className="flex gap-2">
+                    <div>
+                      {book.libraryItemInventory.totalUnits ?? <NoData />}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">{t("Available units")}</h4>
+                  <div className="flex gap-2">
+                    <div>
+                      {book.libraryItemInventory.availableUnits ?? <NoData />}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Request units")}</h4>
+                  <div className="flex gap-2">
+                    <div>
+                      {book.libraryItemInventory.requestUnits ?? <NoData />}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Borrowed units")}</h4>
+                  <div className="flex gap-2">
+                    <div>
+                      {book.libraryItemInventory.borrowedUnits ?? <NoData />}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Reserved units")}</h4>
+                  <div className="flex gap-2">
+                    <div>
+                      {book.libraryItemInventory.reservedUnits ?? <NoData />}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="trainAI">
+            <div className="flex flex-col gap-4 rounded-md border py-5">
+              <h3 className="mx-5 text-lg font-semibold">{t("Status")}</h3>
+              <div className="grid grid-cols-12 gap-y-6 text-sm">
+                <div
+                  className={cn(
+                    "col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3",
+                    book?.libraryItemGroup?.aiTrainingCode &&
+                      "lg:col-span-6 lg:border-r"
+                  )}
+                >
+                  <h4 className="font-bold">{t("AI train code")}</h4>
+                  <div className="flex gap-2">
+                    <Copitor content={book?.libraryItemGroup?.aiTrainingCode} />
+                    {book?.libraryItemGroup?.aiTrainingCode || <NoData />}
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">{t("Trained at")}</h4>
+                  <div className="flex gap-2">
+                    {book.trainedAt ? (
+                      format(new Date(book.trainedAt), "dd-MM-yyyy")
+                    ) : (
+                      <NoData />
+                    )}
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Is trained")}</h4>
+                  <div className="flex gap-2">
+                    <TrainedBadge trained={book.isTrained} />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="metadata">
+            <div className="flex flex-col gap-4 rounded-md border py-5">
+              <h3 className="mx-5 text-lg font-semibold">Metadata</h3>
+              <div className="grid grid-cols-12 gap-y-6 text-sm">
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Created at")}</h4>
+                  <div className="flex gap-2">
+                    {book.createdAt ? (
+                      format(new Date(book.createdAt), "dd-MM-yyyy")
+                    ) : (
+                      <NoData />
+                    )}
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                  <h4 className="font-bold">{t("Created by")}</h4>
+                  <div className="flex gap-2">
+                    {book.createdBy || <NoData />}
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                  <h4 className="font-bold">{t("Updated at")}</h4>
+                  <div className="flex gap-2">
+                    {book.updatedAt ? (
+                      format(new Date(book.updatedAt), "dd-MM-yyyy")
+                    ) : (
+                      <NoData />
+                    )}
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Updated by")}</h4>
+                  <div className="flex gap-2">
+                    <div>{book.updatedBy || <NoData />}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <Tabs defaultValue="authors">
           <TabsList>
-            <TabsTrigger value="resources">{t("Book resources")}</TabsTrigger>
-            <TabsTrigger value="editions">{t("Book editions")}</TabsTrigger>
+            <TabsTrigger value="authors">{t("Authors")}</TabsTrigger>
+            <TabsTrigger value="resources">{t("Resources")}</TabsTrigger>
+            <TabsTrigger value="copies">{t("Copies")}</TabsTrigger>
           </TabsList>
-          <ResourcesTabsContent
-            resources={book.bookResources}
-            bookId={book.bookId}
+          <AuthorsTabsContent
+            authors={book.authors}
+            bookId={book.libraryItemId}
           />
-          <EditionsTabsContent
-            editions={book.bookEditions}
-            bookId={book.bookId}
+          <ResourcesTabsContent
+            bookId={book.libraryItemId}
+            resources={book.resources}
+          />
+          <CopiesTabsContent
+            prefix={book.category.prefix}
+            bookId={book.libraryItemId}
+            copies={book.libraryItemInstances}
           />
         </Tabs>
       </div>

@@ -9,16 +9,15 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function deleteCopies({
   bookId,
   ids,
-  editionId,
 }: {
   bookId: number
-  editionId: number
+
   ids: number[]
 }): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.multiDelete(
-      `/api/management/books/editions/${editionId}/copies`,
+      `/api/management/library-items/${bookId}/instances`,
       { ids },
       {
         headers: {
@@ -29,7 +28,6 @@ export async function deleteCopies({
 
     revalidatePath("/management/books")
     revalidatePath(`/management/books/${bookId}`)
-    revalidatePath(`/management/books/${bookId}/editions/${editionId}`)
 
     return {
       isSuccess: true,

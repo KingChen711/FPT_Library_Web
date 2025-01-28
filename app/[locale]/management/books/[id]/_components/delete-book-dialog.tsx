@@ -23,13 +23,13 @@ type Props = {
 }
 
 function DeleteBookDialog({ open, setOpen, bookId, title }: Props) {
+  const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
   const message = `${locale === "vi" ? "xóa" : "delete"} ${title}`
 
   const [value, setValue] = useState("")
 
   const [pending, startTransition] = useTransition()
-  const t = useTranslations("BooksManagementPage")
 
   const handleDeleteBook = () => {
     startTransition(async () => {
@@ -60,6 +60,7 @@ function DeleteBookDialog({ open, setOpen, bookId, title }: Props) {
               }}
             ></div>
             <Input
+              disabled={pending}
               value={value}
               onChange={(e) => setValue(e.target.value)}
               className="mt-2"
@@ -76,6 +77,7 @@ function DeleteBookDialog({ open, setOpen, bookId, title }: Props) {
             {pending && <Loader2 className="ml-2 size-4" />}
           </Button>
           <Button
+            disabled={pending}
             className="flex-1"
             onClick={() => {
               setOpen(false)

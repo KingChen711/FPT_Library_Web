@@ -50,7 +50,7 @@ type Props = {
 }
 
 const BookPage = async ({ searchParams }: Props) => {
-  const { pageIndex, pageSize, search, sort } = searchParams
+  const { sort } = searchParams
   const t = await getTranslations("BookPage")
 
   return (

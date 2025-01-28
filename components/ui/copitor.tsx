@@ -32,7 +32,7 @@ function Copitor({ content, className }: Props) {
   return (
     <Copy
       className={cn(
-        "size-5 cursor-pointer text-primary hover:text-foreground",
+        "size-5 min-h-5 min-w-5 cursor-pointer text-primary hover:text-foreground",
         className
       )}
       onClick={handleCopy}

@@ -9,17 +9,16 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function removeAuthors({
   authorIds,
   bookId,
-  editionId,
 }: {
   authorIds: number[]
-  editionId: number
+
   bookId: number
 }): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.multiDelete(
-      `/api/management/books/editions/delete-range-author`,
-      { authorIds, bookEditionId: editionId },
+      `/api/management/library-items/delete-range-author`,
+      { authorIds, libraryItemId: bookId },
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
@@ -29,7 +28,6 @@ export async function removeAuthors({
 
     revalidatePath("/management/books")
     revalidatePath(`/management/books/${bookId}`)
-    revalidatePath(`/management/books/${bookId}/editions/${editionId}`)
 
     return {
       isSuccess: true,

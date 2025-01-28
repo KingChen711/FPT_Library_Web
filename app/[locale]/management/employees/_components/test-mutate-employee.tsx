@@ -115,14 +115,14 @@
 //       gender: type === "update" ? employee.gender : "Male",
 //       avatar: type === "update" ? employee.avatar : "",
 //       dob:
-//         type === "update" ? format(new Date(employee.dob), "yyyy-MM-dd") : "",
+//         type === "update" ? format(new Date(employee.dob), "dd-MM-yyyy") : "",
 //       hireDate:
 //         type === "update"
-//           ? format(new Date(employee.hireDate), "yyyy-MM-dd")
+//           ? format(new Date(employee.hireDate), "dd-MM-yyyy")
 //           : "",
 //       terminationDate:
 //         type === "update"
-//           ? format(new Date(employee.terminationDate), "yyyy-MM-dd")
+//           ? format(new Date(employee.terminationDate), "dd-MM-yyyy")
 //           : "",
 //     },
 //   })

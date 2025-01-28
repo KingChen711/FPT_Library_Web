@@ -3,41 +3,69 @@ import { z } from "zod"
 import { EBookEditionStatus } from "@/lib/types/enums"
 
 export enum Column {
-  BOOK_CODE = "bookCode",
+  // Basic info
   COVER_IMAGE = "coverImage",
   TITLE = "title",
-  EDITION_TITLE = "editionTitle",
+  SUBTITLE = "subTitle",
+  AUTHORS = "authors",
+  ADDITIONAL_AUTHORS = "additionalAuthors",
+  RESPONSIBILITY = "responsibility",
+
+  // Edition info
+  EDITION = "edition",
   EDITION_NUMBER = "editionNumber",
-  PUBLICATION_YEAR = "publicationYear",
-  ISBN = "isbn",
-  AUTHOR = "author",
   LANGUAGE = "language",
-  CATEGORIES = "categories",
+  ORIGIN_LANGUAGE = "originLanguage",
+  PUBLICATION_YEAR = "publicationYear",
   PUBLISHER = "publisher",
-  PAGE_COUNT = "pageCount",
+  PUBLICATION_PLACE = "publicationPlace",
+
+  // Classification
+  CLASSIFICATION_NUMBER = "classificationNumber",
+  CUTTER_NUMBER = "cutterNumber",
   SHELF = "shelf",
-  FORMAT = "format",
+  CATEGORY = "category",
+
+  // Identifiers
+  ISBN = "isbn",
+  EAN = "ean",
+
+  // Physical details
+  PAGE_COUNT = "pageCount",
+  PHYSICAL_DETAILS = "physicalDetails",
+  DIMENSIONS = "dimensions",
+  ACCOMPANYING_MATERIAL = "accompanyingMaterial",
+  ESTIMATED_PRICE = "estimatedPrice",
+
+  // Content info
+  SUMMARY = "summary",
+  GENRES = "genres",
+  TOPICAL_TERMS = "topicalTerms",
+  GENERAL_NOTE = "generalNote",
+  BIBLIOGRAPHICAL_NOTE = "bibliographicalNote",
+
+  // Status
   STATUS = "status",
   CAN_BORROW = "canBorrow",
-  TOTAL_COPIES = "totalCopies",
-  AVAILABLE_COPIES = "availableCopies",
-  BORROWED_COPIES = "borrowedCopies",
-  REQUEST_COPIES = "requestCopies",
-  RESERVED_COPIES = "reservedCopies",
-  CREATED_BY = "createBy",
+  IS_TRAINED = "isTrained",
+  TRAINED_AT = "trainedAt",
+
+  // Metadata
+  AVG_REVIEWED_RATE = "avgReviewedRate",
   CREATED_AT = "createdAt",
+  CREATED_BY = "createdBy",
   UPDATED_AT = "updatedAt",
+  UPDATED_BY = "updatedBy",
 }
 
 export const defaultColumns = [
-  Column.BOOK_CODE,
   Column.COVER_IMAGE,
-  Column.EDITION_TITLE,
-  Column.AUTHOR,
+  Column.TITLE,
+  Column.AUTHORS,
   Column.ISBN,
+  Column.STATUS,
   Column.CAN_BORROW,
   Column.SHELF,
-  Column.STATUS,
 ]
 
 export const searchBookEditionsSchema = z
@@ -46,35 +74,32 @@ export const searchBookEditionsSchema = z
     tab: z.enum(["Active", "Deleted"]).catch("Active"),
     search: z.string().catch(""),
     pageIndex: z.coerce.number().min(1).catch(1),
-    pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("10"),
+    pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("5"),
+    //TODO fix sort
     sort: z
       .enum([
-        "BookCode",
-        "-BookCode",
-        "EditionNumber",
-        "-EditionNumber",
-        "PublicationYear",
-        "-PublicationYear",
-        "PageCount",
-        "-PageCount",
-        "Author",
-        "-Author",
         "Title",
         "-Title",
-        "EditionTitle",
-        "-EditionTitle",
-        "Shelf",
-        "-Shelf",
-        "Format",
-        "-Format",
-        "ISBN",
-        "-ISBN",
-        "Language",
-        "-Language",
-        "Publisher",
-        "-Publisher",
-        "Categories",
-        "-Categories",
+        "SubTitle",
+        "-SubTitle",
+        "PublicationYear",
+        "-PublicationYear",
+        "CutterNumber",
+        "-CutterNumber",
+        "ClassificationNumber",
+        "-ClassificationNumber",
+        "PageCount",
+        "-PageCount",
+        "EstimatedPrice",
+        "-EstimatedPrice",
+        "TrainedAt",
+        "-TrainedAt",
+        "AvgReviewedRate",
+        "-AvgReviewedRate",
+        "CreatedAt",
+        "-CreatedAt",
+        "UpdatedAt",
+        "-UpdatedAt",
       ])
       .optional()
       .catch(undefined),

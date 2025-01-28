@@ -89,9 +89,9 @@ export enum EVisibility {
 }
 
 export enum EBookEditionStatus {
-  DRAFT = "Draft",
-  PUBLISHED = "Published",
-  DELETED = "Deleted",
+  DRAFT = 0,
+  PUBLISHED = 1,
+  DELETED = 2, //client only
 }
 
 export enum EBookCopyStatus {
@@ -100,21 +100,6 @@ export enum EBookCopyStatus {
   BORROWED = "Borrowed",
   RESERVED = "Reserved",
   DELETED = "Deleted",
-}
-
-export enum ECategoryPrefix {
-  BC = "BC",
-  HT = "HT",
-  LA = "LA",
-  NC = "NC",
-  SD = "SD",
-  SB = "SB",
-  SCN = "SCN",
-  STK = "STK",
-  SNV = "SNV",
-  SVH = "SVH",
-  SMV = "SMV",
-  TC = "TC",
 }
 
 export enum EFineType {

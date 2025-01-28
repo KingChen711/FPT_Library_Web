@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils"
 import {
   type TBookEditionSchema,
   type TBookResourceSchema,
-} from "@/lib/validations/books/mutate-book"
+} from "@/lib/validations/books/create-book"
 import AudioDropzone from "@/components/ui/audio-dropzone"
 import { Button } from "@/components/ui/button"
 import {

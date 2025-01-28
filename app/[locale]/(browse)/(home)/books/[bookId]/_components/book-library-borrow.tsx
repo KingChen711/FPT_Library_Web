@@ -69,7 +69,7 @@ const BookLibraryBorrow = () => {
                     {...field}
                     value={
                       field.value
-                        ? format(new Date(field.value), "yyyy-MM-dd")
+                        ? format(new Date(field.value), "dd-MM-yyyy")
                         : ""
                     }
                   />

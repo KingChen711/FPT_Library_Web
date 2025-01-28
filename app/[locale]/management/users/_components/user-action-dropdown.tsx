@@ -34,7 +34,7 @@ type Props = {
   userRoles: TUserRole[]
 }
 
-function UserActionDropdown({ user, userRoles }: Props) {
+function UserActionDropdown({ user }: Props) {
   const t = useTranslations("GeneralManagement")
 
   const locale = useLocale()

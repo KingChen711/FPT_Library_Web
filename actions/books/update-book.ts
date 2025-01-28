@@ -5,16 +5,16 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TMutateBookSchema } from "@/lib/validations/books/mutate-book"
+import { type TEditBookSchema } from "@/lib/validations/books/edit-book"
 
 export async function updateBook(
   bookId: number,
-  body: TMutateBookSchema
+  body: TEditBookSchema
 ): Promise<ActionResponse<string>> {
   try {
     const { getAccessToken } = auth()
     const { message } = await http.put(
-      `/api/management/books/${bookId}`,
+      `/api/management/library-items/${bookId}`,
       body,
       {
         headers: {

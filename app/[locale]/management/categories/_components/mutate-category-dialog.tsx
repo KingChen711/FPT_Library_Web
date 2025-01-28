@@ -7,7 +7,6 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { ECategoryPrefix } from "@/lib/types/enums"
 import { type Category } from "@/lib/types/models"
 import {
   mutateCategorySchema,
@@ -80,10 +79,7 @@ function MutateCategoryDialog({
       englishName: type === "update" ? category.englishName : "",
       vietnameseName: type === "update" ? category.vietnameseName : "",
       description: type === "update" ? category.description || "" : "",
-      prefix:
-        type === "update"
-          ? category.prefix || ECategoryPrefix.BC
-          : ECategoryPrefix.BC,
+      prefix: type === "update" ? category.prefix || "" : "",
     },
   })
 

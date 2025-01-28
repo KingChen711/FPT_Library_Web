@@ -101,7 +101,7 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
       biography: type === "update" ? author.biography : "",
       nationality: type === "update" ? author.nationality : "",
       dateOfDeath: type === "update" ? author.dateOfDeath : null,
-      dob: type === "update" ? format(new Date(author.dob), "yyyy-MM-dd") : "",
+      dob: type === "update" ? format(new Date(author.dob), "dd-MM-yyyy") : "",
     },
   })
 

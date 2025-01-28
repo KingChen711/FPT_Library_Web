@@ -1,15 +1,14 @@
 "use client"
 
-import React, { useState } from "react"
-import defaultAuthorAvatar from "@/public/assets/images/default-author.png"
-import { Loader2, X } from "lucide-react"
+import React, { useEffect, useState } from "react"
+import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 import { useDebounce } from "use-debounce"
 
 import { type Author } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
-import { type TBookEditionSchema } from "@/lib/validations/books/mutate-book"
+import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 import useSearchAuthors from "@/hooks/authors/use-search-authors"
 import { Button } from "@/components/ui/button"
 import {
@@ -28,7 +27,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import ImageWithFallback from "@/components/ui/image-with-fallback"
 import NoData from "@/components/ui/no-data"
 import {
   Popover,
@@ -37,16 +35,14 @@ import {
 } from "@/components/ui/popover"
 
 import MutateAuthorDialog from "../../../authors/_components/mutate-author-dialog"
+import AuthorCard from "./author-card"
 
 type Props = {
   form: UseFormReturn<TBookEditionSchema>
   isPending: boolean
-
   selectedAuthors: Author[]
   setSelectedAuthors: React.Dispatch<React.SetStateAction<Author[]>>
 }
-
-//TODO:fix author image
 
 function AuthorsField({
   form,
@@ -61,9 +57,51 @@ function AuthorsField({
 
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
+  const [hasAutoSearch, setHasAutoSearch] = useState(false)
 
   const { data: authorItems, isFetching } =
     useSearchAuthors(debouncedSearchTerm)
+
+  const watchAuthor = form.watch("author")
+
+  useEffect(() => {
+    setSearchTerm(watchAuthor || "")
+    if (!watchAuthor) {
+      setSelectedAuthors([])
+      setHasAutoSearch(true)
+      form.setValue(`authorIds`, [])
+      return
+    }
+    setHasAutoSearch(false)
+  }, [watchAuthor, form, setSelectedAuthors])
+
+  useEffect(() => {
+    console.log({ authorItems, hasAutoSearch })
+    if (
+      authorItems &&
+      authorItems?.length > 0 &&
+      watchAuthor &&
+      !hasAutoSearch
+    ) {
+      setSelectedAuthors([authorItems[0]])
+      setHasAutoSearch(true)
+      form.setValue(`authorIds`, [authorItems[0].authorId])
+      return
+    }
+    console.log({ authorItems, watchAuthor, hasAutoSearch })
+
+    if (
+      authorItems &&
+      authorItems.length === 0 &&
+      watchAuthor &&
+      !hasAutoSearch
+    ) {
+      setSelectedAuthors([])
+      setHasAutoSearch(true)
+      form.setValue(`authorIds`, [])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [authorItems, setSelectedAuthors, form])
 
   return (
     <FormField
@@ -79,41 +117,17 @@ function AuthorsField({
               )
               if (!author) return null
               return (
-                <div
-                  key={authorId}
-                  className="relative flex w-60 gap-x-3 rounded-md border p-3 text-sm"
-                >
-                  <ImageWithFallback
-                    alt="author"
-                    height={40}
-                    width={40}
-                    src={author.authorImage || defaultAuthorAvatar}
-                    fallbackSrc={defaultAuthorAvatar}
-                    className="size-10 shrink-0 rounded-full border"
-                  />
-
-                  <div className="flex w-full flex-col">
-                    <h4 className="line-clamp-1 w-[85%] font-bold">
-                      {author.fullName || "Author"}
-                    </h4>
-                    <p className="line-clamp-1 text-xs">
-                      {author.authorCode} - {author.nationality}
-                    </p>
-                  </div>
-
-                  <X
-                    onClick={() => {
-                      if (isPending) return
-                      form.setValue(
-                        `authorIds`,
-                        form
-                          .getValues(`authorIds`)
-                          ?.filter((t) => t !== authorId)
-                      )
-                    }}
-                    className="absolute right-2 top-2 size-4 cursor-pointer"
-                  />
-                </div>
+                <AuthorCard
+                  key={author.authorId}
+                  author={author}
+                  onClose={() => {
+                    if (isPending) return
+                    form.setValue(
+                      `authorIds`,
+                      form.getValues(`authorIds`)?.filter((t) => t !== authorId)
+                    )
+                  }}
+                />
               )
             })}
             <Popover open={open} onOpenChange={setOpen}>
@@ -160,8 +174,9 @@ function AuthorsField({
 
                   <div className="flex max-h-[90%] w-full flex-col overflow-y-auto overflow-x-hidden">
                     {authorItems?.map((author) => (
-                      <div
+                      <AuthorCard
                         key={author.authorId}
+                        author={author}
                         onClick={() => {
                           setSelectedAuthors((prev) => {
                             if (
@@ -184,26 +199,7 @@ function AuthorsField({
                           setOpen(false)
                           setSearchTerm("")
                         }}
-                        className="relative flex w-60 cursor-pointer gap-x-3 p-3 text-sm hover:opacity-60"
-                      >
-                        <ImageWithFallback
-                          alt="author"
-                          height={40}
-                          width={40}
-                          src={author.authorImage || defaultAuthorAvatar}
-                          fallbackSrc={defaultAuthorAvatar}
-                          className="size-10 shrink-0 rounded-full border"
-                        />
-
-                        <div className="flex w-full flex-col">
-                          <h4 className="line-clamp-1 w-[85%] font-bold">
-                            {author.fullName || "Author"}
-                          </h4>
-                          <p className="line-clamp-1 text-xs">
-                            {author.authorCode}-{author.nationality}
-                          </p>
-                        </div>
-                      </div>
+                      />
                     ))}
                   </div>
                 </Command>
@@ -211,10 +207,12 @@ function AuthorsField({
             </Popover>
           </div>
           <FormDescription>
-            {t("Author infor from General tab")}
-            {form.watch("author") || form.watch("additionalAuthors") || (
-              <NoData />
-            )}
+            <div className="flex items-center gap-1">
+              {t("Author infor from General tab")}
+              {form.watch("author") || form.watch("additionalAuthors") || (
+                <NoData className="text-[0.8rem]" />
+              )}
+            </div>
           </FormDescription>
           <FormMessage />
         </FormItem>

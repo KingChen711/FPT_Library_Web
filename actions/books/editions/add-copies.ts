@@ -10,16 +10,14 @@ import { type TBookEditionAddCopiesSchema } from "@/lib/validations/books/book-e
 export async function addCopies({
   bookEditionCopies,
   bookId,
-  editionId,
 }: TBookEditionAddCopiesSchema & {
-  editionId: number
   bookId: number
 }): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.post(
-      `/api/management/books/editions/${editionId}/copies`,
-      { bookEditionCopies },
+      `/api/management/library-items/${bookId}/instances`,
+      { libraryItemInstances: bookEditionCopies },
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
@@ -29,7 +27,6 @@ export async function addCopies({
 
     revalidatePath("/management/books")
     revalidatePath(`/management/books/${bookId}`)
-    revalidatePath(`/management/books/${bookId}/editions/${editionId}`)
 
     return {
       isSuccess: true,

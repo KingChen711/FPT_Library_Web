@@ -5,17 +5,17 @@ import "server-only"
 import {
   type Author,
   type BookEdition,
-  type BookEditionCopy,
-  type BookEditionInventory,
+  type LibraryItemInstance,
+  type LibraryItemInventory,
 } from "@/lib/types/models"
 
 import { auth } from "../auth"
 
 //TODO: fix another created date field name problem
 export type BookEditionDetail = BookEdition & {
-  bookEditionInventory: BookEditionInventory
+  bookEditionInventory: LibraryItemInventory
   authors: Author[]
-  bookEditionCopies: BookEditionCopy[]
+  bookEditionCopies: LibraryItemInstance[]
 }
 
 const getBookEdition = async (

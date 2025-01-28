@@ -19,7 +19,7 @@ export async function importCategories(
   try {
     const res = await axios.post(
       //TODO: Fix this URL on the server fixed
-      `${ServerUrl}/apimanagement/categories/import`,
+      `${ServerUrl}/api/management/categories/import`,
       formData,
       {
         headers: {
