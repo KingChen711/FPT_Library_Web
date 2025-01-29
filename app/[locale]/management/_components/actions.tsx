@@ -3,30 +3,11 @@
 import { NotificationBell } from "@/components/ui/noti-bell"
 import { ThemeToggle } from "@/components/theme-toggle"
 
-// import { ClerkLoaded, ClerkLoading, SignedIn } from "@clerk/clerk-react"
-// import { Loader2 } from "lucide-react"
-
-// import { UserButton } from "@/components/ui/user-button"
-
-// import MobileNavbar from "./mobile-nav"
-
 function Actions() {
   return (
     <div className="flex items-center gap-x-2 lg:pr-5">
-      {/* <ClerkLoading>
-        <Loader2 className="size-[30px] animate-spin" />
-      </ClerkLoading>
-      <ClerkLoaded>
-        <SignedIn>
-          <UserButton />
-        </SignedIn>
-      </ClerkLoaded>
-
-      <MobileNavbar /> */}
-
       <NotificationBell />
       <ThemeToggle />
-      <div className="size-9 rounded-full bg-red-500"></div>
     </div>
   )
 }

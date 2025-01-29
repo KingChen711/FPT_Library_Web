@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const mutateAuthorSchema = z.object({
-  authorCode: z.string().trim().nullable().optional(),
+  authorCode: z.string().trim().min(1, { message: "required" }),
   fullName: z
     .string()
     .trim()

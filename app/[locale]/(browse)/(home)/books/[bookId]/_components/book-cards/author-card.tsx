@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { Cake, User } from "lucide-react"
 
+import { getTranslations } from "@/lib/get-translations"
 import {
   Carousel,
   CarouselContent,
@@ -16,16 +17,19 @@ type Props = {
   bookId: string
 }
 
-const BookAuthorCard = ({ bookId }: Props) => {
+const BookAuthorCard = async ({ bookId }: Props) => {
+  const t = await getTranslations("BookPage")
+
   const book = dummyBooks.find((book) => book.id.toString() === bookId)
   if (!book) {
-    return <div>Book not found</div>
+    return <div>{t("Book not found")}</div>
   }
   return (
     <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg bg-primary-foreground p-4 shadow-lg">
       <div>
         <h1 className="text-xl font-semibold capitalize">
-          <span className="text-primary">About</span> Author
+          <span className="text-primary">{t("about")}</span>{" "}
+          {t("fields.author")}
         </h1>
         <div className="flex items-center justify-between gap-4">
           <div className="space-y-2">
@@ -55,7 +59,7 @@ const BookAuthorCard = ({ bookId }: Props) => {
         </StyledReadMore>
       </div>
       <div className="mt-auto">
-        <h1 className="mt-4 text-xl font-semibold">Other Books</h1>
+        <h1 className="mt-4 text-xl font-semibold">{t("other books")}</h1>
 
         <div className="flex flex-1 items-center justify-center">
           <Carousel

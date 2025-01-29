@@ -125,6 +125,7 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
   }
 
   const onSubmit = async (values: TMutateAuthorSchema) => {
+    console.log("🚀 ~ onSubmit ~ values:", values)
     startTransition(async () => {
       if (file) {
         const imageData = await handleUploadImage(file)
@@ -304,12 +305,11 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
                       <FormLabel>{t("fields.authorCode")}</FormLabel>
-
                       <FormControl>
                         <Input
                           disabled={isPending}
                           {...field}
-                          value={field.value ?? ""}
+                          // value={field.value ?? ""}
                           placeholder={t("placeholder.code")}
                         />
                       </FormControl>

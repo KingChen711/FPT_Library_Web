@@ -1,10 +1,9 @@
 import React from "react"
 
-import LeftSidebar from "./_components/left-sidebar"
-import ManagementNavbar from "./_components/management-navbar"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import { BrowseSidebar } from "@/components/sidebar/browse-sidebar"
 
-import "@react-pdf-viewer/core/lib/styles/index.css"
-import "@react-pdf-viewer/default-layout/lib/styles/index.css"
+import BrowseNavbar from "./_components/browse-navbar"
 
 type Props = {
   children: React.ReactNode
@@ -12,15 +11,13 @@ type Props = {
 
 function BrowserLayout({ children }: Props) {
   return (
-    <main className="relative bg-background">
-      <ManagementNavbar />
-      <div className="flex">
-        <LeftSidebar />
-        <section className="flex min-h-screen flex-1 flex-col px-6 pb-6 pt-20 max-md:pb-14 sm:px-8">
-          <div className="mx-auto size-full max-w-7xl">{children}</div>
-        </section>
-      </div>
-    </main>
+    <SidebarProvider defaultOpen>
+      <BrowseSidebar />
+      <main className="flex w-full flex-col gap-4 p-6">
+        <BrowseNavbar />
+        {children}
+      </main>
+    </SidebarProvider>
   )
 }
 

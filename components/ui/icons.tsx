@@ -70,20 +70,19 @@ export const Icons = {
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
       height="1em"
-      viewBox="0 0 512 512"
+      viewBox="0 0 16 16"
       {...props}
       className={cn(className)}
     >
       <path
         fill="currentColor"
-        d="M261.56 101.28a8 8 0 0 0-11.06 0L66.4 277.15a8 8 0 0 0-2.47 5.79L63.9 448a32 32 0 0 0 32 32H192a16 16 0 0 0 16-16V328a8 8 0 0 1 8-8h80a8 8 0 0 1 8 8v136a16 16 0 0 0 16 16h96.06a32 32 0 0 0 32-32V282.94a8 8 0 0 0-2.47-5.79Z"
-      ></path>
-      <path
-        fill="currentColor"
-        d="m490.91 244.15l-74.8-71.56V64a16 16 0 0 0-16-16h-48a16 16 0 0 0-16 16v32l-57.92-55.38C272.77 35.14 264.71 32 256 32c-8.68 0-16.72 3.14-22.14 8.63l-212.7 203.5c-6.22 6-7 15.87-1.34 22.37A16 16 0 0 0 43 267.56L250.5 69.28a8 8 0 0 1 11.06 0l207.52 198.28a16 16 0 0 0 22.59-.44c6.14-6.36 5.63-16.86-.76-22.97Z"
+        fillRule="evenodd"
+        d="M8.38 1.353L8 1.131l-.38.222l-7.25 4.25a.75.75 0 0 0 .76 1.294l.87-.51V14h12V6.387l.87.51a.75.75 0 1 0 .76-1.294l-7.25-4.25Zm4.12 4.154L8 2.87L3.5 5.507V12.5H6V8h4v4.5h2.5V5.507ZM8.5 9.5v3h-1v-3h1Z"
+        clipRule="evenodd"
       ></path>
     </svg>
   ),
+
   Publish: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -163,6 +162,79 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  Search: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M10.77 18.3a7.53 7.53 0 1 1 7.53-7.53a7.53 7.53 0 0 1-7.53 7.53Zm0-13.55a6 6 0 1 0 6 6a6 6 0 0 0-6-6Z"
+      ></path>
+      <path
+        fill="currentColor"
+        d="M20 20.75a.74.74 0 0 1-.53-.22l-4.13-4.13a.75.75 0 0 1 1.06-1.06l4.13 4.13a.75.75 0 0 1 0 1.06a.74.74 0 0 1-.53.22Z"
+      ></path>
+    </svg>
+  ),
+
+  Bell: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 16 16"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M13.377 10.573a7.63 7.63 0 0 1-.383-2.38V6.195a5.115 5.115 0 0 0-1.268-3.446a5.138 5.138 0 0 0-3.242-1.722c-.694-.072-1.4 0-2.07.227c-.67.215-1.28.574-1.794 1.053a4.923 4.923 0 0 0-1.208 1.675a5.067 5.067 0 0 0-.431 2.022v2.2a7.61 7.61 0 0 1-.383 2.37L2 12.343l.479.658h3.505c0 .526.215 1.04.586 1.412c.37.37.885.586 1.412.586c.526 0 1.04-.215 1.411-.586s.587-.886.587-1.412h3.505l.478-.658l-.586-1.77zm-4.69 3.147a.997.997 0 0 1-.705.299a.997.997 0 0 1-.706-.3a.997.997 0 0 1-.3-.705h1.999a.939.939 0 0 1-.287.706zm-5.515-1.71l.371-1.114a8.633 8.633 0 0 0 .443-2.691V6.004c0-.563.12-1.113.347-1.616c.227-.514.55-.969.969-1.34c.419-.382.91-.67 1.436-.837c.538-.18 1.1-.24 1.65-.18a4.147 4.147 0 0 1 2.597 1.4a4.133 4.133 0 0 1 1.004 2.776v2.01c0 .909.144 1.818.443 2.691l.371 1.113h-9.63v-.012z"
+      ></path>
+    </svg>
+  ),
+
+  Shelf: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M3 23V1h2v2h14V1h2v22h-2v-2H5v2H3Zm2-12h2V7h6v4h6V5H5v6Zm0 8h6v-4h6v4h2v-6H5v6Zm4-8h2V9H9v2Zm4 8h2v-2h-2v2Zm-4-8h2h-2Zm4 8h2h-2Z"
+      ></path>
+    </svg>
+  ),
+
+  Robot: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn(className)}
+    >
+      <g fill="none" stroke="currentColor" strokeWidth="1.5">
+        <path d="M14.706 4.313H9.294a4.982 4.982 0 0 0-4.982 4.981v5.412a4.982 4.982 0 0 0 4.982 4.982h5.412a4.982 4.982 0 0 0 4.982-4.982V9.294a4.982 4.982 0 0 0-4.982-4.982Z"></path>
+        <path d="M19.606 15.588h1.619a1.025 1.025 0 0 0 1.025-1.025V9.438a1.025 1.025 0 0 0-1.025-1.025h-1.62m-15.21 7.175h-1.62a1.025 1.025 0 0 1-1.025-1.025V9.438a1.025 1.025 0 0 1 1.025-1.025h1.62"></path>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M2.765 8.413v-4.1m18.46 4.1l-.01-4.1M9.95 15.237a2.91 2.91 0 0 0 4.1 0m-6.17-4.262L8.903 9.95l1.025 1.025m4.102 0l1.025-1.025l1.024 1.025"
+        ></path>
+      </g>
+    </svg>
+  ),
+
   Author: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -435,20 +507,17 @@ export const Icons = {
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
       height="1em"
-      viewBox="0 0 16 16"
+      viewBox="0 0 32 32"
       {...props}
       className={cn(className)}
     >
       <path
         fill="currentColor"
-        d="M14 2v13H3.5a1.5 1.5 0 1 1 0-3H13V0H3C1.9 0 1 .9 1 2v12c0 1.1.9 2 2 2h12V2h-1z"
-      ></path>
-      <path
-        fill="currentColor"
-        d="M3.501 13H3.5a.5.5 0 0 0 0 1h9.499v-1H3.501z"
+        d="M9 4C7.355 4 6 5.355 6 7v18c0 1.645 1.355 3 3 3h17V4zm0 2h15v16H9a2.95 2.95 0 0 0-1 .188V7c0-.566.434-1 1-1zm2 3v2h11V9zM9 24h15v2H9c-.566 0-1-.434-1-1c0-.566.434-1 1-1z"
       ></path>
     </svg>
   ),
+
   Open: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

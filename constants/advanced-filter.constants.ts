@@ -1,11 +1,12 @@
-export enum AdvancedFilterBookOption {
+export enum EAdvancedFilterType {
   TEXT = "text",
   DATE_TIME = "date",
-  SELECTION = "selection",
-  RANGE_NUMBER = "rangeNumber",
+  NORMAL_SELECTION = "normal-selection",
+  ENUM_SELECTION = "enum-selection",
+  RANGE_NUMBER = "range-number",
 }
 
-export enum AdvancedFilterBookFields {
+export enum EAdvancedFilterBookFields {
   TITLE = "Title",
   EDITION = "Edition",
   AUTHOR = "Author",
@@ -22,96 +23,158 @@ export enum AdvancedFilterBookFields {
   COPY_CODE = "Copy Code",
 }
 
-export type AdvancedFilterBookField = {
-  id: AdvancedFilterBookFields
-  field: AdvancedFilterBookFields
-  type: AdvancedFilterBookOption
-  isShown: boolean
+export enum FilterOperator {
+  INCLUDES = "includes",
+  EQUAL = "equal",
+  NOT_EQUAL = "not-equal",
+  LESS_THAN = "less-than",
+  LESS_THAN_OR_EQUAL = "less-than-or-equal",
+  GREATER_THAN = "greater-than",
+  GREATER_THAN_OR_EQUAL = "greater-than-or-equal",
 }
 
-export const AdvancedFilterBookConstants: AdvancedFilterBookField[] = [
+export type TAdvancedFilters = {
+  field: EAdvancedFilterBookFields
+  type: EAdvancedFilterType
+  selections?: {
+    label: string
+    value: string
+  }[]
+}
+
+export const AdvancedFilters: TAdvancedFilters[] = [
   {
-    id: AdvancedFilterBookFields.TITLE,
-    field: AdvancedFilterBookFields.TITLE,
-    type: AdvancedFilterBookOption.TEXT,
-    isShown: false,
+    field: EAdvancedFilterBookFields.TITLE,
+    type: EAdvancedFilterType.TEXT,
   },
   {
-    id: AdvancedFilterBookFields.EDITION,
-    field: AdvancedFilterBookFields.EDITION,
-    type: AdvancedFilterBookOption.RANGE_NUMBER,
-    isShown: false,
+    field: EAdvancedFilterBookFields.PUBLISHER,
+    type: EAdvancedFilterType.TEXT,
   },
   {
-    id: AdvancedFilterBookFields.AUTHOR,
-    field: AdvancedFilterBookFields.AUTHOR,
-    type: AdvancedFilterBookOption.TEXT,
-    isShown: false,
+    field: EAdvancedFilterBookFields.ISBN,
+    type: EAdvancedFilterType.TEXT,
   },
   {
-    id: AdvancedFilterBookFields.BOOK_FORMAT,
-    field: AdvancedFilterBookFields.BOOK_FORMAT,
-    type: AdvancedFilterBookOption.SELECTION,
-    isShown: false,
+    field: EAdvancedFilterBookFields.COPY_CODE,
+    type: EAdvancedFilterType.TEXT,
   },
   {
-    id: AdvancedFilterBookFields.CATEGORY,
-    field: AdvancedFilterBookFields.CATEGORY,
-    type: AdvancedFilterBookOption.SELECTION,
-    isShown: false,
+    field: EAdvancedFilterBookFields.AUTHOR,
+    type: EAdvancedFilterType.TEXT,
   },
   {
-    id: AdvancedFilterBookFields.FLOOR,
-    field: AdvancedFilterBookFields.FLOOR,
-    type: AdvancedFilterBookOption.SELECTION,
-    isShown: false,
+    field: EAdvancedFilterBookFields.PUBLICATION_YEAR,
+    type: EAdvancedFilterType.DATE_TIME,
+  },
+
+  /**
+   * F: PUBLICATION_YEAR
+   * V: "null,2025-01-01"
+   * O: 0-5
+   */
+
+  {
+    field: EAdvancedFilterBookFields.AVAILABLE_QUANTITY,
+    type: EAdvancedFilterType.RANGE_NUMBER,
   },
   {
-    id: AdvancedFilterBookFields.SHELF,
-    field: AdvancedFilterBookFields.SHELF,
-    type: AdvancedFilterBookOption.SELECTION,
-    isShown: false,
+    field: EAdvancedFilterBookFields.EDITION,
+    type: EAdvancedFilterType.RANGE_NUMBER,
+  },
+
+  {
+    field: EAdvancedFilterBookFields.PAGE_COUNT,
+    type: EAdvancedFilterType.RANGE_NUMBER,
   },
   {
-    id: AdvancedFilterBookFields.AVAILABLE_QUANTITY,
-    field: AdvancedFilterBookFields.AVAILABLE_QUANTITY,
-    type: AdvancedFilterBookOption.RANGE_NUMBER,
-    isShown: false,
+    field: EAdvancedFilterBookFields.LANGUAGE,
+    type: EAdvancedFilterType.NORMAL_SELECTION,
+    selections: [
+      {
+        label: "English",
+        value: "English",
+      },
+      {
+        label: "French",
+        value: "French",
+      },
+      {
+        label: "Spanish",
+        value: "Spanish",
+      },
+    ],
   },
   {
-    id: AdvancedFilterBookFields.PUBLISHER,
-    field: AdvancedFilterBookFields.PUBLISHER,
-    type: AdvancedFilterBookOption.TEXT,
-    isShown: false,
+    field: EAdvancedFilterBookFields.BOOK_FORMAT,
+    type: EAdvancedFilterType.NORMAL_SELECTION,
+    selections: [
+      {
+        label: "Hardcover",
+        value: "Hardcover",
+      },
+      {
+        label: "Paperback",
+        value: "Paperback",
+      },
+      {
+        label: "Ebook",
+        value: "Ebook",
+      },
+    ],
   },
   {
-    id: AdvancedFilterBookFields.PUBLICATION_YEAR,
-    field: AdvancedFilterBookFields.PUBLICATION_YEAR,
-    type: AdvancedFilterBookOption.RANGE_NUMBER,
-    isShown: false,
+    field: EAdvancedFilterBookFields.CATEGORY,
+    type: EAdvancedFilterType.NORMAL_SELECTION,
+    selections: [
+      {
+        label: "Fiction",
+        value: "Fiction",
+      },
+      {
+        label: "Non-fiction",
+        value: "Non-fiction",
+      },
+      {
+        label: "Manga",
+        value: "Manga",
+      },
+    ],
   },
   {
-    id: AdvancedFilterBookFields.PAGE_COUNT,
-    field: AdvancedFilterBookFields.PAGE_COUNT,
-    type: AdvancedFilterBookOption.RANGE_NUMBER,
-    isShown: false,
+    field: EAdvancedFilterBookFields.FLOOR,
+    type: EAdvancedFilterType.ENUM_SELECTION,
+    selections: [
+      {
+        label: "Floor 1",
+        value: "Floor 1",
+      },
+      {
+        label: "Floor 2",
+        value: "Floor 2",
+      },
+      {
+        label: "Floor 3",
+        value: "Floor 3",
+      },
+    ],
   },
   {
-    id: AdvancedFilterBookFields.LANGUAGE,
-    field: AdvancedFilterBookFields.LANGUAGE,
-    type: AdvancedFilterBookOption.SELECTION,
-    isShown: false,
-  },
-  {
-    id: AdvancedFilterBookFields.ISBN,
-    field: AdvancedFilterBookFields.ISBN,
-    type: AdvancedFilterBookOption.TEXT,
-    isShown: false,
-  },
-  {
-    id: AdvancedFilterBookFields.COPY_CODE,
-    field: AdvancedFilterBookFields.COPY_CODE,
-    type: AdvancedFilterBookOption.TEXT,
-    isShown: false,
+    field: EAdvancedFilterBookFields.SHELF,
+    type: EAdvancedFilterType.ENUM_SELECTION,
+    selections: [
+      {
+        label: "Shelf 1",
+        value: "Shelf 1",
+      },
+      {
+        label: "Shelf 2",
+        value: "Shelf 2",
+      },
+      {
+        label: "Shelf 3",
+        value: "Shelf 3",
+      },
+    ],
   },
 ]

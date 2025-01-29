@@ -1,6 +1,8 @@
 import React from "react"
 
-import LeftSidebar from "./_components/left-sidebar"
+import { SidebarProvider } from "@/components/ui/sidebar"
+import { ManagementSidebar } from "@/components/sidebar/management-sidebar"
+
 import ManagementNavbar from "./_components/management-navbar"
 
 type Props = {
@@ -9,15 +11,13 @@ type Props = {
 
 function ManagementLayout({ children }: Props) {
   return (
-    <main className="relative bg-background">
-      <ManagementNavbar />
-      <div className="flex">
-        <LeftSidebar />
-        <section className="flex min-h-screen flex-1 flex-col px-6 pb-6 pt-20 max-md:pb-14 sm:px-8">
-          <div className="mx-auto size-full max-w-7xl">{children}</div>
-        </section>
-      </div>
-    </main>
+    <SidebarProvider defaultOpen>
+      <ManagementSidebar />
+      <main className="flex w-full flex-col gap-4 p-6">
+        <ManagementNavbar />
+        {children}
+      </main>
+    </SidebarProvider>
   )
 }
 

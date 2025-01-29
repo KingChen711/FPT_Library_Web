@@ -3,7 +3,9 @@ import React from "react"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import BookEditionTab from "./book-edition-tab"
+import BookInstancesTab from "./book-instances-tab"
 import BookOverviewTab from "./book-overview-tab"
+import BookRelatedItemsTab from "./book-related-items-tab"
 
 const BookTabs = () => {
   return (
@@ -18,17 +20,14 @@ const BookTabs = () => {
         <TabsTrigger className="w-full" value="view-edition">
           View Edition
         </TabsTrigger>
-        <TabsTrigger className="w-full" value="detail">
-          Detail
+        <TabsTrigger className="w-full" value="instances">
+          Instances
         </TabsTrigger>
         <TabsTrigger className="w-full" value="review">
           Review
         </TabsTrigger>
-        <TabsTrigger className="w-full" value="list">
-          List
-        </TabsTrigger>
-        <TabsTrigger className="w-full" value="related-book">
-          Related Book
+        <TabsTrigger className="w-full" value="related-items">
+          Related Items
         </TabsTrigger>
       </TabsList>
       <TabsContent value="overview">
@@ -37,10 +36,13 @@ const BookTabs = () => {
       <TabsContent value="view-edition">
         <BookEditionTab />
       </TabsContent>
-      <TabsContent value="detail">Detail content</TabsContent>
+      <TabsContent value="instances">
+        <BookInstancesTab />
+      </TabsContent>
       <TabsContent value="review">Review content</TabsContent>
-      <TabsContent value="list">List content</TabsContent>
-      <TabsContent value="related-book">Related book content</TabsContent>
+      <TabsContent value="related-items">
+        <BookRelatedItemsTab />
+      </TabsContent>
     </Tabs>
   )
 }

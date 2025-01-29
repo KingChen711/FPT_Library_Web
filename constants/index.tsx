@@ -1,7 +1,6 @@
-import packageJson from "@/package.json"
 import { Bell } from "lucide-react"
 
-import { EFeature } from "@/lib/types/enums"
+import { EFeature, type Route } from "@/lib/types/enums"
 import { Icons } from "@/components/ui/icons"
 
 export const ServerUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
@@ -10,12 +9,8 @@ export const ServerUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
 export const DEFAULT_PAGE_INDEX = 1
 export const DEFAULT_PAGE_SIZE = 5
 
-// PDF Version Configuration
-export const pdfjsVersion = packageJson.dependencies["pdfjs-dist"]
-export const workerUrl = `https://unpkg.com/pdfjs-dist@${pdfjsVersion.slice(1)}/build/pdf.worker.min.js`
-
 // Routes Configuration
-export const managementRoutes = [
+export const managementRoutes: Route[] = [
   {
     feature: EFeature.DASHBOARD_MANAGEMENT,
     route: "/management",
@@ -23,6 +18,22 @@ export const managementRoutes = [
     Icon: (props: { className?: string }) => {
       return <Icons.Dashboard {...props} />
     },
+    subRoutes: [
+      {
+        route: "",
+        label: "Sub Dashboard 1",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Dashboard {...props} />
+        },
+      },
+      {
+        route: "",
+        label: "Sub Dashboard 2",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Dashboard {...props} />
+        },
+      },
+    ],
   },
   {
     feature: EFeature.BOOK_MANAGEMENT,
@@ -144,14 +155,44 @@ export const managementRoutes = [
       return <Icons.SystemConfiguration {...props} />
     },
   },
-] as const
+]
 
-export const browseRoutes = [
+export const browseRoutes: Route[] = [
   {
-    route: "",
+    route: "/",
     label: "Home",
     Icon: (props: { className?: string }) => {
       return <Icons.Home {...props} />
+    },
+  },
+  {
+    route: "ai",
+    label: "AI",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Robot {...props} />
+    },
+    subRoutes: [
+      {
+        route: "/ai-prediction",
+        label: "AI prediction",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Robot {...props} />
+        },
+      },
+      {
+        route: "/ai-recommendation",
+        label: "AI recommendation",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Robot {...props} />
+        },
+      },
+    ],
+  },
+  {
+    route: "/search",
+    label: "Search",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Search {...props} />
     },
   },
   {
@@ -175,7 +216,21 @@ export const browseRoutes = [
       return <Icons.Resource {...props} />
     },
   },
-] as const
+  {
+    route: "/my-shelf",
+    label: "My shelf",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Shelf {...props} />
+    },
+  },
+  {
+    route: "/notifications",
+    label: "Notifications",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Bell {...props} />
+    },
+  },
+]
 
 export const editorPlugin = {
   plugins:
