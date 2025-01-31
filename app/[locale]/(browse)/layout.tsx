@@ -13,7 +13,7 @@ function BrowserLayout({ children }: Props) {
   return (
     <SidebarProvider defaultOpen>
       <BrowseSidebar />
-      <main className="flex w-full flex-col gap-4 p-6">
+      <main className="flex w-full flex-col p-6">
         <BrowseNavbar />
         {children}
       </main>
