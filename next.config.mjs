@@ -14,13 +14,6 @@ const nextConfig = {
       use: "node-loader",
     })
 
-    config.module.rules.push({
-      test: /pdf\.worker\.(min\.)?js$/,
-      use: { loader: "file-loader", options: { name: "[name].[ext]" } },
-    })
-
-    config.resolve.alias.canvas = false
-
     return config
   },
   images: {
@@ -36,7 +29,7 @@ const nextConfig = {
   experimental: {
     turbo: {
       resolveAlias: {
-        canvas: "./empty-module.ts",
+        canvas: "./lib/empty-module.ts",
       },
     },
   },
