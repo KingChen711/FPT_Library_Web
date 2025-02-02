@@ -2,14 +2,8 @@
 
 import { type ComponentProps } from "react"
 import { useAuth } from "@/contexts/auth-provider"
-import {
-  BadgeCheck,
-  ChevronsUpDown,
-  Loader2,
-  LogOut,
-  School,
-  User,
-} from "lucide-react"
+import { Link } from "@/i18n/routing"
+import { BadgeCheck, ChevronsUpDown, Loader2, LogOut, User } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import {
@@ -30,34 +24,26 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
+  SidebarSeparator,
   useSidebar,
 } from "@/components/ui/sidebar"
 
+import { Icons } from "../ui/icons"
 import BrowseSidebarContent from "./browse-sidebar-content"
+import SidebarLogoItem from "./sidebar-logo-item"
 
 export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const locale = useLocale()
   const { user } = useAuth()
   const t = useTranslations("Me")
+  const tRoutes = useTranslations("Routes")
   const { isMobile } = useSidebar()
 
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton asChild tooltip={"ELibrary"}>
-              <div>
-                <School size={18} />
-                <div className="flex flex-col">
-                  <span className="text-sm font-semibold">HTPV Team</span>
-                  <span className="text-xs text-muted-foreground">
-                    E-Library
-                  </span>
-                </div>
-              </div>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
+          <SidebarLogoItem />
         </SidebarMenu>
       </SidebarHeader>
 
@@ -65,9 +51,29 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
         <BrowseSidebarContent />
       </SidebarContent>
 
+      <SidebarSeparator />
+
       {user ? (
         <SidebarFooter>
           <SidebarMenu>
+            <SidebarMenuItem>
+              <SidebarMenuButton tooltip={tRoutes("Settings")} asChild>
+                <Link href={"/settings"}>
+                  <Icons.Setting />
+                  <span>{tRoutes("Settings")}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <SidebarMenuButton tooltip={tRoutes("Help")} asChild>
+                <Link href={"/help"}>
+                  <Icons.Help />
+                  <span>{tRoutes("Help")}</span>
+                </Link>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

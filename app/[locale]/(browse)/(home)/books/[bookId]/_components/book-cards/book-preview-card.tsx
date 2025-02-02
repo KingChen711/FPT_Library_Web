@@ -1,33 +1,29 @@
-import React from "react"
 import Image from "next/image"
+import NoImage from "@/public/assets/images/no-image.png"
 import { MapPin, NotebookPen, Share } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
+import { type LibraryItem } from "@/lib/types/models"
 import { Button } from "@/components/ui/button"
 
-import { dummyBooks } from "../../../../_components/dummy-books"
-
 type Props = {
-  bookId: string
+  libraryItem: LibraryItem
 }
 
-const BookPreviewCard = async ({ bookId }: Props) => {
+const BookPreviewCard = async ({ libraryItem }: Props) => {
   const t = await getTranslations("BookPage")
-  const book = dummyBooks.find((book) => book.id.toString() === bookId)
 
-  if (!book) {
-    return <div>{t("Book not found")}</div>
-  }
   return (
-    <section className="h-full w-1/4">
-      <div className="flex h-[56vh] flex-col justify-between overflow-hidden rounded-lg bg-primary-foreground shadow-lg">
+    <section className="h-full w-1/5">
+      <div className="flex h-[60vh] flex-col justify-between overflow-hidden rounded-lg border bg-primary-foreground shadow-lg">
         <div className="flex flex-1 shrink-0 items-center justify-center overflow-hidden rounded-t-lg p-4">
           <Image
-            src={book?.image}
+            src={libraryItem?.coverImage || NoImage}
             alt="Logo"
             width={200}
             height={250}
-            className="object-contain duration-150 ease-in-out hover:scale-105"
+            unoptimized
+            className="object-contain"
           />
         </div>
         <div className="flex flex-col border-t-2">

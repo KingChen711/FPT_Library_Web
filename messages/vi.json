@@ -347,6 +347,9 @@
     "Home": "Trang chủ",
     "AI": "Trí tuệ nhân tạo",
     "Search": "Tìm kiếm",
+    "Search page": "Trang tìm kiếm",
+    "AI prediction": "A.I dự đoán",
+    "AI recommendation": "A.I gợi ý",
     "My shelf": "Kệ sách",
     "Books": "Sách",
     "Borrows": "Mượn sách",
@@ -362,7 +365,9 @@
     "Resources": "Tài nguyên",
     "Notifications": "Thông báo",
     "Returns": "Trả sách",
-    "System Messages": "Tin nhắn hệ thống"
+    "System Messages": "Tin nhắn hệ thống",
+    "Settings": "Cài đặt",
+    "Help": "Giúp đỡ"
   },
   "MfaPage": {
     "Verify MFA": "Xác thực MFA",

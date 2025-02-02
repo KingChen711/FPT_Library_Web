@@ -166,12 +166,19 @@ export const browseRoutes: Route[] = [
     },
   },
   {
-    route: "ai",
-    label: "AI",
+    route: "/search",
+    label: "Search",
     Icon: (props: { className?: string }) => {
-      return <Icons.Robot {...props} />
+      return <Icons.Search {...props} />
     },
     subRoutes: [
+      {
+        route: "/search",
+        label: "Search page",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Search {...props} />
+        },
+      },
       {
         route: "/ai-prediction",
         label: "AI prediction",
@@ -187,13 +194,6 @@ export const browseRoutes: Route[] = [
         },
       },
     ],
-  },
-  {
-    route: "/search",
-    label: "Search",
-    Icon: (props: { className?: string }) => {
-      return <Icons.Search {...props} />
-    },
   },
   {
     route: "/books",

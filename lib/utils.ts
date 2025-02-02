@@ -132,3 +132,7 @@ export function isImageLinkValid(link: string): boolean {
     return false
   }
 }
+
+export function splitCamelCase(text: string): string {
+  return text.replace(/([a-z])([A-Z])/g, "$1 $2")
+}
