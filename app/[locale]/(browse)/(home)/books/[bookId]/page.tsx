@@ -1,3 +1,4 @@
+import getLibraryItem from "@/queries/library-item/get-libraryItem"
 import { ChevronRight } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
@@ -10,7 +11,6 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 
-import { dummyBooks } from "../../_components/dummy-books"
 import BookAuthorCard from "./_components/book-cards/author-card"
 import BookInfoCard from "./_components/book-cards/book-info-card"
 import BookPreviewCard from "./_components/book-cards/book-preview-card"
@@ -25,10 +25,10 @@ type Props = {
 const BookDetailPage = async ({ params: { bookId } }: Props) => {
   const t = await getTranslations("BookPage")
   const tRoute = await getTranslations("Routes")
-  const book = dummyBooks.find((book) => book.id.toString() === bookId)
+  const libraryItem = await getLibraryItem(bookId)
 
-  if (!book) {
-    return <div>{t("Book not found")}</div>
+  if (!libraryItem) {
+    return <div>{t("Library item not found")}</div>
   }
 
   return (
@@ -42,25 +42,19 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
             <ChevronRight />
           </BreadcrumbSeparator>
           <BreadcrumbItem>
-            <BreadcrumbLink href="/books">{tRoute("Books")}</BreadcrumbLink>
-          </BreadcrumbItem>
-          <BreadcrumbSeparator>
-            <ChevronRight />
-          </BreadcrumbSeparator>
-          <BreadcrumbItem>
-            <BreadcrumbPage>{book.title}</BreadcrumbPage>
+            <BreadcrumbPage>{libraryItem.title}</BreadcrumbPage>
           </BreadcrumbItem>
         </BreadcrumbList>
       </Breadcrumb>
 
       <div className="flex h-full gap-4">
-        <BookPreviewCard bookId={book.id.toString()} />
+        <BookPreviewCard libraryItem={libraryItem} />
         <section className="h-full flex-1 space-y-4">
-          <div className="flex h-[56vh] gap-4">
-            <BookInfoCard bookId={book.id.toString()} />
-            <BookAuthorCard bookId={book.id.toString()} />
+          <div className="flex h-[60vh] gap-4">
+            <BookInfoCard libraryItem={libraryItem} />
+            <BookAuthorCard libraryItem={libraryItem} />
           </div>
-          <BookTabs />
+          <BookTabs libraryItemId={libraryItem.libraryItemId.toString()} />
         </section>
       </div>
     </div>

@@ -344,6 +344,9 @@
     "Home": "Home",
     "AI": "AI",
     "Search": "Search",
+    "Search page": "Search page",
+    "A.I prediction": "A.I prediction",
+    "A.I recommendation": "A.I recommendation",
     "My shelf": "My shelf",
     "Books": "Books",
     "Borrows": "Borrows",
@@ -359,7 +362,9 @@
     "Resources": "Resources",
     "Notifications": "Notifications",
     "Returns": "Returns",
-    "System Messages": "System messages"
+    "System Messages": "System messages",
+    "Settings": "Settings",
+    "Help": "Help"
   },
   "MfaPage": {
     "Verify MFA": "Verify MFA",

@@ -1,31 +1,47 @@
 import React from "react"
 import { Link } from "@/i18n/routing"
+import getLibraryItem from "@/queries/library-item/get-libraryItem"
 import { SquarePen } from "lucide-react"
+import { getLocale } from "next-intl/server"
 
+import { splitCamelCase } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Label } from "@/components/ui/label"
 import { StyledReadMore } from "@/components/ui/read-more"
 import { Separator } from "@/components/ui/separator"
 
-const BookOverviewTab = () => {
+type Props = {
+  libraryItemId: string
+}
+
+const BookOverviewTab = async ({ libraryItemId }: Props) => {
+  const locale = await getLocale()
+  const libraryItem = await getLibraryItem(libraryItemId)
+
+  if (!libraryItem) {
+    return <div>Library item not found</div>
+  }
+
   return (
     <div>
       <section className="flex items-center gap-4">
         <div className="flex-1 rounded-lg border bg-primary-foreground p-4 text-center shadow-md">
           <p className="text-sm font-semibold">Publish Year</p>
-          <p>2000</p>
+          <p>{libraryItem?.publicationYear}</p>
         </div>
         <div className="flex-1 rounded-lg border bg-primary-foreground p-4 text-center shadow-md">
           <p className="text-sm font-semibold">Publisher</p>
-          <p className="text-sm text-danger">New Riders Press</p>
+          <p className="text-sm text-danger">{libraryItem?.publisher}</p>
         </div>
         <div className="flex-1 rounded-lg border bg-primary-foreground p-4 text-center shadow-md">
           <p className="text-sm font-semibold">Language</p>
-          <p className="text-sm text-danger">English</p>
+          <p className="text-sm capitalize text-danger">
+            {libraryItem?.originLanguage}
+          </p>
         </div>
         <div className="flex-1 rounded-lg border bg-primary-foreground p-4 text-center shadow-md">
           <p className="text-sm font-semibold">Pages</p>
-          <p className="text-sm text-danger">216</p>
+          <p className="text-sm text-danger">{libraryItem?.pageCount}</p>
         </div>
       </section>
 
@@ -34,38 +50,52 @@ const BookOverviewTab = () => {
           Preview available in &nbsp;
           <span className="font-semibold text-primary underline">English</span>
         </p>
-        <StyledReadMore truncate={120}>
-          Lorem ipsum dolor, sit amet consectetur adipisicing elit. Illo
-          deleniti officiis harum veniam laudantium esse, accusantium nostrum
-          voluptatibus molestiae architecto et vero, recusandae nesciunt,
-          voluptatem eaque libero velit facere odit itaque quidem inventore
-          pariatur. Ipsam quis magni necessitatibus quam facilis in corporis
-          nam? Dolorem, id sunt sit modi veritatis quidem nisi distinctio,
-          doloremque consequuntur suscipit ipsum quibusdam eum dicta aliquid
-          totam quo dignissimos quaerat, repudiandae excepturi dolor
-          perspiciatis saepe! Aperiam modi et molestias fugiat, quo libero
-          aspernatur voluptate sit ratione.
-        </StyledReadMore>
+        <StyledReadMore truncate={120}>{libraryItem.summary}</StyledReadMore>
 
         <div className="flex gap-4">
           <section className="flex-1 space-y-4 rounded-lg border bg-primary-foreground p-4 shadow-md">
             <h1 className="text-xl font-bold text-primary">Book Details</h1>
             <div className="flex items-center">
               <p className="w-1/2 font-semibold">Published in</p>
-              <p className="flex-1">United States</p>
+              <p className="flex-1">{libraryItem?.publicationPlace}</p>
             </div>
-
+            <div className="flex items-center">
+              <p className="w-1/2 font-semibold">Category</p>
+              <p className="flex-1">
+                {" "}
+                {locale === "vi"
+                  ? libraryItem.category.vietnameseName
+                  : splitCamelCase(libraryItem.category.englishName as string)}
+              </p>
+            </div>
+            <div className="flex items-center">
+              <p className="w-1/2 font-semibold">Cutter number</p>
+              <p className="flex-1">{libraryItem?.cutterNumber}</p>
+            </div>
+            <div className="flex items-center">
+              <p className="w-1/2 font-semibold">Dimensions</p>
+              <p className="flex-1">{libraryItem?.dimensions}</p>
+            </div>
+            <div className="flex items-center">
+              <p className="w-1/2 font-semibold">Responsibility</p>
+              <p className="flex-1">{libraryItem?.responsibility}</p>
+            </div>
+            <Separator />
             <section className="space-y-2">
               <h1 className="text-lg font-semibold text-primary">
                 Edition Notes
               </h1>
               <div className="flex items-center">
-                <p className="w-1/2 font-semibold">Series</p>
-                <p className="flex-1">Dover large print classics</p>
+                <p className="w-1/2 font-semibold">Genre</p>
+                <p className="flex-1">{libraryItem?.genres}</p>
               </div>
               <div className="flex items-center">
-                <p className="w-1/2 font-semibold">Genre</p>
-                <p className="flex-1">Fiction</p>
+                <p className="w-1/2 font-semibold">Topic terms</p>
+                <p className="flex-1">{libraryItem?.topicalTerms}</p>
+              </div>
+              <div className="flex items-center">
+                <p className="w-1/2 font-semibold">General notes</p>
+                <p className="flex-1">{libraryItem?.generalNote}</p>
               </div>
             </section>
             <Separator />
@@ -75,11 +105,7 @@ const BookOverviewTab = () => {
               </h1>
               <div className="flex items-center">
                 <p className="w-1/2 font-semibold">Dewey Decimal Class</p>
-                <p className="flex-1">823/.8</p>
-              </div>
-              <div className="flex items-center">
-                <p className="w-1/2 font-semibold">Library of Congress</p>
-                <p className="flex-1">PR5485 .A1 2002</p>
+                <p className="flex-1">{libraryItem.classificationNumber}</p>
               </div>
             </section>
             <Separator />
@@ -87,13 +113,14 @@ const BookOverviewTab = () => {
               <h1 className="text-lg font-semibold text-primary">
                 The physical object
               </h1>
-              <div className="flex items-center">
-                <p className="w-1/2 font-semibold">Pagination</p>
-                <p className="flex-1">ix, 112 p. (large print)</p>
-              </div>
+
               <div className="flex items-center">
                 <p className="w-1/2 font-semibold">Number of pages</p>
-                <p className="flex-1">216</p>
+                <p className="flex-1">{libraryItem.pageCount}</p>
+              </div>
+              <div className="flex items-center">
+                <p className="w-1/2 font-semibold">Detail</p>
+                <p className="flex-1">{libraryItem.physicalDetails}</p>
               </div>
             </section>
             <Separator />
@@ -101,23 +128,11 @@ const BookOverviewTab = () => {
               <h1 className="text-lg font-semibold text-primary">ID Numbers</h1>
               <div className="flex items-center">
                 <p className="w-1/2 font-semibold">My Book Shelf</p>
-                <p className="flex-1">OL3570252M</p>
+                <p className="flex-1">{libraryItem.shelf?.shelfId}</p>
               </div>
               <div className="flex items-center">
                 <p className="w-1/2 font-semibold">ISBN 10</p>
-                <p className="flex-1">0486424715</p>
-              </div>
-              <div className="flex items-center">
-                <p className="w-1/2 font-semibold">LCCN</p>
-                <p className="flex-1">2002073560</p>
-              </div>
-              <div className="flex items-center">
-                <p className="w-1/2 font-semibold">Library Thing</p>
-                <p className="flex-1">12349</p>
-              </div>
-              <div className="flex items-center">
-                <p className="w-1/2 font-semibold">Good reads</p>
-                <p className="flex-1">690668</p>
+                <p className="flex-1">{libraryItem.isbn}</p>
               </div>
             </section>
           </section>

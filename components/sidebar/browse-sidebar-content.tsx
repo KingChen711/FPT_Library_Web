@@ -37,7 +37,7 @@ const BrowseSidebarContent = () => {
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={route.label}>
+                    <SidebarMenuButton tooltip={t(route.label)}>
                       {route.Icon && <route.Icon />}
                       <span>{t(route.label)}</span>
                       <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
@@ -48,7 +48,9 @@ const BrowseSidebarContent = () => {
                       {route.subRoutes.map((subRoute) => (
                         <SidebarMenuSubItem key={subRoute.label}>
                           <SidebarMenuSubButton asChild>
-                            <Link href={subRoute.route}>{subRoute.label}</Link>
+                            <Link href={subRoute.route}>
+                              {t(subRoute.label)}
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}
@@ -60,7 +62,7 @@ const BrowseSidebarContent = () => {
           } else {
             return (
               <SidebarMenuItem key={route.label}>
-                <SidebarMenuButton tooltip={route.label} asChild>
+                <SidebarMenuButton tooltip={t(route.label)} asChild>
                   <Link href={route.route}>
                     {route.Icon && <route.Icon />}
                     <span>{t(route.label)}</span>

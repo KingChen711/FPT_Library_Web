@@ -37,7 +37,7 @@ const ManagementSidebarContent = () => {
               >
                 <SidebarMenuItem>
                   <CollapsibleTrigger asChild>
-                    <SidebarMenuButton tooltip={route.label}>
+                    <SidebarMenuButton tooltip={t(route.label)}>
                       {route.Icon && <route.Icon />}
                       <span>{t(route.label)}</span>
 
@@ -47,9 +47,11 @@ const ManagementSidebarContent = () => {
                   <CollapsibleContent>
                     <SidebarMenuSub>
                       {route.subRoutes.map((subRoute) => (
-                        <SidebarMenuSubItem key={subRoute.label}>
+                        <SidebarMenuSubItem key={t(subRoute.label)}>
                           <SidebarMenuSubButton asChild>
-                            <Link href={subRoute.route}>{subRoute.label}</Link>
+                            <Link href={subRoute.route}>
+                              {t(subRoute.label)}
+                            </Link>
                           </SidebarMenuSubButton>
                         </SidebarMenuSubItem>
                       ))}

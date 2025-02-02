@@ -2,9 +2,11 @@ import Image from "next/image"
 import { CheckCircle2, CircleX, MapPin, Plus } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
+import { EBookCopyStatus } from "@/lib/types/enums"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import InstanceItem from "@/components/ui/instance-item"
 import { Separator } from "@/components/ui/separator"
 
 import { dummyBooks } from "../../../_components/dummy-books"
@@ -16,9 +18,10 @@ const PredictionResultTab = async () => {
   if (!book) {
     return <div>{t("Book not found")}</div>
   }
+
   return (
     <Card className="flex w-full gap-4 rounded-lg border-2 p-4">
-      <section className="w-1/4">
+      <section className="w-1/5">
         <div className="flex flex-col gap-2 overflow-hidden">
           <div className="flex justify-center">
             <Image src={book.image} alt={book.title} width={300} height={400} />
@@ -29,7 +32,7 @@ const PredictionResultTab = async () => {
         </div>
       </section>
 
-      <section className="flex flex-1 flex-col justify-between rounded-lg bg-primary-foreground p-4 shadow-lg">
+      <section className="flex h-[60vh] flex-1 flex-col justify-between overflow-y-auto rounded-lg bg-primary-foreground p-4">
         <div className="space-y-2">
           <p className="font-thin italic">
             {t("an edition of")} &nbsp;
@@ -89,6 +92,7 @@ const PredictionResultTab = async () => {
               <Plus /> {t("add to favorite")}
             </Button>
           </div>
+          <InstanceItem />
         </div>
       </section>
 

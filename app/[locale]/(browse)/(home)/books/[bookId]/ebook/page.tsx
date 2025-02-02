@@ -70,7 +70,7 @@ export default function EBookPage({ params }: Props) {
               useMouseEvents
               swipeDistance={30}
               showCover
-              usePortrait={false}
+              usePortrait={true}
               startZIndex={0}
               mobileScrollSupport={true}
               clickEventForward={true}
