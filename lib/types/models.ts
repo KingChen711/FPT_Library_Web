@@ -130,6 +130,101 @@ export type Author = {
   bookEditionAuthors: unknown[]
 }
 
+export type LibraryItem = {
+  libraryItemId: number
+  title: string
+  subTitle: string | null
+  responsibility: string | null
+  edition: string | null
+  editionNumber: number | null
+  language: string
+  originLanguage: string | null
+  summary: string | null
+  coverImage: string | null
+  publicationYear: number
+  publisher: string | null
+  publicationPlace: string | null
+  classificationNumber: string
+  cutterNumber: string
+  isbn: string | null
+  ean: string | null
+  estimatedPrice: number | null
+  pageCount: number | null
+  physicalDetails: string | null
+  dimensions: string | null
+  accompanyingMaterial: string | null
+  genres: string | null
+  generalNote: string | null
+  bibliographicalNote: string | null
+  topicalTerms: string | null
+  additionalAuthors: string | null
+  categoryId: number
+  shelfId: number | null
+  status: number | null
+  avgReviewedRate: number | null
+  category: {
+    categoryId: number
+    prefix: string | null
+    englishName: string | null
+    vietnameseName: string | null
+    description: string | null
+    isAllowAITraining: boolean
+  }
+  shelf: {
+    shelfId: number | null
+    sectionId: number | null
+    shelfNumber: string | null
+    createDate: string | null
+    updateDate: string | null
+    isDeleted: boolean
+    section: unknown
+  } | null
+  libraryItemInventory: {
+    libraryItemId: number
+    totalUnits: number
+    availableUnits: number
+    requestUnits: number
+    borrowedUnits: number
+    reservedUnits: number
+  }
+  authors: {
+    authorId: number
+    authorCode: string | null
+    authorImage: string | null
+    fullName: string | null
+    biography: string | null
+    dob: string | null
+    dateOfDeath: string | null
+    nationality: string | null
+    createDate: string | null
+    updateDate: string | null
+    isDeleted: boolean
+  }[]
+  libraryItemInstances: {
+    libraryItemInstanceId: number
+    libraryItemId: number | null
+    barcode: string | null
+    status: EBookCopyStatus
+    createdAt: string | null
+    updatedAt: string | null
+    createdBy: string | null
+    updatedBy: string | null
+    isDeleted: boolean
+    libraryItemConditionHistories: unknown[]
+  }[]
+}
+
+export type ReviewsLibraryItem = {
+  reviewId: number
+  libraryItemId: number
+  userId: string
+  ratingValue: number | null
+  reviewText: string | null
+  createDate: string | null
+  updatedDate: string | null
+  user: User
+}
+
 export type Notification = {
   notificationId: number
   title: string

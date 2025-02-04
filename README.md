@@ -34,3 +34,32 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+### Step to step: start project Library
+
+```bash
+- Install dependencies:
+npm install --legacy-peer-deps
+
+- We can check is correct version by running command line: npm ls pdfjs-dist
+- Although we installed "pdfjs-dist": "^4.8.69" based on package.json file, but some packages of "pdfjs-dist" still install version "4.10.38"
+
+- Then we must run "npm i pdfjs-dist@4.8.69" to install the correct version
+
+- BUT, we still have library bug related to Importing worker (showing pdf)
+-> we must open pdf.mjs file in node_modules/pdfjs-dist/build/pdf.mjs and change this line:
+   const worker = await import( /*webpackIgnore: true*/this.workerSrc")
+   to
+   const worker = await import( /*webpackIgnore: true*/this.workerSrc ?? "./pdf.worker.mjs");
+
+
+SUMMARY:
+- npm install --legacy-peer-deps
+- npm i pdfjs-dist@4.8.69
+- open pdf.mjs file in node_modules/pdfjs-dist/build/pdf.mjs and change this line (about in line: 12233):
+   const worker = await import( /*webpackIgnore: true*/this.workerSrc")
+   to
+   const worker = await import( /*webpackIgnore: true*/this.workerSrc ?? "./pdf.worker.mjs");
+```
+
+[Resource of fixing pdfjs-dist](https://github.com/vercel/next.js/issues/65406)

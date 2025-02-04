@@ -99,6 +99,11 @@ export enum EBookCopyConditionStatus {
   // LOST = "Lost",
 }
 
+export enum ELibraryItemStatus {
+  Draft = "Draft",
+  Published = "Published",
+}
+
 export enum EVisibility {
   PUBLIC = "Public",
   PRIVATE = "Private",

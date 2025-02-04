@@ -362,6 +362,9 @@
     "Home": "Home",
     "AI": "AI",
     "Search": "Search",
+    "Search page": "Search page",
+    "A.I prediction": "A.I prediction",
+    "A.I recommendation": "A.I recommendation",
     "My shelf": "My shelf",
     "Books": "Books",
     "Borrows": "Borrows",
@@ -379,7 +382,12 @@
     "Returns": "Returns",
     "System Messages": "System messages",
     "Identity and Access": "Identity and Access",
-    "Permissions": "Permissions"
+    "Permissions": "Permissions",
+    "Settings": "Settings",
+    "Help": "Help",
+    "Warehouse": "Warehouse",
+    "Suppliers": "Suppliers",
+    "Trackings": "Trackings"
   },
   "MfaPage": {
     "Verify MFA": "Verify MFA",

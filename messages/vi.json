@@ -364,6 +364,9 @@
     "Home": "Trang chủ",
     "AI": "Trí tuệ nhân tạo",
     "Search": "Tìm kiếm",
+    "Search page": "Trang tìm kiếm",
+    "AI prediction": "A.I dự đoán",
+    "AI recommendation": "A.I gợi ý",
     "My shelf": "Kệ sách",
     "Books": "Sách",
     "Borrows": "Mượn sách",
@@ -381,7 +384,12 @@
     "Returns": "Trả sách",
     "System Messages": "Tin nhắn hệ thống",
     "Identity and Access": "Danh tính và Truy cập",
-    "Permissions": "Quyền"
+    "Permissions": "Quyền",
+    "Settings": "Cài đặt",
+    "Help": "Giúp đỡ",
+    "Warehouse": "Kho",
+    "Suppliers": "Nhà cung cấp",
+    "Trackings": "Theo dõi"
   },
   "MfaPage": {
     "Verify MFA": "Xác thực MFA",

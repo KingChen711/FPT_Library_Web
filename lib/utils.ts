@@ -175,3 +175,7 @@ export function pascalToCamel(str: string): string {
   if (!str) return str // Handle empty string
   return str.charAt(0).toLowerCase() + str.slice(1)
 }
+
+export function splitCamelCase(text: string): string {
+  return text.replace(/([a-z])([A-Z])/g, "$1 $2")
+}

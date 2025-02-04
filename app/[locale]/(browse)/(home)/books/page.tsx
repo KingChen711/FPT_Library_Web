@@ -111,7 +111,7 @@ const BookPage = async ({ searchParams }: Props) => {
               {dummyBooks.map((item, index) => (
                 <TableRow
                   key={index}
-                  className="mt-4 overflow-hidden rounded-lg border-2 px-8 shadow-md"
+                  className="mt-4 overflow-hidden rounded-lg border-2 bg-background px-8 shadow-md hover:bg-background/95"
                 >
                   <TableCell className="flex items-center gap-2">
                     <div className="flex gap-4 pl-2">
@@ -121,6 +121,7 @@ const BookPage = async ({ searchParams }: Props) => {
                         alt="Logo"
                         width={50}
                         height={60}
+                        unoptimized
                         className="object-cover duration-150 ease-in-out hover:scale-105"
                       />
                       <div className="flex flex-col justify-center gap-2">
