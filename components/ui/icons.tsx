@@ -65,6 +65,82 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  Supplier: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 48 48"
+      {...props}
+      className={cn(className)}
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="4"
+      >
+        <path d="m20 33l6 2s15-3 17-3s2 2 0 4s-9 8-15 8s-10-3-14-3H4"></path>
+        <path d="M4 29c2-2 6-5 10-5s13.5 4 15 6s-3 5-3 5M16 18v-8a2 2 0 0 1 2-2h24a2 2 0 0 1 2 2v16"></path>
+        <path d="M25 8h10v9H25z"></path>
+      </g>
+    </svg>
+  ),
+  Tracking: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 14 14"
+      {...props}
+      className={cn(className)}
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M7 .5v4M8.5 11H11M.5 4.5h13v8a1 1 0 0 1-1 1h-11a1 1 0 0 1-1-1v-8h0Z"></path>
+        <path d="M.5 4.5L2 1.61A2 2 0 0 1 3.74.5h6.52a2 2 0 0 1 1.79 1.11L13.5 4.5"></path>
+      </g>
+    </svg>
+  ),
+  Wand: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="2"
+        d="M6 21L21 6l-3-3L3 18l3 3m9-15l3 3M9 3a2 2 0 0 0 2 2a2 2 0 0 0-2 2a2 2 0 0 0-2-2a2 2 0 0 0 2-2m10 10a2 2 0 0 0 2 2a2 2 0 0 0-2 2a2 2 0 0 0-2-2a2 2 0 0 0 2-2"
+      ></path>
+    </svg>
+  ),
+  Warehouse: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 640 512"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M0 488V171.3c0-26.2 15.9-49.7 40.2-59.4L308.1 4.8c7.6-3.1 16.1-3.1 23.8 0l267.9 107.1c24.3 9.7 40.2 33.3 40.2 59.4V488c0 13.3-10.7 24-24 24h-48c-13.3 0-24-10.7-24-24V224c0-17.7-14.3-32-32-32H128c-17.7 0-32 14.3-32 32v264c0 13.3-10.7 24-24 24H24c-13.3 0-24-10.7-24-24zm488 24H152c-13.3 0-24-10.7-24-24v-56h384v56c0 13.3-10.7 24-24 24zM128 400v-64h384v64H128zm0-96v-80h384v80H128z"
+      ></path>
+    </svg>
+  ),
   Home: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -103,13 +179,13 @@ export const Icons = {
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
       height="1em"
-      viewBox="0 0 1025 1024"
+      viewBox="0 0 16 16"
       {...props}
       className={cn(className)}
     >
       <path
         fill="currentColor"
-        d="M960.85 1024h-896q-27 0-45.5-19T.85 960V704q0-27 18.5-45.5t45.5-18.5h128q20 0 38.5 8.5t25.5 23.5l33.5 100.5l30.5 91.5q8 20 24 26t45 6h249q29 0 43.5-6t22.5-26q51-154 64-192q13-32 64-32h128q26 0 45 18.5t19 45.5v256q0 26-18.5 45t-45.5 19zm-304-243q-9 21-32.5 36t-49.5 15h-121q-26 0-50-15t-33-36l-71-205h-235V64q0-27 18.5-45.5T128.85 0h768q27 0 45.5 18.5t18.5 45.5v512h-235zm-432-333h128q13 0 22.5-9.5t9.5-22.5t-9.5-22.5t-22.5-9.5h-128q-13 0-22.5 9.5t-9.5 22.5t9.5 22.5t22.5 9.5zm256-256h-256q-13 0-22.5 9.5t-9.5 22.5t9.5 22.5t22.5 9.5h256q13 0 22.5-9.5t9.5-22.5t-9.5-22.5t-22.5-9.5zm320 0h-192q-13 0-22.5 9.5t-9.5 22.5t9.5 22.5t22.5 9.5h192q13 0 22.5-9.5t9.5-22.5t-9.5-22.5t-22.5-9.5zm32 224q0-13-9.5-22.5t-22.5-9.5h-320q-13 0-22.5 9.5t-9.5 22.5t9.5 22.5t22.5 9.5h320q13 0 22.5-9.5t9.5-22.5z"
+        d="M10.27 2.001a2.621 2.621 0 0 1 3.712 3.702l-7.469 7.491a1.5 1.5 0 0 1-.558.354l-3.969 1.416a.75.75 0 0 1-.958-.96l1.426-3.963a1.5 1.5 0 0 1 .349-.551l7.467-7.489Zm3.002.704a1.621 1.621 0 0 0-2.294.002l-.782.784l2.293 2.293l.785-.787a1.621 1.621 0 0 0-.002-2.292Zm-1.489 3.787L9.49 4.199l-5.979 5.997a.5.5 0 0 0-.116.184l-1.247 3.464l3.47-1.238a.5.5 0 0 0 .187-.118l5.978-5.996ZM8.857 2H1.5a.5.5 0 1 0 0 1h6.36l.997-1ZM6.863 4H1.5a.5.5 0 1 0 0 1h4.366l.997-1ZM4.87 6H1.5a.5.5 0 1 0 0 1h2.373l.997-1Z"
       ></path>
     </svg>
   ),
@@ -471,6 +547,40 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  Key: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="m13.815 14.632l-4.031 4.031H7.115v2.668H4.447v2.668H0v-4.447l9.368-9.368a7.41 7.41 0 0 1-.474-2.632a7.554 7.554 0 1 1 4.869 7.062l.052.017zm7.532-9.31v-.003a2.668 2.668 0 1 0-2.669 2.668h.001a2.669 2.669 0 0 0 2.668-2.665z"
+      ></path>
+    </svg>
+  ),
+  Lock: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 42 42"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="none"
+        d="M23.68 28.484c0-1.76-1.42-3.18-3.18-3.18s-3.18 1.42-3.18 3.18c0 1.412.91 2.6 2.17 3.02l-1.99 4.98h6l-1.99-4.98a3.178 3.178 0 0 0 2.17-3.02z"
+      ></path>
+      <path
+        fill="currentColor"
+        d="M20.5 6.411c5.98 0 8.67 5.073 9 10.073h5c-.09-9-4.67-14.903-14-14.983c-9.27-.09-14 6.983-14 14.983h4.969c.26-5 2.831-10.073 9.031-10.073zm14 12.089h-28c-2.41 0-3 .655-3 2.984v17c0 2.49.561 3 3 3h28c2.609 0 3-.471 3-3v-17c0-2.458-.46-2.984-3-2.984zm-11 17.984h-6l1.99-4.98a3.176 3.176 0 0 1-2.17-3.02c0-1.76 1.42-3.18 3.18-3.18s3.18 1.42 3.18 3.18c0 1.41-.91 2.6-2.17 3.02l1.99 4.98z"
+      ></path>
+    </svg>
+  ),
   SystemHealth: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -507,13 +617,17 @@ export const Icons = {
       xmlns="http://www.w3.org/2000/svg"
       width="1em"
       height="1em"
-      viewBox="0 0 32 32"
+      viewBox="0 0 16 16"
       {...props}
       className={cn(className)}
     >
       <path
         fill="currentColor"
-        d="M9 4C7.355 4 6 5.355 6 7v18c0 1.645 1.355 3 3 3h17V4zm0 2h15v16H9a2.95 2.95 0 0 0-1 .188V7c0-.566.434-1 1-1zm2 3v2h11V9zM9 24h15v2H9c-.566 0-1-.434-1-1c0-.566.434-1 1-1z"
+        d="M14 2v13H3.5a1.5 1.5 0 1 1 0-3H13V0H3C1.9 0 1 .9 1 2v12c0 1.1.9 2 2 2h12V2h-1z"
+      ></path>
+      <path
+        fill="currentColor"
+        d="M3.501 13H3.5a.5.5 0 0 0 0 1h9.499v-1H3.501z"
       ></path>
     </svg>
   ),

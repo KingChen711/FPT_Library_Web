@@ -2,12 +2,20 @@
 
 import React, { useState, useTransition } from "react"
 import { type BookDetail } from "@/queries/books/get-book"
-import { ChevronDown, ChevronUp, Pencil, RotateCcw, Trash2 } from "lucide-react"
+import {
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  Pencil,
+  RotateCcw,
+  Trash2,
+} from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { EBookEditionStatus } from "@/lib/types/enums"
 import { publishEdition } from "@/actions/books/editions/publish-edition"
+import { restoreEdition } from "@/actions/books/editions/restore-edition"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -53,6 +61,27 @@ function BookDetailActionDropdown({ book }: Props) {
     })
   }
 
+  const handleRestoreEdition = () => {
+    startTransition(async () => {
+      const res = await restoreEdition(book.libraryItemId)
+      if (res.isSuccess) {
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data,
+          variant: "success",
+        })
+        setOpenDropdown(false)
+        return
+      }
+      handleServerActionError(res, locale)
+    })
+  }
+
+  const handleOpenChange = (value: boolean) => {
+    if (isPending) return
+    setOpenDropdown(value)
+  }
+
   return (
     <>
       <EditBookDialog open={openEdit} setOpen={setOpenEdit} book={book} />
@@ -78,7 +107,7 @@ function BookDetailActionDropdown({ book }: Props) {
         bookId={book.libraryItemId}
       />
 
-      <DropdownMenu open={openDropdown} onOpenChange={setOpenDropdown}>
+      <DropdownMenu open={openDropdown} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
             {t("Actions")} {openDropdown ? <ChevronUp /> : <ChevronDown />}
@@ -86,6 +115,7 @@ function BookDetailActionDropdown({ book }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="overflow-visible">
           <DropdownMenuItem
+            disabled={isPending}
             className="cursor-pointer"
             onClick={() => {
               setOpenDropdown(false)
@@ -96,6 +126,7 @@ function BookDetailActionDropdown({ book }: Props) {
             {t("Edit information")}
           </DropdownMenuItem>
           <DropdownMenuItem
+            disabled={isPending}
             className="cursor-pointer"
             onClick={() => {
               setOpenDropdown(false)
@@ -120,6 +151,8 @@ function BookDetailActionDropdown({ book }: Props) {
                 ? "Publish edition"
                 : "Change to draft"
             )}
+
+            {isPending && <Loader2 className="ml-1 animate-spin" />}
           </DropdownMenuItem>
 
           {book.status === EBookEditionStatus.DRAFT &&
@@ -128,9 +161,10 @@ function BookDetailActionDropdown({ book }: Props) {
                 <DropdownMenuItem
                   disabled={isPending}
                   className="cursor-pointer"
-                  // onClick={handleRestoreEdition}
+                  onClick={handleRestoreEdition}
                 >
-                  <RotateCcw /> {t("Restore")}
+                  <RotateCcw /> {t("Restore")}{" "}
+                  {isPending && <Loader2 className="ml-1 animate-spin" />}
                 </DropdownMenuItem>
                 <DropdownMenuItem
                   disabled={isPending}

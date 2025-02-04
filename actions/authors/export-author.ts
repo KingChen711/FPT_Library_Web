@@ -3,8 +3,7 @@
 import { revalidateTag } from "next/cache"
 import { auth } from "@/queries/auth"
 
-import { handleHttpError } from "@/lib/http"
-import { httpBlob } from "@/lib/http-blob"
+import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 
 export async function exportAuthor(
@@ -13,7 +12,7 @@ export async function exportAuthor(
   const { getAccessToken } = auth()
 
   try {
-    const res = await httpBlob.get<Blob>(
+    const { data } = await http.get<Blob>(
       `/api/management/authors/export?${searchParams}`,
       {
         headers: {
@@ -22,7 +21,7 @@ export async function exportAuthor(
         responseType: "blob",
       }
     )
-    const url = URL.createObjectURL(res)
+    const url = URL.createObjectURL(data)
     const a = document.createElement("a")
     a.href = url
     a.download = "authors.xlsx"
@@ -32,7 +31,7 @@ export async function exportAuthor(
 
     return {
       isSuccess: true,
-      data: res,
+      data,
     }
   } catch (error) {
     return handleHttpError(error)

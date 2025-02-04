@@ -33,6 +33,7 @@ import AuthorsTabsContent from "./_components/authors-tabs-content"
 import BookDetailActionDropdown from "./_components/book-detail-action-dropdown"
 import BookDetailBreadCrumb from "./_components/book-detail-breadcrumb"
 import CopiesTabsContent from "./_components/copies-tabs-content"
+import HistoriesTabsContent from "./_components/histories-tabs-content"
 import ResourcesTabsContent from "./_components/resources-tabs-content"
 
 type Props = {
@@ -42,7 +43,7 @@ type Props = {
 }
 
 async function BookDetailPage({ params }: Props) {
-  await auth().protect(EFeature.BOOK_MANAGEMENT)
+  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
 
   const t = await getTranslations("BooksManagementPage")
   const locale = await getLocale()
@@ -588,6 +589,7 @@ async function BookDetailPage({ params }: Props) {
             <TabsTrigger value="authors">{t("Authors")}</TabsTrigger>
             <TabsTrigger value="resources">{t("Resources")}</TabsTrigger>
             <TabsTrigger value="copies">{t("Copies")}</TabsTrigger>
+            <TabsTrigger value="histories">{t("Histories")}</TabsTrigger>
           </TabsList>
           <AuthorsTabsContent
             authors={book.authors}
@@ -602,6 +604,7 @@ async function BookDetailPage({ params }: Props) {
             bookId={book.libraryItemId}
             copies={book.libraryItemInstances}
           />
+          <HistoriesTabsContent bookId={book.libraryItemId} />
         </Tabs>
       </div>
     </div>

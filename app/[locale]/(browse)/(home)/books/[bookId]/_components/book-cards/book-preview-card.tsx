@@ -20,7 +20,7 @@ const BookPreviewCard = async ({ bookId }: Props) => {
   }
   return (
     <section className="h-full w-1/4">
-      <div className="flex h-[56vh] flex-col justify-between overflow-hidden rounded-lg bg-primary-foreground shadow-lg">
+      <div className="flex h-[56vh] flex-col justify-between overflow-hidden rounded-lg shadow-lg">
         <div className="flex flex-1 shrink-0 items-center justify-center overflow-hidden rounded-t-lg p-4">
           <Image
             src={book?.image}

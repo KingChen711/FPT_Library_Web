@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath, revalidateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
@@ -12,7 +12,7 @@ export async function restoreEditions(
   const { getAccessToken } = auth()
   try {
     const { message } = await http.patch(
-      `/api/management/books/editions/undo-delete-range`,
+      `/api/management/library-items/undo-delete-range`,
       { ids },
       {
         headers: {
@@ -22,7 +22,6 @@ export async function restoreEditions(
     )
 
     revalidatePath("/management/books")
-    revalidateTag("management-book-editions")
 
     return {
       isSuccess: true,

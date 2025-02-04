@@ -1,4 +1,5 @@
 import {
+  type EAuditType,
   type EBookCopyStatus,
   type EBookEditionStatus,
   type EBookFormat,
@@ -7,6 +8,18 @@ import {
   type EResourceBookType,
   type ERoleType,
 } from "./enums"
+
+export type Audit = {
+  auditTrailId: number
+  email: string
+  entityId: string
+  entityName: string
+  trailType: EAuditType
+  dateUtc: string
+  oldValues: object
+  newValues: object
+  changedColumns: string[]
+}
 
 export type User = {
   userId: string
@@ -49,6 +62,7 @@ export type ImportError = {
 }
 
 export type Role = {
+  roleId: number
   englishName: string
   vietnameseName: string
   roleType: ERoleType
@@ -143,7 +157,6 @@ export type Category = {
   vietnameseName: string
   description: string | null
   isAllowAITraining: boolean
-  //TODO: check isAllowAITraining in create book form
 }
 
 export type BookEdition = {

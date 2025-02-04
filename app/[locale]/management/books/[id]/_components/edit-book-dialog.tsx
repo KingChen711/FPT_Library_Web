@@ -41,6 +41,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -451,11 +452,14 @@ function EditBookDialog({ open, setOpen, book }: Props) {
                       <FormControl>
                         <Input
                           {...field}
-                          disabled={isPending}
+                          disabled
                           className="min-w-96 max-w-full"
                         />
                       </FormControl>
                       <FormMessage />
+                      <FormDescription>
+                        {t("ISBN not allowed to edit")}
+                      </FormDescription>
                     </FormItem>
                   )}
                 />

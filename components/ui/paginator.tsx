@@ -25,6 +25,8 @@ type Props = {
   pageSize: number
   totalActualItem: number
   className?: string
+  onPaginate?: (page: number) => void
+  onChangePageSize?: (size: "5" | "10" | "30" | "50" | "100") => void
 }
 
 function Paginator({
@@ -33,6 +35,8 @@ function Paginator({
   totalPage,
   className,
   totalActualItem,
+  onPaginate,
+  onChangePageSize,
 }: Props) {
   const router = useRouter()
   const t = useTranslations("Paginator")
@@ -41,6 +45,10 @@ function Paginator({
   const [open, setOpen] = useState(false)
 
   const paginate = ({ selected }: { selected: number }) => {
+    if (onPaginate) {
+      onPaginate(selected + 1)
+      return
+    }
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
@@ -52,6 +60,11 @@ function Paginator({
   }
 
   const handleChangeRowsPerPage = (pageSize: string) => {
+    if (onChangePageSize) {
+      onChangePageSize(pageSize as "5" | "10" | "30" | "50" | "100")
+      return
+    }
+
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
@@ -67,7 +80,7 @@ function Paginator({
 
   return (
     <div className={cn("flex flex-wrap items-center gap-4", className)}>
-      <div className="flex-1 text-sm">
+      <div className="flex-1 text-nowrap text-sm">
         {t("Showing message", {
           from: (pageIndex - 1) * pageSize + 1,
           to: Math.min(pageIndex * pageSize, totalActualItem || 0),
@@ -89,7 +102,7 @@ function Paginator({
         nextLabel={locale === "vi" ? "Sau" : "Next"}
       />
       <div className="flex flex-1 items-center justify-end gap-x-2">
-        <div className="text-sm">{t("rows per page")}</div>
+        <div className="text-nowrap text-sm">{t("rows per page")}</div>
         <Popover open={open} onOpenChange={setOpen}>
           <PopoverTrigger asChild>
             <Button

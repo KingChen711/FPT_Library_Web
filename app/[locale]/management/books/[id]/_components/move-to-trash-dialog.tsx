@@ -53,7 +53,10 @@ function MoveToTrashDialog({
         </DialogHeader>
         <div className="flex items-center gap-4">
           <Button
-            onClick={handleMoveToTrash}
+            onClick={() => {
+              handleMoveToTrash()
+              setValue("")
+            }}
             disabled={value !== message || isPending}
             className="flex-1"
           >

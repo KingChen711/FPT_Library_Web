@@ -11,19 +11,19 @@ const BookOverviewTab = () => {
   return (
     <div>
       <section className="flex items-center gap-4">
-        <div className="flex-1 rounded-lg border bg-primary-foreground p-4 text-center shadow-md">
+        <div className="flex-1 rounded-lg border p-4 text-center shadow-md">
           <p className="text-sm font-semibold">Publish Year</p>
           <p>2000</p>
         </div>
-        <div className="flex-1 rounded-lg border bg-primary-foreground p-4 text-center shadow-md">
+        <div className="flex-1 rounded-lg border p-4 text-center shadow-md">
           <p className="text-sm font-semibold">Publisher</p>
           <p className="text-sm text-danger">New Riders Press</p>
         </div>
-        <div className="flex-1 rounded-lg border bg-primary-foreground p-4 text-center shadow-md">
+        <div className="flex-1 rounded-lg border p-4 text-center shadow-md">
           <p className="text-sm font-semibold">Language</p>
           <p className="text-sm text-danger">English</p>
         </div>
-        <div className="flex-1 rounded-lg border bg-primary-foreground p-4 text-center shadow-md">
+        <div className="flex-1 rounded-lg border p-4 text-center shadow-md">
           <p className="text-sm font-semibold">Pages</p>
           <p className="text-sm text-danger">216</p>
         </div>
@@ -48,7 +48,7 @@ const BookOverviewTab = () => {
         </StyledReadMore>
 
         <div className="flex gap-4">
-          <section className="flex-1 space-y-4 rounded-lg border bg-primary-foreground p-4 shadow-md">
+          <section className="flex-1 space-y-4 rounded-lg border p-4 shadow-md">
             <h1 className="text-xl font-bold text-primary">Book Details</h1>
             <div className="flex items-center">
               <p className="w-1/2 font-semibold">Published in</p>
@@ -122,7 +122,7 @@ const BookOverviewTab = () => {
             </section>
           </section>
 
-          <section className="h-fit flex-1 space-y-4 rounded-lg border bg-primary-foreground p-4 shadow-md">
+          <section className="h-fit flex-1 space-y-4 rounded-lg border p-4 shadow-md">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-bold text-primary">
                 Community Reviews

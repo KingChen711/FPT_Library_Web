@@ -40,7 +40,7 @@ const PredictionOtherMatchesTab = async () => {
               </Button>
             </section>
 
-            <section className="flex flex-1 flex-col justify-between rounded-lg border bg-primary-foreground p-4 shadow-lg">
+            <section className="flex flex-1 flex-col justify-between rounded-lg border p-4 shadow-lg">
               <div>
                 <p className="font-thin italic">
                   {t("an edition of")} &nbsp;

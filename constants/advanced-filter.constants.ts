@@ -1,180 +1,186 @@
+import { EBookEditionStatus } from "@/lib/types/enums"
+
 export enum EAdvancedFilterType {
-  TEXT = "text",
-  DATE_TIME = "date",
-  NORMAL_SELECTION = "normal-selection",
-  ENUM_SELECTION = "enum-selection",
-  RANGE_NUMBER = "range-number",
+  TEXT,
+  DATE,
+  ENUM,
+  NUMBER,
 }
 
-export enum EAdvancedFilterBookFields {
-  TITLE = "Title",
-  EDITION = "Edition",
-  AUTHOR = "Author",
-  BOOK_FORMAT = "Book format",
-  CATEGORY = "Category",
-  FLOOR = "Floor",
-  SHELF = "Shelf",
-  AVAILABLE_QUANTITY = "Available quantity",
-  PUBLISHER = "Publisher",
-  PUBLICATION_YEAR = "Publication year",
-  PAGE_COUNT = "Page count",
-  LANGUAGE = "Language",
-  ISBN = "ISBN",
-  COPY_CODE = "Copy Code",
-}
-
-export enum FilterOperator {
-  INCLUDES = "includes",
-  EQUAL = "equal",
-  NOT_EQUAL = "not-equal",
-  LESS_THAN = "less-than",
-  LESS_THAN_OR_EQUAL = "less-than-or-equal",
-  GREATER_THAN = "greater-than",
-  GREATER_THAN_OR_EQUAL = "greater-than-or-equal",
+export enum EAdvancedFilterBookField {
+  TITLE = "title",
+  SUBTITLE = "subTitle",
+  ADDITIONAL_AUTHORS = "additionalAuthors",
+  RESPONSIBILITY = "responsibility",
+  EDITION = "edition",
+  EDITION_NUMBER = "editionNumber",
+  LANGUAGE = "language",
+  ORIGIN_LANGUAGE = "originLanguage",
+  PUBLICATION_YEAR = "publicationYear",
+  PUBLISHER = "publisher",
+  PUBLICATION_PLACE = "publicationPlace",
+  CLASSIFICATION_NUMBER = "classificationNumber",
+  CUTTER_NUMBER = "cutterNumber",
+  ISBN = "isbn",
+  EAN = "ean",
+  PAGE_COUNT = "pageCount",
+  PHYSICAL_DETAILS = "physicalDetails",
+  DIMENSIONS = "dimensions",
+  ACCOMPANYING_MATERIAL = "accompanyingMaterial",
+  ESTIMATED_PRICE = "estimatedPrice",
+  SUMMARY = "summary",
+  GENRES = "genres",
+  TOPICAL_TERMS = "topicalTerms",
+  GENERAL_NOTE = "generalNote",
+  BIBLIOGRAPHICAL_NOTE = "bibliographicalNote",
+  STATUS = "status",
+  CAN_BORROW = "canBorrow",
+  IS_TRAINED = "isTrained",
+  TRAINED_AT = "trainedAt",
+  AVG_REVIEWED_RATE = "avgReviewedRate",
+  CREATED_AT = "createdAt",
+  CREATED_BY = "createdBy",
+  UPDATED_AT = "updatedAt",
+  UPDATED_BY = "updatedBy",
+  AUTHOR = "author",
+  CATEGORY = "category",
+  BARCODE = "barcode",
+  SHELF_NUMBER = "shelfNumber",
 }
 
 export type TAdvancedFilters = {
-  field: EAdvancedFilterBookFields
+  field: EAdvancedFilterBookField
   type: EAdvancedFilterType
   selections?: {
     label: string
-    value: string
+    value: string | number
   }[]
 }
 
-export const AdvancedFilters: TAdvancedFilters[] = [
+export const advancedFilters: TAdvancedFilters[] = [
+  { field: EAdvancedFilterBookField.TITLE, type: EAdvancedFilterType.TEXT },
+  { field: EAdvancedFilterBookField.SUBTITLE, type: EAdvancedFilterType.TEXT },
   {
-    field: EAdvancedFilterBookFields.TITLE,
+    field: EAdvancedFilterBookField.ADDITIONAL_AUTHORS,
     type: EAdvancedFilterType.TEXT,
   },
   {
-    field: EAdvancedFilterBookFields.PUBLISHER,
+    field: EAdvancedFilterBookField.RESPONSIBILITY,
+    type: EAdvancedFilterType.TEXT,
+  },
+  { field: EAdvancedFilterBookField.EDITION, type: EAdvancedFilterType.TEXT },
+  {
+    field: EAdvancedFilterBookField.EDITION_NUMBER,
+    type: EAdvancedFilterType.NUMBER,
+  },
+  //TODO:LANGUAGE
+  { field: EAdvancedFilterBookField.LANGUAGE, type: EAdvancedFilterType.TEXT },
+  //TODO:ORIGIN_LANGUAGE
+  {
+    field: EAdvancedFilterBookField.ORIGIN_LANGUAGE,
     type: EAdvancedFilterType.TEXT,
   },
   {
-    field: EAdvancedFilterBookFields.ISBN,
+    field: EAdvancedFilterBookField.PUBLICATION_YEAR,
+    type: EAdvancedFilterType.NUMBER,
+  },
+  {
+    field: EAdvancedFilterBookField.PUBLISHER,
     type: EAdvancedFilterType.TEXT,
   },
   {
-    field: EAdvancedFilterBookFields.COPY_CODE,
+    field: EAdvancedFilterBookField.PUBLICATION_PLACE,
     type: EAdvancedFilterType.TEXT,
   },
   {
-    field: EAdvancedFilterBookFields.AUTHOR,
+    field: EAdvancedFilterBookField.CLASSIFICATION_NUMBER,
     type: EAdvancedFilterType.TEXT,
   },
   {
-    field: EAdvancedFilterBookFields.PUBLICATION_YEAR,
-    type: EAdvancedFilterType.DATE_TIME,
+    field: EAdvancedFilterBookField.CUTTER_NUMBER,
+    type: EAdvancedFilterType.TEXT,
   },
-
-  /**
-   * F: PUBLICATION_YEAR
-   * V: "null,2025-01-01"
-   * O: 0-5
-   */
-
+  { field: EAdvancedFilterBookField.ISBN, type: EAdvancedFilterType.TEXT },
+  { field: EAdvancedFilterBookField.EAN, type: EAdvancedFilterType.TEXT },
   {
-    field: EAdvancedFilterBookFields.AVAILABLE_QUANTITY,
-    type: EAdvancedFilterType.RANGE_NUMBER,
+    field: EAdvancedFilterBookField.PAGE_COUNT,
+    type: EAdvancedFilterType.NUMBER,
   },
   {
-    field: EAdvancedFilterBookFields.EDITION,
-    type: EAdvancedFilterType.RANGE_NUMBER,
-  },
-
-  {
-    field: EAdvancedFilterBookFields.PAGE_COUNT,
-    type: EAdvancedFilterType.RANGE_NUMBER,
+    field: EAdvancedFilterBookField.PHYSICAL_DETAILS,
+    type: EAdvancedFilterType.TEXT,
   },
   {
-    field: EAdvancedFilterBookFields.LANGUAGE,
-    type: EAdvancedFilterType.NORMAL_SELECTION,
+    field: EAdvancedFilterBookField.DIMENSIONS,
+    type: EAdvancedFilterType.TEXT,
+  },
+  {
+    field: EAdvancedFilterBookField.ACCOMPANYING_MATERIAL,
+    type: EAdvancedFilterType.TEXT,
+  },
+  {
+    field: EAdvancedFilterBookField.ESTIMATED_PRICE,
+    type: EAdvancedFilterType.NUMBER,
+  },
+  { field: EAdvancedFilterBookField.SUMMARY, type: EAdvancedFilterType.TEXT },
+  { field: EAdvancedFilterBookField.GENRES, type: EAdvancedFilterType.TEXT },
+  {
+    field: EAdvancedFilterBookField.TOPICAL_TERMS,
+    type: EAdvancedFilterType.TEXT,
+  },
+  {
+    field: EAdvancedFilterBookField.GENERAL_NOTE,
+    type: EAdvancedFilterType.TEXT,
+  },
+  {
+    field: EAdvancedFilterBookField.BIBLIOGRAPHICAL_NOTE,
+    type: EAdvancedFilterType.TEXT,
+  },
+  //TODO:no status in deleted tab
+  {
+    field: EAdvancedFilterBookField.STATUS,
+    type: EAdvancedFilterType.ENUM,
     selections: [
       {
-        label: "English",
-        value: "English",
+        label: "Draft",
+        value: EBookEditionStatus.DRAFT,
       },
       {
-        label: "French",
-        value: "French",
-      },
-      {
-        label: "Spanish",
-        value: "Spanish",
+        label: "Published",
+        value: EBookEditionStatus.PUBLISHED,
       },
     ],
   },
   {
-    field: EAdvancedFilterBookFields.BOOK_FORMAT,
-    type: EAdvancedFilterType.NORMAL_SELECTION,
-    selections: [
-      {
-        label: "Hardcover",
-        value: "Hardcover",
-      },
-      {
-        label: "Paperback",
-        value: "Paperback",
-      },
-      {
-        label: "Ebook",
-        value: "Ebook",
-      },
-    ],
+    field: EAdvancedFilterBookField.TRAINED_AT,
+    type: EAdvancedFilterType.DATE,
   },
   {
-    field: EAdvancedFilterBookFields.CATEGORY,
-    type: EAdvancedFilterType.NORMAL_SELECTION,
-    selections: [
-      {
-        label: "Fiction",
-        value: "Fiction",
-      },
-      {
-        label: "Non-fiction",
-        value: "Non-fiction",
-      },
-      {
-        label: "Manga",
-        value: "Manga",
-      },
-    ],
+    field: EAdvancedFilterBookField.AVG_REVIEWED_RATE,
+    type: EAdvancedFilterType.NUMBER,
   },
   {
-    field: EAdvancedFilterBookFields.FLOOR,
-    type: EAdvancedFilterType.ENUM_SELECTION,
-    selections: [
-      {
-        label: "Floor 1",
-        value: "Floor 1",
-      },
-      {
-        label: "Floor 2",
-        value: "Floor 2",
-      },
-      {
-        label: "Floor 3",
-        value: "Floor 3",
-      },
-    ],
+    field: EAdvancedFilterBookField.CREATED_AT,
+    type: EAdvancedFilterType.DATE,
   },
   {
-    field: EAdvancedFilterBookFields.SHELF,
-    type: EAdvancedFilterType.ENUM_SELECTION,
-    selections: [
-      {
-        label: "Shelf 1",
-        value: "Shelf 1",
-      },
-      {
-        label: "Shelf 2",
-        value: "Shelf 2",
-      },
-      {
-        label: "Shelf 3",
-        value: "Shelf 3",
-      },
-    ],
+    field: EAdvancedFilterBookField.CREATED_BY,
+    type: EAdvancedFilterType.TEXT,
+  },
+  {
+    field: EAdvancedFilterBookField.UPDATED_AT,
+    type: EAdvancedFilterType.DATE,
+  },
+  {
+    field: EAdvancedFilterBookField.UPDATED_BY,
+    type: EAdvancedFilterType.TEXT,
+  },
+  { field: EAdvancedFilterBookField.AUTHOR, type: EAdvancedFilterType.TEXT },
+  //category
+  { field: EAdvancedFilterBookField.CATEGORY, type: EAdvancedFilterType.TEXT },
+  { field: EAdvancedFilterBookField.BARCODE, type: EAdvancedFilterType.TEXT },
+  {
+    field: EAdvancedFilterBookField.SHELF_NUMBER,
+    type: EAdvancedFilterType.TEXT,
   },
 ]

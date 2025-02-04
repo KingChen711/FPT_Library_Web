@@ -48,7 +48,10 @@ function DeleteDialog({ open, setOpen, handleDelete, isPending }: Props) {
         </DialogHeader>
         <div className="flex items-center gap-4">
           <Button
-            onClick={handleDelete}
+            onClick={() => {
+              handleDelete()
+              setValue("")
+            }}
             disabled={value !== message || isPending}
             className="flex-1"
           >

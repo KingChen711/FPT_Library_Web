@@ -197,7 +197,10 @@ function AccessLevelContextMenu({
                 ? levelList.find((item) => +item.value === permissionId)?.ICon()
                 : null}
               {permissionId
-                ? levelList.find((item) => +item.value === permissionId)?.label
+                ? t(
+                    levelList.find((item) => +item.value === permissionId)
+                      ?.label
+                  )
                 : "Select level"}
             </Button>
           </div>
@@ -210,7 +213,7 @@ function AccessLevelContextMenu({
               className="flex cursor-pointer items-center gap-x-2"
             >
               <item.ICon />
-              {item.label}
+              {t(item.label)}
               <Check
                 className={cn(
                   "ml-auto size-4",

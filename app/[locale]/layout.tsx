@@ -16,6 +16,12 @@ import { getMessages, setRequestLocale } from "next-intl/server"
 
 import { Toaster } from "@/components/ui/toaster"
 
+// const dmSans = localFont({
+//   src: "./fonts/DMSansVF.ttf",
+//   variable: "--font-dm-sans",
+//   weight: "100 200 300 400 500 600 700 800 900",
+// })
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",

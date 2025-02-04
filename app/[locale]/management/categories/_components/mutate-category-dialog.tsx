@@ -16,6 +16,7 @@ import { createCategory } from "@/actions/categories/create-category"
 import { updateCategory } from "@/actions/categories/update-category"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Dialog,
   DialogClose,
@@ -28,6 +29,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -80,6 +82,7 @@ function MutateCategoryDialog({
       vietnameseName: type === "update" ? category.vietnameseName : "",
       description: type === "update" ? category.description || "" : "",
       prefix: type === "update" ? category.prefix || "" : "",
+      isAllowAITraining: type === "update" ? category.isAllowAITraining : false,
     },
   })
 
@@ -188,6 +191,29 @@ function MutateCategoryDialog({
                     </FormItem>
                   )}
                 />
+
+                {type === "create" && (
+                  <FormField
+                    control={form.control}
+                    name="isAllowAITraining"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4 shadow">
+                        <FormControl>
+                          <Checkbox
+                            checked={field.value}
+                            onCheckedChange={field.onChange}
+                          />
+                        </FormControl>
+                        <div className="space-y-1 leading-none">
+                          <FormLabel>{t("Allow AI training")}</FormLabel>
+                          <FormDescription>
+                            {t("Allow AI training description")}
+                          </FormDescription>
+                        </div>
+                      </FormItem>
+                    )}
+                  />
+                )}
 
                 <div className="flex justify-end gap-x-4">
                   <DialogClose asChild>

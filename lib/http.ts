@@ -10,6 +10,7 @@ type CustomOptions = RequestInit & {
   baseUrl?: string
   lang?: string
   searchParams?: queryString.StringifiableRecord | undefined
+  responseType?: "json" | "blob"
 }
 
 type OkResponse<TData = undefined> = {
@@ -105,6 +106,8 @@ const request = async <TData = undefined>(
       options?.lang ?? getClientSideCookie("NEXT_LOCALE") ?? "vi"
   }
 
+  const responseType = options?.responseType === "blob" ? "blob" : "json"
+
   const baseUrl =
     options?.baseUrl === undefined
       ? process.env.NEXT_PUBLIC_API_ENDPOINT
@@ -129,6 +132,18 @@ const request = async <TData = undefined>(
     body,
     method,
   })
+
+  if (responseType === "blob") {
+    if (!res.ok) {
+      throw new Error(`Failed to fetch blob: ${res.status} ${res.statusText}`)
+    }
+    const blob = await res.blob()
+    return {
+      resultCode: "",
+      message: "",
+      data: blob as TData,
+    }
+  }
 
   const payload = (await res.json()) as OkResponse<TData>
 

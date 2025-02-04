@@ -102,7 +102,7 @@ function UserActionDropdown({ user }: Props) {
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-primary-foreground">
+        <DropdownMenuContent align="end" className="">
           {!user?.isDeleted ? (
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>

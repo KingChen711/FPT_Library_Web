@@ -10,7 +10,7 @@ export const DEFAULT_PAGE_INDEX = 1
 export const DEFAULT_PAGE_SIZE = 5
 
 // Routes Configuration
-export const managementRoutes: Route[] = [
+export const managementRoutes = [
   {
     feature: EFeature.DASHBOARD_MANAGEMENT,
     route: "/management",
@@ -18,25 +18,9 @@ export const managementRoutes: Route[] = [
     Icon: (props: { className?: string }) => {
       return <Icons.Dashboard {...props} />
     },
-    subRoutes: [
-      {
-        route: "",
-        label: "Sub Dashboard 1",
-        Icon: (props: { className?: string }) => {
-          return <Icons.Dashboard {...props} />
-        },
-      },
-      {
-        route: "",
-        label: "Sub Dashboard 2",
-        Icon: (props: { className?: string }) => {
-          return <Icons.Dashboard {...props} />
-        },
-      },
-    ],
   },
   {
-    feature: EFeature.BOOK_MANAGEMENT,
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
     route: "/management/books",
     label: "Books",
     Icon: (props: { className?: string }) => {
@@ -44,7 +28,7 @@ export const managementRoutes: Route[] = [
     },
   },
   {
-    feature: EFeature.BOOK_MANAGEMENT,
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
     route: "/management/authors",
     label: "Authors",
     Icon: (props: { className?: string }) => {
@@ -52,7 +36,7 @@ export const managementRoutes: Route[] = [
     },
   },
   {
-    feature: EFeature.BOOK_MANAGEMENT,
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
     route: "/management/categories",
     label: "Categories",
     Icon: (props: { className?: string }) => {
@@ -60,7 +44,7 @@ export const managementRoutes: Route[] = [
     },
   },
   {
-    feature: EFeature.BOOK_MANAGEMENT,
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
     route: "/management/resources",
     label: "Resources",
     Icon: (props: { className?: string }) => {
@@ -108,6 +92,29 @@ export const managementRoutes: Route[] = [
     },
   },
   {
+    feature: EFeature.WAREHOUSE_TRACKING_MANAGEMENT,
+    label: "Warehouse",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Warehouse {...props} />
+    },
+    subRoutes: [
+      {
+        route: "/management/suppliers",
+        label: "Suppliers",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Supplier {...props} />
+        },
+      },
+      {
+        route: "/management/trackings",
+        label: "Trackings",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Tracking {...props} />
+        },
+      },
+    ],
+  },
+  {
     feature: EFeature.USER_MANAGEMENT,
     route: "/management/users",
     label: "Users",
@@ -125,11 +132,26 @@ export const managementRoutes: Route[] = [
   },
   {
     feature: EFeature.ROLE_MANAGEMENT,
-    route: "/management/roles",
-    label: "Roles",
+    label: "Identity and Access",
     Icon: (props: { className?: string }) => {
-      return <Icons.Role {...props} />
+      return <Icons.Lock {...props} />
     },
+    subRoutes: [
+      {
+        route: "/management/roles",
+        label: "Roles",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Role {...props} />
+        },
+      },
+      {
+        route: "/management/permissions",
+        label: "Permissions",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Key {...props} />
+        },
+      },
+    ],
   },
   {
     feature: EFeature.SYSTEM_HEALTH_MANAGEMENT,

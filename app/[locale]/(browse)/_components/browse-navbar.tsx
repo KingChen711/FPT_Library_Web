@@ -77,12 +77,12 @@ function BrowseNavbar() {
             pathname === "/search" && "hidden"
           )}
         >
-          <div className="flex w-[650px] items-center overflow-hidden rounded-2xl bg-primary-foreground shadow-lg">
+          <div className="flex w-[650px] items-center overflow-hidden rounded-2xl shadow-lg">
             <BookFilterTabs />
             <div className="relative flex-1 border-x-2">
               <Input
                 placeholder="Search"
-                className="flex-1 rounded-none border-l border-none bg-primary-foreground"
+                className="flex-1 rounded-none border-l border-none"
               />
               <Search
                 size={16}
@@ -115,16 +115,16 @@ function BrowseNavbar() {
           </div>
 
           <Select>
-            <SelectTrigger className="w-[140px] bg-primary-foreground">
+            <SelectTrigger className="w-[140px]">
               <Languages size={20} />
               <SelectValue placeholder="Lang" />
             </SelectTrigger>
-            <SelectContent className="bg-primary-foreground">
+            <SelectContent className="">
               <SelectItem value="en">English</SelectItem>
               <SelectItem value="vi">Vietnamese</SelectItem>
             </SelectContent>
           </Select>
-          <section className="flex items-center gap-4 text-nowrap rounded-lg bg-primary-foreground p-1 text-muted-foreground">
+          <section className="flex items-center gap-4 text-nowrap rounded-lg p-1 text-muted-foreground">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Clock size={16} />
               {currentDate || "--:--"}

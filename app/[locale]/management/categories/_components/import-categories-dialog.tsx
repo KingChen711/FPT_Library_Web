@@ -110,11 +110,11 @@ const ImportCategoriesDialog = () => {
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <Button asChild variant="outline" className="bg-primary-foreground">
-          <DialogTrigger>
+        <DialogTrigger asChild>
+          <Button variant="outline" className="">
             <FileDown size={16} /> {t("Import")}
-          </DialogTrigger>
-        </Button>
+          </Button>
+        </DialogTrigger>
         <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
           <DialogHeader>
             <DialogTitle>{t("Import categories")}</DialogTitle>

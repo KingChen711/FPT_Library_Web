@@ -27,7 +27,7 @@ const BookList = ({ title, totalBooks }: Props) => {
         {dummyBooks.map((item) => (
           <Card
             key={item.id}
-            className="flex h-[380px] flex-col justify-between overflow-hidden bg-primary-foreground"
+            className="flex h-[380px] flex-col justify-between overflow-hidden"
           >
             <div className="flex h-3/4 items-center justify-center overflow-hidden">
               <Image

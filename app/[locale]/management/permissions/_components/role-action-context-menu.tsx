@@ -12,8 +12,8 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
 
+import EditRoleDialog from "../../roles/_components/edit-role-dialog"
 import DeleteRoleDialog from "./delete-role-dialog"
-import EditRoleDialog from "./edit-role-dialog"
 
 type Props = {
   roleId: number
@@ -39,11 +39,14 @@ function RoleActionContextMenu({ roleId, roleName }: Props) {
         setOpenDelete={setOpenDelete}
       />
       <ContextMenu>
-        <ContextMenuTrigger asChild>
-          <div className="min-w-[180px]">
+        <ContextMenuTrigger
+          asChild
+          disabled //!disable because the requirement has changed
+        >
+          <div className="min-w-[180px] cursor-default">
             <Button
               variant="ghost"
-              className="w-fit gap-x-2 font-bold text-primary hover:text-primary"
+              className="w-fit cursor-default gap-x-2 font-bold text-primary hover:text-primary"
             >
               {roleName}
             </Button>

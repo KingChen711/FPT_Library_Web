@@ -45,8 +45,6 @@ type Props = {
 const orderByOptions = [
   { label: "A-Z", value: "A-Z" },
   { label: "Z-A", value: "Z-A" },
-  { label: "Id ascending", value: "Id ascending" },
-  { label: "Id descending", value: "Id descending" },
 ]
 
 function CategoryTab({
@@ -173,9 +171,7 @@ function CategoryTab({
                             key={option.value}
                             value={option.value}
                             onSelect={(currentValue) => {
-                              setOrderBy(
-                                currentValue === orderBy ? "" : currentValue
-                              )
+                              setOrderBy(currentValue)
                               setOpen(false)
                             }}
                             className="cursor-pointer"

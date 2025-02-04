@@ -152,7 +152,7 @@ const AuthorImportDialog = () => {
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <Button asChild variant="outline" className="bg-primary-foreground">
+        <Button asChild variant="outline" className="">
           <DialogTrigger>
             <FileDown size={16} /> {tGeneralManagement("btn.import")}
           </DialogTrigger>

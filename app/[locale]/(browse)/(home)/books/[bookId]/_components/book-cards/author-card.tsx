@@ -25,7 +25,7 @@ const BookAuthorCard = async ({ bookId }: Props) => {
     return <div>{t("Book not found")}</div>
   }
   return (
-    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg bg-primary-foreground p-4 shadow-lg">
+    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg p-4 shadow-lg">
       <div>
         <h1 className="text-xl font-semibold capitalize">
           <span className="text-primary">{t("about")}</span>{" "}

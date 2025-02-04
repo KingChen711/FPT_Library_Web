@@ -9,10 +9,7 @@ import BookRelatedItemsTab from "./book-related-items-tab"
 
 const BookTabs = () => {
   return (
-    <Tabs
-      defaultValue="overview"
-      className="w-full rounded-lg bg-primary-foreground p-4 shadow-lg"
-    >
+    <Tabs defaultValue="overview" className="w-full rounded-lg p-4 shadow-lg">
       <TabsList className="flex justify-between">
         <TabsTrigger className="w-full" value="overview">
           Overview

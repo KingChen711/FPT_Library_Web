@@ -1,11 +1,15 @@
 import React, { type SetStateAction } from "react"
+import { Link } from "@/i18n/routing"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 
 import { type Author } from "@/lib/types/models"
+import { generateCutter } from "@/lib/utils"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
+import { Button } from "@/components/ui/button"
 import {
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -16,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea"
 
 import AuthorsField from "./authors-field"
 import CoverImageField from "./cover-image-field"
+import GenerateCutterNumberDialog from "./generate-cutter-number-dialog"
 
 type Props = {
   form: UseFormReturn<TBookEditionSchema>
@@ -35,6 +40,10 @@ function CatalogTab({
   isRequireImage,
 }: Props) {
   const t = useTranslations("BooksManagementPage")
+
+  const handleGenerateCutterNumber = (text: string) => {
+    form.setValue("cutterNumber", generateCutter(text))
+  }
 
   if (!show) return null
 
@@ -281,6 +290,13 @@ function CatalogTab({
                 className="min-w-96 max-w-full"
               />
             </FormControl>
+            <FormDescription>
+              <Button asChild variant="link" className="h-auto min-h-0 p-0">
+                <Link target="_blank" href="/guides/ddc">
+                  {t("What is DDC")}
+                </Link>
+              </Button>
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -301,6 +317,18 @@ function CatalogTab({
                 className="min-w-96 max-w-full"
               />
             </FormControl>
+            <FormDescription>
+              <div className="flex items-center gap-4">
+                <Button asChild variant="link" className="h-auto min-h-0 p-0">
+                  <Link target="_blank" href="/guides/cutter-number">
+                    {t("What is cutter number")}
+                  </Link>
+                </Button>
+                <GenerateCutterNumberDialog
+                  handleGenerateCutterNumber={handleGenerateCutterNumber}
+                />
+              </div>
+            </FormDescription>
             <FormMessage />
           </FormItem>
         )}

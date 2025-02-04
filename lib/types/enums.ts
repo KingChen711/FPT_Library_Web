@@ -3,6 +3,13 @@ export enum ERoleType {
   EMPLOYEE = "Employee",
 }
 
+export enum EAuditType {
+  NONE,
+  ADDED,
+  MODIFIED,
+  DELETED,
+}
+
 export enum ResourceType {
   Profile = "Profile",
   BookImage = "BookImage",
@@ -53,11 +60,12 @@ export enum EFeature {
   EMPLOYEE_MANAGEMENT = 2,
   ROLE_MANAGEMENT = 3,
   FINE_MANAGEMENT = 4,
-  BOOK_MANAGEMENT = 5,
-  BORROW_MANAGEMENT = 6,
-  TRANSACTION_MANAGEMENT = 7,
-  SYSTEM_CONFIGURATION_MANAGEMENT = 8,
-  SYSTEM_HEALTH_MANAGEMENT = 9,
+  LIBRARY_ITEM_MANAGEMENT = 5,
+  WAREHOUSE_TRACKING_MANAGEMENT = 6,
+  BORROW_MANAGEMENT = 7,
+  TRANSACTION_MANAGEMENT = 8,
+  SYSTEM_CONFIGURATION_MANAGEMENT = 9,
+  SYSTEM_HEALTH_MANAGEMENT = 10,
 }
 
 export enum EAccessLevel {
@@ -133,3 +141,19 @@ export const EFineTypeToIndex: Map<EFineType, number> = new Map([
   [EFineType.LOST, 1],
   [EFineType.DAMAGE, 2],
 ])
+
+export enum EFilterOperator {
+  INCLUDES,
+  EQUALS,
+  NOT_EQUALS_TO,
+  LESS_THAN,
+  LESS_THAN_OR_EQUALS_TO,
+  GREATER_THAN,
+  GREATER_THAN_OR_EQUALS_TO,
+}
+
+export enum ESearchType {
+  QUICK_SEARCH,
+  BASIC_SEARCH,
+  ADVANCED_SEARCH,
+}

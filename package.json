@@ -30,6 +30,7 @@
     "@radix-ui/react-popover": "^1.1.2",
     "@radix-ui/react-progress": "^1.1.1",
     "@radix-ui/react-radio-group": "^1.2.1",
+    "@radix-ui/react-scroll-area": "^1.2.2",
     "@radix-ui/react-select": "^2.1.2",
     "@radix-ui/react-separator": "^1.1.1",
     "@radix-ui/react-slider": "^1.2.2",
@@ -54,6 +55,7 @@
     "clsx": "^2.1.1",
     "cmdk": "^1.0.0",
     "date-fns": "^3.0.0",
+    "diff": "^7.0.0",
     "embla-carousel-autoplay": "^8.5.1",
     "embla-carousel-react": "^8.5.1",
     "eslint-config-prettier": "^9.1.0",
@@ -105,6 +107,7 @@
   },
   "devDependencies": {
     "@types/bun": "latest",
+    "@types/diff": "^7.0.1",
     "@types/node": "^20",
     "@types/react": "^19.0.0",
     "@types/react-date-range": "^1.4.9",

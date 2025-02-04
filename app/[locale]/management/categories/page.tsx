@@ -10,7 +10,7 @@ import ImportCategoriesDialog from "./_components/import-categories-dialog"
 import MutateCategoryDialog from "./_components/mutate-category-dialog"
 
 async function CategoriesManagementPage() {
-  await auth().protect(EFeature.BOOK_MANAGEMENT)
+  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("CategoriesManagementPage")
   const categories = await getCategories()
 

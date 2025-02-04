@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import { PencilIcon, Trash2Icon } from "lucide-react"
+import { Brain, Hash, PencilIcon, Trash2Icon } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { type Category } from "@/lib/types/models"
@@ -15,6 +15,9 @@ import {
 
 import DeleteCategoryDialog from "../../app/[locale]/management/categories/_components/delete-category-dialog"
 import MutateCategoryDialog from "../../app/[locale]/management/categories/_components/mutate-category-dialog"
+import { Badge } from "./badge"
+import { Card, CardContent, CardHeader, CardTitle } from "./card"
+import { Icons } from "./icons"
 import { Skeleton } from "./skeleton"
 
 type Props = {
@@ -53,34 +56,52 @@ function CategoryCard({
       />
       <ContextMenu>
         <ContextMenuTrigger disabled={disabledContext} asChild>
-          <div
+          <Card
+            onClick={() => {
+              if (onClick) onClick()
+            }}
             className={cn(
-              "col-span-12 h-full flex-1 rounded-md border bg-card p-4 shadow sm:col-span-6 lg:col-span-3",
+              "col-span-12 h-full flex-1 rounded-md border bg-card shadow sm:col-span-6 lg:col-span-3",
               className
             )}
-            onClick={() => {
-              if (onClick) {
-                onClick()
-              }
-            }}
           >
-            {/* <div className="flex">
-              <div className="text-sm">
-                Id: <strong>{category.categoryId}</strong>
-              </div>
-            </div> */}
+            <CardHeader className="pb-4">
+              <CardTitle className="flex items-center justify-between">
+                <span className="line-clamp-2 flex items-center">
+                  <Icons.Category className="mr-2 size-5" />
+                  {locale === "en"
+                    ? category.englishName
+                    : category.vietnameseName}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-2">
+                <div className="flex items-center">
+                  <Hash className="mr-2 size-4 text-muted-foreground" />
+                  <span className="font-medium">{t("Prefix")}:</span>
+                  <span className="ml-2 font-bold">{category.prefix}</span>
+                </div>
 
-            <div className="line-clamp-2 text-sm font-medium text-muted-foreground">
-              {t("Prefix")}:{" "}
-              <span className="text-foreground">{category.prefix}</span>
-            </div>
-            <div className="line-clamp-2 font-bold">
-              {locale === "en" ? category.englishName : category.vietnameseName}
-            </div>
-            <p className="line-clamp-4 text-sm text-muted-foreground">
-              {category.description}
-            </p>
-          </div>
+                <div className="flex items-center">
+                  <Brain className="mr-2 size-4 text-muted-foreground" />
+                  <span className="font-medium">AI Training:</span>
+                  <Badge
+                    variant={
+                      category.isAllowAITraining ? "success" : "destructive"
+                    }
+                    className="ml-2 rounded-md"
+                  >
+                    {category.isAllowAITraining
+                      ? t("Allowed")
+                      : t("Not allowed")}
+                  </Badge>
+                </div>
+
+                <p>{category.description}</p>
+              </div>
+            </CardContent>
+          </Card>
         </ContextMenuTrigger>
         <ContextMenuContent>
           <ContextMenuItem

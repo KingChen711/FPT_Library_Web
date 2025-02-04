@@ -29,7 +29,7 @@ const BookInfoCard = async ({ bookId }: Props) => {
   }
 
   return (
-    <div className="flex w-3/5 flex-col justify-between rounded-lg bg-primary-foreground p-4 shadow-lg">
+    <div className="flex w-3/5 flex-col justify-between rounded-lg p-4 shadow-lg">
       <div className="space-y-2">
         <p className="font-thin italic">
           {t("an edition of")} &nbsp;

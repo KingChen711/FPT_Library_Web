@@ -5,7 +5,7 @@ import defaultBookCover from "@/public/assets/images/default-book-cover.jpg"
 import { auth } from "@/queries/auth"
 import getBookEditions from "@/queries/books/get-book-editions"
 import { format } from "date-fns"
-import { Check, Plus, X } from "lucide-react"
+import { Check, Eye, MoreHorizontal, Plus, X } from "lucide-react"
 import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
@@ -25,6 +25,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
 import ParseHtml from "@/components/ui/parse-html"
@@ -44,11 +50,14 @@ import TrainedBadge from "@/components/ui/trained-badge"
 import Hidable from "@/components/hoc/hidable"
 
 import BookEditionCheckbox from "./_components/book-edition-checkbox"
+import { BooksFilter } from "./_components/books-filter"
 // import BookEditionActionDropdown from "./_components/book-edition-dropdown"
 import ColumnsButton from "./_components/columns-button"
+import ExportButton from "./_components/export-button"
+import ImportDialog from "./_components/import-dialog"
 import SelectedIdsIndicator from "./_components/selected-ids-indicator"
 import BookEditionsTabs from "./[id]/_components/book-editions-tabs"
-import MoveTrashBookEditionsButton from "./[id]/_components/move-trash-book-editions-button"
+import BooksActionsDropdown from "./[id]/_components/books-actions-dropdown"
 
 type Props = {
   searchParams: {
@@ -61,10 +70,12 @@ type Props = {
 }
 
 async function BooksManagementPage({ searchParams }: Props) {
-  const { search, pageIndex, sort, pageSize, tab, columns, ...rest } =
+  const { search, pageIndex, sort, pageSize, tab, columns, f, o, v, ...rest } =
     searchBookEditionsSchema.parse(searchParams)
 
-  await auth().protect(EFeature.BOOK_MANAGEMENT)
+  console.log({ searchParams })
+
+  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("BooksManagementPage")
   const locale = await getLocale()
 
@@ -79,6 +90,9 @@ async function BooksManagementPage({ searchParams }: Props) {
     pageSize,
     tab,
     columns,
+    f,
+    o,
+    v,
     ...rest,
   })
 
@@ -86,22 +100,7 @@ async function BooksManagementPage({ searchParams }: Props) {
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <h3 className="text-2xl font-semibold">{t("Books")}</h3>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex flex-row items-center">
-            <SearchForm
-              // className="h-full rounded-r-none border-r-0"
-              search={search}
-            />
-            {/* <FiltersBooksDialog /> */}
-          </div>
-
-          <SelectedIdsIndicator />
-        </div>
-        <div className="flex flex-wrap items-center gap-x-4">
-          <MoveTrashBookEditionsButton tab={tab} />
+        <div className="flex items-center gap-4">
           <ColumnsButton columns={columns} />
           <Button asChild>
             <Link href="/management/books/create">
@@ -109,6 +108,38 @@ async function BooksManagementPage({ searchParams }: Props) {
               {t("Create book")}
             </Link>
           </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-row items-center">
+            <SearchForm
+              className="h-10 rounded-r-none border-r-0"
+              search={search}
+            />
+            <BooksFilter f={f} o={o} v={v} />
+          </div>
+
+          <SelectedIdsIndicator />
+        </div>
+        <div className="flex flex-wrap items-center gap-x-4">
+          <BooksActionsDropdown tab={tab} />
+          <ImportDialog />
+          <ExportButton
+            searchParams={{
+              search,
+              pageIndex,
+              sort,
+              pageSize,
+              tab,
+              columns,
+              f,
+              o,
+              v,
+              ...rest,
+            }}
+          />
         </div>
       </div>
 
@@ -704,7 +735,24 @@ async function BooksManagementPage({ searchParams }: Props) {
 
                     <TableCell>
                       <div className="flex items-center justify-center">
-                        {/* <BookEditionActionDropdown bookEdition={book} /> */}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>
+                              <Link
+                                href={`/management/books/${book.libraryItemId}`}
+                                className="flex items-center gap-2"
+                              >
+                                <Eye className="size-4" />
+                                {t("View details")}
+                              </Link>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </TableCell>
                   </TableRow>

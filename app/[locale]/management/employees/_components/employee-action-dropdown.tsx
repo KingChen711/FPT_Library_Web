@@ -103,7 +103,7 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-primary-foreground">
+        <DropdownMenuContent align="end" className="">
           {!employee?.isDeleted ? (
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>

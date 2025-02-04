@@ -75,7 +75,22 @@ export const searchBookEditionsSchema = z
     search: z.string().catch(""),
     pageIndex: z.coerce.number().min(1).catch(1),
     pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("5"),
-    //TODO fix sort
+    f: z
+      .array(z.string())
+      .or(z.string())
+      .transform((data) => (Array.isArray(data) ? data : [data]))
+      .catch([]),
+    o: z
+      .array(z.string())
+      .or(z.string())
+      .transform((data) => (Array.isArray(data) ? data : [data]))
+      .catch([]),
+    v: z
+      .array(z.string())
+      .or(z.string())
+      .transform((data) => (Array.isArray(data) ? data : [data]))
+      .catch([]),
+    searchType: z.enum(["0", "1", "2"]).catch("0"),
     sort: z
       .enum([
         "Title",

@@ -33,7 +33,6 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 type Props = {
   openEdit: boolean
@@ -122,41 +121,6 @@ function EditRoleDialog({ openEdit, setOpenEdit, roleId }: Props) {
                       <FormLabel>{t("Vietnamese name")}</FormLabel>
                       <FormControl>
                         <Input disabled={isPending || isLoading} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="roleTypeIdx"
-                  render={({ field }) => (
-                    <FormItem className="space-y-3">
-                      <FormLabel>{t("Role type")}</FormLabel>
-                      <FormControl>
-                        <RadioGroup
-                          value={field.value}
-                          onValueChange={field.onChange}
-                          className="flex flex-col space-y-1"
-                        >
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value={ERoleType.USER} />
-                            </FormControl>
-                            <FormLabel className="cursor-pointer font-normal">
-                              {t(ERoleType.USER)}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value={ERoleType.EMPLOYEE} />
-                            </FormControl>
-                            <FormLabel className="cursor-pointer font-normal">
-                              {t(ERoleType.EMPLOYEE)}
-                            </FormLabel>
-                          </FormItem>
-                        </RadioGroup>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
