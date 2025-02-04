@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react"
 import { useSocket } from "@/contexts/socket-provider"
-import { useScanIsbn } from "@/stores/use-scan-isnb"
+import { useScanIsbn } from "@/stores/use-scan-isbn"
 import { Scanner } from "@yudiel/react-qr-scanner"
 import { QrCode } from "lucide-react"
 import { useTranslations } from "next-intl"
@@ -35,6 +35,7 @@ function IsbnScannerDialog() {
       if (device !== "Mobile" || isbn) return
 
       setScannedIsbn(scannedIsbn)
+      setOpen(false)
     }
 
     socket.on("isbn-scanned", callback)
@@ -47,6 +48,7 @@ function IsbnScannerDialog() {
   const handleScanFromWeb = (scannedIsbn: string) => {
     if (device !== "Web" || isbn) return
     setScannedIsbn(scannedIsbn)
+    setOpen(false)
   }
 
   return (
@@ -62,7 +64,7 @@ function IsbnScannerDialog() {
           <QrCode />
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] w-fit overflow-y-auto overflow-x-hidden">
+      <DialogContent className="max-h-[80vh] w-fit overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>{t("ISBN scanner")}</DialogTitle>
           <DialogDescription>

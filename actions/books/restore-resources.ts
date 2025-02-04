@@ -17,7 +17,7 @@ export async function restoreResources({
   const { getAccessToken } = auth()
   try {
     const { message } = await http.patch(
-      `/api/management/books/resources/undo-delete-range`,
+      `/api/management/library-items/resources/undo-delete-range`,
       { ids },
       {
         headers: {

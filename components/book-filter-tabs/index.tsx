@@ -17,10 +17,7 @@ export function BookFilterTabs() {
       <PopoverTrigger className="flex cursor-pointer items-center gap-2 px-8">
         <Filter size={16} /> Filter
       </PopoverTrigger>
-      <PopoverContent
-        align="start"
-        className="mt-2 w-[650px] space-y-4 bg-primary-foreground p-4"
-      >
+      <PopoverContent align="start" className="mt-2 w-[650px] space-y-4 p-4">
         <Tabs defaultValue="quick-search" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="quick-search">Quick search</TabsTrigger>

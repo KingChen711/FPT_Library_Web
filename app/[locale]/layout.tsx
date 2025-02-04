@@ -8,13 +8,19 @@ import "./globals.css"
 import { notFound } from "next/navigation"
 import AuthProvider from "@/contexts/auth-provider"
 import { ReactQueryProvider } from "@/contexts/react-query-provider"
-import SocketProvider from "@/contexts/socket-provider"
+// import SocketProvider from "@/contexts/socket-provider"
 import { ThemeProvider } from "@/contexts/theme-provider"
 import { routing } from "@/i18n/routing"
 import { NextIntlClientProvider } from "next-intl"
 import { getMessages, setRequestLocale } from "next-intl/server"
 
 import { Toaster } from "@/components/ui/toaster"
+
+// const dmSans = localFont({
+//   src: "./fonts/DMSansVF.ttf",
+//   variable: "--font-dm-sans",
+//   weight: "100 200 300 400 500 600 700 800 900",
+// })
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -62,16 +68,16 @@ export default async function RootLayout({
         <ReactQueryProvider>
           <NextIntlClientProvider messages={messages}>
             <AuthProvider>
-              <SocketProvider>
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="system"
-                  enableSystem
-                  disableTransitionOnChange
-                >
-                  {children}
-                </ThemeProvider>
-              </SocketProvider>
+              {/* <SocketProvider> */}
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+              </ThemeProvider>
+              {/* </SocketProvider> */}
             </AuthProvider>
           </NextIntlClientProvider>
         </ReactQueryProvider>

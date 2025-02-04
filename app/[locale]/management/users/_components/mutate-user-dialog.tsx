@@ -86,7 +86,7 @@ function MutateUserDialog({ type, user, openEdit, setOpenEdit }: Props) {
       phone: type === "update" ? user.phone : "",
       address: type === "update" ? user.address : "",
       gender: type === "update" ? user.gender : undefined,
-      dob: type === "update" ? format(new Date(user.dob), "yyyy-MM-dd") : "",
+      dob: type === "update" ? format(new Date(user.dob), "dd-MM-yyyy") : "",
     },
   })
 

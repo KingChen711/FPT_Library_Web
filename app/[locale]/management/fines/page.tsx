@@ -19,9 +19,9 @@ import {
 } from "@/components/ui/table"
 
 import DeleteFinesButton from "./_components/delete-fines-button"
-import FiltersFinesDialog from "./_components/filters-fines-dialog"
 import FineActionDropdown from "./_components/fine-action-dropdown"
 import FineCheckbox from "./_components/fine-checkbox"
+import ImportFinesDialog from "./_components/import-fines-dialog"
 import MutateFineDialog from "./_components/mutate-fine-dialog"
 import SelectedIdsIndicator from "./_components/selected-ids-indicator"
 
@@ -55,16 +55,17 @@ async function FinesManagementPage({ searchParams }: Props) {
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-row items-center">
             <SearchForm
-              className="h-full rounded-r-none border-r-0"
+              // className="h-full rounded-r-none border-r-0"
               search={search}
             />
-            <FiltersFinesDialog />
+            {/* <FiltersFinesDialog /> */}
           </div>
 
           <SelectedIdsIndicator />
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
           <DeleteFinesButton />
+          <ImportFinesDialog />
           <MutateFineDialog type="create" />
         </div>
       </div>
@@ -77,8 +78,8 @@ async function FinesManagementPage({ searchParams }: Props) {
                 <TableHead></TableHead>
                 <SortableTableHead
                   currentSort={sort}
-                  label="Id"
-                  sortKey="FinePolicyId"
+                  label={t("Title")}
+                  sortKey="FinePolicyTitle"
                 />
                 <SortableTableHead
                   currentSort={sort}
@@ -106,9 +107,7 @@ async function FinesManagementPage({ searchParams }: Props) {
                   <TableCell className="">
                     <FineCheckbox id={fine.finePolicyId} />
                   </TableCell>
-                  <TableCell className="font-extrabold">
-                    {fine.finePolicyId}
-                  </TableCell>
+                  <TableCell>{fine.finePolicyTitle}</TableCell>
                   <TableCell>{fine.conditionType}</TableCell>
                   <TableCell>{formatPrice(fine.fixedFineAmount)}</TableCell>
                   <TableCell>{formatPrice(fine.fineAmountPerDay)}</TableCell>

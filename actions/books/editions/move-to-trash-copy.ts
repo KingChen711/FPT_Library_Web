@@ -9,16 +9,15 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function moveToTrashCopy({
   bookId,
   copyId,
-  editionId,
 }: {
   bookId: number
-  editionId: number
+
   copyId: number
 }): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.patch(
-      `/api/management/books/editions/copies/${copyId}/soft-delete`,
+      `/api/management/library-items/instances/${copyId}/soft-delete`,
       {},
       {
         headers: {
@@ -29,7 +28,6 @@ export async function moveToTrashCopy({
 
     revalidatePath("/management/books")
     revalidatePath(`/management/books/${bookId}`)
-    revalidatePath(`/management/books/${bookId}/editions/${editionId}`)
 
     return {
       isSuccess: true,

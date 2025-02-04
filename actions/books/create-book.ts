@@ -5,7 +5,7 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TMutateBookSchema } from "@/lib/validations/books/mutate-book"
+import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 
 export type TCreateBookRes = {
   bookCodeForAITraining: string
@@ -13,12 +13,12 @@ export type TCreateBookRes = {
 }
 
 export async function createBook(
-  body: TMutateBookSchema
+  body: TBookEditionSchema
 ): Promise<ActionResponse<{ message: string } & TCreateBookRes>> {
   const { getAccessToken } = auth()
   try {
     const { message, data } = await http.post<TCreateBookRes>(
-      "/api/management/books",
+      "/api/management/library-items",
       body,
       {
         headers: {

@@ -3,6 +3,8 @@ import { jwtDecode } from "jwt-decode"
 import queryString from "query-string"
 import { twMerge } from "tailwind-merge"
 
+import cutterData from "./cutter-data.json"
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -131,6 +133,47 @@ export function isImageLinkValid(link: string): boolean {
   } catch {
     return false
   }
+}
+
+export function generateCutter(name: string) {
+  const suffix = ""
+
+  const sp = "".toLowerCase().replace(/\W/, "")
+  name = name.toLowerCase().replace(/\W/, "")
+
+  const format = (num: string) => {
+    const ch = name.toUpperCase().slice(0, 4 - num.length)
+    return `${ch}${num}${suffix}`
+  }
+
+  let letters = "abcdefghijklmnopqrstuvwxyz".split("")
+  letters = letters.slice(0, letters.indexOf(sp[0]) + 1)
+  for (const c of letters.reverse()) {
+    const key = `${name},${c}.`
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    const num: string | undefined = cutterData[key]
+    if (num) {
+      return format(num)
+    }
+  }
+
+  let key = name
+  while (key) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-ignore
+    const num: string | undefined = cutterData[key]
+    if (num) {
+      return format(num)
+    }
+    key = key.slice(0, key.length - 1)
+  }
+  return ""
+}
+
+export function pascalToCamel(str: string): string {
+  if (!str) return str // Handle empty string
+  return str.charAt(0).toLowerCase() + str.slice(1)
 }
 
 export function splitCamelCase(text: string): string {

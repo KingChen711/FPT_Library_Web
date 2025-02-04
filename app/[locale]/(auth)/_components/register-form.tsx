@@ -14,13 +14,14 @@ import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { cn } from "@/lib/utils"
 import {
   registerSchema,
   type TRegisterSchema,
 } from "@/lib/validations/auth/register"
 import { loginGoogle } from "@/actions/auth/login-google"
 import { register } from "@/actions/auth/register"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -198,9 +199,10 @@ function RegisterForm() {
                       {...field}
                       className="border-none outline-none focus-visible:ring-transparent"
                     />
-                    <Button
-                      size="icon"
-                      variant="ghost"
+                    <div
+                      className={cn(
+                        buttonVariants({ size: "icon", variant: "ghost" })
+                      )}
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
@@ -208,7 +210,7 @@ function RegisterForm() {
                       }}
                     >
                       {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                    </Button>
+                    </div>
                   </div>
                 </FormControl>
                 <FormMessage />
@@ -230,9 +232,10 @@ function RegisterForm() {
                       {...field}
                       className="border-none outline-none focus-visible:ring-transparent"
                     />
-                    <Button
-                      size="icon"
-                      variant="ghost"
+                    <div
+                      className={cn(
+                        buttonVariants({ size: "icon", variant: "ghost" })
+                      )}
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
@@ -240,7 +243,7 @@ function RegisterForm() {
                       }}
                     >
                       {showConfirmPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                    </Button>
+                    </div>
                   </div>
                 </FormControl>
                 <FormMessage />

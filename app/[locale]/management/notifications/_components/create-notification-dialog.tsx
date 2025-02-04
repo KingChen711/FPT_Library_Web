@@ -143,7 +143,7 @@ function CreateNotificationDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] w-full max-w-2xl overflow-y-auto overflow-x-hidden">
+      <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>{t("Create notification")}</DialogTitle>
           <DialogDescription>

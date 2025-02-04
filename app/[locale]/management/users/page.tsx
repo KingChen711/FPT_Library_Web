@@ -81,7 +81,7 @@ async function UsersManagementPage({ searchParams }: Props) {
               className="h-full rounded-r-none border-r-0"
               search={search}
             />
-            <FilterUsersDialog userRoles={userRoles} />
+            <FilterUsersDialog />
           </div>
 
           <SelectedUserIdsIndicator />

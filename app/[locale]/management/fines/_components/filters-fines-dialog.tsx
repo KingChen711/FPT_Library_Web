@@ -75,7 +75,7 @@ function FiltersFinesDialog() {
       updates: {
         gender: values.gender,
         createdDateRange: values.createdDateRange.map((date) =>
-          date ? format(date, "yyyy-MM-dd") : JSON.stringify(null)
+          date ? format(date, "dd-MM-yyyy") : JSON.stringify(null)
         ),
       },
     })
@@ -93,7 +93,7 @@ function FiltersFinesDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] w-full">
+      <DialogContent className="max-h-[80vh] w-full">
         <DialogHeader>
           <DialogTitle>Filter fines</DialogTitle>
           <DialogDescription>

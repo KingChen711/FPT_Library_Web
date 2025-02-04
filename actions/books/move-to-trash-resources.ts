@@ -15,9 +15,10 @@ export async function moveToTrashResources({
   ids: number[]
 }): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
+
   try {
     const { message } = await http.patch(
-      `/api/management/books/resources/soft-delete-range`,
+      `/api/management/library-items/resources/soft-delete-range`,
       { ids },
       {
         headers: {
@@ -34,6 +35,8 @@ export async function moveToTrashResources({
       data: message,
     }
   } catch (error) {
+    console.log(error)
+
     return handleHttpError(error)
   }
 }

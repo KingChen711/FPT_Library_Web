@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { EFineType } from "@/lib/types/enums"
 import { type Fine } from "@/lib/types/models"
 import {
   mutateFineSchema,
@@ -34,6 +35,13 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 
 type Props = {
@@ -71,10 +79,12 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
   const form = useForm<TMutateFineSchema>({
     resolver: zodResolver(mutateFineSchema),
     defaultValues: {
-      conditionType: type === "update" ? fine.conditionType : "",
+      conditionType:
+        type === "update" ? fine.conditionType : EFineType.OVER_DUE,
       description: type === "update" ? fine.description || "" : "",
       fineAmountPerDay: type === "update" ? fine.fineAmountPerDay : 0,
       fixedFineAmount: type === "update" ? fine.fixedFineAmount : 0,
+      finePolicyTitle: type === "update" ? fine.finePolicyTitle : "",
     },
   })
 
@@ -128,13 +138,47 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
               >
                 <FormField
                   control={form.control}
-                  name="conditionType"
+                  name="finePolicyTitle"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("Condition type")}</FormLabel>
+                      <FormLabel>{t("Title")}</FormLabel>
                       <FormControl>
                         <Input disabled={isPending} {...field} />
                       </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="conditionType"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t("Condition type")}
+                        <span className="ml-1 text-xl font-bold leading-none text-primary">
+                          *
+                        </span>
+                      </FormLabel>
+                      <Select
+                        value={field.value}
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.values(EFineType).map((option) => (
+                            <SelectItem key={option} value={option}>
+                              {t(option)}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+
                       <FormMessage />
                     </FormItem>
                   )}

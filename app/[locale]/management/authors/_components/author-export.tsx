@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/auth-provider"
 import { FileUp } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { httpBlob } from "@/lib/http-blob"
+import { http } from "@/lib/http"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 
@@ -19,7 +19,7 @@ const AuthorExport = () => {
   const handleExportAuthor = () => {
     startTransition(async () => {
       try {
-        const res = await httpBlob.get<Blob>(
+        const { data } = await http.get<Blob>(
           `/api/management/authors/export?${searchParams.toString()}`,
           {
             headers: {
@@ -29,7 +29,7 @@ const AuthorExport = () => {
           }
         )
 
-        if (res.size == 0) {
+        if (data.size == 0) {
           toast({
             title: tGeneralManagement("error"),
             description: tGeneralManagement("fileEmptyMessage"),
@@ -38,7 +38,7 @@ const AuthorExport = () => {
           return
         }
 
-        const url = URL.createObjectURL(res)
+        const url = URL.createObjectURL(data)
         const a = document.createElement("a")
         a.href = url
         a.download = "Authors.xlsx"
@@ -53,7 +53,7 @@ const AuthorExport = () => {
   return (
     <Button
       variant="outline"
-      className="bg-primary-foreground"
+      className=""
       onClick={handleExportAuthor}
       disabled={isPending}
     >

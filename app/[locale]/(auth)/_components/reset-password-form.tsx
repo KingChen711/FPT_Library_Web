@@ -10,9 +10,10 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { http } from "@/lib/http"
+import { cn } from "@/lib/utils"
 import { otpSchema, type TOtpSchema } from "@/lib/validations/auth/otp"
 import { verifyOtpChangePassword } from "@/actions/auth/verify-otp-change-password"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -73,9 +74,7 @@ function ResetPasswordForm({ email, type }: Props) {
     })
   }
 
-  function handleResendCode(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  function handleResendCode(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.preventDefault()
     e.stopPropagation()
     setTimeDisableResend(30)
@@ -119,15 +118,18 @@ function ResetPasswordForm({ email, type }: Props) {
                     </InputOTP>
                   </FormControl>
                   <FormDescription>
-                    <Button
+                    <div
                       onClick={handleResendCode}
-                      disabled={timeDisableResend > 0}
-                      className="min-h-0 min-w-0 p-0 hover:bg-transparent hover:underline"
-                      variant="ghost"
+                      className={cn(
+                        buttonVariants({ variant: "ghost" }),
+                        "min-h-0 min-w-0 cursor-pointer p-0 hover:bg-transparent hover:underline",
+                        timeDisableResend > 0 &&
+                          "pointer-events-none text-muted-foreground"
+                      )}
                     >
                       {t("No code")}{" "}
                       {timeDisableResend > 0 ? `(${timeDisableResend})` : null}
-                    </Button>
+                    </div>
                   </FormDescription>
                   <FormMessage />
                 </FormItem>

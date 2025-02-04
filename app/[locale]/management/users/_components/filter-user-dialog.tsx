@@ -2,7 +2,6 @@
 
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { type TUserRole } from "@/queries/users/get-user-roles"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { Filter } from "lucide-react"
@@ -43,13 +42,10 @@ import {
 
 import FilterDateUser from "./filter-date-user"
 
-type Props = {
-  userRoles: TUserRole[]
-}
-
-function FilterUsersDialog({ userRoles }: Props) {
+function FilterUsersDialog() {
   const t = useTranslations("GeneralManagement")
   const router = useRouter()
+
   const [open, setOpen] = useState(false)
   const searchParams = useSearchParams()
 
@@ -82,13 +78,13 @@ function FilterUsersDialog({ userRoles }: Props) {
         lastName: values.lastName,
         gender: values.gender,
         dobRange: values.dobRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
+          date ? format(new Date(date), "dd-MM-yyyy") : ""
         ),
         modifiedDateRange: values.modifiedDateRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
+          date ? format(new Date(date), "dd-MM-yyyy") : ""
         ),
         createDateRange: values.createDateRange.map((date) =>
-          date ? format(new Date(date), "yyyy-MM-dd") : ""
+          date ? format(new Date(date), "dd-MM-yyyy") : ""
         ),
       },
     })
@@ -105,7 +101,7 @@ function FilterUsersDialog({ userRoles }: Props) {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] w-full overflow-y-auto">
+      <DialogContent className="max-h-[80vh] w-full overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("filter.user")}</DialogTitle>
           <DialogDescription>

@@ -1,7 +1,10 @@
 import { z } from "zod"
 
+import { EFineType } from "@/lib/types/enums"
+
 export const mutateFineSchema = z.object({
-  conditionType: z.string().trim().min(1, "min1"),
+  finePolicyTitle: z.string().trim().min(1, "min1"),
+  conditionType: z.nativeEnum(EFineType),
   fineAmountPerDay: z.coerce.number(),
   fixedFineAmount: z.coerce.number(),
   description: z.string().trim().optional(),

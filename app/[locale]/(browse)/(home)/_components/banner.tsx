@@ -84,7 +84,7 @@ const BannerHome = () => {
         </Carousel>
       </div>
 
-      <div className="col-span-2 flex h-full rounded-lg border-8 border-primary bg-primary-foreground shadow-lg">
+      <div className="col-span-2 flex h-full rounded-lg border-8 border-primary shadow-lg">
         <div className="flex w-1/12 items-center justify-center bg-primary text-xl font-semibold text-accent">
           <p className="-rotate-90 text-nowrap">New Arrivals</p>
         </div>

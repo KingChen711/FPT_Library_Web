@@ -5,22 +5,38 @@ import defaultBookCover from "@/public/assets/images/default-book-cover.jpg"
 import { auth } from "@/queries/auth"
 import getBookEditions from "@/queries/books/get-book-editions"
 import { format } from "date-fns"
-import { Check, Plus, X } from "lucide-react"
+import { Check, Eye, MoreHorizontal, Plus, X } from "lucide-react"
 import { getLocale } from "next-intl/server"
 
-import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EBookEditionStatus, EFeature } from "@/lib/types/enums"
+import { formatPrice } from "@/lib/utils"
 import {
   Column,
   searchBookEditionsSchema,
 } from "@/lib/validations/books/search-book-editions"
 import BookEditionStatusBadge from "@/components/ui/book-edition-status-badge"
-import BookFormatBadge from "@/components/ui/book-format-badge"
 import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
+import ParseHtml from "@/components/ui/parse-html"
+import Rating from "@/components/ui/rating"
 import SearchForm from "@/components/ui/search-form"
+import ShelfBadge from "@/components/ui/shelf-badge"
 import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
   Table,
@@ -30,14 +46,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import TrainedBadge from "@/components/ui/trained-badge"
 import Hidable from "@/components/hoc/hidable"
 
 import BookEditionCheckbox from "./_components/book-edition-checkbox"
-import BookEditionActionDropdown from "./_components/book-edition-dropdown"
+import { BooksFilter } from "./_components/books-filter"
+// import BookEditionActionDropdown from "./_components/book-edition-dropdown"
 import ColumnsButton from "./_components/columns-button"
+import ExportButton from "./_components/export-button"
+import ImportDialog from "./_components/import-dialog"
 import SelectedIdsIndicator from "./_components/selected-ids-indicator"
 import BookEditionsTabs from "./[id]/_components/book-editions-tabs"
-import MoveTrashBookEditionsButton from "./[id]/_components/move-trash-book-editions-button"
+import BooksActionsDropdown from "./[id]/_components/books-actions-dropdown"
 
 type Props = {
   searchParams: {
@@ -50,13 +70,15 @@ type Props = {
 }
 
 async function BooksManagementPage({ searchParams }: Props) {
-  const { search, pageIndex, sort, pageSize, tab, columns, ...rest } =
+  const { search, pageIndex, sort, pageSize, tab, columns, f, o, v, ...rest } =
     searchBookEditionsSchema.parse(searchParams)
 
-  await auth().protect(EFeature.BOOK_MANAGEMENT)
+  console.log({ searchParams })
+
+  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("BooksManagementPage")
   const locale = await getLocale()
-  const formatLocale = await getFormatLocale()
+
   const {
     sources: books,
     totalActualItem,
@@ -68,6 +90,9 @@ async function BooksManagementPage({ searchParams }: Props) {
     pageSize,
     tab,
     columns,
+    f,
+    o,
+    v,
     ...rest,
   })
 
@@ -75,22 +100,7 @@ async function BooksManagementPage({ searchParams }: Props) {
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <h3 className="text-2xl font-semibold">{t("Books")}</h3>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex flex-row items-center">
-            <SearchForm
-              // className="h-full rounded-r-none border-r-0"
-              search={search}
-            />
-            {/* <FiltersBooksDialog /> */}
-          </div>
-
-          <SelectedIdsIndicator />
-        </div>
-        <div className="flex flex-wrap items-center gap-x-4">
-          <MoveTrashBookEditionsButton tab={tab} />
+        <div className="flex items-center gap-4">
           <ColumnsButton columns={columns} />
           <Button asChild>
             <Link href="/management/books/create">
@@ -98,6 +108,38 @@ async function BooksManagementPage({ searchParams }: Props) {
               {t("Create book")}
             </Link>
           </Button>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-row items-center">
+            <SearchForm
+              className="h-10 rounded-r-none border-r-0"
+              search={search}
+            />
+            <BooksFilter f={f} o={o} v={v} />
+          </div>
+
+          <SelectedIdsIndicator />
+        </div>
+        <div className="flex flex-wrap items-center gap-x-4">
+          <BooksActionsDropdown tab={tab} />
+          <ImportDialog />
+          <ExportButton
+            searchParams={{
+              search,
+              pageIndex,
+              sort,
+              pageSize,
+              tab,
+              columns,
+              f,
+              o,
+              v,
+              ...rest,
+            }}
+          />
         </div>
       </div>
 
@@ -109,12 +151,6 @@ async function BooksManagementPage({ searchParams }: Props) {
               <TableHeader className="">
                 <TableRow className="">
                   <TableHead></TableHead>
-
-                  <Hidable hide={!columns.includes(Column.BOOK_CODE)}>
-                    <TableHead className="text-nowrap font-bold">
-                      {t("Book code")}
-                    </TableHead>
-                  </Hidable>
 
                   <Hidable hide={!columns.includes(Column.COVER_IMAGE)}>
                     <TableHead>
@@ -132,21 +168,54 @@ async function BooksManagementPage({ searchParams }: Props) {
                     />
                   </Hidable>
 
-                  <Hidable hide={!columns.includes(Column.EDITION_TITLE)}>
+                  <Hidable hide={!columns.includes(Column.SUBTITLE)}>
                     <SortableTableHead
                       currentSort={sort}
-                      label={t("Edition title")}
-                      sortKey="EditionTitle"
+                      label={t("Sub title")}
+                      sortKey="SubTitle"
                     />
                   </Hidable>
 
+                  <Hidable hide={!columns.includes(Column.AUTHORS)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Authors")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.ADDITIONAL_AUTHORS)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Additional authors")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.RESPONSIBILITY)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Responsibility")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.EDITION)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Edition")}
+                    </TableHead>
+                  </Hidable>
+
                   <Hidable hide={!columns.includes(Column.EDITION_NUMBER)}>
-                    <SortableTableHead
-                      currentSort={sort}
-                      label={t("Edition number")}
-                      sortKey="EditionNumber"
-                      position="center"
-                    />
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Edition number")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.LANGUAGE)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Language")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.ORIGIN_LANGUAGE)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Original language")}
+                    </TableHead>
                   </Hidable>
 
                   <Hidable hide={!columns.includes(Column.PUBLICATION_YEAR)}>
@@ -154,47 +223,59 @@ async function BooksManagementPage({ searchParams }: Props) {
                       currentSort={sort}
                       label={t("Publication year")}
                       sortKey="PublicationYear"
-                      position="center"
                     />
-                  </Hidable>
-
-                  <Hidable hide={!columns.includes(Column.ISBN)}>
-                    <SortableTableHead
-                      currentSort={sort}
-                      label="ISBN"
-                      sortKey="ISBN"
-                    />
-                  </Hidable>
-
-                  <Hidable hide={!columns.includes(Column.AUTHOR)}>
-                    <SortableTableHead
-                      currentSort={sort}
-                      label={t("Authors")}
-                      sortKey="Author"
-                    />
-                  </Hidable>
-
-                  <Hidable hide={!columns.includes(Column.LANGUAGE)}>
-                    <SortableTableHead
-                      currentSort={sort}
-                      label={t("Language")}
-                      sortKey="Language"
-                      position="center"
-                    />
-                  </Hidable>
-
-                  <Hidable hide={!columns.includes(Column.CATEGORIES)}>
-                    <TableHead className="text-nowrap font-bold">
-                      {t("Categories")}
-                    </TableHead>
                   </Hidable>
 
                   <Hidable hide={!columns.includes(Column.PUBLISHER)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Publisher")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.PUBLICATION_PLACE)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Publication place")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable
+                    hide={!columns.includes(Column.CLASSIFICATION_NUMBER)}
+                  >
                     <SortableTableHead
                       currentSort={sort}
-                      label={t("Publisher")}
-                      sortKey="Publisher"
+                      label={t("Classification number")}
+                      sortKey="ClassificationNumber"
                     />
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.CUTTER_NUMBER)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Cutter number")}
+                      sortKey="CutterNumber"
+                    />
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.SHELF)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Shelf")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.CATEGORY)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Category")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.ISBN)}>
+                    <TableHead className="text-nowrap font-bold">
+                      ISBN
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.EAN)}>
+                    <TableHead className="text-nowrap font-bold">EAN</TableHead>
                   </Hidable>
 
                   <Hidable hide={!columns.includes(Column.PAGE_COUNT)}>
@@ -202,77 +283,109 @@ async function BooksManagementPage({ searchParams }: Props) {
                       currentSort={sort}
                       label={t("Page count")}
                       sortKey="PageCount"
-                      position="center"
                     />
                   </Hidable>
 
-                  <Hidable hide={!columns.includes(Column.SHELF)}>
+                  <Hidable hide={!columns.includes(Column.PHYSICAL_DETAILS)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Physical details")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.DIMENSIONS)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Dimensions")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable
+                    hide={!columns.includes(Column.ACCOMPANYING_MATERIAL)}
+                  >
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Accompanying material")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.ESTIMATED_PRICE)}>
                     <SortableTableHead
                       currentSort={sort}
-                      label={t("Shelf")}
-                      sortKey="Shelf"
-                      position="center"
+                      label={t("Estimated price")}
+                      sortKey="EstimatedPrice"
                     />
                   </Hidable>
 
-                  <Hidable hide={!columns.includes(Column.FORMAT)}>
-                    <SortableTableHead
-                      currentSort={sort}
-                      label={t("Format")}
-                      sortKey="Format"
-                      position="center"
-                    />
+                  <Hidable hide={!columns.includes(Column.SUMMARY)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Summary")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.GENRES)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Genres")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.TOPICAL_TERMS)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Topical terms")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.GENERAL_NOTE)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("General note")}
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable
+                    hide={!columns.includes(Column.BIBLIOGRAPHICAL_NOTE)}
+                  >
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Bibliographical note")}
+                    </TableHead>
                   </Hidable>
 
                   <Hidable hide={!columns.includes(Column.STATUS)}>
-                    <TableHead>
-                      <div className="flex justify-center text-nowrap font-bold">
-                        {t("Status")}
-                      </div>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Status")}
                     </TableHead>
                   </Hidable>
 
                   <Hidable hide={!columns.includes(Column.CAN_BORROW)}>
-                    <TableHead>
-                      <div className="flex justify-center text-nowrap font-bold">
-                        {t("Can borrow")}
-                      </div>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Can borrow")}
                     </TableHead>
                   </Hidable>
-                  <Hidable hide={!columns.includes(Column.TOTAL_COPIES)}>
-                    <TableHead>
-                      <div className="flex justify-center text-nowrap font-bold">
-                        {t("Total copies")}
-                      </div>
+
+                  <Hidable hide={!columns.includes(Column.IS_TRAINED)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Is trained")}
                     </TableHead>
                   </Hidable>
-                  <Hidable hide={!columns.includes(Column.AVAILABLE_COPIES)}>
-                    <TableHead>
-                      <div className="flex justify-center text-nowrap font-bold">
-                        {t("Available copies")}
-                      </div>
-                    </TableHead>
+
+                  <Hidable hide={!columns.includes(Column.TRAINED_AT)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Trained at")}
+                      sortKey="TrainedAt"
+                    />
                   </Hidable>
-                  <Hidable hide={!columns.includes(Column.BORROWED_COPIES)}>
-                    <TableHead>
-                      <div className="flex justify-center text-nowrap font-bold">
-                        {t("Borrowed copies")}
-                      </div>
-                    </TableHead>
+
+                  <Hidable hide={!columns.includes(Column.AVG_REVIEWED_RATE)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Avg reviewed rate")}
+                      sortKey="AvgReviewedRate"
+                    />
                   </Hidable>
-                  <Hidable hide={!columns.includes(Column.REQUEST_COPIES)}>
-                    <TableHead>
-                      <div className="flex justify-center text-nowrap font-bold">
-                        {t("Request copies")}
-                      </div>
-                    </TableHead>
-                  </Hidable>
-                  <Hidable hide={!columns.includes(Column.RESERVED_COPIES)}>
-                    <TableHead>
-                      <div className="flex justify-center text-nowrap font-bold">
-                        {t("Reserved copies")}
-                      </div>
-                    </TableHead>
+
+                  <Hidable hide={!columns.includes(Column.CREATED_AT)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Created at")}
+                      sortKey="CreatedAt"
+                    />
                   </Hidable>
 
                   <Hidable hide={!columns.includes(Column.CREATED_BY)}>
@@ -280,12 +393,16 @@ async function BooksManagementPage({ searchParams }: Props) {
                       {t("Created by")}
                     </TableHead>
                   </Hidable>
-                  <Hidable hide={!columns.includes(Column.CREATED_AT)}>
-                    <TableHead className="text-nowrap font-bold">
-                      {t("Created at")}
-                    </TableHead>
-                  </Hidable>
+
                   <Hidable hide={!columns.includes(Column.UPDATED_AT)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Updated at")}
+                      sortKey="UpdatedAt"
+                    />
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.UPDATED_BY)}>
                     <TableHead className="text-nowrap font-bold">
                       {t("Updated by")}
                     </TableHead>
@@ -307,90 +424,90 @@ async function BooksManagementPage({ searchParams }: Props) {
                   </TableRow>
                 )}
                 {books.map((book) => (
-                  <TableRow key={book.bookEditionId}>
+                  <TableRow key={book.libraryItemId}>
                     <TableCell className="">
-                      <BookEditionCheckbox id={book.bookEditionId} />
+                      <BookEditionCheckbox id={book.libraryItemId} />
                     </TableCell>
-
-                    <Hidable hide={!columns.includes(Column.BOOK_CODE)}>
-                      <TableCell className="text-nowrap font-bold">
-                        {book.bookCode || "-"}
-                      </TableCell>
-                    </Hidable>
 
                     <Hidable hide={!columns.includes(Column.COVER_IMAGE)}>
                       <TableCell>
-                        <div className="flex h-[72px] w-12 shrink-0 justify-center">
-                          <Image
-                            src={book.coverImage || defaultBookCover}
-                            alt={book.title}
-                            width={48}
-                            height={72}
-                            className="h-[72px] w-12 rounded-md border object-cover"
-                          />
+                        <div className="flex shrink-0 justify-center">
+                          <div className="h-[72px] w-12 shrink-0">
+                            <Image
+                              src={book.coverImage || defaultBookCover}
+                              alt={book.title}
+                              width={48}
+                              height={72}
+                              className="h-[72px] w-12 rounded-md border object-cover"
+                            />
+                          </div>
                         </div>
                       </TableCell>
                     </Hidable>
 
                     <Hidable hide={!columns.includes(Column.TITLE)}>
                       <TableCell className="text-nowrap">
-                        {book.title || "-"}
+                        {book.title}
                       </TableCell>
                     </Hidable>
 
-                    <Hidable hide={!columns.includes(Column.EDITION_TITLE)}>
+                    <Hidable hide={!columns.includes(Column.SUBTITLE)}>
                       <TableCell className="text-nowrap">
-                        {book.editionTitle || "-"}
+                        {book.subTitle || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.AUTHORS)}>
+                      <TableCell className="text-nowrap">
+                        {book?.libraryItemAuthors?.length > 0
+                          ? book.libraryItemAuthors
+                              ?.map((val) => val.author.fullName)
+                              .join(", ")
+                          : "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable
+                      hide={!columns.includes(Column.ADDITIONAL_AUTHORS)}
+                    >
+                      <TableCell className="text-nowrap">
+                        {book.additionalAuthors || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.RESPONSIBILITY)}>
+                      <TableCell className="text-nowrap">
+                        {book.responsibility || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.EDITION)}>
+                      <TableCell className="text-nowrap">
+                        {book.edition || "-"}
                       </TableCell>
                     </Hidable>
 
                     <Hidable hide={!columns.includes(Column.EDITION_NUMBER)}>
                       <TableCell className="text-nowrap">
-                        <div className="flex justify-center pr-4">
-                          {book.editionNumber ?? "-"}
-                        </div>
-                      </TableCell>
-                    </Hidable>
-
-                    <Hidable hide={!columns.includes(Column.PUBLICATION_YEAR)}>
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center pr-4">
-                          {book.publicationYear ?? "-"}
-                        </div>
-                      </TableCell>
-                    </Hidable>
-
-                    <Hidable hide={!columns.includes(Column.ISBN)}>
-                      <TableCell className="text-nowrap">
-                        {book.isbn || "-"}
-                      </TableCell>
-                    </Hidable>
-
-                    <Hidable hide={!columns.includes(Column.AUTHOR)}>
-                      <TableCell className="text-nowrap">
-                        {book.author || "-"}
+                        {book.editionNumber || "-"}
                       </TableCell>
                     </Hidable>
 
                     <Hidable hide={!columns.includes(Column.LANGUAGE)}>
                       <TableCell className="text-nowrap">
-                        <div className="flex justify-center pr-4">
-                          {book.language || "-"}
-                        </div>
+                        {book.language || "-"}
                       </TableCell>
                     </Hidable>
 
-                    <Hidable hide={!columns.includes(Column.CATEGORIES)}>
+                    <Hidable hide={!columns.includes(Column.ORIGIN_LANGUAGE)}>
                       <TableCell className="text-nowrap">
-                        {book.categories.length > 0
-                          ? book.categories
-                              .map((c) =>
-                                locale === "vi"
-                                  ? c.vietnameseName
-                                  : c.englishName
-                              )
-                              .join(", ")
-                          : "-"}
+                        {book.originLanguage || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.PUBLICATION_YEAR)}>
+                      <TableCell className="text-nowrap">
+                        {book.publicationYear || "-"}
                       </TableCell>
                     </Hidable>
 
@@ -400,50 +517,154 @@ async function BooksManagementPage({ searchParams }: Props) {
                       </TableCell>
                     </Hidable>
 
-                    <Hidable hide={!columns.includes(Column.PAGE_COUNT)}>
+                    <Hidable hide={!columns.includes(Column.PUBLICATION_PLACE)}>
                       <TableCell className="text-nowrap">
-                        <div className="flex justify-center pr-4">
-                          {book.pageCount ?? "-"}
-                        </div>
+                        {book.publicationPlace || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable
+                      hide={!columns.includes(Column.CLASSIFICATION_NUMBER)}
+                    >
+                      <TableCell className="text-nowrap">
+                        {book.classificationNumber || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.CUTTER_NUMBER)}>
+                      <TableCell className="text-nowrap">
+                        {book.cutterNumber || "-"}
                       </TableCell>
                     </Hidable>
 
                     <Hidable hide={!columns.includes(Column.SHELF)}>
                       <TableCell className="text-nowrap">
-                        <div className="flex justify-center pr-4">
-                          {book.shelf?.shelfNumber || "-"}
-                        </div>
+                        {book.shelf?.shelfNumber ? (
+                          <ShelfBadge shelfNumber={book.shelf?.shelfNumber} />
+                        ) : (
+                          "-"
+                        )}
                       </TableCell>
                     </Hidable>
 
-                    <Hidable hide={!columns.includes(Column.FORMAT)}>
+                    <Hidable hide={!columns.includes(Column.CATEGORY)}>
                       <TableCell className="text-nowrap">
-                        <div className="flex justify-center pr-4">
-                          {book.format ? (
-                            <BookFormatBadge status={book.format} />
-                          ) : (
-                            "-"
-                          )}
-                        </div>
+                        {locale === "vi"
+                          ? book.category.vietnameseName
+                          : book.category.englishName}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.ISBN)}>
+                      <TableCell className="text-nowrap">
+                        {book.isbn || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.EAN)}>
+                      <TableCell className="text-nowrap">
+                        {book.ean || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.PAGE_COUNT)}>
+                      <TableCell className="text-nowrap">
+                        {book.pageCount || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.PHYSICAL_DETAILS)}>
+                      <TableCell className="text-nowrap">
+                        {book.physicalDetails || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.DIMENSIONS)}>
+                      <TableCell className="text-nowrap">
+                        {book.dimensions || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable
+                      hide={!columns.includes(Column.ACCOMPANYING_MATERIAL)}
+                    >
+                      <TableCell className="text-nowrap">
+                        {book.accompanyingMaterial || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.ESTIMATED_PRICE)}>
+                      <TableCell className="text-nowrap">
+                        {book.estimatedPrice
+                          ? formatPrice(book.estimatedPrice)
+                          : "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.SUMMARY)}>
+                      <TableCell className="text-nowrap">
+                        {book.summary ? (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                {t("View content")}
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
+                              <DialogHeader>
+                                <DialogTitle>{t("Summary")}</DialogTitle>
+                                <DialogDescription>
+                                  <ParseHtml data={book.summary} />
+                                </DialogDescription>
+                              </DialogHeader>
+                            </DialogContent>
+                          </Dialog>
+                        ) : (
+                          "-"
+                        )}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.GENRES)}>
+                      <TableCell className="text-nowrap">
+                        {book.genres || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.TOPICAL_TERMS)}>
+                      <TableCell className="text-nowrap">
+                        {book.topicalTerms || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.GENERAL_NOTE)}>
+                      <TableCell className="text-nowrap">
+                        {book.generalNote || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable
+                      hide={!columns.includes(Column.BIBLIOGRAPHICAL_NOTE)}
+                    >
+                      <TableCell className="text-nowrap">
+                        {book.bibliographicalNote || "-"}
                       </TableCell>
                     </Hidable>
 
                     <Hidable hide={!columns.includes(Column.STATUS)}>
-                      <TableCell>
-                        <div className="flex justify-center">
-                          <BookEditionStatusBadge
-                            status={
-                              tab === "Deleted"
-                                ? EBookEditionStatus.DELETED
-                                : book.status
-                            }
-                          />
-                        </div>
+                      <TableCell className="text-nowrap">
+                        <BookEditionStatusBadge
+                          status={
+                            book.isDeleted
+                              ? EBookEditionStatus.DELETED
+                              : book.status
+                          }
+                        />
                       </TableCell>
                     </Hidable>
 
                     <Hidable hide={!columns.includes(Column.CAN_BORROW)}>
-                      <TableCell>
+                      <TableCell className="text-nowrap">
                         <div className="flex justify-center">
                           {book.canBorrow ? (
                             <Check className="text-success" />
@@ -454,69 +675,84 @@ async function BooksManagementPage({ searchParams }: Props) {
                       </TableCell>
                     </Hidable>
 
-                    <Hidable hide={!columns.includes(Column.TOTAL_COPIES)}>
-                      <TableCell>
-                        <div className="flex justify-center text-nowrap">
-                          {book.totalCopies ?? "-"}
-                        </div>
+                    <Hidable hide={!columns.includes(Column.IS_TRAINED)}>
+                      <TableCell className="text-nowrap">
+                        <TrainedBadge trained={book.isTrained} />
                       </TableCell>
                     </Hidable>
-                    <Hidable hide={!columns.includes(Column.AVAILABLE_COPIES)}>
-                      <TableCell>
-                        <div className="flex justify-center text-nowrap">
-                          {book.availableCopies ?? "-"}
-                        </div>
+
+                    <Hidable hide={!columns.includes(Column.TRAINED_AT)}>
+                      <TableCell className="text-nowrap">
+                        {book.trainedAt
+                          ? format(new Date(book.trainedAt), "dd-MM-yyyy")
+                          : "-"}
                       </TableCell>
                     </Hidable>
-                    <Hidable hide={!columns.includes(Column.BORROWED_COPIES)}>
-                      <TableCell>
-                        <div className="flex justify-center text-nowrap">
-                          {book.borrowedCopies ?? "-"}
-                        </div>
+
+                    <Hidable hide={!columns.includes(Column.AVG_REVIEWED_RATE)}>
+                      <TableCell className="text-nowrap">
+                        {book.avgReviewedRate ? (
+                          <div className="flex items-center gap-2">
+                            <div className="text-xl font-medium">
+                              {book.avgReviewedRate.toFixed(1)}
+                            </div>
+                            <div className="font-medium">/ 5</div>
+                            <Rating value={book.avgReviewedRate} />
+                          </div>
+                        ) : (
+                          "-"
+                        )}
                       </TableCell>
                     </Hidable>
-                    <Hidable hide={!columns.includes(Column.REQUEST_COPIES)}>
-                      <TableCell>
-                        <div className="flex justify-center text-nowrap">
-                          {book.requestCopies ?? "-"}
-                        </div>
-                      </TableCell>
-                    </Hidable>
-                    <Hidable hide={!columns.includes(Column.RESERVED_COPIES)}>
-                      <TableCell>
-                        <div className="flex justify-center text-nowrap">
-                          {book.reservedCopies ?? "-"}
-                        </div>
+
+                    <Hidable hide={!columns.includes(Column.CREATED_AT)}>
+                      <TableCell className="text-nowrap">
+                        {book.createdAt
+                          ? format(new Date(book.createdAt), "dd-MM-yyyy")
+                          : "-"}
                       </TableCell>
                     </Hidable>
 
                     <Hidable hide={!columns.includes(Column.CREATED_BY)}>
                       <TableCell className="text-nowrap">
-                        {book.createBy || "-"}
+                        {book.createdBy || "-"}
                       </TableCell>
                     </Hidable>
-                    <Hidable hide={!columns.includes(Column.CREATED_AT)}>
-                      <TableCell className="text-nowrap">
-                        {book.createdAt
-                          ? format(new Date(book.createdAt), "yyyy-MM-dd", {
-                              locale: formatLocale,
-                            })
-                          : "-"}
-                      </TableCell>
-                    </Hidable>
+
                     <Hidable hide={!columns.includes(Column.UPDATED_AT)}>
                       <TableCell className="text-nowrap">
                         {book.updatedAt
-                          ? format(new Date(book.updatedAt), "yyyy-MM-dd", {
-                              locale: formatLocale,
-                            })
+                          ? format(new Date(book.updatedAt), "dd-MM-yyyy")
                           : "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.UPDATED_BY)}>
+                      <TableCell className="text-nowrap">
+                        {book.updatedBy || "-"}
                       </TableCell>
                     </Hidable>
 
                     <TableCell>
                       <div className="flex items-center justify-center">
-                        <BookEditionActionDropdown bookEdition={book} />
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>
+                              <Link
+                                href={`/management/books/${book.libraryItemId}`}
+                                className="flex items-center gap-2"
+                              >
+                                <Eye className="size-4" />
+                                {t("View details")}
+                              </Link>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </TableCell>
                   </TableRow>

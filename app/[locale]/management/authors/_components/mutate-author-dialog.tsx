@@ -6,6 +6,7 @@ import Image from "next/image"
 import { ServerUrl } from "@/constants"
 import { useAuth } from "@/contexts/auth-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { format } from "date-fns"
 import { Loader2, Plus, Trash } from "lucide-react"
@@ -73,6 +74,7 @@ type TUploadImageData = {
 function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
   const { accessToken } = useAuth()
   const locale = useLocale()
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
   const [file, setFile] = useState<File | null>(null)
@@ -99,7 +101,7 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
       biography: type === "update" ? author.biography : "",
       nationality: type === "update" ? author.nationality : "",
       dateOfDeath: type === "update" ? author.dateOfDeath : null,
-      dob: type === "update" ? format(new Date(author.dob), "yyyy-MM-dd") : "",
+      dob: type === "update" ? format(new Date(author.dob), "dd-MM-yyyy") : "",
     },
   })
 
@@ -180,6 +182,10 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
         }
       }
     })
+
+    queryClient.invalidateQueries({
+      queryKey: ["management-authors"],
+    })
   }
 
   const handleImageChange = (
@@ -212,7 +218,7 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
     >
       {type === "create" && (
         <DialogTrigger asChild>
-          <Button className="flex items-center justify-end gap-x-1 leading-none">
+          <Button>
             <Plus />
             <div>{tAuthorManagement("create author")}</div>
           </Button>

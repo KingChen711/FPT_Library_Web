@@ -77,7 +77,7 @@ function FiltersNotificationsDialog() {
           values.notificationType === "All" ? null : values.notificationType,
         //TODO: filter visibility
         CreateDateRange: values.createDateRange.map((date) =>
-          date ? format(date, "yyyy-MM-dd") : ""
+          date ? format(date, "dd-MM-yyyy") : ""
         ),
       },
     })
@@ -94,7 +94,7 @@ function FiltersNotificationsDialog() {
         </Button>
       </DialogTrigger>
 
-      <DialogContent className="max-h-[90vh] w-full">
+      <DialogContent className="max-h-[80vh] w-full">
         <DialogHeader>
           <DialogTitle>{t("Filter notifications")}</DialogTitle>
           <DialogDescription>

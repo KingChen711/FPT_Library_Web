@@ -9,16 +9,14 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function deleteCopy({
   bookId,
   copyId,
-  editionId,
 }: {
   bookId: number
-  editionId: number
   copyId: number
 }): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.delete(
-      `/api/management/books/editions/copies/${copyId}`,
+      `/api/management/library-items/instances/${copyId}`,
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
@@ -28,7 +26,6 @@ export async function deleteCopy({
 
     revalidatePath("/management/books")
     revalidatePath(`/management/books/${bookId}`)
-    revalidatePath(`/management/books/${bookId}/editions/${editionId}`)
 
     return {
       isSuccess: true,

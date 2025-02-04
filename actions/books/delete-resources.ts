@@ -17,7 +17,7 @@ export async function deleteResources({
   const { getAccessToken } = auth()
   try {
     const { message } = await http.multiDelete(
-      `/api/management/books/resources`,
+      `/api/management/library-items/resources`,
       { ids },
       {
         headers: {

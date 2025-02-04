@@ -15,8 +15,8 @@ import { EBookCopyConditionStatus } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import {
   type TBookCopySchema,
-  type TMutateBookSchema,
-} from "@/lib/validations/books/mutate-book"
+  type TBookEditionSchema,
+} from "@/lib/validations/books/create-book"
 import { toast } from "@/hooks/use-toast"
 import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
 import { Button, buttonVariants } from "@/components/ui/button"
@@ -54,11 +54,11 @@ import {
 } from "@/components/ui/table"
 
 type Props = {
-  form: UseFormReturn<TMutateBookSchema>
+  form: UseFormReturn<TBookEditionSchema>
   isPending: boolean
-  editionIndex: number
-  hasConfirmedAboutChangeStatus: boolean
-  setHasConfirmedAboutChangeStatus: (val: boolean) => void
+  prefix: string
+  hasConfirmedChangeStatus: boolean
+  setHasConfirmedChangeStatus: (val: boolean) => void
 }
 
 const createInput = () => ({
@@ -92,12 +92,12 @@ function parseInput(input: string): (TBookCopySchema & { id: string })[] {
   return items
 }
 
-function BookCopiesDialog({
+function LiblibraryItemInstancesDialog({
   form,
   isPending,
-  editionIndex,
-  hasConfirmedAboutChangeStatus,
-  setHasConfirmedAboutChangeStatus,
+  prefix,
+  hasConfirmedChangeStatus,
+  setHasConfirmedChangeStatus,
 }: Props) {
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
@@ -126,16 +126,14 @@ function BookCopiesDialog({
         title: locale === "vi" ? "Lỗi" : "Error",
         description:
           locale === "vi"
-            ? "Đầu và có định dạng không hợp lệ"
+            ? "Đầu vào có định dạng không hợp lệ"
             : "Invalid input",
       })
     }
   }
 
   const handleSaveCopies = () => {
-    const cloneCopies = structuredClone(
-      form.getValues(`bookEditions.${editionIndex}.bookCopies`)
-    )
+    const cloneCopies = structuredClone(form.getValues(`libraryItemInstances`))
 
     inputs.forEach((input) => {
       if (!input.barcode) return
@@ -151,26 +149,25 @@ function BookCopiesDialog({
     })
 
     setInputs([createInput()])
-    form.setValue(`bookEditions.${editionIndex}.bookCopies`, cloneCopies)
+    form.setValue(`libraryItemInstances`, cloneCopies)
+    if (cloneCopies.length > 0) {
+      form.clearErrors("libraryItemInstances")
+    }
   }
 
   const handleDeleteSelectedCodes = () => {
-    const cloneCopies = structuredClone(
-      form.getValues(`bookEditions.${editionIndex}.bookCopies`)
-    )
+    const cloneCopies = structuredClone(form.getValues(`libraryItemInstances`))
 
     const newCopies = cloneCopies
       .map((copy) => (selectedCodes.includes(copy.barcode) ? null : copy))
       .filter(Boolean) as TBookCopySchema[]
 
-    form.setValue(`bookEditions.${editionIndex}.bookCopies`, newCopies)
+    form.setValue(`libraryItemInstances`, newCopies)
     setSelectedCodes([])
   }
 
   const handleChangeStatus = (status: EBookCopyConditionStatus) => {
-    const cloneCopies = structuredClone(
-      form.getValues(`bookEditions.${editionIndex}.bookCopies`)
-    )
+    const cloneCopies = structuredClone(form.getValues(`libraryItemInstances`))
 
     selectedCodes.forEach((selectedCode) => {
       const copyIndex = cloneCopies.findIndex((c) => c.barcode === selectedCode)
@@ -180,7 +177,7 @@ function BookCopiesDialog({
       }
     })
 
-    form.setValue(`bookEditions.${editionIndex}.bookCopies`, cloneCopies)
+    form.setValue(`libraryItemInstances`, cloneCopies)
     setSelectedCodes([])
   }
 
@@ -191,7 +188,7 @@ function BookCopiesDialog({
           <Edit2Icon className="text-primary" />
         </div>
       </DialogTrigger>
-      <DialogContent className="max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("Edit copies")}</DialogTitle>
           <DialogDescription>
@@ -220,7 +217,7 @@ function BookCopiesDialog({
                       onValueChange={(val: EBookCopyConditionStatus) => {
                         if (
                           val !== EBookCopyConditionStatus.GOOD &&
-                          !hasConfirmedAboutChangeStatus
+                          !hasConfirmedChangeStatus
                         ) {
                           setTempChangedCopy({
                             inputId: input.id,
@@ -369,7 +366,7 @@ function BookCopiesDialog({
                 </TableHeader>
                 <TableBody>
                   {form
-                    .getValues(`bookEditions.${editionIndex}.bookCopies`)
+                    .getValues(`libraryItemInstances`)
                     .filter(
                       (copy) =>
                         copy.barcode
@@ -398,7 +395,10 @@ function BookCopiesDialog({
                             checked={selectedCodes.includes(copy.barcode)}
                           />
                         </TableCell>
-                        <TableCell>{copy.barcode}</TableCell>
+                        <TableCell>
+                          {prefix ? prefix : null}
+                          {copy.barcode}
+                        </TableCell>
 
                         <TableCell>
                           <BookConditionStatusBadge
@@ -435,7 +435,7 @@ function BookCopiesDialog({
                     className="ml-4"
                     onClick={() => {
                       setOpenWarning(false)
-                      setHasConfirmedAboutChangeStatus(true)
+                      setHasConfirmedChangeStatus(true)
                       setInputs((prev) => {
                         const clone = structuredClone(prev)
                         clone.forEach((item) => {
@@ -459,4 +459,4 @@ function BookCopiesDialog({
   )
 }
 
-export default BookCopiesDialog
+export default LiblibraryItemInstancesDialog

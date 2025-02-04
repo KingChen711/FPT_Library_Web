@@ -34,7 +34,7 @@ type Props = {
   userRoles: TUserRole[]
 }
 
-function UserActionDropdown({ user, userRoles }: Props) {
+function UserActionDropdown({ user }: Props) {
   const t = useTranslations("GeneralManagement")
 
   const locale = useLocale()
@@ -102,7 +102,7 @@ function UserActionDropdown({ user, userRoles }: Props) {
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-primary-foreground">
+        <DropdownMenuContent align="end" className="">
           {!user?.isDeleted ? (
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>

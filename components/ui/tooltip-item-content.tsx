@@ -20,7 +20,7 @@ const TooltipItemContent = ({ id }: Props) => {
 
   return (
     <div className="w-[400px]">
-      <section className="flex flex-1 flex-col justify-between rounded-lg bg-primary-foreground p-4">
+      <section className="flex flex-1 flex-col justify-between rounded-lg p-4">
         <div className="space-y-2 text-card-foreground">
           <p className="font-thin italic">
             {t("an edition of")} &nbsp;

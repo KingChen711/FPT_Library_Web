@@ -76,7 +76,7 @@ function AuthorActionDropdown({ author }: Props) {
             <MoreHorizontal />
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent align="end" className="bg-primary-foreground">
+        <DropdownMenuContent align="end" className="">
           {!author?.isDeleted ? (
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>

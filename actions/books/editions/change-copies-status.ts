@@ -5,24 +5,20 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type EBookCopyStatus } from "@/lib/types/enums"
+import { type LibraryItemInstance } from "@/lib/types/models"
 
 export async function changeCopiesStatus({
   bookId,
-  bookEditionCopyIds,
-  editionId,
-  status,
+  bookEditionCopies,
 }: {
   bookId: number
-  editionId: number
-  bookEditionCopyIds: number[]
-  status: EBookCopyStatus
+  bookEditionCopies: LibraryItemInstance[]
 }): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.put(
-      `/api/management/books/editions/${editionId}/copies`,
-      { status, bookEditionCopyIds },
+      `/api/management/library-items/${bookId}/instances`,
+      { libraryItemInstances: bookEditionCopies },
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
@@ -32,7 +28,6 @@ export async function changeCopiesStatus({
 
     revalidatePath("/management/books")
     revalidatePath(`/management/books/${bookId}`)
-    revalidatePath(`/management/books/${bookId}/editions/${editionId}`)
 
     return {
       isSuccess: true,

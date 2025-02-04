@@ -1,11 +1,25 @@
 import {
+  type EAuditType,
   type EBookCopyStatus,
   type EBookEditionStatus,
   type EBookFormat,
+  type EFineType,
   type ENotificationType,
   type EResourceBookType,
   type ERoleType,
 } from "./enums"
+
+export type Audit = {
+  auditTrailId: number
+  email: string
+  entityId: string
+  entityName: string
+  trailType: EAuditType
+  dateUtc: string
+  oldValues: object
+  newValues: object
+  changedColumns: string[]
+}
 
 export type User = {
   userId: string
@@ -48,6 +62,7 @@ export type ImportError = {
 }
 
 export type Role = {
+  roleId: number
   englishName: string
   vietnameseName: string
   roleType: ERoleType
@@ -88,6 +103,16 @@ export type Employee = {
     roleType: ERoleType
     rolePermissions: []
   }
+}
+
+export type LibraryItemAuthor = {
+  libraryItemAuthorId: number
+  libraryItemId: number
+  authorId: number
+  createdAt: Date
+  updatedAt: Date | null
+  createdBy: string | null
+  updatedBy: string | null
 }
 
 export type Author = {
@@ -213,7 +238,8 @@ export type Notification = {
 
 export type Fine = {
   finePolicyId: number
-  conditionType: string
+  finePolicyTitle: string
+  conditionType: EFineType
   fineAmountPerDay: number
   fixedFineAmount: number
   description: string | null
@@ -221,58 +247,59 @@ export type Fine = {
 
 export type Category = {
   categoryId: number
+  prefix: string
   englishName: string
   vietnameseName: string
   description: string | null
+  isAllowAITraining: boolean
 }
 
 export type BookEdition = {
-  bookId: number
-  bookCode: string
-  bookEditionId: number
-  editionNumber: number
-  publicationYear: number
-  pageCount: number
-  totalCopies?: number
-  availableCopies?: number
-  requestCopies?: number
-  reservedCopies?: number
-  borrowedCopies?: number
-  author: string
-  summary: string | null
-  editionSummary: string | null
-  title: string
-  editionTitle: string
-  subTitle: string
-  shelf: Shelf | null
-  format: EBookFormat | null //TODO
-  isbn: string
-  language: string
-  coverImage: string | null
-  publisher: string | null
-  createBy: string
-  canBorrow: boolean
-  createdAt: Date
-  updatedAt: Date | null
-  estimatedPrice: number
-  isDeleted: boolean
-  status: EBookEditionStatus
-  bookEditionInventory?: BookEditionInventory
-}
-
-export type Book = {
-  bookId: number
+  libraryItemId: number
   title: string
   subTitle: string | null
-  summary: string
+  responsibility: string | null
+  edition: string | null
+  editionNumber: number | null
+  language: string | null
+  originLanguage: string | null
+  summary: string | null
+  coverImage: string | null
+  publicationYear: number | null
+  publisher: string | null
+  publicationPlace: string | null
+  classificationNumber: string | null
+  cutterNumber: string | null
+  isbn: string | null
+  ean: string | null
+  estimatedPrice: number | null
+  pageCount: number | null
+  physicalDetails: string | null
+  dimensions: string | null
+  accompanyingMaterial: string | null
+  genres: string | null
+  generalNote: string | null
+  bibliographicalNote: string | null
+  topicalTerms: string | null
+  additionalAuthors: string | null
+  avgReviewedRate: number | null
+  categoryId: number
+  shelfId: number | null
+  groupId: number | null
+  status: EBookEditionStatus
   isDeleted: boolean
-  isDraft: boolean
-  bookCodeForAITraining: string | null
+  canBorrow: boolean
   isTrained: boolean
+  trainedAt: Date | null
+  createdAt: Date
+  updatedAt: Date | null
+  createdBy: string
+  updatedBy: string | null
 }
 
 export type BookResource = {
   resourceId: number
+  resourceTitle: string
   bookId: number
   resourceType: EResourceBookType
   resourceUrl: string
@@ -286,20 +313,22 @@ export type BookResource = {
   updatedAt: Date | null
   createdBy: string
   updatedBy: string | null
+  defaultBorrowDurationDays: number | null
+  borrowPrice: number | null
 }
 
-export type BookEditionInventory = {
-  bookEditionId: number
-  totalCopies: number
-  availableCopies: number
-  requestCopies: number
-  reservedCopies: number
-  borrowedCopies: number
+export type LibraryItemInventory = {
+  libraryItemId: number
+  totalUnits: number
+  availableUnits: number
+  requestUnits: number
+  borrowedUnits: number
+  reservedUnits: number
 }
 
-export type BookEditionCopy = {
-  bookEditionCopyId: number
-  bookEditionId: number
+export type LibraryItemInstance = {
+  libraryItemInstanceId: number
+  libraryItemId: number
   barcode: string
   status: EBookCopyStatus
   createdAt: Date
@@ -344,4 +373,21 @@ export type Shelf = {
   createDate: Date
   updateDate: Date | null
   isDeleted: boolean
+  section: Section | null
+}
+
+export type LibraryItemGroup = {
+  groupId: number
+  aiTrainingCode: string
+  classificationNumber: string | null
+  cutterNumber: string | null
+  title: string
+  subTitle: string | null
+  author: string | null
+  topicalTerms: string | null
+  trainedAt: Date | null
+  createdAt: Date
+  updatedAt: Date | null
+  createdBy: string
+  updatedBy: string
 }

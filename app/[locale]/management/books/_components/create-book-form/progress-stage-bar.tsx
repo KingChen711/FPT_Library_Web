@@ -17,10 +17,11 @@ interface ProgressTabBarProps {
 }
 
 const tabs: Tab[] = [
-  { id: 1, title: "General" },
-  { id: 2, title: "Resources" },
-  { id: 3, title: "Editions" },
-  { id: 4, title: "Train AI" },
+  { id: 1, title: "Category" },
+  { id: 2, title: "Catalog" },
+  { id: 3, title: "Individual registration" },
+  { id: 4, title: "Resources" },
+  { id: 5, title: "Train AI" },
 ] as const
 
 export function ProgressTabBar({

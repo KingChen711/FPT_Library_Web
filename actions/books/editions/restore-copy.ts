@@ -9,16 +9,15 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function restoreCopy({
   bookId,
   copyId,
-  editionId,
 }: {
   bookId: number
-  editionId: number
+
   copyId: number
 }): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.patch(
-      `/api/management/books/editions/copies/${copyId}/undo-delete`,
+      `/api/management/library-items/instances/${copyId}/undo-delete`,
       {},
       {
         headers: {
@@ -29,7 +28,6 @@ export async function restoreCopy({
 
     revalidatePath("/management/books")
     revalidatePath(`/management/books/${bookId}`)
-    revalidatePath(`/management/books/${bookId}/editions/${editionId}`)
 
     return {
       isSuccess: true,

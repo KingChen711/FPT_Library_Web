@@ -9,12 +9,13 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { cn } from "@/lib/utils"
 import {
   loginByPasswordSchema,
   type TLoginByPasswordSchema,
 } from "@/lib/validations/auth/login-by-password"
 import { loginByPassword } from "@/actions/auth/login-by-password"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -104,9 +105,10 @@ function LoginPasswordForm({ email, type }: Props) {
                       {...field}
                       className="border-none outline-none focus-visible:ring-transparent"
                     />
-                    <Button
-                      size="icon"
-                      variant="ghost"
+                    <div
+                      className={cn(
+                        buttonVariants({ size: "icon", variant: "ghost" })
+                      )}
                       onClick={(e) => {
                         e.preventDefault()
                         e.stopPropagation()
@@ -114,7 +116,7 @@ function LoginPasswordForm({ email, type }: Props) {
                       }}
                     >
                       {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                    </Button>
+                    </div>
                   </div>
                 </FormControl>
                 <FormMessage />

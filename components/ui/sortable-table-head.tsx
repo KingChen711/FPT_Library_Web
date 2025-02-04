@@ -13,6 +13,7 @@ type Props = {
   sortKey: string
   currentSort: string | undefined
   position?: "left" | "center" | "right"
+  onSort?: (sortKey: string) => void
 }
 
 function SortableTableHead({
@@ -20,11 +21,17 @@ function SortableTableHead({
   label,
   sortKey,
   position = "left",
+  onSort,
 }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const handleSort = () => {
+    if (onSort) {
+      onSort(currentSort === sortKey ? `-${sortKey}` : sortKey)
+      return
+    }
+
     if (currentSort === sortKey) {
       const newUrl = formUrlQuery({
         params: searchParams.toString(),

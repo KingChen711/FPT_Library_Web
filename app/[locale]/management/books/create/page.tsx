@@ -17,7 +17,7 @@ type Props = {
 
 async function CreateBookPage({ params: { locale } }: Props) {
   setRequestLocale(locale)
-  await auth().protect(EFeature.BOOK_MANAGEMENT)
+  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
 
   return (
     <div>

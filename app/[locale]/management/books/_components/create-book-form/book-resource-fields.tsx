@@ -5,9 +5,10 @@ import { useFieldArray, type UseFormReturn } from "react-hook-form"
 import { EResourceBookType } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import {
+  type TBookEditionSchema,
   type TBookResourceSchema,
-  type TMutateBookSchema,
-} from "@/lib/validations/books/mutate-book"
+} from "@/lib/validations/books/create-book"
+import AudioDropzone from "@/components/ui/audio-dropzone"
 import { Button } from "@/components/ui/button"
 import {
   FormControl,
@@ -16,16 +17,18 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
+import PDFDropzone from "@/components/ui/pdf-dropzone"
 
 type Props = {
-  form: UseFormReturn<TMutateBookSchema>
+  form: UseFormReturn<TBookEditionSchema>
   isPending: boolean
 }
 
 const createBookResource = (type: EResourceBookType): TBookResourceSchema => {
   return {
-    title: "",
+    resourceTitle: "",
     fileFormat: "",
     //TODO: hardcode warning
     provider: "Cloudinary",
@@ -33,31 +36,17 @@ const createBookResource = (type: EResourceBookType): TBookResourceSchema => {
     resourceSize: 0,
     resourceType: type,
     resourceUrl: "",
-    file: new File([], "file"),
+    borrowPrice: 0,
+    defaultBorrowDurationDays: 0,
   }
 }
 
 function BookResourceFields({ form, isPending }: Props) {
   const t = useTranslations("BooksManagementPage")
   const { fields, append, remove } = useFieldArray({
-    name: "bookResources",
+    name: "libraryResources",
     control: form.control,
   })
-
-  const handleFileUpload = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void,
-    bookResourceIndex: number
-  ) => {
-    const file = e.target.files?.[0]
-    //TODO: check type file
-    // if (!file?.type.includes("audio")) return
-    if (file) {
-      const url = URL.createObjectURL(file)
-      fieldChange(url)
-      form.setValue(`bookResources.${bookResourceIndex}.file`, file)
-    }
-  }
 
   return (
     <>
@@ -69,7 +58,12 @@ function BookResourceFields({ form, isPending }: Props) {
           >
             <div className="flex items-center justify-between gap-4 border-b-2 px-4 pb-2">
               <div className="flex items-center gap-x-3">
-                <label className="font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                <label className="flex items-center gap-2 font-semibold leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                  {field.resourceType === EResourceBookType.EBOOK ? (
+                    <Icons.Ebook className="size-6" />
+                  ) : (
+                    <Icons.AudioBook className="size-6" />
+                  )}
                   {t(field.resourceType)}
                 </label>
               </div>
@@ -88,7 +82,7 @@ function BookResourceFields({ form, isPending }: Props) {
             <div className="flex flex-col gap-y-4 p-4">
               <FormField
                 control={form.control}
-                name={`bookResources.${index}.title`}
+                name={`libraryResources.${index}.resourceTitle`}
                 render={({ field }) => (
                   <FormItem className="flex flex-col items-start">
                     <FormLabel className="flex items-center">
@@ -110,34 +104,90 @@ function BookResourceFields({ form, isPending }: Props) {
               />
               <FormField
                 control={form.control}
-                name={`bookResources.${index}.resourceUrl`}
+                name={`libraryResources.${index}.borrowPrice`}
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="flex items-center">
+                      {t("Borrow price")}
+                      <span className="ml-1 text-xl font-bold leading-none text-primary">
+                        *
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isPending}
+                        {...field}
+                        type="number"
+                        className="min-w-96 max-w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`libraryResources.${index}.defaultBorrowDurationDays`}
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="flex items-center">
+                      {t("Default borrow duration")}
+                      <span className="ml-1 text-xl font-bold leading-none text-primary">
+                        *
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={isPending}
+                        {...field}
+                        type="number"
+                        className="min-w-96 max-w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name={`libraryResources.${index}.file`}
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="flex items-center">
-                      File
-                      <span className="text-lg font-bold leading-none text-primary">
+                      {t("File")}
+                      <span className="mb-2 text-lg font-bold leading-none text-primary">
                         *
                       </span>
                     </FormLabel>
                     <FormControl>
                       <>
-                        <Input
-                          disabled={isPending}
-                          onChange={(e) =>
-                            handleFileUpload(e, field.onChange, index)
-                          }
-                          type="file"
-                          accept={
-                            form.getValues(
-                              `bookResources.${index}.resourceType`
-                            ) === EResourceBookType.AUDIO_BOOK
-                              ? "audio/*"
-                              : "application/pdf"
-                          }
-                          className="w-fit"
-                        />
+                        {form.getValues(
+                          `libraryResources.${index}.resourceType`
+                        ) === EResourceBookType.EBOOK ? (
+                          <PDFDropzone
+                            value={field.value}
+                            onChange={(val) => {
+                              field.onChange(val)
+                              form.setValue(
+                                `libraryResources.${index}.resourceUrl`,
+                                undefined
+                              )
+                            }}
+                          />
+                        ) : (
+                          <AudioDropzone
+                            value={field.value}
+                            onChange={(val) => {
+                              field.onChange(val)
+                              form.setValue(
+                                `libraryResources.${index}.resourceUrl`,
+                                undefined
+                              )
+                            }}
+                          />
+                        )}
 
-                        {/* <Recording srcUrl={field.value || null} /> */}
+                        {/* //TODO:Record component */}
                       </>
                     </FormControl>
 

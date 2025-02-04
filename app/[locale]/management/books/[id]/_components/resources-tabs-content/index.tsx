@@ -1,17 +1,16 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import Link from "next/link"
 import { format } from "date-fns"
 import { CheckSquare, Search, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { type BookResource } from "@/lib/types/models"
-import { cn } from "@/lib/utils"
+import { cn, formatPrice } from "@/lib/utils"
+import useFormatLocale from "@/hooks/utils/use-format-locale"
 import ResourceBookTypeBadge from "@/components/ui/book-resource-type-badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import FileSize from "@/components/ui/file-size"
-import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import NoData from "@/components/ui/no-data"
 import {
@@ -25,7 +24,8 @@ import {
 import { TabsContent } from "@/components/ui/tabs"
 
 import CreateResourceDialog from "./create-resource-dialog"
-import ResourcesActionsDropdown from "./resorces-actions-dropdown"
+import ResourceActionsDropdown from "./resource-actions-dropdown"
+import ResourcesActionsDropdown from "./resources-actions-dropdown"
 import ResourcesTabs from "./resources-tabs"
 
 type Props = {
@@ -36,6 +36,7 @@ type Props = {
 function ResourcesTabsContent({ resources, bookId }: Props) {
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
+  const formatLocale = useFormatLocale()
   const [searchTerm, setSearchTerm] = useState("")
   const [selectedResourceIds, setSelectedResourceIds] = useState<number[]>([])
   const [tab, setTab] = useState<"Active" | "Deleted">("Active")
@@ -103,16 +104,34 @@ function ResourcesTabsContent({ resources, bookId }: Props) {
                     {t("Title")}
                   </TableHead>
                   <TableHead className="text-nowrap font-bold">
-                    {t("Resource type")}
+                    <div className="flex justify-center">
+                      {t("Resource type")}
+                    </div>
                   </TableHead>
                   <TableHead className="text-nowrap font-bold">
-                    {t("Size")}
+                    <div className="flex justify-center">{t("Size")}</div>
+                  </TableHead>
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">
+                      {t("Borrow price header")}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">
+                      {t("Borrow duration")}
+                    </div>
                   </TableHead>
                   <TableHead className="text-nowrap font-bold">
                     {t("Created at")}
                   </TableHead>
                   <TableHead className="text-nowrap font-bold">
                     {t("Created by")}
+                  </TableHead>
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Updated at")}
+                  </TableHead>
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Updated by")}
                   </TableHead>
                   <TableHead className="text-nowrap font-bold">
                     {t("Actions")}
@@ -152,28 +171,58 @@ function ResourcesTabsContent({ resources, bookId }: Props) {
                         }}
                       />
                     </TableCell>
-                    <TableCell className="text-nowrap">Sách nói</TableCell>
+                    <TableCell className="text-nowrap">
+                      {resource.resourceTitle}
+                    </TableCell>
                     <TableCell>
-                      <ResourceBookTypeBadge status={resource.resourceType} />
+                      <div className="flex justify-center">
+                        <ResourceBookTypeBadge status={resource.resourceType} />
+                      </div>
                     </TableCell>
                     <TableCell className="text-nowrap">
-                      <FileSize size={resource.resourceSize} />
+                      <div className="flex justify-center">
+                        <FileSize size={resource.resourceSize} />
+                      </div>
                     </TableCell>
                     <TableCell className="text-nowrap">
-                      {format(new Date(resource.createdAt), "yyyy-MM-dd")}
+                      <div className="flex justify-center">
+                        {resource.borrowPrice
+                          ? formatPrice(resource.borrowPrice)
+                          : "-"}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {resource.defaultBorrowDurationDays
+                          ? resource.defaultBorrowDurationDays + " " + t("days")
+                          : "-"}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      {resource.createdAt
+                        ? format(new Date(resource.createdAt), "dd MMM yyyy", {
+                            locale: formatLocale,
+                          })
+                        : "-"}
                     </TableCell>
                     <TableCell className="text-nowrap">
                       {resource.createdBy}
                     </TableCell>
                     <TableCell className="text-nowrap">
-                      <Link
-                        href={resource.resourceUrl}
-                        target="_blank"
-                        className="flex items-center text-primary"
-                      >
-                        <Icons.Open className="size-6" />
-                        {t("Open")}
-                      </Link>
+                      {resource.updatedAt
+                        ? format(new Date(resource.updatedAt), "dd MMM yyyy", {
+                            locale: formatLocale,
+                          })
+                        : "-"}
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      {resource.updatedBy}
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <ResourceActionsDropdown
+                        bookId={bookId}
+                        resource={resource}
+                      />
                     </TableCell>
                   </TableRow>
                 ))}

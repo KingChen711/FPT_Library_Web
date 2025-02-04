@@ -69,7 +69,7 @@ body {
     --card-foreground: 21 0% 90%;
     --popover: 21 10% 5%;
     --popover-foreground: 21 0% 90%;
-    --primary: 177 70%, 28%;
+    --primary: 177 70% 28%;
     --primary-foreground: 0 0% 100%;
     --secondary: 21 10% 18%;
     --secondary-foreground: 0 0% 100%;
@@ -101,11 +101,16 @@ body {
   }
 }
 
+/* @layer base {
+  * {
+    font-family: var(--font-dm-sans);
+  }
+} */
+
 @layer base {
   /* Scroll bar stylings */
-  ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+  * {
+    scrollbar-width: thin;
   }
 
   /* Track */
@@ -116,7 +121,6 @@ body {
   /* Handle */
   ::-webkit-scrollbar-thumb {
     background: hsl(var(--muted-foreground));
-    border-radius: 5px;
   }
 
   /* Handle on hover */
@@ -135,7 +139,7 @@ body {
 
 @layer utilities {
   .markdown {
-    @apply prose my-0 max-w-full prose-headings:text-dark-400 prose-h1:text-dark-300 prose-h2:text-dark-300 prose-p:text-dark-500 prose-ol:text-dark-500 prose-ul:text-dark-500 dark:prose-headings:text-white dark:prose-p:text-light-700 dark:prose-strong:text-white dark:prose-ol:text-light-700 dark:prose-ul:text-light-500;
+    @apply my-0 max-w-full;
   }
 }
 

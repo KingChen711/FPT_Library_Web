@@ -12,7 +12,7 @@ export async function updateCategory(
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
-    const { message } = await http.patch(
+    const { message } = await http.put(
       `/api/management/categories/${body.categoryId}`,
       { ...body, categoryId: undefined },
       {

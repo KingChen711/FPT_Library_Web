@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { http } from "@/lib/http"
+import { cn } from "@/lib/utils"
 import {
   newPassSchema,
   type TNewPassSchema,
@@ -17,7 +18,7 @@ import {
 import { changePassword } from "@/actions/auth/change-password"
 import { verifyOtpChangePassword } from "@/actions/auth/verify-otp-change-password"
 import { useToast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
 import {
   Form,
   FormControl,
@@ -104,9 +105,7 @@ function ChangePassForm() {
     })
   }
 
-  function handleResendCode(
-    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
-  ) {
+  function handleResendCode(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
     e.preventDefault()
     e.stopPropagation()
     setTimeDisableResend(30)
@@ -162,9 +161,10 @@ function ChangePassForm() {
                     {...field}
                     className="border-none outline-none focus-visible:ring-transparent"
                   />
-                  <Button
-                    size="icon"
-                    variant="ghost"
+                  <div
+                    className={cn(
+                      buttonVariants({ size: "icon", variant: "ghost" })
+                    )}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -172,7 +172,7 @@ function ChangePassForm() {
                     }}
                   >
                     {showPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                  </Button>
+                  </div>
                 </div>
               </FormControl>
               <FormMessage />
@@ -194,9 +194,10 @@ function ChangePassForm() {
                     {...field}
                     className="border-none outline-none focus-visible:ring-transparent"
                   />
-                  <Button
-                    size="icon"
-                    variant="ghost"
+                  <div
+                    className={cn(
+                      buttonVariants({ size: "icon", variant: "ghost" })
+                    )}
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
@@ -204,7 +205,7 @@ function ChangePassForm() {
                     }}
                   >
                     {showConfirmPassword ? <EyeIcon /> : <EyeClosedIcon />}
-                  </Button>
+                  </div>
                 </div>
               </FormControl>
               <FormMessage />
@@ -226,15 +227,18 @@ function ChangePassForm() {
             <FormDescription>
               {t("OTP message")}
 
-              <Button
+              <div
                 onClick={handleResendCode}
-                disabled={timeDisableResend > 0}
-                className="min-h-0 min-w-0 p-0 text-sm hover:bg-transparent hover:underline"
-                variant="ghost"
+                className={cn(
+                  buttonVariants({ variant: "ghost" }),
+                  "min-h-0 min-w-0 cursor-pointer p-0 hover:bg-transparent hover:underline",
+                  timeDisableResend > 0 &&
+                    "pointer-events-none text-muted-foreground"
+                )}
               >
                 {t("No code")}{" "}
                 {timeDisableResend > 0 ? `(${timeDisableResend})` : null}
-              </Button>
+              </div>
             </FormDescription>
             <FormMessage />
           </div>

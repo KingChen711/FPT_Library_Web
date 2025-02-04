@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Link } from "@/i18n/routing"
+import searchBooksAdvance from "@/queries/books/search-books-advance"
 import {
   CheckCircle2,
   ChevronRight,
@@ -10,6 +11,7 @@ import {
 } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
+import { searchBooksAdvanceSchema } from "@/lib/validations/books/search-books-advance"
 import { Badge } from "@/components/ui/badge"
 import {
   Breadcrumb,
@@ -34,18 +36,20 @@ import { dummyBooks } from "../_components/dummy-books"
 
 type Props = {
   searchParams: {
-    search?: string
-    pageIndex?: string
-    pageSize?: string
-    sort?: string
     [key: string]: string | string[] | undefined
   }
 }
 
 const BookPage = async ({ searchParams }: Props) => {
-  const { sort } = searchParams
+  const { sort, ...rest } = searchBooksAdvanceSchema.parse({
+    ...searchParams,
+    searchWithKeyword: searchParams.searchWithKeyword
+      ? +searchParams.searchWithKeyword
+      : undefined,
+  })
   const t = await getTranslations("BookPage")
   const tRoute = await getTranslations("Routes")
+  const data = await searchBooksAdvance({ sort, ...rest })
 
   return (
     <div className="space-y-4">
@@ -63,11 +67,13 @@ const BookPage = async ({ searchParams }: Props) => {
         </BreadcrumbList>
       </Breadcrumb>
 
+      {JSON.stringify(data?.libraryItems || [])}
+
       <div className="mt-4 grid w-full">
         <div className="overflow-x-auto rounded-md">
           <Table className="border-separate border-spacing-x-0 border-spacing-y-4 overflow-hidden">
-            <TableHeader className="bg-primary-foreground hover:bg-primary-foreground/95">
-              <TableRow className="border-none hover:bg-primary-foreground/95">
+            <TableHeader>
+              <TableRow className="border-none">
                 <SortableTableHead
                   currentSort={sort}
                   label={t("fields.title")}
@@ -184,7 +190,7 @@ const BookPage = async ({ searchParams }: Props) => {
                   <TableCell>
                     <Button
                       variant={"outline"}
-                      className="border-danger bg-primary-foreground text-danger"
+                      className="border-danger text-danger"
                     >
                       {t("fields.preview")}
                     </Button>

@@ -3,8 +3,7 @@
 import { revalidateTag } from "next/cache"
 import { auth } from "@/queries/auth"
 
-import { handleHttpError } from "@/lib/http"
-import { httpBlob } from "@/lib/http-blob"
+import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 
 export async function exportUser(
@@ -13,7 +12,7 @@ export async function exportUser(
   const { getAccessToken } = auth()
 
   try {
-    const res = await httpBlob.get<Blob>(
+    const { data } = await http.get<Blob>(
       `/api/management/users/export?${searchParams}`,
       {
         headers: {
@@ -22,7 +21,7 @@ export async function exportUser(
         responseType: "blob",
       }
     )
-    const url = URL.createObjectURL(res)
+    const url = URL.createObjectURL(data)
     const a = document.createElement("a")
     a.href = url
     a.download = "users.xlsx"
@@ -32,7 +31,7 @@ export async function exportUser(
 
     return {
       isSuccess: true,
-      data: res,
+      data: data,
     }
   } catch (error) {
     return handleHttpError(error)

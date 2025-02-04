@@ -51,7 +51,7 @@ function SearchForm({ search, className }: Props) {
   return (
     <div
       className={cn(
-        "flex max-w-md flex-1 items-center rounded-lg border-2 px-2",
+        "flex max-w-md flex-1 items-center rounded-md border px-2",
         className
       )}
     >

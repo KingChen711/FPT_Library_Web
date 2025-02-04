@@ -21,7 +21,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-import CategoryCard from "./category-card"
+import CategoryCard from "../../../../../components/ui/category-card"
 
 type Props = {
   categories: Category[]
@@ -30,8 +30,6 @@ type Props = {
 const orderByOptions = [
   { label: "A-Z", value: "A-Z" },
   { label: "Z-A", value: "Z-A" },
-  { label: "Id ascending", value: "Id ascending" },
-  { label: "Id descending", value: "Id descending" },
 ]
 
 function CategoryList({ categories }: Props) {
@@ -43,10 +41,14 @@ function CategoryList({ categories }: Props) {
   const [open, setOpen] = useState(false)
 
   const filteredCategories = categories
-    .filter((category) =>
-      (locale === "vi" ? category.vietnameseName : category.englishName)
-        .toLowerCase()
-        .includes(debouncedSearchTerm.toLowerCase())
+    .filter(
+      (category) =>
+        (locale === "vi" ? category.vietnameseName : category.englishName)
+          .toLowerCase()
+          .includes(debouncedSearchTerm.toLowerCase()) ||
+        category.prefix
+          .toLowerCase()
+          .includes(debouncedSearchTerm.toLowerCase())
     )
     .toSorted((a, b) => {
       switch (orderBy) {
@@ -104,7 +106,7 @@ function CategoryList({ categories }: Props) {
                       key={option.value}
                       value={option.value}
                       onSelect={(currentValue) => {
-                        setOrderBy(currentValue === orderBy ? "" : currentValue)
+                        setOrderBy(currentValue)
                         setOpen(false)
                       }}
                       className="cursor-pointer"

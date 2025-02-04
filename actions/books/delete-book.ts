@@ -11,11 +11,14 @@ export async function deleteBook(
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
-    const { message } = await http.delete(`/api/management/books/${bookId}`, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    })
+    const { message } = await http.delete(
+      `/api/management/library-items/${bookId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+      }
+    )
 
     revalidatePath("/management/books")
     revalidatePath(`/management/books/${bookId}`)

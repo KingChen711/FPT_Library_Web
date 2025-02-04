@@ -43,16 +43,16 @@ function ManagementNavbar() {
         <SidebarTrigger className="absolute -left-3 top-1/2 z-20 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" />
         <div className={cn("flex items-center gap-4")}>
           <Select>
-            <SelectTrigger className="w-[140px] bg-primary-foreground">
+            <SelectTrigger className="w-[140px]">
               <Languages size={20} />
               <SelectValue placeholder="Lang" />
             </SelectTrigger>
-            <SelectContent className="bg-primary-foreground">
+            <SelectContent className="">
               <SelectItem value="en">English</SelectItem>
               <SelectItem value="vi">Vietnamese</SelectItem>
             </SelectContent>
           </Select>
-          <section className="flex items-center gap-4 text-nowrap rounded-lg bg-primary-foreground p-1 text-muted-foreground">
+          <section className="flex items-center gap-4 text-nowrap rounded-lg p-1 text-muted-foreground">
             {currentDate && ( // Render the date and time only if currentDate is available
               <>
                 <div className="flex items-center gap-2 text-muted-foreground">

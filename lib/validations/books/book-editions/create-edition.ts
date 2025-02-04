@@ -3,7 +3,7 @@ import { z } from "zod"
 import { EBookFormat } from "@/lib/types/enums"
 
 import { isbnSchema } from "../../isbn"
-import { bookCopySchema } from "../mutate-book"
+import { bookCopySchema } from "../create-book"
 
 export const createEditionSchema = z
   .object({
