@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
+import { NOT_CLOUDINARY_URL } from "@/constants"
 import { type BookDetail } from "@/queries/books/get-book"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
@@ -15,10 +16,7 @@ import {
 } from "@/lib/validations/books/edit-book"
 import { updateBook } from "@/actions/books/update-book"
 import { uploadBookImage } from "@/actions/books/upload-medias"
-import {
-  NOT_CLOUDINARY_URL,
-  updateBookImage,
-} from "@/actions/resources/update-book-image"
+import { updateBookImage } from "@/actions/resources/update-book-image"
 import useCategories from "@/hooks/categories/use-categories"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"

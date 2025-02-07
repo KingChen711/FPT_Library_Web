@@ -1,10 +1,9 @@
 //!client action
 
-import axios from "axios"
+import { NOT_CLOUDINARY_URL } from "@/constants"
 
+import { http } from "@/lib/http"
 import { getClientSideCookie } from "@/lib/utils"
-
-export const NOT_CLOUDINARY_URL = "78965107564389573570673235098086710"
 
 export const updateBookImage = async (prevUrl: string, file: File) => {
   try {
@@ -12,27 +11,21 @@ export const updateBookImage = async (prevUrl: string, file: File) => {
       /upload\/(?:v\d+\/)?([^\/]+)\.(?:jpg|jpeg|png|pdf)$/
     )?.[1]
 
-    console.log({ publicId, prevUrl })
-
     if (!publicId) return NOT_CLOUDINARY_URL
 
     const formData = new FormData()
     formData.append("file", file)
     formData.append("publicId", publicId)
 
-    const { data } = await axios.put<{
-      data: { secureUrl: string; publicId: string }
-    }>(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/management/resources/images/update`,
-      formData,
-      {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${getClientSideCookie("accessToken")}`,
-        },
-      }
-    )
-    return data.data
+    const { data } = await http.put<{
+      secureUrl: string
+      publicId: string
+    }>(`/api/management/resources/images/update`, formData, {
+      headers: {
+        Authorization: `Bearer ${getClientSideCookie("accessToken")}`,
+      },
+    })
+    return data
   } catch {
     return null
   }

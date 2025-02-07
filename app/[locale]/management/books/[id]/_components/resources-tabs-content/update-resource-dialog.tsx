@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { NOT_CLOUDINARY_URL } from "@/constants"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -14,10 +15,7 @@ import {
   type TMutateResourceSchema,
 } from "@/lib/validations/books/book-editions/mutate-resource"
 import { updateResource } from "@/actions/books/editions/update-resource"
-import {
-  NOT_CLOUDINARY_URL,
-  updateBookImage,
-} from "@/actions/resources/update-book-image"
+import { updateBookImage } from "@/actions/resources/update-book-image"
 import { updateBookVideo } from "@/actions/resources/update-book-video"
 import { type TCheckCoverImageRes } from "@/hooks/books/use-check-cover-image"
 import { toast } from "@/hooks/use-toast"

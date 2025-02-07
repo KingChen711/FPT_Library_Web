@@ -68,6 +68,23 @@ export enum EFeature {
   SYSTEM_HEALTH_MANAGEMENT = 10,
 }
 
+export enum ESupplierType {
+  PUBLISHER,
+  DISTRIBUTOR,
+}
+
+export enum ETrackingType {
+  STOCK_IN,
+  STOCK_OUT,
+  TRANSFER,
+}
+
+export enum ETrackingStatus {
+  DRAFT,
+  COMPLETED,
+  CANCELLED,
+}
+
 export enum EAccessLevel {
   ACCESS_DENIED = 0,
   VIEW = 1,
