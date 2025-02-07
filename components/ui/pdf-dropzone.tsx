@@ -26,18 +26,27 @@ export default function PDFDropzone({ value, onChange }: Props) {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const pdfFile = acceptedFiles[0]
-      if (pdfFile && pdfFile.type === "application/pdf") {
+
+      let error = ""
+
+      if (!pdfFile || pdfFile.type !== "application/pdf") {
+        error = locale === "vi" ? "Tệp không hợp lệ" : "Invalid file"
+      } else if (pdfFile.size >= 10 * 1024 * 1024) {
+        error = locale === "vi" ? "Ảnh quá lớn" : "Image is too large"
+      }
+
+      if (error) {
+        toast({
+          title: locale === "vi" ? "Thất bại" : "Failed",
+          description: error,
+          variant: "danger",
+        })
+      } else {
         onChange(
           Object.assign(pdfFile, {
             preview: URL.createObjectURL(pdfFile),
-          }) as PreviewedFile
+          })
         )
-      } else {
-        toast({
-          title: locale === "vi" ? "Thất bại" : "Failed",
-          description: locale === "vi" ? "Tệp không hợp lệ" : "Invalid file",
-          variant: "danger",
-        })
       }
     },
     [onChange, locale]

@@ -1,8 +1,10 @@
 import Image from "next/image"
+import { auth } from "@/queries/auth"
 import { getAuthors } from "@/queries/authors/get-authors"
 import { ImageIcon } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
+import { EFeature } from "@/lib/types/enums"
 import { formatDate, isImageLinkValid } from "@/lib/utils"
 import { searchAuthorsSchema } from "@/lib/validations/author/search-author"
 import Paginator from "@/components/ui/paginator"
@@ -48,7 +50,7 @@ async function AuthorsManagementPage({ searchParams }: Props) {
     isDeleted = "false",
     ...rest
   } = searchAuthorsSchema.parse(searchParams)
-  // await auth().protect(EFeature.EMPLOYEE_MANAGEMENT)
+  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("GeneralManagement")
 
   const authorsData = await getAuthors({

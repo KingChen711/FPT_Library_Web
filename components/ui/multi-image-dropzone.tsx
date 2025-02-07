@@ -35,9 +35,8 @@ export default function MultiImageDropzone({
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
-    accept: {
-      ".jpg,.jpeg,.png": [],
-    },
+    accept: { "image/*": [".jpeg", ".jpg", ".png"] },
+    maxSize: 10 * 1024 * 1024,
     multiple: true,
   })
 
@@ -74,11 +73,18 @@ export default function MultiImageDropzone({
               : "Drag and drop images here..."}
           </p>
         ) : (
-          <p>
-            {local === "vi"
-              ? "Kéo thả các ảnh vào đây, hoặc nhấn để chọn các tệp"
-              : "Drag and drop some images here, or click to select files"}
-          </p>
+          <>
+            <p>
+              {local === "vi"
+                ? "Kéo thả các ảnh vào đây, hoặc nhấn để chọn các tệp"
+                : "Drag and drop some images here, or click to select files"}
+            </p>
+            <p>
+              {local === "vi"
+                ? "Chấp nhận các ảnh .jpg, .png, jpeg dưới 10MB"
+                : "Accept .jpg, .png, jpeg images under 10MB"}
+            </p>
+          </>
         )}
       </div>
 

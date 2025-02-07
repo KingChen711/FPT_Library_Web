@@ -198,6 +198,9 @@ export const bookEditionSchema = z
     libraryResources: z.array(bookResourceSchema),
     libraryItemInstances: z.array(bookCopySchema).min(1, "copiesMin1"),
 
+    trackingDetailId: z.coerce.number({ message: "required" }),
+    tracking: z.any(),
+    trackingDetail: z.any(),
     //100 a, only get from marc21, no input on UI
     author: z.string().optional(),
   })

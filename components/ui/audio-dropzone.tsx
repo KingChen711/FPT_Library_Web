@@ -26,18 +26,27 @@ export default function AudioDropzone({ value, onChange }: Props) {
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       const audioFile = acceptedFiles[0]
-      if (audioFile && audioFile.type.startsWith("audio/")) {
+
+      let error = ""
+
+      if (!audioFile || !audioFile.type.startsWith("audio/")) {
+        error = locale === "vi" ? "Tệp không hợp lệ" : "Invalid file"
+      } else if (audioFile.size >= 10 * 1024 * 1024) {
+        error = locale === "vi" ? "Ảnh quá lớn" : "Image is too large"
+      }
+
+      if (error) {
+        toast({
+          title: locale === "vi" ? "Thất bại" : "Failed",
+          description: error,
+          variant: "danger",
+        })
+      } else {
         onChange(
           Object.assign(audioFile, {
             preview: URL.createObjectURL(audioFile),
           })
         )
-      } else {
-        toast({
-          title: locale === "vi" ? "Thất bại" : "Failed",
-          description: locale === "vi" ? "Tệp không hợp lệ" : "Invalid file",
-          variant: "danger",
-        })
       }
     },
     [onChange, locale]

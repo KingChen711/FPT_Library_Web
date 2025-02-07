@@ -105,6 +105,8 @@ function BooksActionsDropdown({ tab }: Props) {
     })
   }
 
+  if (selectedIds.length === 0) return null
+
   return (
     <>
       <MoveToTrashDialog

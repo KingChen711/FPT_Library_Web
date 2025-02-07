@@ -7,6 +7,9 @@ import {
   type ENotificationType,
   type EResourceBookType,
   type ERoleType,
+  type ESupplierType,
+  type ETrackingStatus,
+  type ETrackingType,
 } from "./enums"
 
 export type Audit = {
@@ -19,6 +22,22 @@ export type Audit = {
   oldValues: object
   newValues: object
   changedColumns: string[]
+}
+
+export type Supplier = {
+  supplierId: number
+  supplierName: string
+  supplierType: ESupplierType
+  contactPerson: string | null
+  contactEmail: string | null
+  contactPhone: string | null
+  address: string | null
+  country: string | null
+  city: string | null
+  isDeleted: boolean
+  isActive: boolean
+  createdAt: Date
+  updatedAt: Date | null
 }
 
 export type User = {
@@ -390,4 +409,36 @@ export type LibraryItemGroup = {
   updatedAt: Date | null
   createdBy: string
   updatedBy: string
+}
+
+export type Tracking = {
+  trackingId: number
+  supplierId: number
+  receiptNumber: string
+  totalItem: number
+  totalAmount: number
+  trackingType: ETrackingType
+  transferLocation: string | null
+  description: string | null
+  status: ETrackingStatus
+  expectedReturnDate: Date | null
+  actualReturnDate: Date | null
+  entryDate: Date
+  createdAt: Date
+  updatedAt: Date | null
+  createdBy: string
+  updatedBy: string | null
+}
+
+export type TrackingDetail = {
+  trackingDetailId: number
+  itemName: string
+  itemTotal: number
+  isbn: string | null
+  unitPrice: number
+  totalAmount: number
+  reason: string | null
+  trackingId: number
+  libraryItemId: number | null
+  categoryId: number
 }

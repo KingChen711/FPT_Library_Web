@@ -146,11 +146,10 @@ function CoverImageField({ form, isPending, isRequireImage, authors }: Props) {
 
     checkImage(formData, {
       onSuccess: (data) => {
+        const validImage = data[0].totalPoint >= data[0].confidenceThreshold
         form.setValue(`checkedResult`, data[0])
-        form.setValue(
-          `validImage`,
-          data[0].totalPoint >= data[0].confidenceThreshold
-        )
+        form.setValue(`validImage`, validImage)
+        if (validImage) form.clearErrors(`coverImage`)
       },
       onError: () => {
         form.setValue(`checkedResult`, undefined)
