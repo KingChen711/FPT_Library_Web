@@ -46,14 +46,11 @@ type Props = {
 }
 
 async function NotificationPage({ searchParams }: Props) {
+  await auth().protect(EFeature.BORROW_MANAGEMENT)
+  const t = await getTranslations("NotificationsManagementPage")
+
   const { search, pageIndex, sort, pageSize, ...rest } =
     searchNotificationsSchema.parse(searchParams)
-
-  console.log(searchNotificationsSchema.parse(searchParams))
-
-  await auth().protect(EFeature.BORROW_MANAGEMENT)
-
-  const t = await getTranslations("NotificationsManagementPage")
 
   const {
     sources: notifications,

@@ -1072,7 +1072,7 @@
     "Create warehouse tracking": "Tạo theo dõi kho",
     "File": "Tệp",
     "Tracking type": "Loại",
-    "Total item": "Tổng số lượng",
+    "Total item": "Số lượng",
     "Total amount": "Tổng giá trị",
     "Stock in": "Nhập kho",
     "Stock out": "Xuất kho",
@@ -1096,7 +1096,33 @@
     "Error while import data": "Lỗi trong khi nạp dữ liệu",
     "View details": "Xem chi tiết",
     "Row": "Hàng: ",
-    "Import errors": "Lỗi nạp dữ liệu"
+    "Import errors": "Lỗi nạp dữ liệu",
+    "Receipt number": "Số biên lai",
+    "Supplier name": "Nhà cung cấp",
+    "Status": "Trạng thái",
+    "Actual return date": "Ngày trả thật",
+    "Created at": "Tạo lúc",
+    "Created by": "Tạo bởi",
+    "Updated at": "Cập nhật lúc",
+    "Updated by": "Cập nhật bởi",
+    "Actions": "Hành động",
+    "Summary": "Thông tin",
+    "Trackings": "Theo dõi",
+    "Unit price": "Giá lẻ",
+    "Item name": "Tên hàng",
+    "trackingDetails selected": "{amount} chi tiết được chọn",
+    "Edit information": "Chỉnh sửa",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
+    "Delete": "Xóa",
+    "Delete tracking": "Xóa theo dõi",
+    "Tracking details": "Chi tiết theo dõi",
+    "Completed": "Hoàn thành",
+    "Cancelled": "Hủy",
+    "Change to draft": "Đổi thành bản nháp",
+    "Reason": "Lý do",
+    "Save": "Lưu",
+    "Pick a date": "Chọn một ngày",
+    "Edit tracking": "Chỉnh sửa theo dõi"
   },
   "Badges": {
     "BookConditionStatus": {
@@ -1161,6 +1187,10 @@
       "0": "Bản nháp",
       "1": "Hoàn thành",
       "2": "Hủy"
+    },
+    "Cataloged": {
+      "Cataloged": "Đã biên mục",
+      "Uncataloged": "Chưa biên mục"
     }
   },
   "IsbnScanner": {
