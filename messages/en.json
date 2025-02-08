@@ -878,6 +878,9 @@
     "createdBy": "Created by",
     "updatedAt": "Updated at",
     "updatedBy": "Updated by",
+    "author": "Author",
+    "barcode": "Barcode",
+    "shelfNumber": "Shelf number",
     "Origin language": "Origin language",
     "Is trained": "Is trained",
     "Trained at": "Trained at",
@@ -977,7 +980,8 @@
     "Item name": "Item name",
     "Tracking details": "Tracking details",
     "min4CoverImages": "(min 4)",
-    "trainImagesFormDescription": "Accept .jpg, .png, jpeg images under 10MB"
+    "trainImagesFormDescription": "Accept .jpg, .png, jpeg images under 10MB",
+    "Filter": "Bộ lọc"
   },
   "CutterNumber": {
     "Title": "Cutter Number in the Library System",
@@ -1089,7 +1093,33 @@
     "Error while import data": "Error while import data",
     "View details": "View details",
     "Row": "Row: ",
-    "Import errors": "Import errors"
+    "Import errors": "Import errors",
+    "Receipt number": "Receipt number",
+    "Supplier name": "Supplier name",
+    "Status": "Status",
+    "Actual return date": "Actual return date",
+    "Created at": "Created at",
+    "Created by": "Created by",
+    "Updated at": "Updated at",
+    "Updated by": "Updated by",
+    "Actions": "Actions",
+    "Summary": "Summary",
+    "Trackings": "Trackings",
+    "Unit price": "Unit price",
+    "Item name": "Item name",
+    "trackingDetails selected": "{amount, plural, one {# tracking detail selected} other {# tracking details selected}}",
+    "Edit information": "Edit",
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "Delete": "Delete",
+    "Delete tracking": "Delete tracking",
+    "Tracking details": "Tracking details",
+    "Completed": "Completed",
+    "Cancelled": "Cancelled",
+    "Change to draft": "Change to draft",
+    "Reason": "Reason",
+    "Save": "Save",
+    "Pick a date": "Pick a date",
+    "Edit tracking": "Edit tracking"
   },
   "Badges": {
     "BookConditionStatus": {
@@ -1154,6 +1184,10 @@
       "0": "Draft",
       "1": "Completed",
       "2": "Cancelled"
+    },
+    "Cataloged": {
+      "Cataloged": "Cataloged",
+      "Uncataloged": "Uncataloged"
     }
   },
   "IsbnScanner": {
