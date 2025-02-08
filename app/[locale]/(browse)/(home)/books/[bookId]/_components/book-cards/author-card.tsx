@@ -20,6 +20,21 @@ type Props = {
 
 const BookAuthorCard = async ({ libraryItem }: Props) => {
   const t = await getTranslations("BookPage")
+
+  if (libraryItem.authors.length === 0) {
+    return (
+      <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-primary-foreground p-4 shadow-lg">
+        <div className="flex flex-1 flex-col gap-2">
+          <h1 className="text-xl font-semibold capitalize">
+            <span className="text-primary">{t("about")}</span> &nbsp;
+            {t("fields.author")}
+          </h1>
+          <p className="text-danger">No authors found</p>
+        </div>
+      </section>
+    )
+  }
+
   const libraryItems = await getRelatedLibraryItemsByAuthor({
     authorId: libraryItem.authors[0].authorId,
     pageIndex: 1,
@@ -73,11 +88,10 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
           {libraryItem.authors[0]?.biography}
         </StyledReadMore>
       </div>
-      <div className="mt-auto">
-        <h1 className="mt-4 text-xl font-semibold">{t("other books")}</h1>
-
-        <div className="flex flex-1 items-center justify-center">
-          {libraryItems.sources.length > 0 && (
+      {libraryItems.sources.length > 0 && (
+        <div className="mt-auto">
+          <h1 className="mt-4 text-xl font-semibold">{t("other books")}</h1>
+          <div className="flex flex-1 items-center justify-center">
             <Carousel
               opts={{
                 align: "start",
@@ -114,9 +128,9 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
               <CarouselPrevious className="absolute left-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
               <CarouselNext className="absolute right-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
             </Carousel>
-          )}
+          </div>
         </div>
-      </div>
+      )}
     </section>
   )
 }

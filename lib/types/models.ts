@@ -75,6 +75,11 @@ export type User = {
   }
 }
 
+export type LibraryItemLanguage = {
+  languageName: string
+  languageCode: string
+}
+
 export type ImportError = {
   rowNumber: number
   errors: string[]
