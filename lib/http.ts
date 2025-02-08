@@ -94,9 +94,15 @@ const request = async <TData = undefined>(
       ? options.body
       : JSON.stringify(options.body)
     : undefined
+
   const baseHeaders = {
     "Content-Type": "application/json",
     "Accept-Language": "",
+  }
+
+  if (body instanceof FormData) {
+    // @ts-ignore
+    delete baseHeaders["Content-Type"]
   }
 
   if (typeof window === "undefined") {

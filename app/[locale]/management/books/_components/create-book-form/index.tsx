@@ -20,6 +20,10 @@ import {
   bookEditionSchema,
   type TBookEditionSchema,
 } from "@/lib/validations/books/create-book"
+import {
+  trainBookInProgressSchema,
+  type TTrainBookInProgressSchema,
+} from "@/lib/validations/books/train-book-in-progress"
 import { createBook } from "@/actions/books/create-book"
 import { uploadMedias } from "@/actions/books/upload-medias"
 import useSearchIsbn from "@/hooks/books/use-search-isbn"
@@ -35,6 +39,7 @@ import CopiesTab from "./copies-tab"
 import Marc21Dialog from "./marc21-dialog"
 import { ProgressTabBar } from "./progress-stage-bar"
 import ResourcesTab from "./resources-tab"
+import TrainBookForm from "./train-book-form"
 
 type Tab =
   | "Category"
@@ -71,10 +76,17 @@ function CreateBookForm() {
     },
   })
 
+  const trainForm = useForm<TTrainBookInProgressSchema>({
+    resolver: zodResolver(trainBookInProgressSchema),
+    defaultValues: {
+      imageList: [],
+    },
+  })
+
   const onSubmit = async (values: TBookEditionSchema) => {
     try {
       startTransition(async () => {
-        console.log(values)
+        const coverImageFile = values.file
 
         values.libraryItemInstances = values.libraryItemInstances.map((l) => ({
           ...l,
@@ -94,16 +106,21 @@ function CreateBookForm() {
             description: res.data.message,
             variant: "success",
           })
-          // const checkedResults: (TCheckedResultSchema & { file: File })[] = form
-          //   .getValues("bookEditions")
-          //   .map((be, i) => ({
-          //     file: coverFiles[i],
-          //     ...be.checkedResult!,
-          //   }))
-          // setTrainAIData({
-          //   ...res.data,
-          //   checkedResults: checkedResults,
-          // })
+
+          if (!res.data.bookCode || !selectedCategory?.isAllowAITraining) {
+            router.push("/management/books")
+            return
+          }
+
+          trainForm.setValue("bookCode", res.data.bookCode)
+          trainForm.setValue("imageList", [
+            {
+              checkedResult: values.checkedResult,
+              coverImage: values.coverImage,
+              validImage: values.validImage,
+              file: coverImageFile,
+            },
+          ])
           setCurrentTab("Train AI")
           return
         }
@@ -209,6 +226,7 @@ function CreateBookForm() {
         "bibliographicalNote",
         "topicalTerms",
         "additionalAuthors",
+        "trackingDetailId",
       ],
       { shouldFocus: true }
     )
@@ -226,11 +244,37 @@ function CreateBookForm() {
       form.setError("coverImage", { message: "required" })
     }
 
-    if (!trigger || !triggerValidImage || !triggerRequireImage) {
+    const triggerRequireDdc =
+      !selectedCategory?.isAllowAITraining || form.watch("classificationNumber")
+
+    if (!triggerRequireDdc) {
+      form.setError("classificationNumber", { message: "required" })
+    }
+
+    const triggerRequireCutter =
+      !selectedCategory?.isAllowAITraining || form.watch("cutterNumber")
+
+    if (!triggerRequireCutter) {
+      form.setError("cutterNumber", { message: "required" })
+    }
+
+    if (
+      !trigger ||
+      !triggerValidImage ||
+      !triggerRequireImage ||
+      !triggerRequireDdc ||
+      !triggerRequireCutter
+    ) {
       setCurrentTab("Catalog")
     }
 
-    return trigger && triggerValidImage && triggerRequireImage
+    return (
+      trigger &&
+      triggerValidImage &&
+      triggerRequireImage &&
+      triggerRequireDdc &&
+      triggerRequireCutter
+    )
   }
 
   const triggerCopiesTab = async () => {
@@ -274,6 +318,10 @@ function CreateBookForm() {
     appendScannedBook(scannedBook)
   }, [scannedBook, appendScannedBook, locale, t, setIsbn])
 
+  useEffect(() => {
+    console.log({ selectedCategory })
+  }, [selectedCategory])
+
   return (
     <div>
       <div className="mt-4 flex flex-wrap items-start gap-4">
@@ -288,6 +336,7 @@ function CreateBookForm() {
         <ProgressTabBar
           currentTab={currentTab}
           setCurrentTab={setCurrentTab as Dispatch<SetStateAction<string>>}
+          hasTrainAI={selectedCategory?.isAllowAITraining}
         />
       </div>
 
@@ -436,7 +485,22 @@ function CreateBookForm() {
         </div>
       )}
 
-      {/* {currentTab === "Train AI" && <TrainAIForm trainAIData={trainAIData!} />} */}
+      {currentTab === "Train AI" && (
+        <TrainBookForm
+          form={trainForm}
+          title={form.watch("title")}
+          generalNote={form.watch("generalNote")}
+          publisher={form.watch("publisher") || ""}
+          subTitle={form.watch("subTitle")}
+          authorNames={selectedAuthors
+            .map((author) => {
+              if (form.watch("authorIds")?.includes(author.authorId))
+                return author.fullName
+              return false
+            })
+            .filter((item) => item !== false)}
+        />
+      )}
     </div>
   )
 }

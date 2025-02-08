@@ -1,12 +1,13 @@
 import Image from "next/image"
+import { auth } from "@/queries/auth"
 import { getAuthors } from "@/queries/authors/get-authors"
 import { format } from "date-fns"
 import { ImageIcon } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
+import { EFeature } from "@/lib/types/enums"
 import { formatDate, isImageLinkValid } from "@/lib/utils"
 import { searchAuthorsSchema } from "@/lib/validations/author/search-author"
-import useFormatLocale from "@/hooks/utils/use-format-locale"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -51,7 +52,7 @@ async function AuthorsManagementPage({ searchParams }: Props) {
 
     ...rest
   } = searchAuthorsSchema.parse(searchParams)
-  // const formatLocale = useFormatLocale()
+  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("GeneralManagement")
 
   const authorsData = await getAuthors({

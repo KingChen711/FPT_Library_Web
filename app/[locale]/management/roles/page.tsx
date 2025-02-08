@@ -9,7 +9,7 @@ import CreateRoleDialog from "../permissions/_components/create-role-dialog"
 import RoleList from "./_components/role-lis"
 
 async function RolesManagementPage() {
-  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
+  await auth().protect(EFeature.ROLE_MANAGEMENT)
   const t = await getTranslations("RoleManagement")
   const roles = await getRoles()
 

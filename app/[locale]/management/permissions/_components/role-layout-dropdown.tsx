@@ -80,7 +80,7 @@ function RoleLayoutDropdown() {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
                     router.push(
-                      `/management/roles?isRoleVerticalLayout=${currentValue}`
+                      `/management/permissions?isRoleVerticalLayout=${currentValue}`
                     )
                   }}
                   className="cursor-pointer"

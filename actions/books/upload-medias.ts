@@ -1,7 +1,6 @@
 //! This is client action
 
-import axios from "axios"
-
+import { http } from "@/lib/http"
 import { EResourceBookType } from "@/lib/types/enums"
 import { getClientSideCookie } from "@/lib/utils"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
@@ -68,19 +67,16 @@ export const uploadAudioBook = async (file: File) => {
   formData.append("resourceType", "BookAudio")
 
   try {
-    const { data } = await axios.post<{
-      data: { secureUrl: string; publicId: string }
-    }>(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/management/resources/videos/upload`,
+    const { data } = await http.post<{ secureUrl: string; publicId: string }>(
+      `/api/management/resources/videos/upload`,
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${getClientSideCookie("accessToken")}`,
         },
       }
     )
-    return data.data
+    return data
   } catch {
     return null
   }
@@ -92,19 +88,16 @@ export const uploadBookImage = async (file: File) => {
     formData.append("file", file)
     formData.append("resourceType", "BookImage")
 
-    const { data } = await axios.post<{
-      data: { secureUrl: string; publicId: string }
-    }>(
-      `${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/management/resources/images/upload`,
+    const { data } = await http.post<{ secureUrl: string; publicId: string }>(
+      `/api/management/resources/images/upload`,
       formData,
       {
         headers: {
-          "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${getClientSideCookie("accessToken")}`,
         },
       }
     )
-    return data.data
+    return data
   } catch {
     return null
   }

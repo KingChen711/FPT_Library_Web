@@ -58,6 +58,9 @@ function AuthorsField({
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
   const [hasAutoSearch, setHasAutoSearch] = useState(false)
+  const [mounted, setMounted] = useState(false)
+
+  const watchAuthorIds = form.watch("authorIds")
 
   const { data: authorItems, isFetching } =
     useSearchAuthors(debouncedSearchTerm)
@@ -65,43 +68,53 @@ function AuthorsField({
   const watchAuthor = form.watch("author")
 
   useEffect(() => {
+    if (!mounted) return
     setSearchTerm(watchAuthor || "")
     if (!watchAuthor) {
-      setSelectedAuthors([])
       setHasAutoSearch(true)
-      form.setValue(`authorIds`, [])
       return
     }
     setHasAutoSearch(false)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchAuthor, form, setSelectedAuthors])
 
   useEffect(() => {
-    console.log({ authorItems, hasAutoSearch })
-    if (
-      authorItems &&
-      authorItems?.length > 0 &&
-      watchAuthor &&
-      !hasAutoSearch
-    ) {
+    if (!authorItems || !watchAuthor || hasAutoSearch || isFetching) return
+
+    if (authorItems.length > 0) {
       setSelectedAuthors([authorItems[0]])
       setHasAutoSearch(true)
+
+      console.log({
+        type: "length 1",
+        authorItems,
+        watchAuthor,
+        hasAutoSearch,
+      })
+
       form.setValue(`authorIds`, [authorItems[0].authorId])
       return
     }
-    console.log({ authorItems, watchAuthor, hasAutoSearch })
 
-    if (
-      authorItems &&
-      authorItems.length === 0 &&
-      watchAuthor &&
-      !hasAutoSearch
-    ) {
-      setSelectedAuthors([])
-      setHasAutoSearch(true)
-      form.setValue(`authorIds`, [])
-    }
+    setSelectedAuthors([])
+    setHasAutoSearch(true)
+    console.log({
+      type: "length 0",
+      authorItems,
+      watchAuthor,
+      hasAutoSearch,
+    })
+    form.setValue(`authorIds`, [])
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authorItems, setSelectedAuthors, form])
+
+  useEffect(() => {
+    console.log({ watchAuthorIds })
+  }, [watchAuthorIds])
+
+  useEffect(() => setMounted(true), [])
 
   return (
     <FormField

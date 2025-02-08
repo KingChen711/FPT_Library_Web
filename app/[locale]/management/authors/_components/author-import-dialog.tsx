@@ -220,7 +220,7 @@ const AuthorImportDialog = () => {
                   render={({ field }) => (
                     <FormItem className="flex items-center gap-4">
                       <FormLabel className="w-1/3">
-                        {tGeneralManagement("file")} (csv, xlsx)
+                        {tGeneralManagement("file")} (csv, xlsx, xlsm)
                       </FormLabel>
                       <FormControl className="flex-1">
                         <Input

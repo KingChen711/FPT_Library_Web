@@ -53,7 +53,11 @@ function DetailChangeDialog({ dateUtc, trailType }: Props) {
     if (Array.isArray(value)) {
       if (value.length === 0) return JSON.stringify(value)
       return (
-        <Button variant="outline" onClick={() => handleNestedDataClick(value)}>
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={() => handleNestedDataClick(value)}
+        >
           {t("View array data")}
         </Button>
       )

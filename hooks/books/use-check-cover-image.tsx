@@ -1,6 +1,7 @@
 import { useAuth } from "@/contexts/auth-provider"
 import { useMutation } from "@tanstack/react-query"
-import axios from "axios"
+
+import { http } from "@/lib/http"
 
 export type TCheckCoverImageRes = {
   fieldPointsWithThreshole: {
@@ -18,16 +19,17 @@ function useCheckCoverImage() {
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const { data } = await axios.post<{
-        data: TCheckCoverImageRes[]
-      }>(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/api/ocr`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
+      const { data } = await http.post<TCheckCoverImageRes[]>(
+        `/api/ocr`,
+        formData,
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
+      )
 
-      return data.data
+      return data
     },
   })
 }

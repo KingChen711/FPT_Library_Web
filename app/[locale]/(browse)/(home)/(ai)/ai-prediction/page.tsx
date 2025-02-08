@@ -31,8 +31,8 @@ const AiPrediction = () => {
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     accept: { "image/*": [".jpeg", ".jpg", ".png"] },
-    maxFiles: 1,
     maxSize: 10 * 1024 * 1024, // 10MB
+    maxFiles: 1,
   })
 
   const handleRemoveFile = (e: React.MouseEvent) => {

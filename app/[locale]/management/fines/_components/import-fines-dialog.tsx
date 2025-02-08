@@ -69,9 +69,25 @@ const ImportFinesDialog = () => {
     fieldChange: (file: File) => void
   ) => {
     const file = e.target.files?.[0]
-    if (file) {
+    if (
+      file &&
+      [
+        "text/csv",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "application/vnd.ms-excel.sheet.macroEnabled.12",
+      ].includes(file.type)
+    ) {
       fieldChange(file)
       form.setValue("file", file)
+    } else {
+      toast({
+        title: locale === "vi" ? "Lỗi" : "Error",
+        description:
+          locale === "vi"
+            ? "Chỉ chấp nhận các tệp csv, xlsx, xlsm"
+            : "Only csv, xlsx, xlsm files are accepted",
+        variant: "warning",
+      })
     }
   }
 
@@ -133,7 +149,7 @@ const ImportFinesDialog = () => {
                     render={({ field }) => (
                       <FormItem className="flex items-center gap-4">
                         <FormLabel className="w-1/3">
-                          {t("File")} (csv, xlsx)
+                          {t("File")} (csv, xlsx, xlsm)
                         </FormLabel>
                         <FormControl className="flex-1">
                           <Input
@@ -221,13 +237,17 @@ const ImportFinesDialog = () => {
                   </div>
 
                   <div className="flex justify-end gap-4">
-                    <Button type="submit">
+                    <Button disabled={pendingSubmit} type="submit">
                       {t("Import")}
                       {pendingSubmit && (
                         <Loader2 className="ml-1 size-4 animate-spin" />
                       )}
                     </Button>
-                    <Button variant="outline" onClick={() => handleCancel()}>
+                    <Button
+                      disabled={pendingSubmit}
+                      variant="outline"
+                      onClick={() => handleCancel()}
+                    >
                       {t("Cancel")}
                     </Button>
                   </div>

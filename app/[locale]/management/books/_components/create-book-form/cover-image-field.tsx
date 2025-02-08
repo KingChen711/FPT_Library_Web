@@ -151,13 +151,10 @@ function CoverImageField({
 
     checkImage(formData, {
       onSuccess: (data) => {
-        console.log(data)
-
+        const validImage = data[0].totalPoint >= data[0].confidenceThreshold
         form.setValue(`checkedResult`, data[0])
-        form.setValue(
-          `validImage`,
-          data[0].totalPoint >= data[0].confidenceThreshold
-        )
+        form.setValue(`validImage`, validImage)
+        if (validImage) if (validImage) form.clearErrors(`coverImage`)
       },
       onError: () => {
         form.setValue(`checkedResult`, undefined)
