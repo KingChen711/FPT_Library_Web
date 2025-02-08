@@ -17,6 +17,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -172,6 +173,15 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
               </TableRow>
             </TableHeader>
             <TableBody>
+              {trackings.length === 0 && (
+                <TableRow>
+                  <TableCell colSpan={16}>
+                    <div className="flex justify-center p-4">
+                      <NoData />
+                    </div>
+                  </TableCell>
+                </TableRow>
+              )}
               {trackings.map((tracking) => (
                 <TableRow key={tracking.trackingId}>
                   <TableCell className="text-nowrap font-bold">

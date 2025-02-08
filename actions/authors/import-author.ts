@@ -25,13 +25,6 @@ export async function importAuthor(
       }
     )
 
-    if (
-      res.data.resultCode === "SYS.Fail0008" &&
-      Array.isArray(res.data.data)
-    ) {
-      return res.data.data
-    }
-
     revalidateTag("authors")
 
     return {

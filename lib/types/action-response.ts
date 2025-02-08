@@ -11,12 +11,16 @@ export type ServerActionError =
       typeError: "warning"
       messageError: string
       resultCode: string
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data?: any
     }
   | {
       isSuccess: false
       typeError: "error"
       messageError: string
       resultCode: string
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      data?: any
     }
   | {
       isSuccess: false
