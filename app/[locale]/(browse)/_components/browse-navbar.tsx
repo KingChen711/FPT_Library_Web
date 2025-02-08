@@ -39,6 +39,7 @@ function BrowseNavbar() {
   const { open } = useSidebar()
   const pathname = usePathname()
   const router = useRouter()
+  const [openVoiceToText, setOpenVoiceToText] = useState<boolean>(false)
   const [currentDate, setCurrentDate] = useState<string | null>(null)
 
   useEffect(() => {
@@ -89,7 +90,7 @@ function BrowseNavbar() {
               />
             </div>
 
-            <VoiceToText open={false} setOpen={() => {}} />
+            <VoiceToText open={openVoiceToText} setOpen={setOpenVoiceToText} />
             {/* <BookPredictionDialog open={false} setOpen={() => {}} />
             <BookRecommendDialog open={false} setOpen={() => {}} /> */}
 
@@ -100,7 +101,7 @@ function BrowseNavbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => {}}>
+                <DropdownMenuItem onClick={() => setOpenVoiceToText(true)}>
                   <Mic size={16} /> Voice to text
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => router.push("/ai-prediction")}>

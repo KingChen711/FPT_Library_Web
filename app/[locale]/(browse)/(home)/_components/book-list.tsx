@@ -62,10 +62,14 @@ const BookList = async ({ title, categoryId }: Props) => {
                 {item.title}
               </Link>
               <div className="flex items-center justify-between gap-2">
-                <p className="flex items-center gap-1 truncate text-sm">
-                  <User2 size={16} className="text-primary" /> by &nbsp;
-                  {item.authors.map((a) => a.fullName).join(", ")}
-                </p>
+                {item.authors.length > 0 ? (
+                  <p className="flex items-center gap-1 truncate text-sm">
+                    <User2 size={16} className="text-primary" /> by &nbsp;
+                    {item.authors[0]?.fullName}
+                  </p>
+                ) : (
+                  <p></p>
+                )}
                 <p className="flex items-center gap-1 truncate text-sm">
                   {item.publicationYear}
                 </p>
