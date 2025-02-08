@@ -31,7 +31,7 @@ const EmployeeSoftDeleteConfirm = ({
   setOpenDelete,
 }: EmployeeSoftDeleteConfirmProps) => {
   const locale = useLocale()
-  const message = `${employee.email}`
+  const message = `${locale === "vi" ? "xóa" : "delete"}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const { clear } = useManagementEmployeesStore()

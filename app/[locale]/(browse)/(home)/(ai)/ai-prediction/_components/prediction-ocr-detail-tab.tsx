@@ -35,7 +35,7 @@ const PredictionOcrDetailTab = async () => {
   return (
     <Card className="flex w-full flex-col rounded-lg border-2 p-4">
       {/* Book preview */}
-      <div className="flex w-full gap-2">
+      <div className="flex w-full">
         <section className="flex flex-1 flex-col gap-2 p-4">
           <h1 className="text-center text-xl font-semibold">Uploaded Book</h1>
           <h1 className="text-center">Your uploaded Image</h1>
@@ -43,14 +43,14 @@ const PredictionOcrDetailTab = async () => {
             <Image
               src={uploadedBook.image}
               alt={uploadedBook.title}
-              width={300}
-              height={400}
+              width={180}
+              height={240}
               className="rounded-lg object-contain shadow-lg"
             />
           </div>
         </section>
 
-        <section className="flex w-1/4 flex-col items-center justify-center gap-4">
+        <section className="flex w-1/5 flex-col items-center justify-center gap-4">
           <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
             <Label className="text-lg font-semibold">Match percentage</Label>
             <p className="text-lg">90%</p>
@@ -71,8 +71,8 @@ const PredictionOcrDetailTab = async () => {
                   <Image
                     src={detectedBook.image}
                     alt={detectedBook.title}
-                    width={300}
-                    height={400}
+                    width={180}
+                    height={240}
                     className="rounded-lg object-contain shadow-lg"
                   />
                 </TooltipTrigger>
@@ -91,46 +91,48 @@ const PredictionOcrDetailTab = async () => {
 
       {/* Book comparison */}
       <div className="flex w-full gap-4">
-        <section className="flex-1 overflow-hidden rounded-lg border-2">
-          <h1 className="bg-draft p-2 font-semibold text-primary-foreground">
-            OCR Text
-          </h1>
+        <section className="flex flex-1 justify-center">
+          <div className="w-3/4 overflow-hidden rounded-lg border-2">
+            <h1 className="bg-draft p-2 font-semibold text-primary-foreground">
+              OCR Text
+            </h1>
 
-          <div className="w-full overflow-y-auto">
-            {[
-              "The Hobbit or there and back again",
-              "J.R.R TOLKIEN",
-              "THE ENCHANTING PRELUDE TO",
-              "THE LORD OF THE RINGS",
-            ].map((item, index) => (
-              <TooltipProvider key={index} delayDuration={0}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <h1 className="border-b-2 px-2 hover:bg-primary hover:font-semibold hover:text-primary-foreground">
-                      {item}
-                    </h1>
-                  </TooltipTrigger>
-                  <TooltipContent align="end" className="border-2 bg-card">
-                    <div className="flex flex-col gap-2 text-card-foreground">
-                      <h1 className="font-semibold">Assumption Values</h1>
-                      <Separator />
-                      <div className="flex flex-nowrap items-center justify-between gap-2">
-                        <div className="font-semibold">Title:</div>
-                        <div className="font-semibold text-danger">90%</div>
+            <div className="w-full overflow-y-auto">
+              {[
+                "The Hobbit or there and back again",
+                "J.R.R TOLKIEN",
+                "THE ENCHANTING PRELUDE TO",
+                "THE LORD OF THE RINGS",
+              ].map((item, index) => (
+                <TooltipProvider key={index} delayDuration={0}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <h1 className="border-b-2 px-2 hover:bg-primary hover:font-semibold hover:text-primary-foreground">
+                        {item}
+                      </h1>
+                    </TooltipTrigger>
+                    <TooltipContent align="end" className="border-2 bg-card">
+                      <div className="flex flex-col gap-2 text-card-foreground">
+                        <h1 className="font-semibold">Assumption Values</h1>
+                        <Separator />
+                        <div className="flex flex-nowrap items-center justify-between gap-2">
+                          <div className="font-semibold">Title:</div>
+                          <div className="font-semibold text-danger">90%</div>
+                        </div>
+                        <div className="flex flex-nowrap items-center justify-between gap-2">
+                          <div className="font-semibold">Author:</div>
+                          <div className="font-semibold text-danger">90%</div>
+                        </div>
+                        <div className="flex flex-nowrap items-center justify-between gap-2">
+                          <div className="font-semibold">Publisher:</div>
+                          <div className="font-semibold text-danger">90%</div>
+                        </div>
                       </div>
-                      <div className="flex flex-nowrap items-center justify-between gap-2">
-                        <div className="font-semibold">Author:</div>
-                        <div className="font-semibold text-danger">90%</div>
-                      </div>
-                      <div className="flex flex-nowrap items-center justify-between gap-2">
-                        <div className="font-semibold">Publisher:</div>
-                        <div className="font-semibold text-danger">90%</div>
-                      </div>
-                    </div>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-            ))}
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ))}
+            </div>
           </div>
         </section>
 
@@ -193,7 +195,7 @@ const PredictionOcrDetailTab = async () => {
                   <ColorfulTableCell number={75} mark="%" />
                 </TableRow>
                 <TableRow>
-                  <TableCell className="sticky left-0 z-10 w-[200px] min-w-[200px] max-w-[200px] border bg-background text-center font-semibold">
+                  <TableCell className="sticky left-0 z-10 w-[200px] min-w-[200px] max-w-[200px] border border-y-2 bg-background text-center font-semibold">
                     Publisher
                   </TableCell>
                   <ColorfulTableCell number={10} mark="%" />

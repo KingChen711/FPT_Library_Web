@@ -25,7 +25,7 @@ type Props = {
 
 const AuthorUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "khôi phục" : "undo delete"}`
+  const message = `${locale === "vi" ? "khôi phục" : "undo delete"}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)

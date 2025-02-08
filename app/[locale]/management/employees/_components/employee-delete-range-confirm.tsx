@@ -25,7 +25,7 @@ type Props = {
 
 const EmployeeDeleteRangeConfirm = ({ selectedIds }: Props) => {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "xóa" : "delete"}`
+  const message = `${locale === "vi" ? "xóa" : "delete"}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)

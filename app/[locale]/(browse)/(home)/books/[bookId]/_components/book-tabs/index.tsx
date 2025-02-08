@@ -25,7 +25,7 @@ const BookTabs = async ({ libraryItemId }: Props) => {
       defaultValue="overview"
       className="w-full rounded-lg border bg-primary-foreground p-4 shadow-lg"
     >
-      <TabsList className="flex justify-between">
+      <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger className="w-full" value="overview">
           Overview
         </TabsTrigger>

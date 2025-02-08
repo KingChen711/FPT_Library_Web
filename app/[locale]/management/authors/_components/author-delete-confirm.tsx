@@ -31,7 +31,7 @@ const AuthorDeleteConfirm = ({
   setOpenDelete,
 }: Props) => {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "xóa" : "delete"} ${author.fullName}`
+  const message = `${locale === "vi" ? "xóa" : "delete"}`
   const tGeneralManagement = useTranslations("GeneralManagement")
   const tAuthorManagement = useTranslations("AuthorManagement")
   const [value, setValue] = useState<string>("")
