@@ -3,10 +3,11 @@
 
 import { useState, useTransition } from "react"
 import Image from "next/image"
-import { ServerUrl } from "@/constants"
+import { editorPlugin, ServerUrl } from "@/constants"
 import { useAuth } from "@/contexts/auth-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
+import { Editor } from "@tinymce/tinymce-react"
 import axios from "axios"
 import { format } from "date-fns"
 import { Loader2, Plus, Trash } from "lucide-react"
@@ -24,6 +25,7 @@ import {
 import { createAuthor } from "@/actions/authors/create-author"
 import { updateAuthor } from "@/actions/authors/update-author"
 import { toast } from "@/hooks/use-toast"
+import useActualTheme from "@/hooks/utils/use-actual-theme"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -72,10 +74,12 @@ type TUploadImageData = {
 }
 
 function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
+  console.log("🚀🚀🚀 ~ MutateAuthorDialog ~ author:", author)
   const { accessToken } = useAuth()
   const locale = useLocale()
   const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
+  const theme = useActualTheme()
   const [isPending, startTransition] = useTransition()
   const [file, setFile] = useState<File | null>(null)
   const t = useTranslations("GeneralManagement")
@@ -125,7 +129,6 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
   }
 
   const onSubmit = async (values: TMutateAuthorSchema) => {
-    console.log("🚀 ~ onSubmit ~ values:", values)
     startTransition(async () => {
       if (file) {
         const imageData = await handleUploadImage(file)
@@ -343,9 +346,18 @@ function MutateAuthorDialog({ type, author, openEdit, setOpenEdit }: Props) {
                     <FormItem className="flex flex-col items-start">
                       <FormLabel>{t("fields.biography")}</FormLabel>
                       <FormControl>
-                        <Input
-                          {...field}
-                          placeholder={t("placeholder.biography")}
+                        <Editor
+                          disabled={isPending}
+                          value={field.value}
+                          apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
+                          onEditorChange={field.onChange}
+                          init={{
+                            ...editorPlugin,
+                            skin: theme === "dark" ? "oxide-dark" : undefined,
+                            content_css: theme === "dark" ? "dark" : undefined,
+                            width: "100%",
+                            language: locale,
+                          }}
                         />
                       </FormControl>
 

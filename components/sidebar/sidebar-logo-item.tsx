@@ -1,4 +1,5 @@
-import { School } from "lucide-react"
+import Image from "next/image"
+import Logo from "@/public/logo.svg"
 
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 
@@ -7,12 +8,11 @@ const SidebarLogoItem = () => {
     <SidebarMenuItem>
       <SidebarMenuButton asChild tooltip={"Intelligent Library System"}>
         <div>
-          <School size={18} className="text-primary" />
+          <Image src={Logo} alt="logo" width={40} height={40} />
           <div className="flex flex-col text-primary">
             <span className="text-sm font-semibold">
               Intelligent Library System
             </span>
-            <span className="text-xs">HTPV Team</span>
           </div>
         </div>
       </SidebarMenuButton>

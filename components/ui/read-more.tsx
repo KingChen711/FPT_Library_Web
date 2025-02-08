@@ -17,6 +17,10 @@ export const StyledReadMore = ({ truncate, children }: Props) => (
       className="m-0 inline cursor-pointer bg-none p-0 text-justify text-sm text-danger"
     >
       <span className="mt-2 text-justify text-sm">{children}</span>
+      {/* <div
+        className="line-clamp-1 max-w-[260px] flex-1 text-ellipsis"
+        dangerouslySetInnerHTML={{ __html: children }}
+      /> */}
     </ReadMoreWeb>
   </div>
 )

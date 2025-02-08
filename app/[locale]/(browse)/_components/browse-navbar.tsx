@@ -1,7 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { usePathname } from "@/i18n/routing"
+import { usePathname, useRouter } from "@/i18n/routing"
 import {
   Book,
   Bot,
@@ -33,13 +33,12 @@ import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import VoiceToText from "@/components/ui/voice-to-text"
 import { BookFilterTabs } from "@/components/book-filter-tabs"
 
-import BookPredictionDialog from "../(home)/_components/book-prediction-dialog"
-import BookRecommendDialog from "../(home)/_components/book-recommend-dialog"
 import Actions from "./actions"
 
 function BrowseNavbar() {
   const { open } = useSidebar()
   const pathname = usePathname()
+  const router = useRouter()
   const [currentDate, setCurrentDate] = useState<string | null>(null)
 
   useEffect(() => {
@@ -91,8 +90,8 @@ function BrowseNavbar() {
             </div>
 
             <VoiceToText open={false} setOpen={() => {}} />
-            <BookPredictionDialog open={false} setOpen={() => {}} />
-            <BookRecommendDialog open={false} setOpen={() => {}} />
+            {/* <BookPredictionDialog open={false} setOpen={() => {}} />
+            <BookRecommendDialog open={false} setOpen={() => {}} /> */}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -104,10 +103,12 @@ function BrowseNavbar() {
                 <DropdownMenuItem onClick={() => {}}>
                   <Mic size={16} /> Voice to text
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {}}>
+                <DropdownMenuItem onClick={() => router.push("/ai-prediction")}>
                   <Bot size={16} /> Prediction
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {}}>
+                <DropdownMenuItem
+                  onClick={() => router.push("/ai-recommendation")}
+                >
                   <Book size={16} /> Recommend
                 </DropdownMenuItem>
               </DropdownMenuContent>

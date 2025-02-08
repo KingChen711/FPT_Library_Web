@@ -32,6 +32,7 @@ export const searchAuthorsSchema = z.object({
   modifiedDateRange: z.array(z.string().trim()).optional().catch([]),
   authorCode: z.string().optional().catch(""),
   isActive: z.string().optional().catch(""),
+  nationality: z.string().optional().catch(""),
 })
 
 export type TSearchAuthorSchema = z.infer<typeof searchAuthorsSchema>
