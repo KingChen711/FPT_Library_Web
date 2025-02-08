@@ -8,7 +8,9 @@ import { type ActionResponse } from "@/lib/types/action-response"
 
 export async function createTracking(
   formData: FormData
-): Promise<ActionResponse<{ message: string; data: string }>> {
+): Promise<
+  ActionResponse<{ message: string; data: string; resultCode: string }>
+> {
   const { getAccessToken } = auth()
 
   try {
@@ -22,21 +24,26 @@ export async function createTracking(
       }
     )
 
-    if (resultCode === "SYS.Fail0008" && Array.isArray(data)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return data as any
-    }
-
     revalidatePath("/management/trackings")
 
     return {
       isSuccess: true,
       data: {
+        resultCode,
         message: message,
         data: data as string,
       },
     }
   } catch (error) {
-    return handleHttpError(error)
+    const resError = handleHttpError(error)
+
+    if (
+      resError.typeError === "error" &&
+      resError.resultCode === "SYS.Fail0008"
+    ) {
+      return resError.data
+    }
+
+    return resError
   }
 }

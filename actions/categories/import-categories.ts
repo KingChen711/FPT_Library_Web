@@ -12,7 +12,7 @@ export async function importCategories(
   const { getAccessToken } = auth()
 
   try {
-    const { data, message, resultCode } = await http.post(
+    const { message } = await http.post(
       `/api/management/categories/import`,
       formData,
       {
@@ -22,11 +22,6 @@ export async function importCategories(
       }
     )
 
-    if (resultCode === "SYS.Fail0008" && Array.isArray(data)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return data as any
-    }
-
     revalidatePath("/management/categories")
 
     return {
@@ -34,6 +29,15 @@ export async function importCategories(
       data: message,
     }
   } catch (error) {
-    return handleHttpError(error)
+    const resError = handleHttpError(error)
+
+    if (
+      resError.typeError === "error" &&
+      resError.resultCode === "SYS.Fail0008"
+    ) {
+      return resError.data
+    }
+
+    return resError
   }
 }

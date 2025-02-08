@@ -12,7 +12,7 @@ export async function importLibraryItems(
   const { getAccessToken } = auth()
 
   try {
-    const { data, message, resultCode } = await http.post<string | unknown[]>(
+    const { data, message } = await http.post<string | unknown[]>(
       `/api/management/library-items/import`,
       formData,
       {
@@ -21,11 +21,6 @@ export async function importLibraryItems(
         },
       }
     )
-
-    if (resultCode === "SYS.Fail0008" && Array.isArray(data)) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      return data as any
-    }
 
     revalidatePath("/management/books")
 
@@ -37,6 +32,15 @@ export async function importLibraryItems(
       },
     }
   } catch (error) {
-    return handleHttpError(error)
+    const resError = handleHttpError(error)
+
+    if (
+      resError.typeError === "error" &&
+      resError.resultCode === "SYS.Fail0008"
+    ) {
+      return resError.data
+    }
+
+    return resError
   }
 }

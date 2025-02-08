@@ -23,16 +23,19 @@ export class HttpError extends Error {
   resultCode: string
   type: "unknown" | "warning" | "error" | "form"
   fieldErrors: Record<string, string[]>
+  data: any
   constructor({
     fieldErrors,
     message,
     type,
     resultCode,
+    data,
   }: {
     resultCode: string
     type: "unknown" | "warning" | "error" | "form"
     message?: string
     fieldErrors?: Record<string, string[]>
+    data?: any
   } & (
     | {
         type: "unknown"
@@ -40,6 +43,7 @@ export class HttpError extends Error {
     | {
         type: "warning" | "error"
         message: string
+        data: any
       }
     | {
         type: "form"
@@ -50,6 +54,7 @@ export class HttpError extends Error {
     this.type = type
     this.resultCode = resultCode
     this.fieldErrors = fieldErrors || {}
+    this.data = data
   }
 }
 
@@ -75,6 +80,7 @@ export function handleHttpError(error: unknown): ServerActionError {
       typeError: error.type,
       messageError: error.message,
       resultCode: error.resultCode,
+      data: error.data,
     }
   }
 
@@ -170,6 +176,7 @@ const request = async <TData = undefined>(
         type: payload.resultCode.includes("Fail") ? "error" : "warning",
         message: payload.message,
         resultCode: payload.resultCode,
+        data: payload.data,
       })
     }
 
