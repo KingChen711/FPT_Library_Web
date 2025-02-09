@@ -76,11 +76,11 @@ const PredictionOtherMatchesTab = async () => {
                   <div className="flex justify-between text-sm">
                     <div>⭐⭐⭐⭐⭐ 5/5 {t("fields.ratings")}</div>
                     <div>
-                      <span className="font-semibold">25</span>{" "}
+                      <span className="font-semibold">25</span>
                       {t("fields.reading")}
                     </div>
                     <div>
-                      <span className="font-semibold">119</span>{" "}
+                      <span className="font-semibold">119</span>
                       {t("fields.have read")}
                     </div>
                   </div>

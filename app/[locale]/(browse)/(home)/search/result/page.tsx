@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Link } from "@/i18n/routing"
+import searchBooksAdvance from "@/queries/books/search-books-advance"
 import {
   BookOpen,
   CheckCircle2,
@@ -9,7 +10,11 @@ import {
   ScrollText,
 } from "lucide-react"
 
+import { getTranslations } from "@/lib/get-translations"
+import { type LibraryItem } from "@/lib/types/models"
+import { searchBooksAdvanceSchema } from "@/lib/validations/books/search-books-advance"
 import { Button } from "@/components/ui/button"
+import { Card } from "@/components/ui/card"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,9 +40,23 @@ import {
 } from "@/components/ui/table"
 
 import SheetSearchBook from "../_components/sheet-search-book"
-import { dummyBooks } from "../../_components/dummy-books"
 
-const SearchResult = () => {
+type Props = {
+  searchParams: {
+    [key: string]: string | string[] | undefined
+  }
+}
+
+const SearchResult = async ({ searchParams }: Props) => {
+  const { sort, ...rest } = searchBooksAdvanceSchema.parse({
+    ...searchParams,
+    searchWithKeyword: searchParams.searchWithKeyword
+      ? +searchParams.searchWithKeyword
+      : undefined,
+  })
+  const t = await getTranslations("BookPage")
+  const data = await searchBooksAdvance({ sort, ...rest })
+
   return (
     <div className="container flex size-full flex-col gap-4 overflow-y-auto">
       <div className="w-full space-y-2 px-12">
@@ -46,7 +65,7 @@ const SearchResult = () => {
 
       <section className="flex items-center justify-between px-12">
         <div className="flex">
-          <p className="font-semibold">Kết quả: 1.245</p>
+          <p className="font-semibold">Kết quả: {data?.totalActualResponse}</p>
         </div>
         <div className="flex items-center gap-2">
           <Select>
@@ -89,93 +108,101 @@ const SearchResult = () => {
         </div>
       </section>
 
-      <section className="space-y-4 px-12">
-        {dummyBooks.map((book, i) => (
-          <div key={i} className="rounded-lg border-2 p-4 shadow-lg">
-            <div className="flex items-center justify-between">
-              <p className="text-sm font-semibold">Sách</p>
-              <Button asChild variant={"link"}>
-                <Link
-                  href={`/books/${book.id}`}
-                  className="flex items-center gap-2"
-                >
-                  View Detail
-                </Link>
-              </Button>
-            </div>
-            <Separator className="my-2" />
-
-            <div className="flex gap-4">
-              <div className="flex w-1/8 justify-center">
-                <Image
-                  src={dummyBooks[i].image}
-                  width={100}
-                  height={100}
-                  alt="book"
-                />
-              </div>
-              <div className="flex-1">
-                <h1 className="text-xl font-semibold text-primary">
-                  {book.title}: Tài liệu giảng dạy / {book.author}
-                </h1>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">Tác giả</span> {book.author}
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-semibold">Chủ đề</span> Lịch sử thế giới
-                  - Văn minh
-                </div>
-                <div className="flex gap-2">
-                  <div className="w-fit font-semibold">Summary</div>
-                  <span className="line-clamp-1">
-                    Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                    Libero atque porro officiis incidunt quo dolorem cumque,
-                    voluptatum rem veniam voluptates illum rerum, accusantium
-                    doloremque perferendis quasi dolores aliquam? Quis, ipsum?
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <Table className="mt-4">
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Trạng thái</TableHead>
-                  <TableHead>Số kệ</TableHead>
-                  <TableHead>Kí hiệu xếp giá</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow>
-                  <TableCell className="flex items-center gap-2 font-medium">
-                    <CheckCircle2 size={16} color="white" fill="#42bb4e" />
-                    Available
-                  </TableCell>
-                  <TableCell>AGU-Institutional Resources - F3</TableCell>
-                  <TableCell>909 G106 2024</TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button className="mt-4 flex items-center gap-2">
-                  Resources <ChevronDown />
+      {data.libraryItems.length > 0 ? (
+        <section className="space-y-4 px-12">
+          {data.libraryItems.map((item: LibraryItem, i) => (
+            <div key={i} className="rounded-lg border-2 p-4 shadow-lg">
+              <div className="flex items-center justify-between">
+                <p className="text-sm font-semibold">Sách</p>
+                <Button asChild variant={"link"}>
+                  <Link
+                    href={`/books/${item.libraryItemId}`}
+                    className="flex items-center gap-2"
+                  >
+                    View Detail
+                  </Link>
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent>
-                <DropdownMenuItem>
-                  <Headphones /> Audio
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <BookOpen />
-                  Ebook
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
-        ))}
-      </section>
+              </div>
+              <Separator className="my-2" />
+
+              <div className="flex gap-4">
+                <div className="flex w-1/8 justify-center">
+                  <Image
+                    src={item.coverImage || ""}
+                    width={100}
+                    height={100}
+                    alt="book"
+                  />
+                </div>
+                <div className="flex-1">
+                  <p className="font-thin italic">
+                    {t("an edition of")} &nbsp;
+                    <span className="font-semibold">{item.title}</span>
+                  </p>
+                  <h1 className="text-xl font-semibold text-primary">
+                    {item.title}: Tài liệu giảng dạy /
+                  </h1>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">Tác giả</span>
+                    {item.authors.length > 0 && item.authors[0].fullName}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-semibold">Chủ đề </span>{" "}
+                    {item.topicalTerms}
+                  </div>
+                  <div className="flex gap-2">
+                    <div className="w-fit font-semibold">Summary</div>
+                    <span className="line-clamp-1">{item.summary}</span>
+                  </div>
+                </div>
+              </div>
+
+              <Table className="mt-4">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Trạng thái</TableHead>
+                    <TableHead>Số kệ</TableHead>
+                    <TableHead>Kí hiệu xếp giá</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  <TableRow>
+                    <TableCell className="flex items-center gap-2 font-medium">
+                      <CheckCircle2 size={16} color="white" fill="#42bb4e" />
+                      Available
+                    </TableCell>
+                    <TableCell>AGU-Institutional Resources - F3</TableCell>
+                    <TableCell>909 G106 2024</TableCell>
+                  </TableRow>
+                </TableBody>
+              </Table>
+
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button className="mt-4 flex items-center gap-2">
+                    Resources <ChevronDown />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>
+                    <Headphones /> Audio
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <BookOpen />
+                    Ebook
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
+          ))}
+        </section>
+      ) : (
+        <section className="space-y-4 px-12">
+          <Card className="mt-4 w-full rounded-lg py-8 text-center text-2xl font-semibold text-danger shadow-lg">
+            No data
+          </Card>
+        </section>
+      )}
 
       <Separator />
       <div className="flex h-5 items-center justify-center space-x-4 text-sm">

@@ -1,4 +1,4 @@
-import getCategories from "@/queries/categories/get-categories"
+import getCategories from "@/queries/categories/get-public-categories"
 import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"

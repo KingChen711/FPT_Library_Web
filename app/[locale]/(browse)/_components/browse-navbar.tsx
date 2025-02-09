@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { usePathname, useRouter } from "@/i18n/routing"
 import {
   Book,
@@ -12,8 +13,9 @@ import {
   QrCode,
   Search,
 } from "lucide-react"
+import { useDebounce } from "use-debounce"
 
-import { cn } from "@/lib/utils"
+import { cn, formUrlQuery } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -39,8 +41,12 @@ function BrowseNavbar() {
   const { open } = useSidebar()
   const pathname = usePathname()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [openVoiceToText, setOpenVoiceToText] = useState<boolean>(false)
   const [currentDate, setCurrentDate] = useState<string | null>(null)
+  const [searchValue, setSearchValue] = useState<string>(
+    searchParams.get("search") as string
+  )
 
   useEffect(() => {
     // Update currentDate only on the client
@@ -56,6 +62,22 @@ function BrowseNavbar() {
 
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    setSearchValue(searchParams.get("search") as string)
+  }, [searchParams])
+
+  const [handleChangeSearchValue] = useDebounce((value: string) => {
+    setSearchValue(value)
+    const newUrl = formUrlQuery({
+      url: `/search/result`,
+      params: searchParams.toString(),
+      updates: {
+        search: value,
+      },
+    })
+    router.replace(newUrl, { scroll: false })
+  }, 500)
 
   return (
     <nav className={cn("relative mb-16", pathname === "/search" && "hidden")}>
@@ -82,6 +104,8 @@ function BrowseNavbar() {
             <div className="relative flex-1 border-x-2">
               <Input
                 placeholder="Search"
+                value={searchValue}
+                onChange={(e) => handleChangeSearchValue(e.target.value)}
                 className="flex-1 rounded-none border-l border-none"
               />
               <Search
@@ -91,8 +115,6 @@ function BrowseNavbar() {
             </div>
 
             <VoiceToText open={openVoiceToText} setOpen={setOpenVoiceToText} />
-            {/* <BookPredictionDialog open={false} setOpen={() => {}} />
-            <BookRecommendDialog open={false} setOpen={() => {}} /> */}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
