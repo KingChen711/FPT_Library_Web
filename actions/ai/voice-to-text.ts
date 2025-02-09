@@ -6,9 +6,6 @@ import { type ActionResponse } from "@/lib/types/action-response"
 export async function predictVoiceToText(
   formData: FormData
 ): Promise<ActionResponse<{ message: string; data: string }>> {
-  console.log("🚀 ~ formData.languageCode:", formData.get("languageCode"))
-  console.log("🚀 ~ formData.audioFile:", formData.get("audioFile"))
-
   try {
     const { data, resultCode, message } = await http.post<string | unknown[]>(
       `/api/library-items/voice`,

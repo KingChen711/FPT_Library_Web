@@ -6,6 +6,7 @@ import {
   type Author,
   type BookEdition,
   type Category,
+  type LibraryItem,
   type LibraryItemAuthor,
   type Shelf,
 } from "@/lib/types/models"
@@ -20,7 +21,8 @@ export type BookEditions = (BookEdition & {
 })[]
 
 export type TResponse = {
-  libraryItems: BookEditions
+  // libraryItems: BookEditions
+  libraryItems: LibraryItem[]
   pageIndex: number
   pageSize: number
   totalPage: number

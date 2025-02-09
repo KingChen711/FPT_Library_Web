@@ -1,21 +1,23 @@
 "use client"
 
-import { useRef, useState, useTransition } from "react"
+import { useEffect, useRef, useState, useTransition } from "react"
+import { useSearchParams } from "next/navigation"
+import { usePathname, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQuery } from "@tanstack/react-query"
 import { Mic, StopCircle, Trash } from "lucide-react"
-import { useLocale } from "next-intl"
 import { useForm } from "react-hook-form"
+import wavEncoder from "wav-encoder"
 import { type z } from "zod"
 
 import { http } from "@/lib/http"
 import { type LibraryItemLanguage } from "@/lib/types/models"
+import { formUrlQuery } from "@/lib/utils"
 import {
   voiceToTextSchema,
   type TVoiceToTextSchema,
 } from "@/lib/validations/ai/voice-to-text"
 import { predictVoiceToText } from "@/actions/ai/voice-to-text"
-import { toast } from "@/hooks/use-toast"
 import {
   Dialog,
   DialogContent,
@@ -42,21 +44,25 @@ import {
 import { Button } from "./button"
 import { Label } from "./label"
 
+type CustomMediaRecorder = {
+  stop: () => Promise<void>
+}
+
 type Props = {
   open: boolean
   setOpen: (value: boolean) => void
 }
 
 const VoiceToText = ({ open, setOpen }: Props) => {
+  const router = useRouter()
+  const searchParams = useSearchParams()
   const [isRecording, setIsRecording] = useState<boolean>(false)
   const [audioUrl, setAudioUrl] = useState<string | null>(null)
   const [audioBlob, setAudioBlob] = useState<Blob | null>(null)
   const [seconds, setSeconds] = useState<number>(0)
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
-  const audioChunks = useRef<Blob[]>([])
+  const mediaRecorderRef = useRef<CustomMediaRecorder | null>(null)
   const timerRef = useRef<number | null>(null)
   const [isPending, startTransition] = useTransition()
-  const locale = useLocale()
 
   const form = useForm<TVoiceToTextSchema>({
     resolver: zodResolver(voiceToTextSchema),
@@ -65,6 +71,16 @@ const VoiceToText = ({ open, setOpen }: Props) => {
       audioFile: undefined,
     },
   })
+
+  useEffect(() => {
+    setAudioUrl(null)
+    form.reset()
+    return () => {
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.stop()
+      }
+    }
+  }, [form, open])
 
   const { data: languages, isLoading: isLoadingLanguages } = useQuery({
     queryKey: ["library-items-languages"],
@@ -84,29 +100,86 @@ const VoiceToText = ({ open, setOpen }: Props) => {
     setAudioUrl(null)
   }
 
+  const downloadAudio = () => {
+    if (!audioBlob) return
+
+    const link = document.createElement("a")
+    link.href = audioUrl!
+    link.download = "recording.wav"
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  }
+
   const startRecording = async () => {
     try {
+      form.clearErrors("audioFile")
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const mediaRecorder = new MediaRecorder(stream)
-      mediaRecorderRef.current = mediaRecorder
-      mediaRecorder.ondataavailable = (event: BlobEvent) => {
-        audioChunks.current.push(event.data)
-      }
-      mediaRecorder.onstop = () => {
-        const audioBlob = new Blob(audioChunks.current, { type: "audio/mpeg" })
-        convertToWav(audioBlob)
-        audioChunks.current = []
+      const audioContext = new AudioContext({ sampleRate: 16000 })
+      const source = audioContext.createMediaStreamSource(stream)
+      const processor = audioContext.createScriptProcessor(4096, 1, 1)
+
+      const audioData: Float32Array[] = []
+
+      processor.onaudioprocess = (event) => {
+        const inputBuffer = event.inputBuffer.getChannelData(0)
+        audioData.push(new Float32Array(inputBuffer))
       }
 
-      mediaRecorder.start()
+      source.connect(processor)
+      processor.connect(audioContext.destination)
+
+      mediaRecorderRef.current = {
+        stop: async () => {
+          processor.disconnect()
+          source.disconnect()
+          stream.getTracks().forEach((track) => track.stop())
+
+          if (audioData.length > 0) {
+            const wavBlob = await convertToWav(audioData, 16000)
+            setAudioBlob(wavBlob)
+            setAudioUrl(URL.createObjectURL(wavBlob))
+
+            const wavFile = new File([wavBlob], "recording.wav", {
+              type: "audio/wav",
+            })
+            form.setValue("audioFile", wavFile)
+            form.clearErrors("audioFile")
+          }
+        },
+      }
+
       setIsRecording(true)
       setSeconds(0)
-      timerRef.current = window.setInterval(() => {
-        setSeconds((prev) => prev + 1)
-      }, 1000)
+      timerRef.current = window.setInterval(
+        () => setSeconds((prev) => prev + 1),
+        1000
+      )
     } catch (error) {
       console.error("Error accessing microphone:", error)
     }
+  }
+
+  const convertToWav = async (
+    audioData: Float32Array[],
+    sampleRate: number
+  ) => {
+    // Ghép tất cả các mảng Float32Array thành một mảng duy nhất
+    const mergedData = new Float32Array(
+      audioData.reduce((acc, cur) => {
+        const temp = new Float32Array(acc.length + cur.length)
+        temp.set(acc)
+        temp.set(cur, acc.length)
+        return temp
+      }, new Float32Array())
+    )
+
+    const wavArrayBuffer = await wavEncoder.encode({
+      sampleRate,
+      channelData: [mergedData],
+    })
+
+    return new Blob([wavArrayBuffer], { type: "audio/wav" })
   }
 
   const stopRecording = () => {
@@ -120,45 +193,34 @@ const VoiceToText = ({ open, setOpen }: Props) => {
     }
   }
 
-  const convertToWav = (audioBlob: Blob) => {
-    setAudioBlob(audioBlob)
-    const wavUrl = URL.createObjectURL(audioBlob)
-    setAudioUrl(wavUrl)
-    form.setValue(
-      "audioFile",
-      new File([audioBlob], "recording.wav", { type: "audio/wav" })
-    )
-    form.clearErrors("audioFile")
-  }
-
   function onSubmit(values: z.infer<typeof voiceToTextSchema>) {
-    console.log(values)
-
     startTransition(async () => {
       if (!audioBlob) {
         console.error("No audio file to submit.")
         return
       }
       const formData = new FormData()
-      formData.append("audioFile", audioBlob, "recording.wav")
       if (values.languageCode) {
         formData.append("languageCode", values.languageCode)
       }
-      console.log(formData.get("languageCode"))
-      console.log(formData.get("audioFile"))
+
+      if (values.audioFile) {
+        formData.append("audioFile", values.audioFile)
+      }
+
       const res = await predictVoiceToText(formData)
 
-      console.log("🚀 ~ startTransition ~ res:", res)
-
       if (res?.isSuccess) {
-        console.log(res.data)
-        toast({
-          title: locale === "vi" ? "Thành công" : "Success",
-          description: res.data.message,
-          variant: "success",
-        })
         setOpen(false)
         form.reset()
+        const newUrl = formUrlQuery({
+          url: `/search/result`,
+          params: searchParams.toString(),
+          updates: {
+            search: res.data.data,
+          },
+        })
+        router.replace(newUrl, { scroll: false })
         return
       }
     })
@@ -213,6 +275,7 @@ const VoiceToText = ({ open, setOpen }: Props) => {
                     <FormControl>
                       <div className="flex flex-col gap-2 rounded-lg">
                         <Button
+                          type="button"
                           variant="outline"
                           onClick={isRecording ? stopRecording : startRecording}
                         >
@@ -248,6 +311,13 @@ const VoiceToText = ({ open, setOpen }: Props) => {
                                 src={audioUrl}
                                 className="flex-1"
                               />
+                              <Button
+                                type="button"
+                                onClick={downloadAudio}
+                                variant="outline"
+                              >
+                                Download
+                              </Button>
                             </div>
                           </div>
                         )}
