@@ -4,7 +4,7 @@ import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 import { useDebounce } from "use-debounce"
 
-import { cn } from "@/lib/utils"
+import { cn, formatPrice } from "@/lib/utils"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 import useSearchTrackings from "@/hooks/trackings/use-search-trackings"
 import useTrackingDetailsNoItem from "@/hooks/trackings/use-tracking-detaills-no-item"
@@ -151,10 +151,11 @@ function StockInDetailField({ form, isPending }: Props) {
                                 </CommandGroup>
                               </CommandList>
 
-                              <div className="flex max-h-[90%] w-full flex-col overflow-y-auto overflow-x-hidden">
+                              <div className="flex max-h-[400px] w-full flex-col overflow-y-auto overflow-x-hidden">
                                 {trackingItems?.map((tracking) => (
                                   <TrackingCard
                                     key={tracking.trackingId}
+                                    className="rounded-none"
                                     tracking={tracking}
                                     onClick={() => {
                                       form.setValue(`tracking`, tracking)
@@ -200,7 +201,7 @@ function StockInDetailField({ form, isPending }: Props) {
                                       form.clearErrors("trackingDetailId")
                                     }}
                                   >
-                                    <div className="flex justify-between gap-2">
+                                    <div className="flex w-60 justify-between gap-2">
                                       <span className="text-sm font-medium text-muted-foreground">
                                         {t("Item name")}:
                                       </span>
@@ -214,6 +215,22 @@ function StockInDetailField({ form, isPending }: Props) {
                                       </span>
                                       <span className="line-clamp-1 text-sm">
                                         {td.isbn || "N/A"}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between gap-2">
+                                      <span className="text-sm text-muted-foreground">
+                                        {t("Total item")}:
+                                      </span>
+                                      <span className="line-clamp-1 text-sm">
+                                        {td.itemTotal}
+                                      </span>
+                                    </div>
+                                    <div className="flex justify-between gap-2">
+                                      <span className="text-sm text-muted-foreground">
+                                        {t("Total amount")}:
+                                      </span>
+                                      <span className="line-clamp-1 text-sm">
+                                        {formatPrice(td.totalAmount)}
                                       </span>
                                     </div>
                                   </div>
@@ -240,7 +257,7 @@ function StockInDetailField({ form, isPending }: Props) {
               {selectedTracking && trackingDetail && (
                 <>
                   <ArrowRight className="size-9" />
-                  <div className="grid rounded-md border p-4">
+                  <div className="grid w-60 rounded-md border p-4">
                     <div className="flex justify-between gap-2">
                       <span className="text-sm font-medium text-muted-foreground">
                         {t("Item name")}:
@@ -255,6 +272,22 @@ function StockInDetailField({ form, isPending }: Props) {
                       </span>
                       <span className="line-clamp-1 text-sm">
                         {trackingDetail.isbn || "N/A"}
+                      </span>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                      <span className="text-sm font-medium text-muted-foreground">
+                        {t("Total item")}:
+                      </span>
+                      <span className="line-clamp-1 text-sm">
+                        {trackingDetail.itemTotal}
+                      </span>
+                    </div>
+                    <div className="flex justify-between gap-2">
+                      <span className="text-sm font-medium text-muted-foreground">
+                        {t("Total amount")}:
+                      </span>
+                      <span className="line-clamp-1 text-sm">
+                        {formatPrice(trackingDetail.totalAmount)}
                       </span>
                     </div>
                   </div>

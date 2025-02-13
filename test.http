@@ -1,0 +1,2 @@
+### Gửi yêu cầu POST với JSON body
+GET http://localhost:9200/library_items/_search?source=%7B%22size%22:5,%22query%22:%7B%22match_phrase_prefix%22:%7B%22title%22:%22harry%22%7D%7D,%22_source%22:[%22library_item_id%22,%22title%22,%22cover_image%22]%7D&source_content_type=application%2Fjson

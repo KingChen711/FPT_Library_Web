@@ -1,7 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { usePathname } from "@/i18n/routing"
+import Image from "next/image"
+import { Link, usePathname } from "@/i18n/routing"
 import {
   Book,
   Bot,
@@ -12,8 +13,10 @@ import {
   QrCode,
   Search,
 } from "lucide-react"
+import { useDebounce } from "use-debounce"
 
 import { cn } from "@/lib/utils"
+import useAutoCompleteBooks from "@/hooks/books/use-auto-complete-books"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -41,6 +44,13 @@ function BrowseNavbar() {
   const { open } = useSidebar()
   const pathname = usePathname()
   const [currentDate, setCurrentDate] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState("")
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
+  const { data: autoCompleteData } = useAutoCompleteBooks(debouncedSearchTerm)
+
+  useEffect(() => {
+    console.log(debouncedSearchTerm)
+  }, [debouncedSearchTerm])
 
   useEffect(() => {
     // Update currentDate only on the client
@@ -77,17 +87,42 @@ function BrowseNavbar() {
             pathname === "/search" && "hidden"
           )}
         >
-          <div className="flex w-[650px] items-center overflow-hidden rounded-2xl shadow-lg">
+          <div className="flex w-[650px] items-center rounded-2xl border shadow-lg">
             <BookFilterTabs />
-            <div className="relative flex-1 border-x-2">
-              <Input
-                placeholder="Search"
-                className="flex-1 rounded-none border-l border-none"
-              />
+            <div className="relative flex-1 border-x">
               <Search
                 size={16}
-                className="absolute right-2 top-1/2 -translate-y-1/2"
+                className="absolute left-3 top-1/2 -translate-y-1/2"
               />
+              <Input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search"
+                className="flex-1 rounded-none !border-transparent pl-12 !outline-none !ring-transparent"
+              />
+
+              <div className="absolute left-0 top-[calc(100%+4px)] !z-[10000] w-full space-y-1 rounded-md border bg-muted p-2">
+                {autoCompleteData?.map((acd) => (
+                  <Link
+                    href={`/books/${acd.libraryItemId}`}
+                    key={acd.libraryItemId}
+                    className="flex items-center gap-4"
+                  >
+                    {acd.coverImage ? (
+                      <Image
+                        width={24}
+                        height={36}
+                        src={acd.coverImage}
+                        alt={acd.title}
+                        className="h-9 w-6 rounded-md border object-cover"
+                      />
+                    ) : (
+                      <div className="h-9 w-6 bg-transparent"></div>
+                    )}
+                    <div>{acd.title}</div>
+                  </Link>
+                ))}
+              </div>
             </div>
 
             <VoiceToText open={false} setOpen={() => {}} />

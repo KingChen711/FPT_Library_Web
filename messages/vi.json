@@ -98,7 +98,7 @@
     "required": "Bắt buộc",
     "categoriesMin1": "Cần ít nhất 1 thể loại",
     "authorsMin1": "Cần ít nhất 1 tác giả",
-    "imagesMin4": "Cần ít nhất 4 ảnh",
+    "imagesMin5": "Cần ít nhất 5 ảnh",
     "copiesMin1": "Cần ít nhất 1 mã bản sao",
     "gt0": "Phải lớn hơn 0",
     "gte1000": "Phải lớn hơn hoặc bằng 1000",
@@ -984,7 +984,10 @@
     "Item name": "Tên hàng",
     "Tracking details": "Chi tiết nhập kho",
     "min4CoverImages": "(ít nhất 4)",
-    "trainImagesFormDescription": "Chấp nhận các ảnh .jpg, .png, jpeg dưới 10MB"
+    "trainImagesFormDescription": "Chấp nhận các ảnh .jpg, .png, jpeg dưới 10MB",
+    "Total item": "Số lượng",
+    "Total amount": "Tổng giá trị",
+    "Not trained": "Chưa train"
   },
   "CutterNumber": {
     "Title": "Số xếp giá trong Hệ thống Thư viện",
@@ -1122,7 +1125,23 @@
     "Reason": "Lý do",
     "Save": "Lưu",
     "Pick a date": "Chọn một ngày",
-    "Edit tracking": "Chỉnh sửa theo dõi"
+    "Edit tracking": "Chỉnh sửa theo dõi",
+    "Add detail": "Thêm chi tiết",
+    "Select category": "Chọn loại",
+    "No category found": "Không tìm thấy",
+    "Category": "Loại",
+    "Search category": "Tìm loại",
+    "Edit detail": "Chỉnh sửa chi tiết",
+    "Import tracking details": "Nạp dữ liệu chi tiết theo dõi",
+    "Import": "Nạp dữ liệu",
+    "Remove catalog": "Xóa biên mục",
+    "Add catalog": "Thêm biên mục",
+    "No libraryItem found": "Không tìm thấy",
+    "Add library item": "Thêm tài liệu",
+    "Search item": "Tìm kiếm",
+    "Select libraryItem": "Chọn",
+    "Library item": "Tài liệu",
+    "Search": "Tìm kiếm"
   },
   "Badges": {
     "BookConditionStatus": {

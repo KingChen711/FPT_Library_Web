@@ -62,19 +62,19 @@ const BookList = async ({ title, categoryId }: Props) => {
                 {item.title}
               </Link>
               <div className="flex items-center justify-between gap-2">
-                <p className="flex items-center gap-1 truncate text-sm">
+                <div className="flex items-center gap-1 truncate text-sm">
                   <User2 size={16} className="text-primary" /> by &nbsp;
                   {item.authors.map((a) => a.fullName).join(", ")}
-                </p>
+                </div>
                 <p className="flex items-center gap-1 truncate text-sm">
                   {item.publicationYear}
                 </p>
               </div>
               <div className="flex items-center justify-between gap-2">
-                <p className="flex items-center gap-1 text-sm font-semibold">
+                <div className="flex items-center gap-1 text-sm font-semibold">
                   <Icons.Star className="size-4 text-warning" />
                   {item.avgReviewedRate || 5} / 5
-                </p>
+                </div>
                 <p className="text-xs">{item.pageCount} pages</p>
               </div>
               <p className="truncate text-xs font-semibold">{item.publisher}</p>

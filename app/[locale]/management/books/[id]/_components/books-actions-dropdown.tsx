@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from "react"
 import { useManagementBookEditionsStore } from "@/stores/books/use-management-book-editions"
-import { ChevronDown, ChevronUp, RotateCcw, Trash2 } from "lucide-react"
+import { Brain, ChevronDown, ChevronUp, RotateCcw, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
@@ -22,7 +22,7 @@ import DeleteDialog from "./delete-dialog"
 import MoveToTrashDialog from "./move-to-trash-dialog"
 
 type Props = {
-  tab: "Active" | "Deleted"
+  tab: "Active" | "Deleted" | "Not trained"
 }
 
 function BooksActionsDropdown({ tab }: Props) {
@@ -105,6 +105,26 @@ function BooksActionsDropdown({ tab }: Props) {
     })
   }
 
+  const handleTrain = () => {
+    if (isPending) return
+
+    startTransition(async () => {
+      // const res = await deleteBooks(selectedIds)
+      // if (res.isSuccess) {
+      //   toast({
+      //     title: locale === "vi" ? "Thành công" : "Success",
+      //     description: res.data,
+      //     variant: "success",
+      //   })
+      //   clear()
+      //   setOpenDropdown(false)
+      //   setOpenDelete(false)
+      //   return
+      // }
+      // handleServerActionError(res, locale)
+    })
+  }
+
   if (selectedIds.length === 0) return null
 
   return (
@@ -128,7 +148,18 @@ function BooksActionsDropdown({ tab }: Props) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {tab === "Active" ? (
+          {tab === "Not trained" && (
+            <DropdownMenuItem
+              disabled={isPending}
+              onClick={handleTrain}
+              className="cursor-pointer"
+            >
+              <Brain />
+              Train AI
+            </DropdownMenuItem>
+          )}
+
+          {tab !== "Deleted" ? (
             <DropdownMenuItem
               disabled={isPending}
               onClick={() => setOpenMoveTrash(true)}
