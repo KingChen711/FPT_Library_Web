@@ -447,3 +447,62 @@ export type TrackingDetail = {
   libraryItemId: number | null
   categoryId: number
 }
+
+// Ocr Result
+type OcrResult = {
+  fieldPointsWithThreshole: {
+    name: string
+    matchedPoint: number
+    threshold: number
+    isPassed: boolean
+  }[]
+  totalPoint: number
+  confidenceThreshold: number
+  imageName: string
+}
+
+export type PredictResult = {
+  bestItem: {
+    ocrResult: OcrResult
+    libraryItemId: number
+  }
+  otherItems: {
+    ocrResult: OcrResult
+    libraryItemId: number
+  }[]
+}
+
+// Ocr Detail
+type LineStatisticDto = {
+  lineValue: string
+  matchedTitlePercentage: number
+  matchedAuthorPercentage: number
+  matchedPublisherPercentage: number
+}
+
+type StringComparison = {
+  matchLine: string
+  matchPhrasePoint: number
+  fuzzinessPoint: number
+  fieldThreshold: number
+  propertyName: string
+  matchPercentage: number
+}
+
+export type OcrDetail = {
+  lineStatisticDtos: LineStatisticDto[]
+  stringComparisions: StringComparison[]
+  matchPercentage: number
+  overallPercentage: number
+}
+
+// Ocr detect
+type DetectedItem = {
+  name: string
+  percentage: number
+}
+
+export type OcrDetect = {
+  importImageDetected: DetectedItem[]
+  currentItemDetected: DetectedItem[]
+}

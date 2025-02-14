@@ -14,8 +14,8 @@ const BookPreviewCard = async ({ libraryItem }: Props) => {
   const t = await getTranslations("BookPage")
 
   return (
-    <section className="h-full w-1/5">
-      <div className="flex h-[60vh] flex-col justify-between overflow-hidden rounded-lg border bg-primary-foreground shadow-lg">
+    <section className="h-full w-1/5 bg-card">
+      <div className="flex h-[60vh] flex-col justify-between overflow-hidden rounded-lg border bg-card shadow-lg">
         <div className="flex flex-1 shrink-0 items-center justify-center overflow-hidden rounded-t-lg p-4">
           <Image
             src={libraryItem?.coverImage || NoImage}

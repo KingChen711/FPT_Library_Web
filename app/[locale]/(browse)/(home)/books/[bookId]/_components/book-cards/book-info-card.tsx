@@ -28,7 +28,7 @@ const BookInfoCard = async ({ libraryItem }: Props) => {
   return (
     <div
       className={cn(
-        "flex w-3/5 flex-col justify-between overflow-y-auto rounded-lg border bg-primary-foreground p-4 shadow-lg"
+        "flex w-3/5 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg"
       )}
     >
       <div className="space-y-2">
@@ -40,7 +40,7 @@ const BookInfoCard = async ({ libraryItem }: Props) => {
         <h1 className="line-clamp-2 text-2xl font-semibold text-primary">
           {libraryItem?.title}
         </h1>
-        <p>{libraryItem.subTitle}.</p>
+        <p>{libraryItem.subTitle}</p>
         <div className="flex items-center justify-between gap-2">
           {libraryItem.authors.length > 0 ? (
             <div className="flex items-center gap-2 text-sm italic">
