@@ -483,7 +483,8 @@
     "pause": "Dừng",
     "play": "Phát",
     "like": "Thích",
-    "cancel": "Hủy"
+    "cancel": "Hủy",
+    "info": "Thông tin"
   },
   "CategoriesManagementPage": {
     "Allowed": "Cho phép",

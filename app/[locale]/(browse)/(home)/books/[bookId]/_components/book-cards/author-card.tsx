@@ -1,7 +1,9 @@
 import Image from "next/image"
 import { Link } from "@/i18n/routing"
+import NoData from "@/public/assets/images/no-data.png"
 import getRelatedLibraryItemsByAuthor from "@/queries/library-item/get-related-libraryItems-by-author"
 import { Cake, Earth, User } from "lucide-react"
+import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
 import { type LibraryItem } from "@/lib/types/models"
@@ -20,16 +22,23 @@ type Props = {
 
 const BookAuthorCard = async ({ libraryItem }: Props) => {
   const t = await getTranslations("BookPage")
+  const locale = await getLocale()
 
   if (libraryItem.authors.length === 0) {
     return (
-      <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-primary-foreground p-4 shadow-lg">
+      <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg">
         <div className="flex flex-1 flex-col gap-2">
           <h1 className="text-xl font-semibold capitalize">
-            <span className="text-primary">{t("about")}</span> &nbsp;
+            <span className="text-primary">
+              {t(locale === "vi" ? "info" : "about")}
+            </span>
+            &nbsp;
             {t("fields.author")}
           </h1>
-          <p className="text-danger">No authors found</p>
+
+          <div className="flex flex-1 items-center justify-center">
+            <Image src={NoData} alt="No data" width={200} height={200} />
+          </div>
         </div>
       </section>
     )
@@ -44,7 +53,7 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
 
   console.log("🚀 ~ BookAuthorCard ~ libraryItem:", libraryItem)
   return (
-    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-primary-foreground p-4 shadow-lg">
+    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg">
       <div>
         <h1 className="text-xl font-semibold capitalize">
           <span className="text-primary">{t("about")}</span> &nbsp;

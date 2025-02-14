@@ -1,7 +1,11 @@
-import Image from "next/image"
-import { CheckCircle2, CircleX, MapPin, Plus, Search } from "lucide-react"
+"use client"
 
-import { getTranslations } from "@/lib/get-translations"
+import Image from "next/image"
+import { useRouter } from "@/i18n/routing"
+import { usePrediction } from "@/stores/ai/use-prediction"
+import { CheckCircle2, CircleX, MapPin, Plus, Search } from "lucide-react"
+import { useTranslations } from "next-intl"
+
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -13,13 +17,22 @@ import { Separator } from "@/components/ui/separator"
 
 import { dummyBooks } from "../../../_components/dummy-books"
 
-const PredictionOtherMatchesTab = async () => {
+const PredictionOtherMatchesTab = () => {
   const book = dummyBooks[0]
-  const t = await getTranslations("BookPage")
+  const t = useTranslations("BookPage")
+  const router = useRouter()
+  const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
+    usePrediction()
 
   if (!book) {
     return <div>{t("Book not found")}</div>
   }
+
+  if (!predictResult || !bestMatchedLibraryItemId || !uploadedImage) {
+    router.push("/ai-prediction")
+    return
+  }
+
   return (
     <div className="flex flex-col gap-4">
       <div className="relative mt-2 w-1/3">

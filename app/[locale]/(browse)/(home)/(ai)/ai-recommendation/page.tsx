@@ -56,7 +56,7 @@ const AiRecommendation = () => {
             onClick={() => router.push("/ai-recommendation/result")}
             disabled={!previewImage}
           >
-            Let&apos;s start
+            Process
           </Button>
         </div>
       </div>

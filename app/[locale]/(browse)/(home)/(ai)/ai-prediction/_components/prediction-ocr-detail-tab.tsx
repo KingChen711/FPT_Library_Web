@@ -1,6 +1,13 @@
+"use client"
+
 import Image from "next/image"
+import { useRouter } from "@/i18n/routing"
+import { usePrediction } from "@/stores/ai/use-prediction"
+import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { getTranslations } from "@/lib/get-translations"
+import useOcrDetail from "@/hooks/ai/use-ocr-detail"
 import { Card } from "@/components/ui/card"
 import ColorfulTableCell from "@/components/ui/colorful-table-cell"
 import { Label } from "@/components/ui/label"
@@ -23,15 +30,30 @@ import TooltipItemContent from "@/components/ui/tooltip-item-content"
 
 import { dummyBooks } from "../../../_components/dummy-books"
 
-const PredictionOcrDetailTab = async () => {
+const PredictionOcrDetailTab = () => {
+  const t = useTranslations("BookPage")
   const uploadedBook = dummyBooks[0]
   const detectedBook = dummyBooks[1]
+  const router = useRouter()
+  const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
+    usePrediction()
 
-  const t = await getTranslations("BookPage")
+  const { data: ocrDetail, isLoading } = useOcrDetail(
+    bestMatchedLibraryItemId?.toString() as string,
+    uploadedImage!
+  )
 
-  if (!uploadedBook) {
-    return <div>{t("Book not found")}</div>
+  if (isLoading || !ocrDetail) {
+    return <Loader2 className="animate-spin" />
   }
+
+  if (!predictResult || !bestMatchedLibraryItemId || !uploadedImage) {
+    router.push("/ai-prediction")
+    return
+  }
+
+  console.log("🚀 ~ PredictionOcrDetailTab ~ ocrDetail:", ocrDetail)
+
   return (
     <Card className="flex w-full flex-col rounded-lg border-2 p-4">
       {/* Book preview */}
@@ -53,11 +75,13 @@ const PredictionOcrDetailTab = async () => {
         <section className="flex w-1/5 flex-col items-center justify-center gap-4">
           <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
             <Label className="text-lg font-semibold">Match percentage</Label>
-            <p className="text-lg">90%</p>
+            <p className="text-lg">{ocrDetail?.matchPercentage}%</p>
           </div>
           <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
             <Label className="text-lg font-semibold">Overall threshold</Label>
-            <p className="text-lg text-danger">60%</p>
+            <p className="text-lg text-danger">
+              {ocrDetail?.overallPercentage}%
+            </p>
           </div>
         </section>
 

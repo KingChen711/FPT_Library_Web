@@ -483,7 +483,8 @@
     "pause": "Pause",
     "play": "Play",
     "like": "Like",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "info": "Information"
   },
   "CategoriesManagementPage": {
     "Allowed": "Allowed",

@@ -2,7 +2,11 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import { useRouter } from "@/i18n/routing"
+import { usePrediction } from "@/stores/ai/use-prediction"
+import { useTranslations } from "next-intl"
 
+import useOcrDetect from "@/hooks/ai/use-ocr-detect"
 import { Card } from "@/components/ui/card"
 import PredictionOcrDetectStatistic from "@/components/ui/prediction-ocr-detect-statistic"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -23,12 +27,27 @@ enum EOcrDetectTab {
 }
 
 const PredictionOcrDetectTab = () => {
+  const t = useTranslations("BookPage")
+  const router = useRouter()
+  const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
+    usePrediction()
+
+  const { data: ocrDetect, isLoading } = useOcrDetect(
+    bestMatchedLibraryItemId?.toString() as string,
+    uploadedImage!
+  )
+
   const uploadedBook = dummyBooks[0]
   const detectedBook = dummyBooks[1]
 
   const [currentTab, setCurrentTab] = useState<EOcrDetectTab>(
     EOcrDetectTab.BOTH_BOOKS
   )
+
+  if (!predictResult || !bestMatchedLibraryItemId || !uploadedImage) {
+    router.push("/ai-prediction")
+    return
+  }
 
   return (
     <Tabs
