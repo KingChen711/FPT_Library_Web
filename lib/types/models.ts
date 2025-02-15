@@ -449,7 +449,7 @@ export type TrackingDetail = {
 }
 
 // Ocr Result
-type OcrResult = {
+export type OcrResult = {
   fieldPointsWithThreshole: {
     name: string
     matchedPoint: number
@@ -497,12 +497,12 @@ export type OcrDetail = {
 }
 
 // Ocr detect
-type DetectedItem = {
+export type DetectedValue = {
   name: string
   percentage: number
 }
 
 export type OcrDetect = {
-  importImageDetected: DetectedItem[]
-  currentItemDetected: DetectedItem[]
+  importImageDetected: DetectedValue[]
+  currentItemDetected: DetectedValue[]
 }

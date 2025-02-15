@@ -16,7 +16,7 @@ import "react-pdf/dist/Page/AnnotationLayer.css"
 import "react-pdf/dist/Page/TextLayer.css"
 
 import { WorkerPdfVersion } from "@/constants/library-version"
-import { ArrowLeft, Expand, Minimize } from "lucide-react"
+import { ArrowLeft, Expand, Minimize, ZoomIn, ZoomOut } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -34,6 +34,7 @@ export default function EBookPage({ params }: Props) {
   const [numPages, setNumPages] = useState<number>(0)
   const [isClient, setIsClient] = useState(false)
   const [isFullscreen, setIsFullscreen] = useState(false)
+  const [zoomLevel, setZoomLevel] = useState(100)
   const flipBookRef = useRef(null)
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -64,9 +65,16 @@ export default function EBookPage({ params }: Props) {
     }
   }
 
+  const handleZoomChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setZoomLevel(Number(event.target.value))
+  }
+
   if (!isClient) {
     return null
   }
+
+  const baseWidth = 550
+  const baseHeight = 680
 
   return (
     <div
@@ -97,50 +105,80 @@ export default function EBookPage({ params }: Props) {
         </div>
       </div>
 
-      <div className="flex-1 border">
-        <Document
-          file="https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf"
-          onLoadSuccess={onDocumentLoadSuccess}
-          className="m-0 my-auto flex size-full justify-center overflow-hidden"
+      <div className="relative flex-1 overflow-auto border">
+        <div
+          className="flex min-h-full items-center justify-center"
+          style={{
+            transform: `scale(${zoomLevel / 100})`,
+            transformOrigin: "center center",
+            transition: "transform 0.3s ease",
+          }}
         >
-          {numPages > 0 && (
-            <HTMLFlipBook
-              width={400}
-              maxWidth={400}
-              height={540}
-              maxHeight={540}
-              size="stretch"
-              autoSize
-              className="m-0 my-auto h-full bg-background p-0"
-              ref={flipBookRef}
-              flippingTime={500}
-              maxShadowOpacity={0.2}
-              style={{}}
-              startPage={0}
-              minWidth={300}
-              minHeight={400}
-              drawShadow
-              useMouseEvents
-              swipeDistance={30}
-              showCover
-              usePortrait={true}
-              startZIndex={0}
-              mobileScrollSupport={true}
-              clickEventForward={true}
-              showPageCorners={true}
-              disableFlipByClick={false}
-            >
-              {Array.from(new Array(numPages), (_, index) => (
-                <div
-                  key={`page_${index + 1}`}
-                  className="size-full bg-secondary"
-                >
-                  <Page pageNumber={index + 1} width={400} height={540} />
-                </div>
-              ))}
-            </HTMLFlipBook>
-          )}
-        </Document>
+          <Document
+            file="https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf"
+            onLoadSuccess={onDocumentLoadSuccess}
+            className="flex items-center justify-center overflow-hidden bg-secondary"
+          >
+            {numPages > 0 && (
+              <HTMLFlipBook
+                ref={flipBookRef}
+                width={baseWidth}
+                height={baseHeight}
+                size="stretch"
+                minWidth={baseWidth}
+                maxWidth={baseWidth}
+                minHeight={baseHeight}
+                maxHeight={baseHeight}
+                autoSize={true}
+                className=""
+                style={{}}
+                flippingTime={1000}
+                maxShadowOpacity={0}
+                startPage={0}
+                drawShadow={false}
+                useMouseEvents
+                swipeDistance={30}
+                showCover={false}
+                usePortrait={true}
+                startZIndex={0}
+                mobileScrollSupport={true}
+                clickEventForward={true}
+                showPageCorners={true}
+                disableFlipByClick={false}
+              >
+                {Array.from(new Array(numPages), (_, index) => (
+                  <div
+                    key={`page_${index + 1}`}
+                    className="overflow-hidden"
+                    style={{ width: baseWidth, height: baseHeight }}
+                  >
+                    <Page
+                      pageNumber={index + 1}
+                      width={baseWidth}
+                      height={baseHeight}
+                      className="size-full"
+                    />
+                  </div>
+                ))}
+              </HTMLFlipBook>
+            )}
+          </Document>
+        </div>
+        {isFullscreen && (
+          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-zinc p-2 text-primary-foreground">
+            <ZoomOut className="size-4" />
+            <input
+              type="range"
+              min="50"
+              max="200"
+              value={zoomLevel}
+              onChange={handleZoomChange}
+              className="w-32"
+            />
+            <ZoomIn className="size-4" />
+            <span className="ml-2 text-sm">{zoomLevel}%</span>
+          </div>
+        )}
       </div>
       {isAudio === "true" && <BookAudio bookId={params.bookId} />}
     </div>

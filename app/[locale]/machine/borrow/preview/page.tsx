@@ -1,8 +1,7 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
-import { motion, useAnimation } from "framer-motion"
-import { BookUp, CheckCircle, Printer, XCircle } from "lucide-react"
+import { useState } from "react"
+import { CheckCircle, Printer, XCircle } from "lucide-react"
 
 import BookAnimation from "@/components/ui/book-animation"
 import { Button } from "@/components/ui/button"

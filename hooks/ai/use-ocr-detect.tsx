@@ -2,18 +2,18 @@ import { useAuth } from "@/contexts/auth-provider"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
-import { type OcrDetail } from "@/lib/types/models"
+import { type OcrDetect } from "@/lib/types/models"
 
 function useOcrDetect(libraryItemId: string, imageToPredict: File) {
   const formData = new FormData()
-  formData.append("imageToPredict", imageToPredict)
+  formData.append("ImageToDetect", imageToPredict)
 
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: [`library-items/${libraryItemId}`],
+    queryKey: [`library-items/${libraryItemId}/detect`],
     queryFn: async () => {
       try {
-        const { data } = await http.post<OcrDetail | null>(
+        const res = await http.post<OcrDetect | null>(
           `/api/library-items/${libraryItemId}/ai/raw-detect`,
           formData,
           {
@@ -22,7 +22,7 @@ function useOcrDetect(libraryItemId: string, imageToPredict: File) {
             },
           }
         )
-        return data
+        return res.data
       } catch {
         return null
       }

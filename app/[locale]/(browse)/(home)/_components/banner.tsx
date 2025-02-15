@@ -48,7 +48,7 @@ const BannerHome = () => {
   const router = useRouter()
   const { data: libraryItems, isLoading } = useNewArrivals()
   if (!libraryItems || isLoading || libraryItems.length === 0) {
-    return <Loader2 className="size-12 animate-spin" />
+    return <Loader2 className="animate-spin" />
   }
 
   return (

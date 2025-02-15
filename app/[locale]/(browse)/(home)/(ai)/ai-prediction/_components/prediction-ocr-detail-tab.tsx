@@ -6,11 +6,12 @@ import { usePrediction } from "@/stores/ai/use-prediction"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { getTranslations } from "@/lib/get-translations"
 import useOcrDetail from "@/hooks/ai/use-ocr-detail"
+import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import { Card } from "@/components/ui/card"
 import ColorfulTableCell from "@/components/ui/colorful-table-cell"
 import { Label } from "@/components/ui/label"
+import LibraryItemInfo from "@/components/ui/library-item-info"
 import { Separator } from "@/components/ui/separator"
 import {
   Table,
@@ -28,12 +29,8 @@ import {
 } from "@/components/ui/tooltip"
 import TooltipItemContent from "@/components/ui/tooltip-item-content"
 
-import { dummyBooks } from "../../../_components/dummy-books"
-
 const PredictionOcrDetailTab = () => {
   const t = useTranslations("BookPage")
-  const uploadedBook = dummyBooks[0]
-  const detectedBook = dummyBooks[1]
   const router = useRouter()
   const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
     usePrediction()
@@ -43,7 +40,10 @@ const PredictionOcrDetailTab = () => {
     uploadedImage!
   )
 
-  if (isLoading || !ocrDetail) {
+  const { data: libraryItem, isLoading: isLoadingLibraryItem } =
+    useLibraryItemDetail(bestMatchedLibraryItemId?.toString() || "")
+
+  if (isLoading || !ocrDetail || isLoadingLibraryItem) {
     return <Loader2 className="animate-spin" />
   }
 
@@ -51,8 +51,6 @@ const PredictionOcrDetailTab = () => {
     router.push("/ai-prediction")
     return
   }
-
-  console.log("🚀 ~ PredictionOcrDetailTab ~ ocrDetail:", ocrDetail)
 
   return (
     <Card className="flex w-full flex-col rounded-lg border-2 p-4">
@@ -63,8 +61,8 @@ const PredictionOcrDetailTab = () => {
           <h1 className="text-center">Your uploaded Image</h1>
           <div className="flex justify-center">
             <Image
-              src={uploadedBook.image}
-              alt={uploadedBook.title}
+              src={URL.createObjectURL(uploadedImage)}
+              alt={"Uploaded Book"}
               width={180}
               height={240}
               className="rounded-lg object-contain shadow-lg"
@@ -93,8 +91,8 @@ const PredictionOcrDetailTab = () => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Image
-                    src={detectedBook.image}
-                    alt={detectedBook.title}
+                    src={libraryItem?.coverImage as string}
+                    alt={"Detected Book"}
                     width={180}
                     height={240}
                     className="rounded-lg object-contain shadow-lg"
@@ -103,9 +101,17 @@ const PredictionOcrDetailTab = () => {
                 <TooltipContent
                   align="start"
                   side="left"
-                  className="border-2 bg-card"
+                  className="max-h-[60vh] overflow-y-auto border-2 bg-card"
                 >
-                  <TooltipItemContent id={detectedBook.id.toString()} />
+                  {/* <TooltipItemContent
+                    id={libraryItem?.libraryItemId?.toString() as string}
+                  /> */}
+                  <LibraryItemInfo
+                    id={libraryItem?.libraryItemId?.toString() as string}
+                    showInstances={false}
+                    showResources={false}
+                    shownInventory={true}
+                  />
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -122,40 +128,42 @@ const PredictionOcrDetailTab = () => {
             </h1>
 
             <div className="w-full overflow-y-auto">
-              {[
-                "The Hobbit or there and back again",
-                "J.R.R TOLKIEN",
-                "THE ENCHANTING PRELUDE TO",
-                "THE LORD OF THE RINGS",
-              ].map((item, index) => (
-                <TooltipProvider key={index} delayDuration={0}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <h1 className="border-b-2 px-2 hover:bg-primary hover:font-semibold hover:text-primary-foreground">
-                        {item}
-                      </h1>
-                    </TooltipTrigger>
-                    <TooltipContent align="end" className="border-2 bg-card">
-                      <div className="flex flex-col gap-2 text-card-foreground">
-                        <h1 className="font-semibold">Assumption Values</h1>
-                        <Separator />
-                        <div className="flex flex-nowrap items-center justify-between gap-2">
-                          <div className="font-semibold">Title:</div>
-                          <div className="font-semibold text-danger">90%</div>
+              {ocrDetail &&
+                ocrDetail?.lineStatisticDtos?.map((item, index) => (
+                  <TooltipProvider key={index} delayDuration={0}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <h1 className="border-b-2 px-2 hover:bg-primary hover:font-semibold hover:text-primary-foreground">
+                          {item.lineValue}
+                        </h1>
+                      </TooltipTrigger>
+                      <TooltipContent align="end" className="border-2 bg-card">
+                        <div className="flex flex-col gap-2 text-card-foreground">
+                          <h1 className="font-semibold">Assumption Values</h1>
+                          <Separator />
+                          <div className="flex flex-nowrap items-center justify-between gap-2">
+                            <div className="font-semibold">Title:</div>
+                            <div className="font-semibold text-danger">
+                              {item.matchedTitlePercentage}%
+                            </div>
+                          </div>
+                          <div className="flex flex-nowrap items-center justify-between gap-2">
+                            <div className="font-semibold">Author:</div>
+                            <div className="font-semibold text-danger">
+                              {item.matchedAuthorPercentage}%
+                            </div>
+                          </div>
+                          <div className="flex flex-nowrap items-center justify-between gap-2">
+                            <div className="font-semibold">Publisher:</div>
+                            <div className="font-semibold text-danger">
+                              {item.matchedPublisherPercentage}%
+                            </div>
+                          </div>
                         </div>
-                        <div className="flex flex-nowrap items-center justify-between gap-2">
-                          <div className="font-semibold">Author:</div>
-                          <div className="font-semibold text-danger">90%</div>
-                        </div>
-                        <div className="flex flex-nowrap items-center justify-between gap-2">
-                          <div className="font-semibold">Publisher:</div>
-                          <div className="font-semibold text-danger">90%</div>
-                        </div>
-                      </div>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              ))}
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                ))}
             </div>
           </div>
         </section>
@@ -194,42 +202,37 @@ const PredictionOcrDetailTab = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                <TableRow>
-                  <TableCell className="sticky left-0 z-10 w-[200px] border bg-background text-center font-semibold">
-                    Title
-                  </TableCell>
-                  <ColorfulTableCell number={90} mark="%" />
-                  <ColorfulTableCell number={90} mark="%" />
-                  <ColorfulTableCell number={36} mark="%" />
-                  <TableCell className="border text-xs text-secondary-foreground">
-                    The hobbit or there and back again
-                  </TableCell>
-                  <ColorfulTableCell number={88} mark="%" />
-                </TableRow>
-                <TableRow>
-                  <TableCell className="sticky left-0 z-10 w-[200px] min-w-[200px] max-w-[200px] border bg-background text-center font-semibold">
-                    Author
-                  </TableCell>
-                  <ColorfulTableCell number={90} mark="%" />
-                  <ColorfulTableCell number={90} mark="%" />
-                  <ColorfulTableCell number={43} mark="%" />
-                  <TableCell className="border text-xs text-secondary-foreground">
-                    J.R.R TOLKIEN
-                  </TableCell>
-                  <ColorfulTableCell number={75} mark="%" />
-                </TableRow>
-                <TableRow>
-                  <TableCell className="sticky left-0 z-10 w-[200px] min-w-[200px] max-w-[200px] border border-y-2 bg-background text-center font-semibold">
-                    Publisher
-                  </TableCell>
-                  <ColorfulTableCell number={10} mark="%" />
-                  <ColorfulTableCell number={20} mark="%" />
-                  <ColorfulTableCell number={45} mark="%" />
-                  <TableCell className="border text-xs text-secondary-foreground">
-                    Not found
-                  </TableCell>
-                  <ColorfulTableCell number={36} mark="%" />
-                </TableRow>
+                {ocrDetail &&
+                  ocrDetail?.stringComparisions?.map((item, index) => (
+                    <TableRow key={item?.propertyName}>
+                      <TableCell className="sticky left-0 z-10 w-[200px] border bg-background text-center font-semibold capitalize">
+                        {item.propertyName}
+                      </TableCell>
+                      <ColorfulTableCell
+                        number={item?.matchPhrasePoint}
+                        threshold={item.fieldThreshold}
+                        mark="%"
+                      />
+                      <ColorfulTableCell
+                        number={item?.fuzzinessPoint}
+                        threshold={item.fieldThreshold}
+                        mark="%"
+                      />
+                      <ColorfulTableCell
+                        number={item?.fieldThreshold}
+                        threshold={item.fieldThreshold}
+                        mark="%"
+                      />
+                      <TableCell className="border text-xs text-secondary-foreground">
+                        {item?.matchLine}
+                      </TableCell>
+                      <ColorfulTableCell
+                        number={item?.matchPercentage}
+                        threshold={item.fieldThreshold}
+                        mark="%"
+                      />
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </div>

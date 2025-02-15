@@ -93,33 +93,40 @@ const AiPrediction = () => {
   return (
     <div className="flex size-full flex-col items-center justify-center">
       <div className="relative w-full">
-        <h1 className="text-center text-xl font-semibold">Welcome to</h1>
+        <h1 className="text-center text-xl font-semibold">
+          {tGeneralManagement("welcome to")}
+        </h1>
         <div className="absolute right-0 top-1/2 flex w-full -translate-y-1/2 items-center justify-end gap-2">
           <Button
-            disabled={!previewImage}
+            disabled={!previewImage || isPending}
             variant={"outline"}
             onClick={handleRemoveFile}
           >
-            Clear
+            {tGeneralManagement("clear btn")}
           </Button>
           <Button
             disabled={!previewImage || isPending}
             onClick={() => form.handleSubmit(onSubmit)()}
           >
-            Process
+            {tGeneralManagement("process btn")}
           </Button>
         </div>
       </div>
       <div className="flex h-full w-2/3 flex-col gap-2 text-center">
         <h1 className="text-3xl font-semibold text-primary">
-          Book AI Prediction
+          {tGeneralManagement("book ai prediction")}
         </h1>
         <p className="font-semibold">
-          Upload a book cover and let AI Predict the book details
+          {tGeneralManagement(
+            "Upload a book cover and let AI Predict the book details"
+          )}
         </p>
 
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className={`flex-1 space-y-8 ${isPending ? "pointer-events-none opacity-50" : ""}`}
+          >
             <FormField
               control={form.control}
               name="imageToPredict"
@@ -127,7 +134,8 @@ const AiPrediction = () => {
                 <FormItem>
                   <FormControl>
                     <Card
-                      {...getRootProps()}
+                      // {...getRootProps()}
+                      {...getRootProps({ disabled: isPending })}
                       className={`flex w-full flex-1 cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border-4 border-dashed bg-card p-4 ${
                         isDragActive
                           ? "border-primary bg-primary/10"
@@ -147,24 +155,29 @@ const AiPrediction = () => {
                             />
                           </div>
                           <h1 className="text-lg font-semibold underline">
-                            Choose Image
+                            {tGeneralManagement("choose image")}
                           </h1>
-                          <h1>or drag and drop file here</h1>
+                          <h1>
+                            {tGeneralManagement("or drag and drop file here")}
+                          </h1>
 
                           <p className="text-sm">
-                            (supports document - .jpg, .jpeg, .png, .webp)
+                            ({tGeneralManagement("support documents")} - .jpg,
+                            .jpeg, .png, .webp)
                           </p>
-                          <p className="text-sm text-danger">No file chosen</p>
+                          <p className="text-sm text-danger">
+                            {tGeneralManagement("no file chosen")}
+                          </p>
                         </div>
                       ) : (
                         <div className="space-y-4">
-                          <div className="relative flex w-full flex-col justify-center gap-4">
+                          <div className="relative flex w-full flex-col items-center justify-center gap-4">
                             <Image
                               src={previewImage}
                               alt="Preview"
                               className="rounded-md object-contain"
-                              width={400}
-                              height={300}
+                              width={200}
+                              height={200}
                             />
                           </div>
 

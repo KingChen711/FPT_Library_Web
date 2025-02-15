@@ -22,11 +22,10 @@ import {
 } from "@/components/ui/table"
 
 type Props = {
-  libraryItemId: string
   libraryItem: LibraryItem
 }
 
-const BookInstancesTab = ({ libraryItemId, libraryItem }: Props) => {
+const BookInstancesTab = ({ libraryItem }: Props) => {
   return (
     <div>
       <Table>
