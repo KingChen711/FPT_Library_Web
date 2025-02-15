@@ -2,6 +2,7 @@ import getLibraryItem from "@/queries/library-item/get-libraryItem"
 import { ChevronRight } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
+import { cn } from "@/lib/utils"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -10,6 +11,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import LibraryItemInfo from "@/components/ui/library-item-info"
 
 import BookAuthorCard from "./_components/book-cards/author-card"
 import BookInfoCard from "./_components/book-cards/book-info-card"
@@ -51,7 +53,16 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
         <BookPreviewCard libraryItem={libraryItem} />
         <section className="h-full flex-1 space-y-4">
           <div className="flex h-[60vh] gap-4">
-            <BookInfoCard libraryItem={libraryItem} />
+            <div
+              className={cn(
+                "flex w-3/5 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg"
+              )}
+            >
+              <LibraryItemInfo
+                id={libraryItem.libraryItemId.toString()}
+                showInstances={false}
+              />
+            </div>
             <BookAuthorCard libraryItem={libraryItem} />
           </div>
           <BookTabs libraryItemId={libraryItem.libraryItemId.toString()} />

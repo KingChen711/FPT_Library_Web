@@ -1,7 +1,7 @@
-import { CheckCircle2, CircleX, MapPin, Plus } from "lucide-react"
+import { CheckCircle2, CircleX, Loader2, MapPin, Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { dummyBooks } from "@/app/[locale]/(browse)/(home)/_components/dummy-books"
+import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 
 import { Badge } from "./badge"
 import { Button } from "./button"
@@ -11,11 +11,16 @@ type Props = {
 }
 
 const TooltipItemContent = ({ id }: Props) => {
-  const book = dummyBooks.find((item) => item.id.toString() === id)
   const t = useTranslations("BookPage")
 
-  if (!book) {
-    return <div>{t("Book not found")}</div>
+  const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
+
+  if (!libraryItem) {
+    return null
+  }
+
+  if (isLoading) {
+    return <Loader2 className="animate-spin" />
   }
 
   return (
@@ -24,26 +29,26 @@ const TooltipItemContent = ({ id }: Props) => {
         <div className="space-y-2 text-card-foreground">
           <p className="font-thin italic">
             {t("an edition of")} &nbsp;
-            <span className="font-semibold">{book.title}</span> (2024)
+            <span className="font-semibold">{libraryItem?.title}</span> (2024)
           </p>
           <h1 className="line-clamp-1 text-3xl font-semibold text-primary">
-            {book?.title}
+            {libraryItem?.title}
           </h1>
           <p className="text-sm">
             Lorem ipsum dolor sit amet adipisicing elit.
           </p>
-          <p className="text-sm italic">by {book?.author}, 2000</p>
+
+          {libraryItem?.authors && libraryItem?.authors.length > 0 && (
+            <p className="text-sm italic">
+              by {libraryItem?.authors[0]?.fullName},
+              {libraryItem.publicationYear}
+            </p>
+          )}
           <Badge variant={"secondary"} className="w-fit">
             Second Edition
           </Badge>
           <div className="flex justify-between text-sm">
             <div>⭐⭐⭐⭐⭐ 5/5 {t("fields.ratings")}</div>
-            <div>
-              <span className="font-semibold">25</span> {t("fields.reading")}
-            </div>
-            <div>
-              <span className="font-semibold">119</span> {t("fields.have read")}
-            </div>
           </div>
           <div className="flex justify-between text-sm">
             {/* Availability */}

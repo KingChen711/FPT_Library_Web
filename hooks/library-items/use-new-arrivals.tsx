@@ -19,7 +19,6 @@ function useNewArrivals() {
           `/api/library-items/new-arrivals`
         )
 
-        console.log("🚀 ~ queryFn: ~ data:", data)
         return data.sources
       } catch {
         return []

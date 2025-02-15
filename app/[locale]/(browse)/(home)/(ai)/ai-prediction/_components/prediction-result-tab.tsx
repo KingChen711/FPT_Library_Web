@@ -3,22 +3,14 @@
 import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
 import { usePrediction } from "@/stores/ai/use-prediction"
-import {
-  CheckCircle2,
-  CircleX,
-  Loader2,
-  MapPin,
-  Plus,
-  User2,
-} from "lucide-react"
+import { Loader2, MapPin } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import InstanceItem from "@/components/ui/instance-item"
-import LibraryItemStatusBadge from "@/components/ui/libraryItem-status-badge"
+import LibraryItemInfo from "@/components/ui/library-item-info"
 import { Separator } from "@/components/ui/separator"
 
 const PredictionResultTab = () => {
@@ -46,8 +38,6 @@ const PredictionResultTab = () => {
     return
   }
 
-  console.log("🚀 ~ PredictionResultTab ~ libraryItem:", libraryItem)
-
   return (
     <Card className="flex w-full gap-4 rounded-lg border-2 p-4">
       <section className="w-1/5">
@@ -67,74 +57,12 @@ const PredictionResultTab = () => {
       </section>
 
       <section className="flex h-[60vh] flex-1 flex-col justify-between overflow-y-auto rounded-lg bg-card p-4">
-        <div className="space-y-2">
-          <p className="font-thin italic">
-            {t("an edition of")} &nbsp;
-            <span className="font-semibold">{libraryItem?.title}</span>
-          </p>
-
-          <h1 className="line-clamp-2 text-2xl font-semibold text-primary">
-            {libraryItem?.title}
-          </h1>
-          <p>{libraryItem?.subTitle}</p>
-          <div className="flex items-center justify-between gap-2">
-            {libraryItem?.authors && libraryItem?.authors.length > 0 ? (
-              <div className="flex items-center gap-2 text-sm italic">
-                <User2 size={16} /> by &nbsp;
-                {libraryItem?.authors[0].fullName || ""}
-              </div>
-            ) : (
-              <div></div>
-            )}
-          </div>
-          <Badge variant={"draft"} className="w-fit">
-            No.{libraryItem?.editionNumber} Edition
-          </Badge>
-          <div className="my-2 flex justify-between text-sm">
-            <div>
-              ⭐ {libraryItem?.avgReviewedRate} / 5 {t("fields.ratings")}
-            </div>
-          </div>
-          <div className="my-2 flex justify-between text-sm">
-            {/* Availability */}
-            <div>
-              {/* <h1 className="font-semibold">
-                {t("fields.availability")} (
-                {libraryItem?.libraryItemInventory.availableUnits ?? 0} /&nbsp;
-                {libraryItem?.libraryItemInventory.totalUnits ?? 5})
-              </h1> */}
-              <div className="space-y-2">
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} color="white" fill="#42bb4e" />
-                  {t("fields.hard copy")}
-                </div>
-                <div className="flex items-center gap-2">
-                  <CheckCircle2 size={16} color="white" fill="#42bb4e" />
-                  {t("fields.ebook")}
-                </div>
-                <div className="flex items-center gap-2">
-                  <CircleX size={16} color="white" fill="#868d87" />
-                  {t("fields.audio book")}
-                </div>
-              </div>
-            </div>
-            {/* Status */}
-            <div>
-              <h1 className="font-semibold"> {t("fields.status")}</h1>
-              <div className="mt-2 space-y-2">
-                {libraryItem?.status && (
-                  <LibraryItemStatusBadge status={libraryItem?.status} />
-                )}
-                <div className="flex items-center">
-                  <MapPin color="white" fill="orange" /> CS A-15
-                </div>
-              </div>
-            </div>
-            <Button>
-              <Plus /> {t("add to favorite")}
-            </Button>
-          </div>
-        </div>
+        <LibraryItemInfo
+          id={libraryItem?.libraryItemId.toString()}
+          showInstances={true}
+          shownInventory={true}
+          showResources={false}
+        />
       </section>
 
       <section className="w-1/4 space-y-4 rounded-lg border p-4 shadow-lg">

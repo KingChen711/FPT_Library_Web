@@ -10,7 +10,7 @@ function useOcrDetail(libraryItemId: string, imageToPredict: File) {
 
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: [`library-items/${libraryItemId}`],
+    queryKey: [`library-items/${libraryItemId}/ocr-detail`],
     queryFn: async () => {
       try {
         const { data } = await http.post<OcrDetail | null>(

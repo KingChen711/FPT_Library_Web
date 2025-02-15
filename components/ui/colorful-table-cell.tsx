@@ -4,21 +4,27 @@ import { TableCell } from "./table"
 
 type Props = {
   number: number
+  threshold: number
   classname?: string
   mark: "%" | "$" | ""
 }
 
-const ColorfulTableCell = ({ number, classname, mark = "" }: Props) => {
+const ColorfulTableCell = ({
+  number,
+  threshold,
+  classname,
+  mark = "",
+}: Props) => {
   return (
     <TableCell
       className={cn(
         "border text-center font-semibold",
-        { "text-success": number >= 80 },
-        { "text-danger": number < 80 },
+        { "text-success": number >= threshold },
+        { "text-danger": number < threshold },
         classname
       )}
     >
-      {number}
+      {number.toFixed(2)}
       {mark}
     </TableCell>
   )

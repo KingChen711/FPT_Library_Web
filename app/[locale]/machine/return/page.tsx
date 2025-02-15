@@ -1,9 +1,12 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
+import BarcodeCardImg from "@/public/assets/images/barcode-card.png"
+import ScannerImg from "@/public/assets/images/scanner.png"
 import { motion } from "framer-motion"
-import { ChevronLeftCircle, IdCard } from "lucide-react"
+import { ChevronLeftCircle } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 
@@ -21,18 +24,23 @@ const MachineReturnPage = () => {
 
   return (
     <div className="relative flex size-full flex-col gap-4">
-      {/* Light Animation */}
-      <div className="absolute left-1/2 top-[180px] z-10 -translate-x-1/2 -translate-y-1/2">
+      <div className="absolute left-1/2 top-[120px] z-10 -translate-y-1/2 translate-x-2/3">
         <div className="relative">
-          <div className="absolute inset-0 size-20 rounded-full bg-green-500 opacity-50 blur-3xl" />
-          <div className="size-12 rounded-full bg-green-400 shadow-[0_0_20px_5px_rgba(34,197,94,0.8)]" />
+          <Image
+            alt="scanner"
+            src={ScannerImg}
+            width={240}
+            height={240}
+            color="green"
+            className="-rotate-45"
+          />
         </div>
       </div>
 
       <div className="flex flex-1 items-center justify-center rounded-lg bg-background">
-        <div className="flex w-full flex-col items-center justify-center">
+        <div className="flex w-full flex-col items-center justify-center gap-2">
           <motion.div
-            animate={{ y: isAnimating ? -50 : 50 }}
+            animate={{ y: isAnimating ? -20 : 20 }}
             transition={{
               duration: 2,
               ease: "easeInOut",
@@ -40,10 +48,15 @@ const MachineReturnPage = () => {
               repeatType: "reverse",
             }}
           >
-            <IdCard size={400} strokeWidth={1} />
+            <Image
+              alt="scanner"
+              src={BarcodeCardImg}
+              width={240}
+              height={240}
+            />
           </motion.div>
           <p className="mt-4 text-2xl">
-            Đưa thẻ của bạn vào khu vực đọc phía dưới màn hình
+            Bạn hãy quét thẻ thành viên để trả sách
           </p>
         </div>
       </div>
