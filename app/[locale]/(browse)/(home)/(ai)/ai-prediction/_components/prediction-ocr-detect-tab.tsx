@@ -2,8 +2,15 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import { useRouter } from "@/i18n/routing"
+import { usePrediction } from "@/stores/ai/use-prediction"
+import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
+import useOcrDetect from "@/hooks/ai/use-ocr-detect"
+import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import { Card } from "@/components/ui/card"
+import LibraryItemInfo from "@/components/ui/library-item-info"
 import PredictionOcrDetectStatistic from "@/components/ui/prediction-ocr-detect-statistic"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import {
@@ -12,9 +19,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import TooltipItemContent from "@/components/ui/tooltip-item-content"
-
-import { dummyBooks } from "../../../_components/dummy-books"
 
 enum EOcrDetectTab {
   UPLOADED_BOOK = "uploaded-book",
@@ -23,12 +27,30 @@ enum EOcrDetectTab {
 }
 
 const PredictionOcrDetectTab = () => {
-  const uploadedBook = dummyBooks[0]
-  const detectedBook = dummyBooks[1]
-
+  const router = useRouter()
+  const t = useTranslations("BookPage")
   const [currentTab, setCurrentTab] = useState<EOcrDetectTab>(
     EOcrDetectTab.BOTH_BOOKS
   )
+  const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
+    usePrediction()
+
+  const { data: ocrDetect, isLoading } = useOcrDetect(
+    bestMatchedLibraryItemId?.toString() as string,
+    uploadedImage!
+  )
+
+  const { data: libraryItem, isLoading: isLoadingLibraryItem } =
+    useLibraryItemDetail(bestMatchedLibraryItemId?.toString() || "")
+
+  if (isLoading || isLoadingLibraryItem || !ocrDetect) {
+    return <Loader2 className="animate-spin" />
+  }
+
+  if (!predictResult || !bestMatchedLibraryItemId || !uploadedImage) {
+    router.push("/ai-prediction")
+    return
+  }
 
   return (
     <Tabs
@@ -51,8 +73,8 @@ const PredictionOcrDetectTab = () => {
           <div className="flex w-full items-center justify-evenly gap-24 p-4">
             <div className="flex flex-col gap-2">
               <Image
-                src={uploadedBook.image}
-                alt={uploadedBook.title}
+                src={URL.createObjectURL(uploadedImage)}
+                alt={"Uploaded Book"}
                 width={200}
                 height={300}
                 className="overflow-hidden rounded-lg object-cover shadow-lg"
@@ -65,8 +87,8 @@ const PredictionOcrDetectTab = () => {
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Image
-                      src={detectedBook.image}
-                      alt={detectedBook.title}
+                      src={libraryItem?.coverImage as string}
+                      alt={"Detected Book"}
                       width={200}
                       height={300}
                       className="overflow-hidden rounded-lg object-cover shadow-lg"
@@ -75,9 +97,14 @@ const PredictionOcrDetectTab = () => {
                   <TooltipContent
                     align="start"
                     side="left"
-                    className="border-2 bg-card"
+                    className="max-h-[60vh] overflow-y-auto border-2 bg-card"
                   >
-                    <TooltipItemContent id={detectedBook.id.toString()} />
+                    <LibraryItemInfo
+                      id={libraryItem?.libraryItemId?.toString() as string}
+                      showInstances={false}
+                      showResources={false}
+                      shownInventory={true}
+                    />
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -86,21 +113,27 @@ const PredictionOcrDetectTab = () => {
           </div>
 
           <div className="flex w-full items-center justify-evenly gap-24 p-4">
-            <PredictionOcrDetectStatistic />
-            <PredictionOcrDetectStatistic />
+            <PredictionOcrDetectStatistic
+              detectValues={ocrDetect?.importImageDetected as []}
+            />
+            <PredictionOcrDetectStatistic
+              detectValues={ocrDetect?.currentItemDetected as []}
+            />
           </div>
         </Card>
       </TabsContent>
       {/* Uploaded book */}
       <TabsContent value={EOcrDetectTab.UPLOADED_BOOK}>
-        <Card className="flex w-full items-center justify-between gap-4 p-4">
+        <Card className="flex w-full items-start justify-between gap-4 p-4">
           <div className="w-3/5">
-            <PredictionOcrDetectStatistic />
+            <PredictionOcrDetectStatistic
+              detectValues={ocrDetect?.importImageDetected as []}
+            />
           </div>
           <div className="flex flex-1 flex-col items-center justify-center gap-2">
             <Image
-              src={uploadedBook.image}
-              alt={uploadedBook.title}
+              src={URL.createObjectURL(uploadedImage)}
+              alt={"Uploaded Book"}
               width={200}
               height={300}
               className="rounded-lg object-contain shadow-lg"
@@ -112,28 +145,35 @@ const PredictionOcrDetectTab = () => {
 
       {/* Detected book */}
       <TabsContent value={EOcrDetectTab.DETECTED_BOOK}>
-        <Card className="flex w-full items-center justify-between gap-4 p-4">
+        <Card className="flex w-full items-start justify-between gap-4 p-4">
           <div className="w-3/5">
-            <PredictionOcrDetectStatistic />
+            <PredictionOcrDetectStatistic
+              detectValues={ocrDetect?.currentItemDetected as []}
+            />
           </div>
           <div className="flex flex-1 flex-col items-center justify-center gap-2">
             <TooltipProvider delayDuration={0}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Image
-                    src={detectedBook.image}
-                    alt={detectedBook.title}
+                    src={libraryItem?.coverImage as string}
+                    alt={"Detected Book"}
                     width={200}
                     height={300}
-                    className="rounded-lg object-contain shadow-lg"
+                    className="overflow-hidden rounded-lg object-cover shadow-lg"
                   />
                 </TooltipTrigger>
                 <TooltipContent
                   align="start"
                   side="left"
-                  className="border-2 bg-card"
+                  className="max-h-[60vh] overflow-y-auto border-2 bg-card"
                 >
-                  <TooltipItemContent id={detectedBook.id.toString()} />
+                  <LibraryItemInfo
+                    id={libraryItem?.libraryItemId?.toString() as string}
+                    showInstances={false}
+                    showResources={false}
+                    shownInventory={true}
+                  />
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

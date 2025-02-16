@@ -62,7 +62,6 @@ const BookOverviewTab = async ({ libraryItemId }: Props) => {
             <div className="flex items-center">
               <p className="w-1/2 font-semibold">Category</p>
               <p className="flex-1">
-                {" "}
                 {locale === "vi"
                   ? libraryItem.category.vietnameseName
                   : splitCamelCase(libraryItem.category.englishName as string)}

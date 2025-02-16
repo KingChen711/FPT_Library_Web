@@ -31,7 +31,7 @@ const AuthorSoftDeleteConfirm = ({
   setOpenDelete,
 }: Props) => {
   const locale = useLocale()
-  const message = `${author.fullName}`
+  const message = `${locale === "vi" ? "xóa" : "delete"}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const [pending, startSoftDelete] = useTransition()

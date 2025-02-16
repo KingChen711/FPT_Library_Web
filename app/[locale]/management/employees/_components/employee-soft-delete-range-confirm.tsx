@@ -27,7 +27,7 @@ const EmployeeSoftDeleteRangeConfirm = ({
   selectedIds,
 }: EmployeeSoftDeleteConfirmProps) => {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "chuyển vào thùng rác" : "move to trash"}`
+  const message = `${locale === "vi" ? "đưa vào thùng rác" : "move to trash"}`
   const t = useTranslations("GeneralManagement")
   const [value, setValue] = useState<string>("")
   const [isOpen, setIsOpen] = useState(false)

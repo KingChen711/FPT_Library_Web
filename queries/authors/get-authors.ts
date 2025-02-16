@@ -17,6 +17,7 @@ export type TGetAuthorsData = {
 export async function getAuthors(
   searchParams: TSearchAuthorSchema
 ): Promise<TGetAuthorsData> {
+  console.log("🚀 ~ searchParams:", searchParams)
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<TGetAuthorsData>(

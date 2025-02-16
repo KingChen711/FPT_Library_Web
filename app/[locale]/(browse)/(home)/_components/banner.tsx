@@ -1,9 +1,11 @@
 "use client"
 
-import React from "react"
 import Image from "next/image"
+import { useRouter } from "@/i18n/routing"
 import Autoplay from "embla-carousel-autoplay"
+import { Loader2 } from "lucide-react"
 
+import useNewArrivals from "@/hooks/library-items/use-new-arrivals"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -12,8 +14,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-
-import { dummyBooks } from "./dummy-books"
 
 const quotes = [
   {
@@ -45,6 +45,12 @@ const quotes = [
   },
 ]
 const BannerHome = () => {
+  const router = useRouter()
+  const { data: libraryItems, isLoading } = useNewArrivals()
+  if (!libraryItems || isLoading || libraryItems.length === 0) {
+    return <Loader2 className="animate-spin" />
+  }
+
   return (
     <div className="grid h-[240px] w-full grid-cols-3 gap-4">
       <div className="col-span-1 h-full overflow-hidden rounded-lg">
@@ -98,11 +104,17 @@ const BannerHome = () => {
             className="w-full max-w-2xl"
           >
             <CarouselContent className="flex h-full space-x-4">
-              {dummyBooks.map((item) => (
-                <CarouselItem key={item.id} className="h-full basis-1/4">
-                  <div className="flex h-[180px] items-center justify-center overflow-hidden rounded-lg p-4 shadow-lg">
+              {libraryItems.map((item) => (
+                <CarouselItem
+                  key={item.libraryItemId}
+                  className="h-full basis-1/4"
+                >
+                  <div
+                    onClick={() => router.push(`/books/${item.libraryItemId}`)}
+                    className="flex h-[180px] items-center justify-center overflow-hidden rounded-lg p-4 shadow-lg"
+                  >
                     <Image
-                      src={item.image}
+                      src={item.coverImage as string}
                       priority
                       alt="Logo"
                       width={240}

@@ -11,6 +11,7 @@ import {
 
 import { getTranslations } from "@/lib/get-translations"
 import { type LibraryItem } from "@/lib/types/models"
+import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import LibraryItemStatusBadge from "@/components/ui/libraryItem-status-badge"
@@ -25,7 +26,11 @@ const BookInfoCard = async ({ libraryItem }: Props) => {
   const t = await getTranslations("BookPage")
 
   return (
-    <div className="flex w-3/5 flex-col justify-between overflow-y-auto rounded-lg border bg-primary-foreground p-4 shadow-lg">
+    <div
+      className={cn(
+        "flex w-3/5 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg"
+      )}
+    >
       <div className="space-y-2">
         <p className="font-thin italic">
           {t("an edition of")} &nbsp;
@@ -35,12 +40,16 @@ const BookInfoCard = async ({ libraryItem }: Props) => {
         <h1 className="line-clamp-2 text-2xl font-semibold text-primary">
           {libraryItem?.title}
         </h1>
-        <p>{libraryItem.subTitle}.</p>
+        <p>{libraryItem.subTitle}</p>
         <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-2 text-sm italic">
-            <User2 size={16} /> by &nbsp;
-            {libraryItem.authors.map((a) => a.fullName).join(", ")}
-          </div>
+          {libraryItem.authors.length > 0 ? (
+            <div className="flex items-center gap-2 text-sm italic">
+              <User2 size={16} /> by &nbsp;
+              {libraryItem.authors[0].fullName || ""}
+            </div>
+          ) : (
+            <div></div>
+          )}
         </div>
         <Badge variant={"draft"} className="w-fit">
           No.{libraryItem.editionNumber} Edition
@@ -48,12 +57,6 @@ const BookInfoCard = async ({ libraryItem }: Props) => {
         <div className="my-2 flex justify-between text-sm">
           <div>
             ⭐ {libraryItem.avgReviewedRate} / 5 {t("fields.ratings")}
-          </div>
-          <div>
-            <span className="font-semibold">25</span> {t("fields.reading")}
-          </div>
-          <div>
-            <span className="font-semibold">119</span> {t("fields.have read")}
           </div>
         </div>
         <div className="my-2 flex justify-between text-sm">

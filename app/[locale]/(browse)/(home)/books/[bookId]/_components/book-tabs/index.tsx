@@ -23,9 +23,9 @@ const BookTabs = async ({ libraryItemId }: Props) => {
   return (
     <Tabs
       defaultValue="overview"
-      className="w-full rounded-lg border bg-primary-foreground p-4 shadow-lg"
+      className="w-full rounded-lg border bg-card p-4 shadow-lg"
     >
-      <TabsList className="flex justify-between">
+      <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger className="w-full" value="overview">
           Overview
         </TabsTrigger>
@@ -49,10 +49,7 @@ const BookTabs = async ({ libraryItemId }: Props) => {
         <BookEditionTab libraryItemId={libraryItemId} />
       </TabsContent>
       <TabsContent value="instances">
-        <BookInstancesTab
-          libraryItemId={libraryItemId}
-          libraryItem={libraryItem}
-        />
+        <BookInstancesTab libraryItem={libraryItem} />
       </TabsContent>
       <TabsContent value="review">
         <BookReviewsTab libraryItemId={libraryItemId} />

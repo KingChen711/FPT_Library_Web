@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import Image from "next/image"
-import { Link, usePathname } from "@/i18n/routing"
+import { useSearchParams } from "next/navigation"
+import { usePathname, useRouter } from "@/i18n/routing"
 import {
   Book,
   Bot,
@@ -15,8 +15,7 @@ import {
 } from "lucide-react"
 import { useDebounce } from "use-debounce"
 
-import { cn } from "@/lib/utils"
-import useAutoCompleteBooks from "@/hooks/books/use-auto-complete-books"
+import { cn, formUrlQuery } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -36,21 +35,18 @@ import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import VoiceToText from "@/components/ui/voice-to-text"
 import { BookFilterTabs } from "@/components/book-filter-tabs"
 
-import BookPredictionDialog from "../(home)/_components/book-prediction-dialog"
-import BookRecommendDialog from "../(home)/_components/book-recommend-dialog"
 import Actions from "./actions"
 
 function BrowseNavbar() {
   const { open } = useSidebar()
   const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const [openVoiceToText, setOpenVoiceToText] = useState<boolean>(false)
   const [currentDate, setCurrentDate] = useState<string | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
-  const { data: autoCompleteData } = useAutoCompleteBooks(debouncedSearchTerm)
-
-  useEffect(() => {
-    console.log(debouncedSearchTerm)
-  }, [debouncedSearchTerm])
+  const [searchValue, setSearchValue] = useState<string>(
+    searchParams.get("search") as string
+  )
 
   useEffect(() => {
     // Update currentDate only on the client
@@ -66,6 +62,22 @@ function BrowseNavbar() {
 
     return () => clearInterval(interval)
   }, [])
+
+  useEffect(() => {
+    setSearchValue(searchParams.get("search") as string)
+  }, [searchParams])
+
+  const [handleChangeSearchValue] = useDebounce((value: string) => {
+    setSearchValue(value)
+    const newUrl = formUrlQuery({
+      url: `/search/result`,
+      params: searchParams.toString(),
+      updates: {
+        search: value,
+      },
+    })
+    router.replace(newUrl, { scroll: false })
+  }, 500)
 
   return (
     <nav className={cn("relative mb-16", pathname === "/search" && "hidden")}>
@@ -89,7 +101,13 @@ function BrowseNavbar() {
         >
           <div className="flex w-[650px] items-center rounded-2xl border shadow-lg">
             <BookFilterTabs />
-            <div className="relative flex-1 border-x">
+            <div className="relative flex-1 border-x-2">
+              <Input
+                placeholder="Search"
+                value={searchValue}
+                onChange={(e) => handleChangeSearchValue(e.target.value)}
+                className="flex-1 rounded-none border-l border-none"
+              />
               <Search
                 size={16}
                 className="absolute left-3 top-1/2 -translate-y-1/2"
@@ -127,9 +145,7 @@ function BrowseNavbar() {
               )}
             </div>
 
-            <VoiceToText open={false} setOpen={() => {}} />
-            <BookPredictionDialog open={false} setOpen={() => {}} />
-            <BookRecommendDialog open={false} setOpen={() => {}} />
+            <VoiceToText open={openVoiceToText} setOpen={setOpenVoiceToText} />
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -138,13 +154,15 @@ function BrowseNavbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => {}}>
+                <DropdownMenuItem onClick={() => setOpenVoiceToText(true)}>
                   <Mic size={16} /> Voice to text
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {}}>
+                <DropdownMenuItem onClick={() => router.push("/ai-prediction")}>
                   <Bot size={16} /> Prediction
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => {}}>
+                <DropdownMenuItem
+                  onClick={() => router.push("/ai-recommendation")}
+                >
                   <Book size={16} /> Recommend
                 </DropdownMenuItem>
               </DropdownMenuContent>

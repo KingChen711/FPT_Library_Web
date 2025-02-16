@@ -1,5 +1,9 @@
 import Image from "next/image"
+import { Link } from "@/i18n/routing"
+import NoData from "@/public/assets/images/no-data.png"
+import getRelatedLibraryItemsByAuthor from "@/queries/library-item/get-related-libraryItems-by-author"
 import { Cake, Earth, User } from "lucide-react"
+import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
 import { type LibraryItem } from "@/lib/types/models"
@@ -12,18 +16,44 @@ import {
 } from "@/components/ui/carousel"
 import { StyledReadMore } from "@/components/ui/read-more"
 
-import { dummyBooks } from "../../../../_components/dummy-books"
-
 type Props = {
   libraryItem: LibraryItem
 }
 
 const BookAuthorCard = async ({ libraryItem }: Props) => {
   const t = await getTranslations("BookPage")
+  const locale = await getLocale()
+
+  if (libraryItem.authors.length === 0) {
+    return (
+      <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg">
+        <div className="flex flex-1 flex-col gap-2">
+          <h1 className="text-xl font-semibold capitalize">
+            <span className="text-primary">
+              {t(locale === "vi" ? "info" : "about")}
+            </span>
+            &nbsp;
+            {t("fields.author")}
+          </h1>
+
+          <div className="flex flex-1 items-center justify-center">
+            <Image src={NoData} alt="No data" width={200} height={200} />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  const libraryItems = await getRelatedLibraryItemsByAuthor({
+    authorId: libraryItem.authors[0].authorId,
+    pageIndex: 1,
+    pageSize: "5",
+    search: "",
+  })
 
   console.log("🚀 ~ BookAuthorCard ~ libraryItem:", libraryItem)
   return (
-    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-primary-foreground p-4 shadow-lg">
+    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg">
       <div>
         <h1 className="text-xl font-semibold capitalize">
           <span className="text-primary">{t("about")}</span> &nbsp;
@@ -67,41 +97,49 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
           {libraryItem.authors[0]?.biography}
         </StyledReadMore>
       </div>
-      <div className="mt-auto">
-        <h1 className="mt-4 text-xl font-semibold">{t("other books")}</h1>
+      {libraryItems.sources.length > 0 && (
+        <div className="mt-auto">
+          <h1 className="mt-4 text-xl font-semibold">{t("other books")}</h1>
+          <div className="flex flex-1 items-center justify-center">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full max-w-xl"
+            >
+              <CarouselContent className="flex h-full">
+                {libraryItems.sources.map((item) => {
+                  if (item.libraryItemId !== libraryItem.libraryItemId) {
+                    return (
+                      <CarouselItem
+                        key={item.libraryItemId}
+                        className="h-full shrink-0 basis-1/4"
+                      >
+                        <Link
+                          href={`/books/${item.libraryItemId}`}
+                          className="flex h-[80] items-center justify-center overflow-hidden rounded-lg shadow-lg"
+                        >
+                          <Image
+                            src={item.coverImage || ""}
+                            priority
+                            alt="Logo"
+                            width={240}
+                            height={320}
+                            className="object-cover duration-150 ease-in-out hover:scale-105"
+                          />
+                        </Link>
+                      </CarouselItem>
+                    )
+                  }
+                })}
+              </CarouselContent>
 
-        <div className="flex flex-1 items-center justify-center">
-          <Carousel
-            opts={{
-              align: "start",
-            }}
-            className="w-full max-w-xl"
-          >
-            <CarouselContent className="flex h-full">
-              {dummyBooks.map((item) => (
-                <CarouselItem
-                  key={item.id}
-                  className="h-full shrink-0 basis-1/4"
-                >
-                  <div className="flex h-[80] items-center justify-center overflow-hidden rounded-lg shadow-lg">
-                    <Image
-                      src={item.image}
-                      priority
-                      alt="Logo"
-                      width={240}
-                      height={320}
-                      className="object-cover duration-150 ease-in-out hover:scale-105"
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-
-            <CarouselPrevious className="absolute left-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
-            <CarouselNext className="absolute right-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
-          </Carousel>
+              <CarouselPrevious className="absolute left-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
+              <CarouselNext className="absolute right-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
+            </Carousel>
+          </div>
         </div>
-      </div>
+      )}
     </section>
   )
 }

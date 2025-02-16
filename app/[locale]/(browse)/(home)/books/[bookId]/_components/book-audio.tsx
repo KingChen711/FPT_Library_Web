@@ -1,12 +1,30 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
-import { Heart, Pause, Play, Share2 } from "lucide-react"
+import {
+  ArrowLeftToLine,
+  ArrowRightToLine,
+  Heart,
+  Pause,
+  Play,
+  RotateCcw,
+  RotateCw,
+  Share2,
+  Volume2,
+  VolumeX,
+} from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { formatTime } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Slider } from "@/components/ui/slider"
 import {
   Tooltip,
@@ -27,6 +45,9 @@ const BookAudio = ({ bookId }: Props) => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
+  const [playbackRate, setPlaybackRate] = useState(1)
+  const [volume, setVolume] = useState(1)
+  const [isMuted, setIsMuted] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
   const book = dummyBooks.find((book) => book.id.toString() === bookId)
 
@@ -53,13 +74,55 @@ const BookAudio = ({ bookId }: Props) => {
     }
   }
 
+  const handleSkip = (seconds: number) => {
+    if (audioRef.current) {
+      audioRef.current.currentTime += seconds
+      setCurrentTime(audioRef.current.currentTime)
+    }
+  }
+
+  const handleSpeedChange = (value: string) => {
+    const speed = Number.parseFloat(value)
+    setPlaybackRate(speed)
+    if (audioRef.current) {
+      audioRef.current.playbackRate = speed
+    }
+  }
+
+  const handleVolumeChange = (value: number[]) => {
+    const newVolume = value[0]
+    setVolume(newVolume)
+    if (audioRef.current) {
+      audioRef.current.volume = newVolume
+    }
+    setIsMuted(newVolume === 0)
+  }
+
+  const toggleMute = () => {
+    if (audioRef.current) {
+      if (isMuted) {
+        audioRef.current.volume = volume
+        setIsMuted(false)
+      } else {
+        audioRef.current.volume = 0
+        setIsMuted(true)
+      }
+    }
+  }
+
+  useEffect(() => {
+    if (audioRef.current) {
+      audioRef.current.volume = volume
+    }
+  }, [volume])
+
   return (
     <div className="flex items-center gap-8 space-y-2 bg-zinc p-4">
       <section className="flex items-center gap-4">
         <Image
           width={50}
           height={80}
-          src={dummyBooks[0].image}
+          src={dummyBooks[0].image || "/placeholder.svg"}
           alt="Book thumbnail"
           className="rounded-md"
         />
@@ -92,6 +155,32 @@ const BookAudio = ({ bookId }: Props) => {
           <span className="text-xs text-zinc-400">{formatTime(duration)}</span>
         </section>
         <div className="flex items-center justify-center gap-2">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" className="text-primary-foreground">
+                <ArrowLeftToLine className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Previous</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                className="text-primary-foreground"
+                onClick={() => handleSkip(-10)}
+              >
+                <RotateCcw className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>10s</p>
+            </TooltipContent>
+          </Tooltip>
+
           <Button
             variant="ghost"
             className="text-primary-foreground"
@@ -107,6 +196,32 @@ const BookAudio = ({ bookId }: Props) => {
               </>
             )}
           </Button>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                className="text-primary-foreground"
+                onClick={() => handleSkip(10)}
+              >
+                <RotateCw className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>+10s</p>
+            </TooltipContent>
+          </Tooltip>
+
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button variant="ghost" className="text-primary-foreground">
+                <ArrowRightToLine className="size-5" />
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>Next</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </div>
 
@@ -132,6 +247,59 @@ const BookAudio = ({ bookId }: Props) => {
               </TooltipTrigger>
               <TooltipContent>
                 <p>{t("share")}</p>
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="ghost"
+                    className="p-2 text-primary-foreground"
+                    onClick={toggleMute}
+                  >
+                    {isMuted ? (
+                      <VolumeX className="size-5" />
+                    ) : (
+                      <Volume2 className="size-5" />
+                    )}
+                  </Button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent className="bg-background">
+                <Slider
+                  defaultValue={[1]}
+                  max={1}
+                  step={0.01}
+                  value={[isMuted ? 0 : volume]}
+                  onValueChange={handleVolumeChange}
+                  className="h-24 w-4 rounded-xl bg-primary/60"
+                  orientation="vertical"
+                />
+              </TooltipContent>
+            </Tooltip>
+
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Select
+                  onValueChange={handleSpeedChange}
+                  value={playbackRate.toString()}
+                >
+                  <SelectTrigger className="w-[80px] text-primary-foreground">
+                    <SelectValue placeholder="1x" />
+                  </SelectTrigger>
+                  <SelectContent className="w-[80px]" align="center" side="top">
+                    <SelectItem value="0.5">0.5x</SelectItem>
+                    <SelectItem value="0.75">0.75x</SelectItem>
+                    <SelectItem value="1">1x</SelectItem>
+                    <SelectItem value="1.25">1.25x</SelectItem>
+                    <SelectItem value="1.5">1.5x</SelectItem>
+                    <SelectItem value="2">2x</SelectItem>
+                  </SelectContent>
+                </Select>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>{t("playbackSpeed")}</p>
               </TooltipContent>
             </Tooltip>
           </div>

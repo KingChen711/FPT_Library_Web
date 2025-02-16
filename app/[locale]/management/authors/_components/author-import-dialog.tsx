@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition, type ChangeEvent } from "react"
+import { useEffect, useState, useTransition, type ChangeEvent } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FileDown, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
@@ -65,6 +65,10 @@ const AuthorImportDialog = () => {
       scanningFields: [],
     },
   })
+
+  useEffect(() => {
+    setImportErrors([])
+  }, [open])
 
   const handleCancel = () => {
     form.reset()
@@ -134,6 +138,7 @@ const AuthorImportDialog = () => {
       console.log("🚀 ~ startTransition ~ res:", res)
 
       if (res.isSuccess) {
+        console.log("helloooooo")
         toast({
           title: tGeneralManagement("btn.import"),
           description: "Import successfully",
@@ -404,6 +409,7 @@ const AuthorImportDialog = () => {
                   </Button>
                   <Button
                     variant="outline"
+                    type="button"
                     disabled={pendingSubmit}
                     onClick={() => handleCancel()}
                   >
