@@ -173,15 +173,6 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {trackings.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={16}>
-                    <div className="flex justify-center p-4">
-                      <NoData />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
               {trackings.map((tracking) => (
                 <TableRow key={tracking.trackingId}>
                   <TableCell className="text-nowrap font-bold">
@@ -298,6 +289,11 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
               ))}
             </TableBody>
           </Table>
+          {trackings.length === 0 && (
+            <div className="flex justify-center p-4">
+              <NoData />
+            </div>
+          )}
         </div>
 
         <Paginator

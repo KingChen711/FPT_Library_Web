@@ -67,31 +67,31 @@ function SupplierCard({ supplier }: Props) {
             <CardContent className="grid gap-4">
               {supplier.contactPerson && (
                 <div className="flex items-center gap-2">
-                  <User className="size-4 opacity-70" />
+                  <User className="size-4 shrink-0 opacity-70" />
                   <span className="text-sm">{supplier.contactPerson}</span>
                 </div>
               )}
               {supplier.contactEmail && (
                 <div className="flex items-center gap-2">
-                  <Mail className="size-4 opacity-70" />
+                  <Mail className="size-4 shrink-0 opacity-70" />
                   <span className="text-sm">{supplier.contactEmail}</span>
                 </div>
               )}
               {supplier.contactPhone && (
                 <div className="flex items-center gap-2">
-                  <Phone className="size-4 opacity-70" />
+                  <Phone className="size-4 shrink-0 opacity-70" />
                   <span className="text-sm">{supplier.contactPhone}</span>
                 </div>
               )}
               {supplier.address && (
                 <div className="flex items-center gap-2">
-                  <MapPin className="size-4 opacity-70" />
+                  <MapPin className="size-4 shrink-0 opacity-70" />
                   <span className="text-sm">{supplier.address}</span>
                 </div>
               )}
               {(supplier.city || supplier.country) && (
                 <div className="flex items-center gap-2">
-                  <Building className="size-4 opacity-70" />
+                  <Building className="size-4 shrink-0 opacity-70" />
                   <span className="text-sm">
                     {[supplier.city, supplier.country]
                       .filter(Boolean)

@@ -191,7 +191,7 @@ function StockInDetailField({ form, isPending }: Props) {
                                   <div
                                     key={td.trackingDetailId}
                                     className={cn(
-                                      "grid cursor-pointer rounded-md border p-4",
+                                      "grid max-w-60 cursor-pointer rounded-md border p-4",
                                       field.value === td.trackingDetailId &&
                                         "border-primary"
                                     )}
@@ -201,8 +201,8 @@ function StockInDetailField({ form, isPending }: Props) {
                                       form.clearErrors("trackingDetailId")
                                     }}
                                   >
-                                    <div className="flex w-60 justify-between gap-2">
-                                      <span className="text-sm font-medium text-muted-foreground">
+                                    <div className="flex justify-between gap-2">
+                                      <span className="text-nowrap text-sm font-medium text-muted-foreground">
                                         {t("Item name")}:
                                       </span>
                                       <span className="line-clamp-1 text-sm font-bold">
@@ -257,9 +257,9 @@ function StockInDetailField({ form, isPending }: Props) {
               {selectedTracking && trackingDetail && (
                 <>
                   <ArrowRight className="size-9" />
-                  <div className="grid w-60 rounded-md border p-4">
+                  <div className="grid w-60 max-w-60 rounded-md border p-4">
                     <div className="flex justify-between gap-2">
-                      <span className="text-sm font-medium text-muted-foreground">
+                      <span className="text-nowrap text-sm font-medium text-muted-foreground">
                         {t("Item name")}:
                       </span>
                       <span className="line-clamp-1 text-sm font-bold">

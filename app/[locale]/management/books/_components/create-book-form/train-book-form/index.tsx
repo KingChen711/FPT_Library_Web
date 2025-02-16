@@ -1,4 +1,4 @@
-import React, { useEffect, useTransition } from "react"
+import React, { useTransition } from "react"
 import { useRouter } from "@/i18n/routing"
 import { Loader2, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -77,10 +77,6 @@ function TrainBookForm({
     })
   }
 
-  useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form.formState.errors])
-
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -90,7 +86,7 @@ function TrainBookForm({
           render={() => (
             <FormItem>
               <FormLabel>
-                {t("Cover images")} {t("min4CoverImages")}
+                {t("Cover images")} {t("min5CoverImages")}
               </FormLabel>
               <FormControl>
                 <div className="flex flex-col space-y-6">

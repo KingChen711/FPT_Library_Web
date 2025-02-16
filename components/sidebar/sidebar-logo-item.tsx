@@ -5,13 +5,11 @@ import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 const SidebarLogoItem = () => {
   return (
     <SidebarMenuItem>
-      <SidebarMenuButton asChild tooltip={"Intelligent Library System"}>
+      <SidebarMenuButton asChild tooltip={"Intelligent Library"}>
         <div>
-          <School size={18} className="text-primary" />
+          <School className="size-[18px] shrink-0 text-primary" />
           <div className="flex flex-col text-primary">
-            <span className="text-sm font-semibold">
-              Intelligent Library System
-            </span>
+            <span className="text-sm font-semibold">Intelligent Library</span>
             <span className="text-xs">HTPV Team</span>
           </div>
         </div>
