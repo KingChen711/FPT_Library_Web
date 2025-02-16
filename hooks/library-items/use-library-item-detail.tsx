@@ -19,7 +19,6 @@ function useLibraryItemDetail(libraryItemId: string) {
           }
         )
 
-        console.log("🚀 ~ useLibraryItemDetail:queryFn: ~ data:", data)
         return data
       } catch {
         return null

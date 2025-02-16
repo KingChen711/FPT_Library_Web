@@ -455,6 +455,7 @@
       "quantity": "Số lượng",
       "borrowedQuantity": "Số lượng muôn",
       "availability": "Có sẵn",
+      "unavailability": "Không có sẵn",
       "preview": "Xem trước",
       "liked": "Đã thích",
       "action": "Hành động",

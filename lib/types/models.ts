@@ -506,3 +506,12 @@ export type OcrDetect = {
   importImageDetected: DetectedValue[]
   currentItemDetected: DetectedValue[]
 }
+
+// Recommendation
+export type LibraryItemsRecommendation = {
+  itemDetailDto: LibraryItem
+  matchedProperties: {
+    name: string
+    isMatched: boolean
+  }[]
+}

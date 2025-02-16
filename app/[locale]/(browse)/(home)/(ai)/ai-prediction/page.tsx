@@ -6,6 +6,7 @@ import { useRouter } from "@/i18n/routing"
 import AiBookUploadImg from "@/public/assets/images/ai-book-upload.png"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useDropzone } from "react-dropzone"
 import { useForm } from "react-hook-form"
@@ -28,7 +29,6 @@ const formSchema = z.object({
 
 const AiPrediction = () => {
   const router = useRouter()
-  const t = useTranslations("BookPage")
   const tGeneralManagement = useTranslations("GeneralManagement")
   const { setUploadImage, setBestMatchedLibraryItemId, setPredictResult } =
     usePrediction()
@@ -107,7 +107,9 @@ const AiPrediction = () => {
           <Button
             disabled={!previewImage || isPending}
             onClick={() => form.handleSubmit(onSubmit)()}
+            className="flex items-center gap-2"
           >
+            {isPending && <Loader2 className="animate-spin" />}
             {tGeneralManagement("process btn")}
           </Button>
         </div>

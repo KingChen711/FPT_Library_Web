@@ -1,19 +1,29 @@
+"use client"
+
 import Image from "next/image"
+import { useRouter } from "@/i18n/routing"
+import { usePrediction } from "@/stores/ai/use-prediction"
 import {
   CheckCircle2,
   CircleX,
   Filter,
+  Loader2,
   MapPin,
   Search,
   Star,
 } from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
 
-import { getTranslations } from "@/lib/get-translations"
+import { type LibraryItemsRecommendation } from "@/lib/types/models"
+import useOcrDetail from "@/hooks/ai/use-ocr-detail"
+import useLibraryItemRecommendation from "@/hooks/ai/use-recommendation"
+import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
+import LibraryItemInfo from "@/components/ui/library-item-info"
 import {
   Popover,
   PopoverContent,
@@ -33,20 +43,45 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import TooltipItemContent from "@/components/ui/tooltip-item-content"
 
-import { dummyBooks } from "../../../_components/dummy-books"
 import RecommendBookPreview from "./recommend-book-preview"
 
-const RecommendationResultTab = async () => {
-  const uploadedBook = dummyBooks[0]
-  const detectedBook = dummyBooks[1]
+const RecommendationResultTab = () => {
+  const router = useRouter()
+  const locale = useLocale()
+  console.log("🚀 ~ RecommendationResultTab ~ locale:", locale)
+  const t = useTranslations("BookPage")
+  const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
+    usePrediction()
 
-  const t = await getTranslations("BookPage")
+  const { data: ocrDetail, isLoading: isLoadingOcrDetail } = useOcrDetail(
+    bestMatchedLibraryItemId?.toString() as string,
+    uploadedImage!
+  )
 
-  if (!uploadedBook) {
-    return <div>{t("Book not found")}</div>
+  const { data: detectedLibraryItem, isLoading: isLoadingLibraryItem } =
+    useLibraryItemDetail(bestMatchedLibraryItemId?.toString() || "")
+
+  const { data: recommendationResult, isLoading: isLoadingRecommendation } =
+    useLibraryItemRecommendation(bestMatchedLibraryItemId?.toString() as string)
+
+  if (isLoadingOcrDetail || isLoadingRecommendation || isLoadingLibraryItem) {
+    return <Loader2 className="animate-spin" />
   }
+
+  if (
+    !predictResult ||
+    !bestMatchedLibraryItemId ||
+    !uploadedImage ||
+    !detectedLibraryItem ||
+    !recommendationResult
+  ) {
+    router.push("/ai-recommendation")
+    return
+  }
+
+  console.log(recommendationResult && { recommendationResult })
+
   return (
     <Card className="flex w-full flex-col rounded-lg border-2 p-4">
       {/* Book preview */}
@@ -55,33 +90,20 @@ const RecommendationResultTab = async () => {
           <h1 className="text-center text-xl font-semibold">Uploaded Book</h1>
           <h1 className="text-center text-sm">Your uploaded Image</h1>
           <div className="flex justify-center">
-            <TooltipProvider delayDuration={0}>
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <Image
-                    src={uploadedBook.image}
-                    alt={uploadedBook.title}
-                    width={200}
-                    height={300}
-                    className="rounded-lg object-contain shadow-lg"
-                  />
-                </TooltipTrigger>
-                <TooltipContent
-                  align="start"
-                  side="left"
-                  className="border-2 bg-card"
-                >
-                  <TooltipItemContent id={uploadedBook.id.toString()} />
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+            <Image
+              src={URL.createObjectURL(uploadedImage)}
+              alt={"Uploaded Book"}
+              width={200}
+              height={300}
+              className="rounded-lg object-contain shadow-lg"
+            />
           </div>
         </section>
 
         <section className="flex flex-1 flex-col items-center justify-center gap-4">
           <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
             <Label className="text-lg font-semibold">Match percentage</Label>
-            <p className="text-lg">90%</p>
+            <p className="text-lg">{ocrDetail?.matchPercentage}%</p>
           </div>
         </section>
 
@@ -93,8 +115,8 @@ const RecommendationResultTab = async () => {
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Image
-                    src={detectedBook.image}
-                    alt={detectedBook.title}
+                    src={detectedLibraryItem.coverImage as string}
+                    alt={detectedLibraryItem.title}
                     width={200}
                     height={300}
                     className="rounded-lg object-contain shadow-lg"
@@ -105,7 +127,12 @@ const RecommendationResultTab = async () => {
                   side="left"
                   className="border-2 bg-card"
                 >
-                  <TooltipItemContent id={detectedBook.id.toString()} />
+                  <LibraryItemInfo
+                    id={detectedLibraryItem?.libraryItemId?.toString()}
+                    showInstances={false}
+                    showResources={false}
+                    shownInventory={true}
+                  />
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -145,110 +172,131 @@ const RecommendationResultTab = async () => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {dummyBooks.map((book, index) => (
-              <TableRow key={book.id}>
-                <TableCell>
-                  <div className="flex items-start gap-4">
-                    <Image
-                      src={book.image}
-                      alt={book.title}
-                      width={50}
-                      height={75}
-                      className="object-contain"
-                    />
-                    <div className="flex flex-col gap-2">
-                      {index == 0 && (
-                        <Badge
-                          variant={"danger"}
-                          className="flex w-[180px] flex-nowrap justify-center text-nowrap"
-                        >
-                          Highly recommended
-                        </Badge>
-                      )}
-                      {index == 1 && (
-                        <Badge
-                          variant={"draft"}
-                          className="flex w-[180px] flex-nowrap justify-center text-nowrap"
-                        >
-                          Medium recommended
-                        </Badge>
-                      )}
-                      {index == 2 && (
-                        <Badge
-                          variant={"success"}
-                          className="flex w-[180px] flex-nowrap justify-center text-nowrap"
-                        >
-                          Recommend recommended
-                        </Badge>
-                      )}
-                      <p className="text-sm font-semibold">{book.title}</p>
-                      <p className="text-xs">{book.author}</p>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Star size={16} color="orange" fill="orange" /> 4.5 / 5
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex flex-col gap-2">
-                    <p>Computer science</p>
-                    <p>UX design</p>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 size={16} color="white" fill="#42bb4e" />
-                      {t("fields.hard copy")}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 size={16} color="white" fill="#42bb4e" />
-                      {t("fields.ebook")}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CircleX size={16} color="white" fill="#868d87" />
-                      {t("fields.audio book")}
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div>
-                    <div className="mt-2 space-y-2">
-                      <Badge className="h-full w-fit bg-success hover:bg-success">
-                        {t("fields.availability")}
-                      </Badge>
-                      <div className="flex items-center">
-                        <MapPin color="white" fill="orange" /> CS A-15
+            {recommendationResult &&
+              recommendationResult?.map(
+                (result: LibraryItemsRecommendation, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <div className="flex items-start gap-4">
+                        <Image
+                          src={result?.itemDetailDto?.coverImage as string}
+                          alt={result?.itemDetailDto?.title}
+                          width={50}
+                          height={75}
+                          className="object-contain"
+                        />
+                        <div className="flex flex-col gap-2">
+                          {index == 0 && (
+                            <Badge
+                              variant={"danger"}
+                              className="flex w-[180px] flex-nowrap justify-center text-nowrap"
+                            >
+                              Highly recommended
+                            </Badge>
+                          )}
+                          {index == 1 && (
+                            <Badge
+                              variant={"draft"}
+                              className="flex w-[180px] flex-nowrap justify-center text-nowrap"
+                            >
+                              Medium recommended
+                            </Badge>
+                          )}
+                          {index == 2 && (
+                            <Badge
+                              variant={"success"}
+                              className="flex w-[180px] flex-nowrap justify-center text-nowrap"
+                            >
+                              Recommend recommended
+                            </Badge>
+                          )}
+                          <p className="text-sm font-semibold">
+                            {result?.itemDetailDto?.title} -{" "}
+                            {result?.itemDetailDto?.libraryItemId}
+                          </p>
+                          <p className="text-xs">
+                            {result?.itemDetailDto?.authors.length > 0 &&
+                              result?.itemDetailDto?.authors[0].fullName}
+                          </p>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <Button
-                        variant={"outline"}
-                        className="bg-background text-danger hover:bg-background hover:text-danger"
-                      >
-                        Preview
-                      </Button>
-                    </PopoverTrigger>
-                    <PopoverContent
-                      side="left"
-                      align="start"
-                      className="w-[800px]"
-                    >
-                      <RecommendBookPreview
-                        detectedBookId="1"
-                        comparedBookId={book.id.toString()}
-                      />
-                    </PopoverContent>
-                  </Popover>
-                </TableCell>
-              </TableRow>
-            ))}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <Star size={16} color="orange" fill="orange" />
+                        {result?.itemDetailDto?.avgReviewedRate} / 5
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {locale === "vi"
+                        ? result?.itemDetailDto?.category?.vietnameseName
+                        : result?.itemDetailDto?.category?.englishName}
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-2">
+                        <div className="flex items-center gap-2">
+                          <CheckCircle2
+                            size={16}
+                            color="white"
+                            fill="#42bb4e"
+                          />
+                          {t("fields.hard copy")}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          <CircleX size={16} color="white" fill="#868d87" />
+                          {t("fields.audio book")}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="mt-2 space-y-2">
+                          {result?.itemDetailDto?.libraryItemInventory &&
+                          result?.itemDetailDto?.libraryItemInventory
+                            .availableUnits > 0 ? (
+                            <Badge variant={"success"}>
+                              {t("fields.availability")}
+                            </Badge>
+                          ) : (
+                            <Badge variant={"danger"}>
+                              {t("fields.unavailability")}
+                            </Badge>
+                          )}
+                          {result?.itemDetailDto?.shelf && (
+                            <div className="flex items-center">
+                              <MapPin color="white" fill="orange" />
+                              {result?.itemDetailDto?.shelf?.shelfNumber}
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Popover>
+                        <PopoverTrigger asChild>
+                          <Button
+                            variant={"outline"}
+                            className="bg-background text-danger hover:bg-background hover:text-danger"
+                          >
+                            Preview
+                          </Button>
+                        </PopoverTrigger>
+                        <PopoverContent
+                          side="left"
+                          align="start"
+                          className="h-[80vh] w-[800px] overflow-y-auto"
+                        >
+                          <RecommendBookPreview
+                            result={result}
+                            detectedLibraryItem={detectedLibraryItem}
+                            comparedLibraryItemId={result.itemDetailDto.libraryItemId.toString()}
+                          />
+                        </PopoverContent>
+                      </Popover>
+                    </TableCell>
+                  </TableRow>
+                )
+              )}
           </TableBody>
         </Table>
       </div>
