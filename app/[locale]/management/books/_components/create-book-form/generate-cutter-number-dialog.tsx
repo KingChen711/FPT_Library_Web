@@ -24,6 +24,7 @@ function GenerateCutterNumberDialog({ handleGenerateCutterNumber }: Props) {
   const t = useTranslations("BooksManagementPage")
   const [text, setText] = useState("")
   const [open, setOpen] = useState(false)
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>

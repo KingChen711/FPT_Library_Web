@@ -54,18 +54,18 @@ const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
         )
 
         if (existGroupCode) {
-          const clone = structuredClone(prev)
+          console.log("existGroupCode")
 
-          clone.map((i) => {
+          return prev.map((i) => {
             if (i.groupCode !== notification.groupCode.name) return i
             return {
               groupCode: notification.groupCode.name,
               progress: notification.message,
             }
           })
-
-          return prev
         }
+
+        console.log("not existGroupCode")
 
         return [
           {
