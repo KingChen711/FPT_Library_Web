@@ -179,3 +179,9 @@ export enum ESearchType {
   BASIC_SEARCH,
   ADVANCED_SEARCH,
 }
+
+export enum EGroupCheckType {
+  AbleToForceGrouped = 1,
+  GroupSuccess = 2,
+  GroupFailed = 3,
+}

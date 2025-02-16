@@ -56,10 +56,10 @@ const BookEditionTab = async ({ libraryItemId }: Props) => {
                   {edition.title}
                 </h1>
                 <p className="text-sm">{edition.authors[0].fullName}</p>
-                <p className="flex items-center gap-2 text-sm capitalize">
+                <div className="flex items-center gap-2 text-sm capitalize">
                   <Earth size={16} className="text-primary" />
                   {edition.language}
-                </p>
+                </div>
               </div>
               <Button variant="link" asChild>
                 <Link href={`/books/${edition.libraryItemId}`}>Detail</Link>

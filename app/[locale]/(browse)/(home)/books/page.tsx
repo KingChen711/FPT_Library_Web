@@ -41,15 +41,24 @@ type Props = {
 }
 
 const BookPage = async ({ searchParams }: Props) => {
-  const { sort, ...rest } = searchBooksAdvanceSchema.parse({
-    ...searchParams,
-    searchWithKeyword: searchParams.searchWithKeyword
-      ? +searchParams.searchWithKeyword
-      : undefined,
-  })
+  const { sort, isMatchExact, searchWithSpecial, ...rest } =
+    searchBooksAdvanceSchema.parse({
+      ...searchParams,
+      searchWithKeyword: searchParams.searchWithKeyword
+        ? +searchParams.searchWithKeyword
+        : undefined,
+    })
+
+  console.log({ isMatchExact, searchWithSpecial })
+
   const t = await getTranslations("BookPage")
   const tRoute = await getTranslations("Routes")
-  const data = await searchBooksAdvance({ sort, ...rest })
+  const data = await searchBooksAdvance({
+    sort,
+    isMatchExact,
+    searchWithSpecial,
+    ...rest,
+  })
 
   return (
     <div className="space-y-4">
@@ -131,10 +140,10 @@ const BookPage = async ({ searchParams }: Props) => {
                         >
                           {item.title}
                         </Link>
-                        <p className="flex items-center gap-2 font-semibold italic">
+                        <div className="flex items-center gap-2 font-semibold italic">
                           <User size={16} fill="gray" color="gray" /> by &nbsp;
                           {item.author}
-                        </p>
+                        </div>
                         <p>Second Edition</p>
                       </div>
                     </div>

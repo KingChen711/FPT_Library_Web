@@ -12,9 +12,14 @@ import TrackingTypeBadge from "@/components/ui/tracking-type-badge"
 interface TrackingCardProps {
   tracking: Tracking & { supplier: Supplier }
   onClick?: () => void
+  className?: string
 }
 
-export function TrackingCard({ tracking, onClick }: TrackingCardProps) {
+export function TrackingCard({
+  tracking,
+  onClick,
+  className,
+}: TrackingCardProps) {
   const t = useTranslations("BooksManagementPage")
   const formatDate = (date: Date | null) => {
     return date ? format(date, "dd/MM/yyyy") : "N/A"
@@ -25,7 +30,11 @@ export function TrackingCard({ tracking, onClick }: TrackingCardProps) {
       onClick={() => {
         if (onClick) onClick()
       }}
-      className={cn("min-w-60 max-w-72", onClick && "cursor-pointer")}
+      className={cn(
+        "min-w-60 max-w-72",
+        onClick && "cursor-pointer",
+        className
+      )}
     >
       <CardContent className="p-4">
         <div className="grid gap-2">

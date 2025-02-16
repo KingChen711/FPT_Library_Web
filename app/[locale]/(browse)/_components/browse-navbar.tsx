@@ -99,7 +99,7 @@ function BrowseNavbar() {
             pathname === "/search" && "hidden"
           )}
         >
-          <div className="flex w-[650px] items-center overflow-hidden rounded-2xl shadow-lg">
+          <div className="flex w-[650px] items-center rounded-2xl border shadow-lg">
             <BookFilterTabs />
             <div className="relative flex-1 border-x-2">
               <Input
@@ -110,8 +110,39 @@ function BrowseNavbar() {
               />
               <Search
                 size={16}
-                className="absolute right-2 top-1/2 -translate-y-1/2"
+                className="absolute left-3 top-1/2 -translate-y-1/2"
               />
+              <Input
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search"
+                className="flex-1 rounded-none !border-transparent pl-12 !outline-none !ring-transparent"
+              />
+
+              {autoCompleteData && autoCompleteData.length > 0 && (
+                <div className="absolute left-0 top-[calc(100%+4px)] !z-[10000] w-full space-y-1 rounded-md border bg-muted p-2">
+                  {autoCompleteData.map((acd) => (
+                    <Link
+                      href={`/books/${acd.libraryItemId}`}
+                      key={acd.libraryItemId}
+                      className="flex items-center gap-4"
+                    >
+                      {acd.coverImage ? (
+                        <Image
+                          width={24}
+                          height={36}
+                          src={acd.coverImage}
+                          alt={acd.title}
+                          className="h-9 w-6 rounded-md border object-cover"
+                        />
+                      ) : (
+                        <div className="h-9 w-6 bg-transparent"></div>
+                      )}
+                      <div>{acd.title}</div>
+                    </Link>
+                  ))}
+                </div>
+              )}
             </div>
 
             <VoiceToText open={openVoiceToText} setOpen={setOpenVoiceToText} />

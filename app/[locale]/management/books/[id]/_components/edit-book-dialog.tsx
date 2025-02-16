@@ -4,6 +4,7 @@ import React, { useState, useTransition } from "react"
 import { NOT_CLOUDINARY_URL } from "@/constants"
 import { type BookDetail } from "@/queries/books/get-book"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -64,6 +65,7 @@ type Props = {
 function EditBookDialog({ open, setOpen, book }: Props) {
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
+  const queryClient = useQueryClient()
   const [isPending, startTransition] = useTransition()
   const [openComboboxCategory, setOpenComboboxCategory] = useState(false)
 
@@ -156,6 +158,7 @@ function EditBookDialog({ open, setOpen, book }: Props) {
           variant: "success",
         })
         setOpen(false)
+        queryClient.invalidateQueries({ queryKey: ["audits"] })
         return
       }
       handleServerActionError(res, locale, form)

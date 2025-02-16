@@ -1,14 +1,16 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
+import { useRouter } from "@/i18n/routing"
 import { useManagementBookEditionsStore } from "@/stores/books/use-management-book-editions"
-import { ChevronDown, ChevronUp, RotateCcw, Trash2 } from "lucide-react"
+import { Brain, ChevronDown, ChevronUp, RotateCcw, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { deleteBooks } from "@/actions/books/delete-books"
 import { moveToTrashBookEditions } from "@/actions/books/editions/move-to-trash-book-editions"
 import { restoreEditions } from "@/actions/books/editions/restore-editions"
+import { groupChecks, type TGroupCheckRes } from "@/actions/books/group-checks"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -19,19 +21,24 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import DeleteDialog from "./delete-dialog"
+import GroupCheckResultDialog from "./group-check-result-dialog"
 import MoveToTrashDialog from "./move-to-trash-dialog"
 
 type Props = {
-  tab: "Active" | "Deleted"
+  tab: "Active" | "Deleted" | "Not trained"
 }
 
 function BooksActionsDropdown({ tab }: Props) {
   const { selectedIds, clear } = useManagementBookEditionsStore()
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
+  const router = useRouter()
   const [openDropdown, setOpenDropdown] = useState(false)
   const [openMoveTrash, setOpenMoveTrash] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
+  const [openGroupCheck, setOpenGroupCheck] = useState(false)
+  const [groupCheckResult, setGroupCheckResult] =
+    useState<TGroupCheckRes | null>(null)
 
   const [isPending, startTransition] = useTransition()
 
@@ -105,10 +112,36 @@ function BooksActionsDropdown({ tab }: Props) {
     })
   }
 
+  const handleTrain = () => {
+    if (isPending) return
+
+    startTransition(async () => {
+      if (selectedIds.length === 1) {
+        router.push(`/management/books/train-group?itemIds=${selectedIds[0]}`)
+        return
+      }
+
+      const res = await groupChecks(selectedIds)
+      if (!res.isSuccess) {
+        handleServerActionError(res, locale)
+        return
+      }
+
+      setGroupCheckResult(res.data)
+      setOpenDropdown(false)
+      setOpenGroupCheck(true)
+    })
+  }
+
   if (selectedIds.length === 0) return null
 
   return (
     <>
+      <GroupCheckResultDialog
+        open={openGroupCheck}
+        setOpen={setOpenGroupCheck}
+        results={groupCheckResult}
+      />
       <MoveToTrashDialog
         handleMoveToTrash={handleMoveToTrash}
         isPending={isPending}
@@ -128,7 +161,18 @@ function BooksActionsDropdown({ tab }: Props) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {tab === "Active" ? (
+          {tab === "Not trained" && (
+            <DropdownMenuItem
+              disabled={isPending}
+              onClick={handleTrain}
+              className="cursor-pointer"
+            >
+              <Brain />
+              Train AI
+            </DropdownMenuItem>
+          )}
+
+          {tab !== "Deleted" ? (
             <DropdownMenuItem
               disabled={isPending}
               onClick={() => setOpenMoveTrash(true)}

@@ -14,8 +14,14 @@ export enum EKeyword {
 
 export const searchBooksAdvanceSchema = z
   .object({
-    isMatchExact: z.boolean().catch(false),
-    searchWithSpecial: z.boolean().catch(true),
+    isMatchExact: z
+      .enum(["true", "false"])
+      .transform((data) => data === "true")
+      .catch(true),
+    searchWithSpecial: z
+      .enum(["true", "false"])
+      .transform((data) => data === "true")
+      .catch(false),
     search: z.string().catch(""),
     pageIndex: z.coerce.number().min(1).catch(1),
     searchWithKeyword: z.nativeEnum(EKeyword).optional(),

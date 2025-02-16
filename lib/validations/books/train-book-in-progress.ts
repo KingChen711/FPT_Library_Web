@@ -64,7 +64,7 @@ export const trainBookInProgressSchema = z.object({
           path: ["coverImage"],
         })
     )
-    .min(4, { message: "imagesMin4" }),
+    .min(5, { message: "imagesMin5" }),
 })
 
 export type TTrainBookInProgressSchema = z.infer<
