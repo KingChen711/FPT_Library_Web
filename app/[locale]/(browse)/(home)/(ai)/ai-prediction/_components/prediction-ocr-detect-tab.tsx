@@ -124,7 +124,7 @@ const PredictionOcrDetectTab = () => {
       </TabsContent>
       {/* Uploaded book */}
       <TabsContent value={EOcrDetectTab.UPLOADED_BOOK}>
-        <Card className="flex w-full items-center justify-between gap-4 p-4">
+        <Card className="flex w-full items-start justify-between gap-4 p-4">
           <div className="w-3/5">
             <PredictionOcrDetectStatistic
               detectValues={ocrDetect?.importImageDetected as []}
@@ -145,7 +145,7 @@ const PredictionOcrDetectTab = () => {
 
       {/* Detected book */}
       <TabsContent value={EOcrDetectTab.DETECTED_BOOK}>
-        <Card className="flex w-full items-center justify-between gap-4 p-4">
+        <Card className="flex w-full items-start justify-between gap-4 p-4">
           <div className="w-3/5">
             <PredictionOcrDetectStatistic
               detectValues={ocrDetect?.currentItemDetected as []}

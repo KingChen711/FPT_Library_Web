@@ -1,3 +1,5 @@
+"use client"
+
 import { Link } from "@/i18n/routing"
 import { RefreshCcw } from "lucide-react"
 

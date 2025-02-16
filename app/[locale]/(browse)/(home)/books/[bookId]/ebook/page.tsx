@@ -1,5 +1,6 @@
 "use client"
 
+import type React from "react"
 import { useEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import HTMLFlipBook from "react-pageflip"
@@ -69,12 +70,20 @@ export default function EBookPage({ params }: Props) {
     setZoomLevel(Number(event.target.value))
   }
 
+  const handleZoomIn = () => {
+    setZoomLevel((prevZoom) => Math.min(prevZoom + 10, 200))
+  }
+
+  const handleZoomOut = () => {
+    setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50))
+  }
+
   if (!isClient) {
     return null
   }
 
-  const baseWidth = 550
-  const baseHeight = 680
+  const baseWidth = 400
+  const baseHeight = 600
 
   return (
     <div
@@ -85,7 +94,34 @@ export default function EBookPage({ params }: Props) {
         <Button variant={"ghost"} className="text-primary-foreground">
           <ArrowLeft /> Back
         </Button>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 rounded-full bg-zinc/50 p-2 text-primary-foreground">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleZoomOut}
+              className="text-primary-foreground"
+            >
+              <ZoomOut className="size-4" />
+            </Button>
+            <input
+              type="range"
+              min="50"
+              max="200"
+              value={zoomLevel}
+              onChange={handleZoomChange}
+              className="w-24"
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={handleZoomIn}
+              className="text-primary-foreground"
+            >
+              <ZoomIn className="size-4" />
+            </Button>
+            <span className="ml-2 text-sm">{zoomLevel}%</span>
+          </div>
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger asChild>
@@ -133,13 +169,13 @@ export default function EBookPage({ params }: Props) {
                 className=""
                 style={{}}
                 flippingTime={1000}
-                maxShadowOpacity={0}
+                maxShadowOpacity={0.3}
                 startPage={0}
-                drawShadow={false}
+                drawShadow={true}
                 useMouseEvents
                 swipeDistance={30}
-                showCover={false}
-                usePortrait={true}
+                showCover={true}
+                usePortrait={false}
                 startZIndex={0}
                 mobileScrollSupport={true}
                 clickEventForward={true}
@@ -164,21 +200,6 @@ export default function EBookPage({ params }: Props) {
             )}
           </Document>
         </div>
-        {isFullscreen && (
-          <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 items-center gap-2 rounded-full bg-zinc p-2 text-primary-foreground">
-            <ZoomOut className="size-4" />
-            <input
-              type="range"
-              min="50"
-              max="200"
-              value={zoomLevel}
-              onChange={handleZoomChange}
-              className="w-32"
-            />
-            <ZoomIn className="size-4" />
-            <span className="ml-2 text-sm">{zoomLevel}%</span>
-          </div>
-        )}
       </div>
       {isAudio === "true" && <BookAudio bookId={params.bookId} />}
     </div>

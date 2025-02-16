@@ -453,6 +453,7 @@
       "quantity": "Quantity",
       "borrowedQuantity": "Borrowed quantity",
       "availability": "Availability",
+      "unavailability": "Unavailability",
       "preview": "Preview",
       "liked": "Liked",
       "action": "Action",

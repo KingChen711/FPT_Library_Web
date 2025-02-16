@@ -27,7 +27,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
-import TooltipItemContent from "@/components/ui/tooltip-item-content"
 
 const PredictionOcrDetailTab = () => {
   const t = useTranslations("BookPage")
@@ -103,9 +102,6 @@ const PredictionOcrDetailTab = () => {
                   side="left"
                   className="max-h-[60vh] overflow-y-auto border-2 bg-card"
                 >
-                  {/* <TooltipItemContent
-                    id={libraryItem?.libraryItemId?.toString() as string}
-                  /> */}
                   <LibraryItemInfo
                     id={libraryItem?.libraryItemId?.toString() as string}
                     showInstances={false}
