@@ -39,46 +39,58 @@ export const bookEditionSchema = z
     subTitle: z
       .string()
       .trim()
-      .max(255, "max255")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 255, {
+        message: "max255",
+      }),
     //245c
     responsibility: z
       .string()
       .trim()
-      .max(155, "max155")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 155, {
+        message: "max155",
+      }),
     //250 a
     edition: z
       .string()
       .trim()
-      .max(155, "max155")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 155, {
+        message: "max155",
+      }),
     //not in marc21
     editionNumber: z.coerce.number().int("integer").gt(0, "gt0").optional(),
     //041 a
     language: z
       .string()
       .trim()
-      .max(50, "max50")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 50, {
+        message: "max50",
+      }),
     //041 h
     originLanguage: z
       .string()
       .trim()
-      .max(50, "max50")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 50, {
+        message: "max50",
+      }),
     //520 a
     summary: z
       .string()
       .trim()
-      .max(700, "max700")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 700, {
+        message: "max700",
+      }),
     //260 c
     publicationYear: z.coerce
       .number()
@@ -90,17 +102,41 @@ export const bookEditionSchema = z
         "publicationYear"
       ),
     //260 b
-    publisher: z.string().trim().optional(),
+    publisher: z
+      .string()
+      .trim()
+      .optional()
+      .transform((data) => (data === "" ? undefined : data)),
     //260 a
-    publicationPlace: z.string().trim().optional(),
+    publicationPlace: z
+      .string()
+      .trim()
+      .optional()
+      .transform((data) => (data === "" ? undefined : data)),
     //082 a ddc
-    classificationNumber: z.string().trim().optional(),
+    classificationNumber: z
+      .string()
+      .trim()
+      .optional()
+      .transform((data) => (data === "" ? undefined : data)),
     //082 b
-    cutterNumber: z.string().trim().optional(),
+    cutterNumber: z
+      .string()
+      .trim()
+      .optional()
+      .transform((data) => (data === "" ? undefined : data)),
     //020 a
-    isbn: z.string().trim().optional(),
+    isbn: z
+      .string()
+      .trim()
+      .optional()
+      .transform((data) => (data === "" ? undefined : data)),
     //024a
-    ean: z.string().trim().optional(),
+    ean: z
+      .string()
+      .trim()
+      .optional()
+      .transform((data) => (data === "" ? undefined : data)),
     //020 c
     estimatedPrice: z.coerce
       .number()
@@ -118,58 +154,74 @@ export const bookEditionSchema = z
     physicalDetails: z
       .string()
       .trim()
-      .max(100, "max100")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 100, {
+        message: "max100",
+      }),
     //300 c
     dimensions: z
       .string()
       .trim()
-      .max(50, "max50")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 50, {
+        message: "max50",
+      }),
     //300 e
     accompanyingMaterial: z
       .string()
       .trim()
-      .max(50, "max50")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 50, {
+        message: "max50",
+      }),
     //655 a
     genres: z
       .string()
       .trim()
-      .max(255, "max255")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 255, {
+        message: "max255",
+      }),
     //500 a
     generalNote: z
       .string()
       .trim()
-      .max(100, "max100")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 100, {
+        message: "max100",
+      }),
     //504 a
     bibliographicalNote: z
       .string()
       .trim()
-      .max(100, "max100")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 100, {
+        message: "max100",
+      }),
     //650 a
     topicalTerms: z
       .string()
       .trim()
-      .max(500, "max500")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 500, {
+        message: "max500",
+      }),
     //700a,e
     additionalAuthors: z
       .string()
       .trim()
-      .max(500, "max500")
       .optional()
-      .transform((data) => (data ? data : undefined)),
+      .transform((data) => (data === "" ? undefined : data))
+      .refine((data) => data === undefined || data.length <= 500, {
+        message: "max500",
+      }),
 
     coverImage: z.string().trim().min(1, "min1").optional(),
     //client only
