@@ -1023,7 +1023,12 @@
     "ClassificationNumber": "Classification number",
     "SubTitle": "Sub title",
     "Train books group": "Train books group",
-    "Author general note": "Author, general note"
+    "Author general note": "Author, general note",
+    "Condition": "Condition",
+    "Date": "Date",
+    "View condition histories": "View condition histories",
+    "Condition histories": "Condition histories",
+    "Train ai group note": "The first item will be used to compare with the remaining items to check if the items you have selected are a group or not."
   },
   "CutterNumber": {
     "Title": "Cutter Number in the Library System",

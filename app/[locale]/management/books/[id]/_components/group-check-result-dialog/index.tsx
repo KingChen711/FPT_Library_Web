@@ -150,7 +150,7 @@ function GroupCheckResultDialog({ open, setOpen, results }: Props) {
             <div className="mx-auto max-w-4xl">
               <h1 className="text-xl font-bold">{t("Group check results")}</h1>
               <div
-                className={`flex items-center gap-2 ${groupStatusColor} mb-4 text-lg`}
+                className={`flex items-center gap-2 ${groupStatusColor} text-lg`}
               >
                 {groupStatusIcon}
                 <span>
@@ -163,6 +163,7 @@ function GroupCheckResultDialog({ open, setOpen, results }: Props) {
                       : t("No")}
                 </span>
               </div>
+              <p className="mb-4 mt-2">{t("Train ai group note")}</p>
               <div className="grid gap-6">
                 {results.listCheckedGroupDetail.map((detail, index) => (
                   <ItemDetail key={index} {...detail} />

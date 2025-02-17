@@ -1,10 +1,10 @@
 import { z } from "zod"
 
-import { EBookCopyConditionStatus, EResourceBookType } from "@/lib/types/enums"
+import { EResourceBookType } from "@/lib/types/enums"
 
 export const bookCopySchema = z.object({
   barcode: z.string().trim(),
-  conditionStatus: z.nativeEnum(EBookCopyConditionStatus),
+  conditionId: z.number(),
 })
 
 export type TBookCopySchema = z.infer<typeof bookCopySchema>

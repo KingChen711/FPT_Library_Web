@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { EBookCopyConditionStatus, ETrackingType } from "@/lib/types/enums"
 import { type Category, type TrackingDetail } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import {
@@ -47,15 +48,28 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 
 type Props = {
   open: boolean
   setOpen: (value: boolean) => void
   trackingDetail: TrackingDetail
+  trackingType: ETrackingType
 }
 
-function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
+function EditTrackingDetailDialog({
+  open,
+  setOpen,
+  trackingDetail,
+  trackingType,
+}: Props) {
   const t = useTranslations("TrackingsManagementPage")
   const locale = useLocale()
 
@@ -82,6 +96,7 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
       reason: trackingDetail.reason || undefined,
       totalAmount: trackingDetail.totalAmount,
       unitPrice: trackingDetail.unitPrice,
+      conditionId: trackingDetail.conditionId,
     },
   })
 
@@ -307,17 +322,56 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="reason"
+                  name="conditionId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("Reason")}</FormLabel>
-                      <FormControl>
-                        <Textarea {...field} disabled={isPending} />
-                      </FormControl>
+                      <FormLabel>
+                        {t("Condition")}
+                        <span className="ml-1 text-xl font-bold leading-none text-primary">
+                          *
+                        </span>
+                      </FormLabel>
+                      <Select
+                        onValueChange={(val) => field.onChange(+val)}
+                        defaultValue={field.value.toString()}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="1">
+                            {t(EBookCopyConditionStatus.GOOD)}
+                          </SelectItem>
+                          <SelectItem value="3">
+                            {t(EBookCopyConditionStatus.DAMAGED)}
+                          </SelectItem>
+                          <SelectItem value="2">
+                            {t(EBookCopyConditionStatus.WORN)}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {trackingType === ETrackingType.TRANSFER && (
+                  <FormField
+                    control={form.control}
+                    name="reason"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t("Reason")}</FormLabel>
+                        <FormControl>
+                          <Textarea {...field} disabled={isPending} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
 
                 <div className="flex justify-end gap-x-4">
                   <DialogClose asChild>

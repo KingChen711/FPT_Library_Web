@@ -16,6 +16,7 @@ export const mutateTrackingDetailSchema = z.object({
     .optional()
     .transform((data) => (data === "" ? undefined : data)),
   categoryId: z.coerce.number(),
+  conditionId: z.coerce.number(),
 })
 
 export type TMutateTrackingDetailSchema = z.infer<

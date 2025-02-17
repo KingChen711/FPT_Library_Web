@@ -4,8 +4,8 @@ import { useFieldArray, type UseFormReturn } from "react-hook-form"
 import { z } from "zod"
 
 import { EBookCopyConditionStatus } from "@/lib/types/enums"
+import { type Condition } from "@/lib/types/models"
 import { type TBookEditionAddCopiesSchema } from "@/lib/validations/books/book-editions/add-copies"
-import { type TBookCopySchema } from "@/lib/validations/books/create-book"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -27,38 +27,10 @@ import {
 type Props = {
   form: UseFormReturn<TBookEditionAddCopiesSchema>
   isPending: boolean
+  conditions: Condition[]
 }
 
-const createCopy = () => ({
-  barcode: "",
-  conditionStatus: EBookCopyConditionStatus.GOOD,
-})
-
-function parseInput(input: string): TBookCopySchema[] {
-  // Split input into lines
-  const lines = input.trim().split("\n")
-
-  // Process each line
-  const items = lines.map((line) => {
-    const parts = line.split(/\t| +/) // Split by tab or spaces
-
-    if (parts.length < 1 || parts.length > 2) {
-      throw new Error(`Invalid format for line: "${line}"`)
-    }
-
-    return {
-      barcode: parts[0].replace("\r", ""),
-      conditionStatus: z
-        .nativeEnum(EBookCopyConditionStatus)
-        .catch(EBookCopyConditionStatus.GOOD)
-        .parse(parts[1]?.replace("\r", "")),
-    }
-  })
-
-  return items
-}
-
-function CopyFields({ form, isPending }: Props) {
+function CopyFields({ form, isPending, conditions }: Props) {
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
   const { fields, remove, prepend, append } = useFieldArray({
@@ -71,7 +43,7 @@ function CopyFields({ form, isPending }: Props) {
       const pastedData = e.clipboardData.getData("text")
       const parsedData = parseInput(pastedData)
       remove(0)
-      prepend(parsedData)
+      prepend(parsedData.map((d) => ({ ...d, conditionId: +d.conditionId })))
     } catch {
       toast({
         title: locale === "vi" ? "Lỗi" : "Error",
@@ -81,6 +53,38 @@ function CopyFields({ form, isPending }: Props) {
             : "Invalid input",
       })
     }
+  }
+
+  function parseInput(
+    input: string
+  ): { barcode: string; conditionId: string }[] {
+    // Split input into lines
+    const lines = input.trim().split("\n")
+
+    // Process each line
+    const items = lines.map((line) => {
+      const parts = line.split(/\t| +/) // Split by tab or spaces
+
+      if (parts.length < 1 || parts.length > 2) {
+        throw new Error(`Invalid format for line: "${line}"`)
+      }
+
+      return {
+        barcode: parts[0].replace("\r", ""),
+        conditionId: conditions
+          ?.find(
+            (c) =>
+              c.englishName ===
+              (z
+                .nativeEnum(EBookCopyConditionStatus)
+                .catch(EBookCopyConditionStatus.GOOD)
+                .parse(parts[1]?.replace("\r", "")) as string)
+          )
+          ?.conditionId.toString()!,
+      }
+    })
+
+    return items
   }
 
   return (
@@ -110,15 +114,15 @@ function CopyFields({ form, isPending }: Props) {
 
               <FormField
                 control={form.control}
-                name={`bookEditionCopies.${index}.conditionStatus`}
+                name={`bookEditionCopies.${index}.conditionId`}
                 render={({ field }) => (
                   <FormItem className="w-1/2">
                     <FormControl>
                       <Select
                         disabled={isPending}
-                        value={field.value}
-                        onValueChange={(val: EBookCopyConditionStatus) => {
-                          field.onChange(val)
+                        value={field.value.toString()}
+                        onValueChange={(val) => {
+                          field.onChange(+val)
                         }}
                       >
                         <SelectTrigger>
@@ -126,22 +130,13 @@ function CopyFields({ form, isPending }: Props) {
                         </SelectTrigger>
                         <SelectContent>
                           <SelectGroup>
-                            <SelectItem
-                              className="cursor-pointer"
-                              value={EBookCopyConditionStatus.GOOD}
-                            >
+                            <SelectItem className="cursor-pointer" value="1">
                               {t(EBookCopyConditionStatus.GOOD)}
                             </SelectItem>
-                            <SelectItem
-                              className="cursor-pointer"
-                              value={EBookCopyConditionStatus.WORN}
-                            >
+                            <SelectItem className="cursor-pointer" value="3">
                               {t(EBookCopyConditionStatus.WORN)}
                             </SelectItem>
-                            <SelectItem
-                              className="cursor-pointer"
-                              value={EBookCopyConditionStatus.DAMAGED}
-                            >
+                            <SelectItem className="cursor-pointer" value="2">
                               {t(EBookCopyConditionStatus.DAMAGED)}
                             </SelectItem>
                           </SelectGroup>
@@ -176,7 +171,7 @@ function CopyFields({ form, isPending }: Props) {
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            append([createCopy()])
+            append([{ barcode: "", conditionId: 1 }])
           }}
           variant="secondary"
           className="flex-1"

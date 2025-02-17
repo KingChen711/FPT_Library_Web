@@ -12,6 +12,7 @@ import { v4 as uuidv4 } from "uuid"
 import { z } from "zod"
 
 import { EBookCopyConditionStatus } from "@/lib/types/enums"
+import { type Condition } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import {
   type TBookCopySchema,
@@ -59,45 +60,22 @@ type Props = {
   prefix: string
   hasConfirmedChangeStatus: boolean
   setHasConfirmedChangeStatus: (val: boolean) => void
+  conditions: Condition[]
 }
 
 const createInput = () => ({
   id: uuidv4(),
   barcode: "",
-  conditionStatus: EBookCopyConditionStatus.GOOD,
+  conditionId: "1",
 })
 
-function parseInput(input: string): (TBookCopySchema & { id: string })[] {
-  // Split input into lines
-  const lines = input.trim().split("\n")
-
-  // Process each line
-  const items = lines.map((line) => {
-    const parts = line.split(/\t| +/) // Split by tab or spaces
-
-    if (parts.length < 1 || parts.length > 2) {
-      throw new Error(`Invalid format for line: "${line}"`)
-    }
-
-    return {
-      id: uuidv4(),
-      barcode: parts[0].replace("\r", ""),
-      conditionStatus: z
-        .nativeEnum(EBookCopyConditionStatus)
-        .catch(EBookCopyConditionStatus.GOOD)
-        .parse(parts[1]?.replace("\r", "")),
-    }
-  })
-
-  return items
-}
-
-function LiblibraryItemInstancesDialog({
+function LibraryItemInstancesDialog({
   form,
   isPending,
   prefix,
   hasConfirmedChangeStatus,
   setHasConfirmedChangeStatus,
+  conditions,
 }: Props) {
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
@@ -108,8 +86,41 @@ function LiblibraryItemInstancesDialog({
   const [openWarning, setOpenWarning] = useState(false)
   const [tempChangedCopy, setTempChangedCopy] = useState<{
     inputId: string
-    val: EBookCopyConditionStatus
+    val: number
   } | null>(null)
+
+  function parseInput(
+    input: string
+  ): { barcode: string; conditionId: string; id: string }[] {
+    // Split input into lines
+    const lines = input.trim().split("\n")
+
+    // Process each line
+    const items = lines.map((line) => {
+      const parts = line.split(/\t| +/) // Split by tab or spaces
+
+      if (parts.length < 1 || parts.length > 2) {
+        throw new Error(`Invalid format for line: "${line}"`)
+      }
+
+      return {
+        id: uuidv4(),
+        barcode: parts[0].replace("\r", ""),
+        conditionId: conditions
+          ?.find(
+            (c) =>
+              c.englishName ===
+              (z
+                .nativeEnum(EBookCopyConditionStatus)
+                .catch(EBookCopyConditionStatus.GOOD)
+                .parse(parts[1]?.replace("\r", "")) as string)
+          )
+          ?.conditionId.toString()!,
+      }
+    })
+
+    return items
+  }
 
   const handleOnPasteInput = (e: React.ClipboardEvent<HTMLInputElement>) => {
     try {
@@ -139,11 +150,11 @@ function LiblibraryItemInstancesDialog({
       if (!input.barcode) return
       const index = cloneCopies.findIndex((c) => c.barcode === input.barcode)
       if (index !== -1) {
-        cloneCopies[index].conditionStatus = input.conditionStatus
+        cloneCopies[index].conditionId = +input.conditionId
       } else {
         cloneCopies.unshift({
           barcode: input.barcode,
-          conditionStatus: input.conditionStatus,
+          conditionId: +input.conditionId,
         })
       }
     })
@@ -166,14 +177,14 @@ function LiblibraryItemInstancesDialog({
     setSelectedCodes([])
   }
 
-  const handleChangeStatus = (status: EBookCopyConditionStatus) => {
+  const handleChangeStatus = (status: number) => {
     const cloneCopies = structuredClone(form.getValues(`libraryItemInstances`))
 
     selectedCodes.forEach((selectedCode) => {
       const copyIndex = cloneCopies.findIndex((c) => c.barcode === selectedCode)
 
       if (copyIndex !== -1) {
-        cloneCopies[copyIndex].conditionStatus = status
+        cloneCopies[copyIndex].conditionId = status
       }
     })
 
@@ -213,15 +224,12 @@ function LiblibraryItemInstancesDialog({
                       className="w-1/2"
                     />
                     <Select
-                      value={input.conditionStatus}
-                      onValueChange={(val: EBookCopyConditionStatus) => {
-                        if (
-                          val !== EBookCopyConditionStatus.GOOD &&
-                          !hasConfirmedChangeStatus
-                        ) {
+                      value={input.conditionId.toString()}
+                      onValueChange={(val) => {
+                        if (val !== "1" && !hasConfirmedChangeStatus) {
                           setTempChangedCopy({
                             inputId: input.id,
-                            val: val as EBookCopyConditionStatus,
+                            val: +val,
                           })
                           setOpenWarning(true)
                           return
@@ -231,7 +239,7 @@ function LiblibraryItemInstancesDialog({
                           const clone = structuredClone(prev)
                           clone.forEach((item) => {
                             if (item.id !== input.id) return
-                            item.conditionStatus = val
+                            item.conditionId = val
                           })
                           return clone
                         })
@@ -245,22 +253,13 @@ function LiblibraryItemInstancesDialog({
                       </SelectTrigger>
                       <SelectContent className="w-1/2">
                         <SelectGroup>
-                          <SelectItem
-                            className="cursor-pointer"
-                            value={EBookCopyConditionStatus.GOOD}
-                          >
+                          <SelectItem className="cursor-pointer" value="1">
                             {t(EBookCopyConditionStatus.GOOD)}
                           </SelectItem>
-                          <SelectItem
-                            className="cursor-pointer"
-                            value={EBookCopyConditionStatus.WORN}
-                          >
+                          <SelectItem className="cursor-pointer" value="3">
                             {t(EBookCopyConditionStatus.WORN)}
                           </SelectItem>
-                          <SelectItem
-                            className="cursor-pointer"
-                            value={EBookCopyConditionStatus.DAMAGED}
-                          >
+                          <SelectItem className="cursor-pointer" value="2">
                             {t(EBookCopyConditionStatus.DAMAGED)}
                           </SelectItem>
                         </SelectGroup>
@@ -317,30 +316,15 @@ function LiblibraryItemInstancesDialog({
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuCheckboxItem
-                          onClick={() =>
-                            handleChangeStatus(EBookCopyConditionStatus.GOOD)
-                          }
-                          className="cursor-pointer"
-                        >
-                          {t(EBookCopyConditionStatus.GOOD)}
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                          onClick={() =>
-                            handleChangeStatus(EBookCopyConditionStatus.WORN)
-                          }
-                          className="cursor-pointer"
-                        >
-                          {t(EBookCopyConditionStatus.WORN)}
-                        </DropdownMenuCheckboxItem>
-                        <DropdownMenuCheckboxItem
-                          onClick={() =>
-                            handleChangeStatus(EBookCopyConditionStatus.DAMAGED)
-                          }
-                          className="cursor-pointer"
-                        >
-                          {t(EBookCopyConditionStatus.DAMAGED)}
-                        </DropdownMenuCheckboxItem>
+                        {conditions?.map((c) => (
+                          <DropdownMenuCheckboxItem
+                            key={c.conditionId}
+                            onClick={() => handleChangeStatus(c.conditionId)}
+                            className="cursor-pointer"
+                          >
+                            {t(c.englishName)}
+                          </DropdownMenuCheckboxItem>
+                        ))}
                       </DropdownMenuContent>
                     </DropdownMenu>
                     <Button
@@ -372,7 +356,11 @@ function LiblibraryItemInstancesDialog({
                         copy.barcode
                           .toLowerCase()
                           .includes(searchTerm.toLowerCase()) ||
-                        t(copy.conditionStatus)
+                        t(
+                          conditions?.find(
+                            (c) => c.conditionId === copy.conditionId
+                          )?.englishName
+                        )
                           .toLowerCase()
                           .includes(searchTerm)
                     )
@@ -402,7 +390,11 @@ function LiblibraryItemInstancesDialog({
 
                         <TableCell>
                           <BookConditionStatusBadge
-                            status={copy.conditionStatus}
+                            status={
+                              conditions?.find(
+                                (c) => c.conditionId === copy.conditionId
+                              )?.englishName as EBookCopyConditionStatus
+                            }
                           />
                         </TableCell>
                       </TableRow>
@@ -440,7 +432,7 @@ function LiblibraryItemInstancesDialog({
                         const clone = structuredClone(prev)
                         clone.forEach((item) => {
                           if (item.id !== tempChangedCopy?.inputId) return
-                          item.conditionStatus = tempChangedCopy.val
+                          item.conditionId = tempChangedCopy.val.toString()
                         })
                         return clone
                       })
@@ -459,4 +451,4 @@ function LiblibraryItemInstancesDialog({
   )
 }
 
-export default LiblibraryItemInstancesDialog
+export default LibraryItemInstancesDialog

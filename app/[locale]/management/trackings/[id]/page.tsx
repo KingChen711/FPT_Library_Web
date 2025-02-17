@@ -203,6 +203,7 @@ async function TrackingDetailPage({ params }: Props) {
         <TrackingDetailsSection
           trackingDetails={trackingDetails}
           trackingId={tracking.trackingId}
+          trackingType={tracking.trackingType}
         />
       </div>
     </div>

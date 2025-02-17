@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import {
   ArrowDown,
   ArrowUp,
+  Eye,
   MoreHorizontalIcon,
   Pencil,
   RotateCcw,
@@ -16,7 +17,11 @@ import { z } from "zod"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { EBookCopyStatus } from "@/lib/types/enums"
-import { type LibraryItemInstance } from "@/lib/types/models"
+import {
+  type Condition,
+  type ConditionHistory,
+  type LibraryItemInstance,
+} from "@/lib/types/models"
 import { deleteCopy } from "@/actions/books/editions/delete-copy"
 import { editCopy } from "@/actions/books/editions/edit-copy"
 import { moveToTrashCopy } from "@/actions/books/editions/move-to-trash-copy"
@@ -32,11 +37,16 @@ import {
 
 import DeleteDialog from "../delete-dialog"
 import MoveToTrashDialog from "../move-to-trash-dialog"
+import ConditionHistoriesDialog from "./condition-histories-dialog"
 import EditBarcodeDialog from "./edit-barcode-dialog"
 
 type Props = {
   bookId: number
-  copy: LibraryItemInstance
+  copy: LibraryItemInstance & {
+    libraryItemConditionHistories: (ConditionHistory & {
+      condition: Condition
+    })[]
+  }
   prefix: string
 }
 
@@ -54,6 +64,7 @@ function CopyDropdown({ copy, bookId, prefix }: Props) {
   const [openMoveTrash, setOpenMoveTrash] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [openEditBarcode, setOpenEditBarcode] = useState(false)
+  const [openConditionHistories, setOpenConditionHistories] = useState(false)
 
   const form = useForm<z.infer<typeof editBarcodeSchema>>({
     resolver: zodResolver(editBarcodeSchema),
@@ -215,6 +226,11 @@ function CopyDropdown({ copy, bookId, prefix }: Props) {
 
   return (
     <>
+      <ConditionHistoriesDialog
+        open={openConditionHistories}
+        setOpen={setOpenConditionHistories}
+        histories={copy.libraryItemConditionHistories}
+      />
       <EditBarcodeDialog
         handleEditBarcode={handleEditBarcode}
         isPending={isPending}
@@ -242,6 +258,14 @@ function CopyDropdown({ copy, bookId, prefix }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-2">
           <>
+            <DropdownMenuItem
+              disabled={isPending}
+              onClick={() => setOpenConditionHistories(true)}
+              className="cursor-pointer"
+            >
+              <Eye />
+              {t("View condition histories")}
+            </DropdownMenuItem>
             <DropdownMenuItem
               disabled={isPending}
               onClick={() => setOpenEditBarcode(true)}

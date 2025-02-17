@@ -2,10 +2,16 @@
 
 import React, { useState } from "react"
 import { type TrackingDetails } from "@/queries/trackings/get-tracking-details"
-import { Search } from "lucide-react"
+import { Loader2, Search } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
+import {
+  type EBookCopyConditionStatus,
+  type ETrackingType,
+} from "@/lib/types/enums"
 import { cn, formatPrice } from "@/lib/utils"
+import useConditions from "@/hooks/conditions/use-conditions"
+import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
 import CatalogedBadge from "@/components/ui/cataloged-badge"
 import { Input } from "@/components/ui/input"
 import NoData from "@/components/ui/no-data"
@@ -25,13 +31,19 @@ import TrackingDetailActionsDropdown from "./tracking-detail-actions-dropdown"
 type Props = {
   trackingDetails: TrackingDetails
   trackingId: number
+  trackingType: ETrackingType
 }
 
-function TrackingDetailsSection({ trackingDetails, trackingId }: Props) {
+function TrackingDetailsSection({
+  trackingDetails,
+  trackingId,
+  trackingType,
+}: Props) {
   const t = useTranslations("TrackingsManagementPage")
   const locale = useLocale()
 
   const [searchTerm, setSearchTerm] = useState("")
+  const { data: conditions, isFetching: isFetchingConditions } = useConditions()
 
   const filteredTrackingDetails = trackingDetails
 
@@ -57,7 +69,10 @@ function TrackingDetailsSection({ trackingDetails, trackingId }: Props) {
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <ImportDetailsDialog trackingId={trackingId} />
-          <AddTrackingDetailDialog trackingId={trackingId} />
+          <AddTrackingDetailDialog
+            trackingType={trackingType}
+            trackingId={trackingId}
+          />
         </div>
       </div>
 
@@ -128,8 +143,26 @@ function TrackingDetailsSection({ trackingDetails, trackingId }: Props) {
 
                   <TableCell className="text-nowrap">
                     <div className="flex justify-center">
+                      {isFetchingConditions ? (
+                        <Loader2 className="size-4 animate-spin" />
+                      ) : (
+                        <BookConditionStatusBadge
+                          status={
+                            conditions?.find(
+                              (c) =>
+                                c.conditionId === trackingDetail.conditionId
+                            )?.englishName as EBookCopyConditionStatus
+                          }
+                        />
+                      )}
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
                       <TrackingDetailActionsDropdown
                         trackingDetail={trackingDetail}
+                        trackingType={trackingType}
                       />
                     </div>
                   </TableCell>
