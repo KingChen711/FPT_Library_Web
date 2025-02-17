@@ -6,6 +6,8 @@ import {
   type Author,
   type BookEdition,
   type Category,
+  type Condition,
+  type ConditionHistory,
   type LibraryItemGroup,
   type LibraryItemInstance,
   type LibraryItemInventory,
@@ -21,7 +23,11 @@ export type BookDetail = BookEdition & {
   libraryItemInventory: LibraryItemInventory
   resources: []
   authors: Author[]
-  libraryItemInstances: LibraryItemInstance[]
+  libraryItemInstances: (LibraryItemInstance & {
+    libraryItemConditionHistories: (ConditionHistory & {
+      condition: Condition
+    })[]
+  })[]
 }
 
 const getBook = async (id: number): Promise<BookDetail | null> => {

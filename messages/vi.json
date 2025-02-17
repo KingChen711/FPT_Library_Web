@@ -1026,7 +1026,12 @@
     "ClassificationNumber": "Số phân loại",
     "SubTitle": "Phụ đề",
     "Train books group": "Train nhóm sách",
-    "Author general note": "Tác giả, ghi chú chung"
+    "Author general note": "Tác giả, ghi chú chung",
+    "Condition": "Tình trạng",
+    "Date": "Ngày",
+    "View condition histories": "Xem lịch sử tình trạng",
+    "Condition histories": "Lịch sử tình trạng",
+    "Train ai group note": "Tài liệu đầu tiên sẽ được dùng để so sánh với các tài liệu còn lại để kiểm tra xem các tài liệu bạn đã chọn có phải chung nhóm hay không"
   },
   "CutterNumber": {
     "Title": "Số xếp giá trong Hệ thống Thư viện",

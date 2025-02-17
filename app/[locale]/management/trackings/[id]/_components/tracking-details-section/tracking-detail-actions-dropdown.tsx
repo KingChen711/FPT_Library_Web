@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import { MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { type ETrackingType } from "@/lib/types/enums"
 import { type TrackingDetail } from "@/lib/types/models"
 import { Button } from "@/components/ui/button"
 import {
@@ -20,9 +21,13 @@ import RemoveItemDialog from "./remove-item-dialog"
 
 type Props = {
   trackingDetail: TrackingDetail
+  trackingType: ETrackingType
 }
 
-function TrackingDetailActionsDropdown({ trackingDetail }: Props) {
+function TrackingDetailActionsDropdown({
+  trackingDetail,
+  trackingType,
+}: Props) {
   const t = useTranslations("TrackingsManagementPage")
 
   const [openDropdown, setOpenDropdown] = useState(false)
@@ -54,6 +59,7 @@ function TrackingDetailActionsDropdown({ trackingDetail }: Props) {
         open={openEdit}
         setOpen={setOpenEdit}
         trackingDetail={trackingDetail}
+        trackingType={trackingType}
       />
 
       <DeleteTrackingDetailDialog
