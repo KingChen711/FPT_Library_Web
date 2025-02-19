@@ -129,6 +129,28 @@ export type Employee = {
   }
 }
 
+export type LibraryCard = {
+  libraryCardId: string
+  fullName: string
+  avatar: string
+  barcode: string
+  issuanceMethod: number
+  status: number
+  isAllowBorrowMore: boolean
+  maxItemOnceTime: number
+  totalMissedPickUp: number
+  isReminderSent: boolean
+  isExtended: boolean
+  extensionCount: number
+  issueDate: string
+  expiryDate: string
+  suspensionEndDate: string | null
+  isArchived: boolean
+  archiveReason: string | null
+  previousUserId: string | null
+  previousUser: string | null
+}
+
 export type LibraryItemAuthor = {
   libraryItemAuthorId: number
   libraryItemId: number
@@ -360,6 +382,9 @@ export type LibraryItemInstance = {
   createdBy: string
   updatedBy: string | null
   isDeleted: boolean
+  libraryItemConditionHistories: (ConditionHistory & {
+    condition: Condition
+  })[]
 }
 
 export type Floor = {
