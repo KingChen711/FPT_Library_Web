@@ -70,7 +70,7 @@ function BrowseNavbar() {
   const [handleChangeSearchValue] = useDebounce((value: string) => {
     setSearchValue(value)
     const newUrl = formUrlQuery({
-      url: `/search/result`,
+      url: "/search/result",
       params: searchParams.toString(),
       updates: {
         search: value,

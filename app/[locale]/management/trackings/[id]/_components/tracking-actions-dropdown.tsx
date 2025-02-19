@@ -81,7 +81,7 @@ function TrackingActionsDropdown({ tracking }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="overflow-visible">
           {/* ! TODO:hardcode */}
-          {user?.role.englishName === "Librarian" && (
+          {user?.role.englishName === "HeadLibrarian" && (
             <>
               {tracking.status === ETrackingStatus.DRAFT && (
                 <>

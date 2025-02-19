@@ -130,7 +130,7 @@ function MutateSupplierDialog({
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent>
+      <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>
             {t(type === "create" ? "Create supplier" : "Edit supplier")}

@@ -44,6 +44,7 @@ function CatalogTab({
 
   const handleGenerateCutterNumber = (text: string) => {
     form.setValue("cutterNumber", generateCutter(text))
+    console.log(generateCutter(text))
   }
 
   if (!show) return null

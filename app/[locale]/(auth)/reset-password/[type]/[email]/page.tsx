@@ -1,6 +1,6 @@
 import Image from "next/image"
 import { notFound } from "next/navigation"
-import fptLogo from "@/public/assets/images/fpt-logo.png"
+import systemLogo from "@/public/assets/images/logo.png"
 
 import { getTranslations } from "@/lib/get-translations"
 
@@ -24,15 +24,16 @@ const ResetPasswordPage = async ({ params }: Props) => {
   return (
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
       <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
-        <div className="flex justify-center">
+        <div className="flex flex-col items-center justify-center">
           <Image
-            src={fptLogo}
+            src={systemLogo}
             placeholder="blur"
             priority
             alt="Logo"
-            width={120}
-            height={48}
+            width={72}
+            height={72}
           />
+          <div className="text-sm font-bold">Intelligent Library</div>
         </div>
         <div className="flex flex-col gap-y-1">
           <h1 className="text-center text-lg font-semibold">

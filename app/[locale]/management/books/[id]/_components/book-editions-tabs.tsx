@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl"
 import { cn, formUrlQuery } from "@/lib/utils"
 
 type Props = {
-  tab: "Active" | "Deleted"
+  tab: "Active" | "Deleted" | "Not trained"
 }
 
 function BookEditionsTabs({ tab }: Props) {
@@ -17,7 +17,7 @@ function BookEditionsTabs({ tab }: Props) {
   const router = useRouter()
   const { clear } = useManagementBookEditionsStore()
 
-  const handleChangeTab = (tab: "Active" | "Deleted") => {
+  const handleChangeTab = (tab: "Active" | "Deleted" | "Not trained") => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
@@ -34,16 +34,26 @@ function BookEditionsTabs({ tab }: Props) {
       <div
         onClick={() => handleChangeTab("Active")}
         className={cn(
-          "w-28 cursor-pointer border-b-2 px-4 py-2 text-center font-bold",
+          "w-[120px] cursor-pointer border-b-2 px-4 py-2 text-center font-bold",
           tab === "Active" && "pointer-events-none border-primary text-primary"
         )}
       >
         {t("Active")}
       </div>
       <div
+        onClick={() => handleChangeTab("Not trained")}
+        className={cn(
+          "w-[120px] cursor-pointer border-b-2 px-4 py-2 text-center font-bold",
+          tab === "Not trained" &&
+            "pointer-events-none border-primary text-primary"
+        )}
+      >
+        {t("Not trained")}
+      </div>
+      <div
         onClick={() => handleChangeTab("Deleted")}
         className={cn(
-          "w-28 cursor-pointer border-b-2 px-4 py-2 text-center font-bold",
+          "w-[120px] cursor-pointer border-b-2 px-4 py-2 text-center font-bold",
           tab === "Deleted" && "pointer-events-none border-primary text-primary"
         )}
       >

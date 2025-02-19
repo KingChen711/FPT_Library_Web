@@ -63,12 +63,13 @@ function AddAuthorsDialog({ bookId }: Props) {
 
   const [open, setOpen] = useState(false)
   const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
+
   const [isPending, startTransition] = useTransition()
   const locale = useLocale()
   const [openPopover, setOpenPopover] = useState(false)
 
+  const [searchTerm, setSearchTerm] = useState("")
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
   const { data: authorItems, isFetching } =
     useSearchAuthors(debouncedSearchTerm)
 

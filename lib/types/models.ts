@@ -382,6 +382,9 @@ export type LibraryItemInstance = {
   createdBy: string
   updatedBy: string | null
   isDeleted: boolean
+  libraryItemConditionHistories: (ConditionHistory & {
+    condition: Condition
+  })[]
 }
 
 export type Floor = {
@@ -468,6 +471,7 @@ export type TrackingDetail = {
   trackingId: number
   libraryItemId: number | null
   categoryId: number
+  conditionId: number
 }
 
 // Ocr Result
@@ -536,4 +540,20 @@ export type LibraryItemsRecommendation = {
     name: string
     isMatched: boolean
   }[]
+}
+
+export type Condition = {
+  conditionId: number
+  englishName: string
+  vietnameseName: string
+}
+
+export type ConditionHistory = {
+  conditionHistoryId: number
+  libraryItemInstanceId: number
+  conditionId: number
+  createdAt: Date
+  updatedAt: Date | null
+  createdBy: string
+  updatedBy: string | null
 }

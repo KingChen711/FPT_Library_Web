@@ -71,7 +71,7 @@ export const defaultColumns = [
 export const searchBookEditionsSchema = z
   .object({
     columns: z.array(z.nativeEnum(Column)).catch(defaultColumns),
-    tab: z.enum(["Active", "Deleted"]).catch("Active"),
+    tab: z.enum(["Active", "Deleted", "Not trained"]).catch("Active"),
     search: z.string().catch(""),
     pageIndex: z.coerce.number().min(1).catch(1),
     pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("5"),
@@ -120,9 +120,11 @@ export const searchBookEditionsSchema = z
       .catch(undefined),
     status: z.nativeEnum(EBookEditionStatus).optional(),
     isDeleted: z.boolean().optional(),
+    isTrained: z.boolean().optional(),
   })
   .transform((data) => {
     data.isDeleted = data.tab === "Deleted"
+    data.isTrained = data.tab === "Not trained" ? false : undefined
     return data
   })
 

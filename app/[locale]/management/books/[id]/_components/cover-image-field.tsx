@@ -339,7 +339,7 @@ function CoverImageField({ form, isPending, isRequireImage, authors }: Props) {
               <div className="flex flex-wrap items-center gap-4">
                 {watchCheckedResult.fieldPointsWithThreshole.map((field) => {
                   const fieldName = field.name.includes("Author")
-                    ? t("Author") + " " + field.name.split(" ")[1]
+                    ? t("Author general note")
                     : t(field.name)
 
                   return (

@@ -2,19 +2,19 @@
 
 import React, { useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Plus } from "lucide-react"
+import { Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { type z } from "zod"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { EBookCopyConditionStatus } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import {
   bookEditionAddCopiesSchema,
   type TBookEditionAddCopiesSchema,
 } from "@/lib/validations/books/book-editions/add-copies"
 import { addCopies } from "@/actions/books/editions/add-copies"
+import useConditions from "@/hooks/conditions/use-conditions"
 import { toast } from "@/hooks/use-toast"
 import { buttonVariants } from "@/components/ui/button"
 import {
@@ -33,7 +33,7 @@ type Props = { bookId: number; prefix: string }
 
 const createCopy = () => ({
   barcode: "",
-  conditionStatus: EBookCopyConditionStatus.GOOD,
+  conditionId: 1,
 })
 
 function AddCopiesDialog({ bookId, prefix }: Props) {
@@ -42,6 +42,7 @@ function AddCopiesDialog({ bookId, prefix }: Props) {
 
   const [isPending, startTransition] = useTransition()
   const [open, setOpen] = useState(false)
+  const { data: conditions, isFetching: isFetchingConditions } = useConditions()
 
   const form = useForm<z.infer<typeof bookEditionAddCopiesSchema>>({
     resolver: zodResolver(bookEditionAddCopiesSchema),
@@ -85,66 +86,34 @@ function AddCopiesDialog({ bookId, prefix }: Props) {
         </div>
       </DialogTrigger>
       <DialogContent className="max-h-[80vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>{t("Edit copies")}</DialogTitle>
-          <DialogDescription>
-            <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)}>
-                <FormField
-                  control={form.control}
-                  name="bookEditionCopies"
-                  render={({ field: _ }) => (
-                    <FormItem className="flex flex-col">
-                      <CopyFields form={form} isPending={isPending} />
-                    </FormItem>
-                  )}
-                />
-              </form>
-            </Form>
-          </DialogDescription>
-        </DialogHeader>
-
-        {/* <Dialog open={openWarning} onOpenChange={setOpenWarning}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>
-                {t(
-                  "Are you sure you want to set the status of this copy to WornDamage"
-                )}
-              </DialogTitle>
-              <DialogDescription>
-                <div className="flex justify-end">
-                  <Button
-                    variant="outline"
-                    onClick={() => {
-                      setOpenWarning(false)
-                    }}
-                  >
-                    {t("Cancel")}
-                  </Button>
-                  <Button
-                    className="ml-4"
-                    onClick={() => {
-                      setOpenWarning(false)
-                      setHasConfirmedAboutChangeStatus(true)
-                      setInputs((prev) => {
-                        const clone = structuredClone(prev)
-                        clone.forEach((item) => {
-                          if (item.id !== tempChangedCopy?.inputId) return
-                          item.conditionStatus = tempChangedCopy.val
-                        })
-                        return clone
-                      })
-                      // setTempChangedCopy(null)
-                    }}
-                  >
-                    {t("Yes")}
-                  </Button>
-                </div>
-              </DialogDescription>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog> */}
+        {isFetchingConditions ? (
+          <div className="flex w-full justify-center">
+            <Loader2 className="size-9 animate-spin" />
+          </div>
+        ) : (
+          <DialogHeader>
+            <DialogTitle>{t("Edit copies")}</DialogTitle>
+            <DialogDescription>
+              <Form {...form}>
+                <form onSubmit={form.handleSubmit(onSubmit)}>
+                  <FormField
+                    control={form.control}
+                    name="bookEditionCopies"
+                    render={({ field: _ }) => (
+                      <FormItem className="flex flex-col">
+                        <CopyFields
+                          form={form}
+                          isPending={isPending}
+                          conditions={conditions!}
+                        />
+                      </FormItem>
+                    )}
+                  />
+                </form>
+              </Form>
+            </DialogDescription>
+          </DialogHeader>
+        )}
       </DialogContent>
     </Dialog>
   )

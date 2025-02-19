@@ -1,11 +1,13 @@
-import React, { useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { Printer } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 import { useReactToPrint } from "react-to-print"
 
+import { type EBookCopyConditionStatus } from "@/lib/types/enums"
 import { type Category } from "@/lib/types/models"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
+import useConditions from "@/hooks/conditions/use-conditions"
 import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -42,7 +44,13 @@ export default function CopiesTab({
     contentRef: barcodesPrintRef,
   })
 
-  if (!show) return null
+  const { data: conditions, isFetching: isFetchingConditions } = useConditions()
+
+  useEffect(() => {
+    console.log({ show })
+  }, [show])
+
+  if (!show || isFetchingConditions) return null
 
   return (
     <>
@@ -64,6 +72,7 @@ export default function CopiesTab({
                 prefix={selectedCategory?.prefix || ""}
                 hasConfirmedChangeStatus={hasConfirmedChangeStatus}
                 setHasConfirmedChangeStatus={setHasConfirmedChangeStatus}
+                conditions={conditions!}
               />
             </div>
             <div className="flex flex-wrap items-center gap-3">
@@ -87,7 +96,13 @@ export default function CopiesTab({
                     </div>
                     <div className="flex items-center gap-2">
                       <strong>{t("Status")}:</strong>
-                      <BookConditionStatusBadge status={bc.conditionStatus} />
+                      <BookConditionStatusBadge
+                        status={
+                          conditions?.find(
+                            (c) => c.conditionId === bc.conditionId
+                          )?.englishName as EBookCopyConditionStatus
+                        }
+                      />
                     </div>
                   </div>
                 </div>

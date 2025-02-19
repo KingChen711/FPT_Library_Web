@@ -18,7 +18,6 @@ import {
 import { updateTracking } from "@/actions/trackings/update-tracking"
 import useSuppliers from "@/hooks/suppliers/use-suppliers"
 import { toast } from "@/hooks/use-toast"
-import useFormatLocale from "@/hooks/utils/use-format-locale"
 import { Button } from "@/components/ui/button"
 import { Calendar } from "@/components/ui/calendar"
 import {
@@ -65,7 +64,7 @@ type Props = {
 function EditTrackingDialog({ open, setOpen, tracking }: Props) {
   const t = useTranslations("TrackingsManagementPage")
   const locale = useLocale()
-  const formatLocale = useFormatLocale()
+
   const [isPending, startTransition] = useTransition()
 
   const handleOpenChange = (value: boolean) => {

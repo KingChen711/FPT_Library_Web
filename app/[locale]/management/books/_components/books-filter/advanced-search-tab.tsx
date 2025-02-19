@@ -97,7 +97,6 @@ const AdvancedSearchTab = ({ f, o, v }: Props) => {
   }
 
   const handleApply = () => {
-    if (bookQueries.length === 0) return
     const filteredQuery = bookQueries
       .filter(
         (f) =>

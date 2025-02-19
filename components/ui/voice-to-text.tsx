@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState, useTransition } from "react"
 import { useSearchParams } from "next/navigation"
-import { usePathname, useRouter } from "@/i18n/routing"
+import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQuery } from "@tanstack/react-query"
 import { Mic, StopCircle, Trash } from "lucide-react"
