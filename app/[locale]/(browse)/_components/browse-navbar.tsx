@@ -83,7 +83,7 @@ function BrowseNavbar() {
     <nav className={cn("relative mb-16", pathname === "/search" && "hidden")}>
       <div
         className={
-          "fixed top-0 z-10 flex h-16 w-full items-center justify-between border-b bg-card px-6 transition-all"
+          "fixed top-0 z-10 flex h-16 w-full items-center justify-between gap-4 border-b bg-card px-6 transition-all"
         }
         style={{
           left: open ? "var(--sidebar-width, 0)" : "3rem",
@@ -95,18 +95,18 @@ function BrowseNavbar() {
         <SidebarTrigger className="absolute -left-3 top-1/2 z-20 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" />
         <div
           className={cn(
-            "flex items-center gap-4",
+            "flex flex-1 items-center gap-4",
             pathname === "/search" && "hidden"
           )}
         >
-          <div className="flex w-[650px] items-center overflow-hidden rounded-2xl shadow-lg">
+          <div className="flex flex-1 items-center overflow-hidden rounded-2xl shadow-lg">
             <BookFilterTabs />
             <div className="relative flex-1 border-x-2">
               <Input
                 placeholder="Search"
                 value={searchValue}
                 onChange={(e) => handleChangeSearchValue(e.target.value)}
-                className="flex-1 rounded-none border-l border-none"
+                className="flex-1 rounded-none border-l border-none pr-8"
               />
               <Search
                 size={16}

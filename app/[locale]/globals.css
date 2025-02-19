@@ -129,6 +129,12 @@ body {
   } */
 }
 
+/* Fixes Select tag Shadcn remove scroll bar */
+html body[data-scroll-locked] {
+  overflow: visible !important;
+  margin-right: 0 !important;
+}
+
 /* hidden tiny editor water mark  */
 .tox-notifications-container {
   display: none !important;

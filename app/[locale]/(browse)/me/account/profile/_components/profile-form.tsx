@@ -41,7 +41,7 @@ type ProfileFormProps = {
 
 const ProfileForm = ({ currentUser }: ProfileFormProps) => {
   console.log("🚀 ~ ProfileForm ~ currentUser:", currentUser)
-  const t = useTranslations("Me.Account.Profile")
+  const t = useTranslations("Me")
   const locale = useLocale()
   const [pending, startTransition] = useTransition()
   const queryClient = useQueryClient()

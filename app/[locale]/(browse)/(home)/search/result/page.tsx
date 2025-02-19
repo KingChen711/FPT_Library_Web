@@ -1,5 +1,6 @@
 import Image from "next/image"
 import { Link } from "@/i18n/routing"
+import NoData from "@/public/assets/images/no-data.png"
 import searchBooksAdvance from "@/queries/books/search-books-advance"
 import {
   BookOpen,
@@ -198,8 +199,8 @@ const SearchResult = async ({ searchParams }: Props) => {
         </section>
       ) : (
         <section className="space-y-4 px-12">
-          <Card className="mt-4 w-full rounded-lg py-8 text-center text-2xl font-semibold text-danger shadow-lg">
-            No data
+          <Card className="flex items-center justify-center p-4">
+            <Image src={NoData} alt="No data" width={200} height={200} />
           </Card>
         </section>
       )}

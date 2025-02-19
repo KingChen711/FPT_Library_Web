@@ -2,7 +2,7 @@
 
 import { type ComponentProps } from "react"
 import { useAuth } from "@/contexts/auth-provider"
-import { Link } from "@/i18n/routing"
+import { Link, useRouter } from "@/i18n/routing"
 import { BadgeCheck, ChevronsUpDown, Loader2, LogOut, User } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -33,6 +33,7 @@ import BrowseSidebarContent from "./browse-sidebar-content"
 import SidebarLogoItem from "./sidebar-logo-item"
 
 export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
+  const router = useRouter()
   const locale = useLocale()
   const { user } = useAuth()
   const t = useTranslations("Me")
@@ -113,7 +114,9 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => router.push("/me/account/profile")}
+                    >
                       <BadgeCheck />
                       {t("account")}
                     </DropdownMenuItem>
