@@ -1,21 +1,26 @@
 import { useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import { RefreshCcw, Search } from "lucide-react"
+import { useTranslations } from "next-intl"
 
+import { ESearchType } from "@/lib/types/enums"
+import { formUrlQuery } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 
 const BasicSearchTab = () => {
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const t = useTranslations("BasicSearchTab")
   const [values, setValues] = useState({
-    title: "",
-    author: "",
-    keyword: "",
-    category: "",
-    yearFrom: "",
-    yearTo: "",
-    registration: "",
-    isbn: "",
-    allFields: "",
+    title: searchParams.get("title") || "",
+    author: searchParams.get("author") || "",
+    isbn: searchParams.get("isbn") || "",
+    classificationNumber: searchParams.get("classificationNumber") || "",
+    genres: searchParams.get("genres") || "",
+    publisher: searchParams.get("publisher") || "",
+    topicalTerms: searchParams.get("topicalTerms") || "",
   })
 
   const handleInputChange = (key: string, value: string) => {
@@ -26,14 +31,34 @@ const BasicSearchTab = () => {
     setValues({
       title: "",
       author: "",
-      keyword: "",
-      category: "",
-      yearFrom: "",
-      yearTo: "",
-      registration: "",
       isbn: "",
-      allFields: "",
+      classificationNumber: "",
+      genres: "",
+      publisher: "",
+      topicalTerms: "",
     })
+  }
+
+  const handleApply = () => {
+    if (Object.values(values).every((a) => a === "")) return
+
+    const searchValues = structuredClone(values)
+    Object.keys(searchValues).forEach((k) => {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      //@ts-ignore
+      searchValues[k] = searchValues[k] === "" ? undefined : searchValues[k]
+    })
+    const newUrl = formUrlQuery({
+      params: searchParams.toString(),
+      updates: {
+        ...searchValues,
+        pageIndex: "1",
+        searchType: ESearchType.BASIC_SEARCH.toString(),
+        search: null,
+      },
+    }).replace(window.location.pathname, "/management/books")
+
+    router.push(newUrl)
   }
 
   return (
@@ -42,7 +67,7 @@ const BasicSearchTab = () => {
         {Object.keys(values).map((key, index) => (
           <div key={index} className="flex w-full flex-nowrap items-center">
             <Input
-              placeholder={getPlaceholder(key)}
+              placeholder={t(getPlaceholder(key))}
               className="border-dashed"
               value={values[key as keyof typeof values]}
               onChange={(e) => handleInputChange(key, e.target.value)}
@@ -55,8 +80,11 @@ const BasicSearchTab = () => {
         ))}
       </div>
       <div className="flex items-center justify-start gap-4">
-        <Button className="flex flex-nowrap items-center gap-2">
-          <Search /> Search
+        <Button
+          onClick={handleApply}
+          className="flex flex-nowrap items-center gap-2"
+        >
+          <Search /> {t("Search")}
         </Button>
 
         <Button
@@ -64,7 +92,7 @@ const BasicSearchTab = () => {
           className="flex flex-nowrap items-center gap-2"
           onClick={resetFields}
         >
-          <RefreshCcw /> Reset
+          <RefreshCcw /> {t("Reset")}
         </Button>
       </div>
     </div>
@@ -73,15 +101,13 @@ const BasicSearchTab = () => {
 
 const getPlaceholder = (key: string) => {
   const placeholders: { [key: string]: string } = {
-    title: "Nhan đề",
-    author: "Tác giả",
-    keyword: "Từ khóa",
-    category: "Phân loại",
-    yearFrom: "Năm xuất bản: Từ năm",
-    yearTo: "Năm xuất bản: Đến năm",
-    registration: "Số ĐKCB",
-    isbn: "ISBN / ISSN",
-    allFields: "Mọi trường",
+    title: "Title",
+    author: "Author",
+    isbn: "ISBN",
+    classificationNumber: "Classification number",
+    genres: "Genres",
+    publisher: "Publisher",
+    topicalTerms: "Keyword",
   }
   return placeholders[key] || ""
 }

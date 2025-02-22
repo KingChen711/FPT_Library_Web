@@ -7,7 +7,11 @@ import { useLocale, useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 
 import { EBookCopyStatus } from "@/lib/types/enums"
-import { type LibraryItemInstance } from "@/lib/types/models"
+import {
+  type Condition,
+  type ConditionHistory,
+  type LibraryItemInstance,
+} from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import BookCopyStatusBadge from "@/components/ui/book-copy-status-badge"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -29,7 +33,11 @@ import CopiesTabs from "./copies-tabs"
 import CopyDropdown from "./copy-dropdown"
 
 type Props = {
-  copies: LibraryItemInstance[]
+  copies: (LibraryItemInstance & {
+    libraryItemConditionHistories: (ConditionHistory & {
+      condition: Condition
+    })[]
+  })[]
   bookId: number
   prefix: string
 }

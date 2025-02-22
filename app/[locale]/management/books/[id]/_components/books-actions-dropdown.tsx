@@ -25,10 +25,11 @@ import GroupCheckResultDialog from "./group-check-result-dialog"
 import MoveToTrashDialog from "./move-to-trash-dialog"
 
 type Props = {
-  tab: "Active" | "Deleted" | "Not trained"
+  tab: "Active" | "Deleted"
+  isTrained: boolean | undefined
 }
 
-function BooksActionsDropdown({ tab }: Props) {
+function BooksActionsDropdown({ tab, isTrained }: Props) {
   const { selectedIds, clear } = useManagementBookEditionsStore()
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
@@ -161,7 +162,7 @@ function BooksActionsDropdown({ tab }: Props) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          {tab === "Not trained" && (
+          {isTrained === false && (
             <DropdownMenuItem
               disabled={isPending}
               onClick={handleTrain}

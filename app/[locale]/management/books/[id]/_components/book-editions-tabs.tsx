@@ -8,7 +8,7 @@ import { useTranslations } from "next-intl"
 import { cn, formUrlQuery } from "@/lib/utils"
 
 type Props = {
-  tab: "Active" | "Deleted" | "Not trained"
+  tab: "Active" | "Deleted"
 }
 
 function BookEditionsTabs({ tab }: Props) {
@@ -17,7 +17,7 @@ function BookEditionsTabs({ tab }: Props) {
   const router = useRouter()
   const { clear } = useManagementBookEditionsStore()
 
-  const handleChangeTab = (tab: "Active" | "Deleted" | "Not trained") => {
+  const handleChangeTab = (tab: "Active" | "Deleted") => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
@@ -40,16 +40,7 @@ function BookEditionsTabs({ tab }: Props) {
       >
         {t("Active")}
       </div>
-      <div
-        onClick={() => handleChangeTab("Not trained")}
-        className={cn(
-          "w-[120px] cursor-pointer border-b-2 px-4 py-2 text-center font-bold",
-          tab === "Not trained" &&
-            "pointer-events-none border-primary text-primary"
-        )}
-      >
-        {t("Not trained")}
-      </div>
+
       <div
         onClick={() => handleChangeTab("Deleted")}
         className={cn(

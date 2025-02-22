@@ -83,6 +83,11 @@ function StockInDetailField({ form, isPending }: Props) {
     form.clearErrors("trackingDetailId")
   }, [trackingDetailItems, form])
 
+  useEffect(() => {
+    if (!trackingDetail?.unitPrice) return
+    form.setValue("estimatedPrice", trackingDetail.unitPrice as number)
+  }, [trackingDetail, form])
+
   return (
     <FormField
       control={form.control}

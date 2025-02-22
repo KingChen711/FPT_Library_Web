@@ -1031,7 +1031,13 @@
     "Date": "Ngày",
     "View condition histories": "Xem lịch sử tình trạng",
     "Condition histories": "Lịch sử tình trạng",
-    "Train ai group note": "Tài liệu đầu tiên sẽ được dùng để so sánh với các tài liệu còn lại để kiểm tra xem các tài liệu bạn đã chọn có phải chung nhóm hay không"
+    "Train ai group note": "Tài liệu đầu tiên sẽ được dùng để so sánh với các tài liệu còn lại để kiểm tra xem các tài liệu bạn đã chọn có phải chung nhóm hay không",
+    "All": "Tất cả",
+    "Trained": "Đã train",
+    "Untrained": "Chưa train",
+    "Quick search": "Nhanh",
+    "Basic search": "Cơ bản",
+    "Advanced search": "Nâng cao"
   },
   "CutterNumber": {
     "Title": "Số xếp giá trong Hệ thống Thư viện",
@@ -1185,7 +1191,12 @@
     "Search item": "Tìm kiếm",
     "Select libraryItem": "Chọn",
     "Library item": "Tài liệu",
-    "Search": "Tìm kiếm"
+    "Search": "Tìm kiếm",
+    "Good": "Tốt",
+    "Worn": "Rách",
+    "Damaged": "Hỏng",
+    "Lost": "Mất",
+    "Condition": "Tình trạng"
   },
   "Badges": {
     "BookConditionStatus": {
@@ -1278,6 +1289,8 @@
     "Reset": "Khôi phục",
     "All": "Mọi trường",
     "Special character": "Tìm có dấu",
-    "Match exact": "Kết quả chính xác"
+    "Match exact": "Kết quả chính xác",
+    "Enter search value": "Tìm kiếm...",
+    "Keywords": "Từ khóa..."
   }
 }

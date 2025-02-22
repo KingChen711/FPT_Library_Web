@@ -34,10 +34,19 @@ export default function CopiesTab({
   form,
   isPending,
   show,
-  selectedCategory,
+  // selectedCategory,
   hasConfirmedChangeStatus,
   setHasConfirmedChangeStatus,
 }: Props) {
+  const selectedCategory = {
+    categoryId: 1,
+    prefix: "SD",
+    englishName: "string",
+    vietnameseName: "Sách đơn",
+    description: "string",
+    isAllowAITraining: true,
+  }
+
   const t = useTranslations("BooksManagementPage")
   const barcodesPrintRef = useRef<HTMLDivElement>(null)
   const handlePrintBarcodes = useReactToPrint({
@@ -67,6 +76,7 @@ export default function CopiesTab({
                 </span>
               </FormLabel>
               <BookCopiesDialog
+                selectedCategory={selectedCategory}
                 form={form}
                 isPending={isPending}
                 prefix={selectedCategory?.prefix || ""}
