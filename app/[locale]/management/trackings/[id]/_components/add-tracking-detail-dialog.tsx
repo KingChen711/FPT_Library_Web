@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useTransition } from "react"
+import React, { useEffect, useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check, ChevronsUpDown, Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -111,6 +111,14 @@ function AddTrackingDetailDialog({ trackingId, trackingType }: Props) {
       handleServerActionError(res, locale, form)
     })
   }
+
+  const unitPrice = form.watch("unitPrice")
+  const itemTotal = form.watch("itemTotal")
+
+  useEffect(() => {
+    if (!itemTotal || unitPrice) return
+    form.setValue("totalAmount", unitPrice * itemTotal)
+  }, [unitPrice, itemTotal, form])
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
@@ -237,29 +245,6 @@ function AddTrackingDetailDialog({ trackingId, trackingType }: Props) {
                       )}
                     />
 
-                    <FormField
-                      control={form.control}
-                      name="itemTotal"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            {t("Total item")}
-                            <span className="ml-1 text-xl font-bold leading-none text-primary">
-                              *
-                            </span>
-                          </FormLabel>
-                          <FormControl>
-                            <Input
-                              {...field}
-                              disabled={isPending}
-                              type="number"
-                            />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-
                     {selectedCategory?.isAllowAITraining && (
                       <FormField
                         control={form.control}
@@ -280,6 +265,30 @@ function AddTrackingDetailDialog({ trackingId, trackingType }: Props) {
                         )}
                       />
                     )}
+
+                    <FormField
+                      control={form.control}
+                      name="itemTotal"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>
+                            {t("Total item")}
+                            <span className="ml-1 text-xl font-bold leading-none text-primary">
+                              *
+                            </span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              {...field}
+                              disabled={isPending}
+                              type="number"
+                              step="1"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
                     <FormField
                       control={form.control}
@@ -316,11 +325,7 @@ function AddTrackingDetailDialog({ trackingId, trackingType }: Props) {
                             </span>
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              {...field}
-                              disabled={isPending}
-                              type="number"
-                            />
+                            <Input {...field} disabled type="number" />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

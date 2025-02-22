@@ -1028,7 +1028,13 @@
     "Date": "Date",
     "View condition histories": "View condition histories",
     "Condition histories": "Condition histories",
-    "Train ai group note": "The first item will be used to compare with the remaining items to check if the items you have selected are a group or not."
+    "Train ai group note": "The first item will be used to compare with the remaining items to check if the items you have selected are a group or not.",
+    "All": "All",
+    "Trained": "Trained",
+    "Untrained": "Untrained",
+    "Quick search": "Quick search",
+    "Basic search": "Basic search",
+    "Advanced search": "Advanced search"
   },
   "CutterNumber": {
     "Title": "Cutter Number in the Library System",
@@ -1182,7 +1188,12 @@
     "Search item": "Search item",
     "Select libraryItem": "Select item",
     "Library item": "Library item",
-    "Search": "Search"
+    "Search": "Search",
+    "Good": "Good",
+    "Worn": "Worn",
+    "Damaged": "Damaged",
+    "Lost": "Lost",
+    "Condition": "Condition"
   },
   "Badges": {
     "BookConditionStatus": {
@@ -1275,6 +1286,8 @@
     "Reset": "Reset",
     "All": "All",
     "Special character": "Special character",
-    "Match exact": "Match exact"
+    "Match exact": "Match exact",
+    "Enter search value": "Enter search value...",
+    "Keywords": "Keywords..."
   }
 }
