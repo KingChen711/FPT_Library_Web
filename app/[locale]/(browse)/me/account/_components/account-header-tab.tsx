@@ -1,8 +1,8 @@
 "use client"
 
-import React from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
+import { Bell, IdCard, Palette, Shield, User } from "lucide-react"
 
 import { ESystemRoutes } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
@@ -15,18 +15,27 @@ const accountRoutes = [
   {
     label: "Profile",
     route: ESystemRoutes.PROFILE_MANAGEMENT,
+    icon: User,
+  },
+  {
+    label: "Library card",
+    route: ESystemRoutes.LIBRARY_CARD_MANAGEMENT,
+    icon: IdCard,
   },
   {
     label: "Security",
     route: ESystemRoutes.SECURITY_MANAGEMENT,
+    icon: Shield,
   },
   {
     label: "Interface",
     route: ESystemRoutes.INTERFACE_MANAGEMENT,
+    icon: Palette,
   },
   {
     label: "Notifications",
     route: ESystemRoutes.NOTIFICATION_MANAGEMENT,
+    icon: Bell,
   },
 ]
 
@@ -36,20 +45,26 @@ const AccountHeaderTab = ({ locale }: AccountHeaderTabProps) => {
   const isActive = (route: string) => pathname === `/${locale}${route}`
 
   return (
-    <div className="flex items-center">
-      {accountRoutes.map((route) => (
-        <Link
-          key={route.label}
-          href={`/${locale}${route.route}`}
-          className={cn(
-            "w-[120px] border-b-2 pb-1 text-center text-base font-semibold text-muted-foreground hover:border-primary hover:text-primary",
-            isActive(route.route) && "border-primary text-primary"
-          )}
-        >
-          {route.label}
-        </Link>
-      ))}
-    </div>
+    <nav className="flex h-full flex-col space-y-1 bg-background p-2">
+      {accountRoutes.map((route) => {
+        const Icon = route.icon
+        return (
+          <Link
+            key={route.label}
+            href={`/${locale}${route.route}`}
+            className={cn(
+              "flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-muted",
+              isActive(route.route)
+                ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <Icon className="size-5" />
+            <span>{route.label}</span>
+          </Link>
+        )
+      })}
+    </nav>
   )
 }
 

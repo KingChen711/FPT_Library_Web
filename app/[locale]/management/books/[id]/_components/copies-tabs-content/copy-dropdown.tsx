@@ -42,11 +42,7 @@ import EditBarcodeDialog from "./edit-barcode-dialog"
 
 type Props = {
   bookId: number
-  copy: LibraryItemInstance & {
-    libraryItemConditionHistories: (ConditionHistory & {
-      condition: Condition
-    })[]
-  }
+  copy: LibraryItemInstance
   prefix: string
 }
 

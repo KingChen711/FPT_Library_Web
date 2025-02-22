@@ -151,7 +151,7 @@ export default function EBookPage({ params }: Props) {
           }}
         >
           <Document
-            file="https://ontheline.trincoll.edu/images/bookdown/sample-local-pdf.pdf"
+            file="https://res.cloudinary.com/dchmztiqg/image/upload/v1739724844/a214fef9-e5ed-4b11-983f-bed293bcd0a5.pdf?fbclid=IwY2xjawIe94ZleHRuA2FlbQIxMAABHUX-Ti3VKRwFkp-kr6fl8s05vIdhZ2scezoi3JWMglzExXjQ03OYSRrxwQ_aem_eTqC0Tx_pRAvKEpVbU5bQw"
             onLoadSuccess={onDocumentLoadSuccess}
             className="flex items-center justify-center overflow-hidden bg-secondary"
           >
