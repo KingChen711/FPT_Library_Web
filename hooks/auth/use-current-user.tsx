@@ -2,7 +2,7 @@ import { useAuth } from "@/contexts/auth-provider"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
-import { type LibraryCard } from "@/lib/types/models"
+import { type LibraryCardHolder } from "@/lib/types/models"
 
 export type CurrentUser = {
   userId: string
@@ -37,7 +37,7 @@ export type CurrentUser = {
     englishName: string
     roleType: string
   }
-  libraryCard: LibraryCard
+  libraryCard: LibraryCardHolder
   notificationRecipients: unknown[]
 }
 

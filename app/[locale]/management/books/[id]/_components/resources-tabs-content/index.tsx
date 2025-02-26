@@ -141,7 +141,7 @@ function ResourcesTabsContent({ resources, bookId }: Props) {
               <TableBody>
                 {filteredResources.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7}>
+                    <TableCell colSpan={11}>
                       <div className="flex justify-center p-4">
                         <NoData />
                       </div>

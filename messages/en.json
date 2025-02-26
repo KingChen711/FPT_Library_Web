@@ -105,6 +105,9 @@
     "invalid": "Invalid",
     "atLeastOneRecipient": "Need at least one recipient",
     "validImageAI": "Image does not match information or not checked yet",
+    "validAvatarAI": "Avatar does not valid or not checked yet",
+    "validAvatarAI0": "Avatar without face",
+    "validAvatarAI*": "Avatar has more than 1 person",
     "fileRequire": "Require",
     "matchPassword": "The confirm password is not match",
     "integer": "Must be an integer",
@@ -403,7 +406,39 @@
     "Help": "Help",
     "Warehouse": "Warehouse",
     "Suppliers": "Suppliers",
-    "Trackings": "Trackings"
+    "Trackings": "Trackings",
+    "Library card": "Library card",
+    "Patrons": "Patrons",
+    "Holders": "Patrons",
+    "Cards": "Cards"
+  },
+  "LibraryCardManagementPage": {
+    "Patrons": "Patrons",
+    "Holders": "Patrons",
+    "Create patron": "Create patron",
+    "Cancel": "Cancel",
+    "Continue": "Continue",
+    "Email": "Email",
+    "First name": "First name",
+    "Last name": "Last name",
+    "Phone": "Phone",
+    "Address": "Address",
+    "Date of birth": "Date of birth",
+    "Avatar": "Avatar",
+    "Check avatar result": "Check avatar result",
+    "No image uploaded yet": "No image uploaded yet",
+    "Check": "Check",
+    "Passed": "Passed",
+    "Failed": "Failed",
+    "Drop the image here": "Drop the image here",
+    "Drag & drop or click to upload": "Drag & drop or click to upload",
+    "Not checked yet": "Not checked yet",
+    "Checking": "Checking",
+    "Required": "Required",
+    "Result": "Result:",
+    "Gender": "Gender",
+    "Male": "Male",
+    "Female": "Female"
   },
   "MfaPage": {
     "Verify MFA": "Verify MFA",
@@ -1034,7 +1069,9 @@
     "Untrained": "Untrained",
     "Quick search": "Quick search",
     "Basic search": "Basic search",
-    "Advanced search": "Advanced search"
+    "Advanced search": "Advanced search",
+    "Drop the image here": "Thả ảnh ở đây",
+    "Drag & drop or click to upload": "Drag & drop or click to upload"
   },
   "CutterNumber": {
     "Title": "Cutter Number in the Library System",
@@ -1193,7 +1230,12 @@
     "Worn": "Worn",
     "Damaged": "Damaged",
     "Lost": "Lost",
-    "Condition": "Condition"
+    "Condition": "Condition",
+    "Filters": "Filters",
+    "Filters trackings": "Filters trackings",
+    "All": "All",
+    "Reset": "Reset",
+    "Apply": "Apply"
   },
   "Badges": {
     "BookConditionStatus": {
@@ -1289,5 +1331,9 @@
     "Match exact": "Match exact",
     "Enter search value": "Enter search value...",
     "Keywords": "Keywords..."
+  },
+  "AutocompleteLibraryItem": {
+    "Available": "Available",
+    "Out of shelf": "Out of shelf"
   }
 }

@@ -14,10 +14,11 @@ import {
 } from "@/lib/validations/books/book-editions/mutate-resource"
 import { createResource } from "@/actions/books/create-resource"
 import { uploadAudioBook, uploadBookImage } from "@/actions/books/upload-medias"
-import { type TCheckCoverImageRes } from "@/hooks/books/use-check-cover-image"
+import { type TCheckCoverImageRes } from "@/hooks/ai/use-check-cover-image"
 import { toast } from "@/hooks/use-toast"
 import AudioDropzone from "@/components/ui/audio-dropzone"
 import { Button } from "@/components/ui/button"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Dialog,
   DialogClose,
@@ -208,10 +209,9 @@ function CreateResourceDialog({ bookId }: Props) {
                             </span>
                           </FormLabel>
                           <FormControl>
-                            <Input
-                              disabled={isPending}
+                            <CurrencyInput
                               {...field}
-                              type="number"
+                              disabled={isPending}
                               className="min-w-96 max-w-full"
                             />
                           </FormControl>

@@ -32,8 +32,6 @@ export async function confirmNewBackupCodes(
       data: message,
     }
   } catch (error) {
-    console.log({ error })
-
     return handleHttpError(error)
   }
 }

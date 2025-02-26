@@ -18,7 +18,6 @@ enum EPredictionTab {
 
 const AiPredictionResult = () => {
   // const { uploadedImage, bestMatchedLibraryItemId } = usePrediction()
-  // console.log({ uploadedImage, bestMatchedLibraryItemId })
 
   return (
     <div>

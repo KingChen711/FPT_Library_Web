@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import Image from "next/image"
 import { Check, Loader2, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -6,7 +6,7 @@ import { type UseFormReturn } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 import { type TTrainGroupSchema } from "@/lib/validations/books/train-group"
-import useCheckCoverImage from "@/hooks/books/use-check-cover-image"
+import useCheckCoverImage from "@/hooks/ai/use-check-cover-image"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -116,10 +116,6 @@ function CoverImageField({
       },
     })
   }
-
-  useEffect(() => {
-    console.log({ indexBook, indexImage })
-  }, [indexBook, indexImage])
 
   return (
     <div className="flex flex-row justify-start gap-16 p-6">

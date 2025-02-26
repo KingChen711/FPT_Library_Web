@@ -55,9 +55,8 @@ export async function uploadMedias(book: TBookEditionSchema) {
     await Promise.all([...uploadBookResourcePromises, uploadBookImagePromise()])
     // ).filter(Boolean) as File[]
     // return coverFiles
-  } catch (error) {
-    console.log(error)
-    // return []
+  } catch {
+    return
   }
 }
 

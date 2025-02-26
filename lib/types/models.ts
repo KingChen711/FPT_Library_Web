@@ -4,6 +4,7 @@ import {
   type EBookEditionStatus,
   type EBookFormat,
   type EFineType,
+  type EGender,
   type ENotificationType,
   type EResourceBookType,
   type ERoleType,
@@ -129,7 +130,7 @@ export type Employee = {
   }
 }
 
-export type LibraryCard = {
+export type LibraryCardHolder = {
   libraryCardId: string
   fullName: string
   avatar: string
@@ -556,4 +557,21 @@ export type ConditionHistory = {
   updatedAt: Date | null
   createdBy: string
   updatedBy: string | null
+}
+
+export type Patron = {
+  userId: string
+  roleId: number
+  libraryCardId: number | null
+  email: string
+  phone: string | null
+  address: string | null
+  gender: EGender | null
+  dob: Date | null
+  isActive: boolean
+  isDeleted: boolean
+  isEmployeeCreated: boolean
+  createDate: Date
+  modifiedDate: Date | null
+  modifiedBy: string | null
 }

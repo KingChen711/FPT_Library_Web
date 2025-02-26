@@ -29,6 +29,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Dialog,
   DialogClose,
@@ -494,9 +495,8 @@ function EditBookDialog({ open, setOpen, book }: Props) {
                       </FormLabel>
 
                       <FormControl>
-                        <Input
+                        <CurrencyInput
                           {...field}
-                          type="number"
                           disabled={isPending}
                           className="min-w-96 max-w-full"
                         />

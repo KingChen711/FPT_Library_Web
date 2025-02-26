@@ -11,7 +11,7 @@ function useTrackingDetailsNoItem(trackingId: number | null | undefined) {
     queryFn: async () => {
       if (!trackingId) return []
       try {
-        const { data } = await http.get<TrackingDetail[]>(
+        const { data } = await http.get<{ sources: TrackingDetail[] }>(
           `/api/management/warehouse-trackings/${trackingId}/details/no-item`,
           {
             headers: {
@@ -20,7 +20,7 @@ function useTrackingDetailsNoItem(trackingId: number | null | undefined) {
           }
         )
 
-        return data || []
+        return data.sources || []
       } catch {
         return []
       }

@@ -21,7 +21,6 @@ import {
 } from "@/components/ui/command"
 import {
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -60,8 +59,6 @@ function AuthorsField({
   const [hasAutoSearch, setHasAutoSearch] = useState(false)
   const [mounted, setMounted] = useState(false)
 
-  const watchAuthorIds = form.watch("authorIds")
-
   const { data: authorItems, isFetching } =
     useSearchAuthors(debouncedSearchTerm)
 
@@ -86,33 +83,17 @@ function AuthorsField({
       setSelectedAuthors([authorItems[0]])
       setHasAutoSearch(true)
 
-      console.log({
-        type: "length 1",
-        authorItems,
-        watchAuthor,
-        hasAutoSearch,
-      })
-
       form.setValue(`authorIds`, [authorItems[0].authorId])
       return
     }
 
     setSelectedAuthors([])
     setHasAutoSearch(true)
-    console.log({
-      type: "length 0",
-      authorItems,
-      watchAuthor,
-      hasAutoSearch,
-    })
+
     form.setValue(`authorIds`, [])
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [authorItems, setSelectedAuthors, form])
-
-  useEffect(() => {
-    console.log({ watchAuthorIds })
-  }, [watchAuthorIds])
 
   useEffect(() => setMounted(true), [])
 
@@ -219,14 +200,13 @@ function AuthorsField({
               </PopoverContent>
             </Popover>
           </div>
-          <FormDescription>
-            <div className="flex items-center gap-1">
-              {t("Author infor from General tab")}
-              {form.watch("author") || form.watch("additionalAuthors") || (
-                <NoData className="text-[0.8rem]" />
-              )}
-            </div>
-          </FormDescription>
+
+          <div className="flex items-center gap-1 text-sm text-muted-foreground">
+            {t("Author infor from General tab")}
+            {form.watch("author") || form.watch("additionalAuthors") || (
+              <NoData className="text-[0.8rem]" />
+            )}
+          </div>
           <FormMessage />
         </FormItem>
       )}

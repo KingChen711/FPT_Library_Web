@@ -16,9 +16,27 @@ export enum ResourceType {
   BookAudio = "BookAudio",
 }
 
+export enum ECardStatus {
+  PENDING,
+  ACTIVE,
+  EXPIRED,
+  SUSPENDED,
+}
+
+export enum EIssuanceMethod {
+  IN_LIBRARY,
+  ONLINE,
+}
+
 export enum EGender {
   MALE = "Male",
   FEMALE = "Female",
+}
+
+export enum EIdxGender {
+  MALE,
+  FEMALE,
+  OTHER,
 }
 
 export const ERoleTypeToIndex: Map<ERoleType, number> = new Map([

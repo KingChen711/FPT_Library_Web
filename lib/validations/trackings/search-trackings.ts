@@ -5,10 +5,10 @@ import { ETrackingStatus, ETrackingType } from "@/lib/types/enums"
 export const filterTrackingSchema = z.object({
   trackingType: z.nativeEnum(ETrackingType).optional().catch(undefined),
   status: z.nativeEnum(ETrackingStatus).optional().catch(undefined),
-  totalItemRange: z.array(z.coerce.number().or(z.null())).catch([null, null]),
-  totalAmountRange: z.array(z.coerce.number().or(z.null())).catch([null, null]),
   entryDateRange: z.array(z.date().or(z.null())).catch([null, null]),
   expectedReturnDateRange: z.array(z.date().or(z.null())).catch([null, null]),
+  totalItemRange: z.array(z.coerce.number().or(z.null())).catch([null, null]),
+  totalAmountRange: z.array(z.coerce.number().or(z.null())).catch([null, null]),
   actualReturnDateRange: z.array(z.date().or(z.null())).catch([null, null]),
   createdAtRange: z.array(z.date().or(z.null())).catch([null, null]),
   updatedAtRange: z.array(z.date().or(z.null())).catch([null, null]),

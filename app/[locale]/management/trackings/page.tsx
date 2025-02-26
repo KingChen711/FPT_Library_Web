@@ -33,6 +33,7 @@ import TrackingStatusBadge from "@/components/ui/tracking-status-badge"
 import TrackingTypeBadge from "@/components/ui/tracking-type-badge"
 
 import CreateTrackingDialog from "./_components/create-tracking-dialog"
+import FiltersTrackingsDialog from "./_components/filters-tracking-dialog"
 
 type Props = {
   searchParams: Record<string, string | string[] | undefined>
@@ -68,10 +69,10 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-row items-center">
             <SearchForm
-              // className="h-full rounded-r-none border-r-0"
+              className="h-full rounded-r-none border-r-0"
               search={search}
             />
-            {/* <FiltersTrackingsDialog /> */}
+            <FiltersTrackingsDialog />
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-x-4">

@@ -6,7 +6,7 @@ import { type UseFormReturn } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 import { type TTrainBookInProgressSchema } from "@/lib/validations/books/train-book-in-progress"
-import useCheckCoverImage from "@/hooks/books/use-check-cover-image"
+import useCheckCoverImage from "@/hooks/ai/use-check-cover-image"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {

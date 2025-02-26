@@ -28,6 +28,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Dialog,
   DialogClose,
@@ -284,7 +285,7 @@ function EditTrackingDialog({ open, setOpen, tracking }: Props) {
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <CurrencyInput {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

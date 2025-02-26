@@ -18,7 +18,6 @@ const PredictionResultTab = () => {
   const router = useRouter()
   const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
     usePrediction()
-  console.log({ uploadedImage, bestMatchedLibraryItemId, predictResult })
 
   const { data: libraryItem, isLoading } = useLibraryItemDetail(
     bestMatchedLibraryItemId?.toString() || ""

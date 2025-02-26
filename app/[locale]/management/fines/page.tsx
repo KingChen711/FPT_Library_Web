@@ -35,9 +35,10 @@ type Props = {
 }
 
 async function FinesManagementPage({ searchParams }: Props) {
+  await auth().protect(EFeature.FINE_MANAGEMENT)
+
   const { search, pageIndex, sort, pageSize } =
     searchFinesSchema.parse(searchParams)
-  await auth().protect(EFeature.FINE_MANAGEMENT)
   const t = await getTranslations("FinesManagementPage")
   const {
     sources: fines,

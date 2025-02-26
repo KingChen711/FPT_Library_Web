@@ -109,6 +109,9 @@
     "invalid": "Không hợp lệ",
     "atLeastOneRecipient": "Cần ít nhất một người nhận",
     "validImageAI": "Ảnh không tương thích với thông tin hoặc chưa được kiểm tra",
+    "validAvatarAI": "Ảnh không hợp lệ hoặc chưa được kiểm tra",
+    "validAvatarAI0": "Ảnh không có mặt người",
+    "validAvatarAI*": "Ảnh có nhiều hơn một người",
     "fileRequire": "Bắt buộc",
     "matchPassword": "Mật khẩu không khớp",
     "integer": "Phải là số nguyên",
@@ -405,7 +408,40 @@
     "Help": "Giúp đỡ",
     "Warehouse": "Kho",
     "Suppliers": "Nhà cung cấp",
-    "Trackings": "Theo dõi"
+    "Trackings": "Theo dõi",
+    "Library card": "Thẻ thư viện",
+    "Holders": "Bạn đọc",
+    "Patrons": "Bạn đọc",
+    "Cards": "Thẻ"
+  },
+  "LibraryCardManagementPage": {
+    "Patrons": "Bạn đọc",
+    "Holders": "Bạn đọc",
+    "Create patron": "Thêm bạn đọc",
+    "Cancel": "Hủy",
+    "Continue": "Tiếp tục",
+    "Email": "Email",
+    "First name": "Tên",
+    "Last name": "Họ",
+    "Phone": "Số điện thoại",
+    "Address": "Địa chỉ",
+    "Date of birth": "Ngày sinh",
+    "Avatar": "Ảnh đại diện",
+    "Check avatar result": "Kết quả kiểm tra ảnh",
+    "No image uploaded yet": "Chưa có ảnh được tải lên",
+    "Check": "Kiểm tra",
+    "Passed": "Thành công",
+    "Failed": "Thất bại",
+    "Drop the image here": "Thả ảnh ở đây",
+    "Drag & drop or click to upload": "Kéo và thả hoặc nhấn để tải ảnh lên",
+    "Not checked yet": "Chưa kiểm tra",
+    "Checking": "Đang kiểm tra",
+    "Required": "Bắt buộc",
+    "fileRequired": "Bắt buộc",
+    "Result": "Kết quả:",
+    "Gender": "Giới tính",
+    "Male": "Nam",
+    "Female": "Nữ"
   },
   "MfaPage": {
     "Verify MFA": "Xác thực MFA",
@@ -1037,7 +1073,9 @@
     "Untrained": "Chưa train",
     "Quick search": "Nhanh",
     "Basic search": "Cơ bản",
-    "Advanced search": "Nâng cao"
+    "Advanced search": "Nâng cao",
+    "Drop the image here": "Thả ảnh ở đây",
+    "Drag & drop or click to upload": "Kéo và thả hoặc nhấn để tải ảnh lên"
   },
   "CutterNumber": {
     "Title": "Số xếp giá trong Hệ thống Thư viện",
@@ -1196,7 +1234,12 @@
     "Worn": "Rách",
     "Damaged": "Hỏng",
     "Lost": "Mất",
-    "Condition": "Tình trạng"
+    "Condition": "Tình trạng",
+    "Filters": "Bộ lọc",
+    "Filters trackings": "Lọc theo dõi",
+    "All": "Tất cả",
+    "Reset": "Khôi phục",
+    "Apply": "Áp dụng"
   },
   "Badges": {
     "BookConditionStatus": {
@@ -1260,7 +1303,7 @@
     "TrackingStatus": {
       "0": "Bản nháp",
       "1": "Hoàn thành",
-      "2": "Hủy"
+      "2": "Đã Hủy"
     },
     "Cataloged": {
       "Cataloged": "Đã biên mục",
@@ -1292,5 +1335,9 @@
     "Match exact": "Kết quả chính xác",
     "Enter search value": "Tìm kiếm...",
     "Keywords": "Từ khóa..."
+  },
+  "AutocompleteLibraryItem": {
+    "Available": "Có sẵn",
+    "Out of shelf": "Đã hết"
   }
 }

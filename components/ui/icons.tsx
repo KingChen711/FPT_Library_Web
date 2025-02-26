@@ -65,6 +65,36 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  Holders: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 50 50"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M25.154 17.347c3.953 0 7.144-3.217 7.144-7.183c0-3.958-3.19-7.164-7.144-7.164c-3.948 0-7.153 3.207-7.153 7.164c0 3.965 3.206 7.183 7.153 7.183zM32.105 19c3.271 0 4.644 2.794 4.644 2.794l10.557 14.545c.437.649.694 1.443.694 2.3c0 2.26-1.828 4.097-4.081 4.097a4.23 4.23 0 0 1-1.519-.295L36 40.667V47H14v-6.333l-6.402 1.777c-.45.176-.968.296-1.509.296a4.093 4.093 0 0 1-4.088-4.09c0-.856.253-1.637.706-2.288l10.55-14.568S14.629 19 17.886 19h14.219zm-7.099 23.588l8.246-2.74l-.179-.05c-5.705-1.672-3.518-9.228 2.173-7.537l.754.268v-8.521l-10.989 3.623L14 24.008v8.521l.754-.269c5.688-1.69 7.898 5.865 2.197 7.537l-.2.05l8.255 2.741z"
+      ></path>
+    </svg>
+  ),
+  LibraryCardManagement: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 384 448"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M192 206q81-75 192-75v234q-110 0-192 76q-81-76-192-76V131q111 0 192 75zm0-75q-27 0-45.5-19T128 66.5t18.5-45T192 3t45.5 18.5t18.5 45t-18.5 45.5t-45.5 19z"
+      ></path>
+    </svg>
+  ),
   Supplier: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -566,6 +596,21 @@ export const Icons = {
       <path
         fill="currentColor"
         d="M14 18h4v2h-4zm-7 1a5.989 5.989 0 0 1 .09-1H3v-1.4c0-2 4-3.1 6-3.1a8.548 8.548 0 0 1 1.35.125A5.954 5.954 0 0 1 13 13h5V4a2.006 2.006 0 0 0-2-2h-4.18a2.988 2.988 0 0 0-5.64 0H2a2.006 2.006 0 0 0-2 2v14a2.006 2.006 0 0 0 2 2h5.09A5.989 5.989 0 0 1 7 19ZM9 2a1 1 0 1 1-1 1a1.003 1.003 0 0 1 1-1Zm0 4a3 3 0 1 1-3 3a2.996 2.996 0 0 1 3-3Z"
+      ></path>
+    </svg>
+  ),
+  LibraryCard: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M2 3h20c1.05 0 2 .95 2 2v14c0 1.05-.95 2-2 2H2c-1.05 0-2-.95-2-2V5c0-1.05.95-2 2-2m12 3v1h8V6h-8m0 2v1h8V8h-8m0 2v1h7v-1h-7m-6 3.91C6 13.91 2 15 2 17v1h12v-1c0-2-4-3.09-6-3.09M8 6a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3Z"
       ></path>
     </svg>
   ),

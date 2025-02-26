@@ -14,7 +14,6 @@ import {
 import LibraryItemInfo from "@/components/ui/library-item-info"
 
 import BookAuthorCard from "./_components/book-cards/author-card"
-import BookInfoCard from "./_components/book-cards/book-info-card"
 import BookPreviewCard from "./_components/book-cards/book-preview-card"
 import BookTabs from "./_components/book-tabs"
 
