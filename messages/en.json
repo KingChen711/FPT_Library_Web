@@ -139,6 +139,9 @@
     "logout": "Logout"
   },
   "GeneralManagement": {
+    "language": "Language",
+    "vietnamese": "Vietnamese",
+    "english": "English",
     "employee management": "Employee management",
     "user management": "User management",
     "role management": "Role management",
@@ -152,6 +155,10 @@
     "report management": "Report management",
     "clear btn": "Clear",
     "process btn": "Process",
+    "price": "Price",
+    "duration": "Duration",
+    "month": "month",
+    "register library card": "Register library card",
     "welcome to": "Welcome to",
     "book ai prediction": "Book AI prediction",
     "book ai recommendation": "Book AI recommendation",
@@ -195,6 +202,8 @@
     "back to enter barcode": "Back to enter barcode",
     "drag and drop and image or": "Drag and drop and image or",
     "browse to upload": "Browse to upload",
+    "Male": "Male",
+    "Female": "Female",
     "filter": {
       "title": "Filter",
       "author": "Filter author",
@@ -243,7 +252,9 @@
       "date range": "Select date range",
       "status": "Select status",
       "description": "Enter description",
-      "book serial no": "Enter book serial number or scan QR code"
+      "book serial no": "Enter book serial number or scan QR code",
+      "library card package": "Select package",
+      "payment method": "Select payment method"
     },
 
     "fields": {

@@ -1,7 +1,9 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, useTransition } from "react"
+import { usePathname, useRouter } from "@/i18n/routing"
 import { Calendar, Clock, Languages } from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 import {
@@ -17,7 +19,14 @@ import Actions from "./actions"
 
 function ManagementNavbar() {
   const { open } = useSidebar()
+  const router = useRouter()
+  const locale = useLocale()
+  const tGeneralManagement = useTranslations("GeneralManagement")
   const [currentDate, setCurrentDate] = useState<Date | null>(null)
+  const pathname = usePathname()
+  const [isLoading, startTransition] = useTransition()
+
+  const newLocale = locale === "en" ? "vi" : "en"
 
   useEffect(() => {
     setCurrentDate(new Date()) // Set the current date when the component mounts
@@ -28,6 +37,12 @@ function ManagementNavbar() {
 
     return () => clearInterval(interval)
   }, [])
+
+  const switchLanguage = () => {
+    startTransition(() => {
+      router.push(`${pathname}`, { scroll: false, locale: newLocale })
+    })
+  }
 
   return (
     <nav className="relative mb-16">
@@ -42,14 +57,18 @@ function ManagementNavbar() {
       >
         <SidebarTrigger className="absolute -left-3 top-1/2 z-20 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground" />
         <div className={cn("flex items-center gap-4")}>
-          <Select>
+          <Select onValueChange={() => switchLanguage()} defaultValue={locale}>
             <SelectTrigger className="w-[140px]">
               <Languages size={20} />
               <SelectValue placeholder="Lang" />
             </SelectTrigger>
             <SelectContent className="">
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="vi">Vietnamese</SelectItem>
+              <SelectItem value="en">
+                {tGeneralManagement("english")}
+              </SelectItem>
+              <SelectItem value="vi">
+                {tGeneralManagement("vietnamese")}
+              </SelectItem>
             </SelectContent>
           </Select>
           <section className="flex items-center gap-4 text-nowrap rounded-lg p-1 text-muted-foreground">

@@ -3,7 +3,6 @@
 import { useRouter } from "@/i18n/routing"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { Search } from "lucide-react"
-import { useTranslations } from "next-intl"
 
 import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -11,7 +10,6 @@ import Paginator from "@/components/ui/paginator"
 import PredictLibraryItemInfo from "@/components/ui/predict-library-item-info"
 
 const PredictionOtherMatchesTab = () => {
-  const t = useTranslations("BookPage")
   const router = useRouter()
   const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
     usePrediction()

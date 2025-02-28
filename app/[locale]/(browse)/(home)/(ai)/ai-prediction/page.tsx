@@ -50,7 +50,7 @@ const AiPrediction = () => {
 
     const formData = new FormData()
     formData.append("imageToPredict", values.imageToPredict)
-
+    console.log("imageToPredict", JSON.stringify(values.imageToPredict))
     startTransition(async () => {
       const res = await predictImage(formData)
       console.log("🚀 ~ startTransition ~ res:", res)
@@ -156,7 +156,7 @@ const AiPrediction = () => {
                               className="opacity-65"
                             />
                           </div>
-                          <h1 className="text-lg font-semibold underline">
+                          <h1 className="text-lg font-semibold capitalize underline">
                             {tGeneralManagement("choose image")}
                           </h1>
                           <h1>

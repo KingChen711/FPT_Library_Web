@@ -18,7 +18,7 @@ import {
 
 import AuthorDeleteConfirm from "./author-delete-confirm"
 import AuthorSoftDeleteConfirm from "./author-soft-delete-confirm"
-import MutateAuthorDialog from "./mutate-author-dialog"
+import EditAuthorDialog from "./edit-author-dialog"
 
 type Props = {
   author: Author
@@ -62,12 +62,13 @@ function AuthorActionDropdown({ author }: Props) {
         openDelete={openSoftDelete}
         setOpenDelete={setOpenSoftDelete}
       />
-      <MutateAuthorDialog
-        type="update"
+
+      <EditAuthorDialog
         openEdit={openEdit}
         setOpenEdit={setOpenEdit}
         author={author}
       />
+
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -81,13 +82,11 @@ function AuthorActionDropdown({ author }: Props) {
           {!author?.isDeleted ? (
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>
-                <DropdownMenuItem className="cursor-pointer">
-                  <div
-                    onClick={() => {
-                      setOpenEdit(true)
-                    }}
-                    className="flex items-center gap-x-2"
-                  >
+                <DropdownMenuItem
+                  className="cursor-pointer"
+                  onClick={() => setOpenEdit(true)}
+                >
+                  <div className="flex items-center gap-x-2">
                     <SquarePen className="size-4" />
                     {t("btn.update")}
                   </div>

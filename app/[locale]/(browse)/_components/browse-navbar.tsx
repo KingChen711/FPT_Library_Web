@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { startTransition, useEffect, useState } from "react"
 import { useSearchParams } from "next/navigation"
 import { usePathname, useRouter } from "@/i18n/routing"
 import {
@@ -13,6 +13,7 @@ import {
   QrCode,
   Search,
 } from "lucide-react"
+import { useLocale, useTranslations } from "next-intl"
 import { useDebounce } from "use-debounce"
 
 import { cn, formUrlQuery } from "@/lib/utils"
@@ -38,10 +39,13 @@ import { BookFilterTabs } from "@/components/book-filter-tabs"
 import Actions from "./actions"
 
 function BrowseNavbar() {
+  const t = useTranslations("GeneralManagement")
+  const locale = useLocale()
   const { open } = useSidebar()
   const pathname = usePathname()
   const router = useRouter()
   const searchParams = useSearchParams()
+  const newLocale = locale === "en" ? "vi" : "en"
   const [openVoiceToText, setOpenVoiceToText] = useState<boolean>(false)
   const [currentDate, setCurrentDate] = useState<string | null>(null)
   const [searchValue, setSearchValue] = useState<string>(
@@ -78,6 +82,12 @@ function BrowseNavbar() {
     })
     router.replace(newUrl, { scroll: false })
   }, 500)
+
+  const switchLanguage = () => {
+    startTransition(() => {
+      router.push(`${pathname}`, { scroll: false, locale: newLocale })
+    })
+  }
 
   return (
     <nav className={cn("relative mb-16", pathname === "/search" && "hidden")}>
@@ -138,14 +148,14 @@ function BrowseNavbar() {
             </DropdownMenu>
           </div>
 
-          <Select>
+          <Select onValueChange={() => switchLanguage()} defaultValue={locale}>
             <SelectTrigger className="w-[140px]">
               <Languages size={20} />
-              <SelectValue placeholder="Lang" />
+              <SelectValue placeholder={t("language")} />
             </SelectTrigger>
             <SelectContent className="">
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="vi">Vietnamese</SelectItem>
+              <SelectItem value="en">{t("english")}</SelectItem>
+              <SelectItem value="vi">{t("vietnamese")}</SelectItem>
             </SelectContent>
           </Select>
           <section className="flex items-center gap-4 text-nowrap rounded-lg p-1 text-muted-foreground">
