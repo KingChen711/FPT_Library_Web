@@ -4,7 +4,6 @@ import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { Loader2 } from "lucide-react"
-import { useTranslations } from "next-intl"
 
 import useOcrDetail from "@/hooks/ai/use-ocr-detail"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
@@ -29,7 +28,6 @@ import {
 } from "@/components/ui/tooltip"
 
 const PredictionOcrDetailTab = () => {
-  const t = useTranslations("BookPage")
   const router = useRouter()
   const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
     usePrediction()

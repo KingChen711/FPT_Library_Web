@@ -186,3 +186,12 @@ export enum EGroupCheckType {
   GroupSuccess = 2,
   GroupFailed = 3,
 }
+
+export enum ELibraryCardStatus {
+  UnPaid = 0,
+  Pending = 1,
+  Active = 2,
+  Rejected = 3,
+  Expired = 4,
+  Suspend = 5,
+}

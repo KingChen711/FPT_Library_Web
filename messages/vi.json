@@ -143,6 +143,9 @@
     "logout": "Đăng xuất"
   },
   "GeneralManagement": {
+    "language": "Ngôn ngữ",
+    "vietnamese": "Tiếng Việt",
+    "english": "Tiếng Anh",
     "employee management": "Quản lí nhân viên",
     "user management": "Quản lí người dùng",
     "role management": "Quản lí vai trò",
@@ -156,6 +159,10 @@
     "report management": "Quản lí báo cáo",
     "clear btn": "Xóa",
     "process btn": "Xử lý",
+    "price": "Giá",
+    "duration": "Thời hạn",
+    "month": "Tháng",
+    "register library card": "Đăng ký thẻ thư viện",
     "welcome to": "Chào mừng đến với",
     "book ai prediction": "Gợi ý sách bằng AI",
     "book ai recommendation": "Đề xuất sách bằng AI",
@@ -199,6 +206,8 @@
     "back to enter barcode": "Về nhập barcode",
     "drag and drop and image or": "Kéo thả ảnh hoặc",
     "browse to upload": "chọn ảnh để tải lên",
+    "Male": "Nam",
+    "Female": "Nữ",
     "filter": {
       "title": "Tìm kiếm",
       "author": "Tìm tác giả",
@@ -249,7 +258,9 @@
       "date range": "Chọn khoâng thời gian",
       "status": "Chọn trạng thái",
       "description": "Nhập mô tả",
-      "book serial no": "Nhập số sách hay quét mã QR"
+      "book serial no": "Nhập số sách hay quét mã QR",
+      "library card package": "Select library card package",
+      "payment method": "Chọn phương thức thanh toán"
     },
     "fields": {
       "firstName": "Tên",

@@ -4,25 +4,12 @@ import React, { createContext, useContext, useEffect, useMemo } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
-import { type ERoleType } from "@/lib/types/enums"
+import { type CurrentUser } from "@/lib/types/models"
 
 type Token = {
   accessToken: string
   refreshToken: string
 }
-
-type CurrentUser = {
-  userId: string
-  email: string
-  firstName: string
-  lastName: string
-  avatar: string
-  role: {
-    englishName: string
-    vietnameseName: string
-    roleType: ERoleType
-  }
-} | null
 
 type AuthProviderProps = {
   children: React.ReactNode

@@ -10,7 +10,9 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { type Employee, type User } from "@/lib/types/models"
+import { formatDateInput } from "@/lib/utils"
 import {
+  EGenderProfile,
   profileSchema,
   type TProfileSchema,
 } from "@/lib/validations/auth/profile"
@@ -51,10 +53,10 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
     defaultValues: {
       firstName: currentUser.firstName || "",
       lastName: currentUser.lastName || "",
-      dob: currentUser.dob,
+      dob: formatDateInput(currentUser.dob),
       phone: currentUser.phone || "",
       address: currentUser.address || "",
-      // gender: currentUser.gender || undefined,
+      gender: (currentUser.gender as EGenderProfile) || EGenderProfile.Male,
       avatar: currentUser.avatar || "",
     },
   })
@@ -185,24 +187,21 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>{t("gender")}</FormLabel>
-                  <Select
-                    onValueChange={(value) =>
-                      field.onChange(
-                        value !== undefined ? parseInt(value, 10) : undefined
-                      )
-                    }
-                    value={field.value?.toString() || ""}
-                  >
-                    <FormControl>
+                  <FormControl>
+                    <Select
+                      {...field}
+                      defaultValue={currentUser.gender}
+                      onValueChange={field.onChange}
+                    >
                       <SelectTrigger>
-                        <SelectValue placeholder={t("gender")} />
+                        <SelectValue placeholder="Theme" />
                       </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="Male">{t("male")}</SelectItem>
-                      <SelectItem value="Female">{t("female")}</SelectItem>
-                    </SelectContent>
-                  </Select>
+                      <SelectContent>
+                        <SelectItem value="Male">{t("male")}</SelectItem>
+                        <SelectItem value="Female">{t("female")}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

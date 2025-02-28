@@ -1,5 +1,10 @@
 import { z } from "zod"
 
+export enum EGenderProfile {
+  Male = "Male",
+  Female = "Female",
+}
+
 export const profileSchema = z.object({
   firstName: z
     .string()
@@ -14,7 +19,7 @@ export const profileSchema = z.object({
   dob: z.string().trim().min(1, { message: "Date of birth is required" }),
   phone: z.string().trim().length(10, { message: "length_10" }),
   address: z.string().trim().min(1, { message: "Address is required" }),
-  gender: z.number().min(0, { message: "Invalid gender value" }), // Giá trị tối thiểu 0
+  gender: z.nativeEnum(EGenderProfile).catch(EGenderProfile.Male),
   avatar: z.string().trim().nullable().catch(""),
 })
 
