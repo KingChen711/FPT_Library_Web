@@ -70,8 +70,19 @@ type Props = {
 }
 
 async function BooksManagementPage({ searchParams }: Props) {
-  const { search, pageIndex, sort, pageSize, tab, columns, f, o, v, ...rest } =
-    searchBookEditionsSchema.parse(searchParams)
+  const {
+    search,
+    pageIndex,
+    sort,
+    pageSize,
+    tab,
+    columns,
+    isTrained,
+    f,
+    o,
+    v,
+    ...rest
+  } = searchBookEditionsSchema.parse(searchParams)
 
   console.log({ searchParams })
 
@@ -88,6 +99,7 @@ async function BooksManagementPage({ searchParams }: Props) {
     pageIndex,
     sort,
     pageSize,
+    isTrained,
     tab,
     columns,
     f,
@@ -118,13 +130,13 @@ async function BooksManagementPage({ searchParams }: Props) {
               className="h-10 rounded-r-none border-r-0"
               search={search}
             />
-            <BooksFilter f={f} o={o} v={v} />
+            <BooksFilter isTrained={isTrained} f={f} o={o} v={v} />
           </div>
 
           <SelectedIdsIndicator />
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
-          <BooksActionsDropdown tab={tab} />
+          <BooksActionsDropdown isTrained={isTrained} tab={tab} />
           <ImportDialog />
           <ExportButton
             searchParams={{

@@ -12,7 +12,7 @@ import { v4 as uuidv4 } from "uuid"
 import { z } from "zod"
 
 import { EBookCopyConditionStatus } from "@/lib/types/enums"
-import { type Condition } from "@/lib/types/models"
+import { type Category, type Condition } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import {
   type TBookCopySchema,
@@ -38,14 +38,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
   Table,
   TableBody,
   TableCell,
@@ -54,6 +46,8 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import CopyInput from "./copy-input"
+
 type Props = {
   form: UseFormReturn<TBookEditionSchema>
   isPending: boolean
@@ -61,6 +55,7 @@ type Props = {
   hasConfirmedChangeStatus: boolean
   setHasConfirmedChangeStatus: (val: boolean) => void
   conditions: Condition[]
+  selectedCategory: Category
 }
 
 const createInput = () => ({
@@ -76,6 +71,7 @@ function LibraryItemInstancesDialog({
   hasConfirmedChangeStatus,
   setHasConfirmedChangeStatus,
   conditions,
+  selectedCategory,
 }: Props) {
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
@@ -205,80 +201,17 @@ function LibraryItemInstancesDialog({
           <DialogDescription>
             <div className="mt-2 flex flex-col gap-2">
               {inputs.map((input) => (
-                <div key={input.id} className="flex w-full gap-2">
-                  <div className="flex flex-1 items-center gap-2">
-                    <Input
-                      placeholder={t("placeholder code")}
-                      value={input.barcode}
-                      onChange={(e) => {
-                        setInputs((prev) => {
-                          const clone = structuredClone(prev)
-                          clone.forEach((item) => {
-                            if (item.id !== input.id) return
-                            item.barcode = e.target.value
-                          })
-                          return clone
-                        })
-                      }}
-                      onPaste={handleOnPasteInput}
-                      className="w-1/2"
-                    />
-                    <Select
-                      value={input.conditionId.toString()}
-                      onValueChange={(val) => {
-                        if (val !== "1" && !hasConfirmedChangeStatus) {
-                          setTempChangedCopy({
-                            inputId: input.id,
-                            val: +val,
-                          })
-                          setOpenWarning(true)
-                          return
-                        }
-
-                        setInputs((prev) => {
-                          const clone = structuredClone(prev)
-                          clone.forEach((item) => {
-                            if (item.id !== input.id) return
-                            item.conditionId = val
-                          })
-                          return clone
-                        })
-                      }}
-                    >
-                      <SelectTrigger className="w-1/2">
-                        <SelectValue
-                          className="w-1/2"
-                          placeholder="Select a status"
-                        />
-                      </SelectTrigger>
-                      <SelectContent className="w-1/2">
-                        <SelectGroup>
-                          <SelectItem className="cursor-pointer" value="1">
-                            {t(EBookCopyConditionStatus.GOOD)}
-                          </SelectItem>
-                          <SelectItem className="cursor-pointer" value="3">
-                            {t(EBookCopyConditionStatus.WORN)}
-                          </SelectItem>
-                          <SelectItem className="cursor-pointer" value="2">
-                            {t(EBookCopyConditionStatus.DAMAGED)}
-                          </SelectItem>
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <Button
-                    onClick={() => {
-                      setInputs((prev) => prev.filter((i) => i.id !== input.id))
-                    }}
-                    disabled={inputs.length === 1}
-                    variant="outline"
-                    size="icon"
-                    className="shrink-0"
-                  >
-                    <Trash2 />
-                  </Button>
-                </div>
+                <CopyInput
+                  key={input.id}
+                  handleOnPasteInput={handleOnPasteInput}
+                  input={input}
+                  selectedCategory={selectedCategory}
+                  setInputs={setInputs}
+                  hasConfirmedChangeStatus={hasConfirmedChangeStatus}
+                  setTempChangedCopy={setTempChangedCopy}
+                  setOpenWarning={setOpenWarning}
+                  disabled={inputs.length === 1}
+                />
               ))}
 
               <div className="mt-2 flex gap-4">

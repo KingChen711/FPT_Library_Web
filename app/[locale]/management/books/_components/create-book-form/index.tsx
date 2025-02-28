@@ -54,7 +54,7 @@ function CreateBookForm() {
   const locale = useLocale()
 
   const [isPending, startTransition] = useTransition()
-  const [currentTab, setCurrentTab] = useState<Tab>("Category")
+  const [currentTab, setCurrentTab] = useState<Tab>("Individual registration")
 
   const { isbn, scannedBooks, appendScannedBook, setIsbn } = useScanIsbn()
   const { data: scannedBook, isFetching: isFetchingSearchIsbn } =

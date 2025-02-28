@@ -29,12 +29,15 @@ type Props = {
   f: string[]
   o: string[]
   v: string[]
+  isTrained: boolean | undefined
+  setOpen: (val: boolean) => void
 }
 
-const AdvancedSearchTab = ({ f, o, v }: Props) => {
+const AdvancedSearchTab = ({ f, o, v, isTrained, setOpen }: Props) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const t = useTranslations("BooksManagementPage")
+
   const [bookQueries, setBookQueries] = useState<FOV[]>(() => {
     if (f.length !== o.length || f.length !== v.length) return []
 
@@ -125,9 +128,12 @@ const AdvancedSearchTab = ({ f, o, v }: Props) => {
         v: filteredQuery.map((f) => f.v.toString()),
         pageIndex: "1",
         searchType: ESearchType.ADVANCED_SEARCH.toString(),
+        isTrained:
+          isTrained === undefined ? null : isTrained ? "true" : "false",
       },
     })
 
+    setOpen(false)
     router.push(newUrl, { scroll: false })
   }
 
@@ -150,7 +156,9 @@ const AdvancedSearchTab = ({ f, o, v }: Props) => {
         </Button>
         <div className="flex items-center gap-2">
           <Button
-            onClick={() => setBookQueries([])}
+            onClick={() => {
+              setBookQueries([])
+            }}
             variant="outline"
             className="flex items-center gap-2"
           >
