@@ -11,7 +11,7 @@ type Props = {
   type: ENotificationType
 }
 
-export const getTypeColor = (type: ENotificationType) => {
+const getTypeColor = (type: ENotificationType) => {
   switch (type) {
     case ENotificationType.EVENT:
       return "success"
@@ -24,11 +24,11 @@ export const getTypeColor = (type: ENotificationType) => {
   }
 }
 
-function NotificationTypeBadge({ type }: Props) {
+function NotificationTypeBadge({ type: status }: Props) {
   const t = useTranslations("Badges.NotificationType")
   return (
-    <Badge variant={getTypeColor(type)} className="flex w-24 justify-center">
-      {t(type)}
+    <Badge variant={getTypeColor(status)} className="flex w-24 justify-center">
+      {t(status.toString())}
     </Badge>
   )
 }

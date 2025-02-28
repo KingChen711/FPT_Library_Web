@@ -74,8 +74,8 @@ async function FinesManagementPage({ searchParams }: Props) {
       <div className="mt-4 grid w-full">
         <div className="overflow-x-auto rounded-md border">
           <Table className="overflow-hidden">
-            <TableHeader className="">
-              <TableRow className="">
+            <TableHeader>
+              <TableRow>
                 <TableHead></TableHead>
                 <SortableTableHead
                   currentSort={sort}
@@ -105,7 +105,7 @@ async function FinesManagementPage({ searchParams }: Props) {
             <TableBody>
               {fines.map((fine) => (
                 <TableRow key={fine.finePolicyId}>
-                  <TableCell className="">
+                  <TableCell>
                     <FineCheckbox id={fine.finePolicyId} />
                   </TableCell>
                   <TableCell>{fine.finePolicyTitle}</TableCell>

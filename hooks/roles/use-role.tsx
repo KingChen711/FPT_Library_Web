@@ -29,7 +29,7 @@ function useRole(
       }
     },
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false,
+
     enabled,
   })
 }

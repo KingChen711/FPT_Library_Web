@@ -10,6 +10,21 @@ export enum EAuditType {
   DELETED,
 }
 
+export enum EPatronType {
+  SELF_MADE,
+  EMPLOYEE_MADE,
+}
+
+export enum ETransactionMethod {
+  CASH,
+  DIGITAL_PAYMENT,
+}
+
+export enum EPatronHasCard {
+  HAVE_CARD,
+  NO_CARD,
+}
+
 export enum ResourceType {
   Profile = "Profile",
   BookImage = "BookImage",
@@ -17,8 +32,10 @@ export enum ResourceType {
 }
 
 export enum ECardStatus {
+  UNPAID,
   PENDING,
   ACTIVE,
+  REJECTED,
   EXPIRED,
   SUSPENDED,
 }
@@ -37,6 +54,12 @@ export enum EIdxGender {
   MALE,
   FEMALE,
   OTHER,
+}
+
+export enum EPatronStatus {
+  ACTIVE,
+  INACTIVE,
+  DELETED, //client only
 }
 
 export const ERoleTypeToIndex: Map<ERoleType, number> = new Map([
@@ -113,9 +136,9 @@ export enum EAccessLevel {
 }
 
 export enum ENotificationType {
-  EVENT = "Event",
-  REMINDER = "Reminder",
-  NOTICE = "Notice",
+  EVENT,
+  REMINDER,
+  NOTICE,
 }
 
 export enum EResourceBookType {
@@ -203,4 +226,11 @@ export enum EGroupCheckType {
   AbleToForceGrouped = 1,
   GroupSuccess = 2,
   GroupFailed = 3,
+}
+
+export enum ETransactionStatus {
+  PENDING,
+  EXPIRED,
+  PAID,
+  CANCELLED,
 }

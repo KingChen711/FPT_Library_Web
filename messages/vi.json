@@ -11,6 +11,7 @@
     "Email": "Địa chỉ email",
     "or": "hoặc",
     "Login": "Tiếp tục",
+    "Continue with Google": "Tiếp tục với Google",
     "LoginFailedTitle": "Đăng nhập thất bại",
     "Welcome back!": "Chào mừng trở lại!",
     "Message": "Đăng nhập để tiếp tục với Intelligent Library",
@@ -37,6 +38,7 @@
     }
   },
   "RegisterPage": {
+    "Continue with Google": "Tiếp tục với Google",
     "Email": "Địa chỉ email",
     "FirstName": "Tên",
     "LastName": "Họ",
@@ -115,7 +117,8 @@
     "fileRequire": "Bắt buộc",
     "matchPassword": "Mật khẩu không khớp",
     "integer": "Phải là số nguyên",
-    "expectedReturnDate": "Ngày trả dự kiến phải lớn hơn ngày thực hiện"
+    "expectedReturnDate": "Ngày trả dự kiến phải lớn hơn ngày thực hiện",
+    "date": "Ngày không hợp lệ"
   },
   "Me": {
     "account": "Tài khoản",
@@ -441,7 +444,72 @@
     "Result": "Kết quả:",
     "Gender": "Giới tính",
     "Male": "Nam",
-    "Female": "Nữ"
+    "Female": "Nữ",
+    "Full name": "Họ và tên",
+    "Dob": "Ngày sinh",
+    "Status": "Trạng thái",
+    "Type": "Loại",
+    "Filters": "Bộ lọc",
+    "Create date": "Tạo lúc",
+    "Created date": "Tạo lúc",
+    "Modified date": "Chỉnh sửa lúc",
+    "Modified by": "Chỉnh sửa bởi",
+    "Actions": "Hành động",
+    "All": "Tất cả",
+    "Reset": "Khôi phục",
+    "Apply": "Áp dụng",
+    "Yes": "Có",
+    "No": "Không",
+    "View details": "Xem chi tiết",
+    "Filters patrons": "Lọc bạn đọc",
+    "Card status": "Trạng thái thẻ",
+    "Issuance method": "Phương thức phát hành",
+    "Allow borrow more": "Cho phép mượn thêm",
+    "Reminder sent": "Đã gửi lời nhắc nhở",
+    "Extended": "Đã mở rộng",
+    "Archived": "Đã lưu trữ",
+    "Card issue date": "Ngày phát hành thẻ",
+    "Card expiry date": "Ngày hết hạn thẻ",
+    "Suspension date": "Ngày đình chỉ thẻ",
+    "Import": "Nạp dữ liệu",
+    "Active": "Kích hoạt",
+    "Deleted": "Đã xóa",
+    "Avatar images": "Các ảnh đại diện",
+    "Import patrons": "Nạp dữ liệu bạn đọc",
+    "Allow": "Cho phép",
+    "Replace": "Thay thế",
+    "Skip": "Bỏ qua",
+    "Duplicate handle": "Xử lý trùng lặp",
+    "File": "Tệp",
+    "Error while import data": "Lỗi trong khi nạp dữ liệu",
+    "Row": "Hàng: ",
+    "Import errors": "Lỗi nạp dữ liệu",
+    "avatar note": "Ảnh đại diện này sẽ được dùng để làm thẻ thư viện.",
+    "Transaction method": "Phương thức thanh toán",
+    "Confirm patron has cash title": "Đảm bảo bạn đọc đã thanh toán bằng tiền mặt trước khi thêm vào hệ thống",
+    "Confirm patron has cash description": "Tôi xác nhận rằng bạn đọc đã trả tiền mặt",
+    "Package": "Gói",
+    "Select package": "Chọn gói",
+    "Search package": "Tìm kiếm",
+    "No package found": "Không tìm thấy",
+    "No package selected": "Chưa có gói nào được chọn",
+    "Click pencil button to change package": "Nhấn nút bút chì để thay đổi gói",
+    "Search": "Tìm kiếm",
+    "Pending payment": "Đang chờ thanh toán",
+    "QR payment": "Thanh toán QR",
+    "Please scan the QR code below to make payment": "Quét mã QR bên dưới để hoàn tất thanh toán",
+    "Payment description": "Nội dung chuyển khoản",
+    "How to make payment": "Hướng dẫn thanh toán:",
+    "qr payment guide 1": "Mở ứng dụng ngân hàng hoặc ví điện tử của bạn",
+    "qr payment guide 2": "Quét mã QR",
+    "qr payment guide 3": "Kiểm tra thông tin và xác nhận thanh toán",
+    "Time remaining": "Thời gian còn lại",
+    "Auto redirect after n seconds": "Chuyển hướng tự động sau {seconds} giây",
+    "Payment successful": "Thanh toán thành công",
+    "Payment cancelled": "Thanh toán bị hủy",
+    "Payment expired": "Thanh toán đã hết hạn",
+    "Cancel payment": "Hủy thanh toán",
+    "Cancel reason": "Lý do"
   },
   "MfaPage": {
     "Verify MFA": "Xác thực MFA",
@@ -1239,7 +1307,8 @@
     "Filters trackings": "Lọc theo dõi",
     "All": "Tất cả",
     "Reset": "Khôi phục",
-    "Apply": "Áp dụng"
+    "Apply": "Áp dụng",
+    "Create at": "Tạo lúc"
   },
   "Badges": {
     "BookConditionStatus": {
@@ -1249,9 +1318,9 @@
       "Lost": "Mất"
     },
     "NotificationType": {
-      "Event": "Sự kiện",
-      "Notice": "Thông báo",
-      "Reminder": "Nhắc nhở"
+      "0": "Sự kiện",
+      "1": "Thông báo",
+      "2": "Nhắc nhở"
     },
     "ResourceBookType": {
       "AudioBook": "Sách nói",
@@ -1308,6 +1377,42 @@
     "Cataloged": {
       "Cataloged": "Đã biên mục",
       "Uncataloged": "Chưa biên mục"
+    },
+    "PatronStatus": {
+      "0": "Hoạt động",
+      "1": "Bất hoạt",
+      "2": "Đã xóa"
+    },
+    "PatronType": {
+      "0": "Tự tạo",
+      "1": "Nhân viên tạo"
+    },
+    "PatronHasCard": {
+      "0": "Có thẻ",
+      "1": "Không thẻ"
+    },
+    "Gender": {
+      "Male": "Nam",
+      "Female": "Nữ",
+      "0": "Nam",
+      "1": "Nữ",
+      "2": "Khác"
+    },
+    "IssuanceMethod": {
+      "0": "Tại thư viện",
+      "1": "Trực tuyến"
+    },
+    "TransactionMethod": {
+      "0": "Tiền mặt",
+      "1": "Thanh toán điện tử"
+    },
+    "CardStatus": {
+      "0": "Chưa thanh toán",
+      "1": "Đang chờ",
+      "2": "Hoạt động",
+      "3": "Từ chối",
+      "4": "Hết hạn",
+      "5": "Đình chỉ"
     }
   },
   "IsbnScanner": {

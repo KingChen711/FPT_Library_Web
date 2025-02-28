@@ -166,7 +166,6 @@ export default function EBookPage({ params }: Props) {
                 minHeight={baseHeight}
                 maxHeight={baseHeight}
                 autoSize={true}
-                className=""
                 style={{}}
                 flippingTime={1000}
                 maxShadowOpacity={0.3}
@@ -181,6 +180,7 @@ export default function EBookPage({ params }: Props) {
                 clickEventForward={true}
                 showPageCorners={true}
                 disableFlipByClick={false}
+                className=""
               >
                 {Array.from(new Array(numPages), (_, index) => (
                   <div

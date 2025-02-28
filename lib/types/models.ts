@@ -563,15 +563,31 @@ export type Patron = {
   userId: string
   roleId: number
   libraryCardId: number | null
+
   email: string
+  avatar: string | null
+  fullName: string | null
   phone: string | null
-  address: string | null
-  gender: EGender | null
   dob: Date | null
+  gender: EGender | null
+  address: string | null
+
   isActive: boolean
   isDeleted: boolean
+
   isEmployeeCreated: boolean
+
   createDate: Date
   modifiedDate: Date | null
   modifiedBy: string | null
+}
+
+export type Package = {
+  libraryCardPackageId: number
+  packageName: string
+  price: number
+  durationInMonths: number
+  isActive: boolean
+  createdAt: Date
+  description: string | null
 }

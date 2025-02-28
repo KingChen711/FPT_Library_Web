@@ -54,7 +54,6 @@ function useCurrentUser() {
       return res.data
     },
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false,
   })
 }
 

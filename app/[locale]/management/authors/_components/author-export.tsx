@@ -3,7 +3,7 @@
 import { useTransition } from "react"
 import { useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
-import { FileUp } from "lucide-react"
+import { FileUp, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { http } from "@/lib/http"
@@ -51,13 +51,9 @@ const AuthorExport = () => {
   }
 
   return (
-    <Button
-      variant="outline"
-      className=""
-      onClick={handleExportAuthor}
-      disabled={isPending}
-    >
+    <Button variant="outline" onClick={handleExportAuthor} disabled={isPending}>
       <FileUp size={16} /> {tGeneralManagement("btn.export")}
+      {isPending && <Loader2 className="ml-1 size-4 animate-spin" />}
     </Button>
   )
 }

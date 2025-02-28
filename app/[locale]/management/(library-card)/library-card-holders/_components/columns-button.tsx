@@ -1,7 +1,9 @@
+"use client"
+
 import React from "react"
 
 function ColumnsButton() {
-  return <div>ColumnsButton</div>
+  return <div>Columns Button</div>
 }
 
 export default ColumnsButton

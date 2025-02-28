@@ -193,7 +193,7 @@ function ImportDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="">
+        <Button variant="outline">
           <FileDown size={16} /> {t("Import")}
         </Button>
       </DialogTrigger>

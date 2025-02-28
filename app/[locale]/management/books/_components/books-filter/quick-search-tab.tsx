@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Search } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { z } from "zod"
 
@@ -18,7 +17,11 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-const QuickSearchTab = () => {
+type Props = {
+  isTrained: boolean | undefined
+}
+
+const QuickSearchTab = ({ isTrained }: Props) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const t = useTranslations("BasicSearchTab")
@@ -43,13 +46,12 @@ const QuickSearchTab = () => {
         .catch("false")
         .parse(searchParams.get("isMatchExact")) === "true"
   )
+
   const [searchValue, setSearchValue] = useState(
     searchParams.get("search") || ""
   )
 
   const handleApply = () => {
-    if (!searchValue) return
-
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
@@ -59,6 +61,8 @@ const QuickSearchTab = () => {
         searchWithSpecial: searchWithSpecial ? "true" : "false",
         searchWithKeyword: keywordValue === "quick" ? null : keywordValue,
         search: searchValue,
+        isTrained:
+          isTrained === undefined ? null : isTrained ? "true" : "false",
       },
     }).replace(window.location.pathname, "/management/books")
 
@@ -129,7 +133,7 @@ const QuickSearchTab = () => {
           onClick={handleApply}
           className="flex flex-nowrap items-center gap-2"
         >
-          <Search /> {t("Search")}
+          {t("Search")}
         </Button>
       </div>
     </div>

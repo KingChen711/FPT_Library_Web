@@ -6,7 +6,7 @@ import { format } from "date-fns"
 
 import { type Patron } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
-import { type TSearchPatronsSchema } from "@/lib/validations/holders/search-patrons"
+import { type TSearchPatronsSchema } from "@/lib/validations/patrons/search-patrons"
 
 import { auth } from "../auth"
 
@@ -29,11 +29,32 @@ const getPatrons = async (
         },
         searchParams: {
           ...searchParams,
-          createDateRage:
-            JSON.stringify(searchParams.createDateRage) ===
+          cardIssueDateRange:
+            JSON.stringify(searchParams.cardIssueDateRange) ===
             JSON.stringify([null, null])
               ? null
-              : searchParams.createDateRage.map((d) =>
+              : searchParams.cardIssueDateRange.map((d) =>
+                  d === null ? "null" : formatDate(new Date(d))
+                ),
+          cardExpiryDateRange:
+            JSON.stringify(searchParams.cardExpiryDateRange) ===
+            JSON.stringify([null, null])
+              ? null
+              : searchParams.cardExpiryDateRange.map((d) =>
+                  d === null ? "null" : formatDate(new Date(d))
+                ),
+          suspensionDateRange:
+            JSON.stringify(searchParams.suspensionDateRange) ===
+            JSON.stringify([null, null])
+              ? null
+              : searchParams.suspensionDateRange.map((d) =>
+                  d === null ? "null" : formatDate(new Date(d))
+                ),
+          dobRange:
+            JSON.stringify(searchParams.dobRange) ===
+            JSON.stringify([null, null])
+              ? null
+              : searchParams.dobRange.map((d) =>
                   d === null ? "null" : formatDate(new Date(d))
                 ),
         },

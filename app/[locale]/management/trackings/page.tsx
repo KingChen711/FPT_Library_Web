@@ -83,8 +83,8 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
       <div className="mt-4 grid w-full">
         <div className="overflow-x-auto rounded-md border">
           <Table className="overflow-hidden">
-            <TableHeader className="">
-              <TableRow className="">
+            <TableHeader>
+              <TableRow>
                 <SortableTableHead
                   currentSort={sort}
                   label={t("Receipt number")}
@@ -151,7 +151,7 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
 
                 <SortableTableHead
                   currentSort={sort}
-                  label={t("Created at")}
+                  label={t("Create at")}
                   sortKey="CreatedAt"
                 />
 

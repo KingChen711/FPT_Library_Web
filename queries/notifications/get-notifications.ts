@@ -30,7 +30,7 @@ const getNotifications = async (
             d ? d.toString() : d
           ),
           notificationType:
-            searchParams.notificationType === "All"
+            searchParams.notificationType === undefined
               ? null
               : searchParams.notificationType,
           visibility:

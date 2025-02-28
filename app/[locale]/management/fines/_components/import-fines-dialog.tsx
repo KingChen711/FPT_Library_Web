@@ -128,7 +128,7 @@ const ImportFinesDialog = () => {
   return (
     <div>
       <Dialog open={open} onOpenChange={setOpen}>
-        <Button asChild variant="outline" className="">
+        <Button asChild variant="outline">
           <DialogTrigger>
             <FileDown size={16} /> {t("Import")}
           </DialogTrigger>

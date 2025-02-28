@@ -335,7 +335,7 @@ const DateTimePicker = React.forwardRef<
     buttonProps: _buttonProps,
     dialogProps,
     calendarProps,
-  } = useDatePicker(props, state, ref)
+  } = useDatePicker({ ...props, "aria-label": "Date Picker" }, state, ref)
   const { buttonProps } = useButton(_buttonProps, buttonRef)
   useInteractOutside({
     ref: contentRef,
@@ -349,11 +349,12 @@ const DateTimePicker = React.forwardRef<
       {...groupProps}
       ref={ref}
       className={cn(
-        groupProps.className,
+        // groupProps.className,
         "flex w-full items-center rounded-md ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2"
       )}
+      aria-label="Date Time Picker"
     >
-      <DateField {...fieldProps} />
+      <DateField aria-label="" {...fieldProps} />
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
@@ -389,9 +390,10 @@ DateTimePicker.displayName = "DateTimePicker"
 
 export { DateTimePicker }
 
-export const createCalendarDate = (date: Date | undefined | null) => {
+export const createCalendarDate = (date: Date | string | undefined | null) => {
   if (!date) return undefined
 
   const val = new Date(date)
+
   return new CalendarDate(val.getFullYear(), val.getMonth() + 1, val.getDate())
 }

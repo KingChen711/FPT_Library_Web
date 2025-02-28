@@ -176,7 +176,7 @@ function BrowseNavbar() {
               <Languages size={20} />
               <SelectValue placeholder="Lang" />
             </SelectTrigger>
-            <SelectContent className="">
+            <SelectContent>
               <SelectItem value="en">English</SelectItem>
               <SelectItem value="vi">Vietnamese</SelectItem>
             </SelectContent>

@@ -262,7 +262,6 @@ function LibraryItemInstancesDialog({
                     </DropdownMenu>
                     <Button
                       onClick={handleDeleteSelectedCodes}
-                      className=""
                       variant="destructive"
                     >
                       <Trash2 />
@@ -272,8 +271,8 @@ function LibraryItemInstancesDialog({
                 )}
               </div>
               <Table className="overflow-hidden">
-                <TableHeader className="">
-                  <TableRow className="">
+                <TableHeader>
+                  <TableRow>
                     <TableHead className="font-bold"></TableHead>
                     <TableHead className="font-bold">
                       {t("Copy code")}
@@ -299,7 +298,7 @@ function LibraryItemInstancesDialog({
                     )
                     ?.map((copy) => (
                       <TableRow key={copy.barcode}>
-                        <TableCell className="">
+                        <TableCell>
                           <Checkbox
                             onCheckedChange={() => {
                               if (selectedCodes.includes(copy.barcode)) {

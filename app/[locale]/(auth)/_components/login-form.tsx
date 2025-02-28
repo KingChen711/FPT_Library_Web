@@ -10,14 +10,14 @@ import { useGoogleLogin } from "@react-oauth/google"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import { type ReactFacebookLoginInfo } from "react-facebook-login"
-import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props"
+// import { type ReactFacebookLoginInfo } from "react-facebook-login"
+// import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { loginSchema, type TLoginSchema } from "@/lib/validations/auth/login"
 import { login } from "@/actions/auth/login"
-import { loginFacebook } from "@/actions/auth/login-facebook"
+// import { loginFacebook } from "@/actions/auth/login-facebook"
 import { loginGoogle } from "@/actions/auth/login-google"
 import { Button } from "@/components/ui/button"
 import {
@@ -107,28 +107,28 @@ function LoginForm() {
     })
   }
 
-  const handleFacebookLogin = (response: ReactFacebookLoginInfo) => {
-    startTransition(async () => {
-      //@ts-ignore
-      const res = await loginFacebook(response.accessToken, response.expiresIn)
+  // const handleFacebookLogin = (response: ReactFacebookLoginInfo) => {
+  //   startTransition(async () => {
+  //     //@ts-ignore
+  //     const res = await loginFacebook(response.accessToken, response.expiresIn)
 
-      if (res.isSuccess) {
-        queryClient.invalidateQueries({
-          queryKey: ["token"],
-        })
-        router.push(`/`)
-        return
-      }
+  //     if (res.isSuccess) {
+  //       queryClient.invalidateQueries({
+  //         queryKey: ["token"],
+  //       })
+  //       router.push(`/`)
+  //       return
+  //     }
 
-      handleServerActionError(res, locale, form)
-    })
-  }
+  //     handleServerActionError(res, locale, form)
+  //   })
+  // }
 
   return (
     <>
       <div className="flex flex-wrap gap-3">
         {/* @ts-ignore */}
-        <FacebookLogin
+        {/* <FacebookLogin
           appId="598749422623507"
           autoLoad={false}
           callback={handleFacebookLogin}
@@ -144,7 +144,7 @@ function LoginForm() {
               Facebook
             </Button>
           )}
-        />
+        /> */}
         <Button
           onClick={handleGoogleLogin}
           variant="outline"
@@ -153,7 +153,7 @@ function LoginForm() {
           disabled={pending}
         >
           <Icons.Google className="mr-1 size-3" />
-          {t("Google")}
+          {t("Continue with Google")}
         </Button>
       </div>
 

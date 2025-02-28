@@ -54,7 +54,7 @@ export function formUrlQuery({
   url,
 }: {
   params: string
-  updates: Record<string, string | (string | null)[] | null>
+  updates: queryString.ParsedQuery<string>
   url?: string
 }) {
   const query = queryString.parse(params)
@@ -178,4 +178,12 @@ export function pascalToCamel(str: string): string {
 
 export function splitCamelCase(text: string): string {
   return text.replace(/([a-z])([A-Z])/g, "$1 $2")
+}
+
+export const formatLeftTime = (seconds: number) => {
+  const floorSeconds = Math.floor(seconds)
+
+  const minutes = Math.floor(floorSeconds / 60)
+  const remainingSeconds = floorSeconds % 60
+  return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`
 }

@@ -2,17 +2,44 @@ import React from "react"
 import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
 import getPatrons from "@/queries/holders/get-holders"
-import { Plus } from "lucide-react"
+import { format } from "date-fns"
+import { Eye, MoreHorizontal, Plus } from "lucide-react"
 
+import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
-import { EFeature } from "@/lib/types/enums"
-import { searchPatronsSchema } from "@/lib/validations/holders/search-patrons"
+import { EFeature, EPatronStatus } from "@/lib/types/enums"
+import { searchPatronsSchema } from "@/lib/validations/patrons/search-patrons"
 import { Button } from "@/components/ui/button"
-import NoData from "@/components/ui/no-data"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import GenderBadge from "@/components/ui/gender-badge"
 import Paginator from "@/components/ui/paginator"
+import PatronHasCardBadge from "@/components/ui/patron-has-card-badge"
+import PatronStatusBadge from "@/components/ui/patron-status-badge"
+import PatronTypeBadge from "@/components/ui/patron-type-badge"
 import SearchForm from "@/components/ui/search-form"
+import SortableTableHead from "@/components/ui/sortable-table-head"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
 
 import ColumnsButton from "./_components/columns-button"
+import ExportButton from "./_components/export-button"
+import ImportButton from "./_components/import-button"
+import PatronCheckbox from "./_components/patron-checkbox"
+import PatronsActionsDropdown from "./_components/patrons-actions-dropdown"
+import FiltersPatronsDialog from "./_components/patrons-filter-dialog"
+import PatronsTabs from "./_components/patrons-tabs"
+import SelectedIdsIndicator from "./_components/selected-ids-indicator"
 
 type Props = {
   searchParams: Record<string, string | string[] | undefined>
@@ -21,12 +48,13 @@ type Props = {
 async function HoldersManagementPage({ searchParams }: Props) {
   await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("LibraryCardManagementPage")
+  const formatLocale = await getFormatLocale()
 
-  const { search, pageIndex, sort, pageSize, ...rest } =
+  const { search, pageIndex, sort, pageSize, tab, ...rest } =
     searchPatronsSchema.parse(searchParams)
 
   const {
-    sources: holders,
+    sources: patrons,
     totalActualItem,
     totalPage,
   } = await getPatrons({
@@ -34,6 +62,7 @@ async function HoldersManagementPage({ searchParams }: Props) {
     pageIndex,
     sort,
     pageSize,
+    tab,
     ...rest,
   })
 
@@ -59,48 +88,231 @@ async function HoldersManagementPage({ searchParams }: Props) {
               className="h-10 rounded-r-none border-r-0"
               search={search}
             />
-            {/* <BooksFilter isTrained={isTrained} f={f} o={o} v={v} /> */}
+            <FiltersPatronsDialog />
           </div>
 
-          {/* <SelectedIdsIndicator /> */}
+          <SelectedIdsIndicator />
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
-          {/* <BooksActionsDropdown isTrained={isTrained} tab={tab} /> */}
-          {/* <ImportDialog /> */}
-          {/* <ExportButton
+          <PatronsActionsDropdown tab={tab} />
+          <ImportButton />
+          <ExportButton
             searchParams={{
               search,
               pageIndex,
               sort,
               pageSize,
               tab,
-              columns,
-              f,
-              o,
-              v,
               ...rest,
             }}
-          /> */}
+          />
         </div>
       </div>
 
-      <div className="mt-4 grid w-full">
-        <div className="overflow-x-auto rounded-md border">
-          {holders.length === 0 && (
-            <div className="flex justify-center p-4">
-              <NoData />
-            </div>
-          )}
-        </div>
+      <div className="mt-4 rounded-md border p-4">
+        <PatronsTabs tab={tab} />
+        <div className="mt-4 grid w-full">
+          <div className="overflow-x-auto rounded-md">
+            <Table className="overflow-hidden">
+              <TableHeader>
+                <TableRow>
+                  <TableHead />
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Email")}
+                    sortKey="Email"
+                  />
 
-        <Paginator
-          pageSize={+pageSize}
-          pageIndex={pageIndex}
-          totalPage={totalPage}
-          totalActualItem={totalActualItem}
-          className="mt-6"
-        />
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Full name")}
+                    sortKey="FullName"
+                  />
+
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Phone")}
+                    sortKey="Phone"
+                  />
+
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Dob")}
+                    sortKey="Dob"
+                    position="center"
+                  />
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">{t("Gender")}</div>
+                  </TableHead>
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-start">{t("Address")}</div>
+                  </TableHead>
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">{t("Status")}</div>
+                  </TableHead>
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">{t("Type")}</div>
+                  </TableHead>
+
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Create date")}
+                    sortKey="CreateDate"
+                    position="center"
+                  />
+
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Modified date")}
+                    sortKey="ModifiedDate"
+                    position="center"
+                  />
+
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Modified by")}
+                    sortKey="ModifiedBy"
+                  />
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">{t("Actions")}</div>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {patrons.map((patron) => (
+                  <TableRow key={patron.userId}>
+                    <TableCell>
+                      <PatronCheckbox id={patron.userId} />
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      {patron.email}
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      {patron.fullName || "-"}
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      {patron.phone || "-"}
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {patron.dob
+                          ? format(new Date(patron.dob), "dd MMM yyyy", {
+                              locale: formatLocale,
+                            })
+                          : "-"}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {patron.gender ? (
+                          <GenderBadge gender={patron.gender} />
+                        ) : (
+                          "-"
+                        )}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      {patron.address || "-"}
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex items-center justify-center gap-2">
+                        <PatronStatusBadge
+                          status={
+                            patron.isDeleted
+                              ? EPatronStatus.DELETED
+                              : patron.isActive
+                                ? EPatronStatus.ACTIVE
+                                : EPatronStatus.INACTIVE
+                          }
+                        />
+                        <PatronHasCardBadge hasCard={!!patron.libraryCardId} />
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex items-center justify-center">
+                        <PatronTypeBadge
+                          isEmployeeCreated={patron.isEmployeeCreated}
+                        />
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {patron.createDate
+                          ? format(new Date(patron.createDate), "dd MMM yyyy", {
+                              locale: formatLocale,
+                            })
+                          : "-"}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {patron.modifiedDate
+                          ? format(
+                              new Date(patron.modifiedDate),
+                              "dd MMM yyyy",
+                              {
+                                locale: formatLocale,
+                              }
+                            )
+                          : "-"}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      {patron.modifiedBy || "-"}
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex items-center justify-center">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>
+                              <Link
+                                href={`/management/library-card-holders/${patron.userId}`}
+                                className="flex items-center gap-2"
+                              >
+                                <Eye className="size-4" />
+                                {t("View details")}
+                              </Link>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+        </div>
       </div>
+      <Paginator
+        pageSize={+pageSize}
+        pageIndex={pageIndex}
+        totalPage={totalPage}
+        totalActualItem={totalActualItem}
+        className="mt-6"
+      />
     </div>
   )
 }

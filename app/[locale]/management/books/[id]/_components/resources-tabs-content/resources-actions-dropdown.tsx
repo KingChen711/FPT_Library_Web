@@ -15,8 +15,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import DeleteDialog from "../delete-dialog"
-import MoveToTrashDialog from "../move-to-trash-dialog"
+import DeleteDialog from "../../../../_components/delete-dialog"
+import MoveToTrashDialog from "../../../../_components/move-to-trash-dialog"
 
 type Props = {
   selectedResourceIds: number[]

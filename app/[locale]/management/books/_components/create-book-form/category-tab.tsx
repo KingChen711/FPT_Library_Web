@@ -165,7 +165,7 @@ function CategoryTab({
                 <PopoverContent className="w-[220px] p-0">
                   <Command>
                     <CommandList>
-                      <CommandGroup className="">
+                      <CommandGroup>
                         {orderByOptions.map((option) => (
                           <CommandItem
                             key={option.value}

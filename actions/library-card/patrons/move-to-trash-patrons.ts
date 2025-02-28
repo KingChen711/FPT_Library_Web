@@ -1,4 +1,3 @@
-///api/management/library-card-holders
 "use server"
 
 import { revalidatePath } from "next/cache"
@@ -6,16 +5,16 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TCreatePatronSchema } from "@/lib/validations/holders/create-patron"
 
-export async function createPatron(
-  body: TCreatePatronSchema
+export async function moveToTrashPatrons(
+  ids: string[]
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
+
   try {
-    const { message } = await http.post(
-      `/api/management/library-card-holders`,
-      body,
+    const { message } = await http.patch(
+      `/api/management/library-card-holders/soft-delete-range`,
+      { ids },
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,

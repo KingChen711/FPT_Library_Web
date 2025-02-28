@@ -29,9 +29,9 @@ type TrainAIContextType = {
 export const TrainAIContext = createContext<TrainAIContextType | null>(null)
 
 const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
+  const [trainingGroups, setTrainingGroups] = useState<TrainingGroup[]>([])
   const { accessToken } = useAuth()
   const [connection, setConnection] = useState<HubConnection | null>(null)
-  const [trainingGroups, setTrainingGroups] = useState<TrainingGroup[]>([])
 
   useEffect(() => {
     if (!accessToken) return

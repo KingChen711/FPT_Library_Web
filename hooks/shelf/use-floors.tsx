@@ -24,7 +24,6 @@ function useFloors() {
       }
     },
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false,
   })
 }
 

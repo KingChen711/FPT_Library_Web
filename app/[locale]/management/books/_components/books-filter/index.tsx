@@ -83,10 +83,10 @@ export function BooksFilter({ f, o, v, isTrained: isTrainedInitial }: Props) {
             </TabsTrigger>
           </TabsList>
           <TabsContent value="quick-search">
-            <QuickSearchTab />
+            <QuickSearchTab isTrained={isTrained} />
           </TabsContent>
           <TabsContent value="basic-search">
-            <BasicSearchTab />
+            <BasicSearchTab isTrained={isTrained} />
           </TabsContent>
           <TabsContent value="advanced-search">
             <AdvancedSearchTab

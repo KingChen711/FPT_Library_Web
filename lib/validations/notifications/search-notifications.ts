@@ -2,13 +2,6 @@ import { z } from "zod"
 
 import { ENotificationType, EVisibility } from "@/lib/types/enums"
 
-export const typeOptions = [
-  "All",
-  ENotificationType.EVENT,
-  ENotificationType.NOTICE,
-  ENotificationType.REMINDER,
-] as const
-
 export const visibilityOptions = [
   "All",
   EVisibility.PUBLIC,
@@ -16,7 +9,7 @@ export const visibilityOptions = [
 ] as const
 
 export const filterNotificationSchema = z.object({
-  notificationType: z.enum(typeOptions).catch("All"),
+  notificationType: z.nativeEnum(ENotificationType).optional().catch(undefined),
   visibility: z.enum(visibilityOptions).catch("All"),
   createDateRange: z.array(z.date().or(z.null())).catch([null, null]),
 })

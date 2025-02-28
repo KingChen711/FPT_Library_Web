@@ -38,8 +38,6 @@ function useSearchLibraryItems(search = "") {
         return []
       }
     },
-
-    refetchOnWindowFocus: false,
   })
 }
 

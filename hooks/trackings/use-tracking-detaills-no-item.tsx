@@ -26,7 +26,6 @@ function useTrackingDetailsNoItem(trackingId: number | null | undefined) {
       }
     },
     enabled: !!trackingId,
-    refetchOnWindowFocus: false,
   })
 }
 

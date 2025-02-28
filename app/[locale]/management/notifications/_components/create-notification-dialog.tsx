@@ -44,6 +44,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
 function CreateNotificationDialog() {
   const t = useTranslations("NotificationsManagementPage")
+  const tNotificationType = useTranslations("Badges.NotificationType")
   const locale = useLocale()
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -200,36 +201,44 @@ function CreateNotificationDialog() {
                       <FormLabel>{t("Notification type")}</FormLabel>
                       <FormControl>
                         <RadioGroup
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
+                          onValueChange={(val) => field.onChange(+val)}
+                          defaultValue={field.value.toString()}
                           className="flex flex-col space-y-1"
                         >
                           <FormItem className="flex items-center space-x-3 space-y-0">
                             <FormControl>
-                              <RadioGroupItem value={ENotificationType.EVENT} />
+                              <RadioGroupItem
+                                value={ENotificationType.EVENT.toString()}
+                              />
                             </FormControl>
                             <FormLabel className="cursor-pointer font-normal">
-                              {t(ENotificationType.EVENT)}
+                              {tNotificationType(
+                                ENotificationType.EVENT.toString()
+                              )}
                             </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0">
                             <FormControl>
                               <RadioGroupItem
-                                value={ENotificationType.NOTICE}
+                                value={ENotificationType.NOTICE.toString()}
                               />
                             </FormControl>
                             <FormLabel className="cursor-pointer font-normal">
-                              {t(ENotificationType.NOTICE)}
+                              {tNotificationType(
+                                ENotificationType.NOTICE.toString()
+                              )}
                             </FormLabel>
                           </FormItem>
                           <FormItem className="flex items-center space-x-3 space-y-0">
                             <FormControl>
                               <RadioGroupItem
-                                value={ENotificationType.REMINDER}
+                                value={ENotificationType.REMINDER.toString()}
                               />
                             </FormControl>
                             <FormLabel className="cursor-pointer font-normal">
-                              {t(ENotificationType.REMINDER)}
+                              {tNotificationType(
+                                ENotificationType.REMINDER.toString()
+                              )}
                             </FormLabel>
                           </FormItem>
                         </RadioGroup>
@@ -274,7 +283,6 @@ function CreateNotificationDialog() {
                             onKeyDown={(e) =>
                               handleInputRecipientsKeyDown(e, field)
                             }
-                            className=""
                           />
                           {form.getValues("listRecipient").map((email) => (
                             <div

@@ -26,7 +26,6 @@ function useSuppliers() {
     },
     enabled: !!accessToken,
     placeholderData: keepPreviousData,
-    refetchOnWindowFocus: false,
   })
 }
 

@@ -1,6 +1,7 @@
+import { format } from "date-fns"
 import { z } from "zod"
 
-import { EGender } from "@/lib/types/enums"
+import { EGender, ETransactionMethod } from "@/lib/types/enums"
 
 export const createPatronSchema = z
   .object({
@@ -45,8 +46,48 @@ export const createPatronSchema = z
       .trim()
       .optional()
       .transform((data) => (data === "" ? undefined : data)),
-    dob: z.coerce.date().optional(),
+    dob: z
+      .date({ message: "min1" })
+      .optional()
+      .transform((data) =>
+        data === undefined ? undefined : format(data, "yyyy-MM-dd")
+      ),
+
+    transactionMethod: z.nativeEnum(ETransactionMethod), // 0 - Cash, 1 - DigitalPayment
+
+    //client only
+    confirmPatronHasCash: z.boolean(),
+
+    //hidden on transaction method is cash
+    paymentMethodId: z.coerce.number().optional(),
+    libraryCardPackageId: z.coerce.number({ message: "min1" }),
+
+    //client only
+    package: z.any(),
   })
+  .transform((data) => {
+    data.paymentMethodId =
+      data.transactionMethod === ETransactionMethod.CASH ? undefined : 1 //!hard code PAY OS
+    return data
+  })
+  .refine(
+    (data) =>
+      data.transactionMethod === ETransactionMethod.CASH ||
+      !!data.paymentMethodId,
+    {
+      message: "paymentMethodId",
+      path: ["paymentMethodId"],
+    }
+  )
+  .refine(
+    (data) =>
+      data.transactionMethod === ETransactionMethod.DIGITAL_PAYMENT ||
+      data.confirmPatronHasCash,
+    {
+      message: "min1",
+      path: ["confirmPatronHasCash"],
+    }
+  )
   .refine(
     (data) => {
       return !!data.detectedFacesResult
