@@ -27,8 +27,8 @@ import AuthorExport from "./_components/author-export"
 import AuthorHeaderTab from "./_components/author-header-tab"
 import AuthorImportDialog from "./_components/author-import-dialog"
 import AuthorRangeControl from "./_components/author-range-control"
+import CreateAuthorDialog from "./_components/create-author-dialog"
 import FiltersAuthorsDialog from "./_components/filter-author-dialog"
-import MutateAuthorDialog from "./_components/mutate-author-dialog"
 import SelectedAuthorIdsIndicator from "./_components/selected-author-ids-indicator"
 
 type Props = {
@@ -94,7 +94,7 @@ async function AuthorsManagementPage({ searchParams }: Props) {
         <div className="flex flex-wrap items-center gap-x-4">
           <AuthorExport />
           <AuthorImportDialog />
-          <MutateAuthorDialog type="create" />
+          <CreateAuthorDialog />
         </div>
       </div>
 

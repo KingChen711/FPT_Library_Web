@@ -1,7 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { startTransition, useEffect, useState } from "react"
 import Image from "next/image"
+import { useSearchParams } from "next/navigation"
 import { Link, usePathname, useRouter } from "@/i18n/routing"
 import {
   Book,
@@ -13,7 +14,7 @@ import {
   QrCode,
   Search,
 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useDebounce } from "use-debounce"
 
 import { cn } from "@/lib/utils"
@@ -43,14 +44,19 @@ import BookRecommendDialog from "../(home)/_components/book-recommend-dialog"
 import Actions from "./actions"
 
 function BrowseNavbar() {
+  const t = useTranslations("GeneralManagement")
+  const locale = useLocale()
   const { open } = useSidebar()
   const pathname = usePathname()
   const router = useRouter()
+
+  const newLocale = locale === "en" ? "vi" : "en"
+
   const [currentDate, setCurrentDate] = useState<string | null>(null)
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
   const { data: autoCompleteData } = useAutoCompleteBooks(debouncedSearchTerm)
-  const t = useTranslations("AutocompleteLibraryItem")
+  const tAutocomplete = useTranslations("AutocompleteLibraryItem")
 
   useEffect(() => {
     // Update currentDate only on the client
@@ -71,6 +77,12 @@ function BrowseNavbar() {
     e.preventDefault()
     e.stopPropagation()
     router.push(`/books?search=${searchTerm}`)
+  }
+
+  const switchLanguage = () => {
+    startTransition(() => {
+      router.push(`${pathname}`, { scroll: false, locale: newLocale })
+    })
   }
 
   return (
@@ -139,7 +151,9 @@ function BrowseNavbar() {
                         className="flex w-[92px] shrink-0 justify-center"
                         variant={acd.available ? "success" : "warning"}
                       >
-                        {t(acd.available ? "Available" : "Out of shelf")}
+                        {tAutocomplete(
+                          acd.available ? "Available" : "Out of shelf"
+                        )}
                       </Badge>
                     </Link>
                   ))}
@@ -171,14 +185,14 @@ function BrowseNavbar() {
             </DropdownMenu>
           </div>
 
-          <Select>
+          <Select onValueChange={() => switchLanguage()} defaultValue={locale}>
             <SelectTrigger className="w-[140px]">
               <Languages size={20} />
-              <SelectValue placeholder="Lang" />
+              <SelectValue placeholder={t("language")} />
             </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="en">English</SelectItem>
-              <SelectItem value="vi">Vietnamese</SelectItem>
+            <SelectContent className="">
+              <SelectItem value="en">{t("english")}</SelectItem>
+              <SelectItem value="vi">{t("vietnamese")}</SelectItem>
             </SelectContent>
           </Select>
           <section className="flex items-center gap-4 text-nowrap rounded-lg p-1 text-muted-foreground">

@@ -78,6 +78,62 @@ export type User = {
   }
 }
 
+export type CurrentUser = {
+  userId: string
+  roleId: number
+  libraryCardId: string
+  email: string
+  firstName: string | null
+  lastName: string | null
+  passwordHash: null
+  phone: string | null
+  avatar: string | null
+  address: string | null
+  gender: "Male" | "Female" | "Other" | null
+  dob: string | null
+  isActive: boolean | null
+  isDeleted: boolean | null
+  isEmployeeCreated: boolean | null
+  createDate: string | null
+  modifiedDate: string | null
+  modifiedBy: string | null
+  twoFactorEnabled: boolean | null
+  phoneNumberConfirmed: boolean | null
+  emailConfirmed: boolean | null
+  twoFactorSecretKey: boolean | null
+  twoFactorBackupCodes: boolean | null
+  phoneVerificationCode: boolean | null
+  emailVerificationCode: boolean | null
+  phoneVerificationExpiry: boolean | null
+  role: Role
+  libraryCard: {
+    libraryCardId: string
+    fullName: string | null
+    avatar: string | null
+    barcode: string | null
+    issuanceMethod: number | null
+    status: number | null
+    isAllowBorrowMore: boolean | null
+    maxItemOnceTime: number | null
+    allowBorrowMoreReason: boolean | null
+    totalMissedPickUp: number | null
+    isReminderSent: boolean | null
+    isExtended: boolean | null
+    extensionCount: number | null
+    issueDate: string | null
+    expiryDate: string | null
+    suspensionEndDate: string | null
+    suspensionReason: string | null
+    rejectReason: string | null
+    isArchived: boolean | null
+    archiveReason: string | null
+    previousUserId: string | null
+    transactionCode: string | null
+    previousUser: null
+  }
+  notificationRecipients: []
+}
+
 export type LibraryItemLanguage = {
   languageName: string
   languageCode: string
@@ -177,6 +233,21 @@ export type Author = {
   updateDate: string
   isDeleted: false
   bookEditionAuthors: unknown[]
+}
+
+export type LibraryPackage = {
+  libraryCardPackageId: number
+  packageName: string
+  price: number
+  durationInMonths: number
+  isActive: boolean
+  createdAt: string
+  description: string
+}
+
+export type PaymentMethod = {
+  paymentMethodId: number
+  methodName: string
 }
 
 export type LibraryItem = {
@@ -544,6 +615,29 @@ export type LibraryItemsRecommendation = {
     isMatched: boolean
   }[]
 }
+
+// Payment
+
+export type LibraryCardTransaction = {
+  code: string
+  desc: string
+  data: {
+    bin: string
+    accountNumber: string
+    accountName: string
+    amount: number
+    description: string
+    orderCode: string
+    curency: string
+    paymentLinkId: string
+    status: string
+    checkoutUrl: string
+    qrCode: string
+  }
+  signature: string
+}
+
+// end Payment
 
 export type Condition = {
   conditionId: number

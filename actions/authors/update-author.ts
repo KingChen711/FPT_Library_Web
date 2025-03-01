@@ -5,11 +5,11 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TMutateAuthorSchema } from "@/lib/validations/author/mutate-author"
+import { type TEditAuthorSchema } from "@/lib/validations/author/edit-author"
 
 export async function updateAuthor(
   userId: number,
-  body: TMutateAuthorSchema
+  body: TEditAuthorSchema
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
 

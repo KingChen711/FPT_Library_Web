@@ -5,10 +5,10 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TMutateAuthorSchema } from "@/lib/validations/author/mutate-author"
+import { type TCreateAuthorSchema } from "@/lib/validations/author/create-author"
 
 export async function createAuthor(
-  body: TMutateAuthorSchema
+  body: TCreateAuthorSchema
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
 

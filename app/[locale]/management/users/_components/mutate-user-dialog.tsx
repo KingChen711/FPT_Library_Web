@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { type User } from "@/lib/types/models"
+import { formatDateInput } from "@/lib/utils"
 import {
   mutateUserSchema,
   type TMutateUserSchema,
@@ -86,7 +87,7 @@ function MutateUserDialog({ type, user, openEdit, setOpenEdit }: Props) {
       phone: type === "update" ? user.phone : "",
       address: type === "update" ? user.address : "",
       gender: type === "update" ? user.gender : undefined,
-      dob: type === "update" ? format(new Date(user.dob), "dd-MM-yyyy") : "",
+      dob: type === "update" ? formatDateInput(user.dob) : "",
     },
   })
 

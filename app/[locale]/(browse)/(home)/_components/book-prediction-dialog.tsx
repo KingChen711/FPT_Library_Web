@@ -21,7 +21,6 @@ type Props = {
 }
 
 const BookPredictionDialog = ({ open, setOpen }: Props) => {
-  const t = useTranslations("BookPage")
   const tGeneralManagement = useTranslations("GeneralManagement")
 
   const [selectedFile, setSelectedFile] = useState<File | null>(null)

@@ -28,6 +28,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar"
 
+import { Button } from "../ui/button"
 import { Icons } from "../ui/icons"
 import BrowseSidebarContent from "./browse-sidebar-content"
 import SidebarLogoItem from "./sidebar-logo-item"
@@ -132,7 +133,13 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
           </SidebarMenu>
         </SidebarFooter>
       ) : (
-        <Loader2 className="animate-spin" />
+        <Button
+          variant={"link"}
+          className="w-full"
+          onClick={() => router.push("/login")}
+        >
+          {t("login")}
+        </Button>
       )}
       <SidebarRail />
     </Sidebar>

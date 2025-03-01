@@ -10,6 +10,7 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { type Employee } from "@/lib/types/models"
+import { formatDateInput } from "@/lib/utils"
 import {
   mutateEmployeeSchema,
   type TMutateEmployeeSchema,
@@ -95,16 +96,10 @@ function MutateEmployeeDialog({
       phone: type === "update" ? employee.phone : "",
       address: type === "update" ? employee.address : "",
       gender: type === "update" ? employee.gender : "Male",
-      dob:
-        type === "update" ? format(new Date(employee.dob), "dd-MM-yyyy") : "",
-      hireDate:
-        type === "update"
-          ? format(new Date(employee.hireDate), "dd-MM-yyyy")
-          : "",
+      dob: type === "update" ? formatDateInput(employee.dob) : "",
+      hireDate: type === "update" ? formatDateInput(employee.hireDate) : "",
       terminationDate:
-        type === "update"
-          ? format(new Date(employee.terminationDate), "dd-MM-yyyy")
-          : "",
+        type === "update" ? formatDateInput(employee.terminationDate) : "",
     },
   })
 

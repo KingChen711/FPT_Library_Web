@@ -42,7 +42,7 @@ const accountRoutes = [
 const AccountHeaderTab = ({ locale }: AccountHeaderTabProps) => {
   const pathname = usePathname()
 
-  const isActive = (route: string) => pathname === `/${locale}${route}`
+  const isActive = (route: string) => pathname.startsWith(`/${locale}${route}`)
 
   return (
     <nav className="flex h-full flex-col space-y-1 bg-background p-2">

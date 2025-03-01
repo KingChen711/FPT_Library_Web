@@ -33,7 +33,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-import MutateAuthorDialog from "../../../authors/_components/mutate-author-dialog"
+import CreateAuthorDialog from "../../../authors/_components/create-author-dialog"
 import AuthorCard from "./author-card"
 
 type Props = {
@@ -164,7 +164,8 @@ function AuthorsField({
                     </CommandGroup>
                   </CommandList>
 
-                  <MutateAuthorDialog type="create" />
+                  {/* <MutateAuthorDialog type="create" /> */}
+                  <CreateAuthorDialog />
 
                   <div className="flex max-h-[90%] w-full flex-col overflow-y-auto overflow-x-hidden">
                     {authorItems?.map((author) => (

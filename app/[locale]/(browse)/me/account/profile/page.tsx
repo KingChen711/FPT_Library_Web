@@ -18,7 +18,7 @@ const ProfileManagementPage = async () => {
 
   return (
     <div className="flex flex-col gap-4 overflow-y-auto">
-      <section className="flex h-[150px] w-full items-center gap-8 overflow-hidden rounded-lg">
+      <div className="flex h-[150px] w-full items-center gap-8 overflow-hidden rounded-lg">
         <ProfileAvatar />
         <div className="flex h-full w-1/5 flex-col justify-between rounded-lg bg-primary p-4 text-primary-foreground shadow-lg">
           <div className="flex">
@@ -42,7 +42,7 @@ const ProfileManagementPage = async () => {
           </div>
           <p className="text-xl">{t("contribution")}</p>
         </div>
-      </section>
+      </div>
 
       <ProfileForm currentUser={currentUser} />
     </div>
