@@ -88,8 +88,8 @@ async function NotificationPage({ searchParams }: Props) {
       <div className="mt-4 grid w-full">
         <div className="overflow-x-auto rounded-md border">
           <Table className="overflow-hidden">
-            <TableHeader className="">
-              <TableRow className="">
+            <TableHeader>
+              <TableRow>
                 <SortableTableHead
                   currentSort={sort}
                   label={t("Title")}

@@ -2,22 +2,21 @@ import React, { useEffect, useState } from "react"
 import Image from "next/image"
 import { Check, Loader2, Trash2, UploadIcon, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
+import { useDropzone } from "react-dropzone"
 import { type UseFormReturn } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 import { type TEditBookSchema } from "@/lib/validations/books/edit-book"
-import useCheckCoverImage from "@/hooks/books/use-check-cover-image"
+import useCheckCoverImage from "@/hooks/ai/use-check-cover-image"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
-  FormControl,
   FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
 type Props = {
@@ -76,47 +75,39 @@ function CoverImageField({ form, isPending, isRequireImage, authors }: Props) {
     }
   }, [form, watchAuthorIds, watchTitle, watchPublisher])
 
-  const handleImageChange = (
-    e: React.ChangeEvent<HTMLInputElement>,
-    fieldChange: (value: string) => void
-  ) => {
-    e.preventDefault()
-
-    const fileReader = new FileReader()
-
-    if (e.target.files && e.target.files.length > 0) {
-      const file = e.target.files[0]
-
-      if (!["image/jpeg", "image/png", "image/jpg"].includes(file.type)) {
-        toast({
-          title: locale === "vi" ? "Thất bại" : "Failed",
-          description: locale === "vi" ? "Tệp không hợp lệ" : "Invalid file",
-          variant: "danger",
-        })
-        return
-      }
-
-      if (file.size >= 10 * 1024 * 1024) {
-        form.setError(`coverImage`, {
-          message: locale === "vi" ? "Ảnh quá lớn" : "Image is too large",
-        })
-        return
-      }
-
-      form.clearErrors(`coverImage`)
-
+  const onDrop = (acceptedFiles: File[]) => {
+    if (acceptedFiles.length > 0) {
+      const file = acceptedFiles[0]
       form.setValue(`file`, file)
-
-      fileReader.onload = async () => {
-        // const imageDataUrl =
-        //   typeof event.target?.result === "string" ? event.target.result : ""
-        const url = URL.createObjectURL(file)
-        fieldChange(url)
-      }
-
-      fileReader.readAsDataURL(file)
+      const url = URL.createObjectURL(file)
+      form.setValue(`coverImage`, url)
+      form.clearErrors(`coverImage`)
     }
   }
+
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    accept: { "image/*": [".jpeg", ".jpg", ".png"] },
+    maxSize: 10 * 1024 * 1024,
+    disabled: disableImageField || isPending,
+    onDropRejected: (fileRejections) => {
+      const error = fileRejections[0]?.errors[0]
+      if (error?.code === "file-too-large") {
+        toast({
+          title: locale === "vi" ? "Thất bại" : "Failed",
+          description: locale === "vi" ? "Ảnh quá lớn" : "Image is too large",
+          variant: "danger",
+        })
+      } else if (error?.code === "file-invalid-type") {
+        toast({
+          title: locale === "vi" ? "Thất bại" : "Failed",
+          description:
+            locale === "vi" ? "Tệp không hợp lệ" : "Invalid file type",
+          variant: "danger",
+        })
+      }
+    },
+  })
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleCheckImage = () => {
@@ -257,26 +248,25 @@ function CoverImageField({ form, isPending, isRequireImage, authors }: Props) {
                 </div>
               ) : (
                 <div
+                  {...getRootProps()}
                   className={cn(
-                    "mt-2 flex aspect-[2/3] h-72 cursor-pointer flex-col items-center justify-center gap-y-2 rounded-md border-[3px] border-dashed",
-                    isPending && "pointer-events-none opacity-80"
+                    "mt-2 flex aspect-[2/3] h-72 cursor-pointer flex-col items-center justify-center gap-y-2 rounded-md border-[3px] border-dashed transition-colors",
+                    isDragActive && "border-primary bg-primary/10",
+                    isPending && "pointer-events-none opacity-80",
+                    disableImageField && "cursor-not-allowed opacity-60"
                   )}
                 >
+                  <input {...getInputProps()} />
                   <UploadIcon className="size-12" />
-                  <p>{t("Upload")}</p>
+                  <p className="p-4 text-center text-sm">
+                    {isDragActive
+                      ? t("Drop the image here")
+                      : t("Drag & drop or click to upload")}
+                  </p>
                 </div>
               )}
             </FormLabel>
-            <FormControl>
-              <Input
-                disabled={isPending}
-                type="file"
-                accept=".jpg,.jpeg,.png"
-                placeholder="Add profile photo"
-                className="hidden"
-                onChange={(e) => handleImageChange(e, field.onChange)}
-              />
-            </FormControl>
+
             <FormDescription>
               {t(
                 "You need to enter title, publisher, authors before uploading cover image"

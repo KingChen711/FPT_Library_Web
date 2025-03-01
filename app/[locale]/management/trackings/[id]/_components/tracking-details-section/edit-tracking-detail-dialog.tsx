@@ -26,6 +26,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Dialog,
   DialogClose,
@@ -294,7 +295,11 @@ function EditTrackingDetailDialog({
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={isPending} type="number" />
+                        <CurrencyInput
+                          {...field}
+                          disabled={isPending}
+                          type="number"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -313,7 +318,11 @@ function EditTrackingDetailDialog({
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input {...field} disabled={isPending} type="number" />
+                        <CurrencyInput
+                          {...field}
+                          disabled={isPending}
+                          type="number"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

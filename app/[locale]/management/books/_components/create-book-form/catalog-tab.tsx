@@ -7,6 +7,7 @@ import { type Author } from "@/lib/types/models"
 import { generateCutter } from "@/lib/utils"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 import { Button } from "@/components/ui/button"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   FormControl,
   FormDescription,
@@ -329,18 +330,18 @@ function CatalogTab({
                 className="min-w-96 max-w-full"
               />
             </FormControl>
-            <FormDescription>
-              <div className="flex items-center gap-4">
-                <Button asChild variant="link" className="h-auto min-h-0 p-0">
-                  <Link target="_blank" href="/guides/cutter-number">
-                    {t("What is cutter number")}
-                  </Link>
-                </Button>
-                <GenerateCutterNumberDialog
-                  handleGenerateCutterNumber={handleGenerateCutterNumber}
-                />
-              </div>
-            </FormDescription>
+
+            <div className="flex items-center gap-4 text-muted-foreground">
+              <Button asChild variant="link" className="h-auto min-h-0 p-0">
+                <Link target="_blank" href="/guides/cutter-number">
+                  {t("What is cutter number")}
+                </Link>
+              </Button>
+              <GenerateCutterNumberDialog
+                handleGenerateCutterNumber={handleGenerateCutterNumber}
+              />
+            </div>
+
             <FormMessage />
           </FormItem>
         )}
@@ -391,7 +392,7 @@ function CatalogTab({
             </FormLabel>
 
             <FormControl>
-              <Input
+              <CurrencyInput
                 {...field}
                 type="number"
                 disabled={isPending}

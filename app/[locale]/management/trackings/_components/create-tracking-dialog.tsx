@@ -17,7 +17,7 @@ import {
   createTrackingSchema,
   type TCreateTrackingSchema,
 } from "@/lib/validations/trackings/create-tracking"
-import { createTracking } from "@/actions/create-tracking"
+import { createTracking } from "@/actions/trackings/create-tracking"
 import useSuppliers from "@/hooks/suppliers/use-suppliers"
 import { toast } from "@/hooks/use-toast"
 import {
@@ -36,6 +36,7 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Dialog,
   DialogContent,
@@ -92,8 +93,6 @@ function CreateTrackingDialog() {
   }
 
   function onSubmit(values: TCreateTrackingSchema) {
-    console.log(values)
-
     startTransition(async () => {
       const formData = new FormData()
       if (values.file) {
@@ -393,7 +392,7 @@ function CreateTrackingDialog() {
                         </span>
                       </FormLabel>
                       <FormControl>
-                        <Input type="number" {...field} />
+                        <CurrencyInput {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

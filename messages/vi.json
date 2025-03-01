@@ -11,6 +11,7 @@
     "Email": "Địa chỉ email",
     "or": "hoặc",
     "Login": "Tiếp tục",
+    "Continue with Google": "Tiếp tục với Google",
     "LoginFailedTitle": "Đăng nhập thất bại",
     "Welcome back!": "Chào mừng trở lại!",
     "Message": "Đăng nhập để tiếp tục với Intelligent Library",
@@ -37,6 +38,7 @@
     }
   },
   "RegisterPage": {
+    "Continue with Google": "Tiếp tục với Google",
     "Email": "Địa chỉ email",
     "FirstName": "Tên",
     "LastName": "Họ",
@@ -101,6 +103,7 @@
     "imagesMin5": "Cần ít nhất 5 ảnh",
     "copiesMin1": "Cần ít nhất 1 mã bản sao",
     "gt0": "Phải lớn hơn 0",
+    "gte3": "Phải lớn hơn 3",
     "gte1000": "Phải lớn hơn hoặc bằng 1000",
     "lte9999999999": "Phải nhỏ hơn hoặc bằng 9999999999",
     "lte2147483647": "Phải nhỏ hơn hoặc bằng 2147483647",
@@ -109,10 +112,15 @@
     "invalid": "Không hợp lệ",
     "atLeastOneRecipient": "Cần ít nhất một người nhận",
     "validImageAI": "Ảnh không tương thích với thông tin hoặc chưa được kiểm tra",
+    "validAvatarAI": "Ảnh không hợp lệ hoặc chưa được kiểm tra",
+    "validAvatarAI0": "Ảnh không có mặt người",
+    "validAvatarAI*": "Ảnh có nhiều hơn một người",
     "fileRequire": "Bắt buộc",
     "matchPassword": "Mật khẩu không khớp",
     "integer": "Phải là số nguyên",
-    "expectedReturnDate": "Ngày trả dự kiến phải lớn hơn ngày thực hiện"
+    "expectedReturnDate": "Ngày trả dự kiến phải lớn hơn ngày thực hiện",
+    "date": "Ngày không hợp lệ",
+    "dateGteToday": "Bắt buộc phải lớn hơn hoặc bằng ngày hiện tại"
   },
   "Me": {
     "account": "Tài khoản",
@@ -431,7 +439,147 @@
     "Library Packages": "Gói",
     "Warehouse": "Kho",
     "Suppliers": "Nhà cung cấp",
-    "Trackings": "Theo dõi"
+    "Trackings": "Theo dõi",
+    "Library card": "Thẻ thư viện",
+    "Holders": "Bạn đọc",
+    "Patrons": "Bạn đọc",
+    "Cards": "Thẻ"
+  },
+  "LibraryCardManagementPage": {
+    "Patrons": "Bạn đọc",
+    "Holders": "Bạn đọc",
+    "Create patron": "Thêm bạn đọc",
+    "Cancel": "Hủy",
+    "Continue": "Tiếp tục",
+    "Email": "Email",
+    "First name": "Tên",
+    "Last name": "Họ",
+    "Phone": "Số điện thoại",
+    "Address": "Địa chỉ",
+    "Date of birth": "Ngày sinh",
+    "Avatar": "Ảnh đại diện",
+    "Check avatar result": "Kết quả kiểm tra ảnh",
+    "No image uploaded yet": "Chưa có ảnh được tải lên",
+    "Check": "Kiểm tra",
+    "Passed": "Thành công",
+    "Failed": "Thất bại",
+    "Drop the image here": "Thả ảnh ở đây",
+    "Drag & drop or click to upload": "Kéo và thả hoặc nhấn để tải ảnh lên",
+    "Not checked yet": "Chưa kiểm tra",
+    "Checking": "Đang kiểm tra",
+    "Required": "Bắt buộc",
+    "fileRequired": "Bắt buộc",
+    "Result": "Kết quả:",
+    "Gender": "Giới tính",
+    "Male": "Nam",
+    "Female": "Nữ",
+    "Full name": "Họ và tên",
+    "Dob": "Ngày sinh",
+    "Status": "Trạng thái",
+    "Type": "Loại",
+    "Filters": "Bộ lọc",
+    "Create date": "Tạo lúc",
+    "Created date": "Tạo lúc",
+    "Modified date": "Chỉnh sửa lúc",
+    "Modified by": "Chỉnh sửa bởi",
+    "Actions": "Hành động",
+    "All": "Tất cả",
+    "Reset": "Khôi phục",
+    "Apply": "Áp dụng",
+    "Yes": "Có",
+    "No": "Không",
+    "View details": "Xem chi tiết",
+    "Filters patrons": "Lọc bạn đọc",
+    "Card status": "Trạng thái thẻ",
+    "Issuance method": "Phương thức phát hành",
+    "Allow borrow more": "Cho phép mượn thêm",
+    "Reminder sent": "Đã gửi nhắc nhở",
+    "Extended": "Đã mở rộng",
+    "Archived": "Đã lưu trữ",
+    "Card issue date": "Ngày phát hành thẻ",
+    "Card expiry date": "Ngày hết hạn thẻ",
+    "Suspension date": "Ngày đình chỉ thẻ",
+    "Import": "Nạp dữ liệu",
+    "Active": "Kích hoạt",
+    "Deleted": "Đã xóa",
+    "Avatar images": "Các ảnh đại diện",
+    "Import patrons": "Nạp dữ liệu bạn đọc",
+    "Allow": "Cho phép",
+    "Replace": "Thay thế",
+    "Skip": "Bỏ qua",
+    "Duplicate handle": "Xử lý trùng lặp",
+    "File": "Tệp",
+    "Error while import data": "Lỗi trong khi nạp dữ liệu",
+    "Row": "Hàng: ",
+    "Import errors": "Lỗi nạp dữ liệu",
+    "avatar note": "Ảnh đại diện này sẽ được dùng để làm thẻ thư viện.",
+    "Transaction method": "Phương thức thanh toán",
+    "Confirm patron has cash title": "Đảm bảo bạn đọc đã thanh toán bằng tiền mặt trước khi thêm vào hệ thống",
+    "Confirm patron has cash description": "Tôi xác nhận rằng bạn đọc đã trả tiền mặt",
+    "Package": "Gói",
+    "Select package": "Chọn gói",
+    "Search package": "Tìm kiếm",
+    "No package found": "Không tìm thấy",
+    "No package selected": "Chưa có gói nào được chọn",
+    "Click pencil button to change package": "Nhấn nút bút chì để thay đổi gói",
+    "Search": "Tìm kiếm",
+    "Pending payment": "Đang chờ thanh toán",
+    "QR payment": "Thanh toán QR",
+    "Please scan the QR code below to make payment": "Quét mã QR bên dưới để hoàn tất thanh toán",
+    "Payment description": "Nội dung chuyển khoản",
+    "How to make payment": "Hướng dẫn thanh toán:",
+    "qr payment guide 1": "Mở ứng dụng ngân hàng hoặc ví điện tử của bạn",
+    "qr payment guide 2": "Quét mã QR",
+    "qr payment guide 3": "Kiểm tra thông tin và xác nhận thanh toán",
+    "Time remaining": "Thời gian còn lại",
+    "Auto redirect after n seconds": "Chuyển hướng tự động sau {seconds} giây",
+    "Payment successful": "Thanh toán thành công",
+    "Payment cancelled": "Thanh toán bị hủy",
+    "Payment expired": "Thanh toán đã hết hạn",
+    "Cancel payment": "Hủy thanh toán",
+    "Cancel reason": "Lý do",
+    "Move to trash": "Đưa vào thùng rác",
+    "Edit information": "Chỉnh sửa thông tin",
+    "Delete permanently": "Xóa vĩnh viễn",
+    "Restore": "Khôi phục",
+    "Patron name": "Tên bạn đọc",
+    "Summary": "Tóm tắt",
+    "Patron information": "Thông tin bạn đọc",
+    "Card information": "Thông tin thẻ",
+    "Barcode": "Mã vạch",
+    "Max item once time": "Số lượng mượn tối đa đồng thời",
+    "Allow borrow more reason": "Lý do cho phép mượn thêm",
+    "Extension count": "Số lượng mở rộng",
+    "Issue date": "Ngày phát hành",
+    "Suspension end date": "Ngày kết thúc đình chỉ",
+    "Suspension reason": "Lý do đình chỉ",
+    "Reject reason": "Lý do từ chối",
+    "Expiry date": "Ngày hết hạn",
+    "Transaction code": "Mã giao dịch",
+    "Archive reason": "Lý do lưu trữ",
+    "Name on card": "Tên trên thẻ",
+    "Avatar on card": "Ảnh trên thẻ",
+    "Edit patron": "Chỉnh sửa thông tin bạn đọc",
+    "Save": "Lưu",
+    "Archive card": "Lưu trữ thẻ",
+    "Confirm card": "Duyệt thẻ",
+    "Reject card": "Từ chối thẻ",
+    "Extend borrow amount": "Mở rộng số lượng mượn",
+    "Extend reason": "Lý do",
+    "View content": "Xem nội dung",
+    "Suspend card": "Đình chỉ thẻ",
+    "Suspend reason": "Lý do",
+    "Un suspend card": "Hủy đình chỉ thẻ",
+    "Edit card": "Chỉnh sửa thông tin thẻ",
+    "Delete card": "Xóa thẻ",
+    "Allow borrow more description": "Cho phép bạn đọc mượn nhiều hơn số lượng tối đa có thể mượn cùng một lúc",
+    "Borrow requests": "Yêu cầu mượn",
+    "Borrow records": "Mượn",
+    "Digital borrows": "Mượn điện tử",
+    "Reservations": "Đặt trước",
+    "Transactions": "Giao dịch",
+    "Notifications": "Thông báo",
+    "Select gender": "Chọn giới tính"
   },
   "MfaPage": {
     "Verify MFA": "Xác thực MFA",
@@ -1096,7 +1244,9 @@
     "Untrained": "Chưa train",
     "Quick search": "Nhanh",
     "Basic search": "Cơ bản",
-    "Advanced search": "Nâng cao"
+    "Advanced search": "Nâng cao",
+    "Drop the image here": "Thả ảnh ở đây",
+    "Drag & drop or click to upload": "Kéo và thả hoặc nhấn để tải ảnh lên"
   },
   "CutterNumber": {
     "Title": "Số xếp giá trong Hệ thống Thư viện",
@@ -1255,7 +1405,13 @@
     "Worn": "Rách",
     "Damaged": "Hỏng",
     "Lost": "Mất",
-    "Condition": "Tình trạng"
+    "Condition": "Tình trạng",
+    "Filters": "Bộ lọc",
+    "Filters trackings": "Lọc theo dõi",
+    "All": "Tất cả",
+    "Reset": "Khôi phục",
+    "Apply": "Áp dụng",
+    "Create at": "Tạo lúc"
   },
   "Badges": {
     "BookConditionStatus": {
@@ -1265,9 +1421,9 @@
       "Lost": "Mất"
     },
     "NotificationType": {
-      "Event": "Sự kiện",
-      "Notice": "Thông báo",
-      "Reminder": "Nhắc nhở"
+      "0": "Sự kiện",
+      "1": "Thông báo",
+      "2": "Nhắc nhở"
     },
     "ResourceBookType": {
       "AudioBook": "Sách nói",
@@ -1319,11 +1475,47 @@
     "TrackingStatus": {
       "0": "Bản nháp",
       "1": "Hoàn thành",
-      "2": "Hủy"
+      "2": "Đã Hủy"
     },
     "Cataloged": {
       "Cataloged": "Đã biên mục",
       "Uncataloged": "Chưa biên mục"
+    },
+    "PatronStatus": {
+      "0": "Hoạt động",
+      "1": "Bất hoạt",
+      "2": "Đã xóa"
+    },
+    "PatronType": {
+      "0": "Tự tạo",
+      "1": "Nhân viên tạo"
+    },
+    "PatronHasCard": {
+      "0": "Có thẻ",
+      "1": "Không thẻ"
+    },
+    "Gender": {
+      "Male": "Nam",
+      "Female": "Nữ",
+      "0": "Nam",
+      "1": "Nữ",
+      "2": "Khác"
+    },
+    "IssuanceMethod": {
+      "0": "Tại thư viện",
+      "1": "Trực tuyến"
+    },
+    "TransactionMethod": {
+      "0": "Tiền mặt",
+      "1": "Thanh toán điện tử"
+    },
+    "CardStatus": {
+      "0": "Chưa thanh toán",
+      "1": "Đang chờ",
+      "2": "Hoạt động",
+      "3": "Từ chối",
+      "4": "Hết hạn",
+      "5": "Đình chỉ"
     }
   },
   "IsbnScanner": {
@@ -1351,5 +1543,9 @@
     "Match exact": "Kết quả chính xác",
     "Enter search value": "Tìm kiếm...",
     "Keywords": "Từ khóa..."
+  },
+  "AutocompleteLibraryItem": {
+    "Available": "Có sẵn",
+    "Out of shelf": "Đã hết"
   }
 }

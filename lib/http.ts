@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
+
 import { getLocale } from "next-intl/server"
 import queryString from "query-string"
 

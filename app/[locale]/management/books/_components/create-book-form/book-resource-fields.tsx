@@ -10,6 +10,7 @@ import {
 } from "@/lib/validations/books/create-book"
 import AudioDropzone from "@/components/ui/audio-dropzone"
 import { Button } from "@/components/ui/button"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   FormControl,
   FormField,
@@ -114,10 +115,9 @@ function BookResourceFields({ form, isPending }: Props) {
                       </span>
                     </FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={isPending}
+                      <CurrencyInput
                         {...field}
-                        type="number"
+                        disabled={isPending}
                         className="min-w-96 max-w-full"
                       />
                     </FormControl>

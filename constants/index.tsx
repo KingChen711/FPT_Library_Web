@@ -84,6 +84,29 @@ export const managementRoutes = [
     },
   },
   {
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
+    label: "Library card",
+    Icon: (props: { className?: string }) => {
+      return <Icons.LibraryCardManagement {...props} />
+    },
+    subRoutes: [
+      {
+        route: "/management/library-card-holders",
+        label: "Patrons",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Holders {...props} />
+        },
+      },
+      {
+        route: "/management/library-cards",
+        label: "Cards",
+        Icon: (props: { className?: string }) => {
+          return <Icons.LibraryCard {...props} />
+        },
+      },
+    ],
+  },
+  {
     feature: EFeature.BORROW_MANAGEMENT,
     route: "/management/notifications",
     label: "Notifications",
@@ -169,6 +192,7 @@ export const managementRoutes = [
       },
     ],
   },
+
   {
     feature: EFeature.SYSTEM_HEALTH_MANAGEMENT,
     route: "/management/system-health",

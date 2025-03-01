@@ -1,6 +1,5 @@
 import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { RefreshCcw, Search } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { ESearchType } from "@/lib/types/enums"
@@ -9,7 +8,11 @@ import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 
-const BasicSearchTab = () => {
+type Props = {
+  isTrained: boolean | undefined
+}
+
+const BasicSearchTab = ({ isTrained }: Props) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const t = useTranslations("BasicSearchTab")
@@ -55,6 +58,8 @@ const BasicSearchTab = () => {
         pageIndex: "1",
         searchType: ESearchType.BASIC_SEARCH.toString(),
         search: null,
+        isTrained:
+          isTrained === undefined ? null : isTrained ? "true" : "false",
       },
     }).replace(window.location.pathname, "/management/books")
 
@@ -79,20 +84,20 @@ const BasicSearchTab = () => {
           </div>
         ))}
       </div>
-      <div className="flex items-center justify-start gap-4">
+      <div className="flex items-center justify-end gap-4">
+        <Button
+          variant="outline"
+          className="flex flex-nowrap items-center gap-2"
+          onClick={resetFields}
+        >
+          {t("Reset")}
+        </Button>
+
         <Button
           onClick={handleApply}
           className="flex flex-nowrap items-center gap-2"
         >
-          <Search /> {t("Search")}
-        </Button>
-
-        <Button
-          variant="secondary"
-          className="flex flex-nowrap items-center gap-2"
-          onClick={resetFields}
-        >
-          <RefreshCcw /> {t("Reset")}
+          {t("Search")}
         </Button>
       </div>
     </div>

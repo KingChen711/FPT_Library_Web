@@ -6,6 +6,7 @@ import { z } from "zod"
 
 import { getTranslations } from "@/lib/get-translations"
 import { http } from "@/lib/http"
+import { EFeature } from "@/lib/types/enums"
 
 import TrainGroupForm from "./train-group-form"
 
@@ -14,6 +15,8 @@ type Props = {
 }
 
 async function TrainGroupPage({ searchParams }: Props) {
+  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
+
   const ids: number[] = Array.from(
     new Set(
       z

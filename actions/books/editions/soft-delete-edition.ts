@@ -29,8 +29,6 @@ export async function softDeleteEdition(
       data: message,
     }
   } catch (error) {
-    console.log(error)
-
     return handleHttpError(error)
   }
 }

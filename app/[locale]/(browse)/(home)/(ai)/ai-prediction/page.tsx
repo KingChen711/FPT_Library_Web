@@ -53,7 +53,7 @@ const AiPrediction = () => {
     console.log("imageToPredict", JSON.stringify(values.imageToPredict))
     startTransition(async () => {
       const res = await predictImage(formData)
-      console.log("🚀 ~ startTransition ~ res:", res)
+
       if (res?.isSuccess) {
         setUploadImage(values?.imageToPredict)
         setBestMatchedLibraryItemId(res?.data?.data?.bestItem?.libraryItemId)

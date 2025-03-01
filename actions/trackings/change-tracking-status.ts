@@ -31,8 +31,6 @@ export async function changeTrackingStatus(
       data: message,
     }
   } catch (error) {
-    console.log(error)
-
     return handleHttpError(error)
   }
 }

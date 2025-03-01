@@ -33,8 +33,6 @@ function useSearchAuthors(search = "") {
         return []
       }
     },
-
-    refetchOnWindowFocus: false,
   })
 }
 

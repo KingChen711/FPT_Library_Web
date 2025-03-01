@@ -160,8 +160,8 @@ async function BooksManagementPage({ searchParams }: Props) {
         <div className="mt-4 grid w-full">
           <div className="overflow-x-auto rounded-md">
             <Table className="overflow-hidden">
-              <TableHeader className="">
-                <TableRow className="">
+              <TableHeader>
+                <TableRow>
                   <TableHead></TableHead>
 
                   <Hidable hide={!columns.includes(Column.COVER_IMAGE)}>
@@ -366,7 +366,9 @@ async function BooksManagementPage({ searchParams }: Props) {
 
                   <Hidable hide={!columns.includes(Column.CAN_BORROW)}>
                     <TableHead className="text-nowrap font-bold">
-                      {t("Can borrow")}
+                      <div className="flex justify-center">
+                        {t("Can borrow")}
+                      </div>
                     </TableHead>
                   </Hidable>
 
@@ -437,7 +439,7 @@ async function BooksManagementPage({ searchParams }: Props) {
                 )}
                 {books.map((book) => (
                   <TableRow key={book.libraryItemId}>
-                    <TableCell className="">
+                    <TableCell>
                       <BookEditionCheckbox id={book.libraryItemId} />
                     </TableCell>
 

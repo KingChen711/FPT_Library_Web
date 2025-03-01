@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import Logo from "@/public/logo.svg"
+import Logo from "@/public/images/logo.png"
 import { useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 
@@ -25,8 +25,8 @@ const RegisteredLibraryCard = ({ user }: Props) => {
             <Image
               src={Logo}
               alt="logo"
-              width={50}
-              height={50}
+              width={36}
+              height={36}
               className="absolute left-4"
             />
             ELibrary Card

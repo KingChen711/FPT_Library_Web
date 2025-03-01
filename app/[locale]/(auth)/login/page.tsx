@@ -1,7 +1,7 @@
 import React from "react"
 import Image from "next/image"
 import { routing } from "@/i18n/routing"
-import systemLogo from "@/public/assets/images/logo.png"
+import systemLogo from "@/public/images/logo.png"
 import { setRequestLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
@@ -28,8 +28,8 @@ async function LoginPage({ params: { locale } }: Props) {
             placeholder="blur"
             priority
             alt="Logo"
-            width={72}
-            height={72}
+            width={48}
+            height={48}
           />
           <div className="text-sm font-bold">Intelligent Library</div>
         </div>

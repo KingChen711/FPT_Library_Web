@@ -3,7 +3,10 @@ import {
   type EBookCopyStatus,
   type EBookEditionStatus,
   type EBookFormat,
+  type ECardStatus,
   type EFineType,
+  type EGender,
+  type EIssuanceMethod,
   type ENotificationType,
   type EResourceBookType,
   type ERoleType,
@@ -185,7 +188,7 @@ export type Employee = {
   }
 }
 
-export type LibraryCard = {
+export type LibraryCardHolder = {
   libraryCardId: string
   fullName: string
   avatar: string
@@ -650,4 +653,63 @@ export type ConditionHistory = {
   updatedAt: Date | null
   createdBy: string
   updatedBy: string | null
+}
+
+export type Patron = {
+  userId: string
+  roleId: number
+  libraryCardId: number | null
+
+  email: string
+  avatar: string | null
+  firstName: string | null
+  lastName: string | null
+  phone: string | null
+  dob: Date | null
+  gender: EGender | null
+  address: string | null
+
+  isActive: boolean
+  isDeleted: boolean
+
+  isEmployeeCreated: boolean
+
+  createDate: Date
+  modifiedDate: Date | null
+  modifiedBy: string | null
+}
+
+export type Package = {
+  libraryCardPackageId: number
+  packageName: string
+  price: number
+  durationInMonths: number
+  isActive: boolean
+  createdAt: Date
+  description: string | null
+}
+
+export type LibraryCard = {
+  libraryCardId: string
+  fullName: string
+  avatar: string
+  barcode: string
+  issuanceMethod: EIssuanceMethod
+  status: ECardStatus
+  isAllowBorrowMore: boolean
+  maxItemOnceTime: number
+  allowBorrowMoreReason: string | null
+  totalMissedPickUp: number
+  isReminderSent: boolean
+  isExtended: boolean
+  extensionCount: number
+  issueDate: Date
+  expiryDate: Date | null
+  suspensionEndDate: Date | null
+  suspensionReason: string | null
+  rejectReason: string | null
+  isArchived: boolean
+  archiveReason: string | null
+  previousUserId: string | null
+  transactionCode: string
 }

@@ -13,7 +13,6 @@ export async function updateAuthor(
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
 
-  console.log("🚀 ~ body:", body)
   try {
     const { message } = await http.put(
       `/api/management/authors/${userId}`,

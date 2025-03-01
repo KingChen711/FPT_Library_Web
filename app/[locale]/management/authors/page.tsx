@@ -105,8 +105,8 @@ async function AuthorsManagementPage({ searchParams }: Props) {
             <AuthorRangeControl />
           </div>
           <Table className="overflow-hidden">
-            <TableHeader className="">
-              <TableRow className="">
+            <TableHeader>
+              <TableRow>
                 <TableHead></TableHead>
 
                 <SortableTableHead

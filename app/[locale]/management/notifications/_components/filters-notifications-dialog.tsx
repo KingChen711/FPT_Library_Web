@@ -9,10 +9,10 @@ import { Filter } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import { ENotificationType } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
 import {
   filterNotificationSchema,
-  typeOptions,
   visibilityOptions,
   type TFilterNotificationSchema,
 } from "@/lib/validations/notifications/search-notifications"
@@ -57,14 +57,13 @@ function FiltersNotificationsDialog() {
   const form = useForm<TFilterNotificationSchema>({
     resolver: zodResolver(filterNotificationSchema),
     defaultValues: {
-      notificationType: "All",
       visibility: "All",
       createDateRange: [null, null],
     },
   })
 
   const resetFilters = () => {
-    form.setValue("notificationType", "All")
+    form.setValue("notificationType", undefined)
     form.setValue("visibility", "All")
     form.setValue("createDateRange", [null, null])
   }
@@ -74,7 +73,9 @@ function FiltersNotificationsDialog() {
       params: searchParams.toString(),
       updates: {
         notificationType:
-          values.notificationType === "All" ? null : values.notificationType,
+          values.notificationType === undefined
+            ? null
+            : values.notificationType.toString(),
         //TODO: filter visibility
         CreateDateRange: values.createDateRange.map((date) =>
           date ? format(date, "dd-MM-yyyy") : ""
@@ -110,9 +111,14 @@ function FiltersNotificationsDialog() {
                     <FormItem>
                       <FormLabel>{t("Notification type")}</FormLabel>
                       <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        onValueChange={(val) =>
+                          field.onChange(val === "all" ? undefined : +val)
+                        }
+                        defaultValue={
+                          field.value === undefined
+                            ? "all"
+                            : field.value.toString()
+                        }
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -120,11 +126,17 @@ function FiltersNotificationsDialog() {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {typeOptions.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {t(option)}
-                            </SelectItem>
-                          ))}
+                          <SelectItem value="all">{t("All")}</SelectItem>
+                          {Object.values(ENotificationType)
+                            .filter((e) => typeof e === "number")
+                            .map((option) => (
+                              <SelectItem
+                                key={option}
+                                value={option.toString()}
+                              >
+                                {t(option)}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
 

@@ -35,8 +35,6 @@ function useSearchTrackings(search = "") {
         return []
       }
     },
-
-    refetchOnWindowFocus: false,
   })
 }
 

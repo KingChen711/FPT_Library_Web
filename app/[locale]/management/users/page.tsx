@@ -100,8 +100,8 @@ async function UsersManagementPage({ searchParams }: Props) {
             <UserRangeControl />
           </div>
           <Table className="overflow-hidden">
-            <TableHeader className="">
-              <TableRow className="">
+            <TableHeader>
+              <TableRow>
                 <TableHead></TableHead>
                 <SortableTableHead
                   currentSort={sort}

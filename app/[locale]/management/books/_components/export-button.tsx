@@ -2,7 +2,7 @@
 
 import { useTransition } from "react"
 import { useAuth } from "@/contexts/auth-provider"
-import { FileUp } from "lucide-react"
+import { FileUp, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { http } from "@/lib/http"
@@ -56,13 +56,9 @@ const ExportButton = ({ searchParams }: Props) => {
   }
 
   return (
-    <Button
-      variant="outline"
-      className=""
-      onClick={handleExportBook}
-      disabled={isPending}
-    >
+    <Button variant="outline" onClick={handleExportBook} disabled={isPending}>
       <FileUp size={16} /> {tGeneralManagement("btn.export")}
+      {isPending && <Loader2 className="ml-1 size-4 animate-spin" />}
     </Button>
   )
 }

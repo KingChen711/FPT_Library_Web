@@ -56,7 +56,7 @@ function DeleteDialog({ open, setOpen, handleDelete, isPending }: Props) {
             className="flex-1"
           >
             {t("Delete")}
-            {isPending && <Loader2 className="ml-2 size-4" />}
+            {isPending && <Loader2 className="ml-2 size-4 animate-spin" />}
           </Button>
           <Button
             className="flex-1"

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react"
+import React, { useRef } from "react"
 import { Printer } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
@@ -54,10 +54,6 @@ export default function CopiesTab({
   })
 
   const { data: conditions, isFetching: isFetchingConditions } = useConditions()
-
-  useEffect(() => {
-    console.log({ show })
-  }, [show])
 
   if (!show || isFetchingConditions) return null
 

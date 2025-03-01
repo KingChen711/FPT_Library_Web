@@ -17,11 +17,7 @@ import { z } from "zod"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { EBookCopyStatus } from "@/lib/types/enums"
-import {
-  type Condition,
-  type ConditionHistory,
-  type LibraryItemInstance,
-} from "@/lib/types/models"
+import { type LibraryItemInstance } from "@/lib/types/models"
 import { deleteCopy } from "@/actions/books/editions/delete-copy"
 import { editCopy } from "@/actions/books/editions/edit-copy"
 import { moveToTrashCopy } from "@/actions/books/editions/move-to-trash-copy"
@@ -35,8 +31,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import DeleteDialog from "../delete-dialog"
-import MoveToTrashDialog from "../move-to-trash-dialog"
+import DeleteDialog from "../../../../_components/delete-dialog"
+import MoveToTrashDialog from "../../../../_components/move-to-trash-dialog"
 import ConditionHistoriesDialog from "./condition-histories-dialog"
 import EditBarcodeDialog from "./edit-barcode-dialog"
 

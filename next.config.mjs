@@ -26,13 +26,6 @@ const nextConfig = {
       },
     ],
   },
-  experimental: {
-    turbo: {
-      resolveAlias: {
-        canvas: "./lib/empty-module.ts",
-      },
-    },
-  },
 }
 
 export default withBundleAnalyzer(withNextIntl(nextConfig))

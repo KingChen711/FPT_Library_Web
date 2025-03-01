@@ -17,10 +17,11 @@ import {
 import { updateResource } from "@/actions/books/editions/update-resource"
 import { updateBookImage } from "@/actions/resources/update-book-image"
 import { updateBookVideo } from "@/actions/resources/update-book-video"
-import { type TCheckCoverImageRes } from "@/hooks/books/use-check-cover-image"
+import { type TCheckCoverImageRes } from "@/hooks/ai/use-check-cover-image"
 import { toast } from "@/hooks/use-toast"
 import AudioDropzone from "@/components/ui/audio-dropzone"
 import { Button } from "@/components/ui/button"
+import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Dialog,
   DialogClose,
@@ -217,7 +218,7 @@ function UpdateResourceDialog({ open, setOpen, resource }: Props) {
                             </span>
                           </FormLabel>
                           <FormControl>
-                            <Input
+                            <CurrencyInput
                               disabled={isPending}
                               {...field}
                               type="number"

@@ -35,8 +35,6 @@ export async function moveToTrashResources({
       data: message,
     }
   } catch (error) {
-    console.log(error)
-
     return handleHttpError(error)
   }
 }

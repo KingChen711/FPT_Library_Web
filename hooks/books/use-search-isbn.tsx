@@ -86,7 +86,6 @@ function useSearchIsbn(isbn: string) {
       }
     },
     enabled: isbn !== "",
-    refetchOnWindowFocus: false,
   })
 }
 
