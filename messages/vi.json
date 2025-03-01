@@ -158,6 +158,7 @@
     "transaction management": "Quản lí giao dịch",
     "report management": "Quản lí báo cáo",
     "package management": "Quản lí gói thư viện",
+    "condition management": "Quản lí tình trạng vật dụng thư viện",
     "clear btn": "Xóa",
     "process btn": "Xử lý",
     "price": "Giá",
@@ -214,6 +215,7 @@
     "edit": "Chỉnh sửa",
     "save": "Lưu",
     "delete": "Xóa",
+    "back to home page": "Quay ve trang chủ",
     "filter": {
       "title": "Tìm kiếm",
       "author": "Tìm tác giả",
@@ -270,7 +272,9 @@
       "package name": "Nhập tên gói",
       "package price": "Nhập giá gói",
       "package duration": "Nhập thời hạn gói",
-      "package description": "Nhập mô tả gói"
+      "package description": "Nhập mô tả gói",
+      "english condition name": "Nhập tên tình trạng bằng Tiếng Anh",
+      "vietnamese condition name": "Nhập tên tình trạng bằng Tiếng Việt"
     },
     "fields": {
       "firstName": "Tên",
@@ -588,6 +592,22 @@
     "package price": "Giá gói",
     "package duration": "Thời hạn gói",
     "package description": "Mô tả gói",
+    "Edit": "Chỉnh sửa",
+    "Delete": "Xóa",
+    "Save": "Lưu",
+    "Search": "Tìm kiếm...",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận"
+  },
+  "ConditionsManagementPage": {
+    "condition": "Tình trạng đồ thư viện",
+    "Create condition": "Tạo tình trạng",
+    "Edit condition": "Chỉnh sửa tình trạng",
+    "Delete condition": "Xóa tình trạng",
+    "Cancel": "Hủy",
+    "Create": "Tạo",
+    "condition name": "Tên tình trạng",
+    "condition english name": "Tên tiếng Anh",
+    "condition vietnamese name": "Tên tiếng Việt",
     "Edit": "Chỉnh sửa",
     "Delete": "Xóa",
     "Save": "Lưu",

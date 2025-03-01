@@ -7,13 +7,13 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type LibraryPackage } from "@/lib/types/models"
+import { type Condition } from "@/lib/types/models"
 import {
-  mutateLibraryPackageSchema,
-  type TMutateLibraryPackageSchema,
-} from "@/lib/validations/library-packages/mutate-library-package"
-import { createLibraryPackage } from "@/actions/library-packages/create-library-package"
-import { updateLibraryPackage } from "@/actions/library-packages/update-library-package"
+  mutateConditionSchema,
+  type TMutateConditionSchema,
+} from "@/lib/validations/condition/mutate-condition"
+import { createCondition } from "@/actions/condition/create-condition"
+import { updateCondition } from "@/actions/condition/update-condition"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -34,11 +34,10 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
 
 type Props = {
   type: "create" | "update"
-  libraryPackage?: LibraryPackage
+  condition?: Condition
   openEdit?: boolean
   setOpenEdit?: (value: boolean) => void
 } & (
@@ -47,20 +46,20 @@ type Props = {
     }
   | {
       type: "update"
-      libraryPackage: LibraryPackage
+      condition: Condition
       openEdit: boolean
       setOpenEdit: (value: boolean) => void
     }
 )
 
-function MutatePackageDialog({
+function MutateConditionDialog({
   type,
-  libraryPackage,
+  condition,
   openEdit,
   setOpenEdit,
 }: Props) {
   const locale = useLocale()
-  const t = useTranslations("LibraryPackagesManagementPage")
+  const t = useTranslations("ConditionsManagementPage")
   const tGeneral = useTranslations("GeneralManagement")
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -74,27 +73,21 @@ function MutatePackageDialog({
     setOpenEdit(value)
   }
 
-  const form = useForm<TMutateLibraryPackageSchema>({
-    resolver: zodResolver(mutateLibraryPackageSchema),
+  const form = useForm<TMutateConditionSchema>({
+    resolver: zodResolver(mutateConditionSchema),
     defaultValues: {
-      packageName: type === "update" ? libraryPackage.packageName : "",
-      price: type === "update" ? libraryPackage.price : 1000,
-      durationInMonths:
-        type === "update" ? libraryPackage.durationInMonths : 1000,
-      description: type === "update" ? libraryPackage.description : "",
+      englishName: type === "update" ? condition.englishName : "",
+      vietnameseName: type === "update" ? condition.vietnameseName : "",
     },
   })
 
-  const onSubmit = async (values: TMutateLibraryPackageSchema) => {
+  const onSubmit = async (values: TMutateConditionSchema) => {
     console.log("🚀 ~ onSubmit ~ values:", values)
     startTransition(async () => {
       const res =
         type === "create"
-          ? await createLibraryPackage(values)
-          : await updateLibraryPackage(
-              libraryPackage.libraryCardPackageId,
-              values
-            )
+          ? await createCondition(values)
+          : await updateCondition(condition.conditionId, values)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
@@ -121,14 +114,14 @@ function MutatePackageDialog({
         <DialogTrigger asChild>
           <Button className="flex items-center justify-end gap-x-1 leading-none">
             <Plus />
-            <div>{t("Create package")}</div>
+            <div>{t("Create condition")}</div>
           </Button>
         </DialogTrigger>
       )}
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {t(type === "create" ? "Create package" : "Edit package")}
+            {t(type === "create" ? "Create condition" : "Edit condition")}
           </DialogTitle>
           <DialogDescription>
             <Form {...form}>
@@ -138,74 +131,36 @@ function MutatePackageDialog({
               >
                 <FormField
                   control={form.control}
-                  name="packageName"
+                  name="englishName"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("package name")}</FormLabel>
+                      <FormLabel>{t("condition english name")}</FormLabel>
                       <FormControl>
                         <Input
-                          disabled={isPending}
-                          {...field}
-                          placeholder={tGeneral("placeholder.package name")}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="price"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("package price")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min={1000}
-                          disabled={isPending}
-                          {...field}
-                          placeholder={tGeneral("placeholder.package price")}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="durationInMonths"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("package duration")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          type="number"
-                          min={1}
-                          disabled={isPending}
-                          {...field}
-                          placeholder={tGeneral("placeholder.package duration")}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="description"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("package description")}</FormLabel>
-                      <FormControl>
-                        <Textarea
                           disabled={isPending}
                           {...field}
                           placeholder={tGeneral(
-                            "placeholder.package description"
+                            "placeholder.english condition name"
+                          )}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="vietnameseName"
+                  render={({ field }) => (
+                    <FormItem className="flex flex-col items-start">
+                      <FormLabel>{t("condition vietnamese name")}</FormLabel>
+                      <FormControl>
+                        <Input
+                          disabled={isPending}
+                          {...field}
+                          placeholder={tGeneral(
+                            "placeholder.vietnamese condition name"
                           )}
                         />
                       </FormControl>
@@ -245,4 +200,4 @@ function MutatePackageDialog({
   )
 }
 
-export default MutatePackageDialog
+export default MutateConditionDialog

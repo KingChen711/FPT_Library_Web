@@ -1,23 +1,20 @@
 "use server"
 
+import { revalidatePath } from "next/cache"
 import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type LibraryCardTransaction } from "@/lib/types/models"
+import { type TMutateConditionSchema } from "@/lib/validations/condition/mutate-condition"
 
-export async function createLibraryCardTransaction(body: {
-  libraryCardPackageId: number
-  resourceId: null
-  description: null
-  paymentMethodId: number
-  transactionType: number
-}): Promise<ActionResponse<string>> {
+export async function updateCondition(
+  conditionId: number,
+  body: TMutateConditionSchema
+): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
-
   try {
-    const { data } = await http.post<LibraryCardTransaction>(
-      "/api/payment/transactions",
+    const { message } = await http.put(
+      `/api/management/conditions/${conditionId}`,
       body,
       {
         headers: {
@@ -26,9 +23,11 @@ export async function createLibraryCardTransaction(body: {
       }
     )
 
+    revalidatePath("/management/conditions")
+
     return {
       isSuccess: true,
-      data: data.data.checkoutUrl,
+      data: message,
     }
   } catch (error) {
     return handleHttpError(error)

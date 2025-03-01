@@ -613,6 +613,29 @@ export type LibraryItemsRecommendation = {
   }[]
 }
 
+// Payment
+
+export type LibraryCardTransaction = {
+  code: string
+  desc: string
+  data: {
+    bin: string
+    accountNumber: string
+    accountName: string
+    amount: number
+    description: string
+    orderCode: string
+    curency: string
+    paymentLinkId: string
+    status: string
+    checkoutUrl: string
+    qrCode: string
+  }
+  signature: string
+}
+
+// end Payment
+
 export type Condition = {
   conditionId: number
   englishName: string
