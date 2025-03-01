@@ -157,6 +157,7 @@
     "borrow management": "Quản lí mượn sách",
     "transaction management": "Quản lí giao dịch",
     "report management": "Quản lí báo cáo",
+    "package management": "Quản lí gói thư viện",
     "clear btn": "Xóa",
     "process btn": "Xử lý",
     "price": "Giá",
@@ -208,6 +209,11 @@
     "browse to upload": "chọn ảnh để tải lên",
     "Male": "Nam",
     "Female": "Nữ",
+    "cancel": "Hủy",
+    "create": "Tạo",
+    "edit": "Chỉnh sửa",
+    "save": "Lưu",
+    "delete": "Xóa",
     "filter": {
       "title": "Tìm kiếm",
       "author": "Tìm tác giả",
@@ -260,7 +266,11 @@
       "description": "Nhập mô tả",
       "book serial no": "Nhập số sách hay quét mã QR",
       "library card package": "Select library card package",
-      "payment method": "Chọn phương thức thanh toán"
+      "payment method": "Chọn phương thức thanh toán",
+      "package name": "Nhập tên gói",
+      "package price": "Nhập giá gói",
+      "package duration": "Nhập thời hạn gói",
+      "package description": "Nhập mô tả gói"
     },
     "fields": {
       "firstName": "Tên",
@@ -414,6 +424,7 @@
     "Permissions": "Quyền",
     "Settings": "Cài đặt",
     "Help": "Giúp đỡ",
+    "Library Packages": "Gói",
     "Warehouse": "Kho",
     "Suppliers": "Nhà cung cấp",
     "Trackings": "Theo dõi"
@@ -565,6 +576,23 @@
     "View details": "Xem chi tiết",
     "Row": "Hàng: ",
     "Import errors": "Lỗi nạp dữ liệu"
+  },
+  "LibraryPackagesManagementPage": {
+    "package": "Gói",
+    "Create package": "Tạo gói",
+    "Edit package": "Chỉnh sửa gói",
+    "Delete package": "Xóa gói",
+    "Cancel": "Hủy",
+    "Create": "Tạo",
+    "package name": "Tên gói",
+    "package price": "Giá gói",
+    "package duration": "Thời hạn gói",
+    "package description": "Mô tả gói",
+    "Edit": "Chỉnh sửa",
+    "Delete": "Xóa",
+    "Save": "Lưu",
+    "Search": "Tìm kiếm...",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận"
   },
   "SuppliersManagementPage": {
     "Select a supplier": "Chọn một nhà cung cấp",

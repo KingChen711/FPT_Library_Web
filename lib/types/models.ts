@@ -232,7 +232,7 @@ export type Author = {
   bookEditionAuthors: unknown[]
 }
 
-export type Package = {
+export type LibraryPackage = {
   libraryCardPackageId: number
   packageName: string
   price: number
