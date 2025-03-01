@@ -3,8 +3,10 @@ import {
   type EBookCopyStatus,
   type EBookEditionStatus,
   type EBookFormat,
+  type ECardStatus,
   type EFineType,
   type EGender,
+  type EIssuanceMethod,
   type ENotificationType,
   type EResourceBookType,
   type ERoleType,
@@ -566,7 +568,8 @@ export type Patron = {
 
   email: string
   avatar: string | null
-  fullName: string | null
+  firstName: string | null
+  lastName: string | null
   phone: string | null
   dob: Date | null
   gender: EGender | null
@@ -590,4 +593,29 @@ export type Package = {
   isActive: boolean
   createdAt: Date
   description: string | null
+}
+
+export type LibraryCard = {
+  libraryCardId: string
+  fullName: string
+  avatar: string
+  barcode: string
+  issuanceMethod: EIssuanceMethod
+  status: ECardStatus
+  isAllowBorrowMore: boolean
+  maxItemOnceTime: number
+  allowBorrowMoreReason: string | null
+  totalMissedPickUp: number
+  isReminderSent: boolean
+  isExtended: boolean
+  extensionCount: number
+  issueDate: Date
+  expiryDate: Date | null
+  suspensionEndDate: Date | null
+  suspensionReason: string | null
+  rejectReason: string | null
+  isArchived: boolean
+  archiveReason: string | null
+  previousUserId: string | null
+  transactionCode: string
 }

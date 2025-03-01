@@ -8,7 +8,7 @@ const SidebarLogoItem = () => {
     <SidebarMenuItem>
       <SidebarMenuButton asChild tooltip={"Intelligent Library System"}>
         <Link href="/">
-          <Image src="/logo.svg" alt="logo" width={42} height={42} />
+          <Image src="/images/logo.png" alt="logo" width={28} height={28} />
           <div className="flex flex-col text-primary">
             <span className="text-sm font-semibold">E-Library System</span>
           </div>

@@ -65,6 +65,100 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  UnSuspend: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 14 14"
+      {...props}
+      className={cn(className)}
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        <path d="M7 13.5a6.5 6.5 0 1 0 0-13a6.5 6.5 0 0 0 0 13"></path>
+        <path d="M3.7 8c.5 1.8 2.5 2.9 4.3 2.4c1.1-.4 2-1.3 2.3-2.4M4.75 5.5a.25.25 0 0 1 0-.5m0 .5a.25.25 0 0 0 0-.5m4.5.5a.25.25 0 0 1 0-.5m0 .5a.25.25 0 0 0 0-.5"></path>
+      </g>
+    </svg>
+  ),
+  Suspend: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 16 16"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="none"
+        stroke="currentColor"
+        strokeLinejoin="round"
+        d="M6.5 5v6m3 0V5m5 3a6.5 6.5 0 1 1-13 0a6.5 6.5 0 0 1 13 0Z"
+      ></path>
+    </svg>
+  ),
+  Upgrade: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 32 32"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="currentColor"
+        d="M21 24H11a2 2 0 0 0-2 2v2a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2zm0 4H11v-2h10zm7.707-13.707l-12-12a1 1 0 0 0-1.414 0l-12 12A1 1 0 0 0 4 16h5v4a2.002 2.002 0 0 0 2 2h10a2.003 2.003 0 0 0 2-2v-4h5a1 1 0 0 0 .707-1.707zM21 14v6H11v-6H6.414L16 4.414L25.586 14z"
+      ></path>
+    </svg>
+  ),
+  ConfirmCard: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 33 32"
+      {...props}
+      className={cn(className)}
+    >
+      <g fill="currentColor">
+        <path d="M1.5 32h21c.827 0 1.5-.673 1.5-1.5V23c0-.01-.005-.018-.006-.028c.055-.035.112-.068.166-.105l7.986 7.986a.5.5 0 1 0 .708-.706l-7.913-7.913A6.479 6.479 0 0 0 27 17.5a6.494 6.494 0 0 0-3.006-5.472c.001-.01.006-.018.006-.028V9.5c0-.017-.008-.031-.009-.047c-.002-.023-.008-.043-.013-.065a.488.488 0 0 0-.09-.191c-.007-.009-.006-.02-.013-.029l-8-9c-.003-.003-.007-.003-.01-.006a.49.49 0 0 0-.223-.134c-.019-.006-.036-.008-.056-.011C15.557.012 15.53 0 15.5 0h-14C.673 0 0 .673 0 1.5v29c0 .827.673 1.5 1.5 1.5zM26 17.5c0 3.033-2.468 5.5-5.5 5.5S15 20.533 15 17.5s2.468-5.5 5.5-5.5s5.5 2.467 5.5 5.5zM16 1.815L22.387 9H16.5c-.22 0-.5-.42-.5-.75V1.815zM1 1.5a.5.5 0 0 1 .5-.5H15v7.25c0 .809.655 1.75 1.5 1.75H23v1.501A6.475 6.475 0 0 0 15.821 13H5.5a.5.5 0 0 0 0 1h9.532a6.442 6.442 0 0 0-1.006 3H5.5a.5.5 0 0 0 0 1h8.525a6.454 6.454 0 0 0 1.006 3H5.5a.5.5 0 0 0 0 1h10.25c.021 0 .039-.009.06-.012a6.476 6.476 0 0 0 7.19 1.51V30.5a.5.5 0 0 1-.5.5h-21c-.28 0-.5-.22-.5-.5v-29z"></path>
+        <path d="M5.5 10h6a.5.5 0 0 0 0-1h-6a.5.5 0 0 0 0 1zm0 16h13a.5.5 0 0 0 0-1h-13a.5.5 0 0 0 0 1z"></path>
+      </g>
+    </svg>
+  ),
+  Archive: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn(className)}
+    >
+      <g
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.5"
+      >
+        <path
+          strokeLinejoin="round"
+          d="M4.382 8.813v8.5c0 .845.344 1.656.957 2.253a3.305 3.305 0 0 0 2.308.934h8.706c.866 0 1.696-.336 2.308-.934a3.15 3.15 0 0 0 .957-2.253v-8.5m0-5.313H4.382c-.901 0-1.632.714-1.632 1.594v2.125c0 .88.73 1.593 1.632 1.593h15.236c.901 0 1.632-.713 1.632-1.593V5.094c0-.88-.73-1.594-1.632-1.594"
+        ></path>
+        <path strokeMiterlimit="10" d="M12 17v-5"></path>
+        <path
+          strokeLinejoin="round"
+          d="m9.707 14.895l1.967 1.967a.458.458 0 0 0 .652 0l1.967-1.967"
+        ></path>
+      </g>
+    </svg>
+  ),
   Holders: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

@@ -1,5 +1,5 @@
 import Image from "next/image"
-import systemLogo from "@/public/assets/images/logo.png"
+import systemLogo from "@/public/images/logo.png"
 import { useManagementSideBar } from "@/stores/use-management-sidebar"
 
 import { cn } from "@/lib/utils"

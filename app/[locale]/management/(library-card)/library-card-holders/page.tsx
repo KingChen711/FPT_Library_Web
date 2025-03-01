@@ -1,13 +1,14 @@
 import React from "react"
 import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
-import getPatrons from "@/queries/holders/get-holders"
+import getPatrons from "@/queries/patrons/get-patrons"
 import { format } from "date-fns"
 import { Eye, MoreHorizontal, Plus } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature, EPatronStatus } from "@/lib/types/enums"
+import { getFullName } from "@/lib/utils"
 import { searchPatronsSchema } from "@/lib/validations/patrons/search-patrons"
 import { Button } from "@/components/ui/button"
 import {
@@ -195,7 +196,7 @@ async function HoldersManagementPage({ searchParams }: Props) {
                     </TableCell>
 
                     <TableCell className="text-nowrap">
-                      {patron.fullName || "-"}
+                      {getFullName(patron.firstName, patron.lastName) || "-"}
                     </TableCell>
 
                     <TableCell className="text-nowrap">

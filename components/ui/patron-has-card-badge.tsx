@@ -28,7 +28,7 @@ function PatronHasCardBadge({ hasCard }: Props) {
   return (
     <Badge
       variant={getHasCardColor(hasCard)}
-      className="flex w-fit justify-center"
+      className="flex w-[84px] justify-center"
     >
       {t(
         hasCard

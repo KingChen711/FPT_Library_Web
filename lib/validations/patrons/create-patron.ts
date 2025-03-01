@@ -1,4 +1,3 @@
-import { format } from "date-fns"
 import { z } from "zod"
 
 import { EGender, ETransactionMethod } from "@/lib/types/enums"
@@ -14,6 +13,7 @@ export const createPatronSchema = z
 
     //client only
     file: z.instanceof(File).optional(),
+
     //client only
     detectedFacesResult: z
       .object({
@@ -46,12 +46,10 @@ export const createPatronSchema = z
       .trim()
       .optional()
       .transform((data) => (data === "" ? undefined : data)),
-    dob: z
-      .date({ message: "min1" })
-      .optional()
-      .transform((data) =>
-        data === undefined ? undefined : format(data, "yyyy-MM-dd")
-      ),
+    dob: z.date({ message: "min1" }).optional(),
+    // .transform((data) =>
+    //   data === undefined ? undefined : format(data, "yyyy-MM-dd")
+    // ),
 
     transactionMethod: z.nativeEnum(ETransactionMethod), // 0 - Cash, 1 - DigitalPayment
 
@@ -90,7 +88,10 @@ export const createPatronSchema = z
   )
   .refine(
     (data) => {
-      return !!data.detectedFacesResult
+      return (
+        !!data.detectedFacesResult &&
+        data.detectedFacesResult.faces.length === 1
+      )
     },
     {
       //* require on validate, not on initial

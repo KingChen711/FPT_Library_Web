@@ -187,3 +187,10 @@ export const formatLeftTime = (seconds: number) => {
   const remainingSeconds = floorSeconds % 60
   return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`
 }
+
+export const getFullName = (
+  firstName: string | null | undefined,
+  lastName: string | null | undefined
+) => {
+  return `${firstName ?? ""} ${lastName ?? ""}`.trim()
+}

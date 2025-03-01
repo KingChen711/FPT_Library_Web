@@ -28,7 +28,7 @@ function PatronTypeBadge({ isEmployeeCreated }: Props) {
   return (
     <Badge
       variant={getTypeColor(isEmployeeCreated)}
-      className="flex w-24 justify-center"
+      className="flex w-[116px] justify-center"
     >
       {t(
         isEmployeeCreated

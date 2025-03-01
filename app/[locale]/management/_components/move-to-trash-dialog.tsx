@@ -61,7 +61,7 @@ function MoveToTrashDialog({
             className="flex-1"
           >
             {t("Confirm")}
-            {isPending && <Loader2 className="ml-2 size-4" />}
+            {isPending && <Loader2 className="ml-2 size-4 animate-spin" />}
           </Button>
           <Button
             className="flex-1"

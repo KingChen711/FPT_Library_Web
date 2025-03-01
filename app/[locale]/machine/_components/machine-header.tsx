@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import Logo from "@/public/logo.svg"
+import Logo from "@/public/images/logo.png"
 import { School } from "lucide-react"
 
 const MachineHeader = () => {
