@@ -154,6 +154,7 @@
     "transaction management": "Transaction management",
     "report management": "Report management",
     "package management": "Package management",
+    "condition management": "Library condition management",
     "clear btn": "Clear",
     "process btn": "Process",
     "price": "Price",
@@ -210,6 +211,7 @@
     "edit": "Edit",
     "save": "Save",
     "delete": "Delete",
+    "back to home page": "Back to home page",
     "filter": {
       "title": "Filter",
       "author": "Filter author",
@@ -264,7 +266,9 @@
       "package name": "Type package name",
       "package price": "Type package price",
       "package duration": "Type package duration",
-      "package description": "Type package description"
+      "package description": "Type package description",
+      "english condition name": "Type english condition name",
+      "vietnamese condition name": "Type vietnamese condition name"
     },
 
     "fields": {
@@ -590,6 +594,22 @@
     "package price": "Package price",
     "package duration": "Package duration",
     "package description": "Package description",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "Save": "Save",
+    "Search": "Search...",
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm"
+  },
+  "ConditionsManagementPage": {
+    "condition": "condition",
+    "Create condition": "Create condition",
+    "Edit condition": "Edit condition",
+    "Delete condition": "Delete condition",
+    "Cancel": "Cancel",
+    "Create": "Create",
+    "condition name": "Condition name",
+    "condition english name": "Condition english name",
+    "condition vietnamese name": "Condition vietnamese name",
     "Edit": "Edit",
     "Delete": "Delete",
     "Save": "Save",

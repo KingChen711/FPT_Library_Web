@@ -4,6 +4,7 @@ import type React from "react"
 import { useRef, useState, useTransition } from "react"
 import Image from "next/image"
 import { useAuth } from "@/contexts/auth-provider"
+import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { BookOpen, Calendar, Loader2, MapPin, User, X } from "lucide-react"
 import Barcode from "react-barcode"
@@ -12,6 +13,7 @@ import { z } from "zod"
 
 import { formatDate } from "@/lib/utils"
 import { uploadBookImage } from "@/actions/books/upload-medias"
+import { createLibraryCardTransaction } from "@/actions/library-cards/create-library-card-transaction"
 import { registerLibraryCard } from "@/actions/library-cards/register-library-card"
 import useGetPaymentMethods from "@/hooks/payment-methods/use-get-payment-method"
 import { Button } from "@/components/ui/button"
@@ -55,6 +57,7 @@ type Props = {
 }
 
 const LibraryCardRegister = ({ searchParams }: Props) => {
+  const router = useRouter()
   const { user, isLoadingAuth } = useAuth()
   const [previewImage, setPreviewImage] = useState<string | null>(null)
   const fileInputRef = useRef<HTMLInputElement | null>(null)
@@ -109,20 +112,36 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
         form.setError("avatar", { message: "Avatar is required" })
         return
       }
-      if (values.avatar) {
-        const data = await uploadBookImage(values.avatar)
-        if (data) {
-          console.log("🚀 ~ startTransition ~ data:", data)
-          const res = await registerLibraryCard({
-            avatar: data.secureUrl,
-            fullName: values.fullName,
-          })
-          console.log("🚀 ~ startTransition ~ res:", res)
+
+      const data = await uploadBookImage(values.avatar)
+      if (data) {
+        console.log("🚀 ~ startTransition ~ data:", data)
+        const res = await registerLibraryCard({
+          avatar: data.secureUrl,
+          fullName: values.fullName,
+        })
+
+        if (!res.isSuccess) {
+          console.log("🚀 ~ FAIL startTransition ~ res:", res)
+          return
         }
+
+        const transaction = await createLibraryCardTransaction({
+          libraryCardPackageId: values.libraryCardPackageId,
+          resourceId: null,
+          description: null,
+          paymentMethodId: values.paymentMethodId,
+          transactionType: values.transactionType,
+        })
+
+        if (!transaction.isSuccess) {
+          console.log("🚀 ~ FAIL startTransition ~ transaction:", transaction)
+          return
+        }
+
+        router.push(transaction.data)
       }
     })
-
-    console.log(values)
   }
 
   const cardId = "0123456789"

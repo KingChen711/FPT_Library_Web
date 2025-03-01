@@ -53,6 +53,14 @@ export const managementRoutes = [
   },
   {
     feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
+    route: "/management/conditions",
+    label: "Conditions",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Package {...props} />
+    },
+  },
+  {
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
     route: "/management/resources",
     label: "Resources",
     Icon: (props: { className?: string }) => {
