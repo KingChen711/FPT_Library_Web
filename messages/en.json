@@ -153,6 +153,7 @@
     "borrow management": "Borrow management",
     "transaction management": "Transaction management",
     "report management": "Report management",
+    "package management": "Package management",
     "clear btn": "Clear",
     "process btn": "Process",
     "price": "Price",
@@ -204,6 +205,11 @@
     "browse to upload": "Browse to upload",
     "Male": "Male",
     "Female": "Female",
+    "cancel": "Cancel",
+    "create": "Create",
+    "edit": "Edit",
+    "save": "Save",
+    "delete": "Delete",
     "filter": {
       "title": "Filter",
       "author": "Filter author",
@@ -254,7 +260,11 @@
       "description": "Enter description",
       "book serial no": "Enter book serial number or scan QR code",
       "library card package": "Select package",
-      "payment method": "Select payment method"
+      "payment method": "Select payment method",
+      "package name": "Type package name",
+      "package price": "Type package price",
+      "package duration": "Type package duration",
+      "package description": "Type package description"
     },
 
     "fields": {
@@ -412,6 +422,7 @@
     "Permissions": "Permissions",
     "Settings": "Settings",
     "Help": "Help",
+    "Library Packages": "Packages",
     "Warehouse": "Warehouse",
     "Suppliers": "Suppliers",
     "Trackings": "Trackings"
@@ -567,6 +578,23 @@
     "View details": "View details",
     "Row": "Row: ",
     "Import errors": "Import errors"
+  },
+  "LibraryPackagesManagementPage": {
+    "package": "package",
+    "Create package": "Create package",
+    "Edit package": "Edit package",
+    "Delete package": "Delete package",
+    "Cancel": "Cancel",
+    "Create": "Create",
+    "package name": "Package name",
+    "package price": "Package price",
+    "package duration": "Package duration",
+    "package description": "Package description",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "Save": "Save",
+    "Search": "Search...",
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm"
   },
   "SuppliersManagementPage": {
     "Allowed": "Allowed",

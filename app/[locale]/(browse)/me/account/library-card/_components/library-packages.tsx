@@ -4,7 +4,7 @@ import { Link } from "@/i18n/routing"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { type Package } from "@/lib/types/models"
+import { type LibraryPackage } from "@/lib/types/models"
 import useGetPackages from "@/hooks/packages/use-get-packages"
 import { Badge } from "@/components/ui/badge"
 import { Card } from "@/components/ui/card"
@@ -31,7 +31,7 @@ const LibraryPackages = () => {
         {t("placeholder.library card package")}
       </h2>
       <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {packages?.map((item: Package) => (
+        {packages?.map((item: LibraryPackage) => (
           <Link
             key={item.libraryCardPackageId}
             href={`/me/account/library-card/register?libraryCardId=${item.libraryCardPackageId}`}

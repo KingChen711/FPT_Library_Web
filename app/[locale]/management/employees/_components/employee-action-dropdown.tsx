@@ -107,14 +107,12 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
           {!employee?.isDeleted ? (
             <>
               <DropdownMenuItem className="cursor-pointer" asChild>
-                <DropdownMenuItem className="cursor-pointer">
-                  <div
-                    onClick={() => setOpenEdit(true)}
-                    className="flex items-center gap-x-2"
-                  >
-                    <SquarePen className="size-4" />
-                    {t("btn.update")}
-                  </div>
+                <DropdownMenuItem
+                  className="flex cursor-pointer items-center gap-x-2"
+                  onClick={() => setOpenEdit(true)}
+                >
+                  <SquarePen className="size-4" />
+                  {t("btn.update")}
                 </DropdownMenuItem>
               </DropdownMenuItem>
               <DropdownMenuItem className="cursor-pointer">
