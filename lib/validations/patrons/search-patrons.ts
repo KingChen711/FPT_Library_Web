@@ -1,3 +1,4 @@
+import { DateTime } from "luxon"
 import { z } from "zod"
 
 import { ECardStatus, EIdxGender, EIssuanceMethod } from "@/lib/types/enums"
@@ -28,10 +29,58 @@ export const filterPatronSchema = z.object({
     .catch(undefined)
     .transform((data) => (data === undefined ? undefined : data === "true")),
 
-  cardIssueDateRange: z.array(z.date().or(z.null())).catch([null, null]),
-  cardExpiryDateRange: z.array(z.date().or(z.null())).catch([null, null]),
-  suspensionDateRange: z.array(z.date().or(z.null())).catch([null, null]),
-  dobRange: z.array(z.date().or(z.null())).catch([null, null]),
+  cardIssueDateRange: z
+    .array(z.date().or(z.null()))
+    .transform((data) => {
+      data.forEach((date, i) => {
+        if (date) {
+          data[i] = DateTime.fromJSDate(date)
+            .setZone("UTC", { keepLocalTime: true })
+            .toJSDate()
+        }
+      })
+      return data
+    })
+    .catch([null, null]),
+  cardExpiryDateRange: z
+    .array(z.date().or(z.null()))
+    .transform((data) => {
+      data.forEach((date, i) => {
+        if (date) {
+          data[i] = DateTime.fromJSDate(date)
+            .setZone("UTC", { keepLocalTime: true })
+            .toJSDate()
+        }
+      })
+      return data
+    })
+    .catch([null, null]),
+  suspensionDateRange: z
+    .array(z.date().or(z.null()))
+    .transform((data) => {
+      data.forEach((date, i) => {
+        if (date) {
+          data[i] = DateTime.fromJSDate(date)
+            .setZone("UTC", { keepLocalTime: true })
+            .toJSDate()
+        }
+      })
+      return data
+    })
+    .catch([null, null]),
+  dobRange: z
+    .array(z.date().or(z.null()))
+    .transform((data) => {
+      data.forEach((date, i) => {
+        if (date) {
+          data[i] = DateTime.fromJSDate(date)
+            .setZone("UTC", { keepLocalTime: true })
+            .toJSDate()
+        }
+      })
+      return data
+    })
+    .catch([null, null]),
 })
 
 export type TFilterPatronSchema = z.infer<typeof filterPatronSchema>

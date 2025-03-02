@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { getLocalTimeZone } from "@internationalized/date"
 import { format } from "date-fns"
 import { Filter } from "lucide-react"
+import { DateTime } from "luxon"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -44,7 +45,16 @@ const genderOptions = ["All", "Male", "Female"] as const
 
 export const filterFineSchema = z.object({
   gender: z.enum(genderOptions),
-  createdDateRange: z.array(z.date().or(z.null())),
+  createdDateRange: z.array(z.date().or(z.null())).transform((data) => {
+    data.forEach((date, i) => {
+      if (date) {
+        data[i] = DateTime.fromJSDate(date)
+          .setZone("UTC", { keepLocalTime: true })
+          .toJSDate()
+      }
+    })
+    return data
+  }),
 })
 
 export type TFilterFineSchema = z.infer<typeof filterFineSchema>
