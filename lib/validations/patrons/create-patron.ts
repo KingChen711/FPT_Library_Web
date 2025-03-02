@@ -1,3 +1,4 @@
+import { DateTime } from "luxon"
 import { z } from "zod"
 
 import { EGender, ETransactionMethod } from "@/lib/types/enums"
@@ -46,7 +47,16 @@ export const createPatronSchema = z
       .trim()
       .optional()
       .transform((data) => (data === "" ? undefined : data)),
-    dob: z.date({ message: "min1" }).optional(),
+    dob: z
+      .date({ message: "min1" })
+      .optional()
+      .transform((data) =>
+        data
+          ? DateTime.fromJSDate(data)
+              .setZone("UTC", { keepLocalTime: true })
+              .toJSDate()
+          : undefined
+      ),
     // .transform((data) =>
     //   data === undefined ? undefined : format(data, "yyyy-MM-dd")
     // ),

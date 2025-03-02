@@ -1,10 +1,14 @@
 "use client"
 
+import { getLocalTimeZone } from "@internationalized/date"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 
 import { type TEmployeesFilterSchema } from "@/lib/validations/employee/employees-filter"
-import { DateTimePicker } from "@/components/ui/date-time-picker"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/ui/date-time-picker/index"
 import {
   FormField,
   FormItem,
@@ -20,6 +24,7 @@ type Props = {
 
 const FilterDateEmployee = ({ form, label, name }: Props) => {
   const t = useTranslations("GeneralManagement")
+  const timezone = getLocalTimeZone()
 
   return (
     <FormField
@@ -30,9 +35,12 @@ const FilterDateEmployee = ({ form, label, name }: Props) => {
           <FormLabel>{t(label)}</FormLabel>
           <div className="flex w-full flex-wrap items-center justify-between gap-3">
             <DateTimePicker
-              jsDate={field.value[0] || undefined}
-              onJsDateChange={(date) =>
-                field.onChange([date || null, field.value[1]])
+              value={createCalendarDate(field.value[0])}
+              onChange={(date) =>
+                field.onChange([
+                  date ? date.toDate(timezone) : null,
+                  field.value[1],
+                ])
               }
               disabled={(date) =>
                 !!field.value[1] && date > new Date(field.value[1])
@@ -40,9 +48,12 @@ const FilterDateEmployee = ({ form, label, name }: Props) => {
             />
             <div>---</div>
             <DateTimePicker
-              jsDate={field.value[1] || undefined}
-              onJsDateChange={(date) =>
-                field.onChange([field.value[0], date || null])
+              value={createCalendarDate(field.value[1])}
+              onChange={(date) =>
+                field.onChange([
+                  field.value[0],
+                  date ? date.toDate(timezone) : null,
+                ])
               }
               disabled={(date) =>
                 !!field.value[0] && date < new Date(field.value[0])

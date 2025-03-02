@@ -1,3 +1,4 @@
+import { DateTime } from "luxon"
 import { z } from "zod"
 
 import { ENotificationType, EVisibility } from "@/lib/types/enums"
@@ -11,7 +12,19 @@ export const visibilityOptions = [
 export const filterNotificationSchema = z.object({
   notificationType: z.nativeEnum(ENotificationType).optional().catch(undefined),
   visibility: z.enum(visibilityOptions).catch("All"),
-  createDateRange: z.array(z.date().or(z.null())).catch([null, null]),
+  createDateRange: z
+    .array(z.date().or(z.null()))
+    .transform((data) => {
+      data.forEach((date, i) => {
+        if (date) {
+          data[i] = DateTime.fromJSDate(date)
+            .setZone("UTC", { keepLocalTime: true })
+            .toJSDate()
+        }
+      })
+      return data
+    })
+    .catch([null, null]),
 })
 
 export type TFilterNotificationSchema = z.infer<typeof filterNotificationSchema>

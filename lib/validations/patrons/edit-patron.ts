@@ -1,4 +1,5 @@
 // import { format } from "date-fns"
+import { DateTime } from "luxon"
 import { z } from "zod"
 
 import { EGender } from "@/lib/types/enums"
@@ -17,10 +18,16 @@ export const editPatronSchema = z.object({
     .trim()
     .optional()
     .transform((data) => (data === "" ? undefined : data)),
-  dob: z.date({ message: "min1" }).optional(),
-  // .transform((data) =>
-  //   data === undefined ? undefined : format(data, "yyyy-MM-dd")
-  // ),
+  dob: z
+    .date({ message: "min1" })
+    .optional()
+    .transform((data) =>
+      data
+        ? DateTime.fromJSDate(data)
+            .setZone("UTC", { keepLocalTime: true })
+            .toJSDate()
+        : undefined
+    ),
 })
 
 export type TEditPatronSchema = z.infer<typeof editPatronSchema>

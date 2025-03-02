@@ -1,3 +1,4 @@
+import { DateTime } from "luxon"
 import { z } from "zod"
 
 import { ETrackingType } from "@/lib/types/enums"
@@ -11,7 +12,13 @@ export const editTrackingSchema = z
       .gte(1000, "gte1000")
       .lte(9999999999, "lte9999999999"), //
     trackingType: z.nativeEnum(ETrackingType), //
-    entryDate: z.coerce.date(), //
+    entryDate: z.coerce
+      .date({ message: "min1" })
+      .transform((data) =>
+        DateTime.fromJSDate(data)
+          .setZone("UTC", { keepLocalTime: true })
+          .toJSDate()
+      ),
     transferLocation: z
       .string()
       .trim()
@@ -33,7 +40,16 @@ export const editTrackingSchema = z
       .trim()
       .optional()
       .transform((data) => (data === "" ? undefined : data)),
-    expectedReturnDate: z.coerce.date().optional(),
+    expectedReturnDate: z.coerce
+      .date()
+      .optional()
+      .transform((data) =>
+        data
+          ? DateTime.fromJSDate(data)
+              .setZone("UTC", { keepLocalTime: true })
+              .toJSDate()
+          : undefined
+      ),
   })
   .refine(
     (data) => {
