@@ -1,13 +1,13 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { type LibraryPackage } from "@/lib/types/models"
+import { type Package } from "@/lib/types/models"
 import {
   mutateLibraryPackageSchema,
   type TMutateLibraryPackageSchema,
@@ -38,16 +38,14 @@ import { Textarea } from "@/components/ui/textarea"
 
 type Props = {
   type: "create" | "update"
-  libraryPackage?: LibraryPackage
+  libraryPackage?: Package
   openEdit?: boolean
   setOpenEdit?: (value: boolean) => void
 } & (
-  | {
-      type: "create"
-    }
+  | { type: "create" }
   | {
       type: "update"
-      libraryPackage: LibraryPackage
+      libraryPackage: Package
       openEdit: boolean
       setOpenEdit: (value: boolean) => void
     }
@@ -65,6 +63,23 @@ function MutatePackageDialog({
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
 
+  const form = useForm<TMutateLibraryPackageSchema>({
+    resolver: zodResolver(mutateLibraryPackageSchema),
+    defaultValues: {
+      packageName: type === "update" ? libraryPackage.packageName : "",
+      price: type === "update" ? libraryPackage.price : 2000,
+      durationInMonths: type === "update" ? libraryPackage.durationInMonths : 1,
+      description: type === "update" ? (libraryPackage.description ?? "") : "",
+    },
+  })
+
+  useEffect(() => {
+    if (openEdit) {
+      form.reset()
+      form.clearErrors()
+    }
+  }, [form, openEdit, open])
+
   const handleOpenChange = (value: boolean) => {
     if (isPending) return
     if (type === "create") {
@@ -73,17 +88,6 @@ function MutatePackageDialog({
     }
     setOpenEdit(value)
   }
-
-  const form = useForm<TMutateLibraryPackageSchema>({
-    resolver: zodResolver(mutateLibraryPackageSchema),
-    defaultValues: {
-      packageName: type === "update" ? libraryPackage.packageName : "",
-      price: type === "update" ? libraryPackage.price : 1000,
-      durationInMonths:
-        type === "update" ? libraryPackage.durationInMonths : 1000,
-      description: type === "update" ? libraryPackage.description : "",
-    },
-  })
 
   const onSubmit = async (values: TMutateLibraryPackageSchema) => {
     console.log("🚀 ~ onSubmit ~ values:", values)
@@ -163,7 +167,7 @@ function MutatePackageDialog({
                       <FormControl>
                         <Input
                           type="number"
-                          min={1000}
+                          min={2000}
                           disabled={isPending}
                           {...field}
                           placeholder={tGeneral("placeholder.package price")}

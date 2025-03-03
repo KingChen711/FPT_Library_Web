@@ -4,15 +4,16 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import { type Package } from "@/lib/types/models"
 
-function useGetPackages() {
+function useGetPackage(libraryPackageId: string) {
   const { accessToken } = useAuth()
 
   return useQuery({
     queryKey: ["packages"],
     queryFn: async () => {
-      const res = await http.get<Package[]>(`/api/packages`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      })
+      const res = await http.get<Package>(
+        `/api/management/packages/${libraryPackageId}`,
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      )
       return res.data
     },
     placeholderData: keepPreviousData,
@@ -20,4 +21,4 @@ function useGetPackages() {
   })
 }
 
-export default useGetPackages
+export default useGetPackage

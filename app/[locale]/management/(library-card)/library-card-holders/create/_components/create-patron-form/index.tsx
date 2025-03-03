@@ -180,19 +180,16 @@ function CreatePatronForm() {
         ? paymentData.expiredAt.getTime() - Date.now()
         : 0
 
-      setPaymentStates((prev) => ({
-        ...prev,
-        leftTime,
-      }))
+      setPaymentStates((prev) => ({ ...prev, leftTime }))
 
       if (leftTime > 0 || !paymentData?.expiredAt) return
 
-      // setPaymentStates((prev) => ({
-      //   ...prev,
-      //   leftTime: 0,
-      //   canNavigate: true,
-      //   status: ETransactionStatus.EXPIRED,
-      // }))
+      setPaymentStates((prev) => ({
+        ...prev,
+        leftTime: 0,
+        canNavigate: true,
+        status: ETransactionStatus.EXPIRED,
+      }))
     }, 1000)
 
     return () => {
@@ -212,10 +209,7 @@ function CreatePatronForm() {
         return
       }
 
-      setPaymentStates((prev) => ({
-        ...prev,
-        navigateTime,
-      }))
+      setPaymentStates((prev) => ({ ...prev, navigateTime }))
     }, 1000)
 
     return () => clearInterval(timer)
