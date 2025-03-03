@@ -134,15 +134,9 @@ export type CurrentUser = {
   notificationRecipients: []
 }
 
-export type LibraryItemLanguage = {
-  languageName: string
-  languageCode: string
-}
+export type LibraryItemLanguage = { languageName: string; languageCode: string }
 
-export type ImportError = {
-  rowNumber: number
-  errors: string[]
-}
+export type ImportError = { rowNumber: number; errors: string[] }
 
 export type Role = {
   roleId: number
@@ -235,20 +229,7 @@ export type Author = {
   bookEditionAuthors: unknown[]
 }
 
-export type LibraryPackage = {
-  libraryCardPackageId: number
-  packageName: string
-  price: number
-  durationInMonths: number
-  isActive: boolean
-  createdAt: string
-  description: string
-}
-
-export type PaymentMethod = {
-  paymentMethodId: number
-  methodName: string
-}
+export type PaymentMethod = { paymentMethodId: number; methodName: string }
 
 export type LibraryItem = {
   libraryItemId: number
@@ -456,9 +437,7 @@ export type LibraryItemInstance = {
   createdBy: string
   updatedBy: string | null
   isDeleted: boolean
-  libraryItemConditionHistories: (ConditionHistory & {
-    condition: Condition
-  })[]
+  libraryItemConditionHistories: (ConditionHistory & { condition: Condition })[]
 }
 
 export type Floor = {
@@ -562,14 +541,8 @@ export type OcrResult = {
 }
 
 export type PredictResult = {
-  bestItem: {
-    ocrResult: OcrResult
-    libraryItemId: number
-  }
-  otherItems: {
-    ocrResult: OcrResult
-    libraryItemId: number
-  }[]
+  bestItem: { ocrResult: OcrResult; libraryItemId: number }
+  otherItems: { ocrResult: OcrResult; libraryItemId: number }[]
 }
 
 // Ocr Detail
@@ -597,10 +570,7 @@ export type OcrDetail = {
 }
 
 // Ocr detect
-export type DetectedValue = {
-  name: string
-  percentage: number
-}
+export type DetectedValue = { name: string; percentage: number }
 
 export type OcrDetect = {
   importImageDetected: DetectedValue[]
@@ -610,10 +580,7 @@ export type OcrDetect = {
 // Recommendation
 export type LibraryItemsRecommendation = {
   itemDetailDto: LibraryItem
-  matchedProperties: {
-    name: string
-    isMatched: boolean
-  }[]
+  matchedProperties: { name: string; isMatched: boolean }[]
 }
 
 // Payment

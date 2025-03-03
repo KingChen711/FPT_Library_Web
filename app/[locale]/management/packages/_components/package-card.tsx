@@ -2,25 +2,30 @@
 
 import { useState } from "react"
 import { PencilIcon, Trash2Icon } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
-import { type LibraryPackage } from "@/lib/types/models"
+import { type Package } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
-import { Icons } from "@/components/ui/icons"
 
 import DeletePackageDialog from "./delete-package-dialog"
 import MutatePackageDialog from "./mutate-package-dialog"
 
 type Props = {
-  item: LibraryPackage
+  item: Package
   disabledContext?: boolean
   onClick?: () => void
   className?: string
@@ -32,9 +37,15 @@ const PackageCard = ({
   onClick,
   className,
 }: Props) => {
+  const locale = useLocale()
+
   const [openEdit, setOpenEdit] = useState<boolean>(false)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
   const t = useTranslations("GeneralManagement")
+  const formattedPrice = new Intl.NumberFormat("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  }).format(item.price)
 
   return (
     <>
@@ -57,38 +68,32 @@ const PackageCard = ({
             }}
             className={cn(
               "col-span-12 h-full flex-1 rounded-md border bg-card shadow sm:col-span-6 lg:col-span-3",
+              onClick && "cursor-pointer",
               className
             )}
           >
-            <CardHeader className="pb-4">
-              <CardTitle className="flex items-center justify-between">
-                <span className="line-clamp-2 flex items-center">
-                  <Icons.Package className="mr-2 size-5" />
+            <CardHeader className="space-y-1 pb-4">
+              <div className="flex items-start justify-between">
+                <CardTitle className="line-clamp-2 text-xl font-bold">
                   {item.packageName}
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-2">
-                <p className="line-clamp-2 text-sm text-muted-foreground">
-                  {item.description}
-                </p>
-                <p className="space-x-2 text-base font-medium">
-                  💰 {t("price")}:
-                  <span className="ml-2 text-yellow-500">
-                    ${item.price.toLocaleString()}
-                  </span>
-                </p>
-                <p className="text-base">
-                  📅 {t("duration")}: {item.durationInMonths} {t("month")}
-                </p>
+                </CardTitle>
                 <Badge
-                  variant={item.isActive ? "success" : "destructive"}
-                  className="flex w-fit items-center justify-center text-center"
+                  variant="secondary"
+                  className="text-nowrap bg-primary/10 text-primary"
                 >
-                  {item.isActive ? t("fields.active") : t("fields.inactive")}
+                  {item.durationInMonths} {locale === "vi" ? "tháng" : "months"}
                 </Badge>
               </div>
+              <CardDescription className="text-2xl font-bold text-primary">
+                {formattedPrice}
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {item.description && (
+                <p className="text-sm text-muted-foreground">
+                  {item.description}
+                </p>
+              )}
             </CardContent>
           </Card>
         </ContextMenuTrigger>

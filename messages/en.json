@@ -71,9 +71,7 @@
     "Verify your email": "Verify your email",
     "Message": "Enter the verification code sent to your email"
   },
-  "HomePage": {
-    "welcome": "Welcome to E-Library!"
-  },
+  "HomePage": { "welcome": "Welcome to E-Library!" },
   "Zod": {
     "min1": "Required",
     "min2": "Must contain at least 2 characters",
@@ -414,6 +412,7 @@
     "Search page": "Search page",
     "AI prediction": "A.I prediction",
     "AI recommendation": "A.I recommendation",
+    "Conditions": "Conditions",
     "My shelf": "My shelf",
     "Books": "Books",
     "Borrows": "Borrows",
@@ -607,9 +606,7 @@
     "Active MFA": "Active MFA",
     "Password": "Password"
   },
-  "NotificationsPage": {
-    "Search": "Search..."
-  },
+  "NotificationsPage": { "Search": "Search..." },
   "BookPage": {
     "fields": {
       "title": "Title",
@@ -1416,24 +1413,10 @@
       "Damaged": "Damaged",
       "Lost": "Lost"
     },
-    "NotificationType": {
-      "0": "Event",
-      "1": "Notice",
-      "2": "Reminder"
-    },
-    "ResourceBookType": {
-      "AudioBook": "Audio book",
-      "Ebook": "EBook"
-    },
-    "BookFormat": {
-      "Paperback": "Paperback",
-      "HardCover": "Hard cover"
-    },
-    "BookEditionStatus": {
-      "0": "Draft",
-      "1": "Published",
-      "2": "Deleted"
-    },
+    "NotificationType": { "0": "Event", "1": "Notice", "2": "Reminder" },
+    "ResourceBookType": { "AudioBook": "Audio book", "Ebook": "EBook" },
+    "BookFormat": { "Paperback": "Paperback", "HardCover": "Hard cover" },
+    "BookEditionStatus": { "0": "Draft", "1": "Published", "2": "Deleted" },
     "BookCopyStatus": {
       "InShelf": "In shelf",
       "OutOfShelf": "Out of shelf",
@@ -1441,55 +1424,17 @@
       "Reserved": "Reserved",
       "Deleted": "Deleted"
     },
-    "Visibility": {
-      "Public": "Public",
-      "Private": "Private"
-    },
-    "Trained": {
-      "Trained": "Trained",
-      "NotYet": "Not yet"
-    },
-    "AuditType": {
-      "0": "None",
-      "1": "Added",
-      "2": "Modified",
-      "3": "Deleted"
-    },
-    "SupplierType": {
-      "0": "Publisher",
-      "1": "Distributor"
-    },
-    "Active": {
-      "Active": "Active",
-      "Inactive": "Inactive"
-    },
-    "TrackingType": {
-      "0": "Stock in",
-      "1": "Stock out",
-      "2": "Transfer"
-    },
-    "TrackingStatus": {
-      "0": "Draft",
-      "1": "Completed",
-      "2": "Cancelled"
-    },
-    "Cataloged": {
-      "Cataloged": "Cataloged",
-      "Uncataloged": "Uncataloged"
-    },
-    "PatronStatus": {
-      "0": "Active",
-      "1": "Inactive",
-      "2": "Deleted"
-    },
-    "PatronType": {
-      "0": "Self made",
-      "1": "Employee made"
-    },
-    "PatronHasCard": {
-      "0": "Have card",
-      "1": "No card"
-    },
+    "Visibility": { "Public": "Public", "Private": "Private" },
+    "Trained": { "Trained": "Trained", "NotYet": "Not yet" },
+    "AuditType": { "0": "None", "1": "Added", "2": "Modified", "3": "Deleted" },
+    "SupplierType": { "0": "Publisher", "1": "Distributor" },
+    "Active": { "Active": "Active", "Inactive": "Inactive" },
+    "TrackingType": { "0": "Stock in", "1": "Stock out", "2": "Transfer" },
+    "TrackingStatus": { "0": "Draft", "1": "Completed", "2": "Cancelled" },
+    "Cataloged": { "Cataloged": "Cataloged", "Uncataloged": "Uncataloged" },
+    "PatronStatus": { "0": "Active", "1": "Inactive", "2": "Deleted" },
+    "PatronType": { "0": "Self made", "1": "Employee made" },
+    "PatronHasCard": { "0": "Have card", "1": "No card" },
     "Gender": {
       "Male": "Male",
       "Female": "Female",
@@ -1497,14 +1442,8 @@
       "1": "Female",
       "2": "Other"
     },
-    "IssuanceMethod": {
-      "0": "In library",
-      "1": "Online"
-    },
-    "TransactionMethod": {
-      "0": "Cash",
-      "1": "Digital payment"
-    },
+    "IssuanceMethod": { "0": "In library", "1": "Online" },
+    "TransactionMethod": { "0": "Cash", "1": "Digital payment" },
     "CardStatus": {
       "0": "Unpaid",
       "1": "Pending",

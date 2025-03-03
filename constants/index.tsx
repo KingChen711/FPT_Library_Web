@@ -56,7 +56,7 @@ export const managementRoutes = [
     route: "/management/conditions",
     label: "Conditions",
     Icon: (props: { className?: string }) => {
-      return <Icons.Package {...props} />
+      return <Icons.Condition {...props} />
     },
   },
   {

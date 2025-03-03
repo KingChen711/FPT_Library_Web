@@ -75,9 +75,7 @@
     "Verify your email": "Xác minh email",
     "Message": "Nhập OTP được gửi đến email của bạn"
   },
-  "HomePage": {
-    "welcome": "Chào mừng đến với ELibrary!"
-  },
+  "HomePage": { "welcome": "Chào mừng đến với ELibrary!" },
   "Zod": {
     "min1": "Bắt buộc",
     "min2": "Phải có ít nhất 2 kí tự",
@@ -416,6 +414,7 @@
     "Search page": "Trang tìm kiếm",
     "AI prediction": "A.I dự đoán",
     "AI recommendation": "A.I gợi ý",
+    "Conditions": "Tình trạng sách",
     "My shelf": "Kệ sách",
     "Books": "Sách",
     "Borrows": "Mượn sách",
@@ -610,9 +609,7 @@
     "Active MFA": "Kích hoạt MFA",
     "Password": "Mật khẩu"
   },
-  "NotificationsPage": {
-    "Search": "Tìm kiếm..."
-  },
+  "NotificationsPage": { "Search": "Tìm kiếm..." },
   "BookPage": {
     "fields": {
       "title": "Tiêu đề",
@@ -1420,24 +1417,10 @@
       "Damaged": "Hỏng",
       "Lost": "Mất"
     },
-    "NotificationType": {
-      "0": "Sự kiện",
-      "1": "Thông báo",
-      "2": "Nhắc nhở"
-    },
-    "ResourceBookType": {
-      "AudioBook": "Sách nói",
-      "Ebook": "Sách điện tử"
-    },
-    "BookFormat": {
-      "Paperback": "Bìa giấy",
-      "HardCover": "Bìa cứng"
-    },
-    "BookEditionStatus": {
-      "0": "Bản nháp",
-      "1": "Xuất bản",
-      "2": "Đã xóa"
-    },
+    "NotificationType": { "0": "Sự kiện", "1": "Thông báo", "2": "Nhắc nhở" },
+    "ResourceBookType": { "AudioBook": "Sách nói", "Ebook": "Sách điện tử" },
+    "BookFormat": { "Paperback": "Bìa giấy", "HardCover": "Bìa cứng" },
+    "BookEditionStatus": { "0": "Bản nháp", "1": "Xuất bản", "2": "Đã xóa" },
     "BookCopyStatus": {
       "InShelf": "Trên kệ",
       "OutOfShelf": "Trong kho",
@@ -1445,55 +1428,17 @@
       "Reserved": "Đặt trước",
       "Deleted": "Đã xóa"
     },
-    "Visibility": {
-      "Public": "Công khai",
-      "Private": "Riêng tư"
-    },
-    "Trained": {
-      "Trained": "Đã train",
-      "NotYet": "Chưa train"
-    },
-    "AuditType": {
-      "0": "Không đổi",
-      "1": "Tạo",
-      "2": "Sửa",
-      "3": "Xóa"
-    },
-    "SupplierType": {
-      "0": "Nhà xuất bản",
-      "1": "Nhà phân phối"
-    },
-    "Active": {
-      "Active": "Hoạt động",
-      "Inactive": "Không"
-    },
-    "TrackingType": {
-      "0": "Nhập kho",
-      "1": "Xuất kho",
-      "2": "Trao đổi"
-    },
-    "TrackingStatus": {
-      "0": "Bản nháp",
-      "1": "Hoàn thành",
-      "2": "Đã Hủy"
-    },
-    "Cataloged": {
-      "Cataloged": "Đã biên mục",
-      "Uncataloged": "Chưa biên mục"
-    },
-    "PatronStatus": {
-      "0": "Hoạt động",
-      "1": "Bất hoạt",
-      "2": "Đã xóa"
-    },
-    "PatronType": {
-      "0": "Tự tạo",
-      "1": "Nhân viên tạo"
-    },
-    "PatronHasCard": {
-      "0": "Có thẻ",
-      "1": "Không thẻ"
-    },
+    "Visibility": { "Public": "Công khai", "Private": "Riêng tư" },
+    "Trained": { "Trained": "Đã train", "NotYet": "Chưa train" },
+    "AuditType": { "0": "Không đổi", "1": "Tạo", "2": "Sửa", "3": "Xóa" },
+    "SupplierType": { "0": "Nhà xuất bản", "1": "Nhà phân phối" },
+    "Active": { "Active": "Hoạt động", "Inactive": "Không" },
+    "TrackingType": { "0": "Nhập kho", "1": "Xuất kho", "2": "Trao đổi" },
+    "TrackingStatus": { "0": "Bản nháp", "1": "Hoàn thành", "2": "Đã Hủy" },
+    "Cataloged": { "Cataloged": "Đã biên mục", "Uncataloged": "Chưa biên mục" },
+    "PatronStatus": { "0": "Hoạt động", "1": "Bất hoạt", "2": "Đã xóa" },
+    "PatronType": { "0": "Tự tạo", "1": "Nhân viên tạo" },
+    "PatronHasCard": { "0": "Có thẻ", "1": "Không thẻ" },
     "Gender": {
       "Male": "Nam",
       "Female": "Nữ",
@@ -1501,14 +1446,8 @@
       "1": "Nữ",
       "2": "Khác"
     },
-    "IssuanceMethod": {
-      "0": "Tại thư viện",
-      "1": "Trực tuyến"
-    },
-    "TransactionMethod": {
-      "0": "Tiền mặt",
-      "1": "Thanh toán điện tử"
-    },
+    "IssuanceMethod": { "0": "Tại thư viện", "1": "Trực tuyến" },
+    "TransactionMethod": { "0": "Tiền mặt", "1": "Thanh toán điện tử" },
     "CardStatus": {
       "0": "Chưa thanh toán",
       "1": "Đang chờ",
@@ -1544,8 +1483,5 @@
     "Enter search value": "Tìm kiếm...",
     "Keywords": "Từ khóa..."
   },
-  "AutocompleteLibraryItem": {
-    "Available": "Có sẵn",
-    "Out of shelf": "Đã hết"
-  }
+  "AutocompleteLibraryItem": { "Available": "Có sẵn", "Out of shelf": "Đã hết" }
 }

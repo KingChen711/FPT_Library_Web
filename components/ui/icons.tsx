@@ -350,6 +350,27 @@ export const Icons = {
       </g>
     </svg>
   ),
+
+  Condition: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="1em"
+      height="1em"
+      viewBox="0 0 48 48"
+      {...props}
+      className={cn(className)}
+    >
+      <g fill="none" stroke="currentColor" strokeWidth="4">
+        <path d="M39 6H9a3 3 0 0 0-3 3v30a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3Z"></path>
+        <path
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M27.3 12c-1.823 0-3.3 1.435-3.3 3.204c0 3.205 3.9 6.118 6 6.796c2.1-.678 6-3.59 6-6.796C36 13.434 34.523 12 32.7 12a3.326 3.326 0 0 0-2.7 1.362A3.326 3.326 0 0 0 27.3 12Z"
+        ></path>
+      </g>
+    </svg>
+  ),
+
   Resource: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

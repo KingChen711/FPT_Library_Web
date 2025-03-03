@@ -7,7 +7,6 @@ import ConditionCard from "./_components/condition-card"
 import MutateConditionDialog from "./_components/mutate-condition-dialog"
 
 async function ConditionsManagementPage() {
-  // await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("GeneralManagement")
   const conditions = await getConditions()
 
