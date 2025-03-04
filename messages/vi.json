@@ -579,7 +579,23 @@
     "Reservations": "Đặt trước",
     "Transactions": "Giao dịch",
     "Notifications": "Thông báo",
-    "Select gender": "Chọn giới tính"
+    "Select gender": "Chọn giới tính",
+    "Create card": "Tạo thẻ",
+    "Extend card": "Gia hạn thẻ",
+    "Request date": "Ngày yêu cầu",
+    "Expiration date": "Ngày hết hạn",
+    "Total request item": "Số lượng tài liệu",
+    "Description": "Mô tả",
+    "Cancelled at": "Hủy lúc",
+    "Cancellation reason": "Lý do hủy",
+    "Amount": "Số tiền",
+    "Method": "Phương thức",
+    "Transaction date": "Ngày giao dịch",
+    "Expired at": "Hết hạn lúc",
+    "Created at": "Tạo lúc",
+    "Created by": "Tạo bởi",
+    "Cancelled reason": "Lý do hủy",
+    "Total missed pick up": "Số lần bỏ lỡ"
   },
   "MfaPage": {
     "Verify MFA": "Xác thực MFA",
@@ -1420,6 +1436,7 @@
       "Damaged": "Hỏng",
       "Lost": "Mất"
     },
+
     "NotificationType": {
       "0": "Sự kiện",
       "1": "Thông báo",
@@ -1507,7 +1524,7 @@
     },
     "TransactionMethod": {
       "0": "Tiền mặt",
-      "1": "Thanh toán điện tử"
+      "1": "Điện tử"
     },
     "CardStatus": {
       "0": "Chưa thanh toán",
@@ -1516,6 +1533,25 @@
       "3": "Từ chối",
       "4": "Hết hạn",
       "5": "Đình chỉ"
+    },
+    "TransactionStatus": {
+      "0": "Đang chờ",
+      "1": "Hết hạn",
+      "2": "Đã thanh toán",
+      "3": "Đã hủy"
+    },
+    "TransactionType": {
+      "0": "Phí phạt",
+      "1": "Mượn điện tử",
+      "2": "Đăng ký thẻ",
+      "3": "Gia hạn thẻ",
+      "4": "Gia hạn điện tử"
+    },
+    "BorrowRequestStatus": {
+      "0": "Đã tạo",
+      "1": "Hết hạn",
+      "2": "Đã mượn",
+      "3": "Đã hủy"
     }
   },
   "IsbnScanner": {

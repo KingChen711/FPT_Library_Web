@@ -36,12 +36,14 @@ type Props = {
   currentStatus: ETransactionStatus
   orderCode: string
   paymentLinkId: string
+  userId?: string
 }
 
 function CancelPaymentDialog({
   currentStatus,
   paymentLinkId,
   orderCode,
+  userId,
 }: Props) {
   const [open, setOpen] = useState(false)
 
@@ -64,7 +66,6 @@ function CancelPaymentDialog({
     },
   })
 
-  // 2. Define a submit handler.
   function onSubmit(values: TCancelPaymentSchema) {
     startTransition(async () => {
       const res = await cancelPayment(values)
@@ -75,7 +76,9 @@ function CancelPaymentDialog({
           description: res.data,
           variant: "success",
         })
-        router.push("/management/library-card-holders")
+        router.push(
+          `/management/library-card-holders${userId ? "/" + userId : ""}`
+        )
         return
       }
 

@@ -1,17 +1,20 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
+import { Link } from "@/i18n/routing"
 import {
   ChevronDown,
   ChevronUp,
   Loader2,
   Pencil,
+  Plus,
   Trash2,
   X,
 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { ECardStatus } from "@/lib/types/enums"
 import { type LibraryCard } from "@/lib/types/models"
 import { confirmCard } from "@/actions/library-card/cards/confirm-card"
 import { deleteCard } from "@/actions/library-card/cards/delete-card"
@@ -36,9 +39,14 @@ import SuspendCardDialog from "./suspend-card-dialog"
 type Props = {
   libraryCard: LibraryCard
   userId: string
+  canExtendCard: boolean
 }
 
-function LibraryCardActionsDropdown({ libraryCard, userId }: Props) {
+function LibraryCardActionsDropdown({
+  libraryCard,
+  userId,
+  canExtendCard,
+}: Props) {
   const t = useTranslations("LibraryCardManagementPage")
   const locale = useLocale()
   const [openDropdown, setOpenDropdown] = useState(false)
@@ -175,27 +183,46 @@ function LibraryCardActionsDropdown({ libraryCard, userId }: Props) {
             {t("Edit information")}
           </DropdownMenuItem>
 
-          <DropdownMenuItem
-            disabled={confirming || unSuspending}
-            className="cursor-pointer"
-            onClick={handleConfirmCard}
-          >
-            <Icons.ConfirmCard className="size-4" />
-            {t("Confirm card")}
-            {confirming && <Loader2 className="ml-1 size-4 animate-spin" />}
-          </DropdownMenuItem>
+          {libraryCard.status === ECardStatus.PENDING && (
+            <DropdownMenuItem
+              disabled={confirming || unSuspending}
+              className="cursor-pointer"
+              onClick={handleConfirmCard}
+            >
+              <Icons.ConfirmCard className="size-4" />
+              {t("Confirm card")}
+              {confirming && <Loader2 className="ml-1 size-4 animate-spin" />}
+            </DropdownMenuItem>
+          )}
 
-          <DropdownMenuItem
-            disabled={confirming || unSuspending}
-            className="cursor-pointer"
-            onClick={() => {
-              setOpenDropdown(false)
-              setOpenReject(true)
-            }}
-          >
-            <X className="size-5" />
-            {t("Reject card")}
-          </DropdownMenuItem>
+          {libraryCard.status === ECardStatus.PENDING && (
+            <DropdownMenuItem
+              disabled={confirming || unSuspending}
+              className="cursor-pointer"
+              onClick={() => {
+                setOpenDropdown(false)
+                setOpenReject(true)
+              }}
+            >
+              <X className="size-5" />
+              {t("Reject card")}
+            </DropdownMenuItem>
+          )}
+
+          {libraryCard.status === ECardStatus.EXPIRED && canExtendCard && (
+            <DropdownMenuItem
+              disabled={confirming || unSuspending}
+              className="cursor-pointer"
+              asChild
+            >
+              <Link
+                href={`/management/library-card-holders/${userId}/extend-card?libraryCardId=${libraryCard.libraryCardId}`}
+              >
+                <Plus /> {t("Extend card")}
+              </Link>
+            </DropdownMenuItem>
+          )}
+
           <DropdownMenuItem
             disabled={confirming || unSuspending}
             className="cursor-pointer"
@@ -207,39 +234,48 @@ function LibraryCardActionsDropdown({ libraryCard, userId }: Props) {
             <Icons.Archive className="size-4" />
             {t("Archive card")}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            disabled={confirming || unSuspending}
-            className="cursor-pointer"
-            onClick={() => {
-              setOpenDropdown(false)
-              setOpenExtendBorrow(true)
-            }}
-          >
-            <Icons.Upgrade className="size-4" />
-            {t("Extend borrow amount")}
-          </DropdownMenuItem>
 
-          <DropdownMenuItem
-            disabled={confirming || unSuspending}
-            className="cursor-pointer"
-            onClick={() => {
-              setOpenDropdown(false)
-              setOpenSuspend(true)
-            }}
-          >
-            <Icons.Suspend className="size-4" />
-            {t("Suspend card")}
-          </DropdownMenuItem>
+          {libraryCard.status === ECardStatus.ACTIVE && (
+            <DropdownMenuItem
+              disabled={confirming || unSuspending}
+              className="cursor-pointer"
+              onClick={() => {
+                setOpenDropdown(false)
+                setOpenExtendBorrow(true)
+              }}
+            >
+              <Icons.Upgrade className="size-4" />
+              {t("Extend borrow amount")}
+            </DropdownMenuItem>
+          )}
 
-          <DropdownMenuItem
-            disabled={confirming || unSuspending}
-            className="cursor-pointer"
-            onClick={handleUnSuspendCard}
-          >
-            <Icons.UnSuspend className="size-4" />
-            {t("Un suspend card")}
-            {unSuspending && <Loader2 className="ml-1 size-4 animate-spin" />}
-          </DropdownMenuItem>
+          {libraryCard.status !== ECardStatus.UNPAID &&
+            libraryCard.status !== ECardStatus.PENDING &&
+            libraryCard.status !== ECardStatus.REJECTED && (
+              <DropdownMenuItem
+                disabled={confirming || unSuspending}
+                className="cursor-pointer"
+                onClick={() => {
+                  setOpenDropdown(false)
+                  setOpenSuspend(true)
+                }}
+              >
+                <Icons.Suspend className="size-4" />
+                {t("Suspend card")}
+              </DropdownMenuItem>
+            )}
+
+          {libraryCard.status === ECardStatus.SUSPENDED && (
+            <DropdownMenuItem
+              disabled={confirming || unSuspending}
+              className="cursor-pointer"
+              onClick={handleUnSuspendCard}
+            >
+              <Icons.UnSuspend className="size-4" />
+              {t("Un suspend card")}
+              {unSuspending && <Loader2 className="ml-1 size-4 animate-spin" />}
+            </DropdownMenuItem>
+          )}
 
           <DropdownMenuItem
             disabled={confirming || unSuspending}

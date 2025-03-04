@@ -1,6 +1,7 @@
 import React from "react"
 import { notFound } from "next/navigation"
 import { auth } from "@/queries/auth"
+import checkCanExtendCard from "@/queries/patrons/cards/check-can-extend-card"
 import getPatron from "@/queries/patrons/get-patron"
 import { format } from "date-fns"
 import { Check, X } from "lucide-react"
@@ -30,9 +31,11 @@ import PatronStatusBadge from "@/components/ui/patron-status-badge"
 import PatronTypeBadge from "@/components/ui/patron-type-badge"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+import BorrowRequestsTab from "./_components/borrow-requests-tab"
 import LibraryCardActionsDropdown from "./_components/card-actions-dropdown"
 import PatronActionsDropdown from "./_components/patron-actions-dropdown"
 import PatronDetailBreadCrumb from "./_components/patron-detail-bread-crumb"
+import TransactionsTab from "./_components/transactions-tab"
 
 type Props = {
   params: {
@@ -50,10 +53,14 @@ async function PatronDetailPage({ params }: Props) {
 
   if (!patron) notFound()
 
+  const canExtendCard = patron.libraryCard
+    ? await checkCanExtendCard(patron.libraryCard.libraryCardId)
+    : false
+
   const fullName = getFullName(patron.firstName, patron.lastName)
 
   return (
-    <div className="mt-4 pb-8">
+    <div className="pb-8">
       <div className="flex flex-col gap-4">
         <PatronDetailBreadCrumb title={fullName} />
 
@@ -207,6 +214,7 @@ async function PatronDetailPage({ params }: Props) {
               <LibraryCardActionsDropdown
                 libraryCard={patron.libraryCard}
                 userId={patron.userId}
+                canExtendCard={canExtendCard}
               />
             </div>
             <div className="grid grid-cols-12 gap-y-6 text-sm">
@@ -494,14 +502,12 @@ async function PatronDetailPage({ params }: Props) {
               <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
                 <h4 className="font-bold">{t("Transaction code")}</h4>
                 <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2">
-                    <p>
-                      {patron.libraryCard.transactionCode ? (
-                        patron.libraryCard.transactionCode
-                      ) : (
-                        <NoData />
-                      )}
-                    </p>
+                  <div>
+                    {patron.libraryCard.transactionCode ? (
+                      patron.libraryCard.transactionCode
+                    ) : (
+                      <NoData />
+                    )}
                   </div>
                 </div>
               </div>
@@ -509,7 +515,7 @@ async function PatronDetailPage({ params }: Props) {
           </div>
         )}
 
-        <Tabs defaultValue="borrow-requests">
+        <Tabs defaultValue="borrow-records">
           <TabsList>
             <TabsTrigger value="borrow-records">
               {t("Borrow records")}
@@ -526,6 +532,8 @@ async function PatronDetailPage({ params }: Props) {
               {t("Notifications")}
             </TabsTrigger>
           </TabsList>
+          <BorrowRequestsTab userId={params.id} />
+          <TransactionsTab userId={params.id} />
         </Tabs>
       </div>
     </div>
