@@ -13,7 +13,7 @@ function ManagementLayout({ children }: Props) {
   return (
     <SidebarProvider defaultOpen>
       <ManagementSidebar />
-      <main className="mx-auto flex w-full max-w-7xl flex-col gap-4 p-6">
+      <main className="mx-auto flex w-full max-w-[1620px] flex-col gap-6 p-6 pt-0">
         <ManagementNavbar />
         {children}
       </main>

@@ -1,12 +1,14 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
+import Link from "next/link"
 import { type PatronDetail } from "@/queries/patrons/get-patron"
 import {
   ChevronDown,
   ChevronUp,
   Loader2,
   Pencil,
+  Plus,
   RotateCcw,
   Trash2,
 } from "lucide-react"
@@ -133,6 +135,19 @@ function PatronActionsDropdown({ patron }: Props) {
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="overflow-visible">
+          {!patron.libraryCard && (
+            <DropdownMenuItem
+              disabled={isPending}
+              className="cursor-pointer"
+              asChild
+            >
+              <Link
+                href={`/management/library-card-holders/${patron.userId}/add-card`}
+              >
+                <Plus /> {t("Create card")}
+              </Link>
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             disabled={isPending}
             className="cursor-pointer"

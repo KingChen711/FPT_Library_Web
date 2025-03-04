@@ -4,13 +4,13 @@ import "server-only"
 
 import { format } from "date-fns"
 
-import { type Patron } from "@/lib/types/models"
+import { type LibraryCard, type Patron } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 import { type TSearchPatronsSchema } from "@/lib/validations/patrons/search-patrons"
 
 import { auth } from "../auth"
 
-export type Patrons = Patron[]
+export type Patrons = (Patron & { libraryCard: LibraryCard | null })[]
 
 const getPatrons = async (
   searchParams: TSearchPatronsSchema
@@ -18,6 +18,7 @@ const getPatrons = async (
   const { getAccessToken } = auth()
   try {
     const formatDate = (d: Date) => format(d, "yyyy-MM-dd")
+
     const { data } = await http.get<Pagination<Patrons>>(
       `/api/management/library-card-holders`,
       {

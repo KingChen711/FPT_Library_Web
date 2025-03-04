@@ -6,7 +6,7 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TCreatePatronSchema } from "@/lib/validations/patrons/create-patron"
+import { type TExtendCardSchema } from "@/lib/validations/patrons/cards/extend-card"
 
 export type PaymentData = {
   description: string
@@ -16,23 +16,25 @@ export type PaymentData = {
   paymentLinkId: string
 }
 
-export async function createPatron(
-  body: TCreatePatronSchema
+export async function extendCard(
+  libraryCardId: string,
+  body: TExtendCardSchema
 ): Promise<
   ActionResponse<{ message: string; paymentData: PaymentData | null }>
 > {
   const { getAccessToken } = auth()
   try {
-    const { message, data } = await http.post<{
+    const { message, data } = await http.patch<{
       payOsResponse: { data: PaymentData | null }
       expiredAtOffsetUnixSeconds: number
-    }>(`/api/management/library-card-holders`, body, {
+    }>(`/api/management/library-cards/${libraryCardId}/extend`, body, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     })
 
-    revalidatePath("/management/library-card-holders")
+    revalidatePath(`/management/library-card-holders/${libraryCardId}`)
+    revalidatePath(`/management/library-card-holders`)
 
     return {
       isSuccess: true,
@@ -52,6 +54,8 @@ export async function createPatron(
       },
     }
   } catch (error) {
+    console.log(error)
+
     return handleHttpError(error)
   }
 }

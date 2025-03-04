@@ -5,7 +5,6 @@ import Image from "next/image"
 import { useAuth } from "@/contexts/auth-provider"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { getLocalTimeZone } from "@internationalized/date"
 import { type HubConnection } from "@microsoft/signalr"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -20,21 +19,15 @@ import {
   onReceiveVerifyPaymentStatus,
   type SocketVerifyPaymentStatus,
 } from "@/lib/signalR/verify-payment-status"
-import {
-  EGender,
-  ETransactionMethod,
-  ETransactionStatus,
-} from "@/lib/types/enums"
+import { ETransactionMethod, ETransactionStatus } from "@/lib/types/enums"
 import { cn, formatLeftTime } from "@/lib/utils"
 import {
-  createPatronSchema,
-  type TCreatePatronSchema,
-} from "@/lib/validations/patrons/create-patron"
+  addCardSchema,
+  type TAddCardSchema,
+} from "@/lib/validations/patrons/cards/add-card"
 import { uploadBookImage } from "@/actions/books/upload-medias"
-import {
-  createPatron,
-  type PaymentData,
-} from "@/actions/library-card/patrons/create-patron"
+import { addCard } from "@/actions/library-card/cards/add-card"
+import { type PaymentData } from "@/actions/library-card/patrons/create-patron"
 import { toast } from "@/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -47,10 +40,6 @@ import {
 } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import Copitor from "@/components/ui/copitor"
-import {
-  createCalendarDate,
-  DateTimePicker,
-} from "@/components/ui/date-time-picker/index"
 import {
   Form,
   FormControl,
@@ -65,12 +54,15 @@ import { Input } from "@/components/ui/input"
 import PackageCard from "@/components/ui/package-card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-import CancelPaymentDialog from "../../../../../../../../components/ui/cancel-payment-dialog"
-import CreatePatronAvatarField from "./create-patron-avatar-field"
+import CancelPaymentDialog from "../../../../../../../../../components/ui/cancel-payment-dialog"
+import AddCardAvatarField from "./add-card-avatar-field"
 import SelectPackageField from "./select-package-field"
 
-function CreatePatronForm() {
-  const timezone = getLocalTimeZone()
+type Props = {
+  userId: string
+}
+
+function AddCardForm({ userId }: Props) {
   const t = useTranslations("LibraryCardManagementPage")
   const tTransactionMethod = useTranslations("Badges.TransactionMethod")
   const router = useRouter()
@@ -79,10 +71,10 @@ function CreatePatronForm() {
 
   const [isPending, startTransition] = useTransition()
 
-  const form = useForm<TCreatePatronSchema>({
-    resolver: zodResolver(createPatronSchema),
+  const form = useForm<TAddCardSchema>({
+    resolver: zodResolver(addCardSchema),
     defaultValues: {
-      gender: EGender.MALE,
+      userId,
       transactionMethod: ETransactionMethod.CASH,
       confirmPatronHasCash: false,
     },
@@ -97,7 +89,7 @@ function CreatePatronForm() {
     status: ETransactionStatus.PENDING,
   })
 
-  function onSubmit(values: TCreatePatronSchema) {
+  function onSubmit(values: TAddCardSchema) {
     startTransition(async () => {
       const avatarFile = values.file
 
@@ -117,7 +109,8 @@ function CreatePatronForm() {
 
       values.file = undefined
 
-      const res = await createPatron(values)
+      const res = await addCard(values)
+      console.log({ res })
       if (res.isSuccess) {
         if (res.data.paymentData) {
           setPaymentData(res.data.paymentData)
@@ -128,7 +121,7 @@ function CreatePatronForm() {
           description: res.data.message,
           variant: "success",
         })
-        router.push("/management/library-card-holders")
+        router.push(`/management/library-card-holders/${userId}`)
         return
       }
 
@@ -180,7 +173,10 @@ function CreatePatronForm() {
         ? paymentData.expiredAt.getTime() - Date.now()
         : 0
 
-      setPaymentStates((prev) => ({ ...prev, leftTime }))
+      setPaymentStates((prev) => ({
+        ...prev,
+        leftTime,
+      }))
 
       if (leftTime > 0 || !paymentData?.expiredAt) return
 
@@ -205,137 +201,55 @@ function CreatePatronForm() {
       const navigateTime = paymentStates.navigateTime - 1
 
       if (navigateTime <= 0) {
-        router.push("/management/library-card-holders")
+        router.push(`/management/library-card-holders/${userId}`)
         return
       }
 
-      setPaymentStates((prev) => ({ ...prev, navigateTime }))
+      setPaymentStates((prev) => ({
+        ...prev,
+        navigateTime,
+      }))
     }, 1000)
 
     return () => clearInterval(timer)
-  }, [paymentStates.canNavigate, paymentStates.navigateTime, router])
+  }, [paymentStates.canNavigate, paymentStates.navigateTime, router, userId])
 
   return (
     <div>
       {!paymentData && (
         <div className="flex flex-wrap items-start gap-4">
           <div className="flex items-center gap-2">
-            <h3 className="text-2xl font-semibold">{t("Create patron")}</h3>
+            <h3 className="text-2xl font-semibold">{t("Create card")}</h3>
           </div>
         </div>
       )}
 
-      <div className="mt-4 flex flex-col gap-4">
+      <div className="flex flex-col gap-4">
         {!paymentData && (
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <SelectPackageField form={form} isPending={isPending} />
 
-              <div className="flex gap-4 max-lg:flex-col">
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>
-                        {t("Email")}
-                        <span className="ml-1 text-xl font-bold leading-none text-primary">
-                          *
-                        </span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={isPending} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="firstName"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>
-                        {t("First name")}
-                        <span className="ml-1 text-xl font-bold leading-none text-primary">
-                          *
-                        </span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={isPending} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="lastName"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>
-                        {t("Last name")}
-                        <span className="ml-1 text-xl font-bold leading-none text-primary">
-                          *
-                        </span>
-                      </FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={isPending} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-              <div className="flex gap-4 max-lg:flex-col">
-                <FormField
-                  control={form.control}
-                  name="phone"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>{t("Phone")}</FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={isPending} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="address"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>{t("Address")}</FormLabel>
-                      <FormControl>
-                        <Input {...field} disabled={isPending} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="dob"
-                  render={({ field }) => (
-                    <FormItem className="flex-1">
-                      <FormLabel>{t("Date of birth")}</FormLabel>
-                      <FormControl>
-                        <DateTimePicker
-                          value={createCalendarDate(field.value)}
-                          onChange={(date) =>
-                            field.onChange(date ? date.toDate(timezone) : null)
-                          }
-                          disabled={(date) => date > new Date()}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
+              <FormField
+                control={form.control}
+                name="fullName"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>
+                      {t("Full name")}
+                      <span className="ml-1 text-xl font-bold leading-none text-primary">
+                        *
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input {...field} disabled={isPending} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-              <CreatePatronAvatarField form={form} isPending={isPending} />
+              <AddCardAvatarField form={form} isPending={isPending} />
 
               <FormField
                 control={form.control}
@@ -414,7 +328,7 @@ function CreatePatronForm() {
                   onClick={(e) => {
                     e.preventDefault()
                     e.stopPropagation()
-                    router.push("/management/library-card-holders")
+                    router.push(`/management/library-card-holders/${userId}`)
                   }}
                 >
                   {t("Cancel")}
@@ -522,6 +436,7 @@ function CreatePatronForm() {
                       currentStatus={paymentStates.status}
                       orderCode={paymentData.orderCode}
                       paymentLinkId={paymentData.paymentLinkId}
+                      userId={userId}
                     />
                   </div>
 
@@ -564,4 +479,4 @@ function CreatePatronForm() {
   )
 }
 
-export default CreatePatronForm
+export default AddCardForm

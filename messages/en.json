@@ -575,7 +575,23 @@
     "Reservations": "Reservations",
     "Transactions": "Transactions",
     "Notifications": "Notifications",
-    "Select gender": "Select gender"
+    "Select gender": "Select gender",
+    "Create card": "Create card",
+    "Extend card": "Extend card",
+    "Request date": "Request date",
+    "Expiration date": "Expiration date",
+    "Total request item": "Total request item",
+    "Description": "Description",
+    "Cancelled at": "Cancelled at",
+    "Cancellation reason": "Cancellation reason",
+    "Amount": "Amount",
+    "Method": "Method",
+    "Transaction date": "Transaction date",
+    "Expired at": "Expired at",
+    "Created at": "Created at",
+    "Created by": "Created by",
+    "Cancelled reason": "Cancelled reason",
+    "Total missed pick up": "Total missed pick up"
   },
   "MfaPage": {
     "Verify MFA": "Verify MFA",
@@ -1442,8 +1458,21 @@
       "1": "Female",
       "2": "Other"
     },
-    "IssuanceMethod": { "0": "In library", "1": "Online" },
-    "TransactionMethod": { "0": "Cash", "1": "Digital payment" },
+    "IssuanceMethod": {
+      "0": "In library",
+      "1": "Online"
+    },
+    "TransactionMethod": {
+      "0": "Cash",
+      "1": "Digital"
+    },
+    "TransactionType": {
+      "0": "Fine",
+      "1": "Digital borrow",
+      "2": "Card register",
+      "3": "Card extension",
+      "4": "Digital extension"
+    },
     "CardStatus": {
       "0": "Unpaid",
       "1": "Pending",
@@ -1451,6 +1480,18 @@
       "3": "Rejected",
       "4": "Expired",
       "5": "Suspended"
+    },
+    "TransactionStatus": {
+      "0": "Pending",
+      "1": "Expired",
+      "2": "Paid",
+      "3": "Cancelled"
+    },
+    "BorrowRequestStatus": {
+      "0": "Created",
+      "1": "Expired",
+      "2": "Borrowed",
+      "3": "Cancelled"
     }
   },
   "IsbnScanner": {

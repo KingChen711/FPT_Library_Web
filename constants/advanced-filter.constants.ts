@@ -73,9 +73,9 @@ export const advancedFilters: TAdvancedFilters[] = [
     field: EAdvancedFilterBookField.EDITION_NUMBER,
     type: EAdvancedFilterType.NUMBER,
   },
-  //TODO:LANGUAGE
+
   { field: EAdvancedFilterBookField.LANGUAGE, type: EAdvancedFilterType.TEXT },
-  //TODO:ORIGIN_LANGUAGE
+
   {
     field: EAdvancedFilterBookField.ORIGIN_LANGUAGE,
     type: EAdvancedFilterType.TEXT,

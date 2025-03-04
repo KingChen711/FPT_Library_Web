@@ -6,7 +6,7 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TCreatePatronSchema } from "@/lib/validations/patrons/create-patron"
+import { type TAddCardSchema } from "@/lib/validations/patrons/cards/add-card"
 
 export type PaymentData = {
   description: string
@@ -16,8 +16,8 @@ export type PaymentData = {
   paymentLinkId: string
 }
 
-export async function createPatron(
-  body: TCreatePatronSchema
+export async function addCard(
+  body: TAddCardSchema
 ): Promise<
   ActionResponse<{ message: string; paymentData: PaymentData | null }>
 > {
@@ -26,7 +26,7 @@ export async function createPatron(
     const { message, data } = await http.post<{
       payOsResponse: { data: PaymentData | null }
       expiredAtOffsetUnixSeconds: number
-    }>(`/api/management/library-card-holders`, body, {
+    }>(`/api/management/library-card-holders/add-card`, body, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
@@ -52,6 +52,8 @@ export async function createPatron(
       },
     }
   } catch (error) {
+    console.log(error)
+
     return handleHttpError(error)
   }
 }

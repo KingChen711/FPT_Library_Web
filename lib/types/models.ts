@@ -3,6 +3,7 @@ import {
   type EBookCopyStatus,
   type EBookEditionStatus,
   type EBookFormat,
+  type EBorrowRequestStatus,
   type ECardStatus,
   type EFineType,
   type EGender,
@@ -13,6 +14,9 @@ import {
   type ESupplierType,
   type ETrackingStatus,
   type ETrackingType,
+  type ETransactionMethod,
+  type ETransactionStatus,
+  type ETransactionType,
 } from "./enums"
 
 export type Audit = {
@@ -679,4 +683,41 @@ export type LibraryCard = {
   archiveReason: string | null
   previousUserId: string | null
   transactionCode: string
+}
+
+export type BorrowRequest = {
+  borrowRequestId: number
+  libraryCardId: string
+  requestDate: Date
+  expirationDate: Date
+  status: EBorrowRequestStatus
+  description: string | null
+  cancelledAt: Date | null
+  cancellationReason: string | null
+  isReminderSent: boolean
+  totalRequestItem: number
+}
+
+export type Transaction = {
+  transactionId: number
+  transactionCode: string
+  userId: string
+  amount: number
+  transactionStatus: ETransactionStatus
+  transactionType: ETransactionType
+  transactionMethod: ETransactionMethod
+  description: string | null
+  transactionDate: Date | null
+
+  expiredAt: Date | null
+  createdAt: Date
+  createdBy: string
+  cancelledAt: Date | null
+  cancellationReason: string | null
+
+  fineId: number | null
+  resourceId: number | null
+  libraryCardPackageId: number | null
+
+  paymentMethodId: number | null
 }
