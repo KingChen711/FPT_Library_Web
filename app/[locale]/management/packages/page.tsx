@@ -1,13 +1,12 @@
 import { getPackages } from "@/queries/packages/get-packages"
 
 import { getTranslations } from "@/lib/get-translations"
-import { type LibraryPackage } from "@/lib/types/models"
+import { type Package } from "@/lib/types/models"
 
 import MutatePackageDialog from "./_components/mutate-package-dialog"
 import { default as PackageCard } from "./_components/package-card"
 
 async function PackagesManagementPage() {
-  // await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("GeneralManagement")
   const packages = await getPackages()
 
@@ -20,7 +19,7 @@ async function PackagesManagementPage() {
         </div>
       </div>
       <div className="grid grid-cols-12 gap-4">
-        {packages.map((item: LibraryPackage) => (
+        {packages.map((item: Package) => (
           <PackageCard key={item.libraryCardPackageId} item={item} />
         ))}
       </div>

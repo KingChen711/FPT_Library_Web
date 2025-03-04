@@ -65,7 +65,7 @@ import { Input } from "@/components/ui/input"
 import PackageCard from "@/components/ui/package-card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-import CancelPaymentDialog from "../../../_components/cancel-payment-dialog"
+import CancelPaymentDialog from "../../../../../../../../components/ui/cancel-payment-dialog"
 import CreatePatronAvatarField from "./create-patron-avatar-field"
 import SelectPackageField from "./select-package-field"
 
@@ -180,10 +180,7 @@ function CreatePatronForm() {
         ? paymentData.expiredAt.getTime() - Date.now()
         : 0
 
-      setPaymentStates((prev) => ({
-        ...prev,
-        leftTime,
-      }))
+      setPaymentStates((prev) => ({ ...prev, leftTime }))
 
       if (leftTime > 0 || !paymentData?.expiredAt) return
 
@@ -212,10 +209,7 @@ function CreatePatronForm() {
         return
       }
 
-      setPaymentStates((prev) => ({
-        ...prev,
-        navigateTime,
-      }))
+      setPaymentStates((prev) => ({ ...prev, navigateTime }))
     }, 1000)
 
     return () => clearInterval(timer)

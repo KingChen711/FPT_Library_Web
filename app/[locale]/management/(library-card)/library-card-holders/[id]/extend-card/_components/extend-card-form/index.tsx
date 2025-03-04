@@ -52,7 +52,7 @@ import { Icons } from "@/components/ui/icons"
 import PackageCard from "@/components/ui/package-card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-import CancelPaymentDialog from "../../../../_components/cancel-payment-dialog"
+import CancelPaymentDialog from "../../../../../../../../../components/ui/cancel-payment-dialog"
 import SelectPackageField from "./select-package-field"
 
 type Props = {

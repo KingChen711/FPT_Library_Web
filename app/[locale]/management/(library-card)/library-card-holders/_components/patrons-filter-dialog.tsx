@@ -166,7 +166,7 @@ function FiltersPatronsDialog() {
       },
     })
     setOpen(false)
-    // router.replace(newUrl, { scroll: false })
+    router.replace(newUrl, { scroll: false })
   }
 
   return (

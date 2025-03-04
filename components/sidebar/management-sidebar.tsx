@@ -2,7 +2,7 @@
 
 import { type ComponentProps } from "react"
 import { useAuth } from "@/contexts/auth-provider"
-import { Link } from "@/i18n/routing"
+import { Link, useRouter } from "@/i18n/routing"
 import { BadgeCheck, ChevronsUpDown, Loader2, LogOut, User } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -35,11 +35,12 @@ import SidebarLogoItem from "./sidebar-logo-item"
 export function ManagementSidebar({
   ...props
 }: ComponentProps<typeof Sidebar>) {
+  const router = useRouter()
   const locale = useLocale()
   const { user } = useAuth()
   const t = useTranslations("Me")
   const tRoutes = useTranslations("Routes")
-  const { isMobile } = useSidebar()
+  const { isMobile, open } = useSidebar()
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -76,21 +77,22 @@ export function ManagementSidebar({
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <SidebarMenuButton
-                    size="lg"
-                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
-                  >
-                    <User size={40} />
-                    <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{`${user?.firstName} ${user?.lastName}`}</span>
-                      <span className="truncate text-xs">
-                        {locale === "vi"
-                          ? user?.role.vietnameseName
-                          : user?.role.englishName}
-                      </span>
-                    </div>
-                    <ChevronsUpDown className="ml-auto size-4" />
-                  </SidebarMenuButton>
+                  <Link href={`#`} className="flex items-center gap-2 p-2">
+                    <User size={20} />
+                    {open && (
+                      <div className="flex flex-1 justify-between text-left text-sm leading-tight">
+                        <div className="flex flex-col">
+                          <span className="truncate font-semibold">{`${user?.firstName} ${user?.lastName}`}</span>
+                          <span className="truncate text-xs">
+                            {locale === "vi"
+                              ? user?.role.vietnameseName
+                              : user?.role.englishName}
+                          </span>
+                        </div>
+                        <ChevronsUpDown className="ml-auto size-4" />
+                      </div>
+                    )}
+                  </Link>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
                   className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
@@ -112,7 +114,9 @@ export function ManagementSidebar({
                     </div>
                   </DropdownMenuLabel>
                   <DropdownMenuGroup>
-                    <DropdownMenuItem>
+                    <DropdownMenuItem
+                      onClick={() => router.push("/me/account/profile")}
+                    >
                       <BadgeCheck />
                       {t("account")}
                     </DropdownMenuItem>

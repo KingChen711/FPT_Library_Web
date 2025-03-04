@@ -54,7 +54,7 @@ import { Input } from "@/components/ui/input"
 import PackageCard from "@/components/ui/package-card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 
-import CancelPaymentDialog from "../../../../_components/cancel-payment-dialog"
+import CancelPaymentDialog from "../../../../../../../../../components/ui/cancel-payment-dialog"
 import AddCardAvatarField from "./add-card-avatar-field"
 import SelectPackageField from "./select-package-field"
 
