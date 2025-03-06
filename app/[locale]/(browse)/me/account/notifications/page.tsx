@@ -13,7 +13,7 @@ import { useDebounce } from "use-debounce"
 import useInfiniteNotifications from "@/hooks/notifications/use-infinite-notifications"
 import useFormatLocale from "@/hooks/utils/use-format-locale"
 import { Input } from "@/components/ui/input"
-import NotificationTypeBadge from "@/components/ui/notification-type-badge"
+import NotificationTypeBadge from "@/components/badges/notification-type-badge"
 
 const NotificationManagementPage = () => {
   const t = useTranslations("NotificationsPage")

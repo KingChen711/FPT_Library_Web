@@ -84,119 +84,112 @@ function CreateBookForm() {
   })
 
   const onSubmit = async (values: TBookEditionSchema) => {
-    try {
-      startTransition(async () => {
-        const coverImageFile = values.file
+    startTransition(async () => {
+      const coverImageFile = values.file
 
-        values.libraryItemInstances = values.libraryItemInstances.map((l) => ({
-          ...l,
-          barcode: (selectedCategory?.prefix || "") + l.barcode,
-        }))
+      values.libraryItemInstances = values.libraryItemInstances.map((l) => ({
+        ...l,
+        barcode: (selectedCategory?.prefix || "") + l.barcode,
+      }))
 
-        console.log(values)
+      console.log(values)
 
-        await uploadMedias(values)
+      await uploadMedias(values)
 
-        console.log(values)
+      console.log(values)
 
-        const res = await createBook(values)
-        if (res.isSuccess) {
-          toast({
-            title: locale === "vi" ? "Thành công" : "Success",
-            description: res.data.message,
-            variant: "success",
-          })
+      const res = await createBook(values)
+      if (res.isSuccess) {
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data.message,
+          variant: "success",
+        })
 
-          if (!res.data.bookCode || !selectedCategory?.isAllowAITraining) {
-            router.push("/management/books")
-            return
-          }
-
-          trainForm.setValue("bookCode", res.data.bookCode)
-          trainForm.setValue("imageList", [
-            {
-              checkedResult: values.checkedResult,
-              coverImage: values.coverImage,
-              validImage: values.validImage,
-              file: coverImageFile,
-            },
-          ])
-          setCurrentTab("Train AI")
+        if (!res.data.bookCode || !selectedCategory?.isAllowAITraining) {
+          router.push("/management/books")
           return
         }
 
-        //*Just do this when submit fail
-        values.libraryResources.forEach((lr, index) => {
-          form.setValue(`libraryResources.${index}.resourceUrl`, lr.resourceUrl)
-          form.setValue(
-            `libraryResources.${index}.providerPublicId`,
-            lr.providerPublicId
-          )
-          form.setValue(
-            `libraryResources.${index}.resourceSize`,
-            lr.resourceSize
-          )
-        })
-        form.setValue("coverImage", values.coverImage)
+        trainForm.setValue("bookCode", res.data.bookCode)
+        trainForm.setValue("imageList", [
+          {
+            checkedResult: values.checkedResult,
+            coverImage: values.coverImage,
+            validImage: values.validImage,
+            file: coverImageFile,
+          },
+        ])
+        setCurrentTab("Train AI")
+        return
+      }
 
-        if (res.typeError === "form") {
-          if (
-            Object.keys(res.fieldErrors).some((key) =>
-              ["categoryId"].includes(key)
-            )
-          ) {
-            setCurrentTab("Category")
-          } else if (
-            Object.keys(res.fieldErrors).some((key) =>
-              [
-                "title",
-                "subTitle",
-                "responsibility",
-                "edition",
-                "language",
-                "originLanguage",
-                "summary",
-                "publicationPlace",
-                "publisher",
-                "publicationYear",
-                "classificationNumber",
-                "cutterNumber",
-                "isbn",
-                "ean",
-                "estimatedPrice",
-                "pageCount",
-                "physicalDetails",
-                "dimensions",
-                "accompanyingMaterial",
-                "genres",
-                "generalNote",
-                "bibliographicalNote",
-                "topicalTerms",
-                "additionalAuthors",
-              ].includes(key)
-            )
-          ) {
-            setCurrentTab("Catalog")
-          } else if (
-            Object.keys(res.fieldErrors).some((key) =>
-              key.startsWith("libraryItemInstances")
-            )
-          ) {
-            setCurrentTab("Individual registration")
-            const message = Object.keys(res.fieldErrors)
-              .filter((key) => key.startsWith("libraryItemInstances"))
-              .map((key) => res.fieldErrors[key][0])
-              .join(", ")
-            form.setError("libraryItemInstances", { message })
-          } else {
-            setCurrentTab("Resources")
-          }
-        }
-        handleServerActionError(res, locale, form)
+      //*Just do this when submit fail
+      values.libraryResources.forEach((lr, index) => {
+        form.setValue(`libraryResources.${index}.resourceUrl`, lr.resourceUrl)
+        form.setValue(
+          `libraryResources.${index}.providerPublicId`,
+          lr.providerPublicId
+        )
+        form.setValue(`libraryResources.${index}.resourceSize`, lr.resourceSize)
       })
-    } catch (error) {
-      console.log(error)
-    }
+      form.setValue("coverImage", values.coverImage)
+
+      if (res.typeError === "form") {
+        if (
+          Object.keys(res.fieldErrors).some((key) =>
+            ["categoryId"].includes(key)
+          )
+        ) {
+          setCurrentTab("Category")
+        } else if (
+          Object.keys(res.fieldErrors).some((key) =>
+            [
+              "title",
+              "subTitle",
+              "responsibility",
+              "edition",
+              "language",
+              "originLanguage",
+              "summary",
+              "publicationPlace",
+              "publisher",
+              "publicationYear",
+              "classificationNumber",
+              "cutterNumber",
+              "isbn",
+              "ean",
+              "estimatedPrice",
+              "pageCount",
+              "physicalDetails",
+              "dimensions",
+              "accompanyingMaterial",
+              "genres",
+              "generalNote",
+              "bibliographicalNote",
+              "topicalTerms",
+              "additionalAuthors",
+            ].includes(key)
+          )
+        ) {
+          setCurrentTab("Catalog")
+        } else if (
+          Object.keys(res.fieldErrors).some((key) =>
+            key.startsWith("libraryItemInstances")
+          )
+        ) {
+          setCurrentTab("Individual registration")
+          const message = Object.keys(res.fieldErrors)
+            .filter((key) => key.startsWith("libraryItemInstances"))
+            .map((key) => res.fieldErrors[key][0])
+            .join(", ")
+          form.setError("libraryItemInstances", { message })
+        } else {
+          setCurrentTab("Resources")
+        }
+      }
+      handleServerActionError(res, locale, form)
+    })
   }
 
   const triggerCatalogTab = async () => {

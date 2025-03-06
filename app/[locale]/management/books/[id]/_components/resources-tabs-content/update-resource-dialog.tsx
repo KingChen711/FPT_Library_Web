@@ -19,9 +19,7 @@ import { updateBookImage } from "@/actions/resources/update-book-image"
 import { updateBookVideo } from "@/actions/resources/update-book-video"
 import { type TCheckCoverImageRes } from "@/hooks/ai/use-check-cover-image"
 import { toast } from "@/hooks/use-toast"
-import AudioDropzone from "@/components/ui/audio-dropzone"
 import { Button } from "@/components/ui/button"
-import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Dialog,
   DialogClose,
@@ -39,7 +37,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import PDFDropzone from "@/components/ui/pdf-dropzone"
+import AudioDropzone from "@/components/form/audio-dropzone"
+import { CurrencyInput } from "@/components/form/currency-input"
+import PDFDropzone from "@/components/form/pdf-dropzone"
 
 type Props = {
   open: boolean

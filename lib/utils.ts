@@ -68,6 +68,10 @@ export function formUrlQuery({
   const query = queryString.parse(params)
 
   Object.keys(updates).forEach((key) => {
+    if (JSON.stringify(updates[key]) === JSON.stringify(["null", "null"])) {
+      query[key] = null
+      return
+    }
     query[key] = updates[key]
   })
 

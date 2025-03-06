@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl"
 import { EBookCopyStatus } from "@/lib/types/enums"
 import { pascalToCamel } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import BookCopyStatusBadge from "@/components/ui/book-copy-status-badge"
 import {
   Dialog,
   DialogContent,
@@ -20,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import BookCopyStatusBadge from "@/components/badges/book-copy-status-badge"
 
 interface NestedDataDialogProps {
   isOpen: boolean

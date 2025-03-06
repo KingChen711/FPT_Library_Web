@@ -114,7 +114,8 @@
     "integer": "Must be an integer",
     "expectedReturnDate": "The expected return date must be greater than the entry date",
     "date": "Invalid date",
-    "dateGteToday": "Required must be greater than or equal to current date"
+    "dateGteToday": "Required must be greater than or equal to current date",
+    "wrongCatalogInformation": "Cataloging information must be accurate, or do not catalog."
   },
   "Me": {
     "account": "Account",
@@ -884,6 +885,9 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Year": "Year",
+    "Delete catalog information": "Delete catalog information",
+    "Item information": "Item information",
     "Field": "Field",
     "Table": "Table",
     "Old value": "Old value",
@@ -1338,6 +1342,11 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Scan title": "Scan title",
+    "Scan title description": "Add new books that haven't existed in any other book with the specific TITLE in the database yet.",
+    "Scan cover image": "Scan cover image",
+    "Scan cover image description": "Do not allow books to have the same image.",
+    "Cover images": "Cover images",
     "Warehouse trackings": "Warehouse trackings",
     "Create tracking": "Create tracking",
     "Create warehouse tracking": "Create warehouse tracking",
@@ -1367,6 +1376,7 @@
     "Error while import data": "Error while import data",
     "View details": "View details",
     "Row": "Row: ",
+    "Sheet": "Sheet: ",
     "Import errors": "Import errors",
     "Receipt number": "Receipt number",
     "Supplier name": "Supplier name",
@@ -1420,9 +1430,30 @@
     "All": "All",
     "Reset": "Reset",
     "Apply": "Apply",
-    "Create at": "Created at"
+    "Create at": "Created at",
+    "Import excel": "Import Excel",
+    "Manual": "Manual",
+    "Auto calculated": "Auto calculated",
+    "New item": "New item",
+    "Additional item": "Additional item",
+    "Item total": "Item total",
+    "Stock transaction type": "Stock transaction type",
+    "Total amount auto": "Total amount (auto)",
+    "Select condition": "Select condition",
+    "Select library item": "Select library item",
+    "Catalog": "Catalog",
+    "No item found": "No item found"
   },
   "Badges": {
+    "StockTransactionType": {
+      "0": "New",
+      "1": "Additional",
+      "2": "Damaged",
+      "3": "Lost",
+      "4": "Outdated",
+      "5": "Transferred",
+      "6": "Other"
+    },
     "BookConditionStatus": {
       "Good": "Good",
       "Worn": "Worn",

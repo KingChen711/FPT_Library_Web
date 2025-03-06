@@ -12,7 +12,6 @@ import { EFeature, EPatronStatus } from "@/lib/types/enums"
 import { getFullName } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import CardStatusBadge from "@/components/ui/card-status-badge"
 import Copitor from "@/components/ui/copitor"
 import {
   Dialog,
@@ -22,14 +21,15 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import GenderBadge from "@/components/ui/gender-badge"
-import IssuanceMethodBadge from "@/components/ui/issuance-method-badge"
 import NoData from "@/components/ui/no-data"
 import ParseHtml from "@/components/ui/parse-html"
-import PatronHasCardBadge from "@/components/ui/patron-has-card-badge"
-import PatronStatusBadge from "@/components/ui/patron-status-badge"
-import PatronTypeBadge from "@/components/ui/patron-type-badge"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import CardStatusBadge from "@/components/badges/card-status-badge"
+import GenderBadge from "@/components/badges/gender-badge"
+import IssuanceMethodBadge from "@/components/badges/issuance-method-badge"
+import PatronHasCardBadge from "@/components/badges/patron-has-card-badge"
+import PatronStatusBadge from "@/components/badges/patron-status-badge"
+import PatronTypeBadge from "@/components/badges/patron-type-badge"
 
 import BorrowRequestsTab from "./_components/borrow-requests-tab"
 import LibraryCardActionsDropdown from "./_components/card-actions-dropdown"

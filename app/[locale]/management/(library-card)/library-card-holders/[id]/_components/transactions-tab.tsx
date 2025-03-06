@@ -28,9 +28,9 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { TabsContent } from "@/components/ui/tabs"
-import TransactionMethodBadge from "@/components/ui/transaction-method-badge"
-import TransactionStatusBadge from "@/components/ui/transaction-status-badge"
-import TransactionTypeBadge from "@/components/ui/transaction-type-badge"
+import TransactionMethodBadge from "@/components/badges/transaction-method-badge"
+import TransactionStatusBadge from "@/components/badges/transaction-status-badge"
+import TransactionTypeBadge from "@/components/badges/transaction-type-badge"
 
 type Props = {
   userId: string

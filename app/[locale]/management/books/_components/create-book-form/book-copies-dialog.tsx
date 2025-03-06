@@ -19,7 +19,6 @@ import {
   type TBookEditionSchema,
 } from "@/lib/validations/books/create-book"
 import { toast } from "@/hooks/use-toast"
-import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {
@@ -45,6 +44,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import BookConditionStatusBadge from "@/components/badges/book-condition-status-badge"
 
 import CopyInput from "./copy-input"
 

@@ -1,78 +1,24 @@
-import { DateTime } from "luxon"
 import { z } from "zod"
 
 import { ETrackingStatus, ETrackingType } from "@/lib/types/enums"
+import {
+  filterDateRangeSchema,
+  filterEnumSchema,
+  filterNumRangeSchema,
+} from "@/lib/zod"
 
 export const filterTrackingSchema = z.object({
-  trackingType: z.nativeEnum(ETrackingType).optional().catch(undefined),
-  status: z.nativeEnum(ETrackingStatus).optional().catch(undefined),
-  entryDateRange: z
-    .array(z.date().or(z.null()))
-    .transform((data) => {
-      data.forEach((date, i) => {
-        if (date) {
-          data[i] = DateTime.fromJSDate(date)
-            .setZone("UTC", { keepLocalTime: true })
-            .toJSDate()
-        }
-      })
-      return data
-    })
-    .catch([null, null]),
-  expectedReturnDateRange: z
-    .array(z.date().or(z.null()))
-    .transform((data) => {
-      data.forEach((date, i) => {
-        if (date) {
-          data[i] = DateTime.fromJSDate(date)
-            .setZone("UTC", { keepLocalTime: true })
-            .toJSDate()
-        }
-      })
-      return data
-    })
-    .catch([null, null]),
-  totalItemRange: z.array(z.coerce.number().or(z.null())).catch([null, null]),
-  totalAmountRange: z.array(z.coerce.number().or(z.null())).catch([null, null]),
-  actualReturnDateRange: z
-    .array(z.date().or(z.null()))
-    .transform((data) => {
-      data.forEach((date, i) => {
-        if (date) {
-          data[i] = DateTime.fromJSDate(date)
-            .setZone("UTC", { keepLocalTime: true })
-            .toJSDate()
-        }
-      })
-      return data
-    })
-    .catch([null, null]),
-  createdAtRange: z
-    .array(z.date().or(z.null()))
-    .transform((data) => {
-      data.forEach((date, i) => {
-        if (date) {
-          data[i] = DateTime.fromJSDate(date)
-            .setZone("UTC", { keepLocalTime: true })
-            .toJSDate()
-        }
-      })
-      return data
-    })
-    .catch([null, null]),
-  updatedAtRange: z
-    .array(z.date().or(z.null()))
-    .transform((data) => {
-      data.forEach((date, i) => {
-        if (date) {
-          data[i] = DateTime.fromJSDate(date)
-            .setZone("UTC", { keepLocalTime: true })
-            .toJSDate()
-        }
-      })
-      return data
-    })
-    .catch([null, null]),
+  trackingType: filterEnumSchema(ETrackingType),
+  status: filterEnumSchema(ETrackingStatus),
+
+  totalItemRange: filterNumRangeSchema,
+  totalAmountRange: filterNumRangeSchema,
+
+  entryDateRange: filterDateRangeSchema,
+  expectedReturnDateRange: filterDateRangeSchema,
+  actualReturnDateRange: filterDateRangeSchema,
+  createdAtRange: filterDateRangeSchema,
+  updatedAtRange: filterDateRangeSchema,
 })
 
 export type TFilterTrackingSchema = z.infer<typeof filterTrackingSchema>

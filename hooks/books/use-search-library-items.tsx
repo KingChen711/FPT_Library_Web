@@ -5,13 +5,15 @@ import { http } from "@/lib/http"
 import {
   type Author,
   type BookEdition,
+  type Category,
   type LibraryItemAuthor,
+  type Shelf,
 } from "@/lib/types/models"
 
 const pageSize = 8
 const pageIndex = 1
 
-function useSearchLibraryItems(search = "") {
+function useSearchLibraryItems(search = "", enabled = true) {
   const { accessToken } = useAuth()
   return useQuery({
     queryKey: ["management-library-items", search, accessToken],
@@ -20,7 +22,9 @@ function useSearchLibraryItems(search = "") {
       try {
         const { data } = await http.get<{
           sources: (BookEdition & {
+            category: Category
             libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
+            shelf: Shelf | null
           })[]
         }>(`/api/management/library-items`, {
           headers: {
@@ -38,6 +42,7 @@ function useSearchLibraryItems(search = "") {
         return []
       }
     },
+    enabled,
   })
 }
 

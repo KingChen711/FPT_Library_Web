@@ -15,7 +15,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import NotificationTypeBadge from "@/components/ui/notification-type-badge"
 import Paginator from "@/components/ui/paginator"
 import ParseHtml from "@/components/ui/parse-html"
 import SearchForm from "@/components/ui/search-form"
@@ -28,7 +27,8 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import VisibilityBadge from "@/components/ui/visibility-badge"
+import NotificationTypeBadge from "@/components/badges/notification-type-badge"
+import VisibilityBadge from "@/components/badges/visibility-badge"
 
 import CreateNotificationDialog from "./_components/create-notification-dialog"
 import FiltersNotificationsDialog from "./_components/filters-notifications-dialog"

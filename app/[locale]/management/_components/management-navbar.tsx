@@ -24,7 +24,7 @@ function ManagementNavbar() {
   const tGeneralManagement = useTranslations("GeneralManagement")
   const [currentDate, setCurrentDate] = useState<Date | null>(null)
   const pathname = usePathname()
-  const [isLoading, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
 
   const newLocale = locale === "en" ? "vi" : "en"
 

@@ -13,10 +13,6 @@ import { z } from "zod"
 import { formUrlQuery } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
-  createCalendarDate,
-  DateTimePicker,
-} from "@/components/ui/date-time-picker/index"
-import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -40,6 +36,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/form/date-time-picker"
 
 const genderOptions = ["All", "Male", "Female"] as const
 

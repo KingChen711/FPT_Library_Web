@@ -8,9 +8,7 @@ import {
   type TBookEditionSchema,
   type TBookResourceSchema,
 } from "@/lib/validations/books/create-book"
-import AudioDropzone from "@/components/ui/audio-dropzone"
 import { Button } from "@/components/ui/button"
-import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   FormControl,
   FormField,
@@ -20,7 +18,9 @@ import {
 } from "@/components/ui/form"
 import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
-import PDFDropzone from "@/components/ui/pdf-dropzone"
+import AudioDropzone from "@/components/form/audio-dropzone"
+import { CurrencyInput } from "@/components/form/currency-input"
+import PDFDropzone from "@/components/form/pdf-dropzone"
 
 type Props = {
   form: UseFormReturn<TBookEditionSchema>

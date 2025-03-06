@@ -346,7 +346,7 @@ export type Fine = {
   finePolicyTitle: string
   conditionType: EFineType
   fineAmountPerDay: number
-  fixedFineAmount: number
+  fixedFineAmount: number | null
   description: string | null
 }
 
@@ -515,6 +515,14 @@ export type Tracking = {
   updatedAt: Date | null
   createdBy: string
   updatedBy: string | null
+}
+
+export type WarehouseTrackingInventory = {
+  trackingId: number
+  totalItem: number
+  totalInstanceItem: number
+  totalCatalogedItem: number
+  totalCatalogedInstanceItem: number
 }
 
 export type TrackingDetail = {

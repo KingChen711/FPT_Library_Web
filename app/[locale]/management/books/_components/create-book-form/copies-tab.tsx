@@ -8,7 +8,6 @@ import { type EBookCopyConditionStatus } from "@/lib/types/enums"
 import { type Category } from "@/lib/types/models"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 import useConditions from "@/hooks/conditions/use-conditions"
-import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
 import { Button } from "@/components/ui/button"
 import {
   FormField,
@@ -17,6 +16,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
+import BookConditionStatusBadge from "@/components/badges/book-condition-status-badge"
 
 import { BarcodesContainer } from "./barcodes-container"
 import BookCopiesDialog from "./book-copies-dialog"

@@ -9,6 +9,7 @@ import {
   onReceiveTrainAI,
   type SocketTrainAI,
 } from "@/lib/signalR/receive-train-ai-signalR"
+import { ERoleType } from "@/lib/types/enums"
 
 import { useAuth } from "./auth-provider"
 
@@ -30,11 +31,12 @@ export const TrainAIContext = createContext<TrainAIContextType | null>(null)
 
 const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
   const [trainingGroups, setTrainingGroups] = useState<TrainingGroup[]>([])
-  const { accessToken } = useAuth()
+  const { accessToken, user } = useAuth()
   const [connection, setConnection] = useState<HubConnection | null>(null)
 
   useEffect(() => {
-    if (!accessToken) return
+    if (!accessToken || !user || user.role.roleType !== ERoleType.EMPLOYEE)
+      return
 
     const connection = connectToSignalR("ai-hub", accessToken)
     setConnection(connection)
@@ -42,7 +44,7 @@ const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
     return () => {
       disconnectSignalR(connection)
     }
-  }, [accessToken])
+  }, [accessToken, user])
 
   useEffect(() => {
     if (!connection) return

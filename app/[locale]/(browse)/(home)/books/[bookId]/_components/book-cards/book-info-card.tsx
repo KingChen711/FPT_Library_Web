@@ -14,7 +14,7 @@ import { type LibraryItem } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import LibraryItemStatusBadge from "@/components/ui/libraryItem-status-badge"
+import LibraryItemStatusBadge from "@/components/badges/libraryItem-status-badge"
 
 import BookBorrowDialog from "../book-borrow-dialog"
 

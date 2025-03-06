@@ -75,7 +75,10 @@ const AuthorCard: React.FC<AuthorCardProps> = ({
             )}
           </div>
         </TooltipTrigger>
-        <TooltipContent className="w-96 border bg-background p-0 text-foreground">
+        <TooltipContent
+          side="right"
+          className="w-96 border bg-background p-0 text-foreground"
+        >
           <div className="flex flex-col p-4">
             <div className="mb-4 flex items-center space-x-4">
               <Avatar>

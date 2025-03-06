@@ -46,7 +46,6 @@ type Props = {
 function AuthorsField({
   form,
   isPending,
-
   selectedAuthors,
   setSelectedAuthors,
 }: Props) {
