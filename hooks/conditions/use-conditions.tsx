@@ -26,6 +26,7 @@ function useConditions() {
     },
     enabled: !!accessToken,
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   })
 }
 

@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl"
 import { type EBookCopyConditionStatus } from "@/lib/types/enums"
 import { type Condition, type ConditionHistory } from "@/lib/types/models"
 import useFormatLocale from "@/hooks/utils/use-format-locale"
-import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
 import {
   Dialog,
   DialogContent,
@@ -21,6 +20,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import BookConditionStatusBadge from "@/components/badges/book-condition-status-badge"
 
 type Props = {
   open: boolean

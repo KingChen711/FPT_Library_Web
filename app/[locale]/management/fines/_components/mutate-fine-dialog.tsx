@@ -83,7 +83,7 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
         type === "update" ? fine.conditionType : EFineType.OVER_DUE,
       description: type === "update" ? fine.description || "" : "",
       fineAmountPerDay: type === "update" ? fine.fineAmountPerDay : 0,
-      fixedFineAmount: type === "update" ? fine.fixedFineAmount : 0,
+      fixedFineAmount: type === "update" ? (fine.fixedFineAmount ?? 0) : 0,
       finePolicyTitle: type === "update" ? fine.finePolicyTitle : "",
     },
   })

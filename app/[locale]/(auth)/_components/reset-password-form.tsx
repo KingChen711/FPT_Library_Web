@@ -26,7 +26,7 @@ import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
-} from "@/components/ui/input-otp"
+} from "@/components/form/input-otp"
 
 import NewPassForm from "./new-password-form"
 

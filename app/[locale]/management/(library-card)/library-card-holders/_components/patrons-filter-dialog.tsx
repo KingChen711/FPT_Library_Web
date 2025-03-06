@@ -17,10 +17,6 @@ import {
 } from "@/lib/validations/patrons/search-patrons"
 import { Button } from "@/components/ui/button"
 import {
-  createCalendarDate,
-  DateTimePicker,
-} from "@/components/ui/date-time-picker/index"
-import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -45,6 +41,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/form/date-time-picker"
 
 function FiltersPatronsDialog() {
   const timezone = getLocalTimeZone()
@@ -84,39 +84,6 @@ function FiltersPatronsDialog() {
   }
 
   const onSubmit = async (values: TFilterPatronSchema) => {
-    console.log({
-      gender: values.gender ? values.gender.toString() : null,
-      issuanceMethod: values.issuanceMethod
-        ? values.issuanceMethod.toString()
-        : null,
-      cardStatus: values.cardStatus ? values.cardStatus.toString() : null,
-
-      isAllowBorrowMore:
-        values.isAllowBorrowMore === undefined
-          ? null
-          : values.isAllowBorrowMore
-            ? "true"
-            : "false",
-      isReminderSent:
-        values.isAllowBorrowMore === undefined
-          ? null
-          : values.isAllowBorrowMore
-            ? "true"
-            : "false",
-      isExtended:
-        values.isAllowBorrowMore === undefined
-          ? null
-          : values.isAllowBorrowMore
-            ? "true"
-            : "false",
-      isArchived:
-        values.isAllowBorrowMore === undefined
-          ? null
-          : values.isAllowBorrowMore
-            ? "true"
-            : "false",
-    })
-
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {

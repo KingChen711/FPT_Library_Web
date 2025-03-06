@@ -7,7 +7,6 @@ import { type Author } from "@/lib/types/models"
 import { generateCutter } from "@/lib/utils"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 import { Button } from "@/components/ui/button"
-import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   FormControl,
   FormDescription,
@@ -16,12 +15,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import GenerateCutterNumberDialog from "@/components/ui/generate-cutter-number-dialog"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import { CurrencyInput } from "@/components/form/currency-input"
 
 import AuthorsField from "./authors-field"
 import CoverImageField from "./cover-image-field"
-import GenerateCutterNumberDialog from "./generate-cutter-number-dialog"
 import StockInDetailField from "./stock-in-detail-field"
 
 type Props = {

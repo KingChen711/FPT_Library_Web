@@ -243,14 +243,23 @@ export enum EBorrowRequestStatus {
 }
 
 export enum ETransactionType {
-  // [Description("Phí phạt")]
-  FINE,
-  // [Description("Mượn tài liệu điện tử")]
-  DIGITAL_BORROW,
-  // [Description("Đăng ký thẻ thư viện")]
-  LIBRARY_CARD_REGISTER,
-  // [Description("Gia hạn thẻ thư viện")]
-  LIBRARY_CARD_EXTENSION,
-  // [Description("Gia hạn tài liệu điện tử")]
-  DIGITAL_EXTENSION,
+  FINE, // [Description("Phí phạt")]
+
+  DIGITAL_BORROW, // [Description("Mượn tài liệu điện tử")]
+
+  LIBRARY_CARD_REGISTER, // [Description("Đăng ký thẻ thư viện")]
+
+  LIBRARY_CARD_EXTENSION, // [Description("Gia hạn thẻ thư viện")]
+
+  DIGITAL_EXTENSION, // [Description("Gia hạn tài liệu điện tử")]
+}
+
+export enum EStockTransactionType {
+  NEW,
+  ADDITIONAL,
+  DAMAGED,
+  LOST,
+  OUTDATED,
+  TRANSFERRED,
+  OTHER,
 }

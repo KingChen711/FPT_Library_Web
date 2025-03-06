@@ -12,7 +12,6 @@ import { getFullName } from "@/lib/utils"
 import { searchPatronsSchema } from "@/lib/validations/patrons/search-patrons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import CardStatusBadge from "@/components/ui/card-status-badge"
 import {
   Dialog,
   DialogContent,
@@ -27,13 +26,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import GenderBadge from "@/components/ui/gender-badge"
-import IssuanceMethodBadge from "@/components/ui/issuance-method-badge"
 import Paginator from "@/components/ui/paginator"
 import ParseHtml from "@/components/ui/parse-html"
-import PatronHasCardBadge from "@/components/ui/patron-has-card-badge"
-import PatronStatusBadge from "@/components/ui/patron-status-badge"
-import PatronTypeBadge from "@/components/ui/patron-type-badge"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
@@ -44,6 +38,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import CardStatusBadge from "@/components/badges/card-status-badge"
+import GenderBadge from "@/components/badges/gender-badge"
+import IssuanceMethodBadge from "@/components/badges/issuance-method-badge"
+import PatronHasCardBadge from "@/components/badges/patron-has-card-badge"
+import PatronStatusBadge from "@/components/badges/patron-status-badge"
+import PatronTypeBadge from "@/components/badges/patron-type-badge"
 
 import ColumnsButton from "./_components/columns-button"
 import ExportButton from "./_components/export-button"
@@ -65,8 +65,6 @@ async function HoldersManagementPage({ searchParams }: Props) {
 
   const { search, pageIndex, sort, pageSize, tab, ...rest } =
     searchPatronsSchema.parse(searchParams)
-
-  console.log({ searchParams })
 
   const {
     sources: patrons,

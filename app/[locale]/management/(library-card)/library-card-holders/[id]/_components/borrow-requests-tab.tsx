@@ -7,7 +7,6 @@ import { useTranslations } from "next-intl"
 
 import usePatronBorrowRequests from "@/hooks/patrons/use-patron-borrow-requests"
 import useFormatLocale from "@/hooks/utils/use-format-locale"
-import BorrowRequestStatusBadge from "@/components/ui/borrow-request-status-badge"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -28,6 +27,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { TabsContent } from "@/components/ui/tabs"
+import BorrowRequestStatusBadge from "@/components/badges/borrow-request-status-badge"
 
 type Props = {
   userId: string

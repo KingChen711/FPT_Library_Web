@@ -16,6 +16,7 @@ export async function getConditions(): Promise<Condition[]> {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     })
+
     return data
   } catch {
     return []

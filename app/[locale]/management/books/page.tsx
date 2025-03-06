@@ -15,7 +15,6 @@ import {
   Column,
   searchBookEditionsSchema,
 } from "@/lib/validations/books/search-book-editions"
-import BookEditionStatusBadge from "@/components/ui/book-edition-status-badge"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -36,7 +35,6 @@ import Paginator from "@/components/ui/paginator"
 import ParseHtml from "@/components/ui/parse-html"
 import Rating from "@/components/ui/rating"
 import SearchForm from "@/components/ui/search-form"
-import ShelfBadge from "@/components/ui/shelf-badge"
 import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
   Table,
@@ -46,7 +44,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import TrainedBadge from "@/components/ui/trained-badge"
+import BookEditionStatusBadge from "@/components/badges/book-edition-status-badge"
+import ShelfBadge from "@/components/badges/shelf-badge"
+import TrainedBadge from "@/components/badges/trained-badge"
 import Hidable from "@/components/hoc/hidable"
 
 import BookEditionCheckbox from "./_components/book-edition-checkbox"

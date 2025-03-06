@@ -32,7 +32,6 @@ import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
 
-//TODO: update validate
 function LoginForm() {
   const t = useTranslations("LoginPage")
   const locale = useLocale()

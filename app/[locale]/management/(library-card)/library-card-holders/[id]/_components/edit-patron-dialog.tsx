@@ -17,10 +17,6 @@ import { editPatron } from "@/actions/library-card/patrons/edit-patron"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
-  createCalendarDate,
-  DateTimePicker,
-} from "@/components/ui/date-time-picker/index"
-import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -44,6 +40,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/form/date-time-picker"
 
 type Props = {
   open: boolean
@@ -77,8 +77,6 @@ function EditPatronDialog({ patron, open, setOpen }: Props) {
 
   const onSubmit = async (values: TEditPatronSchema) => {
     startTransition(async () => {
-      console.log(values.dob)
-
       const res = await editPatron(patron.userId, values)
       if (res.isSuccess) {
         toast({

@@ -26,6 +26,7 @@ function useCategories() {
     },
     enabled: !!accessToken,
     placeholderData: keepPreviousData,
+    refetchOnWindowFocus: false,
   })
 }
 

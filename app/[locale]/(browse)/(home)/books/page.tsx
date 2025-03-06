@@ -49,8 +49,6 @@ const BookPage = async ({ searchParams }: Props) => {
         : undefined,
     })
 
-  console.log({ isMatchExact, searchWithSpecial })
-
   const t = await getTranslations("BookPage")
   const tRoute = await getTranslations("Routes")
   const data = await searchBooksAdvance({

@@ -4,8 +4,8 @@ import getNotification from "@/queries/notifications/get-notification"
 import { format } from "date-fns"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
-import NotificationTypeBadge from "@/components/ui/notification-type-badge"
 import ParseHtml from "@/components/ui/parse-html"
+import NotificationTypeBadge from "@/components/badges/notification-type-badge"
 
 type Props = {
   params: {

@@ -182,11 +182,6 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
     return () => clearInterval(timer)
   }, [paymentStates.canNavigate, paymentStates.navigateTime, router])
 
-  // Log errors
-  useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form.formState.errors])
-
   if (isLoadingAuth || isLoadingPaymentMethods || isLoadingPackage) {
     return (
       <div className="flex h-screen items-center justify-center">

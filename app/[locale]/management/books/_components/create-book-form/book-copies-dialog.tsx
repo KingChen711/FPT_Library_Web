@@ -1,27 +1,12 @@
-import React, { useState } from "react"
-import {
-  ChevronDown,
-  CirclePlus,
-  Edit2Icon,
-  SaveAll,
-  Trash2,
-} from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
-import { type UseFormReturn } from "react-hook-form"
-import { v4 as uuidv4 } from "uuid"
-import { z } from "zod"
+import React from "react"
+import { Edit2Icon } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useFieldArray, type UseFormReturn } from "react-hook-form"
 
-import { EBookCopyConditionStatus } from "@/lib/types/enums"
 import { type Category, type Condition } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
-import {
-  type TBookCopySchema,
-  type TBookEditionSchema,
-} from "@/lib/validations/books/create-book"
-import { toast } from "@/hooks/use-toast"
-import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
-import { Button, buttonVariants } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
+import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
+import { buttonVariants } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -30,163 +15,25 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
 import CopyInput from "./copy-input"
 
 type Props = {
   form: UseFormReturn<TBookEditionSchema>
   isPending: boolean
-  prefix: string
   hasConfirmedChangeStatus: boolean
   setHasConfirmedChangeStatus: (val: boolean) => void
   conditions: Condition[]
   selectedCategory: Category
 }
 
-const createInput = () => ({
-  id: uuidv4(),
-  barcode: "",
-  conditionId: "1",
-})
-
-function LibraryItemInstancesDialog({
-  form,
-  isPending,
-  prefix,
-  hasConfirmedChangeStatus,
-  setHasConfirmedChangeStatus,
-  conditions,
-  selectedCategory,
-}: Props) {
+function LibraryItemInstancesDialog({ form, isPending }: Props) {
   const t = useTranslations("BooksManagementPage")
-  const locale = useLocale()
-  const [selectedCodes, setSelectedCodes] = useState<string[]>([])
-  const [searchTerm, setSearchTerm] = useState("")
-  const [inputs, setInputs] = useState([createInput()])
 
-  const [openWarning, setOpenWarning] = useState(false)
-  const [tempChangedCopy, setTempChangedCopy] = useState<{
-    inputId: string
-    val: number
-  } | null>(null)
-
-  function parseInput(
-    input: string
-  ): { barcode: string; conditionId: string; id: string }[] {
-    // Split input into lines
-    const lines = input.trim().split("\n")
-
-    // Process each line
-    const items = lines.map((line) => {
-      const parts = line.split(/\t| +/) // Split by tab or spaces
-
-      if (parts.length < 1 || parts.length > 2) {
-        throw new Error(`Invalid format for line: "${line}"`)
-      }
-
-      return {
-        id: uuidv4(),
-        barcode: parts[0].replace("\r", ""),
-        conditionId: conditions
-          ?.find(
-            (c) =>
-              c.englishName ===
-              (z
-                .nativeEnum(EBookCopyConditionStatus)
-                .catch(EBookCopyConditionStatus.GOOD)
-                .parse(parts[1]?.replace("\r", "")) as string)
-          )
-          ?.conditionId.toString()!,
-      }
-    })
-
-    return items
-  }
-
-  const handleOnPasteInput = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    try {
-      const pastedData = e.clipboardData.getData("text")
-      const parsedData = parseInput(pastedData)
-
-      setInputs((prev) => {
-        const clone = structuredClone(prev)
-        clone.shift()
-        return [...parsedData, ...clone]
-      })
-    } catch {
-      toast({
-        title: locale === "vi" ? "Lỗi" : "Error",
-        description:
-          locale === "vi"
-            ? "Đầu vào có định dạng không hợp lệ"
-            : "Invalid input",
-      })
-    }
-  }
-
-  const handleSaveCopies = () => {
-    const cloneCopies = structuredClone(form.getValues(`libraryItemInstances`))
-
-    inputs.forEach((input) => {
-      if (!input.barcode) return
-      const index = cloneCopies.findIndex((c) => c.barcode === input.barcode)
-      if (index !== -1) {
-        cloneCopies[index].conditionId = +input.conditionId
-      } else {
-        cloneCopies.unshift({
-          barcode: input.barcode,
-          conditionId: +input.conditionId,
-        })
-      }
-    })
-
-    setInputs([createInput()])
-    form.setValue(`libraryItemInstances`, cloneCopies)
-    if (cloneCopies.length > 0) {
-      form.clearErrors("libraryItemInstances")
-    }
-  }
-
-  const handleDeleteSelectedCodes = () => {
-    const cloneCopies = structuredClone(form.getValues(`libraryItemInstances`))
-
-    const newCopies = cloneCopies
-      .map((copy) => (selectedCodes.includes(copy.barcode) ? null : copy))
-      .filter(Boolean) as TBookCopySchema[]
-
-    form.setValue(`libraryItemInstances`, newCopies)
-    setSelectedCodes([])
-  }
-
-  const handleChangeStatus = (status: number) => {
-    const cloneCopies = structuredClone(form.getValues(`libraryItemInstances`))
-
-    selectedCodes.forEach((selectedCode) => {
-      const copyIndex = cloneCopies.findIndex((c) => c.barcode === selectedCode)
-
-      if (copyIndex !== -1) {
-        cloneCopies[copyIndex].conditionId = status
-      }
-    })
-
-    form.setValue(`libraryItemInstances`, cloneCopies)
-    setSelectedCodes([])
-  }
+  const { fields } = useFieldArray({
+    name: "libraryItemInstances",
+    control: form.control,
+  })
 
   return (
     <Dialog>
@@ -200,21 +47,11 @@ function LibraryItemInstancesDialog({
           <DialogTitle>{t("Edit copies")}</DialogTitle>
           <DialogDescription>
             <div className="mt-2 flex flex-col gap-2">
-              {inputs.map((input) => (
-                <CopyInput
-                  key={input.id}
-                  handleOnPasteInput={handleOnPasteInput}
-                  input={input}
-                  selectedCategory={selectedCategory}
-                  setInputs={setInputs}
-                  hasConfirmedChangeStatus={hasConfirmedChangeStatus}
-                  setTempChangedCopy={setTempChangedCopy}
-                  setOpenWarning={setOpenWarning}
-                  disabled={inputs.length === 1}
-                />
+              {fields.map((field, index) => (
+                <CopyInput key={field.id} form={form} index={index} />
               ))}
 
-              <div className="mt-2 flex gap-4">
+              {/* <div className="mt-2 flex gap-4">
                 <Button
                   onClick={() => setInputs((prev) => [...prev, createInput()])}
                   variant="secondary"
@@ -332,12 +169,12 @@ function LibraryItemInstancesDialog({
                       </TableRow>
                     ))}
                 </TableBody>
-              </Table>
+              </Table> */}
             </div>
           </DialogDescription>
         </DialogHeader>
 
-        <Dialog open={openWarning} onOpenChange={setOpenWarning}>
+        {/* <Dialog open={openWarning} onOpenChange={setOpenWarning}>
           <DialogContent>
             <DialogHeader>
               <DialogTitle>
@@ -377,7 +214,7 @@ function LibraryItemInstancesDialog({
               </DialogDescription>
             </DialogHeader>
           </DialogContent>
-        </Dialog>
+        </Dialog> */}
       </DialogContent>
     </Dialog>
   )

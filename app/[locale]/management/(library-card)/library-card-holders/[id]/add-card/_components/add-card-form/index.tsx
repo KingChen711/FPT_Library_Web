@@ -110,7 +110,7 @@ function AddCardForm({ userId }: Props) {
       values.file = undefined
 
       const res = await addCard(values)
-      console.log({ res })
+
       if (res.isSuccess) {
         if (res.data.paymentData) {
           setPaymentData(res.data.paymentData)
