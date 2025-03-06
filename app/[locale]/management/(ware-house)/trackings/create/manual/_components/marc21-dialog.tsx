@@ -134,8 +134,7 @@ function Marc21Dialog({ form, index }: Props) {
         marc21Data.author
       )
       setOpen(false)
-    } catch (error) {
-      console.log(error)
+    } catch {
       setShowError(true)
     } finally {
       setMarc21("")

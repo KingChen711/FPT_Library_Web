@@ -1,11 +1,17 @@
 "use client"
 
 import React, { useState } from "react"
-import { MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react"
+import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { type ETrackingType } from "@/lib/types/enums"
-import { type TrackingDetail } from "@/lib/types/models"
+import {
+  type Author,
+  type BookEdition,
+  type Category,
+  type LibraryItemAuthor,
+  type TrackingDetail,
+} from "@/lib/types/models"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -14,13 +20,20 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
-import AddItemDialog from "./add-item-dialog"
 import DeleteTrackingDetailDialog from "./delete-tracking-detail-dialog"
 import EditTrackingDetailDialog from "./edit-tracking-detail-dialog"
-import RemoveItemDialog from "./remove-item-dialog"
+import ViewLibraryItemDialog from "./view-library-item-dialog"
 
 type Props = {
-  trackingDetail: TrackingDetail
+  trackingDetail: TrackingDetail & {
+    libraryItem:
+      | (BookEdition & {
+          libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
+          category: Category
+        })
+      | null
+    category: Category
+  }
   trackingType: ETrackingType
 }
 
@@ -33,25 +46,16 @@ function TrackingDetailActionsDropdown({
   const [openDropdown, setOpenDropdown] = useState(false)
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
-  const [openRemoveItem, setOpenRemoveItem] = useState(false)
-  const [openAddItem, setOpenAddItem] = useState(false)
+
+  const [openViewItem, setOpenViewItem] = useState(false)
 
   return (
     <>
-      {trackingDetail.libraryItemId ? (
-        <RemoveItemDialog
+      {trackingDetail.libraryItemId && (
+        <ViewLibraryItemDialog
           libraryItemId={trackingDetail.libraryItemId}
-          open={openRemoveItem}
-          setOpen={setOpenRemoveItem}
-          trackingDetailId={trackingDetail.trackingDetailId}
-          trackingId={trackingDetail.trackingId}
-        />
-      ) : (
-        <AddItemDialog
-          open={openAddItem}
-          setOpen={setOpenAddItem}
-          trackingDetailId={trackingDetail.trackingDetailId}
-          trackingId={trackingDetail.trackingId}
+          open={openViewItem}
+          setOpen={setOpenViewItem}
         />
       )}
 
@@ -77,6 +81,19 @@ function TrackingDetailActionsDropdown({
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent className="overflow-visible">
+          {trackingDetail.libraryItemId && (
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={() => {
+                setOpenDropdown(false)
+                setOpenViewItem(true)
+              }}
+            >
+              <Eye className="size-4" />
+              {t("View library item")}
+            </DropdownMenuItem>
+          )}
+
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => {
@@ -97,29 +114,6 @@ function TrackingDetailActionsDropdown({
             <Trash2 />
             {t("Delete")}
           </DropdownMenuItem>
-          {trackingDetail.libraryItemId ? (
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => {
-                setOpenDropdown(false)
-                setOpenRemoveItem(true)
-              }}
-            >
-              <Trash2 className="size-4" />
-              {t("Remove catalog")}
-            </DropdownMenuItem>
-          ) : (
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => {
-                setOpenDropdown(false)
-                setOpenAddItem(true)
-              }}
-            >
-              <Plus className="size-4" />
-              {t("Add catalog")}
-            </DropdownMenuItem>
-          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>

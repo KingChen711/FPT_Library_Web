@@ -110,8 +110,7 @@ const ImportSuppliersDialog = () => {
           EDuplicateHandleToIndex.get(values.duplicateHandle) + ""
         )
       }
-      console.log(values)
-      console.log(formData)
+
       const res = await importSuppliers(formData)
       if (res?.isSuccess) {
         toast({

@@ -156,7 +156,6 @@ function CreateTrackingImportForm() {
       })
 
       const res = await createTracking(formData)
-      console.log(res)
 
       if (res?.isSuccess) {
         toast({
@@ -184,8 +183,6 @@ function CreateTrackingImportForm() {
 
       setHasError(true)
       form.setValue("duplicateHandle", EDuplicateHandle.ALLOW)
-
-      console.log(res)
 
       //@ts-ignore
       if (Array.isArray(res?.result)) {

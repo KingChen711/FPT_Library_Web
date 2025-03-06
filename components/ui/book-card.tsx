@@ -9,8 +9,8 @@ import {
   type BookEdition,
   type Category,
   type LibraryItemAuthor,
-  type Shelf,
 } from "@/lib/types/models"
+import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 
@@ -20,11 +20,14 @@ interface LibraryItemProps {
   libraryItem: BookEdition & {
     category: Category
     libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
-    shelf: Shelf | null
   }
+  modal?: boolean
 }
 
-export default function LibraryItemCard({ libraryItem }: LibraryItemProps) {
+export default function LibraryItemCard({
+  libraryItem,
+  modal,
+}: LibraryItemProps) {
   const {
     accompanyingMaterial,
     additionalAuthors,
@@ -73,30 +76,13 @@ export default function LibraryItemCard({ libraryItem }: LibraryItemProps) {
     : null
 
   return (
-    <Card className="w-full max-w-[calc(95vw-640px)] overflow-hidden rounded-md border-2">
+    <Card
+      className={cn(
+        "relative w-full max-w-[calc(95vw-640px)] overflow-hidden rounded-md border-2",
+        modal && "max-w-[95vw]"
+      )}
+    >
       <div className="flex flex-col sm:flex-row">
-        {/* Left side - LibraryItem cover */}
-        {/* <div className="relative h-[200px] bg-muted sm:h-auto">
-          {coverImage ? (
-            <Image
-              src={coverImage || "/placeholder.svg"}
-              alt={title}
-              fill
-              className="aspect-[2/3] object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 flex items-center justify-center bg-muted">
-              <BookOpen className="size-16 text-muted-foreground" />
-            </div>
-          )}
-          {category && (
-            <Badge className="absolute right-2 top-2">
-              {locale === "vi" ? category.vietnameseName : category.englishName}
-            </Badge>
-          )}
-        </div> */}
-
-        {/* Right side - LibraryItem details */}
         <CardContent className="flex-1 p-4">
           <div className="flex gap-4">
             <div className="relative h-[135px] w-[90px] shrink-0 overflow-hidden rounded-md border">

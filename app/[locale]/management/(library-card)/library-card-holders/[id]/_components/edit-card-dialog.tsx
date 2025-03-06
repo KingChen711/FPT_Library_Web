@@ -89,8 +89,6 @@ function EditCardDialog({ card, open, setOpen, userId }: Props) {
   const watchIsAllowBorrowMore = form.watch("isAllowBorrowMore")
 
   const onSubmit = async (values: TEditCardSchema) => {
-    console.log(values)
-
     startTransition(async () => {
       const avatarFile = values.file
 

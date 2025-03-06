@@ -214,5 +214,3 @@ function FiltersFinesDialog() {
 }
 
 export default FiltersFinesDialog
-
-//TODO: pick date not work

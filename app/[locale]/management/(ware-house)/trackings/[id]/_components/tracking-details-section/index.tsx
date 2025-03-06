@@ -2,17 +2,17 @@
 
 import React, { useState } from "react"
 import { type TrackingDetails } from "@/queries/trackings/get-tracking-details"
-import { Loader2, Search } from "lucide-react"
+import { Check, Search, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import {
   type EBookCopyConditionStatus,
   type ETrackingType,
 } from "@/lib/types/enums"
+import { type Condition } from "@/lib/types/models"
 import { cn, formatPrice } from "@/lib/utils"
-import useConditions from "@/hooks/conditions/use-conditions"
 import { Input } from "@/components/ui/input"
-import NoData from "@/components/ui/no-data"
+import StockTransactionTypeBadge from "@/components/ui/stock-transaction-type-badge"
 import {
   Table,
   TableBody,
@@ -32,18 +32,19 @@ type Props = {
   trackingDetails: TrackingDetails
   trackingId: number
   trackingType: ETrackingType
+  conditions: Condition[]
 }
 
 function TrackingDetailsSection({
   trackingDetails,
   trackingId,
   trackingType,
+  conditions,
 }: Props) {
   const t = useTranslations("TrackingsManagementPage")
   const locale = useLocale()
 
   const [searchTerm, setSearchTerm] = useState("")
-  const { data: conditions, isFetching: isFetchingConditions } = useConditions()
 
   const filteredTrackingDetails = trackingDetails
 
@@ -82,9 +83,24 @@ function TrackingDetailsSection({
             <TableHeader>
               <TableRow>
                 <TableHead className="text-nowrap font-bold">
+                  <div className="flex justify-center">
+                    {t("Stock transaction type")}
+                  </div>
+                </TableHead>
+                <TableHead className="text-nowrap font-bold">
                   {t("Item name")}
                 </TableHead>
-                <TableHead className="text-nowrap font-bold">ISBN</TableHead>
+                <TableHead className="text-nowrap font-bold">
+                  <div className="flex justify-center">ISBN</div>
+                </TableHead>
+                <TableHead className="text-nowrap font-bold">
+                  {t("Category")}
+                </TableHead>
+                <TableHead className="text-nowrap font-bold">
+                  <div className="flex justify-center">
+                    {t("Barcode range")}
+                  </div>
+                </TableHead>
                 <TableHead className="text-nowrap font-bold">
                   <div className="flex justify-center">{t("Total item")}</div>
                 </TableHead>
@@ -95,6 +111,14 @@ function TrackingDetailsSection({
                   <div className="flex justify-center">{t("Total amount")}</div>
                 </TableHead>
                 <TableHead className="text-nowrap font-bold">
+                  <div className="flex justify-center">
+                    {t("Has glue barcode")}
+                  </div>
+                </TableHead>
+                <TableHead className="text-nowrap font-bold">
+                  {t("Condition")}
+                </TableHead>
+                <TableHead className="text-nowrap font-bold">
                   <div className="flex justify-center">{t("Status")}</div>
                 </TableHead>
                 <TableHead className="text-nowrap font-bold">
@@ -103,21 +127,36 @@ function TrackingDetailsSection({
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredTrackingDetails.length === 0 && (
-                <TableRow>
-                  <TableCell colSpan={7}>
-                    <div className="flex justify-center p-4">
-                      <NoData />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              )}
               {filteredTrackingDetails.map((trackingDetail) => (
                 <TableRow key={trackingDetail.trackingDetailId}>
                   <TableCell className="text-nowrap font-bold">
+                    <div className="flex justify-center">
+                      <StockTransactionTypeBadge
+                        type={trackingDetail.stockTransactionType}
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-nowrap font-bold">
                     {trackingDetail.itemName}
                   </TableCell>
-                  <TableCell>{trackingDetail.isbn}</TableCell>
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
+                      {trackingDetail.isbn}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-nowrap">
+                    {locale === "vi"
+                      ? trackingDetail.category.vietnameseName
+                      : trackingDetail.category.englishName}
+                  </TableCell>
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
+                      {trackingDetail.barcodeRangeFrom ===
+                      trackingDetail.barcodeRangeTo
+                        ? trackingDetail.barcodeRangeTo
+                        : `${trackingDetail.barcodeRangeFrom} - ${trackingDetail.barcodeRangeTo}`}
+                    </div>
+                  </TableCell>
                   <TableCell className="text-nowrap">
                     <div className="flex justify-center">
                       {trackingDetail.itemTotal}
@@ -135,29 +174,31 @@ function TrackingDetailsSection({
                   </TableCell>
                   <TableCell className="text-nowrap">
                     <div className="flex justify-center">
+                      {trackingDetail.hasGlueBarcode ? (
+                        <Check className="text-success" />
+                      ) : (
+                        <X className="text-danger" />
+                      )}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
+                      <BookConditionStatusBadge
+                        status={
+                          conditions?.find(
+                            (c) => c.conditionId === trackingDetail.conditionId
+                          )?.englishName as EBookCopyConditionStatus
+                        }
+                      />
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
                       <CatalogedBadge
                         cataloged={!!trackingDetail.libraryItem}
                       />
                     </div>
                   </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    <div className="flex justify-center">
-                      {isFetchingConditions ? (
-                        <Loader2 className="size-4 animate-spin" />
-                      ) : (
-                        <BookConditionStatusBadge
-                          status={
-                            conditions?.find(
-                              (c) =>
-                                c.conditionId === trackingDetail.conditionId
-                            )?.englishName as EBookCopyConditionStatus
-                          }
-                        />
-                      )}
-                    </div>
-                  </TableCell>
-
                   <TableCell className="text-nowrap">
                     <div className="flex justify-center">
                       <TrackingDetailActionsDropdown

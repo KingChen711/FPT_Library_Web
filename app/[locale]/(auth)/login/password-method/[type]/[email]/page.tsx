@@ -17,7 +17,6 @@ type Props = {
 async function LoginPasswordMethodPage({ params }: Props) {
   const email = decodeURIComponent(params.email).trim()
 
-  //TODO: fix this if admin is employee
   if (!["user", "admin", "employee"].includes(params.type)) {
     notFound()
   }

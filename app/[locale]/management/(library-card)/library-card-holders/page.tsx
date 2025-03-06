@@ -66,8 +66,6 @@ async function HoldersManagementPage({ searchParams }: Props) {
   const { search, pageIndex, sort, pageSize, tab, ...rest } =
     searchPatronsSchema.parse(searchParams)
 
-  console.log({ searchParams })
-
   const {
     sources: patrons,
     totalActualItem,

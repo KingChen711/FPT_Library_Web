@@ -1342,6 +1342,15 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Total library item": "Total library item",
+    "Total instance": "Total instance",
+    "Total cataloged item": "Total cataloged item",
+    "Total cataloged instance": "Total cataloged instance",
+    "Information": "Information",
+    "Statistic": "Statistic",
+    "View library item": "View library item",
+    "Has glue barcode": "Has glue barcode",
+    "Barcode range": "Barcode range",
     "Scan title": "Scan title",
     "Scan title description": "Add new books that haven't existed in any other book with the specific TITLE in the database yet.",
     "Scan cover image": "Scan cover image",

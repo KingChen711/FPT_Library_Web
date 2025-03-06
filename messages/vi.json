@@ -1346,6 +1346,15 @@
     "DDC additional info": "Ngoài ra, nhiều thư viện công cộng và đại học cũng cung cấp hướng dẫn và tài liệu về cách sử dụng DDC. Bạn có thể tham khảo trang web của thư viện địa phương hoặc trường đại học gần nhất để biết thêm thông tin."
   },
   "TrackingsManagementPage": {
+    "Total library item": "Tổng tài liệu",
+    "Total instance": "Tổng bản sao",
+    "Total cataloged item": "Tổng tài liệu đã biên mục",
+    "Total cataloged instance": "Tổng bản sao đã biên mục",
+    "Information": "Thông tin",
+    "Statistic": "Thống kê",
+    "View library item": "Xem tài liệu",
+    "Has glue barcode": "Đã dán barcode",
+    "Barcode range": "Vùng barcode",
     "Scan title": "Quét tiêu đề",
     "Scan title description": "Thêm sách mới chưa tồn tại trong bất kỳ cuốn sách nào khác có TIÊU ĐỀ cụ thể trong cơ sở dữ liệu.",
     "Scan cover image": "Quét bìa sách",

@@ -1,6 +1,7 @@
 import React from "react"
 import { notFound } from "next/navigation"
 import { auth } from "@/queries/auth"
+import { getConditions } from "@/queries/conditions/get-conditions"
 import getTracking from "@/queries/trackings/get-tracking"
 import getTrackingDetails from "@/queries/trackings/get-tracking-details"
 import { format } from "date-fns"
@@ -32,7 +33,12 @@ async function TrackingDetailPage({ params }: Props) {
   const formatLocale = await getFormatLocale()
 
   const tracking = await getTracking(+params.id)
-  const trackingDetails = await getTrackingDetails(+params.id)
+  const conditions = await getConditions()
+
+  const {
+    result: { sources: trackingDetails },
+    statisticSummary,
+  } = await getTrackingDetails(+params.id)
 
   if (!tracking) notFound()
 
@@ -49,7 +55,7 @@ async function TrackingDetailPage({ params }: Props) {
         </div>
 
         <div className="flex flex-col gap-4 rounded-md border py-5">
-          <h3 className="mx-5 text-lg font-semibold">{t("Summary")}</h3>
+          <h3 className="mx-5 text-lg font-semibold">{t("Information")}</h3>
           <div className="grid grid-cols-12 gap-y-6 text-sm">
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
               <h4 className="font-bold">{t("Receipt number")}</h4>
@@ -194,13 +200,47 @@ async function TrackingDetailPage({ params }: Props) {
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
               <h4 className="font-bold">{t("Updated by")}</h4>
               <div className="flex gap-2">
-                <p>{tracking.updatedBy || <NoData />}</p>
+                <div>{tracking.updatedBy || <NoData />}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 rounded-md border py-5">
+          <h3 className="mx-5 text-lg font-semibold">{t("Statistic")}</h3>
+          <div className="grid grid-cols-12 gap-y-6 text-sm">
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Total library item")}</h4>
+              <div className="flex gap-2">
+                <p>{statisticSummary.totalItem}</p>
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+              <h4 className="font-bold">{t("Total instance")}</h4>
+              <div className="flex gap-2">
+                <p>{statisticSummary.totalInstanceItem}</p>
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Total cataloged item")}</h4>
+              <div className="flex gap-2">
+                <p>{statisticSummary.totalCatalogedItem}</p>
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Total cataloged instance")}</h4>
+              <div className="flex gap-2">
+                <p>{statisticSummary.totalCatalogedInstanceItem}</p>
               </div>
             </div>
           </div>
         </div>
 
         <TrackingDetailsSection
+          conditions={conditions}
           trackingDetails={trackingDetails}
           trackingId={tracking.trackingId}
           trackingType={tracking.trackingType}

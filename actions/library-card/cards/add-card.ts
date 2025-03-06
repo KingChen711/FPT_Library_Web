@@ -52,8 +52,6 @@ export async function addCard(
       },
     }
   } catch (error) {
-    console.log(error)
-
     return handleHttpError(error)
   }
 }

@@ -89,7 +89,7 @@ function ExtendCardForm({ userId, libraryCardId }: Props) {
   function onSubmit(values: TExtendCardSchema) {
     startTransition(async () => {
       const res = await extendCard(libraryCardId, values)
-      console.log({ res })
+
       if (res.isSuccess) {
         if (res.data.paymentData) {
           setPaymentData(res.data.paymentData)

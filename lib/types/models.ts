@@ -11,6 +11,7 @@ import {
   type ENotificationType,
   type EResourceBookType,
   type ERoleType,
+  type EStockTransactionType,
   type ESupplierType,
   type ETrackingStatus,
   type ETrackingType,
@@ -357,6 +358,7 @@ export type Category = {
   vietnameseName: string
   description: string | null
   isAllowAITraining: boolean
+  totalBorrowDays: number | null
 }
 
 export type BookEdition = {
@@ -532,11 +534,18 @@ export type TrackingDetail = {
   isbn: string | null
   unitPrice: number
   totalAmount: number
-  reason: string | null
   trackingId: number
   libraryItemId: number | null
   categoryId: number
   conditionId: number
+  stockTransactionType: EStockTransactionType
+  createdAt: Date
+  updatedAt: Date | null
+  createdBy: string
+  updatedBy: string | null
+  barcodeRangeFrom: string
+  barcodeRangeTo: string
+  hasGlueBarcode: boolean
 }
 
 // Ocr Result

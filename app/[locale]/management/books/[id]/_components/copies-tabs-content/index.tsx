@@ -42,8 +42,6 @@ type Props = {
   prefix: string
 }
 
-//TODO:search
-
 function CopiesTabsContent({ copies, bookId, prefix }: Props) {
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
@@ -257,5 +255,3 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
 }
 
 export default CopiesTabsContent
-
-//TODO:add fullscreen view barcode

@@ -49,7 +49,7 @@ import RecommendBookPreview from "./recommend-book-preview"
 const RecommendationResultTab = () => {
   const router = useRouter()
   const locale = useLocale()
-  console.log("🚀 ~ RecommendationResultTab ~ locale:", locale)
+
   const t = useTranslations("BookPage")
   const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
     usePrediction()
@@ -79,8 +79,6 @@ const RecommendationResultTab = () => {
     router.push("/ai-recommendation")
     return
   }
-
-  console.log(recommendationResult && { recommendationResult })
 
   return (
     <Card className="flex w-full flex-col rounded-lg border-2 p-4">

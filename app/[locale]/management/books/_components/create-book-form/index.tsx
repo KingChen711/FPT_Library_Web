@@ -84,6 +84,8 @@ function CreateBookForm() {
   })
 
   const onSubmit = async (values: TBookEditionSchema) => {
+    console.log(values.libraryItemInstances)
+
     startTransition(async () => {
       const coverImageFile = values.file
 

@@ -7,7 +7,11 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { EBookCopyConditionStatus, ETrackingType } from "@/lib/types/enums"
+import {
+  EBookCopyConditionStatus,
+  EStockTransactionType,
+  type ETrackingType,
+} from "@/lib/types/enums"
 import { type Category, type TrackingDetail } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import {
@@ -55,7 +59,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 import { CurrencyInput } from "@/components/form/currency-input"
 
 type Props = {
@@ -65,13 +68,9 @@ type Props = {
   trackingType: ETrackingType
 }
 
-function EditTrackingDetailDialog({
-  open,
-  setOpen,
-  trackingDetail,
-  trackingType,
-}: Props) {
+function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
   const t = useTranslations("TrackingsManagementPage")
+  const tStockType = useTranslations("Badges.StockTransactionType")
   const locale = useLocale()
 
   const [isPending, startTransition] = useTransition()
@@ -94,10 +93,10 @@ function EditTrackingDetailDialog({
       isbn: trackingDetail.isbn || undefined,
       itemName: trackingDetail.itemName,
       itemTotal: trackingDetail.itemTotal,
-      reason: trackingDetail.reason || undefined,
       totalAmount: trackingDetail.totalAmount,
       unitPrice: trackingDetail.unitPrice,
       conditionId: trackingDetail.conditionId,
+      stockTransactionType: trackingDetail.stockTransactionType,
     },
   })
 
@@ -137,6 +136,44 @@ function EditTrackingDetailDialog({
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="mt-4 space-y-6"
               >
+                <FormField
+                  control={form.control}
+                  name="stockTransactionType"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>
+                        {t("Stock transaction type")}
+                        <span className="ml-1 text-xl font-bold leading-none text-primary">
+                          *
+                        </span>
+                      </FormLabel>
+                      <Select
+                        onValueChange={(val) => field.onChange(+val)}
+                        value={field.value.toString()}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder={t("Select gender")} />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {Object.values(EStockTransactionType)
+                            .filter((e) => typeof e === "number")
+                            .map((option) => (
+                              <SelectItem
+                                key={option}
+                                value={option.toString()}
+                              >
+                                {tStockType(option.toString())}
+                              </SelectItem>
+                            ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
                 <FormField
                   control={form.control}
                   name="categoryId"
@@ -365,22 +402,6 @@ function EditTrackingDetailDialog({
                     </FormItem>
                   )}
                 />
-
-                {trackingType === ETrackingType.TRANSFER && (
-                  <FormField
-                    control={form.control}
-                    name="reason"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("Reason")}</FormLabel>
-                        <FormControl>
-                          <Textarea {...field} disabled={isPending} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
 
                 <div className="flex justify-end gap-x-4">
                   <DialogClose asChild>

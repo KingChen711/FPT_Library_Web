@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { EBookCopyConditionStatus, ETrackingType } from "@/lib/types/enums"
+import { EBookCopyConditionStatus, type ETrackingType } from "@/lib/types/enums"
 import { type Category } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import {
@@ -56,7 +56,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
 import { CurrencyInput } from "@/components/form/currency-input"
 
 type Props = {
@@ -64,7 +63,7 @@ type Props = {
   trackingType: ETrackingType
 }
 
-function AddTrackingDetailDialog({ trackingId, trackingType }: Props) {
+function AddTrackingDetailDialog({ trackingId }: Props) {
   const t = useTranslations("TrackingsManagementPage")
   const locale = useLocale()
 
@@ -369,22 +368,6 @@ function AddTrackingDetailDialog({ trackingId, trackingType }: Props) {
                         </FormItem>
                       )}
                     />
-
-                    {trackingType === ETrackingType.TRANSFER && (
-                      <FormField
-                        control={form.control}
-                        name="reason"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t("Reason")}</FormLabel>
-                            <FormControl>
-                              <Textarea {...field} disabled={isPending} />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    )}
                   </>
                 )}
 

@@ -186,8 +186,6 @@ function BookResourceFields({ form, isPending }: Props) {
                             }}
                           />
                         )}
-
-                        {/* //TODO:Record component */}
                       </>
                     </FormControl>
 

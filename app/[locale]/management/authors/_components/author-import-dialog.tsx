@@ -138,7 +138,6 @@ const AuthorImportDialog = () => {
       console.log("🚀 ~ startTransition ~ res:", res)
 
       if (res.isSuccess) {
-        console.log("helloooooo")
         toast({
           title: tGeneralManagement("btn.import"),
           description: "Import successfully",

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client"
 
-import React, { useEffect, useState } from "react"
+import React, { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Filter } from "lucide-react"
@@ -97,11 +97,6 @@ function FiltersTrackingsDialog() {
 
   const wTrackingType = form.watch("trackingType")
   const wStatus = form.watch("status")
-  const wCreatedAtRange = form.watch("createdAtRange")
-
-  useEffect(() => {
-    console.log(wCreatedAtRange)
-  }, [wCreatedAtRange])
 
   const onSubmit = async (values: TFilterTrackingSchema) => {
     setOpen(false)
@@ -333,5 +328,3 @@ function FiltersTrackingsDialog() {
 }
 
 export default FiltersTrackingsDialog
-
-//TODO: pick date not work

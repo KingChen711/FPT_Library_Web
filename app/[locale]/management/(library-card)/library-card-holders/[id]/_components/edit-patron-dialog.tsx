@@ -77,8 +77,6 @@ function EditPatronDialog({ patron, open, setOpen }: Props) {
 
   const onSubmit = async (values: TEditPatronSchema) => {
     startTransition(async () => {
-      console.log(values.dob)
-
       const res = await editPatron(patron.userId, values)
       if (res.isSuccess) {
         toast({
