@@ -5,7 +5,7 @@ import { type FieldArrayWithId, type UseFormReturn } from "react-hook-form"
 import { useDebounce } from "use-debounce"
 
 import { EStockTransactionType } from "@/lib/types/enums"
-import { type Author, type Category } from "@/lib/types/models"
+import { type Category } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { type TCreateTrackingManualSchema } from "@/lib/validations/trackings/create-tracking-manual"
 import useSearchLibraryItems from "@/hooks/books/use-search-library-items"
@@ -97,26 +97,37 @@ function TrackingDetailRowField({
     `warehouseTrackingDetails.${index}.unitPrice`
   )
 
+  const watchItemName = form.watch(`warehouseTrackingDetails.${index}.itemName`)
+
   const watchItemTotal = form.watch(
     `warehouseTrackingDetails.${index}.itemTotal`
   )
 
   const [openCataloDialog, setOpenCataloDialog] = useState(false)
 
-  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
-
   useEffect(() => {
-    const itemTotal = Number(watchItemTotal) || 0
-    const unitPrice = Number(watchUnitPrice) || 0
+    const timer = setTimeout(() => {
+      const itemTotal = Number(watchItemTotal) || 0
+      const unitPrice = Number(watchUnitPrice) || 0
 
-    form.setValue(
-      `warehouseTrackingDetails.${index}.totalAmount`,
-      itemTotal * unitPrice
-    )
+      form.setValue(
+        `warehouseTrackingDetails.${index}.totalAmount`,
+        itemTotal * unitPrice
+      )
 
-    onGlobalCalculate()
+      onGlobalCalculate()
+    }, 500)
+
+    return () => {
+      clearTimeout(timer)
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchUnitPrice, watchItemTotal, form, index])
+
+  useEffect(() => {
+    console.log(watchItemName)
+  }, [watchItemName])
 
   return (
     <>
@@ -128,8 +139,6 @@ function TrackingDetailRowField({
         setCategory={setCategory}
         open={openCataloDialog}
         setOpen={setOpenCataloDialog}
-        selectedAuthors={selectedAuthors}
-        setSelectedAuthors={setSelectedAuthors}
       />
       <TableRow key={field.id}>
         <TableCell className="border align-top">
@@ -159,11 +168,7 @@ function TrackingDetailRowField({
                               !field.value && "text-muted-foreground"
                             )}
                           >
-                            {field.value
-                              ? libraryItems?.find(
-                                  (item) => item.libraryItemId === field.value
-                                )?.title
-                              : t("Select library item")}
+                            {watchItemName || t("Select library item")}
                           </Button>
                         </FormControl>
                       </PopoverTrigger>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { type EFilterOperator } from "@/constants/advance-search/common"
 import {
   advancedFilters,
   EAdvancedFilterType,
@@ -12,7 +13,7 @@ import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { v4 as uuidv4 } from "uuid"
 
-import { ESearchType, type EFilterOperator } from "@/lib/types/enums"
+import { ESearchType } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 

@@ -12,9 +12,15 @@ import {
 
 type Props = {
   title: string
+  addTrackingDetail?: boolean
+  trackingId?: number
 }
 
-async function TrackingDetailBreadCrumb({ title }: Props) {
+async function TrackingDetailBreadCrumb({
+  title,
+  addTrackingDetail = false,
+  trackingId,
+}: Props) {
   const t = await getTranslations("TrackingsManagementPage")
   return (
     <Breadcrumb>
@@ -25,9 +31,24 @@ async function TrackingDetailBreadCrumb({ title }: Props) {
           </BreadcrumbLink>
         </BreadcrumbItem>
         <BreadcrumbSeparator />
-        <BreadcrumbItem>
-          <BreadcrumbPage className="line-clamp-1">{title}</BreadcrumbPage>
-        </BreadcrumbItem>
+        {addTrackingDetail && trackingId ? (
+          <BreadcrumbLink href={`/management/trackings/${trackingId}`}>
+            {title}
+          </BreadcrumbLink>
+        ) : (
+          <BreadcrumbItem>
+            <BreadcrumbPage className="line-clamp-1">{title}</BreadcrumbPage>
+          </BreadcrumbItem>
+        )}
+
+        <BreadcrumbSeparator />
+        {addTrackingDetail && (
+          <BreadcrumbItem>
+            <BreadcrumbPage className="line-clamp-1">
+              {t("Add tracking detail")}
+            </BreadcrumbPage>
+          </BreadcrumbItem>
+        )}
       </BreadcrumbList>
     </Breadcrumb>
   )

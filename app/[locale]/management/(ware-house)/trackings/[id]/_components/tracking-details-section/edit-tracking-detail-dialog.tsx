@@ -15,8 +15,8 @@ import {
 import { type Category, type TrackingDetail } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import {
-  mutateTrackingDetailSchema,
-  type TMutateTrackingDetailSchema,
+  editTrackingDetailSchema,
+  type TEditTrackingDetailSchema,
 } from "@/lib/validations/trackings/edit-tracking-detail"
 import { updateTrackingDetail } from "@/actions/trackings/edit-tracking-detail"
 import useCategories from "@/hooks/categories/use-categories"
@@ -86,8 +86,8 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
     setOpen(value)
   }
 
-  const form = useForm<TMutateTrackingDetailSchema>({
-    resolver: zodResolver(mutateTrackingDetailSchema),
+  const form = useForm<TEditTrackingDetailSchema>({
+    resolver: zodResolver(editTrackingDetailSchema),
     defaultValues: {
       categoryId: trackingDetail.categoryId,
       isbn: trackingDetail.isbn || undefined,
@@ -100,7 +100,7 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
     },
   })
 
-  const onSubmit = async (values: TMutateTrackingDetailSchema) => {
+  const onSubmit = async (values: TEditTrackingDetailSchema) => {
     if (selectedCategory?.isAllowAITraining && !values.isbn) {
       form.setError("isbn", { message: "required" })
       return

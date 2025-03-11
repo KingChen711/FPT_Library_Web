@@ -2,7 +2,7 @@ import { z } from "zod"
 
 import { EStockTransactionType } from "@/lib/types/enums"
 
-export const mutateTrackingDetailSchema = z.object({
+export const editTrackingDetailSchema = z.object({
   itemName: z.string().min(1, "min1"),
   itemTotal: z.coerce.number({ message: "required" }),
   isbn: z
@@ -17,6 +17,4 @@ export const mutateTrackingDetailSchema = z.object({
   stockTransactionType: z.nativeEnum(EStockTransactionType),
 })
 
-export type TMutateTrackingDetailSchema = z.infer<
-  typeof mutateTrackingDetailSchema
->
+export type TEditTrackingDetailSchema = z.infer<typeof editTrackingDetailSchema>

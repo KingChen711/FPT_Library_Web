@@ -49,21 +49,20 @@ export default function CopiesTab({
 
   const { data: conditions, isFetching: isFetchingConditions } = useConditions()
 
-  const { data: barcodes, isFetching: isFetchingBarcodes } = useRangeBarcodes(
-    form.getValues("trackingDetailId")
-  )
+  const { data: rangeBarcodeData, isFetching: isFetchingBarcodes } =
+    useRangeBarcodes(form.getValues("trackingDetailId"))
 
   useEffect(() => {
-    if (barcodes) {
+    if (rangeBarcodeData) {
       form.setValue(
         "libraryItemInstances",
-        barcodes.map((barcode) => ({
+        rangeBarcodeData.barcodes.map((barcode) => ({
           barcode,
           conditionId: 1,
         }))
       )
     }
-  }, [barcodes, form])
+  }, [rangeBarcodeData, form])
 
   if (!show || isFetchingConditions || isFetchingBarcodes) return null
 

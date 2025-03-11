@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useTransition } from "react"
+import React, { useEffect, useState, useTransition } from "react"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { getLocalTimeZone } from "@internationalized/date"
@@ -18,6 +18,7 @@ import {
 } from "@/lib/validations/trackings/create-tracking-manual"
 import { uploadBookImage } from "@/actions/books/upload-medias"
 import { createTrackingManual } from "@/actions/trackings/create-tracking-manual"
+import useCategories from "@/hooks/categories/use-categories"
 import useSuppliers from "@/hooks/suppliers/use-suppliers"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -62,7 +63,7 @@ function CreateTrackingManualForm() {
 
   const [openComboboxSupplier, setOpenComboboxSupplier] = useState(false)
   const { data: supplierItems } = useSuppliers()
-
+  const { data: categoryItems } = useCategories()
   const form = useForm<TCreateTrackingManualSchema>({
     resolver: zodResolver(createTrackingManualSchema),
     defaultValues: {
@@ -130,20 +131,29 @@ function CreateTrackingManualForm() {
       })
 
       if (res.typeError === "form") {
-        const key = Object.keys(res.fieldErrors).find((k) =>
-          k.toLowerCase().startsWith("warehouseTrackingDetails[".toLowerCase())
-        )
-        if (!key) return
-        const index = +key.replace("warehouseTrackingDetails[", "")[0]
-        if (
-          Number(index) &&
-          values.warehouseTrackingDetails[index].libraryItem
-        ) {
-          form.setError(`warehouseTrackingDetails.${index}.itemName`, {
-            message: "wrongCatalogInformation",
-          })
+        const key = Object.keys(res.fieldErrors)
+          .filter((k) =>
+            k
+              .toLowerCase()
+              .startsWith("warehouseTrackingDetails[".toLowerCase())
+          )
+          .map((k) => k.replace("warehouseTrackingDetails[", ""))
+          .find((k) => k.includes("libraryItem.".toLowerCase()))
+
+        if (key) {
+          const index = +key[0]
+
+          if (
+            Number(index) &&
+            values.warehouseTrackingDetails[index].libraryItem
+          ) {
+            form.setError(`warehouseTrackingDetails.${index}.itemName`, {
+              message: "wrongCatalogInformation",
+            })
+          }
         }
       }
+
       handleServerActionError(res, locale, form)
     })
   }
@@ -169,13 +179,14 @@ function CreateTrackingManualForm() {
     for (let i = 0; i < rows.length; ++i) {
       const row = rows[i]
 
-      console.log({
-        category: selectedCategories[i]?.isAllowAITraining,
-        isbn: form.watch(`warehouseTrackingDetails.${i}.isbn`),
-      })
+      const selectedCategory =
+        selectedCategories[i] ||
+        (row.categoryId
+          ? categoryItems?.find((c) => c.categoryId === row.categoryId)
+          : null)
 
       if (
-        selectedCategories[i]?.isAllowAITraining &&
+        selectedCategory?.isAllowAITraining &&
         !form.watch(`warehouseTrackingDetails.${i}.isbn`)
       ) {
         form.setError(`warehouseTrackingDetails.${i}.isbn`, { message: "min1" })
@@ -229,7 +240,7 @@ function CreateTrackingManualForm() {
       }
 
       const triggerRequireImage =
-        !selectedCategories[i]?.isAllowAITraining ||
+        !selectedCategory?.isAllowAITraining ||
         form.watch(`warehouseTrackingDetails.${i}.libraryItem.file`)
 
       if (!triggerRequireImage) {
@@ -239,7 +250,7 @@ function CreateTrackingManualForm() {
       }
 
       const triggerRequireDdc =
-        !selectedCategories[i]?.isAllowAITraining ||
+        !selectedCategory?.isAllowAITraining ||
         form.watch(
           `warehouseTrackingDetails.${i}.libraryItem.classificationNumber`
         )
@@ -252,7 +263,7 @@ function CreateTrackingManualForm() {
       }
 
       const triggerRequireCutter =
-        !selectedCategories[i]?.isAllowAITraining ||
+        !selectedCategory?.isAllowAITraining ||
         form.watch(`warehouseTrackingDetails.${i}.libraryItem.cutterNumber`)
 
       if (!triggerRequireCutter) {
@@ -277,6 +288,10 @@ function CreateTrackingManualForm() {
     }
     return flag
   }
+
+  useEffect(() => {
+    console.log(form.formState.errors)
+  }, [form.formState.errors])
 
   return (
     <Form {...form}>
