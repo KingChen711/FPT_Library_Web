@@ -24,6 +24,7 @@ const LibraryPackages = () => {
   if (!packages || packages.length === 0) {
     return <NoData />
   }
+
   return (
     <div className="">
       <h2 className="mb-4 text-xl font-semibold">

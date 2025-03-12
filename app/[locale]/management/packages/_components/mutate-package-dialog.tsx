@@ -74,10 +74,8 @@ function MutatePackageDialog({
   })
 
   useEffect(() => {
-    if (openEdit) {
-      form.reset()
-      form.clearErrors()
-    }
+    form.reset()
+    form.clearErrors()
   }, [form, openEdit, open])
 
   const handleOpenChange = (value: boolean) => {
@@ -110,6 +108,8 @@ function MutatePackageDialog({
         } else {
           setOpenEdit(false)
         }
+        form.reset()
+        form.clearErrors()
         return
       }
       handleServerActionError(res, locale, form)

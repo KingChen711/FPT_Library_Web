@@ -1,8 +1,12 @@
-import Image from "next/image"
-import { Heart, Trash2 } from "lucide-react"
+"use client"
 
+import { useEffect, useState } from "react"
+import { LocalStorageKeys } from "@/constants"
+import { Heart } from "lucide-react"
+
+import { localStorageHandler } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import OverviewFavoriteItem from "@/components/ui/overview-favorite-item"
 import {
   Sheet,
   SheetContent,
@@ -11,21 +15,61 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
-
-import { dummyBooks } from "../(home)/_components/dummy-books"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 const OverviewFavoriteList = () => {
-  const favoriteItems = [1, 2, 3, 4, 5, 6, 7, 8, 9] // Thay thế bằng dữ liệu thực tế
+  const [likedLibraryItem, setLikedLibraryItem] = useState<string[]>([])
+
+  const updateFavorites = () => {
+    setLikedLibraryItem(localStorageHandler.getItem(LocalStorageKeys.FAVORITE))
+  }
+
+  useEffect(() => {
+    updateFavorites()
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === LocalStorageKeys.FAVORITE) {
+        updateFavorites()
+      }
+    }
+    const handleCustomEvent = () => updateFavorites()
+    window.addEventListener("storage", handleStorageChange)
+    window.addEventListener(LocalStorageKeys.FAVORITE, handleCustomEvent)
+    return () => {
+      window.removeEventListener("storage", handleStorageChange)
+      window.removeEventListener(LocalStorageKeys.FAVORITE, handleCustomEvent)
+    }
+  }, [])
 
   return (
     <Sheet>
       <SheetTrigger asChild>
-        <Button variant="ghost" size="icon">
-          <Heart
-            size={18}
-            className="text-red-500 transition-transform duration-200 hover:scale-110"
-          />
-        </Button>
+        <div className="relative">
+          <TooltipProvider delayDuration={0}>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button variant="ghost" size="icon" className="relative">
+                  <Heart
+                    size={20}
+                    className="transition-transform duration-200 hover:scale-110"
+                  />
+                  {likedLibraryItem?.length > 0 && (
+                    <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-danger text-xs font-bold text-white shadow-md">
+                      {likedLibraryItem.length}
+                    </span>
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Favorite list</p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        </div>
       </SheetTrigger>
 
       <SheetContent className="flex flex-col gap-4 p-4">
@@ -39,46 +83,27 @@ const OverviewFavoriteList = () => {
           </SheetDescription>
         </SheetHeader>
 
-        {dummyBooks.length > 0 ? (
-          <div className="flex-1 space-y-3 overflow-y-auto">
-            {dummyBooks.map((book) => (
-              <Card
-                key={book.id}
-                className="flex items-start gap-4 rounded-lg p-3 shadow transition hover:bg-gray-100"
-              >
-                <Image
-                  src={book.image}
-                  alt="Book cover"
-                  width={60}
-                  height={60}
-                  className="rounded-md"
-                />
-                <div className="flex-1">
-                  <p className="font-medium">{book.title}</p>
-                  <p className="text-sm text-gray-600">{book.author}</p>
-                  <p className="text-sm text-gray-500">Publisher</p>
-                </div>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="text-red-500 hover:text-red-700"
-                >
-                  <Trash2 size={18} />
-                </Button>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <div className="py-6 text-center text-gray-500">
-            No favorite items found.
+        {likedLibraryItem.length > 0 &&
+          likedLibraryItem.map((libraryItemId) => (
+            <OverviewFavoriteItem
+              key={libraryItemId}
+              libraryItemId={libraryItemId}
+            />
+          ))}
+
+        {likedLibraryItem.length > 0 && (
+          <div className="flex justify-end">
+            <Button
+              variant="destructive"
+              className="px-4"
+              onClick={() =>
+                localStorageHandler.clear(LocalStorageKeys.FAVORITE)
+              }
+            >
+              Remove All
+            </Button>
           </div>
         )}
-
-        <div className="flex justify-end">
-          <Button variant="destructive" className="px-4">
-            Remove All
-          </Button>
-        </div>
       </SheetContent>
     </Sheet>
   )

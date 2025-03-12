@@ -36,6 +36,7 @@ export async function createLibraryCardTransaction(body: {
     revalidatePath(
       `/me/account/library-card/register?libraryCardId=${body.libraryCardPackageId}`
     )
+    revalidatePath(`/me/account/library-card`)
 
     return {
       isSuccess: true,

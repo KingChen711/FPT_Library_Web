@@ -1,26 +1,46 @@
 "use client"
 
-import { type ReactNode } from "react"
-import { ReadMoreWeb } from "react-shorten"
+import { useEffect, useRef, useState, type ReactNode } from "react"
+
+import { cn } from "@/lib/utils"
 
 type Props = {
-  truncate: number
   children: ReactNode
 }
 
-export const StyledReadMore = ({ truncate, children }: Props) => (
-  <div className="mt-2">
-    <ReadMoreWeb
-      truncate={truncate}
-      showMoreText="Show more"
-      showLessText="Show less"
-      className="m-0 inline cursor-pointer bg-none p-0 text-justify text-sm text-danger"
-    >
-      <span className="mt-2 text-justify text-sm">{children}</span>
-      {/* <div
-        className="line-clamp-1 max-w-[260px] flex-1 text-ellipsis"
-        dangerouslySetInnerHTML={{ __html: children }}
-      /> */}
-    </ReadMoreWeb>
-  </div>
-)
+export const StyledReadMore = ({ children }: Props) => {
+  const [showMore, setShowMore] = useState(false)
+  const [isOverflowing, setIsOverflowing] = useState(false)
+  const contentRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (contentRef.current) {
+      const lineHeight = parseFloat(
+        getComputedStyle(contentRef.current).lineHeight
+      )
+      const maxHeight = lineHeight * 3 // Giới hạn 3 dòng
+      setIsOverflowing(contentRef.current.scrollHeight > maxHeight)
+    }
+  }, [children])
+
+  return (
+    <div className="mt-2">
+      <div
+        ref={contentRef}
+        className={cn(
+          "line-clamp-3 flex-1 text-ellipsis text-sm",
+          showMore && "line-clamp-none"
+        )}
+        dangerouslySetInnerHTML={{ __html: children as string }}
+      />
+      {isOverflowing && (
+        <div
+          onClick={() => setShowMore(!showMore)}
+          className="mt-2 cursor-pointer text-sm underline hover:opacity-90"
+        >
+          {showMore ? "Show less" : "Show more"}
+        </div>
+      )}
+    </div>
+  )
+}

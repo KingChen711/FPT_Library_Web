@@ -5,8 +5,11 @@ import {
   type JSX,
   type RefAttributes,
 } from "react"
+import Image from "next/image"
+import { LocalStorageKeys } from "@/constants"
 import { Link } from "@/i18n/routing"
 import {
+  Book,
   BookMarked,
   BookOpen,
   BookX,
@@ -28,7 +31,7 @@ import {
 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { cn } from "@/lib/utils"
+import { cn, localStorageHandler } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import BookBorrowDialog from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-borrow-dialog"
 import BookInstancesTab from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-tabs/book-instances-tab"
@@ -42,12 +45,14 @@ type Props = {
   shownInventory?: boolean
   showResources?: boolean
   showInstances?: boolean
+  showImage?: boolean
 }
 
 const LibraryItemInfo = ({
   id,
   showResources = true,
   showInstances = true,
+  showImage = false,
 }: Props): JSX.Element | null => {
   const t = useTranslations("BookPage")
   const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
@@ -55,39 +60,54 @@ const LibraryItemInfo = ({
   if (isLoading) return <Loader2 className="animate-spin" />
   if (!libraryItem) return null
 
+  localStorageHandler.addRecentItem(
+    LocalStorageKeys.OPENING_RECENT,
+    libraryItem.libraryItemId.toString()
+  )
+
   return (
     <div className="space-y-4 text-foreground">
-      <section className="space-y-2">
-        <p className="font-thin italic">
-          {t("an edition of")} &nbsp;
-          <span className="font-semibold">{libraryItem.title}</span>
-        </p>
-        <h1 className="line-clamp-2 text-2xl font-semibold text-primary">
-          {libraryItem.title}
-        </h1>
-        <p className="text-muted-foreground">{libraryItem.subTitle}</p>
-        {libraryItem.authors.length > 0 && (
-          <div className="flex items-center gap-2 text-sm italic">
-            <User2 size={16} /> by &nbsp;
-            {libraryItem.authors[0].fullName as string}
+      <div className="flex items-start gap-4">
+        {showImage && (
+          <Image
+            src={libraryItem.coverImage || ""}
+            alt=""
+            width={120}
+            height={160}
+          />
+        )}
+        <section className="flex-1 space-y-2">
+          <p className="font-thin italic">
+            {t("an edition of")} &nbsp;
+            <span className="font-semibold">{libraryItem.title}</span>
+          </p>
+          <h1 className="line-clamp-2 text-2xl font-semibold text-primary">
+            {libraryItem.title}
+          </h1>
+          <p className="text-muted-foreground">{libraryItem.subTitle}</p>
+          {libraryItem.authors.length > 0 && (
+            <div className="flex items-center gap-2 text-sm italic">
+              <User2 size={16} /> by &nbsp;
+              {libraryItem.authors[0].fullName as string}
+            </div>
+          )}
+          <div className="flex flex-wrap gap-2">
+            <Badge variant="draft" className="w-fit">
+              No.{libraryItem.editionNumber} Edition
+            </Badge>
+            <Badge variant="draft" className="w-fit">
+              {libraryItem.category.englishName}
+            </Badge>
           </div>
-        )}
-        <div className="flex flex-wrap gap-2">
-          <Badge variant="draft" className="w-fit">
-            No.{libraryItem.editionNumber} Edition
-          </Badge>
-          <Badge variant="draft" className="w-fit">
-            {libraryItem.category.englishName}
-          </Badge>
-        </div>
-        <div className="my-2 text-sm">
-          ⭐ {libraryItem.avgReviewedRate} / 5 {t("fields.ratings")}
-        </div>
+          <div className="my-2 text-sm">
+            ⭐ {libraryItem.avgReviewedRate} / 5 {t("fields.ratings")}
+          </div>
 
-        {libraryItem.summary && (
-          <p className="text-sm">{libraryItem.summary}</p>
-        )}
-      </section>
+          {libraryItem.summary && (
+            <p className="text-sm">{libraryItem.summary}</p>
+          )}
+        </section>
+      </div>
 
       <InfoItem
         className="text-sm"
@@ -190,12 +210,23 @@ const LibraryItemInfo = ({
         </section>
       }
       <section className="flex flex-col items-start justify-start gap-4">
-        <Button>
+        <Button
+          onClick={() =>
+            localStorageHandler.setItem(LocalStorageKeys.FAVORITE, id)
+          }
+        >
           <Plus className="mr-1 size-4" /> {t("add to favorite")}
         </Button>
         {showResources && (
           <section className="flex items-center gap-4">
-            <BookBorrowDialog />
+            <Button
+              onClick={() =>
+                localStorageHandler.setItem(LocalStorageKeys.BORROW, id)
+              }
+            >
+              <Book /> <span>{t("borrow")}</span>
+            </Button>
+            {/* <BookBorrowDialog /> */}
             {[
               { label: "audio", icon: Headphones, query: "audio=true" },
               { label: "read now", icon: BookOpen, query: "audio=false" },

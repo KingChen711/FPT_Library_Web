@@ -46,7 +46,7 @@ const InstanceItem = () => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {bookCopies.map((book, index) => (
+          {bookCopies.map((book) => (
             <TableRow key={book.id}>
               <TableCell className="text-center font-medium">
                 {book.id}

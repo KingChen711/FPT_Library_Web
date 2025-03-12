@@ -2,7 +2,6 @@
 
 import { startTransition, useEffect, useState } from "react"
 import Image from "next/image"
-import { useSearchParams } from "next/navigation"
 import { Link, usePathname, useRouter } from "@/i18n/routing"
 import {
   Book,
@@ -46,7 +45,6 @@ import Actions from "./actions"
 function BrowseNavbar() {
   const t = useTranslations("GeneralManagement")
   const locale = useLocale()
-  const { open } = useSidebar()
   const pathname = usePathname()
   const router = useRouter()
 
@@ -57,6 +55,8 @@ function BrowseNavbar() {
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
   const { data: autoCompleteData } = useAutoCompleteBooks(debouncedSearchTerm)
   const tAutocomplete = useTranslations("AutocompleteLibraryItem")
+  const { open } = useSidebar()
+  const [openVoiceToText, setOpenVoiceToText] = useState(false)
 
   useEffect(() => {
     // Update currentDate only on the client
@@ -105,7 +105,11 @@ function BrowseNavbar() {
             pathname === "/search" && "hidden"
           )}
         >
-          <div className="flex w-[650px] items-center rounded-2xl border shadow-lg">
+          <div
+            className={cn(
+              "flex flex-1 items-center rounded-2xl border shadow-lg"
+            )}
+          >
             <BookFilterTabs />
             <div className="relative flex-1 border-x">
               <Search
@@ -161,7 +165,10 @@ function BrowseNavbar() {
               )}
             </div>
 
-            <VoiceToText open={false} setOpen={() => {}} />
+            <VoiceToText
+              open={openVoiceToText}
+              setOpen={() => setOpenVoiceToText(true)}
+            />
             <BookPredictionDialog open={false} setOpen={() => {}} />
             <BookRecommendDialog open={false} setOpen={() => {}} />
 
@@ -172,7 +179,7 @@ function BrowseNavbar() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => {}}>
+                <DropdownMenuItem onClick={() => setOpenVoiceToText(true)}>
                   <Mic size={16} /> Voice to text
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {}}>

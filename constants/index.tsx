@@ -294,6 +294,12 @@ export const browseRoutes: Route[] = [
   },
 ]
 
+export enum LocalStorageKeys {
+  FAVORITE = "favorite",
+  BORROW = "borrow",
+  OPENING_RECENT = "opening-recent",
+}
+
 export const editorPlugin = {
   plugins:
     "anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount linkchecker markdown",
