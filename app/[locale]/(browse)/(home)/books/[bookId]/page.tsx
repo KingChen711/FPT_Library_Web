@@ -32,11 +32,6 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
     return <div>{t("Library item not found")}</div>
   }
 
-  // const notHavingAuthor = !(
-  //   libraryItem.authors && libraryItem.authors.length > 0
-  // )
-  const notHavingAuthor = false
-
   return (
     <div className="size-full space-y-4">
       <Breadcrumb>
@@ -53,28 +48,11 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
         </BreadcrumbList>
       </Breadcrumb>
 
-      {notHavingAuthor ? (
+      {libraryItem.authors && libraryItem.authors.length > 0 ? (
         <div className="flex h-full gap-4">
-          <section className="h-full flex-1 space-y-4">
-            <div className="flex h-[60vh] gap-4">
-              <div
-                className={cn(
-                  "flex w-full justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg"
-                )}
-              >
-                <BookPreviewCard libraryItem={libraryItem} />
-                <LibraryItemInfo
-                  id={libraryItem.libraryItemId.toString()}
-                  showInstances={false}
-                />
-              </div>
-            </div>
-            <BookTabs libraryItemId={libraryItem.libraryItemId.toString()} />
+          <section className="h-full w-1/5 bg-card">
+            <BookPreviewCard libraryItem={libraryItem} />
           </section>
-        </div>
-      ) : (
-        <div className="flex h-full gap-4">
-          <BookPreviewCard libraryItem={libraryItem} />
           <section className="h-full flex-1 space-y-4">
             <div className="flex h-[60vh] gap-4">
               <div
@@ -88,6 +66,29 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
                 />
               </div>
               <BookAuthorCard libraryItem={libraryItem} />
+            </div>
+            <BookTabs libraryItemId={libraryItem.libraryItemId.toString()} />
+          </section>
+        </div>
+      ) : (
+        <div className="container flex h-full justify-center gap-4">
+          <section className="h-full w-3/4 space-y-4">
+            <div className="flex h-[70vh] gap-4">
+              <div
+                className={cn(
+                  "flex w-full justify-between gap-4 rounded-lg border bg-card p-4 shadow-lg"
+                )}
+              >
+                <section className="h-full w-1/3 bg-card">
+                  <BookPreviewCard libraryItem={libraryItem} />
+                </section>
+                <div className="overflow-y-auto">
+                  <LibraryItemInfo
+                    id={libraryItem.libraryItemId.toString()}
+                    showInstances={false}
+                  />
+                </div>
+              </div>
             </div>
             <BookTabs libraryItemId={libraryItem.libraryItemId.toString()} />
           </section>

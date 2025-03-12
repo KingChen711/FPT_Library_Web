@@ -51,12 +51,25 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
     search: "",
   })
 
-  console.log("🚀 ~ BookAuthorCard ~ libraryItem:", libraryItem)
+  const otherBooks = libraryItems.sources.filter(
+    (item) => item.libraryItemId !== libraryItem.libraryItemId
+  )
+
+  const otherAuthors =
+    libraryItem.authors.filter(
+      (author) => author.authorId !== libraryItem.authors[0].authorId
+    ) || []
+
+  console.log(
+    "🚀 ~ BookAuthorCard ~ libraryItem.authors: ",
+    libraryItem.authors
+  )
+
   return (
     <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg">
       <div>
         <h1 className="text-xl font-semibold capitalize">
-          <span className="text-primary">{t("about")}</span> &nbsp;
+          <span className="text-primary">{t("about")}</span>&nbsp;
           {t("fields.author")}
         </h1>
         <div className="flex items-center justify-between gap-4">
@@ -93,11 +106,52 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
             />
           )}
         </div>
-        <StyledReadMore truncate={80}>
-          {libraryItem.authors[0]?.biography}
-        </StyledReadMore>
+        <StyledReadMore>{libraryItem.authors[0]?.biography}</StyledReadMore>
       </div>
-      {libraryItems.sources.length > 0 && (
+
+      {otherAuthors.length > 0 && (
+        <div className="mt-auto">
+          <h1 className="mt-4 text-xl font-semibold">{t("other authors")}</h1>
+          <div className="flex flex-1 items-center justify-center">
+            <Carousel
+              opts={{
+                align: "start",
+              }}
+              className="w-full max-w-xl"
+            >
+              <CarouselContent className="flex h-full">
+                {otherAuthors.map((author) => {
+                  return (
+                    <CarouselItem
+                      key={author.authorId}
+                      className="h-full shrink-0 basis-1/4"
+                    >
+                      <Link
+                        href={`#`}
+                        className="flex items-center justify-center overflow-hidden rounded-lg shadow-lg"
+                      >
+                        <Image
+                          src={author.authorImage || ""}
+                          priority
+                          alt="Logo"
+                          width={240}
+                          height={320}
+                          className="object-cover duration-150 ease-in-out hover:scale-105"
+                        />
+                      </Link>
+                    </CarouselItem>
+                  )
+                })}
+              </CarouselContent>
+
+              <CarouselPrevious className="absolute left-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
+              <CarouselNext className="absolute right-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
+            </Carousel>
+          </div>
+        </div>
+      )}
+
+      {otherBooks.length > 0 && (
         <div className="mt-auto">
           <h1 className="mt-4 text-xl font-semibold">{t("other books")}</h1>
           <div className="flex flex-1 items-center justify-center">
@@ -117,7 +171,7 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
                       >
                         <Link
                           href={`/books/${item.libraryItemId}`}
-                          className="flex h-[80] items-center justify-center overflow-hidden rounded-lg shadow-lg"
+                          className="flex items-center justify-center overflow-hidden rounded-lg shadow-lg"
                         >
                           <Image
                             src={item.coverImage || ""}

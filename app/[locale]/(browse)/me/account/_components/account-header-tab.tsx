@@ -23,6 +23,21 @@ const accountRoutes = [
     icon: IdCard,
   },
   {
+    label: "Return",
+    route: ESystemRoutes.RETURN_MANAGEMENT,
+    icon: IdCard,
+  },
+  {
+    label: "Reservation",
+    route: ESystemRoutes.RESERVATION_MANAGEMENT,
+    icon: IdCard,
+  },
+  {
+    label: "Transaction",
+    route: ESystemRoutes.TRANSACTION_MANAGEMENT,
+    icon: IdCard,
+  },
+  {
     label: "Security",
     route: ESystemRoutes.SECURITY_MANAGEMENT,
     icon: Shield,

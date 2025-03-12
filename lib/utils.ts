@@ -1,3 +1,4 @@
+import { type LocalStorageKeys } from "@/constants"
 import { clsx, type ClassValue } from "clsx"
 import { jwtDecode } from "jwt-decode"
 import queryString from "query-string"
@@ -205,4 +206,56 @@ export const getFullName = (
   lastName: string | null | undefined
 ) => {
   return `${firstName ?? ""} ${lastName ?? ""}`.trim()
+}
+
+export const localStorageHandler = {
+  getItem: (key: LocalStorageKeys) => {
+    if (typeof window === "undefined") return []
+    return JSON.parse(localStorage.getItem(key) ?? "[]")
+  },
+
+  setItem: (key: LocalStorageKeys, bookId: string) => {
+    if (typeof window === "undefined") return
+
+    const existingItemList = localStorage.getItem(key)
+    let updatedList: string[] = []
+
+    if (existingItemList) {
+      const parsedItemList: string[] = JSON.parse(existingItemList)
+      updatedList = parsedItemList.includes(bookId)
+        ? parsedItemList.filter((id) => id !== bookId) // Xóa nếu đã có
+        : [...parsedItemList, bookId] // Thêm nếu chưa có
+    } else {
+      updatedList = [bookId]
+    }
+
+    localStorage.setItem(key, JSON.stringify(updatedList))
+
+    // 🔥 Phát sự kiện tùy chỉnh để cập nhật UI ngay trong cùng tab
+    window.dispatchEvent(new Event(key))
+  },
+
+  addRecentItem: (key: LocalStorageKeys, bookId: string) => {
+    if (typeof window === "undefined") return
+
+    const recentItems = localStorage.getItem(key)
+    let updatedRecentItems: string[] = []
+
+    if (recentItems) {
+      const parsedRecentItems: string[] = JSON.parse(recentItems)
+      const filteredItems = parsedRecentItems.filter((id) => id !== bookId)
+      updatedRecentItems = [bookId, ...filteredItems].slice(0, 5)
+    } else {
+      updatedRecentItems = [bookId]
+    }
+
+    localStorage.setItem(key, JSON.stringify(updatedRecentItems))
+    window.dispatchEvent(new Event(key))
+  },
+
+  clear: (key: LocalStorageKeys) => {
+    if (typeof window === "undefined") return
+    localStorage.removeItem(key)
+    window.dispatchEvent(new Event(key))
+  },
 }

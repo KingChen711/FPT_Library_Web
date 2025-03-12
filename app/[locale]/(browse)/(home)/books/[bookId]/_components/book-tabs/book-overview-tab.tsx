@@ -50,7 +50,7 @@ const BookOverviewTab = async ({ libraryItemId }: Props) => {
           Preview available in &nbsp;
           <span className="font-semibold text-primary underline">English</span>
         </p>
-        <StyledReadMore truncate={120}>{libraryItem.summary}</StyledReadMore>
+        <StyledReadMore>{libraryItem.summary}</StyledReadMore>
 
         <div className="flex gap-4">
           <section className="flex-1 space-y-4 rounded-lg border p-4 shadow-md">

@@ -32,6 +32,7 @@ const getRelatedLibraryItemsByAuthor = async (
         searchParams,
       }
     )
+    console.log("🚀 ~ data:", data)
     return data
   } catch {
     return {

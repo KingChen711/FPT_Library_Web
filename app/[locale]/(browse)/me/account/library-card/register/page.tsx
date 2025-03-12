@@ -7,7 +7,15 @@ import { useAuth } from "@/contexts/auth-provider"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { type HubConnection } from "@microsoft/signalr"
-import { BookOpen, Calendar, Loader2, MapPin, User, X } from "lucide-react"
+import {
+  ArrowLeftCircle,
+  BookOpen,
+  Calendar,
+  Loader2,
+  MapPin,
+  User,
+  X,
+} from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 import { useForm } from "react-hook-form"
@@ -116,7 +124,6 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
   })
 
   const cardId = "012345678901234567890123456789"
-  const formattedCardId = cardId.replace(/(\d{4})/g, "$1 ").trim()
 
   // Connect to SignalR
   useEffect(() => {
@@ -241,6 +248,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
             title: locale === "vi" ? "Đăng kí thất bại" : "Fail to register",
             variant: "danger",
           })
+          handleServerActionError(res, locale, form)
           return
         }
 
@@ -280,8 +288,15 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
   }
 
   return (
-    <div className="mx-auto max-w-4xl p-4">
-      <PackageCard package={packageData} />
+    <div className="mx-auto max-w-4xl px-4">
+      {!paymentData && (
+        <>
+          <Button variant={"link"} onClick={() => router.back()}>
+            <ArrowLeftCircle className="mr-2 size-4" /> Back
+          </Button>
+          <PackageCard package={packageData} />
+        </>
+      )}
 
       <h1 className="mb-6 mt-4 text-center text-2xl font-bold text-primary">
         Library Card Registration
@@ -291,7 +306,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <div className="grid gap-8 md:grid-cols-2">
-              <div className="space-y-6">
+              <section className="space-y-6">
                 <h2 className="border-b pb-2 text-lg font-semibold">
                   Personal Information
                 </h2>
@@ -410,10 +425,10 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                   )}
                 />
                 <Button type="submit">Register Library Card</Button>
-              </div>
+              </section>
 
               {/* Library Card Preview */}
-              <div>
+              <section>
                 <h2 className="mb-4 border-b pb-2 text-lg font-semibold">
                   Card Preview
                 </h2>
@@ -444,7 +459,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                           <User className="size-12" />
                         )}
                       </div>
-                      <div className="flex-1 space-y-1">
+                      <div className="flex-1 space-y-2">
                         <p className="text-lg font-semibold">
                           {form.watch("fullName") || "Your Name"}
                         </p>
@@ -464,11 +479,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                       </div>
                     </div>
 
-                    <div className="space-y-1">
-                      <div className="flex justify-between text-sm">
-                        <span>Card ID:</span>
-                        <span className="font-medium">{formattedCardId}</span>
-                      </div>
+                    <div className="space-y-2">
                       <div className="flex justify-between text-sm">
                         <span>Issue Date:</span>
                         <span>{formatDate(new Date().toISOString())}</span>
@@ -487,14 +498,14 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                       </div>
                     </div>
 
-                    <div className="pt-2">
+                    <div className="flex justify-center pt-2">
                       <Barcode
                         value={cardId}
                         width={1.5}
                         height={40}
                         fontSize={12}
                         margin={0}
-                        displayValue={true}
+                        displayValue={false}
                       />
                     </div>
                   </CardContent>
@@ -505,7 +516,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                     </p>
                   </CardFooter>
                 </Card>
-              </div>
+              </section>
             </div>
           </form>
         </Form>
@@ -543,7 +554,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                   <div className="relative">
                     <div
                       className={cn(
-                        "rounded-lg border-2 bg-white p-4",
+                        "flex w-full justify-center rounded-lg border-2 bg-white p-4",
                         paymentStates.status !== ETransactionStatus.PENDING &&
                           "blur"
                       )}
@@ -618,7 +629,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                       <h3 className="mb-2 font-medium">
                         {t("How to make payment")}
                       </h3>
-                      <ol className="list-decimal space-y-1 pl-5">
+                      <ol className="list-decimal space-y-2 pl-5">
                         <li>{t("qr payment guide 1")}</li>
                         <li>{t("qr payment guide 2")}</li>
                         <li>{t("qr payment guide 3")}</li>
