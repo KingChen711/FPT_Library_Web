@@ -61,6 +61,7 @@ function Paginator({
 
   const handleChangeRowsPerPage = (pageSize: string) => {
     if (onChangePageSize) {
+      setOpen(false)
       onChangePageSize(pageSize as "5" | "10" | "30" | "50" | "100")
       return
     }

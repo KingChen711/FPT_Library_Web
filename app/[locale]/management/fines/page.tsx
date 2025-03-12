@@ -110,7 +110,11 @@ async function FinesManagementPage({ searchParams }: Props) {
                   </TableCell>
                   <TableCell>{fine.finePolicyTitle}</TableCell>
                   <TableCell>{fine.conditionType}</TableCell>
-                  <TableCell>{formatPrice(fine.fixedFineAmount)}</TableCell>
+                  <TableCell>
+                    {fine.fixedFineAmount
+                      ? formatPrice(fine.fixedFineAmount)
+                      : "-"}
+                  </TableCell>
                   <TableCell>{formatPrice(fine.fineAmountPerDay)}</TableCell>
                   <TableCell className="flex justify-center">
                     <FineActionDropdown fine={fine} />

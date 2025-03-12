@@ -6,8 +6,8 @@ import { useTranslations } from "next-intl"
 import { type Supplier, type Tracking } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { Card, CardContent } from "@/components/ui/card"
-import TrackingStatusBadge from "@/components/ui/tracking-status-badge"
-import TrackingTypeBadge from "@/components/ui/tracking-type-badge"
+import TrackingStatusBadge from "@/components/badges/tracking-status-badge"
+import TrackingTypeBadge from "@/components/badges/tracking-type-badge"
 
 interface TrackingCardProps {
   tracking: Tracking & { supplier: Supplier }

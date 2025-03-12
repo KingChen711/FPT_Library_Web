@@ -114,7 +114,8 @@
     "integer": "Must be an integer",
     "expectedReturnDate": "The expected return date must be greater than the entry date",
     "date": "Invalid date",
-    "dateGteToday": "Required must be greater than or equal to current date"
+    "dateGteToday": "Required must be greater than or equal to current date",
+    "wrongCatalogInformation": "Cataloging information must be accurate, or do not catalog."
   },
   "Me": {
     "account": "Account",
@@ -575,7 +576,23 @@
     "Reservations": "Reservations",
     "Transactions": "Transactions",
     "Notifications": "Notifications",
-    "Select gender": "Select gender"
+    "Select gender": "Select gender",
+    "Create card": "Create card",
+    "Extend card": "Extend card",
+    "Request date": "Request date",
+    "Expiration date": "Expiration date",
+    "Total request item": "Total request item",
+    "Description": "Description",
+    "Cancelled at": "Cancelled at",
+    "Cancellation reason": "Cancellation reason",
+    "Amount": "Amount",
+    "Method": "Method",
+    "Transaction date": "Transaction date",
+    "Expired at": "Expired at",
+    "Created at": "Created at",
+    "Created by": "Created by",
+    "Cancelled reason": "Cancelled reason",
+    "Total missed pick up": "Total missed pick up"
   },
   "MfaPage": {
     "Verify MFA": "Verify MFA",
@@ -869,6 +886,9 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Year": "Year",
+    "Delete catalog information": "Delete catalog information",
+    "Item information": "Item information",
     "Field": "Field",
     "Table": "Table",
     "Old value": "Old value",
@@ -1323,6 +1343,20 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Total library item": "Total library item",
+    "Total instance": "Total instance",
+    "Total cataloged item": "Total cataloged item",
+    "Total cataloged instance": "Total cataloged instance",
+    "Information": "Information",
+    "Statistic": "Statistic",
+    "View library item": "View library item",
+    "Has glue barcode": "Has glue barcode",
+    "Barcode range": "Barcode range",
+    "Scan title": "Scan title",
+    "Scan title description": "Add new books that haven't existed in any other book with the specific TITLE in the database yet.",
+    "Scan cover image": "Scan cover image",
+    "Scan cover image description": "Do not allow books to have the same image.",
+    "Cover images": "Cover images",
     "Warehouse trackings": "Warehouse trackings",
     "Create tracking": "Create tracking",
     "Create warehouse tracking": "Create warehouse tracking",
@@ -1352,6 +1386,7 @@
     "Error while import data": "Error while import data",
     "View details": "View details",
     "Row": "Row: ",
+    "Sheet": "Sheet: ",
     "Import errors": "Import errors",
     "Receipt number": "Receipt number",
     "Supplier name": "Supplier name",
@@ -1405,9 +1440,30 @@
     "All": "All",
     "Reset": "Reset",
     "Apply": "Apply",
-    "Create at": "Created at"
+    "Create at": "Created at",
+    "Import excel": "Import Excel",
+    "Manual": "Manual",
+    "Auto calculated": "Auto calculated",
+    "New item": "New item",
+    "Additional item": "Additional item",
+    "Item total": "Item total",
+    "Stock transaction type": "Stock transaction type",
+    "Total amount auto": "Total amount (auto)",
+    "Select condition": "Select condition",
+    "Select library item": "Select library item",
+    "Catalog": "Catalog",
+    "No item found": "No item found"
   },
   "Badges": {
+    "StockTransactionType": {
+      "0": "New",
+      "1": "Additional",
+      "2": "Damaged",
+      "3": "Lost",
+      "4": "Outdated",
+      "5": "Transferred",
+      "6": "Other"
+    },
     "BookConditionStatus": {
       "Good": "Good",
       "Worn": "Worn",
@@ -1443,8 +1499,21 @@
       "1": "Female",
       "2": "Other"
     },
-    "IssuanceMethod": { "0": "In library", "1": "Online" },
-    "TransactionMethod": { "0": "Cash", "1": "Digital payment" },
+    "IssuanceMethod": {
+      "0": "In library",
+      "1": "Online"
+    },
+    "TransactionMethod": {
+      "0": "Cash",
+      "1": "Digital"
+    },
+    "TransactionType": {
+      "0": "Fine",
+      "1": "Digital borrow",
+      "2": "Card register",
+      "3": "Card extension",
+      "4": "Digital extension"
+    },
     "CardStatus": {
       "0": "Unpaid",
       "1": "Pending",
@@ -1452,6 +1521,18 @@
       "3": "Rejected",
       "4": "Expired",
       "5": "Suspended"
+    },
+    "TransactionStatus": {
+      "0": "Pending",
+      "1": "Expired",
+      "2": "Paid",
+      "3": "Cancelled"
+    },
+    "BorrowRequestStatus": {
+      "0": "Created",
+      "1": "Expired",
+      "2": "Borrowed",
+      "3": "Cancelled"
     }
   },
   "IsbnScanner": {

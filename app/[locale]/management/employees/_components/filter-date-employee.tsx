@@ -6,15 +6,15 @@ import { type UseFormReturn } from "react-hook-form"
 
 import { type TEmployeesFilterSchema } from "@/lib/validations/employee/employees-filter"
 import {
-  createCalendarDate,
-  DateTimePicker,
-} from "@/components/ui/date-time-picker/index"
-import {
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/form/date-time-picker"
 
 type Props = {
   form: UseFormReturn<TEmployeesFilterSchema, unknown, undefined>

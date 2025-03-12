@@ -1,13 +1,15 @@
-import React, { useCallback, useEffect, useState } from "react"
-import { Check, Loader2, Trash2, X } from "lucide-react"
+import React, { useEffect } from "react"
 import { useTranslations } from "next-intl"
-import { useDebounce } from "use-debounce"
+import { type UseFormReturn } from "react-hook-form"
 
 import { EBookCopyConditionStatus } from "@/lib/types/enums"
-import { type Category } from "@/lib/types/models"
-import useCheckExistBarcode from "@/hooks/books/use-check-exist-barcode"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form"
 import {
   Select,
   SelectContent,
@@ -18,145 +20,68 @@ import {
 } from "@/components/ui/select"
 
 type Props = {
-  input: {
-    id: string
-    barcode: string
-    conditionId: string
-  }
-  selectedCategory: Category
-  handleOnPasteInput: (e: React.ClipboardEvent<HTMLInputElement>) => void
-  setInputs: React.Dispatch<
-    React.SetStateAction<
-      {
-        id: string
-        barcode: string
-        conditionId: string
-      }[]
-    >
-  >
-  hasConfirmedChangeStatus: boolean
-  disabled: boolean
-  setOpenWarning: React.Dispatch<React.SetStateAction<boolean>>
-  setTempChangedCopy: React.Dispatch<
-    React.SetStateAction<{
-      inputId: string
-      val: number
-    } | null>
-  >
+  form: UseFormReturn<TBookEditionSchema>
+  index: number
 }
 
-function CopyInput({
-  input,
-  selectedCategory,
-  handleOnPasteInput,
-  setInputs,
-  disabled,
-  hasConfirmedChangeStatus,
-  setOpenWarning,
-  setTempChangedCopy,
-}: Props) {
+function CopyInput({ index, form }: Props) {
   const t = useTranslations("BooksManagementPage")
-  const [isExist, setIsExist] = useState(false)
-  const [debouncedSearchTerm] = useDebounce(input.barcode, 500)
 
-  const { mutate: checkExistBarcode, isPending } = useCheckExistBarcode()
-
-  const Icons = useCallback(() => {
-    return isPending ? (
-      <Loader2 className="ml-2 size-4 animate-spin text-draft" />
-    ) : !debouncedSearchTerm ? (
-      <div className="size-4" />
-    ) : isExist ? (
-      <X className="ml-2 size-4 text-danger" />
-    ) : (
-      <Check className="ml-2 size-4 text-success" />
-    )
-  }, [debouncedSearchTerm, isExist, isPending])
+  const wConditionId = form.watch(`libraryItemInstances.${index}.conditionId`)
 
   useEffect(() => {
-    if (!debouncedSearchTerm) return
-    checkExistBarcode(selectedCategory.prefix + debouncedSearchTerm, {
-      onSuccess: (data) => {
-        setIsExist(data)
-      },
-    })
-  }, [debouncedSearchTerm, checkExistBarcode, selectedCategory])
+    console.log({ wConditionId })
+  }, [wConditionId])
 
   return (
-    <div key={input.id} className="flex w-full gap-2">
+    <div className="flex w-full gap-2">
       <div className="flex flex-1 items-center gap-2">
-        <div className="flex w-1/2 items-center rounded-md border px-3">
-          <p className="select-none">{selectedCategory.prefix}</p>
-          <Input
-            value={input.barcode}
-            onChange={(e) => {
-              setIsExist(false)
-              setInputs((prev) => {
-                const clone = structuredClone(prev)
-                clone.forEach((item) => {
-                  if (item.id !== input.id) return
-                  item.barcode = e.target.value
-                })
-                return clone
-              })
-            }}
-            onPaste={handleOnPasteInput}
-            className="flex-1 !border-none px-0 !shadow-none !outline-none !ring-0"
-          />
-          <Icons />
-        </div>
-        <Select
-          value={input.conditionId.toString()}
-          onValueChange={(val) => {
-            if (val !== "1" && !hasConfirmedChangeStatus) {
-              setTempChangedCopy({
-                inputId: input.id,
-                val: +val,
-              })
-              setOpenWarning(true)
-              return
-            }
+        <FormField
+          control={form.control}
+          name={`libraryItemInstances.${index}.barcode`}
+          render={({ field }) => (
+            <FormItem className="flex w-1/2 items-center rounded-md border px-3">
+              <FormControl>
+                <div className="select-none rounded-md p-2">{field.value}</div>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-            setInputs((prev) => {
-              const clone = structuredClone(prev)
-              clone.forEach((item) => {
-                if (item.id !== input.id) return
-                item.conditionId = val
-              })
-              return clone
-            })
-          }}
-        >
-          <SelectTrigger className="w-1/2">
-            <SelectValue className="w-1/2" placeholder="Select a status" />
-          </SelectTrigger>
-          <SelectContent className="w-1/2">
-            <SelectGroup>
-              <SelectItem className="cursor-pointer" value="1">
-                {t(EBookCopyConditionStatus.GOOD)}
-              </SelectItem>
-              <SelectItem className="cursor-pointer" value="3">
-                {t(EBookCopyConditionStatus.WORN)}
-              </SelectItem>
-              <SelectItem className="cursor-pointer" value="2">
-                {t(EBookCopyConditionStatus.DAMAGED)}
-              </SelectItem>
-            </SelectGroup>
-          </SelectContent>
-        </Select>
+        <FormField
+          control={form.control}
+          name={`libraryItemInstances.${index}.conditionId`}
+          render={({ field }) => (
+            <FormItem className="w-1/2">
+              <FormControl>
+                <Select
+                  value={field.value.toString()}
+                  onValueChange={(val) => field.onChange(+val)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      <SelectItem className="cursor-pointer" value="1">
+                        {t(EBookCopyConditionStatus.GOOD)}
+                      </SelectItem>
+                      <SelectItem className="cursor-pointer" value="3">
+                        {t(EBookCopyConditionStatus.WORN)}
+                      </SelectItem>
+                      <SelectItem className="cursor-pointer" value="2">
+                        {t(EBookCopyConditionStatus.DAMAGED)}
+                      </SelectItem>
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
       </div>
-
-      <Button
-        onClick={() => {
-          setInputs((prev) => prev.filter((i) => i.id !== input.id))
-        }}
-        disabled={disabled}
-        variant="outline"
-        size="icon"
-        className="shrink-0"
-      >
-        <Trash2 />
-      </Button>
     </div>
   )
 }

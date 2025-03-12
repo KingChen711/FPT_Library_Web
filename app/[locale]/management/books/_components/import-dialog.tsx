@@ -41,8 +41,8 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import MultiImageDropzone from "@/components/ui/multi-image-dropzone"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import MultiImageDropzone from "@/components/form/multi-image-dropzone"
 
 function ImportDialog() {
   const [open, setOpen] = useState(false)

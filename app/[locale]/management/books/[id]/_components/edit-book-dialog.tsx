@@ -29,7 +29,6 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command"
-import { CurrencyInput } from "@/components/ui/currency-input"
 import {
   Dialog,
   DialogClose,
@@ -54,6 +53,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { Textarea } from "@/components/ui/textarea"
+import { CurrencyInput } from "@/components/form/currency-input"
 
 import CoverImageField from "./cover-image-field"
 

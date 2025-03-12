@@ -1,4 +1,6 @@
-import React, { useRef } from "react"
+"use client"
+
+import React, { useEffect, useRef } from "react"
 import { Printer } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
@@ -7,8 +9,8 @@ import { useReactToPrint } from "react-to-print"
 import { type EBookCopyConditionStatus } from "@/lib/types/enums"
 import { type Category } from "@/lib/types/models"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
+import useRangeBarcodes from "@/hooks/books/use-range-barcodes"
 import useConditions from "@/hooks/conditions/use-conditions"
-import BookConditionStatusBadge from "@/components/ui/book-condition-status-badge"
 import { Button } from "@/components/ui/button"
 import {
   FormField,
@@ -17,6 +19,7 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
+import BookConditionStatusBadge from "@/components/badges/book-condition-status-badge"
 
 import { BarcodesContainer } from "./barcodes-container"
 import BookCopiesDialog from "./book-copies-dialog"
@@ -34,19 +37,10 @@ export default function CopiesTab({
   form,
   isPending,
   show,
-  // selectedCategory,
+  selectedCategory,
   hasConfirmedChangeStatus,
   setHasConfirmedChangeStatus,
 }: Props) {
-  const selectedCategory = {
-    categoryId: 1,
-    prefix: "SD",
-    englishName: "string",
-    vietnameseName: "Sách đơn",
-    description: "string",
-    isAllowAITraining: true,
-  }
-
   const t = useTranslations("BooksManagementPage")
   const barcodesPrintRef = useRef<HTMLDivElement>(null)
   const handlePrintBarcodes = useReactToPrint({
@@ -55,7 +49,23 @@ export default function CopiesTab({
 
   const { data: conditions, isFetching: isFetchingConditions } = useConditions()
 
-  if (!show || isFetchingConditions) return null
+  const { data: barcodes, isFetching: isFetchingBarcodes } = useRangeBarcodes(
+    form.getValues("trackingDetailId")
+  )
+
+  useEffect(() => {
+    if (barcodes) {
+      form.setValue(
+        "libraryItemInstances",
+        barcodes.map((barcode) => ({
+          barcode,
+          conditionId: 1,
+        }))
+      )
+    }
+  }, [barcodes, form])
+
+  if (!show || isFetchingConditions || isFetchingBarcodes) return null
 
   return (
     <>
@@ -72,10 +82,9 @@ export default function CopiesTab({
                 </span>
               </FormLabel>
               <BookCopiesDialog
-                selectedCategory={selectedCategory}
+                selectedCategory={selectedCategory!}
                 form={form}
                 isPending={isPending}
-                prefix={selectedCategory?.prefix || ""}
                 hasConfirmedChangeStatus={hasConfirmedChangeStatus}
                 setHasConfirmedChangeStatus={setHasConfirmedChangeStatus}
                 conditions={conditions!}
@@ -94,11 +103,7 @@ export default function CopiesTab({
                 >
                   <div className="flex flex-col text-sm">
                     <div>
-                      <strong>{t("Code")}:</strong>{" "}
-                      {selectedCategory?.prefix
-                        ? selectedCategory.prefix
-                        : null}
-                      {bc.barcode}
+                      <strong>{t("Code")}:</strong> {bc.barcode}
                     </div>
                     <div className="flex items-center gap-2">
                       <strong>{t("Status")}:</strong>
@@ -137,11 +142,7 @@ export default function CopiesTab({
               <Printer className="text-primary" />
             </Button>
           </div>
-          <BarcodesContainer
-            ref={barcodesPrintRef}
-            form={form}
-            prefix={selectedCategory?.prefix || ""}
-          />
+          <BarcodesContainer ref={barcodesPrintRef} form={form} />
         </div>
       )}
     </>

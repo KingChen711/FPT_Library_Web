@@ -4,7 +4,6 @@ import { EllipsisVertical } from "lucide-react"
 import Barcode from "react-barcode"
 
 import { type LibraryItem } from "@/lib/types/models"
-import BookCopyStatusBadge from "@/components/ui/book-copy-status-badge"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -20,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import BookCopyStatusBadge from "@/components/badges/book-copy-status-badge"
 
 type Props = {
   libraryItem: LibraryItem

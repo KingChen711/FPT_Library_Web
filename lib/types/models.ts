@@ -3,6 +3,7 @@ import {
   type EBookCopyStatus,
   type EBookEditionStatus,
   type EBookFormat,
+  type EBorrowRequestStatus,
   type ECardStatus,
   type EFineType,
   type EGender,
@@ -10,9 +11,13 @@ import {
   type ENotificationType,
   type EResourceBookType,
   type ERoleType,
+  type EStockTransactionType,
   type ESupplierType,
   type ETrackingStatus,
   type ETrackingType,
+  type ETransactionMethod,
+  type ETransactionStatus,
+  type ETransactionType,
 } from "./enums"
 
 export type Audit = {
@@ -342,7 +347,7 @@ export type Fine = {
   finePolicyTitle: string
   conditionType: EFineType
   fineAmountPerDay: number
-  fixedFineAmount: number
+  fixedFineAmount: number | null
   description: string | null
 }
 
@@ -353,6 +358,7 @@ export type Category = {
   vietnameseName: string
   description: string | null
   isAllowAITraining: boolean
+  totalBorrowDays: number | null
 }
 
 export type BookEdition = {
@@ -513,6 +519,14 @@ export type Tracking = {
   updatedBy: string | null
 }
 
+export type WarehouseTrackingInventory = {
+  trackingId: number
+  totalItem: number
+  totalInstanceItem: number
+  totalCatalogedItem: number
+  totalCatalogedInstanceItem: number
+}
+
 export type TrackingDetail = {
   trackingDetailId: number
   itemName: string
@@ -520,11 +534,18 @@ export type TrackingDetail = {
   isbn: string | null
   unitPrice: number
   totalAmount: number
-  reason: string | null
   trackingId: number
   libraryItemId: number | null
   categoryId: number
   conditionId: number
+  stockTransactionType: EStockTransactionType
+  createdAt: Date
+  updatedAt: Date | null
+  createdBy: string
+  updatedBy: string | null
+  barcodeRangeFrom: string
+  barcodeRangeTo: string
+  hasGlueBarcode: boolean
 }
 
 // Ocr Result
@@ -679,4 +700,41 @@ export type LibraryCard = {
   archiveReason: string | null
   previousUserId: string | null
   transactionCode: string
+}
+
+export type BorrowRequest = {
+  borrowRequestId: number
+  libraryCardId: string
+  requestDate: Date
+  expirationDate: Date
+  status: EBorrowRequestStatus
+  description: string | null
+  cancelledAt: Date | null
+  cancellationReason: string | null
+  isReminderSent: boolean
+  totalRequestItem: number
+}
+
+export type Transaction = {
+  transactionId: number
+  transactionCode: string
+  userId: string
+  amount: number
+  transactionStatus: ETransactionStatus
+  transactionType: ETransactionType
+  transactionMethod: ETransactionMethod
+  description: string | null
+  transactionDate: Date | null
+
+  expiredAt: Date | null
+  createdAt: Date
+  createdBy: string
+  cancelledAt: Date | null
+  cancellationReason: string | null
+
+  fineId: number | null
+  resourceId: number | null
+  libraryCardPackageId: number | null
+
+  paymentMethodId: number | null
 }

@@ -51,9 +51,13 @@ function StockInDetailField({ form, isPending }: Props) {
   const t = useTranslations("BooksManagementPage")
 
   const [open, setOpen] = useState(false)
+  const [openDetail, setOpenDetail] = useState(false)
 
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
+
+  const [searchTermDetail, setSearchTermDetail] = useState("")
+  const [debouncedSearchTermDetail] = useDebounce(searchTermDetail, 300)
 
   const selectedTracking = form.watch("tracking")
   const trackingDetail = form.watch("trackingDetail")
@@ -62,7 +66,22 @@ function StockInDetailField({ form, isPending }: Props) {
     useSearchTrackings(debouncedSearchTerm)
 
   const { data: trackingDetailItems, isFetching: isFetchingDetails } =
-    useTrackingDetailsNoItem(selectedTracking?.trackingId)
+    useTrackingDetailsNoItem(
+      selectedTracking?.trackingId,
+      debouncedSearchTermDetail
+    )
+
+  useEffect(() => {
+    if (trackingDetail?.isbn) {
+      form.setValue("isbn", trackingDetail?.isbn)
+    }
+    if (trackingDetail?.unitPrice) {
+      form.setValue("estimatedPrice", trackingDetail?.unitPrice)
+    }
+    if (trackingDetail?.categoryId) {
+      form.setValue("categoryId", trackingDetail?.categoryId)
+    }
+  }, [trackingDetail, form])
 
   useEffect(() => {
     if (!trackingDetailItems || trackingDetailItems.length === 0) return
@@ -139,8 +158,9 @@ function StockInDetailField({ form, isPending }: Props) {
                                 onValueChange={(val) => setSearchTerm(val)}
                               />
                               <CommandList>
-                                {searchTerm !== "" &&
-                                  searchTerm === debouncedSearchTerm &&
+                                {searchTermDetail !== "" &&
+                                  searchTermDetail ===
+                                    debouncedSearchTermDetail &&
                                   !isFetching &&
                                   trackingItems?.length === 0 && (
                                     <CommandEmpty>
@@ -177,71 +197,155 @@ function StockInDetailField({ form, isPending }: Props) {
                           <TrackingCard tracking={selectedTracking} />
                         )}
                       </div>
-                      {trackingDetailItems !== undefined && (
+
+                      {selectedTracking && (
                         <div className="flex flex-col gap-2">
                           <Label>{t("Tracking details")}</Label>
-                          {isFetchingDetails && (
-                            <Loader2 className="size-9 animate-spin" />
-                          )}
-                          {!isFetchingDetails &&
-                            trackingDetailItems.length === 0 && (
-                              <div className="text-sm text-muted-foreground">
-                                {t("This tracking has no tracking details")}
-                              </div>
-                            )}
-                          {!isFetchingDetails &&
-                            trackingDetailItems.length > 0 && (
-                              <div className="flex flex-wrap gap-4">
-                                {trackingDetailItems.map((td) => (
-                                  <div
-                                    key={td.trackingDetailId}
-                                    className={cn(
-                                      "grid max-w-60 cursor-pointer rounded-md border p-4",
-                                      field.value === td.trackingDetailId &&
-                                        "border-primary"
+
+                          <Popover
+                            open={openDetail}
+                            onOpenChange={setOpenDetail}
+                          >
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  disabled={isPending}
+                                  variant="ghost"
+                                  role="combobox"
+                                  className={cn(
+                                    "w-72 justify-between",
+                                    !field.value && "text-muted-foreground"
+                                  )}
+                                >
+                                  {t("Select tracking")}
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent className="p-0">
+                              <Command className="w-72">
+                                <CommandInput
+                                  placeholder={t("Search")}
+                                  className="h-9"
+                                  value={searchTermDetail}
+                                  onValueChange={(val) =>
+                                    setSearchTermDetail(val)
+                                  }
+                                />
+                                <CommandList>
+                                  {searchTermDetail !== "" &&
+                                    searchTermDetail ===
+                                      debouncedSearchTermDetail &&
+                                    !isFetchingDetails &&
+                                    trackingDetailItems?.length === 0 && (
+                                      <CommandEmpty>
+                                        {t("No tracking found")}
+                                      </CommandEmpty>
                                     )}
-                                    onClick={() => {
-                                      field.onChange(td.trackingDetailId)
-                                      form.setValue("trackingDetail", td)
-                                      form.clearErrors("trackingDetailId")
-                                    }}
-                                  >
-                                    <div className="flex justify-between gap-2">
-                                      <span className="text-nowrap text-sm font-medium text-muted-foreground">
-                                        {t("Item name")}:
-                                      </span>
-                                      <span className="line-clamp-1 text-sm font-bold">
-                                        {td.itemName}
-                                      </span>
+                                  <CommandGroup>
+                                    {isFetchingDetails && (
+                                      <CommandItem className="flex justify-center">
+                                        <Loader2 className="size-4 animate-spin" />
+                                      </CommandItem>
+                                    )}
+                                  </CommandGroup>
+                                </CommandList>
+
+                                <div className="flex max-h-[400px] w-full flex-col overflow-y-auto overflow-x-hidden">
+                                  {trackingDetailItems?.map((detail) => (
+                                    <div
+                                      key={detail.trackingDetailId}
+                                      className={cn(
+                                        "grid w-72 max-w-72 cursor-pointer border p-4",
+                                        field.value ===
+                                          detail.trackingDetailId &&
+                                          "border-primary"
+                                      )}
+                                      onClick={() => {
+                                        field.onChange(detail.trackingDetailId)
+                                        form.setValue("trackingDetail", detail)
+                                        form.clearErrors("trackingDetailId")
+                                        setOpenDetail(false)
+                                      }}
+                                    >
+                                      <div className="flex justify-between gap-2">
+                                        <span className="text-nowrap text-sm font-medium text-muted-foreground">
+                                          {t("Item name")}:
+                                        </span>
+                                        <span className="line-clamp-1 text-sm font-bold">
+                                          {detail.itemName}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between gap-2">
+                                        <span className="text-sm font-medium text-muted-foreground">
+                                          ISBN:
+                                        </span>
+                                        <span className="line-clamp-1 text-sm">
+                                          {detail.isbn || "N/A"}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between gap-2">
+                                        <span className="text-sm text-muted-foreground">
+                                          {t("Total item")}:
+                                        </span>
+                                        <span className="line-clamp-1 text-sm">
+                                          {detail.itemTotal}
+                                        </span>
+                                      </div>
+                                      <div className="flex justify-between gap-2">
+                                        <span className="text-sm text-muted-foreground">
+                                          {t("Total amount")}:
+                                        </span>
+                                        <span className="line-clamp-1 text-sm">
+                                          {formatPrice(detail.totalAmount)}
+                                        </span>
+                                      </div>
                                     </div>
-                                    <div className="flex justify-between gap-2">
-                                      <span className="text-sm font-medium text-muted-foreground">
-                                        ISBN:
-                                      </span>
-                                      <span className="line-clamp-1 text-sm">
-                                        {td.isbn || "N/A"}
-                                      </span>
-                                    </div>
-                                    <div className="flex justify-between gap-2">
-                                      <span className="text-sm text-muted-foreground">
-                                        {t("Total item")}:
-                                      </span>
-                                      <span className="line-clamp-1 text-sm">
-                                        {td.itemTotal}
-                                      </span>
-                                    </div>
-                                    <div className="flex justify-between gap-2">
-                                      <span className="text-sm text-muted-foreground">
-                                        {t("Total amount")}:
-                                      </span>
-                                      <span className="line-clamp-1 text-sm">
-                                        {formatPrice(td.totalAmount)}
-                                      </span>
-                                    </div>
-                                  </div>
-                                ))}
+                                  ))}
+                                </div>
+                              </Command>
+                            </PopoverContent>
+                          </Popover>
+
+                          {trackingDetail && (
+                            <div
+                              className={cn(
+                                "grid max-w-72 cursor-pointer rounded-md border p-4"
+                              )}
+                            >
+                              <div className="flex justify-between gap-2">
+                                <span className="text-nowrap text-sm font-medium text-muted-foreground">
+                                  {t("Item name")}:
+                                </span>
+                                <span className="line-clamp-1 text-sm font-bold">
+                                  {trackingDetail.itemName}
+                                </span>
                               </div>
-                            )}
+                              <div className="flex justify-between gap-2">
+                                <span className="text-sm font-medium text-muted-foreground">
+                                  ISBN:
+                                </span>
+                                <span className="line-clamp-1 text-sm">
+                                  {trackingDetail.isbn || "N/A"}
+                                </span>
+                              </div>
+                              <div className="flex justify-between gap-2">
+                                <span className="text-sm text-muted-foreground">
+                                  {t("Total item")}:
+                                </span>
+                                <span className="line-clamp-1 text-sm">
+                                  {trackingDetail.itemTotal}
+                                </span>
+                              </div>
+                              <div className="flex justify-between gap-2">
+                                <span className="text-sm text-muted-foreground">
+                                  {t("Total amount")}:
+                                </span>
+                                <span className="line-clamp-1 text-sm">
+                                  {formatPrice(trackingDetail.totalAmount)}
+                                </span>
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
                     </div>
@@ -262,7 +366,7 @@ function StockInDetailField({ form, isPending }: Props) {
               {selectedTracking && trackingDetail && (
                 <>
                   <ArrowRight className="size-9" />
-                  <div className="grid w-60 max-w-60 rounded-md border p-4">
+                  <div className="grid w-72 max-w-72 rounded-md border p-4">
                     <div className="flex justify-between gap-2">
                       <span className="text-nowrap text-sm font-medium text-muted-foreground">
                         {t("Item name")}:

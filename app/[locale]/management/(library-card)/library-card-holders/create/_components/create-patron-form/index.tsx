@@ -38,6 +38,7 @@ import {
 import { toast } from "@/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import CancelPaymentDialog from "@/components/ui/cancel-payment-dialog"
 import {
   Card,
   CardContent,
@@ -47,10 +48,6 @@ import {
 } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import Copitor from "@/components/ui/copitor"
-import {
-  createCalendarDate,
-  DateTimePicker,
-} from "@/components/ui/date-time-picker/index"
 import {
   Form,
   FormControl,
@@ -64,8 +61,11 @@ import { Icons } from "@/components/ui/icons"
 import { Input } from "@/components/ui/input"
 import PackageCard from "@/components/ui/package-card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/form/date-time-picker"
 
-import CancelPaymentDialog from "./cancel-payment-dialog"
 import CreatePatronAvatarField from "./create-patron-avatar-field"
 import SelectPackageField from "./select-package-field"
 
@@ -215,14 +215,10 @@ function CreatePatronForm() {
     return () => clearInterval(timer)
   }, [paymentStates.canNavigate, paymentStates.navigateTime, router])
 
-  useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form.formState.errors])
-
   return (
     <div>
       {!paymentData && (
-        <div className="mt-4 flex flex-wrap items-start gap-4">
+        <div className="flex flex-wrap items-start gap-4">
           <div className="flex items-center gap-2">
             <h3 className="text-2xl font-semibold">{t("Create patron")}</h3>
           </div>
@@ -440,7 +436,7 @@ function CreatePatronForm() {
         )}
 
         {paymentData && (
-          <div className="container mx-auto max-w-5xl p-4">
+          <div className="container mx-auto flex max-w-5xl items-center justify-center p-6">
             <Card className="w-full overflow-hidden">
               <CardHeader className="rounded-t-lg bg-primary text-primary-foreground">
                 <CardTitle className="text-center text-xl">

@@ -4,7 +4,6 @@ import { EllipsisVertical } from "lucide-react"
 import Barcode from "react-barcode"
 
 import { EBookCopyStatus } from "@/lib/types/enums"
-import BookCopyStatusBadge from "@/components/ui/book-copy-status-badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -19,6 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import BookCopyStatusBadge from "@/components/badges/book-copy-status-badge"
 
 import { Button } from "./button"
 

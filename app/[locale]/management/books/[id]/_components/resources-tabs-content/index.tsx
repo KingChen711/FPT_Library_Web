@@ -8,7 +8,6 @@ import { useLocale, useTranslations } from "next-intl"
 import { type BookResource } from "@/lib/types/models"
 import { cn, formatPrice } from "@/lib/utils"
 import useFormatLocale from "@/hooks/utils/use-format-locale"
-import ResourceBookTypeBadge from "@/components/ui/book-resource-type-badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import FileSize from "@/components/ui/file-size"
 import { Input } from "@/components/ui/input"
@@ -22,6 +21,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { TabsContent } from "@/components/ui/tabs"
+import ResourceBookTypeBadge from "@/components/badges/book-resource-type-badge"
 
 import CreateResourceDialog from "./create-resource-dialog"
 import ResourceActionsDropdown from "./resource-actions-dropdown"

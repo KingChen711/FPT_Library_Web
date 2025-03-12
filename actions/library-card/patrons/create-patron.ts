@@ -24,7 +24,7 @@ export async function createPatron(
   const { getAccessToken } = auth()
   try {
     const { message, data } = await http.post<{
-      payOsResponse: { data: PaymentData }
+      payOsResponse: { data: PaymentData | null }
       expiredAtOffsetUnixSeconds: number
     }>(`/api/management/library-card-holders`, body, {
       headers: {
@@ -38,15 +38,17 @@ export async function createPatron(
       isSuccess: true,
       data: {
         message,
-        paymentData: {
-          description: data.payOsResponse.data.description,
-          orderCode: data.payOsResponse.data.orderCode,
-          paymentLinkId: data.payOsResponse.data.paymentLinkId,
-          qrCode: data.payOsResponse.data.qrCode,
-          expiredAt: data.expiredAtOffsetUnixSeconds
-            ? new Date(data.expiredAtOffsetUnixSeconds * 1000)
-            : null,
-        },
+        paymentData: data?.payOsResponse?.data
+          ? {
+              description: data.payOsResponse.data.description,
+              orderCode: data.payOsResponse.data.orderCode,
+              paymentLinkId: data.payOsResponse.data.paymentLinkId,
+              qrCode: data.payOsResponse.data.qrCode,
+              expiredAt: data.expiredAtOffsetUnixSeconds
+                ? new Date(data.expiredAtOffsetUnixSeconds * 1000)
+                : null,
+            }
+          : null,
       },
     }
   } catch (error) {

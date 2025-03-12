@@ -4,18 +4,29 @@ import { useQuery } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import { type TrackingDetail } from "@/lib/types/models"
 
-function useTrackingDetailsNoItem(trackingId: number | null | undefined) {
+const pageSize = 8
+const pageIndex = 1
+
+function useTrackingDetailsNoItem(
+  trackingId: number | null | undefined,
+  search = ""
+) {
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: ["tracking-details-no-item", trackingId, accessToken],
+    queryKey: ["tracking-details-no-item", trackingId, search, accessToken],
     queryFn: async () => {
-      if (!trackingId) return []
+      if (!trackingId || !search) return []
       try {
         const { data } = await http.get<{ sources: TrackingDetail[] }>(
           `/api/management/warehouse-trackings/${trackingId}/details/no-item`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
+            },
+            searchParams: {
+              pageIndex,
+              pageSize,
+              search,
             },
           }
         )
@@ -25,7 +36,6 @@ function useTrackingDetailsNoItem(trackingId: number | null | undefined) {
         return []
       }
     },
-    enabled: !!trackingId,
   })
 }
 

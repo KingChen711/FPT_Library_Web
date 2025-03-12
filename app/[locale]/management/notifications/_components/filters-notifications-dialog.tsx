@@ -18,10 +18,6 @@ import {
 } from "@/lib/validations/notifications/search-notifications"
 import { Button } from "@/components/ui/button"
 import {
-  createCalendarDate,
-  DateTimePicker,
-} from "@/components/ui/date-time-picker/index"
-import {
   Dialog,
   DialogClose,
   DialogContent,
@@ -45,6 +41,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import {
+  createCalendarDate,
+  DateTimePicker,
+} from "@/components/form/date-time-picker"
 
 function FiltersNotificationsDialog() {
   const timezone = getLocalTimeZone()

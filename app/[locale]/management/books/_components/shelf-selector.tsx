@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import ShelfBadge from "@/components/ui/shelf-badge"
+import ShelfBadge from "@/components/badges/shelf-badge"
 
 type Props = {
   initShelfName: string | undefined

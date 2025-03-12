@@ -4,7 +4,11 @@ import "server-only"
 
 import { format } from "date-fns"
 
-import { type Supplier, type Tracking } from "@/lib/types/models"
+import {
+  type Supplier,
+  type Tracking,
+  type WarehouseTrackingInventory,
+} from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 import { type TSearchTrackingsSchema } from "@/lib/validations/trackings/search-trackings"
 
@@ -12,6 +16,7 @@ import { auth } from "../auth"
 
 export type Trackings = (Tracking & {
   supplier: Supplier
+  warehouseTrackingInventory: WarehouseTrackingInventory
 })[]
 
 const getTrackings = async (
@@ -19,6 +24,8 @@ const getTrackings = async (
 ): Promise<Pagination<Trackings>> => {
   const { getAccessToken } = auth()
   try {
+    console.log(27, searchParams)
+
     const formatDate = (d: Date) => format(d, "yyyy-MM-dd")
     const { data } = await http.get<Pagination<Trackings>>(
       `/api/management/warehouse-trackings`,

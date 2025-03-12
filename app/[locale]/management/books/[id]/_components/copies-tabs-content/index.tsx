@@ -13,7 +13,6 @@ import {
   type LibraryItemInstance,
 } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
-import BookCopyStatusBadge from "@/components/ui/book-copy-status-badge"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import NoData from "@/components/ui/no-data"
@@ -26,6 +25,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { TabsContent } from "@/components/ui/tabs"
+import BookCopyStatusBadge from "@/components/badges/book-copy-status-badge"
 
 import AddCopiesDialog from "./add-copies-dialog"
 import CopiesActionsDropdown from "./copies-actions-dropdown"
@@ -41,8 +41,6 @@ type Props = {
   bookId: number
   prefix: string
 }
-
-//TODO:search
 
 function CopiesTabsContent({ copies, bookId, prefix }: Props) {
   const t = useTranslations("BooksManagementPage")
@@ -257,5 +255,3 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
 }
 
 export default CopiesTabsContent
-
-//TODO:add fullscreen view barcode

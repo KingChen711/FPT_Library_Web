@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import { Check, ChevronsUpDown, Search } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
@@ -62,6 +62,8 @@ function CategoryTab({
 
   const { data: categories } = useCategories()
 
+  const wCategoryId = form.watch("categoryId")
+
   const filteredCategories =
     categories
       ?.filter(
@@ -89,6 +91,13 @@ function CategoryTab({
             return b.categoryId - a.categoryId
         }
       }) || []
+
+  useEffect(() => {
+    if (wCategoryId && categories) {
+      const category = categories.find((c) => c.categoryId === wCategoryId)
+      if (category) setSelectedCategory(category)
+    }
+  }, [wCategoryId, categories, setSelectedCategory])
 
   if (!show) return null
 

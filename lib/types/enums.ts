@@ -237,3 +237,32 @@ export enum ETransactionStatus {
   PAID,
   CANCELLED,
 }
+
+export enum EBorrowRequestStatus {
+  CREATED, // The request is created and waiting for the user to pick up the item
+  EXPIRED, // The user didn't pick up the item before ExpirationDate
+  BORROWED, // The user picked up the item, and a BorrowRecord has been created
+  CANCELLED, // The user cancels the request
+}
+
+export enum ETransactionType {
+  FINE, // [Description("Phí phạt")]
+
+  DIGITAL_BORROW, // [Description("Mượn tài liệu điện tử")]
+
+  LIBRARY_CARD_REGISTER, // [Description("Đăng ký thẻ thư viện")]
+
+  LIBRARY_CARD_EXTENSION, // [Description("Gia hạn thẻ thư viện")]
+
+  DIGITAL_EXTENSION, // [Description("Gia hạn tài liệu điện tử")]
+}
+
+export enum EStockTransactionType {
+  NEW,
+  ADDITIONAL,
+  DAMAGED,
+  LOST,
+  OUTDATED,
+  TRANSFERRED,
+  OTHER,
+}

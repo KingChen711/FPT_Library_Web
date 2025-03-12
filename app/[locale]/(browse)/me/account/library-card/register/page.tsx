@@ -41,6 +41,7 @@ import useGetPaymentMethods from "@/hooks/payment-methods/use-get-payment-method
 import { toast } from "@/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import CancelPaymentDialog from "@/components/ui/cancel-payment-dialog"
 import {
   Card,
   CardContent,
@@ -68,7 +69,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import CancelPaymentDialog from "@/app/[locale]/management/(library-card)/library-card-holders/create/_components/create-patron-form/cancel-payment-dialog"
 
 const formSchema = z.object({
   avatar: z.custom<File | null>(
@@ -188,11 +188,6 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
     }, 1000)
     return () => clearInterval(timer)
   }, [paymentStates.canNavigate, paymentStates.navigateTime, router])
-
-  // Log errors
-  useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form.formState.errors])
 
   if (isLoadingAuth || isLoadingPaymentMethods || isLoadingPackage) {
     return (
@@ -321,7 +316,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                   <FormField
                     control={form.control}
                     name="avatar"
-                    render={({ field: { value, ...field } }) => (
+                    render={({ field: { value: _, ...field } }) => (
                       <FormItem className="w-full">
                         <FormLabel className="flex items-center">
                           Profile Photo

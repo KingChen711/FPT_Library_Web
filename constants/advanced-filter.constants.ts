@@ -73,9 +73,9 @@ export const advancedFilters: TAdvancedFilters[] = [
     field: EAdvancedFilterBookField.EDITION_NUMBER,
     type: EAdvancedFilterType.NUMBER,
   },
-  //TODO:LANGUAGE
+
   { field: EAdvancedFilterBookField.LANGUAGE, type: EAdvancedFilterType.TEXT },
-  //TODO:ORIGIN_LANGUAGE
+
   {
     field: EAdvancedFilterBookField.ORIGIN_LANGUAGE,
     type: EAdvancedFilterType.TEXT,
@@ -136,7 +136,7 @@ export const advancedFilters: TAdvancedFilters[] = [
     field: EAdvancedFilterBookField.BIBLIOGRAPHICAL_NOTE,
     type: EAdvancedFilterType.TEXT,
   },
-  //TODO:no status in deleted tab
+
   {
     field: EAdvancedFilterBookField.STATUS,
     type: EAdvancedFilterType.ENUM,
