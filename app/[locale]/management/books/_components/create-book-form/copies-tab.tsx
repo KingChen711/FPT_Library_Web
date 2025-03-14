@@ -18,6 +18,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import GlueBarcodeInstructionsDialog from "@/components/ui/glue-barcode-instructions-dialog"
 import { Label } from "@/components/ui/label"
 import BookConditionStatusBadge from "@/components/badges/book-condition-status-badge"
 
@@ -142,6 +143,7 @@ export default function CopiesTab({
             </Button>
           </div>
           <BarcodesContainer ref={barcodesPrintRef} form={form} />
+          <GlueBarcodeInstructionsDialog />
         </div>
       )}
     </>

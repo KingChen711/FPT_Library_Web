@@ -48,7 +48,7 @@ function ConfirmGlueDialog({
             <Loader2 className="size-9 animate-spin" />
           </div>
         ) : data ? (
-          <div className="flex flex-col">
+          <div className="flex flex-col gap-2">
             <div className="flex items-center justify-start">
               <Label>{t("Glue barcode")}</Label>
               <Button

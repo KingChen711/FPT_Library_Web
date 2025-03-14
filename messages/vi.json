@@ -891,6 +891,9 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "Shelf name": "Tên kệ sách",
+    "to": "đến",
+    "Most appropriate shelves": "Kệ phù hợp nhất",
     "Year": "Năm",
     "Delete catalog information": "Hủy thông tin biên mục",
     "Item information": "Thông tin tài liệu",
@@ -1348,6 +1351,8 @@
     "DDC additional info": "Ngoài ra, nhiều thư viện công cộng và đại học cũng cung cấp hướng dẫn và tài liệu về cách sử dụng DDC. Bạn có thể tham khảo trang web của thư viện địa phương hoặc trường đại học gần nhất để biết thêm thông tin."
   },
   "TrackingsManagementPage": {
+    "Individual barcode description": "Mã ĐKCB cần được dán ở góc trên của bìa sách.",
+    "Classification barcode description": "Mã phân loại cần được dán ở gáy sách để dễ dàng tìm kiếm trên kệ.",
     "How many barcode has glue": "Bạn đã dán ĐKCB cho bao nhiêu tài liệu?",
     "Confirm has glued": "Xác nhận đã dán",
     "Glue barcode instructions": "Hướng dẫn dán barcode",

@@ -887,6 +887,9 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Shelf name": "Shelf name",
+    "to": "to",
+    "Most appropriate shelves": "Most appropriate shelves",
     "Year": "Year",
     "Delete catalog information": "Delete catalog information",
     "Item information": "Item information",
@@ -1344,6 +1347,8 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Classification barcode description": "The classification barcode should be affixed to the spine of the book for easy searching on the shelf.",
+    "Individual barcode description": "The individual barcode must be affixed to the upper corner of the book cover.",
     "How many barcode has glue": "How many books have you glued barcode?",
     "Confirm has glued": "Confirm has glued",
     "Glue barcode instructions": "Glue barcode instructions",

@@ -19,7 +19,7 @@ function GlueBarcodeInstructionsDialog() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant="link" className="mt-2 h-auto min-h-0 w-fit p-0">
+        <Button variant="link" className="h-auto min-h-0 w-fit p-0">
           {t("Glue barcode instructions")}
         </Button>
       </DialogTrigger>
@@ -30,13 +30,13 @@ function GlueBarcodeInstructionsDialog() {
             <div className="grid gap-8 md:grid-cols-2">
               <InstructionCard
                 title={t("Individual barcode")}
-                description="Mã ĐKCB cần được dán ở góc trên của bìa sách."
+                description={t("Individual barcode description")}
                 imageSrc="/images/book-cover-label.svg"
               />
 
               <InstructionCard
                 title={t("Classification barcode")}
-                description="Mã phân loại cần được dán ở gáy sách để dễ dàng tìm kiếm trên kệ."
+                description={t("Classification barcode description")}
                 imageSrc="/images/book-spine-label.svg"
               />
             </div>
