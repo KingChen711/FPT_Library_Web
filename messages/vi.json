@@ -892,6 +892,7 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "Base on tracking detail": "Dựa trên chi tiết nhập kho",
     "Shelf name": "Tên kệ sách",
     "to": "đến",
     "Most appropriate shelves": "Kệ phù hợp nhất",
@@ -950,7 +951,7 @@
     "HardCover": "Bìa cứng",
     "Cover image": "Ảnh bìa",
     "Upload": "Tải lên",
-    "Book copies": "Mã bản sao sách",
+    "Book copies": "Bản sao tài liệu",
     "Add copies message": "Thêm các mã bản sao của cuốn sách này. Bạn cần nhấn 'Enter' để thêm một mã.",
     "Authors": "Tác giả",
     "Select author": "Chọn tác giả",

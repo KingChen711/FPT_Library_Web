@@ -8,9 +8,10 @@ import React, {
   type SetStateAction,
 } from "react"
 import { useRouter } from "next/navigation"
+import { type TrackingDetailCatalog } from "@/queries/trackings/get-tracking-detail"
 import { useScanIsbn } from "@/stores/use-scan-isbn"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2 } from "lucide-react"
+import { ArrowRight, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
@@ -32,6 +33,7 @@ import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
 import ScannedBook from "@/components/ui/scanned-book"
+import TrackingDetailCard from "@/components/ui/tracking-detail-card"
 
 import CatalogTab from "./catalog-tab"
 import CategoryTab from "./category-tab"
@@ -39,6 +41,7 @@ import CopiesTab from "./copies-tab"
 import Marc21Dialog from "./marc21-dialog"
 import { ProgressTabBar } from "./progress-stage-bar"
 import ResourcesTab from "./resources-tab"
+import { TrackingCard } from "./tracking-card"
 import TrainBookForm from "./train-book-form"
 
 type Tab =
@@ -48,10 +51,17 @@ type Tab =
   | "Resources"
   | "Train AI"
 
-function CreateBookForm() {
+type Props = {
+  trackingDetail?: TrackingDetailCatalog | null
+}
+
+function CreateBookForm({ trackingDetail }: Props) {
   const t = useTranslations("BooksManagementPage")
   const router = useRouter()
   const locale = useLocale()
+
+  //user come from warehouse page
+  const fromWarehouseMode = !!trackingDetail
 
   const [isPending, startTransition] = useTransition()
   const [currentTab, setCurrentTab] = useState<Tab>("Category")
@@ -71,8 +81,12 @@ function CreateBookForm() {
   const form = useForm<TBookEditionSchema>({
     resolver: zodResolver(bookEditionSchema),
     defaultValues: {
-      title: "",
+      title: trackingDetail?.itemName || "",
+      isbn: trackingDetail?.isbn || undefined,
+      estimatedPrice: trackingDetail?.unitPrice || undefined,
       libraryItemInstances: [],
+      categoryId: trackingDetail?.categoryId,
+      trackingDetailId: trackingDetail?.trackingDetailId,
     },
   })
 
@@ -88,13 +102,6 @@ function CreateBookForm() {
 
     startTransition(async () => {
       const coverImageFile = values.file
-
-      values.libraryItemInstances = values.libraryItemInstances.map((l) => ({
-        ...l,
-        barcode: (selectedCategory?.prefix || "") + l.barcode,
-      }))
-
-      console.log(values)
 
       await uploadMedias(values)
 
@@ -190,6 +197,8 @@ function CreateBookForm() {
           setCurrentTab("Resources")
         }
       }
+      console.log(res)
+
       handleServerActionError(res, locale, form)
     })
   }
@@ -317,7 +326,9 @@ function CreateBookForm() {
     <div>
       <div className="mt-4 flex flex-wrap items-start gap-4">
         <div className="flex items-center gap-2">
-          <h3 className="text-2xl font-semibold">{t("Create book")}</h3>
+          <h3 className="text-2xl font-semibold">
+            {t(fromWarehouseMode ? "Catalog" : "Create book")}
+          </h3>
           {/* //TODO:uncomment this */}
           {/* <SocketProvider>
             <IsbnScannerDialog />
@@ -364,10 +375,28 @@ function CreateBookForm() {
 
       {currentTab !== "Train AI" && (
         <div className="mt-4 flex flex-col gap-4">
-          <Marc21Dialog form={form} show={currentTab === "Catalog"} />
+          {fromWarehouseMode && (
+            <div>
+              <Label>{t("Tracking details")}</Label>
+              <div className="flex items-center">
+                <TrackingCard tracking={trackingDetail.warehouseTracking} />
+                <ArrowRight className="size-9" />
+                <TrackingDetailCard
+                  trackingDetail={trackingDetail}
+                  category={trackingDetail.category}
+                />
+              </div>
+            </div>
+          )}
+          <Marc21Dialog
+            form={form}
+            show={currentTab === "Catalog"}
+            getIsbn={!fromWarehouseMode && !form.watch("trackingDetailId")}
+          />
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
               <CategoryTab
+                fromWarehouseMode={fromWarehouseMode}
                 show={currentTab === "Category"}
                 form={form}
                 isPending={isPending}
@@ -376,6 +405,7 @@ function CreateBookForm() {
               />
 
               <CatalogTab
+                fromWarehouseMode={fromWarehouseMode}
                 isRequireImage={!!selectedCategory?.isAllowAITraining}
                 form={form}
                 isPending={isPending}

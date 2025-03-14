@@ -65,6 +65,23 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  Catalog: ({ className, ...props }: IconProps) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="800"
+      height="800"
+      viewBox="0 0 24 24"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        fill="none"
+        stroke="#000"
+        strokeWidth="2"
+        d="M5 6 1 4.5v13.943L12 23l11-4.557V4l-4 2M5 16V2l7 3 7-3v14l-7 3zm6.95-11v14"
+      ></path>
+    </svg>
+  ),
   Glue: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"

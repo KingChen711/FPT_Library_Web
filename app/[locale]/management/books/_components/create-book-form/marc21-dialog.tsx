@@ -21,9 +21,10 @@ import { Textarea } from "@/components/ui/textarea"
 type Props = {
   form: UseFormReturn<TBookEditionSchema>
   show: boolean
+  getIsbn: boolean
 }
 
-function Marc21Dialog({ form, show }: Props) {
+function Marc21Dialog({ form, show, getIsbn }: Props) {
   const [marc21, setMarc21] = useState("")
   const locale = useLocale()
   const t = useTranslations("BooksManagementPage")
@@ -45,7 +46,9 @@ function Marc21Dialog({ form, show }: Props) {
       form.setValue("publicationYear", marc21Data.publicationYear)
       form.setValue("classificationNumber", marc21Data.classificationNumber)
       form.setValue("cutterNumber", marc21Data.cutterNumber)
-      form.setValue("isbn", marc21Data.isbn)
+      if (getIsbn) {
+        form.setValue("isbn", marc21Data.isbn)
+      }
       form.setValue("ean", marc21Data.ean)
       form.setValue("estimatedPrice", marc21Data.estimatedPrice)
       form.setValue("pageCount", marc21Data.pageCount)

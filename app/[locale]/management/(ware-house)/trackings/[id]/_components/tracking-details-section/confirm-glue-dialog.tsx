@@ -1,7 +1,6 @@
 "use client"
 
 import React, { useRef, useState, useTransition } from "react"
-import Image from "next/image"
 import { Loader2, Printer } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import Barcode from "react-barcode"
@@ -91,13 +90,6 @@ function ConfirmGlueDialog({
                     <div key={barcode} className="border border-black p-1">
                       <div className="flex flex-col items-center justify-center border-4 border-black">
                         <div className="flex items-end justify-center gap-2 px-2 py-1 text-sm font-bold">
-                          <Image
-                            src="/images/logo.png"
-                            width={16}
-                            height={16}
-                            alt="logo"
-                            className="mb-[2px]"
-                          />
                           E-Library System
                         </div>
 
