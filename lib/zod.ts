@@ -2,16 +2,32 @@ import { isValid, parse } from "date-fns"
 import { z } from "zod"
 
 export const filterEnumSchema = <T extends Record<string, string | number>>(
-  enumObj: T
+  enumObj: T,
+  defaultValue?: string,
+  stringEnum = false
 ) =>
-  z
-    .enum(
-      Object.values(enumObj)
-        .filter((e): e is number => typeof e === "number")
-        .map((e) => e.toString()) as [string, ...string[]]
-    )
-    .optional()
-    .catch(undefined)
+  defaultValue
+    ? z
+        .enum(
+          Object.values(enumObj)
+            .filter(
+              (e): e is number =>
+                typeof e === (stringEnum ? "string" : "number")
+            )
+            .map((e) => e.toString()) as [string, ...string[]]
+        )
+        .catch(defaultValue)
+    : z
+        .enum(
+          Object.values(enumObj)
+            .filter(
+              (e): e is number =>
+                typeof e === (stringEnum ? "string" : "number")
+            )
+            .map((e) => e.toString()) as [string, ...string[]]
+        )
+        .optional()
+        .catch(undefined)
 
 export const filterNumRangeSchema = z
   .array(z.coerce.string().or(z.null()))
@@ -28,8 +44,6 @@ export const filterDateRangeSchema = z
   .array(z.string().or(z.null()).or(z.date()))
   .transform((dateRange) =>
     dateRange.map((date) => {
-      console.log({ hello: date })
-
       if (date === "null" || !date) return null
 
       if (date instanceof Date) return date
@@ -40,3 +54,15 @@ export const filterDateRangeSchema = z
     })
   )
   .catch([null, null])
+
+export const filterBooleanSchema = (defaultValue?: "true" | "false") =>
+  defaultValue
+    ? z
+        .enum(["true", "false"])
+        .catch(defaultValue)
+        .transform((data) => data === "true")
+    : z
+        .enum(["true", "false"])
+        .transform((data) => data === "true")
+        .optional()
+        .catch(undefined)

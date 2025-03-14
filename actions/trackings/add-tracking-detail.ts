@@ -5,11 +5,11 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TMutateTrackingDetailSchema } from "@/lib/validations/trackings/edit-tracking-detail"
+import { type TAddTrackingDetailSchema } from "@/lib/validations/trackings/add-tracking-detail"
 
 export async function addTrackingDetail(
   trackingId: number,
-  body: TMutateTrackingDetailSchema
+  body: TAddTrackingDetailSchema
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {

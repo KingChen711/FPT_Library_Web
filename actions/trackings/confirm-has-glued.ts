@@ -5,18 +5,16 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TEditTrackingDetailSchema } from "@/lib/validations/trackings/edit-tracking-detail"
 
-export async function updateTrackingDetail(
+export async function confirmHasGlued(
   trackingId: number,
-  trackingDetailId: number,
-  body: TEditTrackingDetailSchema
+  trackingDetailId: number
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.put(
-      `/api/management/warehouse-trackings/details/${trackingDetailId}`,
-      body,
+      `/api/management/warehouse-trackings/details/${trackingDetailId}/unique-barcode-registration`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,

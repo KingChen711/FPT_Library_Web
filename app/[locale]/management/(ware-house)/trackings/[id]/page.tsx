@@ -1,4 +1,4 @@
-import React from "react"
+import React, { Suspense } from "react"
 import { notFound } from "next/navigation"
 import { auth } from "@/queries/auth"
 import { getConditions } from "@/queries/conditions/get-conditions"
@@ -10,6 +10,7 @@ import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { formatPrice } from "@/lib/utils"
+import { searchTrackingDetailsSchema } from "@/lib/validations/trackings/search-tracking-details"
 import Copitor from "@/components/ui/copitor"
 import NoData from "@/components/ui/no-data"
 import TrackingStatusBadge from "@/components/badges/tracking-status-badge"
@@ -17,15 +18,18 @@ import TrackingTypeBadge from "@/components/badges/tracking-type-badge"
 
 import TrackingActionsDropdown from "./_components/tracking-actions-dropdown"
 import TrackingDetailBreadCrumb from "./_components/tracking-detail-bread-crumb"
-import TrackingDetailsSection from "./_components/tracking-details-section"
+import TrackingDetailsSection, {
+  TrackingDetailsSectionSkeleton,
+} from "./_components/tracking-details-section"
 
 type Props = {
   params: {
     id: string
   }
+  searchParams: Record<string, string | string[] | undefined>
 }
 
-async function TrackingDetailPage({ params }: Props) {
+async function TrackingDetailPage({ params, searchParams }: Props) {
   await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
 
   const t = await getTranslations("TrackingsManagementPage")
@@ -33,12 +37,15 @@ async function TrackingDetailPage({ params }: Props) {
   const formatLocale = await getFormatLocale()
 
   const tracking = await getTracking(+params.id)
+
   const conditions = await getConditions()
 
+  const parsedSearchParams = searchTrackingDetailsSchema.parse(searchParams)
+
   const {
-    result: { sources: trackingDetails },
+    result: { sources: trackingDetails, totalPage, totalActualItem },
     statisticSummary,
-  } = await getTrackingDetails(+params.id)
+  } = await getTrackingDetails(+params.id, parsedSearchParams)
 
   if (!tracking) notFound()
 
@@ -239,12 +246,17 @@ async function TrackingDetailPage({ params }: Props) {
           </div>
         </div>
 
-        <TrackingDetailsSection
-          conditions={conditions}
-          trackingDetails={trackingDetails}
-          trackingId={tracking.trackingId}
-          trackingType={tracking.trackingType}
-        />
+        <Suspense fallback={<TrackingDetailsSectionSkeleton />}>
+          <TrackingDetailsSection
+            totalActualItem={totalActualItem}
+            totalPage={totalPage}
+            searchParams={parsedSearchParams}
+            conditions={conditions}
+            trackingDetails={trackingDetails}
+            trackingId={tracking.trackingId}
+            trackingType={tracking.trackingType}
+          />
+        </Suspense>
       </div>
     </div>
   )

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { http } from "@/lib/http"
 
 import "server-only"
@@ -11,6 +12,7 @@ import {
   type WarehouseTrackingInventory,
 } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
+import { type TSearchTrackingDetailsSchema } from "@/lib/validations/trackings/search-tracking-details"
 
 import { auth } from "../auth"
 
@@ -55,8 +57,23 @@ const defaultResponse: Response = {
   statistics: [],
 }
 
-const getTrackingDetails = async (trackingId: number): Promise<Response> => {
+const getTrackingDetails = async (
+  trackingId: number,
+  searchParams: TSearchTrackingDetailsSchema
+): Promise<Response> => {
   const { getAccessToken } = auth()
+
+  Object.keys(searchParams.v).forEach((k) => {
+    //@ts-ignore
+    const value = searchParams.v[k]
+    console.log({ value })
+
+    if (value === "null,null") {
+      //@ts-ignore
+      searchParams.v[k] = ""
+    }
+  })
+
   try {
     const { data } = await http.get<Response>(
       `/api/management/warehouse-trackings/${trackingId}/details`,
@@ -67,9 +84,7 @@ const getTrackingDetails = async (trackingId: number): Promise<Response> => {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
-        searchParams: {
-          pageSize: 100,
-        },
+        searchParams,
       }
     )
 

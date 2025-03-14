@@ -457,31 +457,43 @@ export type Floor = {
 export type Zone = {
   zoneId: number
   floorId: number
-  zoneName: string
-  xCoordinate: number
-  yCoordinate: number
+  engZoneName: string
+  vieZoneName: string
+  engDescription: string | null
+  vieDescription: string | null
+  totalCount: number
   createDate: Date
-  updateDate: Date | null
-  isDeleted: boolean
+  updateDate: null
+  isDeleted: false
 }
 
 export type Section = {
   sectionId: number
   zoneId: number
-  sectionName: string
+  engSectionName: string
+  vieSectionName: string
+  shelfPrefix: string
+  classificationNumberRangeFrom: number
+  classificationNumberRangeTo: number
   createDate: Date
   updateDate: Date | null
   isDeleted: boolean
+  isChildrenSection: boolean
+  isReferenceSection: boolean
+  isJournalSection: boolean
 }
 
 export type Shelf = {
   shelfId: number
   sectionId: number
   shelfNumber: string
+  engShelfName: string
+  vieShelfName: string
+  classificationNumberRangeFrom: number
+  classificationNumberRangeTo: number
   createDate: Date
   updateDate: Date | null
   isDeleted: boolean
-  section: Section | null
 }
 
 export type LibraryItemGroup = {

@@ -20,6 +20,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import FastInputDialog from "./fast-input-dialog"
 import TrackingDetailRowField from "./tracking-detail-row-field"
 
 type Props = {
@@ -51,7 +52,7 @@ function TrackingDetailsField({
   setSelectedCategories,
 }: Props) {
   const t = useTranslations("TrackingsManagementPage")
-  const { fields, append, remove } = useFieldArray({
+  const { fields, append, remove, replace } = useFieldArray({
     name: "warehouseTrackingDetails",
     control: form.control,
   })
@@ -81,12 +82,9 @@ function TrackingDetailsField({
                 *
               </span>
             </FormLabel>
-            {/* <div className="flex flex-wrap items-center gap-4">
-              <Button className="w-32">{t("New item")}</Button>
-              <Button className="w-32" variant="outline">
-                {t("Additional item")}
-              </Button>
-            </div> */}
+            <div className="flex flex-wrap items-center gap-4">
+              <FastInputDialog append={append} replace={replace} form={form} />
+            </div>
           </div>
           <FormControl>
             <div className="mt-4 grid w-full">
