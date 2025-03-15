@@ -15,7 +15,6 @@ function useAutoCompleteBooks(term = "") {
       }[]
     > => {
       if (!term) return []
-      console.log({ term })
 
       try {
         const response = await axios.get(
@@ -42,8 +41,6 @@ function useAutoCompleteBooks(term = "") {
           }
         )
 
-        console.log(response)
-
         // Extract and format results
         const results = response.data.hits.hits.map(
           (hit: {
@@ -67,8 +64,6 @@ function useAutoCompleteBooks(term = "") {
 
         return results
       } catch (error) {
-        console.log(error)
-
         return []
       }
     },

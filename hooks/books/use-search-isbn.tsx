@@ -54,11 +54,8 @@ function useSearchIsbn(isbn: string) {
             //@ts-ignore
 
             summary = data?.description?.value || data?.description || undefined
-            console.log({ summary })
           }
-        } catch (error) {
-          console.log(error)
-        }
+        } catch {}
 
         return {
           authors:

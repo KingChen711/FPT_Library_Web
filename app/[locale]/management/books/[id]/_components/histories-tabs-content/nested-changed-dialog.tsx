@@ -55,8 +55,6 @@ export function NestedDataDialog({
       ].includes(key)
   )
 
-  console.log({ headers })
-
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-3xl">

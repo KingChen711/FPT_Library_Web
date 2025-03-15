@@ -5,7 +5,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
-import { type TTrainGroupSchema } from "@/lib/validations/books/train-group"
+import { type TTrainGroupsSchema } from "@/lib/validations/books/train-groups"
 import useCheckCoverImage from "@/hooks/ai/use-check-cover-image"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -19,9 +19,10 @@ import {
 import { Label } from "@/components/ui/label"
 
 type Props = {
-  form: UseFormReturn<TTrainGroupSchema>
+  form: UseFormReturn<TTrainGroupsSchema>
   isPending: boolean
-  indexBook: number
+  groupIndex: number
+  bookIndex: number
   indexImage: number
   title: string
   publisher: string
@@ -33,7 +34,8 @@ type Props = {
 function CoverImageField({
   form,
   isPending,
-  indexBook,
+  groupIndex,
+  bookIndex,
   indexImage,
   title,
   subTitle,
@@ -45,18 +47,16 @@ function CoverImageField({
   const locale = useLocale()
 
   const watchFile = form.watch(
-    `books.${indexBook}.imageList.${indexImage}.file`
+    `groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.file`
   )
   const watchValidImage = form.watch(
-    `books.${indexBook}.imageList.${indexImage}.validImage`
+    `groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.validImage`
   )
   const watchCheckedResult = form.watch(
-    `books.${indexBook}.imageList.${indexImage}.checkedResult`
+    `groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.checkedResult`
   )
 
   const { mutate: checkImage, isPending: checkingImage } = useCheckCoverImage()
-
-  //   const [mounted, setMounted] = useState(false)
 
   const handleCheckImage = () => {
     const formData = new FormData()
@@ -82,25 +82,25 @@ function CoverImageField({
       onSuccess: (data) => {
         const validImage = data[0].totalPoint >= data[0].confidenceThreshold
         form.setValue(
-          `books.${indexBook}.imageList.${indexImage}.checkedResult`,
+          `groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.checkedResult`,
           data[0]
         )
         form.setValue(
-          `books.${indexBook}.imageList.${indexImage}.validImage`,
+          `groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.validImage`,
           validImage
         )
         if (validImage)
           form.clearErrors(
-            `books.${indexBook}.imageList.${indexImage}.coverImage`
+            `groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.coverImage`
           )
       },
       onError: () => {
         form.setValue(
-          `books.${indexBook}.imageList.${indexImage}.checkedResult`,
+          `groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.checkedResult`,
           undefined
         )
         form.setValue(
-          `books.${indexBook}.imageList.${indexImage}.validImage`,
+          `groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.validImage`,
           false
         )
         toast({
@@ -119,7 +119,7 @@ function CoverImageField({
     <div className="flex flex-row justify-start gap-16 p-6">
       <FormField
         control={form.control}
-        name={`books.${indexBook}.imageList.${indexImage}.coverImage`}
+        name={`groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.coverImage`}
         render={({ field }) => (
           <FormItem>
             <FormLabel>

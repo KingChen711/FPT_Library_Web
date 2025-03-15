@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useTransition } from "react"
+import { useState, useTransition } from "react"
 import { NOT_CLOUDINARY_URL } from "@/constants"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
@@ -90,8 +90,6 @@ function UpdateResourceDialog({ open, setOpen, resource }: Props) {
             values.resourceSize = Math.round(values.fileAudioBook.size)
           }
         } else {
-          console.log("updateBookImage")
-
           const data = await updateBookImage(
             resource.resourceUrl,
             values.fileEbook
@@ -125,10 +123,6 @@ function UpdateResourceDialog({ open, setOpen, resource }: Props) {
       handleServerActionError(res, locale, form)
     })
   }
-
-  useEffect(() => {
-    console.log({ errors: form.formState.errors })
-  }, [form.formState.errors])
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

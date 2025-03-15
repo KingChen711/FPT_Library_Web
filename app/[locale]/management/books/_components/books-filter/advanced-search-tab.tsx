@@ -83,10 +83,6 @@ const AdvancedSearchTab = ({ f, o, v, isTrained, setOpen }: Props) => {
     .map((item) => item.f)
     .filter(Boolean) as EAdvancedFilterBookField[]
 
-  useEffect(() => {
-    console.log({ bookQueries })
-  }, [bookQueries])
-
   const handleNewFov = () =>
     setBookQueries((prev) => [
       ...prev,

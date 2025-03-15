@@ -264,8 +264,6 @@ export const parsedMarc21 = (marc21Data: string) => {
     genres: jsonData.genres ? jsonData.genres.join(",") : undefined,
   }
 
-  console.log(parsedMarc)
-
   return bookEditionSchema.parse(parsedMarc)
 }
 

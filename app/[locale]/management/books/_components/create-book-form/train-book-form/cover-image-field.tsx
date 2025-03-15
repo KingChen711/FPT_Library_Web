@@ -70,8 +70,6 @@ function CoverImageField({
       formData.append("Authors", author)
     })
 
-    console.log(formData)
-
     checkImage(formData, {
       onSuccess: (data) => {
         const validImage = data[0].totalPoint >= data[0].confidenceThreshold

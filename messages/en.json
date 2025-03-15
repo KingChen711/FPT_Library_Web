@@ -443,7 +443,8 @@
     "Library card": "Library card",
     "Patrons": "Patrons",
     "Holders": "Patrons",
-    "Cards": "Cards"
+    "Cards": "Cards",
+    "Train AI": "Train AI"
   },
   "LibraryCardManagementPage": {
     "Patrons": "Patrons",
@@ -888,6 +889,9 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Library item": "Library item",
+    "Group": "Group",
+    "Untrained groups": "Untrained groups",
     "Base on tracking detail": "Base on tracking detail",
     "Shelf name": "Shelf name",
     "to": "to",

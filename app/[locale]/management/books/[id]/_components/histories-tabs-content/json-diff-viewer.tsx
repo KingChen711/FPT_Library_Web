@@ -11,8 +11,6 @@ interface JsonDiffViewerProps {
 }
 
 export function JsonDiffViewer({ oldValue, newValue }: JsonDiffViewerProps) {
-  console.log({ oldValue, newValue })
-
   const diff = useMemo(
     () => diffJson(oldValue || {}, newValue || {}),
     [oldValue, newValue]

@@ -46,8 +46,6 @@ function ResourcesActionsDropdown({
   }
 
   const handleMoveToTrash = () => {
-    console.log("move to trash")
-
     if (isPending) return
 
     startTransition(async () => {

@@ -92,7 +92,6 @@ const ImportFinesDialog = () => {
   }
 
   function onSubmit(values: TImportFines) {
-    console.log(values)
     startTransition(async () => {
       const formData = new FormData()
       if (values.file) {
@@ -104,8 +103,6 @@ const ImportFinesDialog = () => {
       )
 
       const res = await importFines(formData)
-
-      console.log(res)
 
       if (res?.isSuccess) {
         toast({

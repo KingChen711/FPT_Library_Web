@@ -21,10 +21,6 @@ import {
   bookEditionSchema,
   type TBookEditionSchema,
 } from "@/lib/validations/books/create-book"
-import {
-  trainBookInProgressSchema,
-  type TTrainBookInProgressSchema,
-} from "@/lib/validations/books/train-book-in-progress"
 import { createBook } from "@/actions/books/create-book"
 import { uploadMedias } from "@/actions/books/upload-medias"
 import useSearchIsbn from "@/hooks/books/use-search-isbn"
@@ -42,14 +38,8 @@ import Marc21Dialog from "./marc21-dialog"
 import { ProgressTabBar } from "./progress-stage-bar"
 import ResourcesTab from "./resources-tab"
 import { TrackingCard } from "./tracking-card"
-import TrainBookForm from "./train-book-form"
 
-type Tab =
-  | "Category"
-  | "Catalog"
-  | "Individual registration"
-  | "Resources"
-  | "Train AI"
+type Tab = "Category" | "Catalog" | "Individual registration" | "Resources"
 
 type Props = {
   trackingDetail?: TrackingDetailCatalog | null
@@ -90,18 +80,16 @@ function CreateBookForm({ trackingDetail }: Props) {
     },
   })
 
-  const trainForm = useForm<TTrainBookInProgressSchema>({
-    resolver: zodResolver(trainBookInProgressSchema),
-    defaultValues: {
-      imageList: [],
-    },
-  })
+  // const trainForm = useForm<TTrainBookInProgressSchema>({
+  //   resolver: zodResolver(trainBookInProgressSchema),
+  //   defaultValues: {
+  //     imageList: [],
+  //   },
+  // })
 
   const onSubmit = async (values: TBookEditionSchema) => {
-    console.log(values.libraryItemInstances)
-
     startTransition(async () => {
-      const coverImageFile = values.file
+      // const coverImageFile = values.file
 
       await uploadMedias(values)
 
@@ -120,16 +108,16 @@ function CreateBookForm({ trackingDetail }: Props) {
           return
         }
 
-        trainForm.setValue("bookCode", res.data.bookCode)
-        trainForm.setValue("imageList", [
-          {
-            checkedResult: values.checkedResult,
-            coverImage: values.coverImage,
-            validImage: values.validImage,
-            file: coverImageFile,
-          },
-        ])
-        setCurrentTab("Train AI")
+        // trainForm.setValue("bookCode", res.data.bookCode)
+        // trainForm.setValue("imageList", [
+        //   {
+        //     checkedResult: values.checkedResult,
+        //     coverImage: values.coverImage,
+        //     validImage: values.validImage,
+        //     file: coverImageFile,
+        //   },
+        // ])
+        // setCurrentTab("Train AI")
         return
       }
 
@@ -373,140 +361,138 @@ function CreateBookForm({ trackingDetail }: Props) {
         </div>
       )}
 
-      {currentTab !== "Train AI" && (
-        <div className="mt-4 flex flex-col gap-4">
-          {fromWarehouseMode && (
-            <div>
-              <Label>{t("Tracking details")}</Label>
-              <div className="flex items-center">
-                <TrackingCard tracking={trackingDetail.warehouseTracking} />
-                <ArrowRight className="size-9" />
-                <TrackingDetailCard
-                  trackingDetail={trackingDetail}
-                  category={trackingDetail.category}
-                />
-              </div>
+      {/* {currentTab !== "Train AI" && ( */}
+      <div className="mt-4 flex flex-col gap-4">
+        {fromWarehouseMode && (
+          <div>
+            <Label>{t("Tracking details")}</Label>
+            <div className="flex items-center">
+              <TrackingCard tracking={trackingDetail.warehouseTracking} />
+              <ArrowRight className="size-9" />
+              <TrackingDetailCard
+                trackingDetail={trackingDetail}
+                category={trackingDetail.category}
+              />
             </div>
-          )}
-          <Marc21Dialog
-            form={form}
-            show={currentTab === "Catalog"}
-            getIsbn={!fromWarehouseMode && !form.watch("trackingDetailId")}
-          />
-          <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-              <CategoryTab
-                fromWarehouseMode={fromWarehouseMode}
-                show={currentTab === "Category"}
-                form={form}
-                isPending={isPending}
-                selectedCategory={selectedCategory}
-                setSelectedCategory={setSelectedCategory}
-              />
+          </div>
+        )}
+        <Marc21Dialog
+          form={form}
+          show={currentTab === "Catalog"}
+          getIsbn={!fromWarehouseMode && !form.watch("trackingDetailId")}
+        />
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <CategoryTab
+              fromWarehouseMode={fromWarehouseMode}
+              show={currentTab === "Category"}
+              form={form}
+              isPending={isPending}
+              selectedCategory={selectedCategory}
+              setSelectedCategory={setSelectedCategory}
+            />
 
-              <CatalogTab
-                fromWarehouseMode={fromWarehouseMode}
-                isRequireImage={!!selectedCategory?.isAllowAITraining}
-                form={form}
-                isPending={isPending}
-                show={currentTab === "Catalog"}
-                selectedAuthors={selectedAuthors}
-                setSelectedAuthors={setSelectedAuthors}
-              />
+            <CatalogTab
+              fromWarehouseMode={fromWarehouseMode}
+              isRequireImage={!!selectedCategory?.isAllowAITraining}
+              form={form}
+              isPending={isPending}
+              show={currentTab === "Catalog"}
+              selectedAuthors={selectedAuthors}
+              setSelectedAuthors={setSelectedAuthors}
+            />
 
-              <CopiesTab
-                form={form}
-                isPending={isPending}
-                hasConfirmedChangeStatus={hasConfirmedChangeStatus}
-                selectedCategory={selectedCategory}
-                setHasConfirmedChangeStatus={setHasConfirmedChangeStatus}
-                show={currentTab === "Individual registration"}
-              />
+            <CopiesTab
+              form={form}
+              isPending={isPending}
+              hasConfirmedChangeStatus={hasConfirmedChangeStatus}
+              selectedCategory={selectedCategory}
+              setHasConfirmedChangeStatus={setHasConfirmedChangeStatus}
+              show={currentTab === "Individual registration"}
+            />
 
-              <ResourcesTab
-                form={form}
-                isPending={isPending}
-                show={currentTab === "Resources"}
-              />
+            <ResourcesTab
+              form={form}
+              isPending={isPending}
+              show={currentTab === "Resources"}
+            />
 
-              <div className="flex justify-end gap-x-4">
-                <Button
-                  disabled={isPending}
-                  variant="secondary"
-                  className="float-right mt-4"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
-                    if (currentTab === "Category") {
-                      router.push("/management/books")
-                      return
-                    }
+            <div className="flex justify-end gap-x-4">
+              <Button
+                disabled={isPending}
+                variant="secondary"
+                className="float-right mt-4"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  if (currentTab === "Category") {
+                    router.push("/management/books")
+                    return
+                  }
 
-                    if (currentTab === "Catalog") {
-                      setCurrentTab("Category")
-                      return
-                    }
+                  if (currentTab === "Catalog") {
+                    setCurrentTab("Category")
+                    return
+                  }
 
-                    if (currentTab === "Individual registration") {
+                  if (currentTab === "Individual registration") {
+                    setCurrentTab("Catalog")
+                    return
+                  }
+                  if (currentTab === "Resources") {
+                    setCurrentTab("Individual registration")
+                    return
+                  }
+                }}
+              >
+                {t(currentTab !== "Catalog" ? "Back" : "Cancel")}
+              </Button>
+
+              <Button
+                disabled={isPending}
+                type="submit"
+                className="float-right mt-4"
+                onClick={async (e) => {
+                  if (currentTab === "Resources") {
+                    //active the default behaviour (submit)
+                    return
+                  }
+
+                  e.preventDefault()
+                  e.stopPropagation()
+
+                  if (currentTab === "Category") {
+                    if (await triggerCategoryTab()) {
                       setCurrentTab("Catalog")
-                      return
                     }
-                    if (currentTab === "Resources") {
+                    return
+                  }
+
+                  if (currentTab === "Catalog") {
+                    if (await triggerCatalogTab()) {
                       setCurrentTab("Individual registration")
-                      return
                     }
-                  }}
-                >
-                  {t(currentTab !== "Catalog" ? "Back" : "Cancel")}
-                </Button>
+                    return
+                  }
 
-                <Button
-                  disabled={isPending}
-                  type="submit"
-                  className="float-right mt-4"
-                  onClick={async (e) => {
-                    if (currentTab === "Resources") {
-                      //active the default behaviour (submit)
-                      return
+                  if (currentTab === "Individual registration") {
+                    if (await triggerCopiesTab()) {
+                      setCurrentTab("Resources")
                     }
+                    return
+                  }
+                }}
+              >
+                {t("Continue")}
+                {isPending && <Loader2 className="ml-1 size-4 animate-spin" />}
+              </Button>
+            </div>
+          </form>
+        </Form>
+      </div>
+      {/* )} */}
 
-                    e.preventDefault()
-                    e.stopPropagation()
-
-                    if (currentTab === "Category") {
-                      if (await triggerCategoryTab()) {
-                        setCurrentTab("Catalog")
-                      }
-                      return
-                    }
-
-                    if (currentTab === "Catalog") {
-                      if (await triggerCatalogTab()) {
-                        setCurrentTab("Individual registration")
-                      }
-                      return
-                    }
-
-                    if (currentTab === "Individual registration") {
-                      if (await triggerCopiesTab()) {
-                        setCurrentTab("Resources")
-                      }
-                      return
-                    }
-                  }}
-                >
-                  {t("Continue")}
-                  {isPending && (
-                    <Loader2 className="ml-1 size-4 animate-spin" />
-                  )}
-                </Button>
-              </div>
-            </form>
-          </Form>
-        </div>
-      )}
-
-      {currentTab === "Train AI" && (
+      {/* {currentTab === "Train AI" && (
         <TrainBookForm
           form={trainForm}
           title={form.watch("title")}
@@ -521,7 +507,7 @@ function CreateBookForm({ trackingDetail }: Props) {
             })
             .filter((item) => item !== false)}
         />
-      )}
+      )} */}
     </div>
   )
 }

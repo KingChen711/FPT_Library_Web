@@ -445,7 +445,8 @@
     "Library card": "Thẻ thư viện",
     "Holders": "Bạn đọc",
     "Patrons": "Bạn đọc",
-    "Cards": "Thẻ"
+    "Cards": "Thẻ",
+    "Train AI": "Train AI"
   },
   "LibraryCardManagementPage": {
     "Patrons": "Bạn đọc",
@@ -892,6 +893,9 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "Library item": "Tài liệu",
+    "Group": "Nhóm",
+    "Untrained groups": "Các nhóm chưa train",
     "Base on tracking detail": "Dựa trên chi tiết nhập kho",
     "Shelf name": "Tên kệ sách",
     "to": "đến",

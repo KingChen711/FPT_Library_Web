@@ -18,7 +18,7 @@ import ParseHtml from "./parse-html"
 
 interface LibraryItemProps {
   libraryItem: BookEdition & {
-    category: Category
+    category?: Category
     libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
   }
   modal?: boolean
@@ -103,11 +103,13 @@ export default function LibraryItemCard({
               <div>
                 <div className="mt-2 flex items-center">
                   <h3 className="line-clamp-1 text-lg font-bold">{title}</h3>
-                  <Badge className="absolute right-2 top-2">
-                    {locale === "vi"
-                      ? category.vietnameseName
-                      : category.englishName}
-                  </Badge>
+                  {category && (
+                    <Badge className="absolute right-2 top-2">
+                      {locale === "vi"
+                        ? category.vietnameseName
+                        : category.englishName}
+                    </Badge>
+                  )}
                 </div>
                 {subTitle && (
                   <p className="text-sm text-muted-foreground">{subTitle}</p>

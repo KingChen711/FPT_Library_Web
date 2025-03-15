@@ -1,4 +1,4 @@
-import React, { useEffect } from "react"
+import React from "react"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 
@@ -26,12 +26,6 @@ type Props = {
 
 function CopyInput({ index, form }: Props) {
   const t = useTranslations("BooksManagementPage")
-
-  const wConditionId = form.watch(`libraryItemInstances.${index}.conditionId`)
-
-  useEffect(() => {
-    console.log({ wConditionId })
-  }, [wConditionId])
 
   return (
     <div className="flex w-full gap-2">

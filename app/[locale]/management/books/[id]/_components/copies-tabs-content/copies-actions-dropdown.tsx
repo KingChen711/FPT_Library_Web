@@ -58,7 +58,6 @@ function CopiesActionsDropdown({
 
   const handleChangeCopiesStatus = (status: EBookCopyStatus) => {
     if (isPending) return
-    console.log(status)
 
     const updatedCopies = copies
       .filter((c) => selectedCopyIds.includes(c.libraryItemInstanceId))
