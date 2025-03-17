@@ -5,7 +5,6 @@ import Image from "next/image"
 import { addDays, isAfter, isBefore } from "date-fns"
 import { Check } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Calendar as CalendarComponent } from "@/components/ui/calendar"
 import {

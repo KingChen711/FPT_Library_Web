@@ -51,7 +51,7 @@ const BookInstancesTab = ({ libraryItem }: Props) => {
                 <TableCell>
                   <div className="flex w-full justify-center">
                     <Barcode
-                      value={instance.barcode as string}
+                      value={instance.barcode}
                       width={1}
                       height={50}
                       fontSize={12}

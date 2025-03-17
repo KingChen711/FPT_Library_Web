@@ -7,12 +7,13 @@ import AiBookUploadImg from "@/public/assets/images/ai-book-upload.png"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useDropzone } from "react-dropzone"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { predictImage } from "@/actions/ai/predict-image"
+import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -29,7 +30,8 @@ const formSchema = z.object({
 
 const AiPrediction = () => {
   const router = useRouter()
-  const tGeneralManagement = useTranslations("GeneralManagement")
+  const locale = useLocale()
+  const t = useTranslations("GeneralManagement")
   const { setUploadImage, setBestMatchedLibraryItemId, setPredictResult } =
     usePrediction()
   const [previewImage, setPreviewImage] = useState<string | null>(null)
@@ -59,7 +61,14 @@ const AiPrediction = () => {
         setBestMatchedLibraryItemId(res?.data?.data?.bestItem?.libraryItemId)
         setPredictResult(res?.data?.data)
         router.push(`/ai-prediction/result`)
+        return
       }
+
+      toast({
+        title: t("error"),
+        description: locale === "vi" ? "Không có dữ liệu" : "No data",
+        variant: "danger",
+      })
     })
   }
 
@@ -93,35 +102,31 @@ const AiPrediction = () => {
   return (
     <div className="flex size-full flex-col items-center justify-center">
       <div className="relative w-full">
-        <h1 className="text-center text-xl font-semibold">
-          {tGeneralManagement("welcome to")}
-        </h1>
+        <h1 className="text-center text-xl font-semibold">{t("welcome to")}</h1>
         <div className="absolute right-0 top-1/2 flex w-full -translate-y-1/2 items-center justify-end gap-2">
           <Button
             disabled={!previewImage || isPending}
             variant={"outline"}
             onClick={handleRemoveFile}
           >
-            {tGeneralManagement("clear btn")}
+            {t("clear btn")}
           </Button>
           <Button
             disabled={!previewImage || isPending}
             onClick={() => form.handleSubmit(onSubmit)()}
             className="flex items-center gap-2"
           >
+            {t("process btn")}
             {isPending && <Loader2 className="animate-spin" />}
-            {tGeneralManagement("process btn")}
           </Button>
         </div>
       </div>
       <div className="flex h-full w-2/3 flex-col gap-2 text-center">
         <h1 className="text-3xl font-semibold text-primary">
-          {tGeneralManagement("book ai prediction")}
+          {t("book ai prediction")}
         </h1>
         <p className="font-semibold">
-          {tGeneralManagement(
-            "Upload a book cover and let AI Predict the book details"
-          )}
+          {t("Upload a book cover and let AI Predict the book details")}
         </p>
 
         <Form {...form}>
@@ -157,18 +162,16 @@ const AiPrediction = () => {
                             />
                           </div>
                           <h1 className="text-lg font-semibold capitalize underline">
-                            {tGeneralManagement("choose image")}
+                            {t("choose image")}
                           </h1>
-                          <h1>
-                            {tGeneralManagement("or drag and drop file here")}
-                          </h1>
+                          <h1>{t("or drag and drop file here")}</h1>
 
                           <p className="text-sm">
-                            ({tGeneralManagement("support documents")} - .jpg,
-                            .jpeg, .png, .webp)
+                            ({t("support documents")} - .jpg, .jpeg, .png,
+                            .webp)
                           </p>
                           <p className="text-sm text-danger">
-                            {tGeneralManagement("no file chosen")}
+                            {t("no file chosen")}
                           </p>
                         </div>
                       ) : (
@@ -184,7 +187,8 @@ const AiPrediction = () => {
                           </div>
 
                           <p className="text-sm">
-                            (supports document - .jpg, .jpeg, .png, .webp)
+                            ({t("support documents")} - .jpg, .jpeg, .png,
+                            .webp)
                           </p>
                         </div>
                       )}

@@ -77,7 +77,7 @@ const OverviewFavoriteItem = ({ libraryItemId }: Props) => {
 
           <div className="flex-1 space-y-1">
             <Link
-              href={`/book/${item.libraryItemId}`}
+              href={`/books/${item.libraryItemId}`}
               className="line-clamp-2 font-medium text-foreground hover:text-primary hover:underline"
             >
               {item.title}

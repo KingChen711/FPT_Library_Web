@@ -37,6 +37,7 @@ type Props = {
   orderCode: string
   paymentLinkId: string
   userId?: string
+  callbackUrl?: string
 }
 
 function CancelPaymentDialog({
@@ -44,6 +45,7 @@ function CancelPaymentDialog({
   paymentLinkId,
   orderCode,
   userId,
+  callbackUrl,
 }: Props) {
   const [open, setOpen] = useState(false)
 
@@ -76,9 +78,14 @@ function CancelPaymentDialog({
           description: res.data,
           variant: "success",
         })
+        if (callbackUrl) {
+          router.push(callbackUrl)
+          return
+        }
         router.push(
           `/management/library-card-holders${userId ? "/" + userId : ""}`
         )
+
         return
       }
 

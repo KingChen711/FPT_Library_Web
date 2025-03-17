@@ -17,8 +17,6 @@ enum EPredictionTab {
 }
 
 const AiPredictionResult = () => {
-  // const { uploadedImage, bestMatchedLibraryItemId } = usePrediction()
-
   return (
     <div>
       <Tabs defaultValue={EPredictionTab.RESULT} className="w-full">

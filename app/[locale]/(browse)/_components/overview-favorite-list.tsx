@@ -83,13 +83,15 @@ const OverviewFavoriteList = () => {
           </SheetDescription>
         </SheetHeader>
 
-        {likedLibraryItem.length > 0 &&
-          likedLibraryItem.map((libraryItemId) => (
-            <OverviewFavoriteItem
-              key={libraryItemId}
-              libraryItemId={libraryItemId}
-            />
-          ))}
+        <div className="flex-1 overflow-y-auto">
+          {likedLibraryItem.length > 0 &&
+            likedLibraryItem.map((libraryItemId) => (
+              <OverviewFavoriteItem
+                key={libraryItemId}
+                libraryItemId={libraryItemId}
+              />
+            ))}
+        </div>
 
         {likedLibraryItem.length > 0 && (
           <div className="flex justify-end">

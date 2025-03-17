@@ -1,6 +1,6 @@
 import { Bell, Brain } from "lucide-react"
 
-import { EFeature, type Route } from "@/lib/types/enums"
+import { EFeature } from "@/lib/types/enums"
 import { Icons } from "@/components/ui/icons"
 
 export const ServerUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
@@ -241,7 +241,7 @@ export const managementRoutes = [
   },
 ]
 
-export const browseRoutes: Route[] = [
+export const browseRoutes = [
   {
     route: "/",
     label: "Home",

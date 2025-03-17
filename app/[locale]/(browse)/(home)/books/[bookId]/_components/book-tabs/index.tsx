@@ -1,6 +1,7 @@
 import React from "react"
 import getLibraryItem from "@/queries/library-item/get-libraryItem"
 
+import { getTranslations } from "@/lib/get-translations"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import BookEditionTab from "./book-edition-tab"
@@ -14,10 +15,11 @@ type Props = {
 }
 
 const BookTabs = async ({ libraryItemId }: Props) => {
+  const t = await getTranslations("BookPage")
   const libraryItem = await getLibraryItem(libraryItemId)
 
   if (!libraryItem) {
-    return <div>Not found</div>
+    return <div>{t("Book not found")}</div>
   }
 
   return (
@@ -27,19 +29,19 @@ const BookTabs = async ({ libraryItemId }: Props) => {
     >
       <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger className="w-full" value="overview">
-          Overview
+          {t("overview")}
         </TabsTrigger>
         <TabsTrigger className="w-full" value="view-edition">
-          View Edition
+          {t("view edition")}
         </TabsTrigger>
         <TabsTrigger className="w-full" value="instances">
-          Instances
+          {t("instances")}
         </TabsTrigger>
         <TabsTrigger className="w-full" value="review">
-          Reviews
+          {t("reviews")}
         </TabsTrigger>
         <TabsTrigger className="w-full" value="related-items">
-          Related Items
+          {t("related items")}
         </TabsTrigger>
       </TabsList>
       <TabsContent value="overview">

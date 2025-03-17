@@ -3,7 +3,14 @@
 import { useState } from "react"
 import { useAuth } from "@/contexts/auth-provider"
 import { useRouter } from "@/i18n/routing"
-import { BookOpen, Check, GraduationCap, Loader2, Users } from "lucide-react"
+import {
+  BookOpen,
+  Check,
+  GraduationCap,
+  Loader2,
+  Users,
+  XCircle,
+} from "lucide-react"
 
 import { type Package } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
@@ -32,7 +39,11 @@ const MeLibraryCard = () => {
   }
 
   if (!packages || !Array.isArray(packages) || packages.length === 0) {
-    return <NoData />
+    return (
+      <Card className="flex items-center justify-start gap-2 p-4 font-semibold text-danger">
+        <XCircle /> Library package not found!
+      </Card>
+    )
   }
 
   const handleContinue = () => {
@@ -178,7 +189,10 @@ const MeLibraryCard = () => {
                         }
                       )}
                     >
-                      <PackageCard package={item} className="border-none" />
+                      <PackageCard
+                        package={item}
+                        className="h-full border-none"
+                      />
                     </Card>
                   ))}
               </div>

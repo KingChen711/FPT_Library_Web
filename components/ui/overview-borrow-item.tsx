@@ -4,7 +4,7 @@ import { useState } from "react"
 import Image from "next/image"
 import { LocalStorageKeys } from "@/constants"
 import { Link } from "@/i18n/routing"
-import { BookOpen, Calendar, Trash2 } from "lucide-react"
+import { Trash2 } from "lucide-react"
 
 import { localStorageHandler } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
@@ -18,7 +18,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -77,8 +76,8 @@ const OverviewBorrowItem = ({ libraryItemId }: Props) => {
 
           <div className="flex-1 space-y-1">
             <Link
-              href={`/book/${item.libraryItemId}`}
-              className="line-clamp-2 font-medium text-foreground hover:text-primary hover:underline"
+              href={`/books/${item.libraryItemId}`}
+              className="line-clamp-2 text-sm font-medium text-primary hover:text-primary hover:underline"
             >
               {item.title}
             </Link>
@@ -93,34 +92,6 @@ const OverviewBorrowItem = ({ libraryItemId }: Props) => {
                 )}
               </p>
             )}
-
-            <div className="flex flex-wrap gap-2 pt-1">
-              {item.publisher && (
-                <Badge variant="default" className="text-xs font-normal">
-                  {item.publisher}
-                </Badge>
-              )}
-
-              {item.publicationYear && (
-                <Badge
-                  variant="default"
-                  className="flex items-center gap-1 text-xs font-normal"
-                >
-                  <Calendar className="size-3" />
-                  {item.publicationYear}
-                </Badge>
-              )}
-
-              {item.pageCount && (
-                <Badge
-                  variant="default"
-                  className="flex items-center gap-1 text-xs font-normal"
-                >
-                  <BookOpen className="size-3" />
-                  {item.pageCount} pages
-                </Badge>
-              )}
-            </div>
           </div>
 
           <Button
