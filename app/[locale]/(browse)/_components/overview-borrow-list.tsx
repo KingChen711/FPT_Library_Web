@@ -109,13 +109,15 @@ const OverviewBorrowList = () => {
           </SheetDescription>
         </SheetHeader>
 
-        {borrowIdList.length > 0 &&
-          borrowIdList.map((libraryItemId) => (
-            <OverviewBorrowItem
-              key={libraryItemId}
-              libraryItemId={libraryItemId}
-            />
-          ))}
+        <div className="flex-1 overflow-y-auto">
+          {borrowIdList.length > 0 &&
+            borrowIdList.map((libraryItemId) => (
+              <OverviewBorrowItem
+                key={libraryItemId}
+                libraryItemId={libraryItemId}
+              />
+            ))}
+        </div>
 
         {borrowIdList.length > 0 && (
           <div className="flex justify-end gap-2">

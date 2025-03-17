@@ -2,12 +2,14 @@
 
 import { useEffect, useState } from "react"
 import { LocalStorageKeys } from "@/constants"
+import { useTranslations } from "next-intl"
 
 import { localStorageHandler } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 import RecentBookItem from "@/components/ui/recent-book-item"
 
 const RecentBookList = () => {
+  const t = useTranslations("HomePage")
   const [recentIdList, setRecentIdList] = useState<string[]>([])
   const updateBorrows = () => {
     setRecentIdList(
@@ -34,14 +36,16 @@ const RecentBookList = () => {
     }
   }, [])
 
+  if (recentIdList.length === 0) return null
+
   return (
     <div>
       {recentIdList && recentIdList.length > 0 && (
         <div className="flex items-center justify-between">
-          <Label className="text-2xl font-bold text-primary">
-            Recent Book &nbsp;
+          <Label className="text-2xl font-bold text-foreground">
+            {t("recent read")} &nbsp;
             <span className="text-lg text-muted-foreground">
-              ({recentIdList.length} books)
+              ({recentIdList.length} {t("books")})
             </span>
           </Label>
         </div>

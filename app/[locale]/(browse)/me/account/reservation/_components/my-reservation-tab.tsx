@@ -2,7 +2,6 @@ import Image from "next/image"
 import { format } from "date-fns"
 import { Book, BookOpen, Calendar, Clock, X } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {

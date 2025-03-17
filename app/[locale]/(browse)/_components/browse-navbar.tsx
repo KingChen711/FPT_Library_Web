@@ -1,19 +1,11 @@
 "use client"
 
-import { startTransition, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import Image from "next/image"
+import { useSearchParams } from "next/navigation"
 import { Link, usePathname, useRouter } from "@/i18n/routing"
-import {
-  Book,
-  Bot,
-  Calendar,
-  Clock,
-  Languages,
-  Mic,
-  QrCode,
-  Search,
-} from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { Book, Bot, Mic, QrCode, Search } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useDebounce } from "use-debounce"
 
 import { cn } from "@/lib/utils"
@@ -27,13 +19,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { SidebarTrigger, useSidebar } from "@/components/ui/sidebar"
 import VoiceToText from "@/components/ui/voice-to-text"
 import { BookFilterTabs } from "@/components/book-filter-tabs"
@@ -44,45 +29,26 @@ import Actions from "./actions"
 
 function BrowseNavbar() {
   const t = useTranslations("GeneralManagement")
-  const locale = useLocale()
-  const pathname = usePathname()
-  const router = useRouter()
-
-  const newLocale = locale === "en" ? "vi" : "en"
-
-  const [currentDate, setCurrentDate] = useState<string | null>(null)
-  const [searchTerm, setSearchTerm] = useState("")
-  const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
-  const { data: autoCompleteData } = useAutoCompleteBooks(debouncedSearchTerm)
   const tAutocomplete = useTranslations("AutocompleteLibraryItem")
+  const router = useRouter()
   const { open } = useSidebar()
-  const [openVoiceToText, setOpenVoiceToText] = useState(false)
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+  const [openVoiceToText, setOpenVoiceToText] = useState<boolean>(false)
+
+  const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "")
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
+
+  const { data: autoCompleteData } = useAutoCompleteBooks(debouncedSearchTerm)
 
   useEffect(() => {
-    // Update currentDate only on the client
-    const interval = setInterval(() => {
-      setCurrentDate(
-        new Date().toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        })
-      )
-    }, 1000)
-
-    return () => clearInterval(interval)
-  }, [])
+    setSearchTerm(searchParams.get("search") || "")
+  }, [searchParams])
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
-    router.push(`/books?search=${searchTerm}`)
-  }
-
-  const switchLanguage = () => {
-    startTransition(() => {
-      router.push(`${pathname}`, { scroll: false, locale: newLocale })
-    })
+    router.push(`/search/result?search=${searchTerm}`)
   }
 
   return (
@@ -120,7 +86,7 @@ function BrowseNavbar() {
                 <Input
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder="Search"
+                  placeholder={t("search")}
                   className="flex-1 rounded-none !border-transparent pl-12 !outline-none !ring-transparent"
                 />
               </form>
@@ -165,10 +131,7 @@ function BrowseNavbar() {
               )}
             </div>
 
-            <VoiceToText
-              open={openVoiceToText}
-              setOpen={() => setOpenVoiceToText(true)}
-            />
+            <VoiceToText open={openVoiceToText} setOpen={setOpenVoiceToText} />
             <BookPredictionDialog open={false} setOpen={() => {}} />
             <BookRecommendDialog open={false} setOpen={() => {}} />
 
@@ -180,42 +143,17 @@ function BrowseNavbar() {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem onClick={() => setOpenVoiceToText(true)}>
-                  <Mic size={16} /> Voice to text
+                  <Mic size={16} /> {t("voice to text")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {}}>
-                  <Bot size={16} /> Prediction
+                  <Bot size={16} /> {t("ai prediction")}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => {}}>
-                  <Book size={16} /> Recommend
+                  <Book size={16} /> {t("ai recommendation")}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
-          <Select onValueChange={() => switchLanguage()} defaultValue={locale}>
-            <SelectTrigger className="w-[140px]">
-              <Languages size={20} />
-              <SelectValue placeholder={t("language")} />
-            </SelectTrigger>
-            <SelectContent className="">
-              <SelectItem value="en">{t("english")}</SelectItem>
-              <SelectItem value="vi">{t("vietnamese")}</SelectItem>
-            </SelectContent>
-          </Select>
-          <section className="flex items-center gap-4 text-nowrap rounded-lg p-1 text-muted-foreground">
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Clock size={16} />
-              {currentDate || "--:--"}
-            </div>
-            <div className="flex items-center gap-2 text-muted-foreground">
-              <Calendar size={16} />
-              {new Date().toLocaleDateString("en-GB", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-              })}
-            </div>
-          </section>
         </div>
         <Actions />
       </div>

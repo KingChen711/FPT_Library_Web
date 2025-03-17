@@ -2,7 +2,6 @@
 
 import Image from "next/image"
 import { Loader2, MapPin } from "lucide-react"
-import { useTranslations } from "next-intl"
 
 import { type OcrResult } from "@/lib/types/models"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
@@ -19,7 +18,6 @@ type Props = {
 }
 
 const PredictLibraryItemInfo = ({ libraryItemId, ocrResult }: Props) => {
-  const t = useTranslations("BookPage")
   const { data: libraryItem, isLoading } = useLibraryItemDetail(libraryItemId)
 
   if (isLoading) {

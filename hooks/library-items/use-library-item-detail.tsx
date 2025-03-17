@@ -5,18 +5,18 @@ import { http } from "@/lib/http"
 import { type LibraryItem } from "@/lib/types/models"
 
 function useLibraryItemDetail(libraryItemId: string) {
-  const { accessToken } = useAuth()
+  const { user } = useAuth()
   return useQuery({
     queryKey: [`library-items/${libraryItemId}`],
     queryFn: async () => {
       try {
         const { data } = await http.get<LibraryItem | null>(
-          `/api/library-items/${libraryItemId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+          `/api/library-items/${libraryItemId}?email=${user?.email || ""}`
+          // {
+          //   headers: {
+          //     Authorization: `Bearer ${accessToken}`,
+          //   },
+          // }
         )
 
         return data

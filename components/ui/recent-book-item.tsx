@@ -2,8 +2,10 @@ import React from "react"
 import Image from "next/image"
 import { Link } from "@/i18n/routing"
 import { User2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
+import { Skeleton } from "@/components/ui/skeleton"
 
 import { Card } from "./card"
 import { Icons } from "./icons"
@@ -15,9 +17,32 @@ type Props = {
 }
 
 const RecentBookItem = ({ libraryItem }: Props) => {
+  const t = useTranslations("HomePage")
   const { data: item, isLoading } = useLibraryItemDetail(libraryItem)
+
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+      <Card className="flex h-[420px] flex-col overflow-hidden rounded-lg shadow-md">
+        {/* Skeleton cho ảnh bìa */}
+        <div className="flex h-3/4 items-center justify-center p-4">
+          <Skeleton className="h-[240px] w-[180px] rounded-lg" />
+        </div>
+
+        {/* Skeleton cho nội dung */}
+        <div className="flex flex-col gap-2 p-3">
+          <Skeleton className="h-5 w-3/4" />
+          <div className="flex justify-between gap-2">
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-4 w-1/4" />
+          </div>
+          <div className="flex justify-between gap-2">
+            <Skeleton className="h-4 w-1/3" />
+            <Skeleton className="h-4 w-1/4" />
+          </div>
+          <Skeleton className="h-4 w-2/3" />
+        </div>
+      </Card>
+    )
   }
 
   if (!item) {
@@ -38,7 +63,7 @@ const RecentBookItem = ({ libraryItem }: Props) => {
           height={240}
           priority
           unoptimized
-          className="object-contain transition-transform duration-200 group-hover:scale-105"
+          className="rounded-lg object-contain"
         />
       </div>
 
@@ -51,13 +76,11 @@ const RecentBookItem = ({ libraryItem }: Props) => {
           {item.title}
         </Link>
         <div className="flex items-center justify-between gap-2">
-          {item.authors.length > 0 ? (
+          {item.authors.length > 0 && (
             <p className="flex items-center gap-1 truncate text-sm">
-              <User2 size={16} className="text-primary" /> by &nbsp;
+              <User2 size={16} className="text-primary" />
               {item.authors[0]?.fullName}
             </p>
-          ) : (
-            <p></p>
           )}
           <p className="flex items-center gap-1 truncate text-sm">
             {item.publicationYear}
@@ -68,7 +91,9 @@ const RecentBookItem = ({ libraryItem }: Props) => {
             <Icons.Star className="size-4 text-warning" />
             {item.avgReviewedRate || 5} / 5
           </div>
-          <p className="text-xs">{item.pageCount} pages</p>
+          <p className="text-xs">
+            {item.pageCount} {t("pages")}
+          </p>
         </div>
         <p className="truncate text-xs font-semibold">{item.publisher}</p>
       </div>

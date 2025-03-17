@@ -3,7 +3,7 @@
 import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
 import Autoplay from "embla-carousel-autoplay"
-import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import useNewArrivals from "@/hooks/library-items/use-new-arrivals"
 import { Card, CardContent } from "@/components/ui/card"
@@ -14,41 +14,62 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
+import { Skeleton } from "@/components/ui/skeleton"
 
 const quotes = [
   {
     id: 1,
-    quote: "The best way to predict the future is to create it.",
-    author: "Peter Drucker",
-  },
-  {
-    id: 2,
     quote:
       "Success is not the key to happiness. Happiness is the key to success.",
     author: "Albert Schweitzer",
   },
   {
-    id: 3,
+    id: 2,
     quote:
       "Your time is limited, so don’t waste it living someone else’s life.",
     author: "Steve Jobs",
   },
   {
-    id: 4,
+    id: 3,
     quote: "Life is what happens when you’re busy making other plans.",
     author: "John Lennon",
   },
   {
-    id: 5,
+    id: 4,
     quote: "Do what you can, with what you have, where you are.",
     author: "Theodore Roosevelt",
   },
 ]
 const BannerHome = () => {
+  const t = useTranslations("HomePage")
   const router = useRouter()
   const { data: libraryItems, isLoading } = useNewArrivals()
+
   if (!libraryItems || isLoading || libraryItems.length === 0) {
-    return <Loader2 className="animate-spin" />
+    return (
+      <div className="grid h-[240px] w-full grid-cols-3 gap-4">
+        <div className="col-span-1 h-full overflow-hidden rounded-lg">
+          <Card className="size-full">
+            <CardContent className="flex h-full flex-col justify-between gap-4 p-6">
+              <Skeleton className="h-6 w-1/2" />
+              <Skeleton className="h-5 w-full" />
+              <Skeleton className="h-4 w-1/3 self-end" />
+            </CardContent>
+          </Card>
+        </div>
+
+        <div className="col-span-2 flex h-full rounded-lg border-8 border-primary shadow-lg">
+          <div className="flex w-1/12 items-center justify-center bg-primary">
+            <Skeleton className="h-5 w-[100px] -rotate-90" />
+          </div>
+          <div className="flex flex-1 items-center justify-around px-4">
+            {[...Array(4)].map((_, i) => (
+              <Skeleton key={i} className="h-[180px] w-[120px] rounded-lg" />
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -62,22 +83,22 @@ const BannerHome = () => {
           }}
           plugins={[
             Autoplay({
-              delay: 6000,
+              delay: 5000,
             }),
           ]}
         >
           <CarouselContent className="h-full space-x-4">
-            {quotes.map(({ id, quote, author }) => (
+            {quotes.map(({ id, author }, index) => (
               <CarouselItem key={id}>
                 <Card>
                   <CardContent className="flex h-[240px] flex-col justify-between gap-6 overflow-hidden rounded-lg bg-gradient-to-br from-primary to-primary/70 p-8 shadow-lg">
-                    <h1 className="mb-2 px-4 text-left text-2xl font-semibold text-accent">
-                      Today&apos;s quote
+                    <h1 className="mb-2 px-4 text-left text-2xl font-semibold text-primary-foreground dark:text-foreground">
+                      {t("today quote")}
                     </h1>
-                    <div className="mb-2 px-4 text-center font-serif text-lg font-semibold text-accent">
-                      {`"${quote}"`}
+                    <div className="mb-2 px-4 text-center font-serif text-lg font-semibold text-primary-foreground dark:text-foreground">
+                      {`"${t(`quote ${index + 1}`)}"`}
                     </div>
-                    <div className="text-right text-sm font-medium italic text-accent">
+                    <div className="text-right text-sm font-medium italic text-primary-foreground dark:text-foreground">
                       - {author} -
                     </div>
                   </CardContent>
@@ -92,7 +113,9 @@ const BannerHome = () => {
 
       <div className="col-span-2 flex h-full rounded-lg border-8 border-primary shadow-lg">
         <div className="flex w-1/12 items-center justify-center bg-primary text-xl font-semibold text-accent">
-          <p className="-rotate-90 text-nowrap">New Arrivals</p>
+          <p className="-rotate-90 text-nowrap text-primary-foreground dark:text-foreground">
+            {t("new arrivals")}
+          </p>
         </div>
 
         <div className="flex flex-1 items-center justify-center">
@@ -111,15 +134,15 @@ const BannerHome = () => {
                 >
                   <div
                     onClick={() => router.push(`/books/${item.libraryItemId}`)}
-                    className="flex h-[180px] items-center justify-center overflow-hidden rounded-lg p-4 shadow-lg"
+                    className="relative flex h-[180px] cursor-pointer items-center justify-center rounded-lg p-4 shadow-lg"
                   >
                     <Image
                       src={item.coverImage as string}
                       priority
                       alt="Logo"
-                      width={240}
-                      height={320}
-                      className="object-cover duration-150 ease-in-out hover:scale-105"
+                      objectFit="contain"
+                      fill
+                      className="rounded-lg object-cover"
                     />
                   </div>
                 </CarouselItem>

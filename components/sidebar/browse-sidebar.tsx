@@ -136,7 +136,7 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       ) : (
         <Button
           variant={"link"}
-          className="w-full"
+          className="w-full text-foreground"
           onClick={() => router.push("/login")}
         >
           {t("login")}

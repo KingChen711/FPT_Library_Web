@@ -6,6 +6,7 @@ import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQuery } from "@tanstack/react-query"
 import { Mic, StopCircle, Trash } from "lucide-react"
+import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import wavEncoder from "wav-encoder"
 import { type z } from "zod"
@@ -20,8 +21,10 @@ import {
 import { predictVoiceToText } from "@/actions/ai/voice-to-text"
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
@@ -54,6 +57,7 @@ type Props = {
 }
 
 const VoiceToText = ({ open, setOpen }: Props) => {
+  const t = useTranslations("GeneralManagement")
   const router = useRouter()
   const searchParams = useSearchParams()
   const [isRecording, setIsRecording] = useState<boolean>(false)
@@ -228,123 +232,120 @@ const VoiceToText = ({ open, setOpen }: Props) => {
   }
 
   return (
-    <div>
-      {open && (
-        <Dialog open={open} onOpenChange={handleOnChange}>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Voice to text</DialogTitle>
-              <DialogDescription>
-                Press the mic button and start speaking. The text will be
-                recognized and written in the text field.
-              </DialogDescription>
+    <Dialog open={open} onOpenChange={handleOnChange}>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>{t("voice to text")}</DialogTitle>
+          <DialogDescription className="mt-4">
+            {t("voice description")}
+          </DialogDescription>
 
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className="space-y-8"
-                >
-                  <FormField
-                    control={form.control}
-                    name="languageCode"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Language Code</FormLabel>
-                        <FormControl>
-                          <Select onValueChange={field.onChange}>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Choose language" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {languages.map((language) => (
-                                <SelectItem
-                                  key={language.languageCode}
-                                  value={language.languageCode}
-                                >
-                                  {language.languageName}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  <FormField
-                    control={form.control}
-                    name="audioFile"
-                    render={() => (
-                      <FormItem>
-                        <FormLabel>Audio File</FormLabel>
-                        <FormControl>
-                          <div className="flex flex-col gap-2 rounded-lg">
-                            <Button
-                              type="button"
-                              variant="outline"
-                              onClick={
-                                isRecording ? stopRecording : startRecording
-                              }
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <FormField
+                control={form.control}
+                name="languageCode"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>{t("language")}</FormLabel>
+                    <FormControl>
+                      <Select onValueChange={field.onChange}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Choose language" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {languages.map((language) => (
+                            <SelectItem
+                              key={language.languageCode}
+                              value={language.languageCode}
                             >
-                              {isRecording ? (
-                                <div className="flex items-center gap-2">
-                                  <StopCircle className="size-6" />
-                                  Stop recording ({seconds}s)
-                                </div>
-                              ) : (
-                                <div className="flex items-center gap-2">
-                                  <Mic className="size-6" />
-                                  Start recording
-                                </div>
-                              )}
-                            </Button>
-                            {audioUrl && (
-                              <div className="mt-4 space-y-2">
-                                <div className="flex items-center gap-2">
-                                  <Label>Playback</Label>
-                                  <Trash
-                                    size={16}
-                                    color="red"
-                                    className="cursor-pointer"
-                                    onClick={() => {
-                                      setAudioUrl(null)
-                                      form.resetField("audioFile")
-                                    }}
-                                  />
-                                </div>
-                                <div className="flex items-center justify-between gap-4">
-                                  <audio
-                                    controls
-                                    src={audioUrl}
-                                    className="flex-1"
-                                  />
-                                  <Button
-                                    type="button"
-                                    onClick={downloadAudio}
-                                    variant="outline"
-                                  >
-                                    Download
-                                  </Button>
-                                </div>
-                              </div>
-                            )}
+                              {language.languageName}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="audioFile"
+                render={() => (
+                  <FormItem>
+                    <FormLabel>Audio File</FormLabel>
+                    <FormControl>
+                      <div className="flex flex-col gap-2 rounded-lg">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          onClick={isRecording ? stopRecording : startRecording}
+                        >
+                          {isRecording ? (
+                            <div className="flex items-center gap-2">
+                              <StopCircle className="size-6" />
+                              {t("btn.stop recording")} ({seconds}s)
+                            </div>
+                          ) : (
+                            <div className="flex items-center gap-2">
+                              <Mic className="size-6" />
+                              {t("btn.start recording")}
+                            </div>
+                          )}
+                        </Button>
+                        {audioUrl && (
+                          <div className="mt-4 space-y-2">
+                            <div className="flex items-center gap-2">
+                              <Label> {t("btn.playback")}</Label>
+                              <Trash
+                                size={16}
+                                color="red"
+                                className="cursor-pointer"
+                                onClick={() => {
+                                  setAudioUrl(null)
+                                  form.resetField("audioFile")
+                                }}
+                              />
+                            </div>
+                            <div className="flex items-center justify-between gap-4">
+                              <audio
+                                controls
+                                src={audioUrl}
+                                className="flex-1"
+                              />
+                              <Button
+                                type="button"
+                                onClick={downloadAudio}
+                                variant="outline"
+                              >
+                                {t("btn.download")}
+                              </Button>
+                            </div>
                           </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <Button type="submit" disabled={isPending}>
-                    Submit
+                        )}
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <DialogFooter className="flex items-center justify-end gap-2">
+                <DialogClose asChild>
+                  <Button type="button" variant={"outline"}>
+                    {t("btn.cancel")}
                   </Button>
-                </form>
-              </Form>
-            </DialogHeader>
-          </DialogContent>
-        </Dialog>
-      )}
-    </div>
+                </DialogClose>
+                <Button type="submit" disabled={isPending}>
+                  {t("btn.submit")}
+                </Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   )
 }
 

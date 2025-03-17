@@ -19,17 +19,6 @@ interface LibraryItem {
   duration?: string // for audiobooks
 }
 
-interface Reservation {
-  id: string
-  itemId: string
-  userId: string
-  startDate: string
-  endDate: string
-  status: "pending" | "active" | "completed" | "cancelled"
-  createdAt: string
-  item: LibraryItem
-}
-
 export const activeReservations = [
   {
     id: "RES-20001",
