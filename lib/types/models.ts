@@ -714,19 +714,6 @@ export type LibraryCard = {
   transactionCode: string
 }
 
-export type BorrowRequest = {
-  borrowRequestId: number
-  libraryCardId: string
-  requestDate: Date
-  expirationDate: Date
-  status: EBorrowRequestStatus
-  description: string | null
-  cancelledAt: Date | null
-  cancellationReason: string | null
-  isReminderSent: boolean
-  totalRequestItem: number
-}
-
 export type Transaction = {
   transactionId: number
   transactionCode: string
@@ -749,4 +736,17 @@ export type Transaction = {
   libraryCardPackageId: number | null
 
   paymentMethodId: number | null
+}
+
+export type BorrowRequest = {
+  borrowRequestId: number
+  libraryCardId: string
+  requestDate: Date
+  expirationDate: Date
+  status: EBorrowRequestStatus
+  description: string | null
+  cancelledAt: string | null
+  cancellationReason: string | null
+  isReminderSent: boolean
+  totalRequestItem: number
 }

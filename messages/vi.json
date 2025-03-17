@@ -409,6 +409,8 @@
     "Permissions": "Quyền"
   },
   "Routes": {
+    "Borrow requests": "Yêu cầu mượn",
+    "Borrow and Return": "Mượn trả sách",
     "Dashboard": "Bảng điều khiển",
     "Navigator Bar": "Thanh điều hướng",
     "Home": "Trang chủ",

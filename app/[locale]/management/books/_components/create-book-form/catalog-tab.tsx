@@ -597,7 +597,7 @@ function CatalogTab({
         isPending={isPending}
       />
 
-      {fromWarehouseMode && (
+      {!fromWarehouseMode && (
         <StockInDetailField form={form} isPending={isPending} />
       )}
     </>

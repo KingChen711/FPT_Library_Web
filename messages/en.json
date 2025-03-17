@@ -407,6 +407,8 @@
     "Permissions": "Permissions"
   },
   "Routes": {
+    "Borrow requests": "Borrow requests",
+    "Borrow and Return": "Borrow and Return",
     "Dashboard": "Dashboard",
     "Navigator Bar": "Navigator bar",
     "Home": "Home",

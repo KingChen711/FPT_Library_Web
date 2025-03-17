@@ -103,10 +103,7 @@ function CreateBookForm({ trackingDetail }: Props) {
           variant: "success",
         })
 
-        if (!res.data.bookCode || !selectedCategory?.isAllowAITraining) {
-          router.push("/management/books")
-          return
-        }
+        router.push("/management/books")
 
         // trainForm.setValue("bookCode", res.data.bookCode)
         // trainForm.setValue("imageList", [
