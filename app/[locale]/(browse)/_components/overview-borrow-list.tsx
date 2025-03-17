@@ -1,15 +1,11 @@
 "use client"
 
-import { useEffect, useState, useTransition } from "react"
+import { useEffect, useState } from "react"
 import { LocalStorageKeys } from "@/constants"
 import { useRouter } from "@/i18n/routing"
 import { Book } from "lucide-react"
-import { useLocale } from "next-intl"
 
-import handleServerActionError from "@/lib/handle-server-action-error"
 import { localStorageHandler } from "@/lib/utils"
-import { borrowLibraryItems } from "@/actions/library-item/borrow-library-items"
-import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import OverviewBorrowItem from "@/components/ui/overview-borrow-item"
 import {
@@ -30,8 +26,7 @@ import {
 const OverviewBorrowList = () => {
   const router = useRouter()
   const [borrowIdList, setBorrowIdList] = useState<string[]>([])
-  const [isPending, startTransition] = useTransition()
-  const locale = useLocale()
+
   const updateBorrows = () => {
     setBorrowIdList(localStorageHandler.getItem(LocalStorageKeys.BORROW))
   }
@@ -52,24 +47,24 @@ const OverviewBorrowList = () => {
     }
   }, [])
 
-  const handleSubmitBorrow = () => {
-    startTransition(async () => {
-      // updateBorrows()
-      const res = await borrowLibraryItems({
-        description: null,
-        libraryItemIds: borrowIdList.map((id) => Number(id)),
-      })
-      if (res.isSuccess) {
-        toast({
-          title: locale === "vi" ? "Thành công" : "Success",
-          description: res.data,
-          variant: "success",
-        })
-        return
-      }
-      handleServerActionError(res, locale)
-    })
-  }
+  // const handleSubmitBorrow = () => {
+  //   startTransition(async () => {
+  //     // updateBorrows()
+  //     const res = await borrowLibraryItems({
+  //       description: null,
+  //       libraryItemIds: borrowIdList.map((id) => Number(id)),
+  //     })
+  //     if (res.isSuccess) {
+  //       toast({
+  //         title: locale === "vi" ? "Thành công" : "Success",
+  //         description: res.data,
+  //         variant: "success",
+  //       })
+  //       return
+  //     }
+  //     handleServerActionError(res, locale)
+  //   })
+  // }
 
   return (
     <Sheet>

@@ -70,7 +70,7 @@ function EditShelfDialog({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent>
+      <DialogContent className="max-h-[80vh] max-w-3xl overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle className="mb-1">{t("Edit shelf")}</DialogTitle>
           <DialogDescription>
@@ -80,18 +80,11 @@ function EditShelfDialog({
               initShelfName={initShelfName || undefined}
               open={openSelector}
               setOpen={setOpenSelector}
+              libraryItemId={bookId}
             />
           </DialogDescription>
         </DialogHeader>
         <div className="flex items-center gap-4">
-          <Button
-            onClick={handleEditShelf}
-            disabled={pending || openSelector}
-            className="flex-1"
-          >
-            {t("Save")}
-            {pending && <Loader2 className="ml-2 size-4" />}
-          </Button>
           <Button
             disabled={pending || openSelector}
             className="flex-1"
@@ -101,6 +94,14 @@ function EditShelfDialog({
             variant="secondary"
           >
             {t("Cancel")}
+          </Button>
+          <Button
+            onClick={handleEditShelf}
+            disabled={pending || openSelector}
+            className="flex-1"
+          >
+            {t("Save")}
+            {pending && <Loader2 className="ml-2 size-4" />}
           </Button>
         </div>
       </DialogContent>

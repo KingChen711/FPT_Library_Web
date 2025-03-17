@@ -6,7 +6,7 @@ import { type UseFormReturn } from "react-hook-form"
 
 import { type Author, type Category } from "@/lib/types/models"
 import { cn, generateCutter } from "@/lib/utils"
-import { type TCreateTrackingManualSchema } from "@/lib/validations/trackings/create-tracking-manual"
+import { type TAddTrackingDetailSchema } from "@/lib/validations/trackings/add-tracking-detail"
 import useCategories from "@/hooks/categories/use-categories"
 import { Button } from "@/components/ui/button"
 import {
@@ -43,14 +43,13 @@ import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { CurrencyInput } from "@/components/form/currency-input"
 
+import CoverImageField from "./add-tracking-detail-cover-image-field"
 import AuthorsField from "./authors-field"
-import CoverImageField from "./create-tracking-manual-cover-image-field"
 import Marc21Dialog from "./marc21-dialog"
 
 type Props = {
-  form: UseFormReturn<TCreateTrackingManualSchema>
+  form: UseFormReturn<TAddTrackingDetailSchema>
   isPending: boolean
-  index: number
   category: Category | null
   setCategory: (val: Category | null) => void
   open: boolean
@@ -59,7 +58,6 @@ type Props = {
 
 function CatalogDialog({
   form,
-  index,
   isPending,
   category,
   setCategory,
@@ -71,61 +69,38 @@ function CatalogDialog({
 
   const [openComboboxCategory, setOpenComboboxCategory] = useState(false)
 
-  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
-
   const { data: categoryItems } = useCategories()
 
+  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
+
   const handleGenerateCutterNumber = (text: string) => {
-    form.setValue(
-      `warehouseTrackingDetails.${index}.libraryItem.cutterNumber`,
-      generateCutter(text)
-    )
+    form.setValue(`libraryItem.cutterNumber`, generateCutter(text))
   }
 
   const isRequireImage = !!category?.isAllowAITraining
 
-  const watchCategoryId = form.watch(
-    `warehouseTrackingDetails.${index}.libraryItem.categoryId`
-  )
+  const watchCategoryId = form.watch(`libraryItem.categoryId`)
 
-  const watchTitle = form.watch(
-    `warehouseTrackingDetails.${index}.libraryItem.title`
-  )
+  const watchTitle = form.watch(`libraryItem.title`)
 
   useEffect(() => {
-    if (!form.watch(`warehouseTrackingDetails.${index}.libraryItem`)) return
+    form.setValue(`itemName`, watchTitle || "")
+    form.clearErrors(`itemName`)
+  }, [watchTitle, form])
 
-    form.setValue(
-      `warehouseTrackingDetails.${index}.itemName`,
-      watchTitle || ""
-    )
-    form.clearErrors(`warehouseTrackingDetails.${index}.itemName`)
-  }, [watchTitle, form, index])
-
-  const watchIsbn = form.watch(
-    `warehouseTrackingDetails.${index}.libraryItem.isbn`
-  )
+  const watchIsbn = form.watch(`libraryItem.isbn`)
 
   useEffect(() => {
-    if (!form.watch(`warehouseTrackingDetails.${index}.libraryItem`)) return
+    form.setValue(`isbn`, watchIsbn || "")
+    form.clearErrors(`isbn`)
+  }, [watchIsbn, form])
 
-    form.setValue(`warehouseTrackingDetails.${index}.isbn`, watchIsbn || "")
-    form.clearErrors(`warehouseTrackingDetails.${index}.isbn`)
-  }, [watchIsbn, form, index])
-
-  const watchEstimatedPrice = form.watch(
-    `warehouseTrackingDetails.${index}.libraryItem.estimatedPrice`
-  )
+  const watchEstimatedPrice = form.watch(`libraryItem.estimatedPrice`)
 
   useEffect(() => {
-    if (!form.watch(`warehouseTrackingDetails.${index}.libraryItem`)) return
-
-    form.setValue(
-      `warehouseTrackingDetails.${index}.unitPrice`,
-      watchEstimatedPrice || 0
-    )
-    form.clearErrors(`warehouseTrackingDetails.${index}.unitPrice`)
-  }, [watchEstimatedPrice, form, index])
+    form.setValue(`unitPrice`, watchEstimatedPrice || 0)
+    form.clearErrors(`unitPrice`)
+  }, [watchEstimatedPrice, form])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -136,7 +111,7 @@ function CatalogDialog({
             <div className="space-y-6">
               <FormField
                 control={form.control}
-                name={`warehouseTrackingDetails.${index}.libraryItem.categoryId`}
+                name={`libraryItem.categoryId`}
                 render={({ field: _ }) => (
                   <FormItem className="flex flex-col">
                     <FormLabel>
@@ -196,19 +171,15 @@ function CatalogDialog({
                                   key={category.categoryId}
                                   onSelect={() => {
                                     form.setValue(
-                                      `warehouseTrackingDetails.${index}.categoryId`,
+                                      `categoryId`,
                                       category.categoryId
                                     )
-                                    form.clearErrors(
-                                      `warehouseTrackingDetails.${index}.categoryId`
-                                    )
+                                    form.clearErrors(`categoryId`)
                                     form.setValue(
-                                      `warehouseTrackingDetails.${index}.libraryItem.categoryId`,
+                                      `libraryItem.categoryId`,
                                       category.categoryId
                                     )
-                                    form.clearErrors(
-                                      `warehouseTrackingDetails.${index}.libraryItem.categoryId`
-                                    )
+                                    form.clearErrors(`libraryItem.categoryId`)
                                     setCategory(category)
                                     setOpenComboboxCategory(false)
                                   }}
@@ -246,17 +217,12 @@ function CatalogDialog({
                         {t("Item information")}
                       </div>
                       <div className="flex items-center gap-4">
-                        <Marc21Dialog form={form} index={index} />
+                        <Marc21Dialog form={form} />
                         <Button
                           variant="outline"
                           onClick={() => {
-                            form.setValue(
-                              `warehouseTrackingDetails.${index}.libraryItem`,
-                              undefined
-                            )
-                            form.clearErrors(
-                              `warehouseTrackingDetails.${index}.itemName`
-                            )
+                            form.setValue(`libraryItem`, undefined)
+                            form.clearErrors(`itemName`)
                           }}
                         >
                           {t("Delete catalog information")}
@@ -265,7 +231,7 @@ function CatalogDialog({
                     </div>
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.title`}
+                      name={`libraryItem.title`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -291,7 +257,7 @@ function CatalogDialog({
                   <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 xl:grid-cols-3">
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.subTitle`}
+                      name={`libraryItem.subTitle`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -311,7 +277,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.responsibility`}
+                      name={`libraryItem.responsibility`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -331,7 +297,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.edition`}
+                      name={`libraryItem.edition`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -351,7 +317,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.editionNumber`}
+                      name={`libraryItem.editionNumber`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -372,7 +338,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.language`}
+                      name={`libraryItem.language`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -392,7 +358,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.originLanguage`}
+                      name={`libraryItem.originLanguage`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -413,7 +379,7 @@ function CatalogDialog({
 
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.publicationPlace`}
+                      name={`libraryItem.publicationPlace`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -434,7 +400,7 @@ function CatalogDialog({
 
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.publicationYear`}
+                      name={`libraryItem.publicationYear`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -455,7 +421,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.publisher`}
+                      name={`libraryItem.publisher`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -475,7 +441,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.summary`}
+                      name={`libraryItem.summary`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -496,7 +462,7 @@ function CatalogDialog({
 
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.classificationNumber`}
+                      name={`libraryItem.classificationNumber`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -532,7 +498,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.cutterNumber`}
+                      name={`libraryItem.cutterNumber`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -578,7 +544,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.isbn`}
+                      name={`libraryItem.isbn`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -592,10 +558,7 @@ function CatalogDialog({
                               className="min-w-96 max-w-full"
                               onChange={(e) => {
                                 field.onChange(e)
-                                form.setValue(
-                                  `warehouseTrackingDetails.${index}.isbn`,
-                                  e.target.value
-                                )
+                                form.setValue(`isbn`, e.target.value)
                               }}
                             />
                           </FormControl>
@@ -605,7 +568,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.ean`}
+                      name={`libraryItem.ean`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -625,7 +588,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.estimatedPrice`}
+                      name={`libraryItem.estimatedPrice`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -640,10 +603,7 @@ function CatalogDialog({
                               className="min-w-96 max-w-full"
                               onChange={(num) => {
                                 field.onChange(num)
-                                form.setValue(
-                                  `warehouseTrackingDetails.${index}.unitPrice`,
-                                  num || 0
-                                )
+                                form.setValue(`unitPrice`, num || 0)
                               }}
                             />
                           </FormControl>
@@ -653,7 +613,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.pageCount`}
+                      name={`libraryItem.pageCount`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -674,7 +634,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.physicalDetails`}
+                      name={`libraryItem.physicalDetails`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -694,7 +654,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.dimensions`}
+                      name={`libraryItem.dimensions`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -714,7 +674,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.accompanyingMaterial`}
+                      name={`libraryItem.accompanyingMaterial`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -734,7 +694,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.genres`}
+                      name={`libraryItem.genres`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -754,7 +714,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.generalNote`}
+                      name={`libraryItem.generalNote`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -774,7 +734,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.bibliographicalNote`}
+                      name={`libraryItem.bibliographicalNote`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -794,7 +754,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.topicalTerms`}
+                      name={`libraryItem.topicalTerms`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -814,7 +774,7 @@ function CatalogDialog({
                     />
                     <FormField
                       control={form.control}
-                      name={`warehouseTrackingDetails.${index}.libraryItem.additionalAuthors`}
+                      name={`libraryItem.additionalAuthors`}
                       render={({ field }) => (
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
@@ -839,7 +799,6 @@ function CatalogDialog({
                     setSelectedAuthors={setSelectedAuthors}
                     form={form}
                     isPending={isPending}
-                    index={index}
                   />
 
                   <CoverImageField
@@ -847,7 +806,6 @@ function CatalogDialog({
                     selectedAuthors={selectedAuthors}
                     form={form}
                     isPending={isPending}
-                    index={index}
                   />
                 </>
               )}

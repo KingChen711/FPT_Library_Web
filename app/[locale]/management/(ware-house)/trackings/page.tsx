@@ -47,11 +47,6 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
   const { search, pageIndex, sort, pageSize, ...rest } =
     searchTrackingsSchema.parse(searchParams)
 
-  console.log({
-    origin: searchParams,
-    parsed: { search, pageIndex, sort, pageSize, ...rest },
-  })
-
   const {
     sources: trackings,
     totalActualItem,

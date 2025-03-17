@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import { EFilterOperator } from "@/constants/advance-search/common"
 import {
   advancedFilters,
   EAdvancedFilterType,
@@ -8,7 +9,6 @@ import {
 import { Check, ChevronsUpDown, Trash } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { EFilterOperator } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {

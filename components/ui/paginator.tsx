@@ -56,7 +56,7 @@ function Paginator({
       },
     })
 
-    router.push(newUrl)
+    router.push(newUrl, { scroll: false })
   }
 
   const handleChangeRowsPerPage = (pageSize: string) => {
@@ -76,7 +76,7 @@ function Paginator({
 
     setOpen(false)
 
-    router.push(newUrl)
+    router.push(newUrl, { scroll: false })
   }
 
   return (

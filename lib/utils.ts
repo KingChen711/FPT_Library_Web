@@ -73,6 +73,10 @@ export function formUrlQuery({
       query[key] = null
       return
     }
+    if (updates[key] === "") {
+      query[key] = null
+      return
+    }
     query[key] = updates[key]
   })
 

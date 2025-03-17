@@ -130,7 +130,9 @@
     "expectedReturnDate": "The expected return date must be greater than the entry date",
     "date": "Invalid date",
     "dateGteToday": "Required must be greater than or equal to current date",
-    "wrongCatalogInformation": "Cataloging information must be accurate, or do not catalog."
+    "wrongCatalogInformation": "Cataloging information must be accurate",
+    "lessThanRequire": "Less than required",
+    "greaterThanRequire": "More than required"
   },
   "Me": {
     "account": "Account",
@@ -963,6 +965,9 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Shelf name": "Shelf name",
+    "to": "to",
+    "Most appropriate shelves": "Most appropriate shelves",
     "Year": "Year",
     "Delete catalog information": "Delete catalog information",
     "Item information": "Item information",
@@ -1420,6 +1425,35 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Classification barcode description": "The classification barcode should be affixed to the spine of the book for easy searching on the shelf.",
+    "Individual barcode description": "The individual barcode must be affixed to the upper corner of the book cover.",
+    "How many barcode has glue": "How many books have you glued barcode?",
+    "Confirm has glued": "Confirm has glued",
+    "Glue barcode instructions": "Glue barcode instructions",
+    "Individual barcode": "Individual barcode (glue on book cover)",
+    "Classification barcode": "Classification barcode (glue on book spine)",
+    "Barcodes": "Barcodes",
+    "Glue barcode": "Glue barcode",
+    "From": "From",
+    "To": "To",
+    "Not found": "Not found",
+    "Select": "Select",
+    "itemTotal": "Item total",
+    "isbn": "ISBN",
+    "unitPrice": "Unit price",
+    "totalAmount": "Total amount",
+    "stockTransactionType": "Stock transaction type",
+    "categoryId": "Category",
+    "libraryItemCondition": "Condition",
+    "createdAt": "Created at",
+    "updatedAt": "Updated at",
+    "Add": "Thêm",
+    "Fast input": "Fast input",
+    "Excel content": "Excel content",
+    "Confirm": "Confirm",
+    "Add new description": "Add library item that do not exist in the system. Can be cataloged immediately if desired.",
+    "Additional description": "Add additional library items that already exist in the system",
+    "Add tracking detail": "Add tracking detail",
     "Total library item": "Total library item",
     "Total instance": "Total instance",
     "Total cataloged item": "Total cataloged item",
@@ -1529,6 +1563,7 @@
     "Select condition": "Select condition",
     "Select library item": "Select library item",
     "Catalog": "Catalog",
+    "Base on selected library item": "Base on selected library item",
     "No item found": "No item found"
   },
   "Badges": {
@@ -1611,6 +1646,15 @@
       "2": "Borrowed",
       "3": "Cancelled"
     },
+    "Operator": {
+      "0": "Includes",
+      "1": "Equals",
+      "2": "Not equals",
+      "3": "Less than",
+      "4": "Less than or equals",
+      "5": "Greater than",
+      "6": "Greater than or equals"
+    },
     "BorrowDigitalStatus": {
       "0": "Active",
       "1": "Expired",
@@ -1638,10 +1682,23 @@
     "Search": "Search",
     "Reset": "Reset",
     "All": "All",
+    "All2": "All",
+    "Unglued": "Unglued",
     "Special character": "Special character",
     "Match exact": "Match exact",
     "Enter search value": "Enter search value...",
-    "Keywords": "Keywords..."
+    "Keywords": "Keywords...",
+    "Item name": "Item name",
+    "Item total": "Item total",
+    "Total amount": "Total amount",
+    "Unit price": "Unit price",
+    "Stock transaction type": "Stock transaction type",
+    "Has glue barcode": "Has glue barcode",
+    "Glued": "Glued",
+    "Filters": "Filters",
+    "Basic search": "Basic search",
+    "Advanced search": "Advanced search",
+    "Quick search": "Quick search"
   },
   "AutocompleteLibraryItem": {
     "Available": "Available",

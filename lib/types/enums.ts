@@ -210,16 +210,6 @@ export const EFineTypeToIndex: Map<EFineType, number> = new Map([
   [EFineType.DAMAGE, 2],
 ])
 
-export enum EFilterOperator {
-  INCLUDES,
-  EQUALS,
-  NOT_EQUALS_TO,
-  LESS_THAN,
-  LESS_THAN_OR_EQUALS_TO,
-  GREATER_THAN,
-  GREATER_THAN_OR_EQUALS_TO,
-}
-
 export enum ESearchType {
   QUICK_SEARCH,
   BASIC_SEARCH,
