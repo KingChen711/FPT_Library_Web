@@ -23,6 +23,7 @@ type Props = {
 }
 
 export function BookQrDialog({ open, setOpen, onFileSelect }: Props) {
+  console.log("🚀 ~ BookQrDialog ~ onFileSelect:", onFileSelect)
   const t = useTranslations("BookPage")
   const tGeneralManagement = useTranslations("GeneralManagement")
 

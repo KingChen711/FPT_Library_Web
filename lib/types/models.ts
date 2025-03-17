@@ -236,6 +236,14 @@ export type Author = {
 
 export type PaymentMethod = { paymentMethodId: number; methodName: string }
 
+export type PaymentData = {
+  description: string
+  orderCode: string
+  qrCode: string
+  expiredAt: Date | null
+  paymentLinkId: string
+}
+
 export type LibraryItem = {
   libraryItemId: number
   title: string
@@ -268,14 +276,7 @@ export type LibraryItem = {
   shelfId: number | null
   status: number | null
   avgReviewedRate: number | null
-  category: {
-    categoryId: number
-    prefix: string | null
-    englishName: string | null
-    vietnameseName: string | null
-    description: string | null
-    isAllowAITraining: boolean
-  }
+  category: Category
   shelf: {
     shelfId: number | null
     sectionId: number | null
@@ -285,14 +286,8 @@ export type LibraryItem = {
     isDeleted: boolean
     section: unknown
   } | null
-  libraryItemInventory: {
-    libraryItemId: number
-    totalUnits: number
-    availableUnits: number
-    requestUnits: number
-    borrowedUnits: number
-    reservedUnits: number
-  }
+  libraryItemInventory: LibraryItemInventory
+  resources: BookResource[]
   authors: {
     authorId: number
     authorCode: string | null
@@ -306,18 +301,21 @@ export type LibraryItem = {
     updateDate: string | null
     isDeleted: boolean
   }[]
-  libraryItemInstances: {
-    libraryItemInstanceId: number
-    libraryItemId: number | null
-    barcode: string | null
-    status: EBookCopyStatus
-    createdAt: string | null
-    updatedAt: string | null
-    createdBy: string | null
-    updatedBy: string | null
-    isDeleted: boolean
-    libraryItemConditionHistories: unknown[]
-  }[]
+  libraryItemInstances: LibraryItemInstance[]
+  digitalBorrows: DigitalBorrow[]
+}
+
+export type DigitalBorrow = {
+  digitalBorrowId: number
+  resourceId: number
+  userId: string
+  registerDate: string
+  expiryDate: string
+  isExtended: boolean
+  extensionCount: number
+  status: number
+  user: null
+  digitalBorrowExtensionHistories: unknown[]
 }
 
 export type ReviewsLibraryItem = {
@@ -727,6 +725,11 @@ export type BorrowRequest = {
   totalRequestItem: number
 }
 
+export type BorrowItem = DigitalBorrow & {
+  libraryResource: BookResource
+  transactions: unknown[]
+}
+
 export type Transaction = {
   transactionId: number
   transactionCode: string
@@ -749,4 +752,8 @@ export type Transaction = {
   libraryCardPackageId: number | null
 
   paymentMethodId: number | null
+}
+
+export type DigitalTransaction = Transaction & {
+  qrCode: string
 }

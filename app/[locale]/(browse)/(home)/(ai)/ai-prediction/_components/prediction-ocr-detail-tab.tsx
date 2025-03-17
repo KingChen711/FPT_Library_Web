@@ -197,7 +197,7 @@ const PredictionOcrDetailTab = () => {
               </TableHeader>
               <TableBody>
                 {ocrDetail &&
-                  ocrDetail?.stringComparisions?.map((item, index) => (
+                  ocrDetail?.stringComparisions?.map((item) => (
                     <TableRow key={item?.propertyName}>
                       <TableCell className="sticky left-0 z-10 w-[200px] border bg-background text-center font-semibold capitalize">
                         {item.propertyName}

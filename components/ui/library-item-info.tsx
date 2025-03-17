@@ -1,13 +1,13 @@
 "use client"
 
 import {
+  useState,
   type ForwardRefExoticComponent,
   type JSX,
   type RefAttributes,
 } from "react"
 import Image from "next/image"
 import { LocalStorageKeys } from "@/constants"
-import { Link } from "@/i18n/routing"
 import {
   Book,
   BookMarked,
@@ -17,9 +17,7 @@ import {
   Calendar,
   Clock,
   Globe,
-  Headphones,
   Languages,
-  Loader2,
   MapPin,
   Plus,
   TagIcon as PriceTag,
@@ -29,16 +27,24 @@ import {
   Users,
   type LucideProps,
 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
-import { cn, localStorageHandler } from "@/lib/utils"
+import { type BookResource } from "@/lib/types/models"
+import {
+  cn,
+  formatPrice,
+  localStorageHandler,
+  splitCamelCase,
+} from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
-import BookBorrowDialog from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-borrow-dialog"
+import { toast } from "@/hooks/use-toast"
 import BookInstancesTab from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-tabs/book-instances-tab"
+import BorrowDigitalConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/borrow-digital-confirm"
 
 import { Badge } from "./badge"
 import { Button } from "./button"
 import { Separator } from "./separator"
+import { Skeleton } from "./skeleton"
 
 type Props = {
   id: string
@@ -54,10 +60,16 @@ const LibraryItemInfo = ({
   showInstances = true,
   showImage = false,
 }: Props): JSX.Element | null => {
+  const locale = useLocale()
   const t = useTranslations("BookPage")
   const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
+  const [selectedResource, setSelectedResource] = useState<BookResource>()
+  const [openDigitalBorrow, setOpenDigitalBorrow] = useState<boolean>(false)
 
-  if (isLoading) return <Loader2 className="animate-spin" />
+  if (isLoading) {
+    return <LibraryItemInfoLoading />
+  }
+
   if (!libraryItem) return null
 
   localStorageHandler.addRecentItem(
@@ -65,8 +77,34 @@ const LibraryItemInfo = ({
     libraryItem.libraryItemId.toString()
   )
 
+  const handleBorrow = (resourceId: number) => {
+    const isBorrowing = libraryItem.digitalBorrows.find(
+      (item) => item.resourceId === resourceId
+    )
+    if (isBorrowing) {
+      toast({
+        title: locale === "vi" ? "Bạn đang mượn" : "You are borrowing",
+        variant: "danger",
+      })
+      return
+    }
+    setSelectedResource(
+      libraryItem.resources.find((item) => item.resourceId === resourceId)
+    )
+    setOpenDigitalBorrow(true)
+  }
+
   return (
     <div className="space-y-4 text-foreground">
+      {selectedResource && (
+        <BorrowDigitalConfirm
+          libraryItemId={id}
+          selectedResource={selectedResource}
+          open={openDigitalBorrow}
+          setOpen={setOpenDigitalBorrow}
+        />
+      )}
+
       <div className="flex items-start gap-4">
         {showImage && (
           <Image
@@ -87,7 +125,7 @@ const LibraryItemInfo = ({
           <p className="text-muted-foreground">{libraryItem.subTitle}</p>
           {libraryItem.authors.length > 0 && (
             <div className="flex items-center gap-2 text-sm italic">
-              <User2 size={16} /> by &nbsp;
+              <User2 size={16} />
               {libraryItem.authors[0].fullName as string}
             </div>
           )}
@@ -109,12 +147,6 @@ const LibraryItemInfo = ({
         </section>
       </div>
 
-      <InfoItem
-        className="text-sm"
-        icon={Users}
-        label={t("fields.responsibility")}
-        value={libraryItem.responsibility}
-      />
       <section className="grid grid-cols-1 gap-4 text-sm md:grid-cols-2">
         <div className="space-y-4">
           <InfoItem
@@ -132,11 +164,7 @@ const LibraryItemInfo = ({
             label={t("fields.publicationYear")}
             value={libraryItem.publicationYear?.toString()}
           />
-          <InfoItem
-            icon={Printer}
-            label={t("fields.publisher")}
-            value={libraryItem.publisher}
-          />
+
           <InfoItem
             icon={MapPin}
             label={t("fields.publicationPlace")}
@@ -148,7 +176,7 @@ const LibraryItemInfo = ({
             <InfoItem
               icon={PriceTag}
               label={t("fields.estimatedPrice")}
-              value={`${libraryItem.estimatedPrice.toLocaleString()} VND`}
+              value={formatPrice(libraryItem.estimatedPrice)}
             />
           )}
           <InfoItem
@@ -157,9 +185,9 @@ const LibraryItemInfo = ({
             value={libraryItem.pageCount?.toString()}
           />
           <InfoItem
-            icon={BookOpen}
-            label={t("fields.genres")}
-            value={libraryItem.genres}
+            icon={Printer}
+            label={t("fields.publisher")}
+            value={libraryItem.publisher}
           />
           <InfoItem
             icon={MapPin}
@@ -168,6 +196,17 @@ const LibraryItemInfo = ({
           />
         </div>
       </section>
+      <InfoItem
+        className="text-sm"
+        icon={Users}
+        label={t("fields.responsibility")}
+        value={libraryItem.responsibility}
+      />
+      <InfoItem
+        icon={BookOpen}
+        label={t("fields.genres")}
+        value={libraryItem.genres}
+      />
       <Separator />
 
       {
@@ -175,7 +214,7 @@ const LibraryItemInfo = ({
           <h2 className="mb-4 text-lg font-semibold">
             {t("fields.inventory")}
           </h2>
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
             <InventoryItem
               icon={Box}
               label={t("fields.totalUnits")}
@@ -226,19 +265,23 @@ const LibraryItemInfo = ({
             >
               <Book /> <span>{t("borrow")}</span>
             </Button>
-            {/* <BookBorrowDialog /> */}
-            {[
-              { label: "audio", icon: Headphones, query: "audio=true" },
-              { label: "read now", icon: BookOpen, query: "audio=false" },
-            ].map(({ label, icon: Icon, query }) => (
-              <Button key={label} asChild variant="outline">
-                <Link
-                  href={`/books/${libraryItem.libraryItemId}/ebook?${query}`}
+
+            {libraryItem.resources &&
+              libraryItem.resources.length > 0 &&
+              libraryItem.resources.map((resource) => (
+                <Button
+                  asChild
+                  key={resource.resourceId}
+                  variant="outline"
+                  className="cursor-pointer"
+                  onClick={() => handleBorrow(resource.resourceId)}
                 >
-                  <Icon className="mr-1 size-4" /> {t(label)}
-                </Link>
-              </Button>
-            ))}
+                  <div className="flex items-center gap-2">
+                    <BookOpen className="mr-1 size-4" />
+                    {splitCamelCase(resource.resourceType)}
+                  </div>
+                </Button>
+              ))}
           </section>
         )}
       </section>
@@ -279,11 +322,61 @@ const InventoryItem = ({
   value: number
   color: string
 }) => (
-  <div className="flex items-center gap-2 rounded-md border p-2 shadow-sm">
-    <Icon className="size-4" color={color} />
-    <span className="text-xs font-medium">
-      {label} {value}
-    </span>
+  <div className="flex items-center justify-between gap-2 rounded-md border p-2 shadow-sm">
+    <div className="flex items-center gap-2">
+      <Icon className="size-4" color={color} />
+      <span className="text-xs font-medium">{label}</span>
+    </div>
+    <span>{value}</span>
+  </div>
+)
+
+const LibraryItemInfoLoading = () => (
+  <div className="space-y-4 text-foreground">
+    <div className="flex items-start gap-4">
+      <div className="h-[160px] w-full rounded-md bg-muted" />
+      <div className="flex-1 space-y-3">
+        <Skeleton className="h-4 w-1/2" />
+        <Skeleton className="h-6 w-3/4" />
+        <Skeleton className="h-4 w-1/3" />
+        <Skeleton className="h-4 w-1/2" />
+        <div className="flex gap-2">
+          <Skeleton className="h-5 w-[80px]" />
+          <Skeleton className="h-5 w-[100px]" />
+        </div>
+        <Skeleton className="h-4 w-1/4" />
+        <Skeleton className="h-20 w-full" />
+      </div>
+    </div>
+
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+      <div className="space-y-4">
+        {[...Array(5)].map((_, i) => (
+          <Skeleton key={i} className="h-4 w-full" />
+        ))}
+      </div>
+      <div className="space-y-4">
+        {[...Array(4)].map((_, i) => (
+          <Skeleton key={i} className="h-4 w-full" />
+        ))}
+      </div>
+    </div>
+
+    <Separator />
+
+    <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
+      {[...Array(5)].map((_, i) => (
+        <Skeleton key={i} className="h-10 w-full" />
+      ))}
+    </div>
+
+    <div className="space-y-2">
+      <Skeleton className="h-10 w-[200px]" />
+      <div className="flex gap-2">
+        <Skeleton className="h-10 w-[120px]" />
+        <Skeleton className="h-10 w-[160px]" />
+      </div>
+    </div>
   </div>
 )
 

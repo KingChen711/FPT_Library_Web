@@ -91,6 +91,7 @@ export enum ESystemRoutes {
   ACCOUNT_MANAGEMENT = "/me/account",
   PROFILE_MANAGEMENT = "/me/account/profile",
   LIBRARY_CARD_MANAGEMENT = "/me/account/library-card",
+  BORROW_MANAGEMENT = "/me/account/borrow",
   RETURN_MANAGEMENT = "/me/account/return",
   RESERVATION_MANAGEMENT = "/me/account/reservation",
   TRANSACTION_MANAGEMENT = "/me/account/transaction",
@@ -255,4 +256,10 @@ export enum EStockTransactionType {
   OUTDATED,
   TRANSFERRED,
   OTHER,
+}
+
+export enum EBorrowDigitalStatus {
+  Active,
+  Expired,
+  Cancelled,
 }

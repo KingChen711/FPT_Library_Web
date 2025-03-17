@@ -1,4 +1,5 @@
 import { Filter } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import {
   Popover,
@@ -11,26 +12,39 @@ import AdvancedSearchTab from "./advanced-search-tab"
 import BasicSearchTab from "./basic-search-tab"
 import QuickSearchTab from "./quick-search-tab"
 
+enum ESearchTabs {
+  QuickSearch = "quick-search",
+  BasicSearch = "basic-search",
+  AdvancedSearch = "advanced-search",
+}
+
 export function BookFilterTabs() {
+  const t = useTranslations("GeneralManagement")
   return (
     <Popover>
       <PopoverTrigger className="flex cursor-pointer items-center gap-2 px-8">
-        <Filter size={16} /> Filter
+        <Filter size={16} /> {t("filters")}
       </PopoverTrigger>
       <PopoverContent align="start" className="mt-2 w-[650px] space-y-4 p-4">
-        <Tabs defaultValue="quick-search" className="w-full">
+        <Tabs defaultValue={ESearchTabs.QuickSearch} className="w-full">
           <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="quick-search">Quick search</TabsTrigger>
-            <TabsTrigger value="basic-search">Basic search</TabsTrigger>
-            <TabsTrigger value="advanced-search">Advanced search</TabsTrigger>
+            <TabsTrigger value={ESearchTabs.QuickSearch}>
+              {t("quick search")}
+            </TabsTrigger>
+            <TabsTrigger value={ESearchTabs.BasicSearch}>
+              {t("basic search")}
+            </TabsTrigger>
+            <TabsTrigger value={ESearchTabs.AdvancedSearch}>
+              {t("advanced search")}
+            </TabsTrigger>
           </TabsList>
-          <TabsContent value="quick-search">
+          <TabsContent value={ESearchTabs.QuickSearch}>
             <QuickSearchTab />
           </TabsContent>
-          <TabsContent value="basic-search">
+          <TabsContent value={ESearchTabs.BasicSearch}>
             <BasicSearchTab />
           </TabsContent>
-          <TabsContent value="advanced-search">
+          <TabsContent value={ESearchTabs.AdvancedSearch}>
             <AdvancedSearchTab />
           </TabsContent>
         </Tabs>
