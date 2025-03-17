@@ -1,5 +1,4 @@
 import React from "react"
-import Image from "next/image"
 import { useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 import { type UseFormReturn } from "react-hook-form"
@@ -47,13 +46,6 @@ export const BarcodesContainer = React.forwardRef(
               <div key={l.barcode} className="border border-black p-1">
                 <div className="flex flex-col items-center justify-center border-4 border-black">
                   <div className="flex items-end justify-center gap-2 px-2 py-1 text-sm font-bold">
-                    <Image
-                      src="/images/logo.png"
-                      width={16}
-                      height={16}
-                      alt="logo"
-                      className="mb-[2px]"
-                    />
                     E-Library System
                   </div>
 

@@ -62,8 +62,6 @@ export function ChangesTable({
       ].includes(key)
   )
 
-  console.log({ oldValue, newValue })
-
   return (
     <div className="grid w-full">
       <div className="overflow-x-auto rounded-md">

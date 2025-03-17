@@ -84,8 +84,6 @@ async function BooksManagementPage({ searchParams }: Props) {
     ...rest
   } = searchBookEditionsSchema.parse(searchParams)
 
-  console.log({ searchParams })
-
   await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("BooksManagementPage")
   const locale = await getLocale()
@@ -136,7 +134,7 @@ async function BooksManagementPage({ searchParams }: Props) {
           <SelectedIdsIndicator />
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
-          <BooksActionsDropdown isTrained={isTrained} tab={tab} />
+          <BooksActionsDropdown tab={tab} />
           <ImportDialog />
           <ExportButton
             searchParams={{

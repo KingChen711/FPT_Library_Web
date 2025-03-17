@@ -1,4 +1,4 @@
-import { Bell } from "lucide-react"
+import { Bell, Brain } from "lucide-react"
 
 import { EFeature } from "@/lib/types/enums"
 import { Icons } from "@/components/ui/icons"
@@ -25,6 +25,14 @@ export const managementRoutes = [
     label: "Books",
     Icon: (props: { className?: string }) => {
       return <Icons.Book {...props} />
+    },
+  },
+  {
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
+    route: "/management/train-ai",
+    label: "Train AI",
+    Icon: (props: { className?: string }) => {
+      return <Brain {...props} />
     },
   },
   {
@@ -69,19 +77,33 @@ export const managementRoutes = [
   },
   {
     feature: EFeature.BORROW_MANAGEMENT,
-    route: "/management/borrows",
-    label: "Borrows",
+    label: "Borrow and Return",
     Icon: (props: { className?: string }) => {
-      return <Icons.BorrowBook {...props} />
+      return <Icons.BorrowReturn {...props} />
     },
-  },
-  {
-    feature: EFeature.BORROW_MANAGEMENT,
-    route: "/management/returns",
-    label: "Returns",
-    Icon: (props: { className?: string }) => {
-      return <Icons.Return {...props} />
-    },
+    subRoutes: [
+      {
+        route: "/management/borrows/requests",
+        label: "Borrow requests",
+        Icon: (props: { className?: string }) => {
+          return <Icons.BorrowRequest {...props} />
+        },
+      },
+      {
+        route: "/management/borrows",
+        label: "Borrows",
+        Icon: (props: { className?: string }) => {
+          return <Icons.BorrowBook {...props} />
+        },
+      },
+      {
+        route: "/management/returns",
+        label: "Returns",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Return {...props} />
+        },
+      },
+    ],
   },
   {
     feature: EFeature.LIBRARY_ITEM_MANAGEMENT,

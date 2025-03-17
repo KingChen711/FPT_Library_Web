@@ -40,6 +40,7 @@ type Props = {
   selectedCategory: Category | null
   show: boolean
   setSelectedCategory: (val: Category) => void
+  fromWarehouseMode?: boolean
 }
 
 const orderByOptions = [
@@ -52,6 +53,7 @@ function CategoryTab({
   selectedCategory,
   show,
   setSelectedCategory,
+  fromWarehouseMode = false,
 }: Props) {
   const [searchTerm, setSearchTerm] = useState("")
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
@@ -142,94 +144,99 @@ function CategoryTab({
 
             <FormMessage />
 
-            <div className="mb-4 flex items-center gap-4">
-              <div className="flex flex-1 items-center rounded-md border py-1 pl-3">
-                <Search className="size-5" />
-                <Input
-                  className="border-none outline-none focus-visible:ring-0"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  placeholder={t("Search")}
-                />
-              </div>
-              <Popover open={open} onOpenChange={setOpen}>
-                <PopoverTrigger asChild>
-                  <Button
-                    variant="outline"
-                    role="combobox"
-                    aria-expanded={open}
-                    className="h-[46px] w-[220px] justify-between"
-                  >
-                    {t("Sort by")}:{" "}
-                    {orderBy
-                      ? t(
-                          orderByOptions.find(
-                            (option) => option.value === orderBy
-                          )?.label
-                        )
-                      : "Select option..."}
-                    <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
-                  </Button>
-                </PopoverTrigger>
-                <PopoverContent className="w-[220px] p-0">
-                  <Command>
-                    <CommandList>
-                      <CommandGroup>
-                        {orderByOptions.map((option) => (
-                          <CommandItem
-                            key={option.value}
-                            value={option.value}
-                            onSelect={(currentValue) => {
-                              setOrderBy(currentValue)
-                              setOpen(false)
-                            }}
-                            className="cursor-pointer"
-                          >
-                            <Check
-                              className={cn(
-                                "mr-2 size-4",
-                                orderBy === option.value
-                                  ? "opacity-100"
-                                  : "opacity-0"
-                              )}
-                            />
-                            {t(option.label)}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </CommandList>
-                  </Command>
-                </PopoverContent>
-              </Popover>
-            </div>
-            <div className="grid grid-cols-12 gap-4">
-              {categories === undefined &&
-                [...Array(8)].map((_, index) => (
-                  <CategoryCardSkeleton key={index} />
-                ))}
-              {categories !== undefined && filteredCategories.length === 0 && (
-                <div className="col-span-12 flex w-full justify-center">
-                  <NoData />
+            {!fromWarehouseMode && (
+              <>
+                <div className="mb-4 flex items-center gap-4">
+                  <div className="flex flex-1 items-center rounded-md border py-1 pl-3">
+                    <Search className="size-5" />
+                    <Input
+                      className="border-none outline-none focus-visible:ring-0"
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      placeholder={t("Search")}
+                    />
+                  </div>
+                  <Popover open={open} onOpenChange={setOpen}>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={open}
+                        className="h-[46px] w-[220px] justify-between"
+                      >
+                        {t("Sort by")}:{" "}
+                        {orderBy
+                          ? t(
+                              orderByOptions.find(
+                                (option) => option.value === orderBy
+                              )?.label
+                            )
+                          : "Select option..."}
+                        <ChevronsUpDown className="ml-2 size-4 shrink-0 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-[220px] p-0">
+                      <Command>
+                        <CommandList>
+                          <CommandGroup>
+                            {orderByOptions.map((option) => (
+                              <CommandItem
+                                key={option.value}
+                                value={option.value}
+                                onSelect={(currentValue) => {
+                                  setOrderBy(currentValue)
+                                  setOpen(false)
+                                }}
+                                className="cursor-pointer"
+                              >
+                                <Check
+                                  className={cn(
+                                    "mr-2 size-4",
+                                    orderBy === option.value
+                                      ? "opacity-100"
+                                      : "opacity-0"
+                                  )}
+                                />
+                                {t(option.label)}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
                 </div>
-              )}
-              {filteredCategories.map((category) => (
-                <CategoryCard
-                  key={category.categoryId}
-                  category={category}
-                  disabledContext
-                  onClick={() => {
-                    field.onChange(category.categoryId)
-                    setSelectedCategory(category)
-                    form.clearErrors("categoryId")
-                  }}
-                  className={cn(
-                    "cursor-pointer hover:border hover:border-primary",
-                    selectedCategory?.categoryId === category.categoryId &&
-                      "pointer-events-auto cursor-default opacity-50 hover:border-border"
-                  )}
-                />
-              ))}
-            </div>
+                <div className="grid grid-cols-12 gap-4">
+                  {categories === undefined &&
+                    [...Array(8)].map((_, index) => (
+                      <CategoryCardSkeleton key={index} />
+                    ))}
+                  {categories !== undefined &&
+                    filteredCategories.length === 0 && (
+                      <div className="col-span-12 flex w-full justify-center">
+                        <NoData />
+                      </div>
+                    )}
+                  {filteredCategories.map((category) => (
+                    <CategoryCard
+                      key={category.categoryId}
+                      category={category}
+                      disabledContext
+                      onClick={() => {
+                        field.onChange(category.categoryId)
+                        setSelectedCategory(category)
+                        form.clearErrors("categoryId")
+                      }}
+                      className={cn(
+                        "cursor-pointer hover:border hover:border-primary",
+                        selectedCategory?.categoryId === category.categoryId &&
+                          "pointer-events-auto cursor-default opacity-50 hover:border-border"
+                      )}
+                    />
+                  ))}
+                </div>
+              </>
+            )}
           </FormItem>
         )}
       />

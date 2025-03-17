@@ -66,7 +66,6 @@ const getTrackingDetails = async (
   Object.keys(searchParams.v).forEach((k) => {
     //@ts-ignore
     const value = searchParams.v[k]
-    console.log({ value })
 
     if (value === "null,null") {
       //@ts-ignore

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useTransition } from "react"
+import { useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -110,10 +110,6 @@ function CreateResourceDialog({ bookId }: Props) {
       handleServerActionError(res, locale, form)
     })
   }
-
-  useEffect(() => {
-    console.log({ errors: form.formState.errors })
-  }, [form.formState.errors])
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>

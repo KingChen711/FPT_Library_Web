@@ -101,8 +101,6 @@ const ImportCategoriesDialog = () => {
         "duplicateHandle",
         EDuplicateHandleToIndex.get(values.duplicateHandle) + ""
       )
-      console.log(values)
-      console.log(formData)
 
       const res = await importCategories(formData)
       if (res?.isSuccess) {

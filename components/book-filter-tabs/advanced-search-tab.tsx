@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { type EFilterOperator } from "@/constants/advance-search/common"
 import {
@@ -77,10 +77,6 @@ const AdvancedSearchTab = () => {
   const selectedFields = bookQueries
     .map((item) => item.f)
     .filter(Boolean) as EAdvancedFilterBookField[]
-
-  useEffect(() => {
-    console.log({ bookQueries })
-  }, [bookQueries])
 
   const handleNewFov = () =>
     setBookQueries((prev) => [

@@ -56,8 +56,6 @@ const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
         )
 
         if (existGroupCode) {
-          console.log("existGroupCode")
-
           return prev.map((i) => {
             if (i.groupCode !== notification.groupCode.name) return i
             return {
@@ -66,8 +64,6 @@ const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
             }
           })
         }
-
-        console.log("not existGroupCode")
 
         return [
           {

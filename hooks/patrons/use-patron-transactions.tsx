@@ -4,11 +4,10 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import { type Transaction } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
-import { type TSearchBorrowRequestsSchema } from "@/lib/validations/patrons/cards/search-borrow-requests"
 
 function usePatronTransactions(
   userId: string,
-  searchParams: TSearchBorrowRequestsSchema
+  searchParams: { pageSize: string; pageIndex: number }
 ) {
   const { accessToken } = useAuth()
   return useQuery({

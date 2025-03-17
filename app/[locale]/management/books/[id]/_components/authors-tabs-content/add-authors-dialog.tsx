@@ -188,8 +188,6 @@ function AddAuthorsDialog({ bookId }: Props) {
                                     key={author.authorId}
                                     author={author}
                                     onClick={() => {
-                                      console.log("AuthorCard")
-
                                       setSelectedAuthors((prev) => {
                                         if (
                                           prev.find(

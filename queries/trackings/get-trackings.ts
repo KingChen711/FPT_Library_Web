@@ -24,8 +24,6 @@ const getTrackings = async (
 ): Promise<Pagination<Trackings>> => {
   const { getAccessToken } = auth()
   try {
-    console.log(27, searchParams)
-
     const formatDate = (d: Date) => format(d, "yyyy-MM-dd")
     const { data } = await http.get<Pagination<Trackings>>(
       `/api/management/warehouse-trackings`,

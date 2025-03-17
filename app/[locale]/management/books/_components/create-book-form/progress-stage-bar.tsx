@@ -22,7 +22,6 @@ const tabs: Tab[] = [
   { id: 2, title: "Catalog" },
   { id: 3, title: "Individual registration" },
   { id: 4, title: "Resources" },
-  { id: 5, title: "Train AI" },
 ] as const
 
 export function ProgressTabBar({

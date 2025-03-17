@@ -61,7 +61,7 @@ function InstructionCard({
   imageSrc,
 }: InstructionCardProps) {
   return (
-    <Card className="h-full">
+    <Card className="h-full rounded-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">{title}</CardTitle>
       </CardHeader>

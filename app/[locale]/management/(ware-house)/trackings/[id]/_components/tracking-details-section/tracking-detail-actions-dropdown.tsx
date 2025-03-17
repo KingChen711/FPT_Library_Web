@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
+import { Link } from "@/i18n/routing"
 import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
@@ -103,6 +104,17 @@ function TrackingDetailActionsDropdown({
             >
               <Eye className="size-4" />
               {t("View library item")}
+            </DropdownMenuItem>
+          )}
+
+          {!trackingDetail.libraryItemId && (
+            <DropdownMenuItem className="cursor-pointer" asChild>
+              <Link
+                href={`/management/books/create?trackingDetailId=${trackingDetail.trackingDetailId}`}
+              >
+                <Icons.Catalog className="size-4" />
+                {t("Catalog")}
+              </Link>
             </DropdownMenuItem>
           )}
 

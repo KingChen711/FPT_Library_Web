@@ -31,6 +31,7 @@ type Props = {
   selectedAuthors: Author[]
   setSelectedAuthors: React.Dispatch<SetStateAction<Author[]>>
   isRequireImage: boolean
+  fromWarehouseMode?: boolean
 }
 
 function CatalogTab({
@@ -40,12 +41,12 @@ function CatalogTab({
   selectedAuthors,
   setSelectedAuthors,
   isRequireImage,
+  fromWarehouseMode = false,
 }: Props) {
   const t = useTranslations("BooksManagementPage")
 
   const handleGenerateCutterNumber = (text: string) => {
     form.setValue("cutterNumber", generateCutter(text))
-    console.log(generateCutter(text))
   }
 
   if (!show) return null
@@ -354,12 +355,9 @@ function CatalogTab({
             <FormLabel className="flex items-center">ISBN (020a)</FormLabel>
 
             <FormControl>
-              <Input
-                {...field}
-                disabled={isPending}
-                className="min-w-96 max-w-full"
-              />
+              <Input {...field} disabled className="min-w-96 max-w-full" />
             </FormControl>
+            <FormDescription>{t("Base on tracking detail")}</FormDescription>
             <FormMessage />
           </FormItem>
         )}
@@ -599,7 +597,9 @@ function CatalogTab({
         isPending={isPending}
       />
 
-      <StockInDetailField form={form} isPending={isPending} />
+      {!fromWarehouseMode && (
+        <StockInDetailField form={form} isPending={isPending} />
+      )}
     </>
   )
 }
