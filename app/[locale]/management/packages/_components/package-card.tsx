@@ -67,7 +67,7 @@ const PackageCard = ({
               if (onClick) onClick()
             }}
             className={cn(
-              "col-span-12 h-full flex-1 rounded-md border bg-card shadow sm:col-span-6 lg:col-span-3",
+              "col-span-12 h-full flex-1 rounded-md border bg-card shadow sm:col-span-6 lg:col-span-4",
               onClick && "cursor-pointer",
               className
             )}

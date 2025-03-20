@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/table"
 import { TabsContent } from "@/components/ui/tabs"
 import BookCopyStatusBadge from "@/components/badges/book-copy-status-badge"
+import CirculatedBadge from "@/components/badges/circulated-badge"
 
 import AddCopiesDialog from "./add-copies-dialog"
 import CopiesActionsDropdown from "./copies-actions-dropdown"
@@ -125,6 +126,12 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
                     </div>
                   </TableHead>
 
+                  <TableHead>
+                    <div className="flex items-center justify-center text-nowrap font-bold">
+                      {t("Circulated")}
+                    </div>
+                  </TableHead>
+
                   <TableHead className="text-nowrap font-bold">
                     {t("Created at")}
                   </TableHead>
@@ -210,6 +217,12 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
                               : copy.status
                           }
                         />
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        <CirculatedBadge circulated={copy.isCirculated} />
                       </div>
                     </TableCell>
 

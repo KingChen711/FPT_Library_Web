@@ -49,10 +49,11 @@ function Marc21Dialog({ form, index }: Props) {
         `warehouseTrackingDetails.${index}.libraryItem.edition`,
         marc21Data.edition
       )
-      form.setValue(
-        `warehouseTrackingDetails.${index}.libraryItem.language`,
-        marc21Data.language
-      )
+      if (marc21Data.language)
+        form.setValue(
+          `warehouseTrackingDetails.${index}.libraryItem.language`,
+          marc21Data.language
+        )
       form.setValue(
         `warehouseTrackingDetails.${index}.libraryItem.originLanguage`,
         marc21Data.originLanguage
@@ -69,10 +70,11 @@ function Marc21Dialog({ form, index }: Props) {
         `warehouseTrackingDetails.${index}.libraryItem.publisher`,
         marc21Data.publisher
       )
-      form.setValue(
-        `warehouseTrackingDetails.${index}.libraryItem.publicationYear`,
-        marc21Data.publicationYear
-      )
+      if (marc21Data.publicationYear)
+        form.setValue(
+          `warehouseTrackingDetails.${index}.libraryItem.publicationYear`,
+          marc21Data.publicationYear
+        )
       form.setValue(
         `warehouseTrackingDetails.${index}.libraryItem.classificationNumber`,
         marc21Data.classificationNumber
@@ -93,18 +95,20 @@ function Marc21Dialog({ form, index }: Props) {
         `warehouseTrackingDetails.${index}.libraryItem.estimatedPrice`,
         marc21Data.estimatedPrice
       )
-      form.setValue(
-        `warehouseTrackingDetails.${index}.libraryItem.pageCount`,
-        marc21Data.pageCount
-      )
+      if (marc21Data.pageCount)
+        form.setValue(
+          `warehouseTrackingDetails.${index}.libraryItem.pageCount`,
+          marc21Data.pageCount
+        )
       form.setValue(
         `warehouseTrackingDetails.${index}.libraryItem.physicalDetails`,
         marc21Data.physicalDetails
       )
-      form.setValue(
-        `warehouseTrackingDetails.${index}.libraryItem.dimensions`,
-        marc21Data.dimensions
-      )
+      if (marc21Data.dimensions)
+        form.setValue(
+          `warehouseTrackingDetails.${index}.libraryItem.dimensions`,
+          marc21Data.dimensions
+        )
       form.setValue(
         `warehouseTrackingDetails.${index}.libraryItem.accompanyingMaterial`,
         marc21Data.accompanyingMaterial
