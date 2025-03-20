@@ -968,6 +968,7 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Circulated": "Circulated",
     "Library item": "Library item",
     "Group": "Group",
     "Untrained groups": "Untrained groups",
@@ -1598,6 +1599,7 @@
       "OutOfShelf": "Out of shelf",
       "Borrowed": "Borrowed",
       "Reserved": "Reserved",
+      "Lost": "Lost",
       "Deleted": "Deleted"
     },
     "Visibility": { "Public": "Public", "Private": "Private" },
@@ -1666,6 +1668,10 @@
       "0": "Active",
       "1": "Expired",
       "2": "Cancelled"
+    },
+    "Circulated": {
+      "Circulated": "Circulated",
+      "UnCirculated": "Un-circulated"
     }
   },
   "IsbnScanner": {

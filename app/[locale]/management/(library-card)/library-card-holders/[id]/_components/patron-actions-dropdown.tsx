@@ -2,6 +2,7 @@
 
 import React, { useState, useTransition } from "react"
 import Link from "next/link"
+import { useRouter } from "@/i18n/routing"
 import { type PatronDetail } from "@/queries/patrons/get-patron"
 import {
   ChevronDown,
@@ -38,6 +39,7 @@ type Props = {
 function PatronActionsDropdown({ patron }: Props) {
   const t = useTranslations("LibraryCardManagementPage")
   const locale = useLocale()
+  const router = useRouter()
   const [openDropdown, setOpenDropdown] = useState(false)
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
@@ -100,6 +102,7 @@ function PatronActionsDropdown({ patron }: Props) {
         })
         setOpenDropdown(false)
         setOpenDelete(false)
+        router.push("/management/library-card-holders")
         return
       }
       handleServerActionError(res, locale)

@@ -25,6 +25,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarSeparator,
+  SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar"
 
@@ -43,7 +44,9 @@ export function ManagementSidebar({
   const { isMobile, open } = useSidebar()
 
   return (
-    <Sidebar collapsible="icon" {...props}>
+    <Sidebar className="sticky" collapsible="icon" {...props}>
+      <SidebarTrigger className="absolute left-full top-8 z-50 -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground max-lg:hidden" />
+
       <SidebarHeader>
         <SidebarMenu>
           <SidebarLogoItem />

@@ -22,7 +22,7 @@ export async function deletePatron(
     )
 
     revalidatePath("/management/library-card-holders")
-    revalidatePath(`/management/library-card-holders/${userId}`)
+    // revalidatePath(`/management/library-card-holders/${userId}`)
 
     return {
       isSuccess: true,

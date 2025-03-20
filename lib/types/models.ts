@@ -441,6 +441,7 @@ export type LibraryItemInstance = {
   createdBy: string
   updatedBy: string | null
   isDeleted: boolean
+  isCirculated: boolean
   libraryItemConditionHistories: (ConditionHistory & { condition: Condition })[]
 }
 

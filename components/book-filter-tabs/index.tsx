@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/popover"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
+import { Button } from "../ui/button"
 import AdvancedSearchTab from "./advanced-search-tab"
 import BasicSearchTab from "./basic-search-tab"
 import QuickSearchTab from "./quick-search-tab"
@@ -22,8 +23,13 @@ export function BookFilterTabs() {
   const t = useTranslations("GeneralManagement")
   return (
     <Popover>
-      <PopoverTrigger className="flex cursor-pointer items-center gap-2 px-8">
-        <Filter size={16} /> {t("filters")}
+      <PopoverTrigger asChild>
+        <Button
+          className="shrink-0 !border-none !outline-none !ring-0"
+          variant="ghost"
+        >
+          <Filter size={16} /> {t("filters")}
+        </Button>
       </PopoverTrigger>
       <PopoverContent align="start" className="mt-2 w-[650px] space-y-4 p-4">
         <Tabs defaultValue={ESearchTabs.QuickSearch} className="w-full">

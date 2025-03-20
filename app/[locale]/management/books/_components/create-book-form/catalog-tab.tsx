@@ -164,6 +164,9 @@ function CatalogTab({
           <FormItem className="flex flex-1 flex-col items-start">
             <FormLabel className="flex items-center">
               {t("Language")} (041a)
+              <span className="ml-1 text-xl font-bold leading-none text-primary">
+                *
+              </span>
             </FormLabel>
 
             <FormControl>
@@ -224,6 +227,9 @@ function CatalogTab({
           <FormItem className="flex flex-1 flex-col items-start">
             <FormLabel className="flex items-center">
               {t("Publication year")} (260c)
+              <span className="ml-1 text-xl font-bold leading-none text-primary">
+                *
+              </span>
             </FormLabel>
 
             <FormControl>
@@ -408,6 +414,9 @@ function CatalogTab({
           <FormItem className="flex flex-1 flex-col items-start">
             <FormLabel className="flex items-center">
               {t("Page count")} (300a)
+              <span className="ml-1 text-xl font-bold leading-none text-primary">
+                *
+              </span>
             </FormLabel>
 
             <FormControl>
@@ -449,6 +458,9 @@ function CatalogTab({
           <FormItem className="flex flex-1 flex-col items-start">
             <FormLabel className="flex items-center">
               {t("Dimensions")} (300c)
+              <span className="ml-1 text-xl font-bold leading-none text-primary">
+                *
+              </span>
             </FormLabel>
 
             <FormControl>

@@ -52,7 +52,7 @@ function SupplierCard({ supplier }: Props) {
       />
       <ContextMenu>
         <ContextMenuTrigger asChild>
-          <Card className="col-span-12 h-full flex-1 rounded-md border bg-card shadow sm:col-span-6 lg:col-span-3">
+          <Card className="col-span-12 h-full flex-1 rounded-md border bg-card shadow sm:col-span-6 lg:col-span-4">
             <CardHeader className="pb-4">
               <div className="flex flex-col gap-2">
                 <CardTitle className="line-clamp-2 text-xl font-bold">
@@ -128,7 +128,7 @@ export default SupplierCard
 export const SupplierCardSkeleton = () => (
   <ContextMenu>
     <ContextMenuTrigger asChild>
-      <div className="col-span-12 h-full flex-1 rounded-md border bg-card p-4 shadow sm:col-span-6 lg:col-span-3">
+      <div className="col-span-12 h-full flex-1 rounded-md border bg-card p-4 shadow sm:col-span-6 lg:col-span-4">
         <div className="flex">
           <Skeleton className="h-4 w-24" />
         </div>

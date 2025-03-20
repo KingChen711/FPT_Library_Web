@@ -22,11 +22,13 @@ interface LibraryItemProps {
     libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
   }
   modal?: boolean
+  className?: string
 }
 
 export default function LibraryItemCard({
   libraryItem,
   modal,
+  className,
 }: LibraryItemProps) {
   const {
     accompanyingMaterial,
@@ -79,7 +81,8 @@ export default function LibraryItemCard({
     <Card
       className={cn(
         "relative w-full max-w-[calc(95vw-640px)] overflow-hidden rounded-md border-2",
-        modal && "max-w-[95vw]"
+        modal && "max-w-[95vw]",
+        className
       )}
     >
       <div className="flex flex-col sm:flex-row">

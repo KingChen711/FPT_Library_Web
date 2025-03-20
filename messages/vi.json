@@ -972,6 +972,7 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "Circulated": "Lưu hành",
     "Library item": "Tài liệu",
     "Group": "Nhóm",
     "Untrained groups": "Các nhóm chưa train",
@@ -1619,6 +1620,7 @@
       "OutOfShelf": "Trong kho",
       "Borrowed": "Đang mượn",
       "Reserved": "Đặt trước",
+      "Lost": "Mất",
       "Deleted": "Đã xóa"
     },
     "Visibility": { "Public": "Công khai", "Private": "Riêng tư" },
@@ -1687,6 +1689,10 @@
       "0": "Đang mượn",
       "1": "Hết hạn",
       "2": "Đã hủy"
+    },
+    "Circulated": {
+      "Circulated": "Đã lưu hành",
+      "UnCirculated": "Chưa lưu hành"
     }
   },
   "IsbnScanner": {
