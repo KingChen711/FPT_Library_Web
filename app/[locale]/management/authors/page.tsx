@@ -24,9 +24,9 @@ import AuthorActionDropdown from "./_components/author-action-dropdown"
 import AuthorBioDialog from "./_components/author-bio-dialog"
 import AuthorCheckbox from "./_components/author-checkbox"
 import AuthorExport from "./_components/author-export"
-import AuthorHeaderTab from "./_components/author-header-tab"
 import AuthorImportDialog from "./_components/author-import-dialog"
-import AuthorRangeControl from "./_components/author-range-control"
+import AuthorsActionsDropdown from "./_components/authors-actions-dropdown"
+import AuthorsTabs from "./_components/authors-tabs"
 import CreateAuthorDialog from "./_components/create-author-dialog"
 import FiltersAuthorsDialog from "./_components/filter-author-dialog"
 import SelectedAuthorIdsIndicator from "./_components/selected-author-ids-indicator"
@@ -43,15 +43,8 @@ type Props = {
 }
 
 async function AuthorsManagementPage({ searchParams }: Props) {
-  const {
-    search,
-    pageIndex,
-    sort,
-    pageSize,
-    isDeleted = "false",
-
-    ...rest
-  } = searchAuthorsSchema.parse(searchParams)
+  const { search, pageIndex, sort, pageSize, tab, ...rest } =
+    searchAuthorsSchema.parse(searchParams)
   await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("GeneralManagement")
 
@@ -60,7 +53,7 @@ async function AuthorsManagementPage({ searchParams }: Props) {
     pageIndex,
     sort,
     pageSize,
-    isDeleted,
+    tab,
     ...rest,
   })
   console.log("🚀 ~ AuthorsManagementPage ~ authorsData:", authorsData)
@@ -77,6 +70,7 @@ async function AuthorsManagementPage({ searchParams }: Props) {
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <h3 className="text-2xl font-semibold">{t("author management")}</h3>
+        <CreateAuthorDialog />
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -92,18 +86,16 @@ async function AuthorsManagementPage({ searchParams }: Props) {
           <SelectedAuthorIdsIndicator />
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
+          <AuthorsActionsDropdown tab={tab} />
           <AuthorExport />
           <AuthorImportDialog />
-          <CreateAuthorDialog />
         </div>
       </div>
 
       <div className="mt-4 grid w-full">
-        <div className="overflow-x-auto rounded-md border">
-          <div className="flex items-center justify-between p-4 pl-0">
-            <AuthorHeaderTab />
-            <AuthorRangeControl />
-          </div>
+        <div className="overflow-x-auto rounded-md border p-4">
+          <AuthorsTabs tab={tab} />
+
           <Table className="overflow-hidden">
             <TableHeader>
               <TableRow>

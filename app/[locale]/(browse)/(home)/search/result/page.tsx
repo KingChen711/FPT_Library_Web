@@ -2,6 +2,7 @@ import Image from "next/image"
 import { Link } from "@/i18n/routing"
 import NoData from "@/public/assets/images/no-data.png"
 import searchBooksAdvance from "@/queries/books/search-books-advance"
+// import searchBooksAdvance from "@/queries/books/search-books-advance"
 import {
   BookOpen,
   CheckCircle2,
@@ -40,8 +41,6 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import SheetSearchBook from "../_components/sheet-search-book"
-
 type Props = {
   searchParams: {
     [key: string]: string | string[] | undefined
@@ -60,9 +59,9 @@ const SearchResult = async ({ searchParams }: Props) => {
 
   return (
     <div className="container flex size-full flex-col gap-4 overflow-y-auto">
-      <div className="w-full space-y-2 px-12">
+      {/* <div className="w-full space-y-2 px-12">
         <SheetSearchBook />
-      </div>
+      </div> */}
 
       <section className="flex items-center justify-between px-12">
         <div className="flex">
@@ -204,17 +203,6 @@ const SearchResult = async ({ searchParams }: Props) => {
           </Card>
         </section>
       )}
-
-      <Separator />
-      <div className="flex h-5 items-center justify-center space-x-4 text-sm">
-        <div>Chính sách riêng tư</div>
-        <Separator orientation="vertical" />
-        <div>Điều khoản sử dụng</div>
-        <Separator orientation="vertical" />
-        <div>Đăng xuất theo tổ chức</div>
-        <Separator orientation="vertical" />
-        <div>Quản lí cookies của bạn</div>
-      </div>
     </div>
   )
 }
