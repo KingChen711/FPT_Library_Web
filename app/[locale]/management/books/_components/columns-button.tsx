@@ -9,7 +9,7 @@ import { formUrlQuery } from "@/lib/utils"
 import {
   Column,
   defaultColumns,
-} from "@/lib/validations/books/search-book-editions"
+} from "@/lib/validations/books/search-books-advance"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import {

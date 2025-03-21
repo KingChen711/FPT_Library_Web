@@ -26,9 +26,9 @@ type Props = {
 function BrowserLayout({ children }: Props) {
   return (
     <SidebarProvider defaultOpen>
-      <div className="relative">
+      <div className="relative w-full">
         <BrowseNavbar />
-        <div className="flex">
+        <div className="flex w-full">
           <BrowseSidebar />
           <section className="flex min-h-screen flex-1 flex-col p-6 pt-[88px]">
             <div className="mx-auto w-full max-w-[1620px]">{children}</div>

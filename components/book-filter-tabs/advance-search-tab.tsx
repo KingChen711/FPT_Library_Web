@@ -9,9 +9,9 @@ import {
   operators,
 } from "@/constants/advance-search/common"
 import {
-  EAdvancedFilterTrackingDetailField,
-  trackingDetailAdvancedFilters,
-} from "@/constants/advanced-filter-tracking-details"
+  EAdvancedFilterLibraryItemField,
+  libraryItemAdvancedFilters,
+} from "@/constants/advanced-filter-library-items"
 import { getLocalTimeZone } from "@internationalized/date"
 import { CommandList } from "cmdk"
 import { format } from "date-fns"
@@ -19,10 +19,9 @@ import { Check, ChevronsUpDown, Plus, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { v4 as uuidv4 } from "uuid"
 
-import { ESearchType, EStockTransactionType } from "@/lib/types/enums"
+import { EBookEditionStatus, ESearchType } from "@/lib/types/enums"
 import { cn, formUrlQuery } from "@/lib/utils"
 import useCategories from "@/hooks/categories/use-categories"
-import useConditions from "@/hooks/conditions/use-conditions"
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -53,29 +52,32 @@ import {
 import { type FOV } from "."
 
 type Props = {
-  trackingId: number
-  hasGlueBarcode: boolean | undefined
-  setHasGlueBarcode: (val: boolean | undefined) => void
-  setOpen: (val: boolean) => void
   queries: FOV[]
   setQueries: React.Dispatch<SetStateAction<FOV[]>>
+  management?: boolean
+  isTrained?: boolean | undefined
+  setIsTrained?: React.Dispatch<SetStateAction<boolean | undefined>>
+  canBorrow?: boolean | undefined
+  setCanBorrow?: React.Dispatch<SetStateAction<boolean | undefined>>
 }
 
 const AdvancedSearchTab = ({
-  hasGlueBarcode,
-  setHasGlueBarcode,
-  setOpen,
   queries,
   setQueries,
+  management = false,
+  canBorrow,
+  isTrained,
+  setCanBorrow,
+  setIsTrained,
 }: Props) => {
-  const t = useTranslations("TrackingsManagementPage")
+  const t = useTranslations("BooksManagementPage")
   const router = useRouter()
   const searchParams = useSearchParams()
   const selectedFields = useMemo(
     () =>
       queries
         .map((item) => item.f)
-        .filter(Boolean) as EAdvancedFilterTrackingDetailField[],
+        .filter(Boolean) as EAdvancedFilterLibraryItemField[],
     [queries]
   )
 
@@ -113,18 +115,23 @@ const AdvancedSearchTab = ({
         search: null,
         pageIndex: "1",
         searchType: ESearchType.ADVANCED_SEARCH.toString(),
-        hasGlueBarcode:
-          hasGlueBarcode === undefined ? null : hasGlueBarcode.toString(),
+        isTrained: isTrained === undefined ? null : isTrained.toString(),
+        canBorrow: canBorrow === undefined ? null : canBorrow.toString(),
       },
-    })
-    setOpen(false)
-    console.log(newUrl)
+    }).replace(
+      window.location.pathname,
+      management ? "/management/books" : `/search/result`
+    )
 
     router.push(newUrl, { scroll: false })
   }
 
   const handleAddFov = () => {
-    if (queries.length >= trackingDetailAdvancedFilters.length) return
+    if (
+      queries.length >=
+      libraryItemAdvancedFilters.length - (management ? 0 : 1)
+    )
+      return
     setQueries((prev) => [...prev, { id: uuidv4(), f: null, o: null, v: null }])
   }
 
@@ -132,6 +139,7 @@ const AdvancedSearchTab = ({
     <div className="space-y-4">
       {queries.map((fov) => (
         <AdvancedSearchItem
+          management={management}
           key={fov.id}
           fov={fov}
           onDeleteFov={() => handleDeleteFov(fov.id)}
@@ -150,7 +158,8 @@ const AdvancedSearchTab = ({
           <Button
             onClick={() => {
               setQueries([])
-              setHasGlueBarcode(undefined)
+              setIsTrained?.(undefined)
+              setCanBorrow?.(undefined)
             }}
             variant="outline"
             className="flex items-center gap-2"
@@ -174,9 +183,10 @@ export default AdvancedSearchTab
 
 type AdvancedSearchItemProps = {
   fov: FOV
-  selectedFields: EAdvancedFilterTrackingDetailField[]
+  selectedFields: EAdvancedFilterLibraryItemField[]
   onDeleteFov: () => void
   onChangeFov: (fov: FOV) => void
+  management: boolean
 }
 
 export function AdvancedSearchItem({
@@ -184,23 +194,22 @@ export function AdvancedSearchItem({
   selectedFields,
   onDeleteFov,
   onChangeFov,
+  management,
 }: AdvancedSearchItemProps) {
   const timezone = getLocalTimeZone()
-  const t = useTranslations("TrackingsManagementPage")
+  const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
   const tOperator = useTranslations("Badges.Operator")
-  const tStockTransactionType = useTranslations("Badges.StockTransactionType")
+  const tBookEditionStatus = useTranslations("Badges.BookEditionStatus")
 
-  const [openComboboxCondition, setOpenComboboxCondition] = useState(false)
   const [openComboboxCategory, setOpenComboboxCategory] = useState(false)
 
   const { data: categoryItems } = useCategories()
-  const { data: conditionItems } = useConditions()
 
   const type = useMemo(
     () =>
       fov.f
-        ? (trackingDetailAdvancedFilters.find((a) => a.field === fov.f)!.type ??
+        ? (libraryItemAdvancedFilters.find((a) => a.field === fov.f)!.type ??
           null)
         : null,
     [fov.f]
@@ -221,7 +230,7 @@ export function AdvancedSearchItem({
           >
             {fov.f
               ? t(
-                  trackingDetailAdvancedFilters.find((f) => f.field === fov.f)
+                  libraryItemAdvancedFilters.find((f) => f.field === fov.f)
                     ?.field
                 )
               : t("Select")}
@@ -231,36 +240,42 @@ export function AdvancedSearchItem({
         <PopoverContent className="w-[200px] shrink-0 p-0" side="bottom">
           <Command>
             <CommandInput placeholder={t("Search")} className="h-9" />
-            <CommandList>
+            <CommandList className="max-h-[50dvh] overflow-y-auto">
               <CommandEmpty>{t("Not found")}</CommandEmpty>
               <CommandGroup>
-                {trackingDetailAdvancedFilters.map((f) => {
-                  const hasSelected = selectedFields.includes(f.field)
-                  return (
-                    <CommandItem
-                      disabled={hasSelected}
-                      key={f.field}
-                      value={t(f.field)}
-                      onSelect={() => {
-                        onChangeFov({
-                          ...fov,
-                          f: f.field as EAdvancedFilterTrackingDetailField,
-                          o: defaultO[f.type],
-                          v: defaultV[f.type],
-                        })
-                        setOpenSelectF(false)
-                      }}
-                    >
-                      {t(f.field)}
-                      <Check
-                        className={cn(
-                          "ml-auto",
-                          hasSelected ? "opacity-100" : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
+                {libraryItemAdvancedFilters
+                  .filter((f) =>
+                    management
+                      ? true
+                      : f.field !== EAdvancedFilterLibraryItemField.STATUS
                   )
-                })}
+                  .map((f) => {
+                    const hasSelected = selectedFields.includes(f.field)
+                    return (
+                      <CommandItem
+                        disabled={hasSelected}
+                        key={f.field}
+                        value={t(f.field)}
+                        onSelect={() => {
+                          onChangeFov({
+                            ...fov,
+                            f: f.field,
+                            o: defaultO[f.type],
+                            v: defaultV[f.type],
+                          })
+                          setOpenSelectF(false)
+                        }}
+                      >
+                        {t(f.field)}
+                        <Check
+                          className={cn(
+                            "ml-auto",
+                            hasSelected ? "opacity-100" : "opacity-0"
+                          )}
+                        />
+                      </CommandItem>
+                    )
+                  })}
               </CommandGroup>
             </CommandList>
           </Command>
@@ -357,7 +372,7 @@ export function AdvancedSearchItem({
         </div>
       )}
 
-      {fov.f === EAdvancedFilterTrackingDetailField.STOCK_TRANSACTION_TYPE && (
+      {fov.f === EAdvancedFilterLibraryItemField.STATUS && (
         <Select
           value={fov.v?.toString()}
           onValueChange={(value) =>
@@ -372,81 +387,21 @@ export function AdvancedSearchItem({
           </SelectTrigger>
 
           <SelectContent>
-            {Object.values(EStockTransactionType)
+            {Object.values(EBookEditionStatus)
               .filter((e) => typeof e === "number")
-              .map((ope) => (
-                <SelectItem key={ope} value={ope.toString()}>
-                  {tStockTransactionType(ope.toString())}
-                </SelectItem>
-              ))}
+              .slice(0, -1)
+              .map((ope) => {
+                return (
+                  <SelectItem key={ope} value={ope.toString()}>
+                    {tBookEditionStatus(ope.toString())}
+                  </SelectItem>
+                )
+              })}
           </SelectContent>
         </Select>
       )}
 
-      {fov.f === EAdvancedFilterTrackingDetailField.CONDITION && (
-        <Popover
-          open={openComboboxCondition}
-          onOpenChange={setOpenComboboxCondition}
-        >
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              className={cn(
-                "w-40 justify-between",
-                !fov.v && "text-muted-foreground"
-              )}
-            >
-              {fov.v
-                ? locale === "vi"
-                  ? conditionItems?.find(
-                      (condition) => condition.conditionId === fov.v
-                    )?.vietnameseName
-                  : conditionItems?.find(
-                      (condition) => condition.conditionId === fov.v
-                    )?.englishName
-                : t("Select condition")}
-              <ChevronsUpDown className="opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent side="top" className="p-0">
-            <Command>
-              <CommandList>
-                <CommandGroup>
-                  {conditionItems?.map((condition) => (
-                    <CommandItem
-                      value={
-                        locale === "vi"
-                          ? condition.vietnameseName
-                          : condition.englishName
-                      }
-                      key={condition.conditionId}
-                      onSelect={() => {
-                        onChangeFov({ ...fov, v: condition.conditionId })
-                        setOpenComboboxCondition(false)
-                      }}
-                    >
-                      {locale === "vi"
-                        ? condition.vietnameseName
-                        : condition.englishName}
-                      <Check
-                        className={cn(
-                          "ml-auto",
-                          condition.conditionId === fov.v
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      )}
-
-      {fov.f === EAdvancedFilterTrackingDetailField.CATEGORY && (
+      {fov.f === EAdvancedFilterLibraryItemField.CATEGORY && (
         <Popover
           open={openComboboxCategory}
           onOpenChange={setOpenComboboxCategory}

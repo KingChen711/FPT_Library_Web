@@ -232,8 +232,8 @@
     "delete permanently": "Delete permanently",
     "row per page": "Row per page",
     "no data": "No data",
-    "all": "All",
-    "trash": "Trash",
+    "all": "Active",
+    "trash": "Deleted",
     "type": "type",
     "to confirm": "to confirm",
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
@@ -968,6 +968,10 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Filters": "Filters",
+    "Add": "Add",
+    "Search for articles, books, journals, and other content": "Search for articles, books, journals, and other content",
+    "Children section": "Children section",
     "Circulated": "Circulated",
     "Library item": "Library item",
     "Group": "Group",
@@ -1685,6 +1689,8 @@
     "Scan again": "Scan again"
   },
   "BasicSearchTab": {
+    "Search for articles, books, journals, and other content": "Search for articles, books, journals, and other content",
+    "Topical terms": "Topical terms",
     "Title": "Title",
     "Author": "Author",
     "ISBN": "ISBN",
@@ -1711,7 +1717,11 @@
     "Filters": "Filters",
     "Basic search": "Basic search",
     "Advanced search": "Advanced search",
-    "Quick search": "Quick search"
+    "Quick search": "Quick search",
+    "Can borrow": "Can borrow",
+    "Cannot borrow": "Cannot borrow",
+    "Trained": "Trained",
+    "Untrained": "Untrained"
   },
   "AutocompleteLibraryItem": {
     "Available": "Available",

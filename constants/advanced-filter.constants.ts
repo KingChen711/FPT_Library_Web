@@ -1,11 +1,6 @@
 import { EBookEditionStatus } from "@/lib/types/enums"
 
-export enum EAdvancedFilterType {
-  TEXT,
-  DATE,
-  ENUM,
-  NUMBER,
-}
+import { EAdvancedFilterType } from "./advance-search/common"
 
 export enum EAdvancedFilterBookField {
   TITLE = "title",
@@ -139,7 +134,7 @@ export const advancedFilters: TAdvancedFilters[] = [
 
   {
     field: EAdvancedFilterBookField.STATUS,
-    type: EAdvancedFilterType.ENUM,
+    type: EAdvancedFilterType.SELECT_DYNAMIC,
     selections: [
       {
         label: "Draft",

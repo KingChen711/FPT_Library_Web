@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form"
 import handleServerActionError from "@/lib/handle-server-action-error"
 import {
   EBookCopyConditionStatus,
-  EStockTransactionType,
+  // EStockTransactionType,
   type ETrackingType,
 } from "@/lib/types/enums"
 import { type Category, type TrackingDetail } from "@/lib/types/models"
@@ -70,7 +70,7 @@ type Props = {
 
 function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
   const t = useTranslations("TrackingsManagementPage")
-  const tStockType = useTranslations("Badges.StockTransactionType")
+
   const locale = useLocale()
 
   const [isPending, startTransition] = useTransition()
@@ -136,7 +136,7 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
                 onSubmit={form.handleSubmit(onSubmit)}
                 className="mt-4 space-y-6"
               >
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="stockTransactionType"
                   render={({ field }) => (
@@ -172,7 +172,7 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
+                /> */}
 
                 <FormField
                   control={form.control}

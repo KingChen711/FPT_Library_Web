@@ -4,11 +4,12 @@ import { useEffect, useState } from "react"
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"
 import { Link, usePathname, useRouter } from "@/i18n/routing"
-import { Book, Bot, Mic, QrCode, Search } from "lucide-react"
+import { Book, Bot, Filter, Mic, QrCode, Search } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useDebounce } from "use-debounce"
 
-import { cn } from "@/lib/utils"
+import { ESearchType } from "@/lib/types/enums"
+import { cn, formUrlQuery } from "@/lib/utils"
 import useAutoCompleteBooks from "@/hooks/books/use-auto-complete-books"
 import { Badge } from "@/components/ui/badge"
 import LibraryItemCard from "@/components/ui/book-card"
@@ -20,6 +21,11 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import { useSidebar } from "@/components/ui/sidebar"
 import {
   Tooltip,
@@ -28,7 +34,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 import VoiceToText from "@/components/ui/voice-to-text"
-import { BookFilterTabs } from "@/components/book-filter-tabs"
+import BookFilterTabs from "@/components/book-filter-tabs"
+
+// import { BookFilterTabs } from "@/components/book-filter-tabs"
 
 import BookPredictionDialog from "../(home)/_components/book-prediction-dialog"
 import BookRecommendDialog from "../(home)/_components/book-recommend-dialog"
@@ -55,7 +63,20 @@ function BrowseNavbar() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     e.stopPropagation()
-    router.push(`/search/result?search=${searchTerm}`)
+
+    const newUrl = formUrlQuery({
+      params: searchParams.toString(),
+      updates: {
+        pageIndex: "1",
+        searchType: ESearchType.QUICK_SEARCH.toString(),
+        isMatchExact: "false",
+        searchWithSpecial: "true",
+        searchWithKeyword: "quick",
+        search: searchTerm || "",
+      },
+    }).replace(window.location.pathname, "/search/result")
+
+    router.push(newUrl)
   }
 
   return (
@@ -65,16 +86,21 @@ function BrowseNavbar() {
         pathname === "/search" && "hidden",
         open ? "lg:pl-[279px]" : "lg:pl-[71px]"
       )}
-      // style={{
-      //   left: open ? "var(--sidebar-width, 0)" : "3rem",
-      //   width: open
-      //     ? "calc(100% - var(--sidebar-width, 0))"
-      //     : "calc(100% - var(--sidebar-width-icon, 0))",
-      // }}
     >
       <div className={cn("flex flex-1 items-center gap-4")}>
         <div className="relative flex w-full max-w-[560px] items-center rounded-md border">
-          <BookFilterTabs />
+          <Popover>
+            <PopoverTrigger asChild>
+              <Button variant="outline" className="relative">
+                <Filter className="size-4 shrink-0" />
+                {t("filter.title")}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent side="bottom" className="w-[650px]">
+              <BookFilterTabs />
+            </PopoverContent>
+          </Popover>
+
           <div className="relative flex-1 border-x">
             <Search
               size={16}

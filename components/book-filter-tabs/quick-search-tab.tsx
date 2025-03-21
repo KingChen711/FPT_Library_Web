@@ -1,11 +1,13 @@
-import { useState } from "react"
+import { type SetStateAction } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { Search } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { z } from "zod"
 
 import { ESearchType } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -14,43 +16,39 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-import { Button } from "../ui/button"
-import { Checkbox } from "../ui/checkbox"
-import { Input } from "../ui/input"
-import { Label } from "../ui/label"
+type Props = {
+  keywordValue: string
+  setKeywordValue: React.Dispatch<SetStateAction<string>>
+  searchWithSpecial: boolean
+  setSearchWithSpecial: React.Dispatch<SetStateAction<boolean>>
+  isMatchExact: boolean
+  setIsMatchExact: React.Dispatch<SetStateAction<boolean>>
+  searchValue: string
+  setSearchValue: React.Dispatch<SetStateAction<string>>
+}
 
-const QuickSearchTab = () => {
+const QuickSearchTab = ({
+  isMatchExact,
+  keywordValue,
+  searchValue,
+  searchWithSpecial,
+  setIsMatchExact,
+  setKeywordValue,
+  setSearchValue,
+  setSearchWithSpecial,
+}: Props) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const t = useTranslations("BasicSearchTab")
 
-  const [keywordValue, setKeywordValue] = useState(() =>
-    z
-      .enum(["0", "1", "2", "3", "4", "5", "6", "quick"])
-      .catch("quick")
-      .parse(searchParams.get("searchWithKeyword"))
-  )
-  const [searchWithSpecial, setSearchWithSpecial] = useState(
-    () =>
-      z
-        .enum(["true", "false"])
-        .catch("true")
-        .parse(searchParams.get("searchWithSpecial")) === "true"
-  )
-  const [isMatchExact, setIsMatchExact] = useState(
-    () =>
-      z
-        .enum(["true", "false"])
-        .catch("false")
-        .parse(searchParams.get("isMatchExact")) === "true"
-  )
-  const [searchValue, setSearchValue] = useState(
-    searchParams.get("search") || ""
-  )
+  const resetFields = () => {
+    setIsMatchExact(false)
+    setKeywordValue("quick")
+    setSearchValue("")
+    setSearchWithSpecial(true)
+  }
 
   const handleApply = () => {
-    if (!searchValue) return
-
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
@@ -59,9 +57,9 @@ const QuickSearchTab = () => {
         isMatchExact: isMatchExact ? "true" : "false",
         searchWithSpecial: searchWithSpecial ? "true" : "false",
         searchWithKeyword: keywordValue === "quick" ? null : keywordValue,
-        search: searchValue,
+        search: searchValue || "",
       },
-    }).replace(window.location.pathname, "/books")
+    }).replace(window.location.pathname, "/search/result")
 
     router.push(newUrl)
   }
@@ -94,7 +92,7 @@ const QuickSearchTab = () => {
           value={searchValue}
           onChange={(e) => setSearchValue(e.target.value)}
           className="flex-1"
-          placeholder="Enter search value"
+          placeholder={`${t("Search")}...`}
         />
       </div>
       <div className="flex justify-between">
@@ -126,12 +124,22 @@ const QuickSearchTab = () => {
             </Label>
           </div>
         </div>
-        <Button
-          onClick={handleApply}
-          className="flex flex-nowrap items-center gap-2"
-        >
-          <Search /> Search
-        </Button>
+        <div className="flex items-center justify-end gap-4">
+          <Button
+            variant="outline"
+            className="flex flex-nowrap items-center gap-2"
+            onClick={resetFields}
+          >
+            {t("Reset")}
+          </Button>
+
+          <Button
+            onClick={handleApply}
+            className="flex flex-nowrap items-center gap-2"
+          >
+            {t("Search")}
+          </Button>
+        </div>
       </div>
     </div>
   )
