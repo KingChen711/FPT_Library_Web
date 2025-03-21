@@ -1,4 +1,7 @@
+"use client"
+
 import React from "react"
+import { useTranslations } from "next-intl"
 
 import { type DetectedValue } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
@@ -11,11 +14,11 @@ type Props = {
 }
 
 const PredictionOcrDetectStatistic = ({ detectValues }: Props) => {
+  const t = useTranslations("AI")
   return (
     <section className="flex flex-1 flex-col gap-2">
-      {/* Example list content */}
       <h1 className="mt-2 text-center text-xl font-semibold text-primary">
-        Statistic
+        {t("statistic")}
       </h1>
       {detectValues?.map((value, index) => (
         <div key={index} className="flex items-center justify-between gap-2">

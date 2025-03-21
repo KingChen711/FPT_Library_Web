@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, type ReactNode } from "react"
+import { useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
 
@@ -9,6 +10,7 @@ type Props = {
 }
 
 export const StyledReadMore = ({ children }: Props) => {
+  const t = useTranslations("GeneralManagement")
   const [showMore, setShowMore] = useState(false)
   const [isOverflowing, setIsOverflowing] = useState(false)
   const contentRef = useRef<HTMLDivElement>(null)
@@ -38,7 +40,7 @@ export const StyledReadMore = ({ children }: Props) => {
           onClick={() => setShowMore(!showMore)}
           className="mt-2 cursor-pointer text-sm underline hover:opacity-90"
         >
-          {showMore ? "Show less" : "Show more"}
+          {showMore ? t("show less") : t("show more")}
         </div>
       )}
     </div>

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useTransition } from "react"
+import { useEffect, useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -81,8 +81,16 @@ function MutateConditionDialog({
     },
   })
 
+  useEffect(() => {
+    if (type === "update" && condition) {
+      form.reset({
+        englishName: condition.englishName,
+        vietnameseName: condition.vietnameseName,
+      })
+    }
+  }, [condition, type, form])
+
   const onSubmit = async (values: TMutateConditionSchema) => {
-    console.log("🚀 ~ onSubmit ~ values:", values)
     startTransition(async () => {
       const res =
         type === "create"

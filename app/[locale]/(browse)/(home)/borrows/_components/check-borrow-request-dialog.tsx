@@ -1,16 +1,19 @@
 "use client"
 
-import React, { useTransition } from "react"
+import { useEffect, useTransition } from "react"
 import { userBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
 import { Loader2 } from "lucide-react"
+import { useLocale } from "next-intl"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
+import { createBorrowRequest } from "@/actions/borrows/create-borrow-request"
 import useCheckAvailableBorrowRequest from "@/hooks/borrow/use-check-available-borrow-request"
+import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -24,27 +27,49 @@ type Props = {
 }
 
 const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
+  const locale = useLocale()
   const { selectedIds } = userBorrowRequestStore()
   const [isPending, startTransition] = useTransition()
 
-  const { data, isLoading } = useCheckAvailableBorrowRequest(selectedIds)
+  const { data, isLoading, refetch } =
+    useCheckAvailableBorrowRequest(selectedIds)
 
   const isAllowedBorrowRequest: boolean =
     data?.alreadyBorrowedItems.length === 0 &&
     data?.alreadyRequestedItems.length === 0 &&
     data?.alreadyReservedItems.length === 0
-  console.log(
-    "🚀 ~ CheckBorrowRequestDialog ~ isAllowedBorrowRequest:",
-    isAllowedBorrowRequest
-  )
+
+  useEffect(() => {
+    refetch()
+  }, [open, refetch])
 
   if (isLoading) {
     return <Loader2 className="size-6 animate-spin" />
   }
 
   console.log("🚀 ~ CheckBorrowRequestDialog ~ data:", data)
+
   const handleSubmit = () => {
-    startTransition(() => {})
+    startTransition(async () => {
+      const res = await createBorrowRequest({
+        description: "",
+        libraryItemIds:
+          data?.allowToBorrowItems?.map((id) => id.libraryItemId) || [],
+        reservationItemIds:
+          data?.allowToReserveItems?.map((id) => id.libraryItemId) || [],
+      })
+      console.log("🚀 ~ startTransition ~ res:", res)
+      if (res.isSuccess) {
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data,
+          variant: "success",
+        })
+        setOpen(false)
+        return
+      }
+      handleServerActionError(res, locale)
+    })
   }
 
   return (
@@ -52,19 +77,16 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
       <DialogContent className="sm:max-w-4xl">
         <DialogHeader>
           <DialogTitle>Your borrow list?</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
-          </DialogDescription>
         </DialogHeader>
 
-        {isAllowedBorrowRequest && (
+        {/* Succeed to request borrow */}
+        {isAllowedBorrowRequest && data && (
           <div className="flex flex-col gap-2">
             <div>
               <h1 className="font-semibold">Allow to borrow</h1>
               {data?.allowToBorrowItems.map((item) => (
                 <div key={item.libraryItemId}>
-                  <p>{item.title}</p>
+                  <p>✅ {item.title}</p>
                 </div>
               ))}
             </div>
@@ -73,44 +95,72 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
               <h1 className="font-semibold">Allow to reserve</h1>
               {data?.allowToReserveItems.map((item) => (
                 <div key={item.libraryItemId}>
-                  <p>{item.title}</p>
+                  <p>✅ {item.title}</p>
                 </div>
               ))}
             </div>
           </div>
         )}
 
-        {!isAllowedBorrowRequest && selectedIds.length > 0 && (
+        {/* Fail to request borrow */}
+        {!isAllowedBorrowRequest && data && selectedIds.length > 0 && (
           <div className="flex flex-col gap-2">
-            <div>
-              <h1 className="font-semibold">Already Requested Items</h1>
-              {data?.alreadyRequestedItems.map((item) => (
-                <NotAllowBorrowCard
-                  key={item.libraryItemId}
-                  libraryItem={item}
-                />
-              ))}
-            </div>
+            {data?.alreadyRequestedItems?.length > 0 && (
+              <div>
+                <h1 className="font-semibold">
+                  Already Requested Items ({data?.alreadyRequestedItems.length}
+                  &nbsp; items)
+                </h1>
+                <p className="text-danger">
+                  Bạn đang chờ duyệt {data?.alreadyRequestedItems.length} quyển
+                  này. Vui lòng xóa khỏi danh sách mượn.
+                </p>
+                {data?.alreadyRequestedItems.map((item) => (
+                  <NotAllowBorrowCard
+                    key={item.libraryItemId}
+                    libraryItem={item}
+                  />
+                ))}
+              </div>
+            )}
 
-            <div>
-              <h1 className="font-semibold">Already Borrow Items</h1>
-              {data?.alreadyBorrowedItems.map((item) => (
-                <NotAllowBorrowCard
-                  key={item.libraryItemId}
-                  libraryItem={item}
-                />
-              ))}
-            </div>
+            {data?.alreadyBorrowedItems.length > 0 && (
+              <div>
+                <h1 className="font-semibold">
+                  Already Borrow Items ({data?.alreadyBorrowedItems.length}
+                  &nbsp;items)
+                </h1>
+                <p className="text-danger">
+                  Bạn đang mượn {data?.alreadyBorrowedItems.length} quyển này.
+                  Vui lòng xóa khỏi danh sách mượn.
+                </p>
+                {data?.alreadyBorrowedItems.map((item) => (
+                  <NotAllowBorrowCard
+                    key={item.libraryItemId}
+                    libraryItem={item}
+                  />
+                ))}
+              </div>
+            )}
 
-            <div>
-              <h1 className="font-semibold">Already Reserve Items</h1>
-              {data?.alreadyReservedItems.map((item) => (
-                <NotAllowBorrowCard
-                  key={item.libraryItemId}
-                  libraryItem={item}
-                />
-              ))}
-            </div>
+            {data?.alreadyReservedItems.length > 0 && (
+              <div>
+                <h1 className="font-semibold">
+                  Already Reserve Items ({data?.alreadyReservedItems.length}
+                  &nbsp; items)
+                </h1>
+                <p className="text-danger">
+                  Bạn đã đặt {data?.alreadyReservedItems.length} quyển này. Vui
+                  lòng xóa khỏi danh sách mượn.
+                </p>
+                {data?.alreadyReservedItems.map((item) => (
+                  <NotAllowBorrowCard
+                    key={item.libraryItemId}
+                    libraryItem={item}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -121,6 +171,7 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
             disabled={!isAllowedBorrowRequest || isPending}
           >
             Submit
+            {isPending && <Loader2 className="ml-1 size-4 animate-spin" />}
           </Button>
         </DialogFooter>
       </DialogContent>

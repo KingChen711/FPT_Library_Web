@@ -5,7 +5,7 @@ type Props = {
 }
 
 const NotAllowBorrowCard = ({ libraryItem }: Props) => {
-  return <div>{libraryItem?.title}</div>
+  return <div>❌ {libraryItem?.title}</div>
 }
 
 export default NotAllowBorrowCard

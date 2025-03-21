@@ -6,7 +6,7 @@ import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { type HubConnection } from "@microsoft/signalr"
 import { BadgeCheck, BookOpen, Clock, DollarSign, Loader2 } from "lucide-react"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -69,16 +69,15 @@ const BorrowDigitalConfirm = ({
   selectedResource,
   libraryItemId,
 }: Props) => {
+  const t = useTranslations("BookPage")
   const locale = useLocale()
   const router = useRouter()
+  const [connection, setConnection] = useState<HubConnection | null>(null)
   const { user, isLoadingAuth, accessToken } = useAuth()
   const { data: paymentMethods, isLoading: isLoadingPaymentMethods } =
     useGetPaymentMethods()
   const [isPending, startTransition] = useTransition()
-  const [connection, setConnection] = useState<HubConnection | null>(null)
-
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
-
   const [paymentStates, setPaymentStates] = useState({
     leftTime: 0,
     canNavigate: false,
@@ -97,6 +96,7 @@ const BorrowDigitalConfirm = ({
     },
   })
 
+  // Connect to SignalR
   useEffect(() => {
     if (!accessToken) return
     const connection = connectToSignalR("payment-hub", accessToken)
@@ -158,7 +158,12 @@ const BorrowDigitalConfirm = ({
       setPaymentStates((prev) => ({ ...prev, navigateTime }))
     }, 1000)
     return () => clearInterval(timer)
-  }, [paymentStates.canNavigate, paymentStates.navigateTime, router])
+  }, [
+    libraryItemId,
+    paymentStates.canNavigate,
+    paymentStates.navigateTime,
+    router,
+  ])
 
   if (isLoadingAuth || isLoadingPaymentMethods) {
     return (
@@ -168,9 +173,12 @@ const BorrowDigitalConfirm = ({
     )
   }
 
+  if (!user || !paymentMethods) {
+    return null
+  }
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     startTransition(async () => {
-      console.log("🚀 ~ onSubmit ~ data:", values)
       const transaction = await createDigitalBorrowTransaction(
         {
           libraryCardPackageId: null,
@@ -217,35 +225,36 @@ const BorrowDigitalConfirm = ({
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg font-semibold sm:text-xl">
-            <BadgeCheck className="size-5 text-green-600" />
-            Xác nhận mượn tài liệu?
+            <BadgeCheck className="size-5 text-success" />
+            {t("borrow resource confirm")}
           </DialogTitle>
         </DialogHeader>
 
         {!paymentData && (
           <div>
-            <div className="mt-4 space-y-3 text-sm text-gray-700">
+            <div className="mt-4 space-y-3 text-sm">
               <div className="flex items-center gap-2">
-                <BookOpen className="size-4 text-gray-500" />
-                <span className="font-medium">Tiêu đề:</span>{" "}
+                <BookOpen className="size-4" />
+                <span className="font-medium">{t("title")}:</span>&nbsp;
                 {selectedResource.resourceTitle}
               </div>
               <div className="flex items-center gap-2">
-                <BookOpen className="size-4 text-gray-500" />
-                <span className="font-medium">Loại tài liệu:</span>{" "}
+                <BookOpen className="size-4" />
+                <span className="font-medium">{t("resource type")}:</span>&nbsp;
                 {selectedResource.resourceType}
               </div>
               <div className="flex items-center gap-2">
-                <DollarSign className="size-4 text-gray-500" />
-                <span className="font-medium">Giá mượn:</span>{" "}
-                <span className="font-semibold text-green-600">
+                <DollarSign className="size-4" />
+                <span className="font-medium">{t("borrow price")}:</span>&nbsp;
+                <span className="font-semibold text-success">
                   {formatPrice(selectedResource.borrowPrice!)}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <Clock className="size-4 text-gray-500" />
-                <span className="font-medium">Thời hạn:</span>{" "}
-                {selectedResource.defaultBorrowDurationDays} ngày
+                <Clock className="size-4" />
+                <span className="font-medium">{t("borrow duration")}:</span>
+                &nbsp;
+                {selectedResource.defaultBorrowDurationDays} {t("days")}
               </div>
             </div>
 
@@ -259,7 +268,7 @@ const BorrowDigitalConfirm = ({
                   name="paymentMethodId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Payment Method</FormLabel>
+                      <FormLabel>{t("payment methods")}</FormLabel>
                       <FormControl>
                         <Select
                           defaultValue={field.value.toString()}
@@ -292,7 +301,7 @@ const BorrowDigitalConfirm = ({
                     <div className="mt-6 flex justify-end gap-3">
                       <DialogClose asChild>
                         <Button variant="ghost" disabled={isPending}>
-                          Huỷ
+                          {t("cancel")}
                         </Button>
                       </DialogClose>
                       <Button
@@ -301,7 +310,7 @@ const BorrowDigitalConfirm = ({
                         disabled={isPending}
                         className="flex items-center gap-2"
                       >
-                        Borrow now
+                        {t("borrow")}
                         {isPending && <Loader2 className="animate-spin" />}
                       </Button>
                     </div>
@@ -311,7 +320,7 @@ const BorrowDigitalConfirm = ({
                         href={"/me/account/library-card"}
                         className="mt-6 underline"
                       >
-                        Please register your library card to borrow the resource
+                        {t("warning 1")}
                       </Link>
                     </Button>
                   ))}
@@ -331,7 +340,7 @@ const BorrowDigitalConfirm = ({
         {!user && (
           <Button asChild variant={"link"}>
             <Link href={"/login"} className="mt-6 underline">
-              Please login to borrow the resource
+              {t("warning 2")}
             </Link>
           </Button>
         )}

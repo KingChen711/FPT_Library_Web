@@ -27,19 +27,12 @@ import {
   Users,
   type LucideProps,
 } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { useTranslations } from "next-intl"
 
-import { type BookResource } from "@/lib/types/models"
-import {
-  cn,
-  formatPrice,
-  localStorageHandler,
-  splitCamelCase,
-} from "@/lib/utils"
+import { cn, formatPrice, localStorageHandler } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
-import { toast } from "@/hooks/use-toast"
+import BookDigitalListDialog from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-digital-list-dialog"
 import BookInstancesTab from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-tabs/book-instances-tab"
-import BorrowDigitalConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/borrow-digital-confirm"
 
 import { Badge } from "./badge"
 import { Button } from "./button"
@@ -60,11 +53,9 @@ const LibraryItemInfo = ({
   showInstances = true,
   showImage = false,
 }: Props): JSX.Element | null => {
-  const locale = useLocale()
   const t = useTranslations("BookPage")
   const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
-  const [selectedResource, setSelectedResource] = useState<BookResource>()
-  const [openDigitalBorrow, setOpenDigitalBorrow] = useState<boolean>(false)
+  const [openDigitalList, setOpenDigitalList] = useState<boolean>(false)
 
   if (isLoading) {
     return <LibraryItemInfoLoading />
@@ -77,33 +68,14 @@ const LibraryItemInfo = ({
     libraryItem.libraryItemId.toString()
   )
 
-  const handleBorrow = (resourceId: number) => {
-    const isBorrowing = libraryItem.digitalBorrows.find(
-      (item) => item.resourceId === resourceId
-    )
-    if (isBorrowing) {
-      toast({
-        title: locale === "vi" ? "Bạn đang mượn" : "You are borrowing",
-        variant: "danger",
-      })
-      return
-    }
-    setSelectedResource(
-      libraryItem.resources.find((item) => item.resourceId === resourceId)
-    )
-    setOpenDigitalBorrow(true)
-  }
-
   return (
     <div className="space-y-4 text-foreground">
-      {selectedResource && (
-        <BorrowDigitalConfirm
-          libraryItemId={id}
-          selectedResource={selectedResource}
-          open={openDigitalBorrow}
-          setOpen={setOpenDigitalBorrow}
-        />
-      )}
+      <BookDigitalListDialog
+        libraryItemId={id}
+        resources={libraryItem.resources}
+        open={openDigitalList}
+        setOpen={setOpenDigitalList}
+      />
 
       <div className="flex items-start gap-4">
         {showImage && (
@@ -266,22 +238,19 @@ const LibraryItemInfo = ({
               <Book /> <span>{t("borrow")}</span>
             </Button>
 
-            {libraryItem.resources &&
-              libraryItem.resources.length > 0 &&
-              libraryItem.resources.map((resource) => (
-                <Button
-                  asChild
-                  key={resource.resourceId}
-                  variant="outline"
-                  className="cursor-pointer"
-                  onClick={() => handleBorrow(resource.resourceId)}
-                >
-                  <div className="flex items-center gap-2">
-                    <BookOpen className="mr-1 size-4" />
-                    {splitCamelCase(resource.resourceType)}
-                  </div>
-                </Button>
-              ))}
+            {libraryItem.resources && libraryItem.resources.length > 0 && (
+              <Button
+                asChild
+                variant="outline"
+                className="cursor-pointer"
+                onClick={() => setOpenDigitalList(true)}
+              >
+                <div className="flex items-center gap-2">
+                  <BookOpen className="mr-1 size-4" />
+                  {t("digital list")}
+                </div>
+              </Button>
+            )}
           </section>
         )}
       </section>
