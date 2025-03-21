@@ -3,14 +3,7 @@ import { Link } from "@/i18n/routing"
 import NoData from "@/public/assets/images/no-data.png"
 import searchBooksAdvance from "@/queries/books/search-books-advance"
 // import searchBooksAdvance from "@/queries/books/search-books-advance"
-import {
-  BookOpen,
-  CheckCircle2,
-  ChevronDown,
-  EllipsisVertical,
-  Headphones,
-  ScrollText,
-} from "lucide-react"
+import { BookOpen, CheckCircle2, ChevronDown, Headphones } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
 import { type LibraryItem } from "@/lib/types/models"
@@ -21,16 +14,8 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import {
   Table,
@@ -66,45 +51,6 @@ const SearchResult = async ({ searchParams }: Props) => {
       <section className="flex items-center justify-between px-12">
         <div className="flex">
           <p className="font-semibold">Kết quả: {data?.totalActualResponse}</p>
-        </div>
-        <div className="flex items-center gap-2">
-          <Select>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Hiển thị" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">Hiển thị: 10</SelectItem>
-              <SelectItem value="20">Hiển thị: 20</SelectItem>
-              <SelectItem value="50">Hiển thị: 50</SelectItem>
-              <SelectItem value="100">Hiển thị: 100</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <Select>
-            <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Mức độ liên quan" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="10">Hiển thị: 10</SelectItem>
-              <SelectItem value="20">Hiển thị: 20</SelectItem>
-              <SelectItem value="50">Hiển thị: 50</SelectItem>
-              <SelectItem value="100">Hiển thị: 100</SelectItem>
-            </SelectContent>
-          </Select>
-
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size={"icon"}>
-                <EllipsisVertical />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuSeparator />
-              <DropdownMenuItem>
-                <ScrollText /> Lịch sử tìm kiếm
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
         </div>
       </section>
 

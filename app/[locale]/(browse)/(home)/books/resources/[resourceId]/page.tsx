@@ -26,6 +26,7 @@ import "react-pdf/dist/Page/TextLayer.css"
 
 import { WorkerPdfVersion } from "@/constants/library-version"
 import { useAuth } from "@/contexts/auth-provider"
+import { useRouter } from "@/i18n/routing"
 import {
   ArrowLeft,
   Expand,
@@ -47,22 +48,25 @@ type Props = {
   }
   searchParams: {
     resourceType: string
+    isPreview: string
   }
 }
-export default function EBookPage({ params }: Props) {
+export default function DigitalResourcePage({ params, searchParams }: Props) {
   const baseWidth = 400
   const baseHeight = 600
-  const [numPages, setNumPages] = useState<number>(0)
+  const { accessToken } = useAuth()
+  const flipBookRef = useRef(null)
+  const router = useRouter()
   const [isClient, setIsClient] = useState(false)
+  const [numPages, setNumPages] = useState<number>(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(100)
-  const flipBookRef = useRef(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const tGeneralManagement = useTranslations("GeneralManagement")
-  const { accessToken } = useAuth()
   const { data, isLoading } = useGetOwnResource(+params.resourceId)
   const [pdfLink, setPdfLink] = useState<string>("")
   const [openPrintShotWarning, setOpenPrintShotWarning] = useState(false)
+  const t = useTranslations("BookPage")
+  const tGeneralManagement = useTranslations("GeneralManagement")
 
   useEffect(() => {
     setIsClient(true)
@@ -104,15 +108,26 @@ export default function EBookPage({ params }: Props) {
   useEffect(() => {
     async function fetchPdf() {
       try {
-        const { data } = await http.get<Blob>(
-          `/api/library-items/resource/${params.resourceId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            responseType: "blob",
-          }
-        )
+        const { data } =
+          searchParams.isPreview === "true"
+            ? await http.get<Blob>(
+                `/api/library-item/resource/${params.resourceId}/preview`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                  responseType: "blob",
+                }
+              )
+            : await http.get<Blob>(
+                `/api/library-items/resource/${params.resourceId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                  responseType: "blob",
+                }
+              )
 
         if (data.size === 0) {
           toast({
@@ -135,7 +150,12 @@ export default function EBookPage({ params }: Props) {
     }
 
     fetchPdf()
-  }, [accessToken, params.resourceId, tGeneralManagement])
+  }, [
+    accessToken,
+    params.resourceId,
+    searchParams.isPreview,
+    tGeneralManagement,
+  ])
 
   if (isLoading) {
     return <Loader2 className="size-6 animate-spin" />
@@ -180,19 +200,13 @@ export default function EBookPage({ params }: Props) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-danger">
-              Screen Capturing is Prohibited
+              {t("screen capturing is prohibited")}
             </DialogTitle>
-            <DialogDescription>
-              For security and copyright protection, screen capturing is not
-              allowed. Repeated violations may result in permanent account
-              suspension and data removal.
-            </DialogDescription>
+            <DialogDescription>{t("screen capturing desc")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant={"destructive"}>
-                Got it, I won’t do it again
-              </Button>
+              <Button variant={"destructive"}>{t("prohibited promise")}</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
@@ -203,8 +217,12 @@ export default function EBookPage({ params }: Props) {
         className="flex h-full flex-col overflow-hidden bg-secondary"
       >
         <div className="flex w-full items-center justify-between bg-zinc p-4 text-primary-foreground">
-          <Button variant={"ghost"} className="text-primary-foreground">
-            <ArrowLeft /> Back
+          <Button
+            variant={"ghost"}
+            onClick={() => router.back()}
+            className="text-primary-foreground"
+          >
+            <ArrowLeft /> {t("back")}
           </Button>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 rounded-full bg-zinc/50 p-2 text-primary-foreground">
@@ -246,7 +264,9 @@ export default function EBookPage({ params }: Props) {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{isFullscreen ? "Exit full screen" : "Full screen"}</p>
+                  <p>
+                    {isFullscreen ? t("exit full screen") : t("full screen")}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

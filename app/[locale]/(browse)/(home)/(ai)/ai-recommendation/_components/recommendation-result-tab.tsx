@@ -101,7 +101,7 @@ const RecommendationResultTab = () => {
         <section className="flex flex-1 flex-col items-center justify-center gap-4">
           <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
             <Label className="text-lg font-semibold">Match percentage</Label>
-            <p className="text-lg">{ocrDetail?.matchPercentage}%</p>
+            <p className="text-lg">{ocrDetail?.matchPercentage.toFixed(2)}%</p>
           </div>
         </section>
 
@@ -205,7 +205,7 @@ const RecommendationResultTab = () => {
                               variant={"success"}
                               className="flex w-[180px] flex-nowrap justify-center text-nowrap"
                             >
-                              Recommend recommended
+                              Recommended
                             </Badge>
                           )}
                           <p className="text-sm font-semibold">

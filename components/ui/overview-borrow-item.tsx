@@ -5,6 +5,7 @@ import Image from "next/image"
 import { LocalStorageKeys } from "@/constants"
 import { Link } from "@/i18n/routing"
 import { Trash2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { localStorageHandler } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
@@ -29,12 +30,13 @@ type Props = {
 }
 
 const OverviewBorrowItem = ({ libraryItemId }: Props) => {
+  const t = useTranslations("BookPage")
   const { data: item, isLoading } = useLibraryItemDetail(libraryItemId)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
 
   const handleRemoveBorrow = () => {
     localStorageHandler.setItem(LocalStorageKeys.BORROW, libraryItemId)
-    setShowDeleteConfirm(false)
+    setOpenDelete(false)
   }
 
   if (isLoading) {
@@ -62,6 +64,30 @@ const OverviewBorrowItem = ({ libraryItemId }: Props) => {
 
   return (
     <>
+      <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t("remove from borrow list")}?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("are you sure you want to remove")}
+              <span className="mx-2 font-semibold">
+                &quot;{item.title}&quot;
+              </span>
+              {t("from your favorites? This action cannot be undone")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleRemoveBorrow}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t("delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Card className="group overflow-hidden transition-all duration-200 hover:bg-accent/10">
         <div className="flex items-start gap-4 p-4">
           <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded-md shadow-sm transition-all duration-200 group-hover:shadow-md">
@@ -98,35 +124,13 @@ const OverviewBorrowItem = ({ libraryItemId }: Props) => {
             variant="ghost"
             size="icon"
             className="size-8 rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-            onClick={() => setShowDeleteConfirm(true)}
+            onClick={() => setOpenDelete(true)}
             aria-label="Remove from favorites"
           >
             <Trash2 size={16} />
           </Button>
         </div>
       </Card>
-
-      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Remove from borrow list?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to remove
-              <span className="font-semibold">&quot;{item.title}&quot;</span>
-              from your favorites? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleRemoveBorrow}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Remove
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   )
 }

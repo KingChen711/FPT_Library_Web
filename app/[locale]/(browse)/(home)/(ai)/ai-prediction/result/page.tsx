@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/routing"
 import { RefreshCcw } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -17,6 +18,8 @@ enum EPredictionTab {
 }
 
 const AiPredictionResult = () => {
+  const t = useTranslations("AI")
+
   return (
     <div>
       <Tabs defaultValue={EPredictionTab.RESULT} className="w-full">
@@ -26,34 +29,33 @@ const AiPredictionResult = () => {
               className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               value={EPredictionTab.RESULT}
             >
-              Result
+              {t("result")}
             </TabsTrigger>
             <TabsTrigger
               className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               value={EPredictionTab.OCR_DETAIL}
             >
-              OCR detail
+              {t("ocr detail")}
             </TabsTrigger>
             <TabsTrigger
               className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               value={EPredictionTab.OCR_DETECTS}
             >
-              OCR detects
+              {t("ocr detects")}
             </TabsTrigger>
             <TabsTrigger
               className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               value={EPredictionTab.OCR_MATCHES}
             >
-              Other matches
+              {t("other matches")}
             </TabsTrigger>
           </TabsList>
           <div className="flex gap-2">
             <Button asChild>
               <Link href="/ai-prediction">
-                <RefreshCcw /> Try again
+                <RefreshCcw /> {t("try again")}
               </Link>
             </Button>
-            <Button variant={"outline"}>Reset</Button>
           </div>
         </div>
 

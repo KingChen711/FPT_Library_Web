@@ -2,6 +2,7 @@
 
 import Image from "next/image"
 import { Loader2, MapPin } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { type OcrResult } from "@/lib/types/models"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
@@ -18,6 +19,7 @@ type Props = {
 }
 
 const PredictLibraryItemInfo = ({ libraryItemId, ocrResult }: Props) => {
+  const t = useTranslations("AI")
   const { data: libraryItem, isLoading } = useLibraryItemDetail(libraryItemId)
 
   if (isLoading) {
@@ -41,7 +43,7 @@ const PredictLibraryItemInfo = ({ libraryItemId, ocrResult }: Props) => {
           </div>
 
           <Button className="flex w-full items-center gap-2">
-            <MapPin size={24} /> Locate
+            <MapPin size={24} /> {t("locate")}
           </Button>
         </section>
 
@@ -57,18 +59,22 @@ const PredictLibraryItemInfo = ({ libraryItemId, ocrResult }: Props) => {
 
       <section className="w-1/4 space-y-2 rounded-lg border p-4 shadow-lg">
         <h1 className="text-center text-2xl font-semibold text-primary">
-          AI-detected
+          {t("AI-predict")}
         </h1>
         {ocrResult?.fieldPointsWithThreshole?.map((field) => (
           <div key={field.name} className="flex items-center gap-2">
-            <div className="w-1/4 font-semibold capitalize">{field.name}:</div>
-            <div className="w-1/4 text-center">{field.matchedPoint}%</div>
+            <div className="w-1/4 font-semibold capitalize">
+              {t(field.name.toLowerCase())}:
+            </div>
+            <div className="w-1/4 text-center">
+              {field.matchedPoint.toFixed(2)}%
+            </div>
             <div className="flex-1">
               <Badge
                 variant={field.isPassed ? "success" : "danger"}
                 className="flex w-full items-center justify-center text-center"
               >
-                {field.isPassed ? "Passed" : "Not passed"}
+                {field.isPassed ? t("passed") : t("not passed")}
               </Badge>
             </div>
           </div>
@@ -78,19 +84,19 @@ const PredictLibraryItemInfo = ({ libraryItemId, ocrResult }: Props) => {
 
         <div className="space-y-2">
           <div className="flex">
-            <div className="flex-1">Threshold value:</div>
+            <div className="flex-1">{t("threshold value")}:</div>
             <div className="flex-1 text-center font-semibold text-danger">
-              {ocrResult?.confidenceThreshold}%
+              {ocrResult?.confidenceThreshold.toFixed(2)}%
             </div>
           </div>
           <div className="flex">
-            <div className="flex-1">Match overall:</div>
+            <div className="flex-1">{t("match overall")}:</div>
             <div className="flex-1 text-center font-semibold text-danger">
-              {ocrResult?.totalPoint}%
+              {ocrResult?.totalPoint.toFixed(2)}%
             </div>
           </div>
           <div className="flex">
-            <div className="flex-1">Status:</div>
+            <div className="flex-1">{t("status")}:</div>
             <div className="flex-1">
               <Badge
                 variant={
@@ -101,8 +107,8 @@ const PredictLibraryItemInfo = ({ libraryItemId, ocrResult }: Props) => {
                 className="flex w-full flex-nowrap items-center justify-center text-nowrap text-center"
               >
                 {ocrResult?.totalPoint > ocrResult?.confidenceThreshold
-                  ? "Passed"
-                  : "Not passed"}
+                  ? t("passed")
+                  : t("not passed")}
               </Badge>
             </div>
           </div>

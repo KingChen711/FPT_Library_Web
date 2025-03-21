@@ -34,31 +34,35 @@ const FilterDateEmployee = ({ form, label, name }: Props) => {
         <FormItem>
           <FormLabel>{t(label)}</FormLabel>
           <div className="flex w-full flex-wrap items-center justify-between gap-3">
-            <DateTimePicker
-              value={createCalendarDate(field.value[0])}
-              onChange={(date) =>
-                field.onChange([
-                  date ? date.toDate(timezone) : null,
-                  field.value[1],
-                ])
-              }
-              disabled={(date) =>
-                !!field.value[1] && date > new Date(field.value[1])
-              }
-            />
-            <div>---</div>
-            <DateTimePicker
-              value={createCalendarDate(field.value[1])}
-              onChange={(date) =>
-                field.onChange([
-                  field.value[0],
-                  date ? date.toDate(timezone) : null,
-                ])
-              }
-              disabled={(date) =>
-                !!field.value[0] && date < new Date(field.value[0])
-              }
-            />
+            <div className="flex-1">
+              <DateTimePicker
+                value={createCalendarDate(field.value[0])}
+                onChange={(date) =>
+                  field.onChange([
+                    date ? date.toDate(timezone) : null,
+                    field.value[1],
+                  ])
+                }
+                disabled={(date) =>
+                  !!field.value[1] && date > new Date(field.value[1])
+                }
+              />
+            </div>
+            <div>-</div>
+            <div className="flex-1">
+              <DateTimePicker
+                value={createCalendarDate(field.value[1])}
+                onChange={(date) =>
+                  field.onChange([
+                    field.value[0],
+                    date ? date.toDate(timezone) : null,
+                  ])
+                }
+                disabled={(date) =>
+                  !!field.value[0] && date < new Date(field.value[0])
+                }
+              />
+            </div>
           </div>
           <FormMessage />
         </FormItem>

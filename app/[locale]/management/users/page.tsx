@@ -10,6 +10,7 @@ import { EFeature } from "@/lib/types/enums"
 import { formatDate } from "@/lib/utils"
 import { searchUsersSchema } from "@/lib/validations/user/search-user"
 import { Badge } from "@/components/ui/badge"
+import { Icons } from "@/components/ui/icons"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -179,15 +180,17 @@ async function UsersManagementPage({ searchParams }: Props) {
                       <p>{user.email}</p>
                     </div>
                   </TableCell>
-                  <TableCell>{user.firstName}</TableCell>
-                  <TableCell>{user.lastName}</TableCell>
+                  <TableCell className="text-nowrap">
+                    {user.firstName}
+                  </TableCell>
+                  <TableCell className="text-nowrap">{user.lastName}</TableCell>
                   <TableCell>{user.userCode}</TableCell>
                   <TableCell>{user.phone}</TableCell>
                   <TableCell>{user?.dob && formatDate(user?.dob)}</TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center text-nowrap">
-                      {user.gender === "Male" && <User color="blue" />}
-                      {user.gender === "Female" && <User color="red" />}
+                      {user.gender === "Male" && <Icons.Male />}
+                      {user.gender === "Female" && <Icons.Female />}
                       {user.gender === "Other" && <User color="gray" />}
                     </div>
                   </TableCell>

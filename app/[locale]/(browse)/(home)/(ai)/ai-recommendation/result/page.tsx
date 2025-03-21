@@ -2,6 +2,7 @@
 
 import { Link } from "@/i18n/routing"
 import { RefreshCcw } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
@@ -13,6 +14,8 @@ enum ERecommendationTab {
 }
 
 const AiRecommendationResult = () => {
+  const t = useTranslations("AI")
+
   return (
     <div>
       <Tabs defaultValue={ERecommendationTab.RESULT} className="w-full">
@@ -22,16 +25,15 @@ const AiRecommendationResult = () => {
               className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               value={ERecommendationTab.RESULT}
             >
-              Result
+              {t("result")}
             </TabsTrigger>
           </TabsList>
           <div className="flex gap-2">
             <Button asChild>
               <Link href="/ai-prediction">
-                <RefreshCcw /> Try again
+                <RefreshCcw /> {t("try again")}
               </Link>
             </Button>
-            <Button variant={"outline"}>Reset</Button>
           </div>
         </div>
         <TabsContent value={ERecommendationTab.RESULT}>

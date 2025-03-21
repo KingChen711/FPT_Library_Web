@@ -16,11 +16,9 @@ import {
   User,
   X,
 } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { useLocale } from "next-intl"
 import Barcode from "react-barcode"
 import { useForm } from "react-hook-form"
-import QRCode from "react-qr-code"
-import { BeatLoader } from "react-spinners"
 import { z } from "zod"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
@@ -31,7 +29,7 @@ import {
   type SocketVerifyPaymentStatus,
 } from "@/lib/signalR/verify-payment-status"
 import { ETransactionStatus } from "@/lib/types/enums"
-import { cn, formatDate, formatLeftTime } from "@/lib/utils"
+import { formatDate } from "@/lib/utils"
 import { uploadBookImage } from "@/actions/books/upload-medias"
 import { type PaymentData } from "@/actions/library-card/patrons/create-patron"
 import { createLibraryCardTransaction } from "@/actions/library-cards/create-library-card-transaction"
@@ -39,18 +37,8 @@ import { registerLibraryCard } from "@/actions/library-cards/register-library-ca
 import useGetPackage from "@/hooks/packages/use-get-package"
 import useGetPaymentMethods from "@/hooks/payment-methods/use-get-payment-method"
 import { toast } from "@/hooks/use-toast"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
-import CancelPaymentDialog from "@/components/ui/cancel-payment-dialog"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
-import Copitor from "@/components/ui/copitor"
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import {
   Form,
   FormControl,
@@ -62,6 +50,7 @@ import {
 import { Input } from "@/components/ui/input"
 import NoData from "@/components/ui/no-data"
 import PackageCard from "@/components/ui/package-card"
+import PaymentCard from "@/components/ui/payment-card"
 import {
   Select,
   SelectContent,
@@ -88,7 +77,6 @@ type Props = { searchParams: { libraryCardId: string } }
 const LibraryCardRegister = ({ searchParams }: Props) => {
   const locale = useLocale()
   const router = useRouter()
-  const t = useTranslations("LibraryCardManagementPage")
   const { user, isLoadingAuth, accessToken } = useAuth()
   const [connection, setConnection] = useState<HubConnection | null>(null)
 
@@ -123,7 +111,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
     },
   })
 
-  const cardId = "012345678901234567890123456789"
+  const cardId = "dummy_card_id_01234567890123456789"
 
   // Connect to SignalR
   useEffect(() => {
@@ -237,6 +225,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
         })
         return
       }
+
       if (data) {
         const res = await registerLibraryCard({
           avatar: data.secureUrl,
@@ -384,7 +373,12 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                     <FormItem>
                       <FormLabel>Full Name</FormLabel>
                       <FormControl>
-                        <Input type="text" {...field} disabled={isPending} />
+                        <Input
+                          type="text"
+                          {...field}
+                          placeholder="Enter your full name"
+                          disabled={isPending}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -523,124 +517,11 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
       )}
 
       {paymentData && (
-        <div className="container mx-auto max-w-5xl p-4">
-          <Card className="w-full overflow-hidden">
-            <CardHeader className="rounded-t-lg bg-primary text-primary-foreground">
-              <CardTitle className="text-center text-xl">
-                {t("QR payment")}
-              </CardTitle>
-              <CardDescription className="text-center text-primary-foreground/80">
-                {t("Please scan the QR code below to make payment")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-0">
-              <div className="flex flex-col md:flex-row">
-                {/* QR Code Section */}
-                <div className="flex flex-col items-center justify-center p-6 md:w-1/2 md:border-r">
-                  <div className="mb-4 flex items-center rounded-full bg-primary px-4 py-1 text-sm font-medium text-primary-foreground">
-                    {paymentStates.status === ETransactionStatus.PENDING ? (
-                      <>
-                        {t("Pending payment")}{" "}
-                        <BeatLoader color="#fff" size={10} className="ml-2" />
-                      </>
-                    ) : (
-                      <>
-                        {t("Auto redirect after n seconds", {
-                          seconds: paymentStates.navigateTime,
-                        })}
-                      </>
-                    )}
-                  </div>
-                  <div className="relative">
-                    <div
-                      className={cn(
-                        "flex w-full justify-center rounded-lg border-2 bg-white p-4",
-                        paymentStates.status !== ETransactionStatus.PENDING &&
-                          "blur"
-                      )}
-                    >
-                      <QRCode
-                        value={paymentData.qrCode}
-                        size={200}
-                        style={{
-                          height: "auto",
-                          maxWidth: "100%",
-                          width: "100%",
-                        }}
-                        viewBox={`0 0 256 256`}
-                      />
-                    </div>
-
-                    <Image
-                      alt="status_payment"
-                      src={
-                        paymentStates.status === ETransactionStatus.PAID
-                          ? "/assets/images/payment-success.png"
-                          : "/assets/images/payment-fail.png"
-                      }
-                      width={236}
-                      height={236}
-                      className={cn(
-                        "absolute left-1/2 top-1/2 size-20 -translate-x-1/2 -translate-y-1/2 object-cover",
-                        paymentStates.status === ETransactionStatus.PENDING &&
-                          "invisible"
-                      )}
-                    />
-                  </div>
-                  <Badge variant="default" className="mt-4 text-sm font-medium">
-                    {paymentStates.status === ETransactionStatus.PENDING && (
-                      <>
-                        {t("Time remaining")}:{" "}
-                        {formatLeftTime(paymentStates.leftTime / 1000)}
-                      </>
-                    )}
-                    {paymentStates.status === ETransactionStatus.PAID &&
-                      t("Payment successful")}
-                    {paymentStates.status === ETransactionStatus.CANCELLED &&
-                      t("Payment cancelled")}
-                    {paymentStates.status === ETransactionStatus.EXPIRED &&
-                      t("Payment expired")}
-                  </Badge>
-
-                  <CancelPaymentDialog
-                    currentStatus={paymentStates.status}
-                    orderCode={paymentData.orderCode}
-                    paymentLinkId={paymentData.paymentLinkId}
-                  />
-                </div>
-
-                {/* Payment Details Section */}
-                <div className="p-6 md:w-1/2">
-                  <div className="w-full space-y-4">
-                    <PackageCard package={packageData} />
-                    <div>
-                      <h3 className="mb-2 text-sm font-medium">
-                        {t("Payment description")}
-                      </h3>
-                      <div className="flex items-center gap-2 rounded-md bg-muted p-3">
-                        <p className="flex-1 break-all text-sm">
-                          {paymentData.description}
-                        </p>
-                        <Copitor content={paymentData.description} />
-                      </div>
-                    </div>
-
-                    <div className="text-sm text-muted-foreground">
-                      <h3 className="mb-2 font-medium">
-                        {t("How to make payment")}
-                      </h3>
-                      <ol className="list-decimal space-y-2 pl-5">
-                        <li>{t("qr payment guide 1")}</li>
-                        <li>{t("qr payment guide 2")}</li>
-                        <li>{t("qr payment guide 3")}</li>
-                      </ol>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+        <PaymentCard
+          paymentStates={paymentStates}
+          paymentData={paymentData}
+          cancelPaymentUrl={"/me/account/library-card"}
+        />
       )}
     </div>
   )

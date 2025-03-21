@@ -2,7 +2,6 @@ import Image from "next/image"
 import { auth } from "@/queries/auth"
 import getEmployees from "@/queries/employees/get-employees"
 import getEmployeeRoles from "@/queries/roles/get-employee-roles"
-import { User } from "lucide-react"
 import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
@@ -10,6 +9,7 @@ import { EFeature } from "@/lib/types/enums"
 import { formatDate } from "@/lib/utils"
 import { searchEmployeesSchema } from "@/lib/validations/employee/search-employee"
 import { Badge } from "@/components/ui/badge"
+import { Icons } from "@/components/ui/icons"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -190,8 +190,12 @@ async function EmployeesManagementPage({ searchParams }: Props) {
                       <p>{employee.email}</p>
                     </div>
                   </TableCell>
-                  <TableCell>{employee.firstName}</TableCell>
-                  <TableCell>{employee.lastName}</TableCell>
+                  <TableCell className="text-nowrap">
+                    {employee.firstName}
+                  </TableCell>
+                  <TableCell className="text-nowrap">
+                    {employee.lastName}
+                  </TableCell>
                   <TableCell>{employee.employeeCode}</TableCell>
                   <TableCell>{employee.phone}</TableCell>
                   <TableCell>
@@ -200,9 +204,9 @@ async function EmployeesManagementPage({ searchParams }: Props) {
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center text-nowrap">
                       {employee.gender === "Male" ? (
-                        <User color="blue" />
+                        <Icons.Male />
                       ) : (
-                        <User color="red" />
+                        <Icons.Female />
                       )}
                     </div>
                   </TableCell>
