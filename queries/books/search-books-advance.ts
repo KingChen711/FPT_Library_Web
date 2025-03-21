@@ -1,24 +1,18 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { http } from "@/lib/http"
 
 import "server-only"
 
-import {
-  type Author,
-  type BookEdition,
-  type Category,
-  type LibraryItem,
-  type LibraryItemAuthor,
-  type Shelf,
-} from "@/lib/types/models"
+import { type LibraryItem } from "@/lib/types/models"
 import { type TSearchBooksAdvanceSchema } from "@/lib/validations/books/search-books-advance"
 
 import { auth } from "../auth"
 
-export type BookEditions = (BookEdition & {
-  category: Category
-  libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
-  shelf: Shelf | null
-})[]
+// export type BookEditions = (BookEdition & {
+//   category: Category
+//   libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
+//   shelf: Shelf | null
+// })[]
 
 export type TResponse = {
   // libraryItems: BookEditions
@@ -33,6 +27,17 @@ const searchBooksAdvance = async (
   searchParams: TSearchBooksAdvanceSchema
 ): Promise<TResponse> => {
   const { getAccessToken } = auth()
+
+  Object.keys(searchParams.v).forEach((k) => {
+    //@ts-ignore
+    const value = searchParams.v[k]
+
+    if (value === "null,null") {
+      //@ts-ignore
+      searchParams.v[k] = ""
+    }
+  })
+
   try {
     const { data } = await http.get<TResponse>(`/api/library-items/q`, {
       headers: {

@@ -61,7 +61,7 @@ function CategoryCard({
               if (onClick) onClick()
             }}
             className={cn(
-              "col-span-12 h-full flex-1 rounded-md border bg-card shadow sm:col-span-6 lg:col-span-3",
+              "col-span-12 h-full flex-1 rounded-md border bg-card shadow sm:col-span-6 lg:col-span-4 xl:col-span-3",
               className
             )}
           >
@@ -90,7 +90,7 @@ function CategoryCard({
                     variant={
                       category.isAllowAITraining ? "success" : "destructive"
                     }
-                    className="ml-2 rounded-md"
+                    className="ml-2 shrink-0 rounded-md"
                   >
                     {category.isAllowAITraining
                       ? t("Allowed")
@@ -129,7 +129,7 @@ export default CategoryCard
 export const CategoryCardSkeleton = () => (
   <ContextMenu>
     <ContextMenuTrigger asChild>
-      <div className="col-span-12 h-full flex-1 rounded-md border bg-card p-4 shadow sm:col-span-6 lg:col-span-3">
+      <div className="col-span-12 h-full flex-1 rounded-md border bg-card p-4 shadow sm:col-span-6 lg:col-span-4 xl:col-span-3">
         <div className="flex">
           <Skeleton className="h-4 w-24" />
         </div>

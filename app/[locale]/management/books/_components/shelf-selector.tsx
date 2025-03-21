@@ -32,6 +32,7 @@ export default function ShelfSelector({
   const [editMode, setEditMode] = useState(false)
   const [shelfName, setShelfName] = useState(initShelfName)
   const [isMostAppropriate, setIsMostAppropriate] = useState(true)
+  const [isChildrenSection, setIsChildrenSection] = useState(false)
 
   const [selectedShelf, setSelectedShelf] = useState<number | undefined>(
     undefined
@@ -40,7 +41,7 @@ export default function ShelfSelector({
   const { data: shelveData, isLoading: loadingShelves } = useShelves({
     libraryItemId,
     isMostAppropriate,
-    isChildrenSection: undefined,
+    isChildrenSection,
     isJournalSection: undefined,
     isReferenceSection: undefined,
   })
@@ -71,7 +72,13 @@ export default function ShelfSelector({
   }
 
   return (
-    <div className="flex flex-col gap-4 rounded-md border p-4 pt-5">
+    <div className="mt-2 flex flex-col gap-2 rounded-md border p-4">
+      {/* <div className="flex flex-wrap gap-6 gap-y-3"> */}
+      <div className="flex items-center gap-y-2">
+        <Label>{t("Classification number")}</Label>
+        <p>: {shelveData?.itemClassificationNumber}</p>
+      </div>
+
       <div className="flex items-center gap-y-2">
         <Label>{t("Floor")}</Label>
         <p>: {shelveData?.floor.floorNumber}</p>
@@ -96,21 +103,37 @@ export default function ShelfSelector({
             : shelveData?.section.engSectionName}
         </p>
       </div>
+      {/* </div> */}
 
       <div className="flex flex-col gap-y-2">
         <Label>{t("Shelf")}</Label>
-        <div className="flex items-center space-x-2">
-          <Checkbox
-            checked={isMostAppropriate}
-            onCheckedChange={(val) => setIsMostAppropriate(Boolean(val))}
-            id="most-appropriate"
-          />
-          <Label
-            htmlFor="most-appropriate"
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-          >
-            {t("Most appropriate shelves")}
-          </Label>
+        <div className="flex flex-wrap items-center gap-6">
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              checked={isMostAppropriate}
+              onCheckedChange={(val) => setIsMostAppropriate(Boolean(val))}
+              id="most-appropriate"
+            />
+            <Label
+              htmlFor="most-appropriate"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {t("Most appropriate shelves")}
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              checked={isChildrenSection}
+              onCheckedChange={(val) => setIsChildrenSection(Boolean(val))}
+              id="most-appropriate"
+            />
+            <Label
+              htmlFor="most-appropriate"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {t("Children section")}
+            </Label>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-4">

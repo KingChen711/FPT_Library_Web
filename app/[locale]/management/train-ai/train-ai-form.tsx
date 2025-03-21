@@ -1,6 +1,7 @@
 "use client"
 
 import React, { useEffect, useState, useTransition } from "react"
+import { useRouter } from "@/i18n/routing"
 import { type UntrainedGroup } from "@/queries/books/get-untrained-group"
 import { useUntrainedGroupsStore } from "@/stores/books/use-untrained-group"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -41,6 +42,7 @@ function TrainAIForm({ groups }: Props) {
   const [showForm, setShowForm] = useState(false)
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
+  const router = useRouter()
 
   const [isConvertedUrlsToFiles, setIsConvertedUrlsToFiles] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -153,6 +155,7 @@ function TrainAIForm({ groups }: Props) {
           variant: "success",
         })
         setShowForm(false)
+        router.push("/management/books")
         return
       }
 

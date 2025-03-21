@@ -3,25 +3,20 @@
 import { useEffect, useState } from "react"
 import { LocalStorageKeys } from "@/constants"
 import { userBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
-import { CheckCircle, Filter, Search } from "lucide-react"
+import { CheckCircle, Search } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { localStorageHandler } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 import BorrowCard from "./_components/borrow-card"
 import CheckBorrowRequestDialog from "./_components/check-borrow-request-dialog"
 
 const BorrowsPage = () => {
+  const t = useTranslations("BookPage")
   const [openCheckBorrow, setOpenCheckBorrow] = useState(false)
   const { selectedIds, clear, selectAll } = userBorrowRequestStore()
   const [borrowIdList, setBorrowIdList] = useState<string[]>([])
@@ -53,8 +48,7 @@ const BorrowsPage = () => {
       />
       <div className="container mx-auto space-y-6 py-6">
         <section className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
-          <h1 className="text-2xl font-bold">Borrow Book list</h1>
-
+          <h1 className="text-2xl font-bold">{t("borrow list")}</h1>
           <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
             <div className="relative w-full sm:w-64">
               <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
@@ -64,23 +58,6 @@ const BorrowsPage = () => {
                 className="w-full pl-8"
               />
             </div>
-
-            <Button variant="outline" size="icon" className="shrink-0">
-              <Filter className="size-4" />
-              <span className="sr-only">Filter</span>
-            </Button>
-
-            <Select defaultValue="newest">
-              <SelectTrigger className="w-full sm:w-40">
-                <SelectValue placeholder="Sort by" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="oldest">Oldest</SelectItem>
-                <SelectItem value="price-asc">Price: Low to High</SelectItem>
-                <SelectItem value="price-desc">Price: High to Low</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
         </section>
 
@@ -103,8 +80,8 @@ const BorrowsPage = () => {
                   htmlFor="select-all"
                   className="cursor-pointer text-sm font-medium"
                 >
-                  Select All ({selectedIds.length}/{borrowIdList.length}{" "}
-                  selected items)
+                  {t("select all")} ({selectedIds.length}/{borrowIdList.length}{" "}
+                  {t("selected items")})
                 </label>
               </div>
 
@@ -113,7 +90,7 @@ const BorrowsPage = () => {
                 disabled={selectedIds.length === 0}
                 onClick={() => setOpenCheckBorrow(true)}
               >
-                <CheckCircle className="size-4" /> Borrow
+                <CheckCircle className="size-4" /> {t("borrow")}
               </Button>
             </div>
 

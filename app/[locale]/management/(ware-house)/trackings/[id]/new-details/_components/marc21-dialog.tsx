@@ -36,12 +36,14 @@ function Marc21Dialog({ form }: Props) {
       form.setValue(`libraryItem.subTitle`, marc21Data.subTitle)
       form.setValue(`libraryItem.responsibility`, marc21Data.responsibility)
       form.setValue(`libraryItem.edition`, marc21Data.edition)
-      form.setValue(`libraryItem.language`, marc21Data.language)
+      if (marc21Data.language)
+        form.setValue(`libraryItem.language`, marc21Data.language)
       form.setValue(`libraryItem.originLanguage`, marc21Data.originLanguage)
       form.setValue(`libraryItem.summary`, marc21Data.summary)
       form.setValue(`libraryItem.publicationPlace`, marc21Data.publicationPlace)
       form.setValue(`libraryItem.publisher`, marc21Data.publisher)
-      form.setValue(`libraryItem.publicationYear`, marc21Data.publicationYear)
+      if (marc21Data.publicationYear)
+        form.setValue(`libraryItem.publicationYear`, marc21Data.publicationYear)
       form.setValue(
         `libraryItem.classificationNumber`,
         marc21Data.classificationNumber
@@ -50,9 +52,11 @@ function Marc21Dialog({ form }: Props) {
       form.setValue(`libraryItem.isbn`, marc21Data.isbn)
       form.setValue(`libraryItem.ean`, marc21Data.ean)
       form.setValue(`libraryItem.estimatedPrice`, marc21Data.estimatedPrice)
-      form.setValue(`libraryItem.pageCount`, marc21Data.pageCount)
+      if (marc21Data.pageCount)
+        form.setValue(`libraryItem.pageCount`, marc21Data.pageCount)
       form.setValue(`libraryItem.physicalDetails`, marc21Data.physicalDetails)
-      form.setValue(`libraryItem.dimensions`, marc21Data.dimensions)
+      if (marc21Data.dimensions)
+        form.setValue(`libraryItem.dimensions`, marc21Data.dimensions)
       form.setValue(
         `libraryItem.accompanyingMaterial`,
         marc21Data.accompanyingMaterial

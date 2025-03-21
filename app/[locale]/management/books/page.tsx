@@ -5,7 +5,15 @@ import defaultBookCover from "@/public/assets/images/default-book-cover.jpg"
 import { auth } from "@/queries/auth"
 import getBookEditions from "@/queries/books/get-book-editions"
 import { format } from "date-fns"
-import { Check, Eye, MoreHorizontal, Plus, X } from "lucide-react"
+import {
+  Brain,
+  Check,
+  Eye,
+  Filter,
+  MoreHorizontal,
+  Plus,
+  X,
+} from "lucide-react"
 import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
@@ -13,8 +21,8 @@ import { EBookEditionStatus, EFeature } from "@/lib/types/enums"
 import { formatPrice } from "@/lib/utils"
 import {
   Column,
-  searchBookEditionsSchema,
-} from "@/lib/validations/books/search-book-editions"
+  searchBooksAdvanceSchema,
+} from "@/lib/validations/books/search-books-advance"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -33,6 +41,11 @@ import {
 import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
 import ParseHtml from "@/components/ui/parse-html"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import Rating from "@/components/ui/rating"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -47,11 +60,10 @@ import {
 import BookEditionStatusBadge from "@/components/badges/book-edition-status-badge"
 import ShelfBadge from "@/components/badges/shelf-badge"
 import TrainedBadge from "@/components/badges/trained-badge"
+import BookFilterTabs from "@/components/book-filter-tabs"
 import Hidable from "@/components/hoc/hidable"
 
 import BookEditionCheckbox from "./_components/book-edition-checkbox"
-import { BooksFilter } from "./_components/books-filter"
-// import BookEditionActionDropdown from "./_components/book-edition-dropdown"
 import ColumnsButton from "./_components/columns-button"
 import ExportButton from "./_components/export-button"
 import ImportDialog from "./_components/import-dialog"
@@ -77,12 +89,16 @@ async function BooksManagementPage({ searchParams }: Props) {
     pageSize,
     tab,
     columns,
-    isTrained,
     f,
     o,
     v,
+    canBorrow,
+    isTrained,
     ...rest
-  } = searchBookEditionsSchema.parse(searchParams)
+  } = searchBooksAdvanceSchema.parse({
+    ...searchParams,
+    pageSize: searchParams?.pageSize || "5",
+  })
 
   await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("BooksManagementPage")
@@ -97,12 +113,13 @@ async function BooksManagementPage({ searchParams }: Props) {
     pageIndex,
     sort,
     pageSize,
-    isTrained,
     tab,
     columns,
     f,
     o,
     v,
+    canBorrow,
+    isTrained,
     ...rest,
   })
 
@@ -111,7 +128,12 @@ async function BooksManagementPage({ searchParams }: Props) {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <h3 className="text-2xl font-semibold">{t("Books")}</h3>
         <div className="flex items-center gap-4">
-          <ColumnsButton columns={columns} />
+          <Button asChild>
+            <Link href="/management/train-ai">
+              <Brain />
+              Train AI
+            </Link>
+          </Button>
           <Button asChild>
             <Link href="/management/books/create">
               <Plus />
@@ -128,13 +150,31 @@ async function BooksManagementPage({ searchParams }: Props) {
               className="h-10 rounded-r-none border-r-0"
               search={search}
             />
-            <BooksFilter isTrained={isTrained} f={f} o={o} v={v} />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="outline"
+                  className="relative h-10 rounded-l-none"
+                >
+                  <Filter className="size-4 shrink-0" />
+                  {t("Filters")}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent side="bottom" className="w-[650px]">
+                <BookFilterTabs
+                  management
+                  isTrained={isTrained}
+                  canBorrow={canBorrow}
+                />
+              </PopoverContent>
+            </Popover>
           </div>
 
           <SelectedIdsIndicator />
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
           <BooksActionsDropdown tab={tab} />
+          <ColumnsButton columns={columns} />
           <ImportDialog />
           <ExportButton
             searchParams={{

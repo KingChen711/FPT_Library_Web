@@ -1,24 +1,14 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
-import Link from "next/link"
-import { useRouter } from "@/i18n/routing"
-import { type PatronDetail } from "@/queries/patrons/get-patron"
-import {
-  ChevronDown,
-  ChevronUp,
-  Loader2,
-  Pencil,
-  Plus,
-  RotateCcw,
-  Trash2,
-} from "lucide-react"
+import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
+import { ChevronDown, ChevronUp, RotateCcw, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { deletePatron } from "@/actions/library-card/patrons/delete-patron"
-import { moveToTrashPatron } from "@/actions/library-card/patrons/move-to-trash-patron"
-import { restorePatron } from "@/actions/library-card/patrons/restore-patron"
+import { deleteRangeAuthor } from "@/actions/authors/delete-range-author"
+import { softDeleteRangeAuthor } from "@/actions/authors/soft-delete-range-author"
+import { undoDeleteRangeAuthor } from "@/actions/authors/undo-delete-range-author"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -27,30 +17,38 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import DeleteDialog from "@/app/[locale]/management/_components/delete-dialog"
-import MoveToTrashDialog from "@/app/[locale]/management/_components/move-to-trash-dialog"
 
-import EditPatronDialog from "./edit-patron-dialog"
+import DeleteDialog from "../../_components/delete-dialog"
+import MoveToTrashDialog from "../../_components/move-to-trash-dialog"
 
 type Props = {
-  patron: PatronDetail
+  tab: "Active" | "Deleted"
 }
 
-function PatronActionsDropdown({ patron }: Props) {
-  const t = useTranslations("LibraryCardManagementPage")
+function AuthorsActionsDropdown({ tab }: Props) {
+  const { selectedIds, clear } = useManagementAuthorsStore()
+  const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
-  const router = useRouter()
+  // const router = useRouter()
   const [openDropdown, setOpenDropdown] = useState(false)
-  const [openEdit, setOpenEdit] = useState(false)
-  const [openDelete, setOpenDelete] = useState(false)
   const [openMoveTrash, setOpenMoveTrash] = useState(false)
+  const [openDelete, setOpenDelete] = useState(false)
+  // const [openGroupCheck, setOpenGroupCheck] = useState(false)
+  // const [groupCheckResult, setGroupCheckResult] =
+  //   useState<TGroupCheckRes | null>(null)
+
   const [isPending, startTransition] = useTransition()
+
+  const handleOpenChange = (value: boolean) => {
+    if (isPending) return
+    setOpenDropdown(value)
+  }
 
   const handleMoveToTrash = () => {
     if (isPending) return
 
     startTransition(async () => {
-      const res = await moveToTrashPatron(patron.userId)
+      const res = await softDeleteRangeAuthor(selectedIds)
 
       if (res.isSuccess) {
         toast({
@@ -58,7 +56,7 @@ function PatronActionsDropdown({ patron }: Props) {
           description: res.data,
           variant: "success",
         })
-
+        clear()
         setOpenDropdown(false)
         setOpenMoveTrash(false)
         return
@@ -72,7 +70,7 @@ function PatronActionsDropdown({ patron }: Props) {
     if (isPending) return
 
     startTransition(async () => {
-      const res = await restorePatron(patron.userId)
+      const res = await undoDeleteRangeAuthor(selectedIds)
 
       if (res.isSuccess) {
         toast({
@@ -80,7 +78,7 @@ function PatronActionsDropdown({ patron }: Props) {
           description: res.data,
           variant: "success",
         })
-
+        clear()
         setOpenDropdown(false)
         return
       }
@@ -93,31 +91,54 @@ function PatronActionsDropdown({ patron }: Props) {
     if (isPending) return
 
     startTransition(async () => {
-      const res = await deletePatron(patron.userId)
+      const res = await deleteRangeAuthor(selectedIds)
+
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
           variant: "success",
         })
+        clear()
         setOpenDropdown(false)
         setOpenDelete(false)
-        router.push("/management/library-card-holders")
         return
       }
+
       handleServerActionError(res, locale)
     })
   }
 
-  const handleOpenChange = (value: boolean) => {
-    if (isPending) return
-    setOpenDropdown(value)
-  }
+  // const handleTrain = () => {
+  //   if (isPending) return
+
+  //   startTransition(async () => {
+  //     if (selectedIds.length === 1) {
+  //       router.push(`/management/authors/train-group?itemIds=${selectedIds[0]}`)
+  //       return
+  //     }
+
+  //     const res = await groupChecks(selectedIds)
+  //     if (!res.isSuccess) {
+  //       handleServerActionError(res, locale)
+  //       return
+  //     }
+
+  //     setGroupCheckResult(res.data)
+  //     setOpenDropdown(false)
+  //     setOpenGroupCheck(true)
+  //   })
+  // }
+
+  if (selectedIds.length === 0) return null
 
   return (
     <>
-      <EditPatronDialog open={openEdit} setOpen={setOpenEdit} patron={patron} />
-
+      {/* <GroupCheckResultDialog
+        open={openGroupCheck}
+        setOpen={setOpenGroupCheck}
+        results={groupCheckResult}
+      /> */}
       <MoveToTrashDialog
         handleMoveToTrash={handleMoveToTrash}
         isPending={isPending}
@@ -130,70 +151,54 @@ function PatronActionsDropdown({ patron }: Props) {
         open={openDelete}
         setOpen={setOpenDelete}
       />
-
       <DropdownMenu open={openDropdown} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger asChild>
           <Button variant="outline">
             {t("Actions")} {openDropdown ? <ChevronUp /> : <ChevronDown />}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="overflow-visible">
-          {!patron.libraryCard && (
+        <DropdownMenuContent>
+          {/* {isTrained === false && (
             <DropdownMenuItem
               disabled={isPending}
+              onClick={handleTrain}
               className="cursor-pointer"
-              asChild
             >
-              <Link
-                href={`/management/library-card-holders/${patron.userId}/add-card`}
-              >
-                <Plus /> {t("Create card")}
-              </Link>
+              <Brain />
+              Train AI
             </DropdownMenuItem>
-          )}
-          <DropdownMenuItem
-            disabled={isPending}
-            className="cursor-pointer"
-            onClick={() => {
-              setOpenDropdown(false)
-              setOpenEdit(true)
-            }}
-          >
-            <Pencil />
-            {t("Edit information")}
-          </DropdownMenuItem>
-          {patron.isDeleted ? (
+          )} */}
+
+          {tab !== "Deleted" ? (
+            <DropdownMenuItem
+              disabled={isPending}
+              onClick={() => setOpenMoveTrash(true)}
+              className="cursor-pointer"
+            >
+              <Trash2 />
+              {t("Move to trash")}
+            </DropdownMenuItem>
+          ) : (
             <>
               <DropdownMenuItem
                 disabled={isPending}
-                className="cursor-pointer"
                 onClick={handleRestore}
+                className="cursor-pointer"
               >
-                <RotateCcw /> {t("Restore")}
-                {isPending && <Loader2 className="ml-1 size-4 animate-spin" />}
+                <RotateCcw />
+                {t("Restore")}
               </DropdownMenuItem>
               <DropdownMenuItem
                 disabled={isPending}
-                className="cursor-pointer"
                 onClick={() => {
-                  setOpenDropdown(false)
                   setOpenDelete(true)
                 }}
+                className="cursor-pointer"
               >
-                <Trash2 /> {t("Delete permanently")}
+                <Trash2 />
+                {t("Delete permanently")}
               </DropdownMenuItem>
             </>
-          ) : (
-            <DropdownMenuItem
-              disabled={isPending}
-              className="cursor-pointer"
-              onClick={() => {
-                setOpenDropdown(false)
-                setOpenMoveTrash(true)
-              }}
-            >
-              <Trash2 /> {t("Move to trash")}
-            </DropdownMenuItem>
           )}
         </DropdownMenuContent>
       </DropdownMenu>
@@ -201,4 +206,4 @@ function PatronActionsDropdown({ patron }: Props) {
   )
 }
 
-export default PatronActionsDropdown
+export default AuthorsActionsDropdown

@@ -6,12 +6,12 @@ import { FileUp, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { http } from "@/lib/http"
-import { type TSearchBookEditionsSchema } from "@/lib/validations/books/search-book-editions"
+import { type TSearchBooksAdvanceSchema } from "@/lib/validations/books/search-books-advance"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 
 type Props = {
-  searchParams: TSearchBookEditionsSchema
+  searchParams: TSearchBooksAdvanceSchema
 }
 
 const ExportButton = ({ searchParams }: Props) => {

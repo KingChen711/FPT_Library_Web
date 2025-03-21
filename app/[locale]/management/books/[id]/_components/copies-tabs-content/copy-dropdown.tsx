@@ -7,7 +7,7 @@ import {
   ArrowUp,
   Eye,
   MoreHorizontalIcon,
-  Pencil,
+  // Pencil,
   RotateCcw,
   Trash2,
 } from "lucide-react"
@@ -258,14 +258,14 @@ function CopyDropdown({ copy, bookId, prefix }: Props) {
               <Eye />
               {t("View condition histories")}
             </DropdownMenuItem>
-            <DropdownMenuItem
+            {/* <DropdownMenuItem
               disabled={isPending}
               onClick={() => setOpenEditBarcode(true)}
               className="cursor-pointer"
             >
               <Pencil />
               {t("Edit barcode")}
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             {copy.isDeleted ? (
               <>
                 <DropdownMenuItem

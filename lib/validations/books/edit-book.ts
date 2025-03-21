@@ -29,11 +29,10 @@ export const editBookSchema = z
     editionNumber: z.coerce.number().int("integer").gt(0, "gt0").optional(),
     //041 a
     language: z
-      .string()
+      .string({ message: "min1" })
       .trim()
-      .max(50, "max50")
-      .optional()
-      .transform((data) => (data ? data : undefined)),
+      .min(1, "min1")
+      .max(50, "max50"),
     //041 h
     originLanguage: z
       .string()
@@ -50,14 +49,10 @@ export const editBookSchema = z
       .transform((data) => (data ? data : undefined)),
     //260 c
     publicationYear: z.coerce
-      .number()
+      .number({ message: "min1" })
       .int("integer")
       .gt(0, "gt0")
-      .optional()
-      .refine(
-        (data) => !data || data <= new Date().getFullYear(),
-        "publicationYear"
-      ),
+      .refine((data) => data <= new Date().getFullYear(), "publicationYear"),
     //260 b
     publisher: z.string().trim().optional(),
     //260 a
@@ -78,11 +73,10 @@ export const editBookSchema = z
       .optional(),
     //300 a
     pageCount: z.coerce
-      .number()
+      .number({ message: "min1" })
       .int("integer")
       .gt(0, "gt0")
-      .lte(2147483647, "lte2147483647")
-      .optional(),
+      .lte(2147483647, "lte2147483647"),
     //300 b
     physicalDetails: z
       .string()
@@ -92,11 +86,10 @@ export const editBookSchema = z
       .transform((data) => (data ? data : undefined)),
     //300 c
     dimensions: z
-      .string()
+      .string({ message: "min1" })
       .trim()
-      .max(50, "max50")
-      .optional()
-      .transform((data) => (data ? data : undefined)),
+      .min(1, "min1")
+      .max(50, "max50"),
     //300 e
     accompanyingMaterial: z
       .string()

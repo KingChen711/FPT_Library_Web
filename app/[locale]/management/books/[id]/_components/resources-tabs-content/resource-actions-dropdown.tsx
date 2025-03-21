@@ -156,20 +156,20 @@ function ResourceActionsDropdown({ resource, bookId }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="border-2">
           <>
-            <Link
-              href={resource.resourceUrl}
-              target="_blank"
-              className="flex items-center"
+            <DropdownMenuItem
+              disabled={isPending}
+              onClick={() => setOpenEdit(true)}
+              className="cursor-pointer"
             >
-              <DropdownMenuItem
-                disabled={isPending}
-                onClick={() => setOpenEdit(true)}
-                className="cursor-pointer"
+              <Link
+                href={resource.resourceUrl}
+                target="_blank"
+                className="flex items-center gap-2"
               >
-                <Navigation />
+                <Navigation className="size-4" />
                 {t("View resource")}
-              </DropdownMenuItem>
-            </Link>
+              </Link>
+            </DropdownMenuItem>
             <DropdownMenuItem
               disabled={isPending}
               onClick={() => setOpenEdit(true)}

@@ -12,11 +12,15 @@ type Props = {
 function ManagementLayout({ children }: Props) {
   return (
     <SidebarProvider defaultOpen>
-      <ManagementSidebar />
-      <main className="mx-auto flex w-full max-w-[1620px] flex-col gap-6 p-6 pt-0">
+      <div className="relative w-full">
         <ManagementNavbar />
-        {children}
-      </main>
+        <div className="flex w-full">
+          <ManagementSidebar />
+          <section className="flex min-h-screen flex-1 flex-col p-6 pt-[88px]">
+            <div className="mx-auto w-full max-w-[1620px]">{children}</div>
+          </section>
+        </div>
+      </div>
     </SidebarProvider>
   )
 }

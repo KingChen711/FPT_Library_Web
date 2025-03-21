@@ -1,4 +1,3 @@
-import React from "react"
 import Image from "next/image"
 import { Link } from "@/i18n/routing"
 import { User2 } from "lucide-react"
@@ -9,7 +8,6 @@ import { Skeleton } from "@/components/ui/skeleton"
 
 import { Card } from "./card"
 import { Icons } from "./icons"
-import NoData from "./no-data"
 
 type Props = {
   libraryItem: string
@@ -46,7 +44,7 @@ const RecentBookItem = ({ libraryItem }: Props) => {
   }
 
   if (!item) {
-    return <NoData />
+    return null
   }
 
   return (

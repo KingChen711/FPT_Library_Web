@@ -232,8 +232,8 @@
     "delete permanently": "Delete permanently",
     "row per page": "Row per page",
     "no data": "No data",
-    "all": "All",
-    "trash": "Trash",
+    "all": "Active",
+    "trash": "Deleted",
     "type": "type",
     "to confirm": "to confirm",
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
@@ -766,7 +766,19 @@
       "architecture": "Architecture",
       "law": "Law"
     },
+    "borrow list": "Borrow list",
+    "your borrow library items": "Your borrow library items",
+    "remove all": "Remove all",
+    "borrow all": "Borrow all",
     "back": "Back",
+    "delete": "Delete",
+    "select all": "Select all",
+    "selected items": "Selected items",
+    "are you absolutely sure to delete your borrow list": "Are you absolutely sure to delete your borrow list?",
+    "cannot undo": "This action cannot be undone",
+    "remove from borrow list": "Remove from borrow list?",
+    "are you sure you want to remove": "Are you sure you want to remove",
+    "from your favorites? This action cannot be undone": "from your favorites? This action cannot be undone",
     "screen capturing is prohibited": "Screen capturing is prohibited",
     "screen capturing desc": "For security and copyright protection, screen capturing is not allowed. Repeated violations may result in permanent account suspension and data removal",
     "prohibited promise": "I understand, I promise not to violate",
@@ -1027,6 +1039,11 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Filters": "Filters",
+    "Add": "Add",
+    "Search for articles, books, journals, and other content": "Search for articles, books, journals, and other content",
+    "Children section": "Children section",
+    "Circulated": "Circulated",
     "Library item": "Library item",
     "Group": "Group",
     "Untrained groups": "Untrained groups",
@@ -1657,6 +1674,7 @@
       "OutOfShelf": "Out of shelf",
       "Borrowed": "Borrowed",
       "Reserved": "Reserved",
+      "Lost": "Lost",
       "Deleted": "Deleted"
     },
     "Visibility": { "Public": "Public", "Private": "Private" },
@@ -1725,6 +1743,10 @@
       "0": "Active",
       "1": "Expired",
       "2": "Cancelled"
+    },
+    "Circulated": {
+      "Circulated": "Circulated",
+      "UnCirculated": "Un-circulated"
     }
   },
   "IsbnScanner": {
@@ -1738,6 +1760,8 @@
     "Scan again": "Scan again"
   },
   "BasicSearchTab": {
+    "Search for articles, books, journals, and other content": "Search for articles, books, journals, and other content",
+    "Topical terms": "Topical terms",
     "Title": "Title",
     "Author": "Author",
     "ISBN": "ISBN",
@@ -1764,7 +1788,11 @@
     "Filters": "Filters",
     "Basic search": "Basic search",
     "Advanced search": "Advanced search",
-    "Quick search": "Quick search"
+    "Quick search": "Quick search",
+    "Can borrow": "Can borrow",
+    "Cannot borrow": "Cannot borrow",
+    "Trained": "Trained",
+    "Untrained": "Untrained"
   },
   "AutocompleteLibraryItem": {
     "Available": "Available",

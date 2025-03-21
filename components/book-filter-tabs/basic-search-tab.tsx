@@ -1,28 +1,45 @@
-import { useState } from "react"
+import { type SetStateAction } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { RefreshCcw, Search } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { ESearchType } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
+import { Input } from "@/components/ui/input"
 
-import { Button } from "../ui/button"
-import { Checkbox } from "../ui/checkbox"
-import { Input } from "../ui/input"
+export type TBasicSearch = {
+  title: string
+  author: string
+  isbn: string
+  classificationNumber: string
+  genres: string
+  publisher: string
+  topicalTerms: string
+}
 
-const BasicSearchTab = () => {
+type Props = {
+  values: TBasicSearch
+  setValues: React.Dispatch<SetStateAction<TBasicSearch>>
+  management?: boolean
+  isTrained?: boolean | undefined
+  setIsTrained?: React.Dispatch<SetStateAction<boolean | undefined>>
+  canBorrow?: boolean | undefined
+  setCanBorrow?: React.Dispatch<SetStateAction<boolean | undefined>>
+}
+
+const BasicSearchTab = ({
+  setValues,
+  values,
+  management,
+  canBorrow,
+  isTrained,
+  setCanBorrow,
+  setIsTrained,
+}: Props) => {
   const searchParams = useSearchParams()
   const router = useRouter()
   const t = useTranslations("BasicSearchTab")
-  const [values, setValues] = useState({
-    title: searchParams.get("title") || "",
-    author: searchParams.get("author") || "",
-    isbn: searchParams.get("isbn") || "",
-    classificationNumber: searchParams.get("classificationNumber") || "",
-    genres: searchParams.get("genres") || "",
-    publisher: searchParams.get("publisher") || "",
-    topicalTerms: searchParams.get("topicalTerms") || "",
-  })
 
   const handleInputChange = (key: string, value: string) => {
     setValues((prev) => ({ ...prev, [key]: value }))
@@ -30,34 +47,33 @@ const BasicSearchTab = () => {
 
   const resetFields = () => {
     setValues({
-      title: "",
       author: "",
-      isbn: "",
       classificationNumber: "",
       genres: "",
+      isbn: "",
       publisher: "",
+      title: "",
       topicalTerms: "",
     })
+    setIsTrained?.(undefined)
+    setCanBorrow?.(undefined)
   }
 
   const handleApply = () => {
-    if (Object.values(values).every((a) => a === "")) return
-
-    const searchValues = structuredClone(values)
-    Object.keys(searchValues).forEach((k) => {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      //@ts-ignore
-      searchValues[k] = searchValues[k] === "" ? undefined : searchValues[k]
-    })
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        ...searchValues,
+        ...values,
         pageIndex: "1",
         searchType: ESearchType.BASIC_SEARCH.toString(),
         search: null,
+        isTrained: isTrained === undefined ? null : isTrained.toString(),
+        canBorrow: canBorrow === undefined ? null : canBorrow.toString(),
       },
-    }).replace(window.location.pathname, "/books")
+    }).replace(
+      window.location.pathname,
+      management ? "/management/books" : `/search/result`
+    )
 
     router.push(newUrl)
   }
@@ -80,20 +96,20 @@ const BasicSearchTab = () => {
           </div>
         ))}
       </div>
-      <div className="flex items-center justify-start gap-4">
+      <div className="flex items-center justify-end gap-4">
+        <Button
+          variant="outline"
+          className="flex flex-nowrap items-center gap-2"
+          onClick={resetFields}
+        >
+          {t("Reset")}
+        </Button>
+
         <Button
           onClick={handleApply}
           className="flex flex-nowrap items-center gap-2"
         >
-          <Search /> {t("Search")}
-        </Button>
-
-        <Button
-          variant="secondary"
-          className="flex flex-nowrap items-center gap-2"
-          onClick={resetFields}
-        >
-          <RefreshCcw /> {t("Reset")}
+          {t("Search")}
         </Button>
       </div>
     </div>
@@ -108,7 +124,7 @@ const getPlaceholder = (key: string) => {
     classificationNumber: "Classification number",
     genres: "Genres",
     publisher: "Publisher",
-    topicalTerms: "Keyword",
+    topicalTerms: "Topical terms",
   }
   return placeholders[key] || ""
 }
