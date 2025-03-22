@@ -2,19 +2,22 @@ import { http } from "@/lib/http"
 
 import "server-only"
 
-import { type Notification } from "@/lib/types/models"
+import { format } from "date-fns"
+
+import { type Employee, type Notification } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 import { type TSearchNotificationsSchema } from "@/lib/validations/notifications/search-notifications"
 
 import { auth } from "../auth"
 
-export type Notifications = Notification[]
+export type Notifications = (Notification & { createdByNavigation: Employee })[]
 
 const getNotifications = async (
   searchParams: TSearchNotificationsSchema
 ): Promise<Pagination<Notifications>> => {
   const { getAccessToken } = auth()
   try {
+    const formatDate = (d: Date) => format(d, "yyyy-MM-dd")
     const { data } = await http.get<Pagination<Notifications>>(
       `/api/management/notifications`,
       {
@@ -26,15 +29,13 @@ const getNotifications = async (
         },
         searchParams: {
           ...searchParams,
-          createDateRange: searchParams.createDateRange.map((d) =>
-            d ? d.toString() : d
-          ),
-          notificationType:
-            searchParams.notificationType === undefined
+          createDateRange:
+            JSON.stringify(searchParams.createDateRange) ===
+            JSON.stringify([null, null])
               ? null
-              : searchParams.notificationType,
-          visibility:
-            searchParams.visibility === "All" ? null : searchParams.visibility,
+              : searchParams.createDateRange.map((d) =>
+                  d === null ? "null" : formatDate(new Date(d))
+                ),
         },
       }
     )

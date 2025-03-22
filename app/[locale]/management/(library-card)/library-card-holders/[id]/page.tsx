@@ -246,11 +246,10 @@ async function PatronDetailPage({ params }: Props) {
                 <div className="flex gap-2">
                   <Copitor content={patron.libraryCard.barcode} />
                   {/* <Barcode
-                    marginLeft={0}
-                    value={"1234567890123456789045678945678904567890"}
+                    value={patron.libraryCard.barcode}
                     width={1}
-                    height={40}
-                    fontSize={20}
+                    height={50}
+                    fontSize={12}
                     displayValue={false}
                   /> */}
                 </div>

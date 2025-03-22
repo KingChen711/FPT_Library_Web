@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { ECardStatus, EIdxGender, EIssuanceMethod } from "@/lib/types/enums"
+import { ECardStatus, EIssuanceMethod } from "@/lib/types/enums"
 import {
   filterBooleanSchema,
   filterDateRangeSchema,
@@ -8,19 +8,6 @@ import {
 } from "@/lib/zod"
 
 export enum Column {
-  // Thông tin chung về người dùng
-  FULLNAME = "Fullname",
-  EMAIL = "Email",
-  PHONE = "Phone",
-  DOB = "Dob",
-  GENDER = "Gender",
-  ADDRESS = "Address",
-  STATUS = "Status", // trạng thái tài khoản thư viện
-  TYPE = "Type", // được tạo bởi nhân viên hay tự tạo
-  CREATED_AT = "Created at",
-  MODIFIED_DATE = "Modified date",
-  MODIFIED_BY = "Modified by",
-
   // Thông tin về thẻ thư viện
   BARCODE = "Barcode", // mã vạch trên thẻ
   FULLNAME_ON_CARD = "Name on card",
@@ -45,37 +32,37 @@ export enum Column {
 }
 
 export const defaultColumns: Column[] = [
-  Column.FULLNAME,
-  Column.EMAIL,
-  Column.PHONE,
-  Column.STATUS,
+  Column.BARCODE,
+  Column.FULLNAME_ON_CARD,
   Column.CARD_STATUS,
   Column.ISSUE_DATE,
   Column.EXPIRY_DATE,
+  Column.MAX_ITEM_ONCE_TIME,
+  Column.TOTAL_MISSED_PICK_UP,
+  Column.EXTENDED,
+  Column.SUSPENSION_END_DATE,
 ]
 
-export const filterPatronSchema = z.object({
-  gender: filterEnumSchema(EIdxGender),
-  issuanceMethod: filterEnumSchema(EIssuanceMethod),
-  cardStatus: filterEnumSchema(ECardStatus),
-
+export const filterCardSchema = z.object({
   isAllowBorrowMore: filterBooleanSchema(),
   isReminderSent: filterBooleanSchema(),
   isExtended: filterBooleanSchema(),
   isArchived: filterBooleanSchema(),
 
-  cardIssueDateRange: filterDateRangeSchema,
-  cardExpiryDateRange: filterDateRangeSchema,
+  issuanceMethod: filterEnumSchema(EIssuanceMethod),
+  status: filterEnumSchema(ECardStatus),
+
+  issueDateRange: filterDateRangeSchema,
+  expiryDateRange: filterDateRangeSchema,
   suspensionDateRange: filterDateRangeSchema,
-  dobRange: filterDateRangeSchema,
 })
 
-export type TFilterPatronSchema = z.infer<typeof filterPatronSchema>
+export type TFilterCardSchema = z.infer<typeof filterCardSchema>
 
-export const searchPatronsSchema = z
+export const searchCardsSchema = z
   .object({
     columns: z.array(z.nativeEnum(Column)).catch(defaultColumns),
-    tab: z.enum(["Active", "Deleted"]).catch("Active"),
+    tab: z.enum(["Active", "Archived"]).catch("Active"),
     search: z.string().catch(""),
     pageIndex: z.coerce.number().min(1).catch(1),
     pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("10"),
@@ -114,12 +101,12 @@ export const searchPatronsSchema = z
       ])
       .optional()
       .catch(undefined),
-    isDeleted: z.boolean().optional(),
+    isArchived: z.boolean().optional(),
   })
-  .and(filterPatronSchema)
+  .and(filterCardSchema)
   .transform((data) => {
-    data.isDeleted = data.tab === "Deleted"
+    data.isArchived = data.tab === "Archived"
     return data
   })
 
-export type TSearchPatronsSchema = z.infer<typeof searchPatronsSchema>
+export type TSearchCardsSchema = z.infer<typeof searchCardsSchema>

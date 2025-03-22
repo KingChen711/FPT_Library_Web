@@ -26,6 +26,8 @@ export async function archiveCard(
 
     revalidatePath("/management/library-card-holders")
     revalidatePath(`/management/library-card-holders/${userId}`)
+    revalidatePath(`/management/library-cards`)
+    revalidatePath(`/management/library-cards/${body.libraryCardId}`)
 
     return {
       isSuccess: true,

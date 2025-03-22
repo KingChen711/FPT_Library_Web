@@ -1,21 +1,21 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client"
 
 import React, { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { getLocalTimeZone } from "@internationalized/date"
-import { format } from "date-fns"
 import { Filter } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import { parseQueryDateRange, parseSearchParamsDateRange } from "@/lib/filters"
 import { ENotificationType } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
 import {
   filterNotificationSchema,
-  visibilityOptions,
   type TFilterNotificationSchema,
 } from "@/lib/validations/notifications/search-notifications"
+import { filterBooleanSchema } from "@/lib/zod"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -34,52 +34,62 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  createCalendarDate,
-  DateTimePicker,
-} from "@/components/form/date-time-picker"
+import { Input } from "@/components/ui/input"
+import BooleanFilter from "@/components/form/boolean-filter"
+import DateRangePickerFilter from "@/components/form/date-range-picker-filter"
+import SelectEnumFilter from "@/components/form/select-enum-filter"
 
 function FiltersNotificationsDialog() {
-  const timezone = getLocalTimeZone()
   const router = useRouter()
   const t = useTranslations("NotificationsManagementPage")
   const [open, setOpen] = useState(false)
+  const tNotificationType = useTranslations("Badges.NotificationType")
 
   const searchParams = useSearchParams()
 
   const form = useForm<TFilterNotificationSchema>({
     resolver: zodResolver(filterNotificationSchema),
     defaultValues: {
-      visibility: "All",
-      createDateRange: [null, null],
+      createDateRange: parseSearchParamsDateRange(
+        searchParams.getAll("createdAtRange")
+      ),
+      isPublic: filterBooleanSchema().parse(searchParams.get("isPublic")),
+      notificationType: searchParams.get("notificationType") || undefined,
+      email: searchParams.get("email") || undefined,
+      createdBy: searchParams.get("createdBy") || undefined,
     },
   })
 
   const resetFilters = () => {
-    form.setValue("notificationType", undefined)
-    form.setValue("visibility", "All")
-    form.setValue("createDateRange", [null, null])
+    Object.keys(form.getValues()).forEach((key) => {
+      form.setValue(
+        //@ts-ignore
+        key,
+        //@ts-ignore
+        Array.isArray(form.getValues()[key]) ? [null, null] : undefined
+      )
+    })
+    setOpen(false)
+    router.push("/management/library-cards")
   }
+
+  const wIsPublic = form.watch("isPublic")
+  const wNotificationType = form.watch("notificationType")
 
   const onSubmit = async (values: TFilterNotificationSchema) => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        notificationType:
-          values.notificationType === undefined
+        createDateRange: parseQueryDateRange(values.createDateRange),
+        isPublic:
+          values.isPublic === undefined
             ? null
-            : values.notificationType.toString(),
-        //TODO: filter visibility
-        CreateDateRange: values.createDateRange.map((date) =>
-          date ? format(date, "dd-MM-yyyy") : ""
-        ),
+            : values.isPublic
+              ? "true"
+              : "false",
+        notificationType: values.notificationType || null,
+        email: values.email || null,
+        createdBy: values.createdBy || null,
       },
     })
     setOpen(false)
@@ -110,35 +120,13 @@ function FiltersNotificationsDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("Notification type")}</FormLabel>
-                      <Select
-                        onValueChange={(val) =>
-                          field.onChange(val === "all" ? undefined : +val)
-                        }
-                        defaultValue={
-                          field.value === undefined
-                            ? "all"
-                            : field.value.toString()
-                        }
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="all">{t("All")}</SelectItem>
-                          {Object.values(ENotificationType)
-                            .filter((e) => typeof e === "number")
-                            .map((option) => (
-                              <SelectItem
-                                key={option}
-                                value={option.toString()}
-                              >
-                                {t(option)}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
+                      <SelectEnumFilter
+                        //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                        value={wNotificationType}
+                        onChange={field.onChange}
+                        enumObj={ENotificationType}
+                        tEnum={tNotificationType}
+                      />
 
                       <FormMessage />
                     </FormItem>
@@ -147,30 +135,17 @@ function FiltersNotificationsDialog() {
 
                 <FormField
                   control={form.control}
-                  name="visibility"
+                  name="isPublic"
                   render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Visibility")}</FormLabel>
-                      <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          {visibilityOptions.map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {t(option)}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-
-                      <FormMessage />
+                    <FormItem className="space-y-3">
+                      <FormLabel>{t("Public")}?</FormLabel>
+                      <FormControl>
+                        <BooleanFilter
+                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                          value={wIsPublic}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
                     </FormItem>
                   )}
                 />
@@ -182,39 +157,42 @@ function FiltersNotificationsDialog() {
                     <FormItem>
                       <FormLabel>{t("Created date")}</FormLabel>
 
-                      <div className="flex items-center justify-between gap-3">
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[0])}
-                          onChange={(date) =>
-                            field.onChange([
-                              date ? date.toDate(timezone) : null,
-                              field.value[1],
-                            ])
-                          }
-                          disabled={(date) =>
-                            (!!field.value[1] &&
-                              date > new Date(field.value[1])) ||
-                            date > new Date()
-                          }
+                      <FormControl>
+                        <DateRangePickerFilter
+                          value={field.value}
+                          onChange={field.onChange}
                         />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-                        <div>-</div>
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("Recipient")}</FormLabel>
 
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[1])}
-                          onChange={(date) =>
-                            field.onChange([
-                              field.value[0],
-                              date ? date.toDate(timezone) : null,
-                            ])
-                          }
-                          disabled={(date) =>
-                            (!!field.value[0] &&
-                              date < new Date(field.value[0])) ||
-                            date > new Date()
-                          }
-                        />
-                      </div>
+                      <FormControl>
+                        <Input type="email" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="createdBy"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("Sender")}</FormLabel>
+
+                      <FormControl>
+                        <Input type="email" {...field} />
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -223,7 +201,7 @@ function FiltersNotificationsDialog() {
                 <div className="flex justify-end gap-x-4">
                   <DialogClose asChild>
                     <Button variant="secondary" className="float-right mt-4">
-                      Cancel
+                      {t("Cancel")}
                     </Button>
                   </DialogClose>
                   <Button
@@ -235,10 +213,10 @@ function FiltersNotificationsDialog() {
                       resetFilters()
                     }}
                   >
-                    Reset
+                    {t("Reset")}
                   </Button>
                   <Button type="submit" className="float-right mt-4">
-                    Apply{" "}
+                    {t("Apply")}
                   </Button>
                 </div>
               </form>
