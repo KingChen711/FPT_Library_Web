@@ -8,18 +8,14 @@ import { Filter } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
-import {
-  parseQueryDateRange,
-  parseQueryNumRange,
-  parseSearchParamsDateRange,
-  parseSearchParamsNumRange,
-} from "@/lib/filters"
-import { ETrackingStatus, ETrackingType } from "@/lib/types/enums"
+import { parseQueryDateRange, parseSearchParamsDateRange } from "@/lib/filters"
+import { ECardStatus, EIssuanceMethod } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
 import {
-  filterTrackingSchema,
-  type TFilterTrackingSchema,
-} from "@/lib/validations/trackings/search-trackings"
+  filterCardSchema,
+  type TFilterCardSchema,
+} from "@/lib/validations/patrons/cards/search-cards"
+import { filterBooleanSchema } from "@/lib/zod"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -38,47 +34,45 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import BooleanFilter from "@/components/form/boolean-filter"
 import DateRangePickerFilter from "@/components/form/date-range-picker-filter"
-import NumRangeFilter from "@/components/form/num-range-filter"
 import SelectEnumFilter from "@/components/form/select-enum-filter"
 
-function FiltersTrackingsDialog() {
+function FiltersCardsDialog() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
-  const t = useTranslations("TrackingsManagementPage")
-  const tTrackingStatus = useTranslations("Badges.TrackingStatus")
-  const tTrackingType = useTranslations("Badges.TrackingType")
+  const t = useTranslations("LibraryCardManagementPage")
+
+  const tStatus = useTranslations("Badges.CardStatus")
+  const tIssuanceMethod = useTranslations("Badges.IssuanceMethod")
 
   const searchParams = useSearchParams()
 
-  const form = useForm<TFilterTrackingSchema>({
-    resolver: zodResolver(filterTrackingSchema),
+  const form = useForm<TFilterCardSchema>({
+    resolver: zodResolver(filterCardSchema),
     defaultValues: {
-      actualReturnDateRange: parseSearchParamsDateRange(
-        searchParams.getAll("actualReturnDateRange")
+      expiryDateRange: parseSearchParamsDateRange(
+        searchParams.getAll("expiryDateRange")
       ),
-      createdAtRange: parseSearchParamsDateRange(
-        searchParams.getAll("createdAtRange")
+      issueDateRange: parseSearchParamsDateRange(
+        searchParams.getAll("issueDateRange")
       ),
-      entryDateRange: parseSearchParamsDateRange(
-        searchParams.getAll("entryDateRange")
-      ),
-      expectedReturnDateRange: parseSearchParamsDateRange(
-        searchParams.getAll("expectedReturnDateRange")
-      ),
-      updatedAtRange: parseSearchParamsDateRange(
-        searchParams.getAll("updatedAtRange")
-      ),
-
-      totalAmountRange: parseSearchParamsNumRange(
-        searchParams.getAll("totalAmountRange")
-      ),
-      totalItemRange: parseSearchParamsNumRange(
-        searchParams.getAll("totalItemRange")
+      suspensionDateRange: parseSearchParamsDateRange(
+        searchParams.getAll("suspensionDateRange")
       ),
 
       status: searchParams.get("status") || undefined,
-      trackingType: searchParams.get("trackingType") || undefined,
+
+      issuanceMethod: searchParams.get("issuanceMethod") || undefined,
+
+      isAllowBorrowMore: filterBooleanSchema().parse(
+        searchParams.get("isAllowBorrowMore")
+      ),
+      isArchived: filterBooleanSchema().parse(searchParams.get("isArchived")),
+      isExtended: filterBooleanSchema().parse(searchParams.get("isExtended")),
+      isReminderSent: filterBooleanSchema().parse(
+        searchParams.get("isReminderSent")
+      ),
     },
   })
 
@@ -92,33 +86,56 @@ function FiltersTrackingsDialog() {
       )
     })
     setOpen(false)
-    router.push("/management/trackings")
+    router.push("/management/library-cards")
   }
 
-  const wTrackingType = form.watch("trackingType")
   const wStatus = form.watch("status")
 
-  const onSubmit = async (values: TFilterTrackingSchema) => {
-    setOpen(false)
+  const wIssuanceMethod = form.watch("issuanceMethod")
+  const wIsAllowBorrowMore = form.watch("isAllowBorrowMore")
+  const wIsArchived = form.watch("isArchived")
+  const wIsExtended = form.watch("isExtended")
+  const wIsReminderSent = form.watch("isReminderSent")
 
+  const onSubmit = async (values: TFilterCardSchema) => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        trackingType: values.trackingType || null,
+        expiryDateRange: parseQueryDateRange(values.expiryDateRange),
+        issueDateRange: parseQueryDateRange(values.issueDateRange),
+        suspensionDateRange: parseQueryDateRange(values.suspensionDateRange),
+
         status: values.status || null,
-        actualReturnDateRange: parseQueryDateRange(
-          values.actualReturnDateRange
-        ),
-        createdAtRange: parseQueryDateRange(values.createdAtRange),
-        updatedAtRange: parseQueryDateRange(values.updatedAtRange),
-        expectedReturnDateRange: parseQueryDateRange(
-          values.expectedReturnDateRange
-        ),
-        entryDateRange: parseQueryDateRange(values.entryDateRange),
-        totalAmountRange: parseQueryNumRange(values.totalAmountRange),
-        totalItemRange: parseQueryNumRange(values.totalItemRange),
+
+        issuanceMethod: values.issuanceMethod || null,
+
+        isAllowBorrowMore:
+          values.isAllowBorrowMore === undefined
+            ? null
+            : values.isAllowBorrowMore
+              ? "true"
+              : "false",
+        isArchived:
+          values.isArchived === undefined
+            ? null
+            : values.isArchived
+              ? "true"
+              : "false",
+        isExtended:
+          values.isExtended === undefined
+            ? null
+            : values.isExtended
+              ? "true"
+              : "false",
+        isReminderSent:
+          values.isReminderSent === undefined
+            ? null
+            : values.isReminderSent
+              ? "true"
+              : "false",
       },
     })
+
     setOpen(false)
     router.replace(newUrl, { scroll: false })
   }
@@ -135,7 +152,7 @@ function FiltersTrackingsDialog() {
 
       <DialogContent className="max-h-[80vh] w-full overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t("Filters trackings")}</DialogTitle>
+          <DialogTitle>{t("Filters cards")}</DialogTitle>
           <DialogDescription asChild>
             <Form {...form}>
               <form
@@ -144,17 +161,104 @@ function FiltersTrackingsDialog() {
               >
                 <FormField
                   control={form.control}
+                  name="isAllowBorrowMore"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>{t("Allow borrow more")}</FormLabel>
+                      <FormControl>
+                        <BooleanFilter
+                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                          value={wIsAllowBorrowMore}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="isReminderSent"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>{t("Reminder sent")}</FormLabel>
+                      <FormControl>
+                        <BooleanFilter
+                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                          value={wIsReminderSent}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="isExtended"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>{t("Extended")}</FormLabel>
+                      <FormControl>
+                        <BooleanFilter
+                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                          value={wIsExtended}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="isArchived"
+                  render={({ field }) => (
+                    <FormItem className="space-y-3">
+                      <FormLabel>{t("Archived")}</FormLabel>
+                      <FormControl>
+                        <BooleanFilter
+                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                          value={wIsArchived}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="issuanceMethod"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("Issuance method")}</FormLabel>
+                      <SelectEnumFilter
+                        //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                        value={wIssuanceMethod}
+                        onChange={field.onChange}
+                        enumObj={EIssuanceMethod}
+                        tEnum={tIssuanceMethod}
+                      />
+
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
                   name="status"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("Status")}</FormLabel>
+                      <FormLabel>{t("Card status")}</FormLabel>
                       <SelectEnumFilter
                         //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
                         value={wStatus}
                         onChange={field.onChange}
-                        enumObj={ETrackingStatus}
-                        tEnum={tTrackingStatus}
+                        enumObj={ECardStatus}
+                        tEnum={tStatus}
                       />
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -162,62 +266,11 @@ function FiltersTrackingsDialog() {
 
                 <FormField
                   control={form.control}
-                  name="trackingType"
+                  name="issueDateRange"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("Tracking type")}</FormLabel>
-                      <SelectEnumFilter
-                        //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
-                        value={wTrackingType}
-                        onChange={field.onChange}
-                        enumObj={ETrackingType}
-                        tEnum={tTrackingType}
-                      />
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      <FormLabel>{t("Card issue date")}</FormLabel>
 
-                <FormField
-                  control={form.control}
-                  name="totalItemRange"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Total item")}</FormLabel>
-                      <FormControl>
-                        <NumRangeFilter
-                          onChange={field.onChange}
-                          value={field.value}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="totalAmountRange"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Total amount")}</FormLabel>
-                      <FormControl>
-                        <NumRangeFilter
-                          onChange={field.onChange}
-                          value={field.value}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="entryDateRange"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Entry date")}</FormLabel>
                       <FormControl>
                         <DateRangePickerFilter
                           value={field.value}
@@ -228,13 +281,13 @@ function FiltersTrackingsDialog() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
-                  name="expectedReturnDateRange"
+                  name="expiryDateRange"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("Expected return date")}</FormLabel>
+                      <FormLabel>{t("Card expiry date")}</FormLabel>
+
                       <FormControl>
                         <DateRangePickerFilter
                           value={field.value}
@@ -245,47 +298,13 @@ function FiltersTrackingsDialog() {
                     </FormItem>
                   )}
                 />
-
                 <FormField
                   control={form.control}
-                  name="actualReturnDateRange"
+                  name="suspensionDateRange"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>{t("Actual return date")}</FormLabel>
-                      <FormControl>
-                        <DateRangePickerFilter
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                      <FormLabel>{t("Suspension date")}</FormLabel>
 
-                <FormField
-                  control={form.control}
-                  name="createdAtRange"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Created at")}</FormLabel>
-                      <FormControl>
-                        <DateRangePickerFilter
-                          value={field.value}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="updatedAtRange"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Updated at")}</FormLabel>
                       <FormControl>
                         <DateRangePickerFilter
                           value={field.value}
@@ -327,4 +346,4 @@ function FiltersTrackingsDialog() {
   )
 }
 
-export default FiltersTrackingsDialog
+export default FiltersCardsDialog

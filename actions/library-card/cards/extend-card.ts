@@ -18,7 +18,8 @@ export type PaymentData = {
 
 export async function extendCard(
   libraryCardId: string,
-  body: TExtendCardSchema
+  body: TExtendCardSchema,
+  userId: string
 ): Promise<
   ActionResponse<{ message: string; paymentData: PaymentData | null }>
 > {
@@ -33,8 +34,10 @@ export async function extendCard(
       },
     })
 
-    revalidatePath(`/management/library-card-holders/${libraryCardId}`)
+    revalidatePath(`/management/library-card-holders/${userId}`)
     revalidatePath(`/management/library-card-holders`)
+    revalidatePath(`/management/library-cards`)
+    revalidatePath(`/management/library-cards/${libraryCardId}`)
 
     return {
       isSuccess: true,

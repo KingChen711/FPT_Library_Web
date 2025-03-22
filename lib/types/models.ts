@@ -337,7 +337,6 @@ export type Notification = {
   createDate: Date
   createdBy: string
   notificationType: ENotificationType
-  notificationRecipients: []
 }
 
 export type Fine = {

@@ -61,8 +61,10 @@ export const filterBooleanSchema = (defaultValue?: "true" | "false") =>
         .enum(["true", "false"])
         .catch(defaultValue)
         .transform((data) => data === "true")
+        .or(z.boolean().catch(defaultValue === "true"))
     : z
         .enum(["true", "false"])
         .transform((data) => data === "true")
         .optional()
         .catch(undefined)
+        .or(z.boolean().optional().catch(undefined))

@@ -32,6 +32,7 @@ import VisibilityBadge from "@/components/badges/visibility-badge"
 
 import CreateNotificationDialog from "./_components/create-notification-dialog"
 import FiltersNotificationsDialog from "./_components/filters-notifications-dialog"
+import RecipientsDialog from "./_components/recipients-dialog"
 
 type Props = {
   searchParams: {
@@ -145,33 +146,12 @@ async function NotificationPage({ searchParams }: Props) {
                     </Dialog>
                   </TableCell>
                   <TableCell className="text-nowrap">
-                    {!notification.isPublic && (
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button size="sm" variant="secondary">
-                            {t("View recipients")}
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-h-[80vh] overflow-y-auto">
-                          <DialogHeader>
-                            <DialogTitle>{t("Recipients")}</DialogTitle>
-                            <DialogDescription>
-                              <div className="flex items-center gap-4">
-                                {notification.notificationRecipients.map(
-                                  (r) => (
-                                    <div
-                                      key={r}
-                                      className="rounded-md bg-muted px-2 py-1 text-muted-foreground"
-                                    >
-                                      {r}
-                                    </div>
-                                  )
-                                )}
-                              </div>
-                            </DialogDescription>
-                          </DialogHeader>
-                        </DialogContent>
-                      </Dialog>
+                    {notification.isPublic ? (
+                      t("All")
+                    ) : (
+                      <RecipientsDialog
+                        notificationId={notification.notificationId}
+                      />
                     )}
                   </TableCell>
 
@@ -190,7 +170,9 @@ async function NotificationPage({ searchParams }: Props) {
                   <TableCell>
                     {format(new Date(notification.createDate), "dd-MM-yyyy")}
                   </TableCell>
-                  <TableCell>{notification.createdBy}</TableCell>
+                  <TableCell>
+                    {notification.createdByNavigation.email}
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
