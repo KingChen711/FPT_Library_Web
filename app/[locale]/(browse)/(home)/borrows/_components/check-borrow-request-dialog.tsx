@@ -1,9 +1,9 @@
 "use client"
 
-import { useEffect, useTransition } from "react"
-import { userBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
+import { useEffect, useState, useTransition } from "react"
+import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
 import { Loader2 } from "lucide-react"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { createBorrowRequest } from "@/actions/borrows/create-borrow-request"
@@ -19,7 +19,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import NotAllowBorrowCard from "./not-allowed-borrow-card"
+import AvailableBorrowCard from "./available-borrow-card"
 
 type Props = {
   open: boolean
@@ -27,9 +27,11 @@ type Props = {
 }
 
 const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
+  const t = useTranslations("BookPage")
   const locale = useLocale()
-  const { selectedIds } = userBorrowRequestStore()
+  const { selectedIds } = useBorrowRequestStore()
   const [isPending, startTransition] = useTransition()
+  const [allowToReserveItems, setAllowToReserveItems] = useState<number[]>([])
 
   const { data, isLoading, refetch } =
     useCheckAvailableBorrowRequest(selectedIds)
@@ -47,16 +49,13 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
     return <Loader2 className="size-6 animate-spin" />
   }
 
-  console.log("🚀 ~ CheckBorrowRequestDialog ~ data:", data)
-
   const handleSubmit = () => {
     startTransition(async () => {
       const res = await createBorrowRequest({
         description: "",
         libraryItemIds:
           data?.allowToBorrowItems?.map((id) => id.libraryItemId) || [],
-        reservationItemIds:
-          data?.allowToReserveItems?.map((id) => id.libraryItemId) || [],
+        reservationItemIds: allowToReserveItems,
       })
       console.log("🚀 ~ startTransition ~ res:", res)
       if (res.isSuccess) {
@@ -74,31 +73,44 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogContent className="sm:max-w-4xl">
+      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-4xl">
         <DialogHeader>
-          <DialogTitle>Your borrow list?</DialogTitle>
+          <DialogTitle>{t("borrow list")}</DialogTitle>
         </DialogHeader>
 
         {/* Succeed to request borrow */}
         {isAllowedBorrowRequest && data && (
           <div className="flex flex-col gap-2">
-            <div>
-              <h1 className="font-semibold">Allow to borrow</h1>
-              {data?.allowToBorrowItems.map((item) => (
-                <div key={item.libraryItemId}>
-                  <p>✅ {item.title}</p>
-                </div>
-              ))}
-            </div>
+            {data?.allowToBorrowItems.length > 0 && (
+              <div>
+                <h1 className="font-semibold">
+                  {t("allow to borrow")} ({data?.allowToBorrowItems.length})
+                </h1>
+                {data?.allowToBorrowItems.map((item) => (
+                  <AvailableBorrowCard
+                    key={item.libraryItemId}
+                    libraryItem={item}
+                  />
+                ))}
+              </div>
+            )}
 
-            <div>
-              <h1 className="font-semibold">Allow to reserve</h1>
-              {data?.allowToReserveItems.map((item) => (
-                <div key={item.libraryItemId}>
-                  <p>✅ {item.title}</p>
-                </div>
-              ))}
-            </div>
+            {data?.allowToReserveItems.length > 0 && (
+              <div>
+                <h1 className="font-semibold">
+                  {t("allow to reserve")} ({data?.allowToReserveItems.length})
+                </h1>
+                <p className="text-danger">{t("allow to reserve message")}</p>
+                {data?.allowToReserveItems.map((item) => (
+                  <AvailableBorrowCard
+                    key={item.libraryItemId}
+                    libraryItem={item}
+                    allowToReserveItems={allowToReserveItems}
+                    setAllowToReserveItems={setAllowToReserveItems}
+                  />
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -108,15 +120,15 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
             {data?.alreadyRequestedItems?.length > 0 && (
               <div>
                 <h1 className="font-semibold">
-                  Already Requested Items ({data?.alreadyRequestedItems.length}
-                  &nbsp; items)
+                  {t("already requested items")} (
+                  {data?.alreadyRequestedItems.length})
                 </h1>
                 <p className="text-danger">
-                  Bạn đang chờ duyệt {data?.alreadyRequestedItems.length} quyển
-                  này. Vui lòng xóa khỏi danh sách mượn.
+                  {t("the document has been requested by you")}. &nbsp;
+                  {t("please delete from borrow list")}
                 </p>
                 {data?.alreadyRequestedItems.map((item) => (
-                  <NotAllowBorrowCard
+                  <AvailableBorrowCard
                     key={item.libraryItemId}
                     libraryItem={item}
                   />
@@ -127,15 +139,16 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
             {data?.alreadyBorrowedItems.length > 0 && (
               <div>
                 <h1 className="font-semibold">
-                  Already Borrow Items ({data?.alreadyBorrowedItems.length}
+                  {t("already borrowed items")} (
+                  {data?.alreadyBorrowedItems.length}
                   &nbsp;items)
                 </h1>
                 <p className="text-danger">
-                  Bạn đang mượn {data?.alreadyBorrowedItems.length} quyển này.
-                  Vui lòng xóa khỏi danh sách mượn.
+                  {t("the document is being borrowed by you")}. &nbsp;
+                  {t("please delete from borrow list")}
                 </p>
                 {data?.alreadyBorrowedItems.map((item) => (
-                  <NotAllowBorrowCard
+                  <AvailableBorrowCard
                     key={item.libraryItemId}
                     libraryItem={item}
                   />
@@ -146,15 +159,16 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
             {data?.alreadyReservedItems.length > 0 && (
               <div>
                 <h1 className="font-semibold">
-                  Already Reserve Items ({data?.alreadyReservedItems.length}
+                  {t("already reserved items")} (
+                  {data?.alreadyReservedItems.length}
                   &nbsp; items)
                 </h1>
                 <p className="text-danger">
-                  Bạn đã đặt {data?.alreadyReservedItems.length} quyển này. Vui
-                  lòng xóa khỏi danh sách mượn.
+                  {t("the document has been booked by you")}. &nbsp;
+                  {t("please delete from borrow list")}
                 </p>
                 {data?.alreadyReservedItems.map((item) => (
-                  <NotAllowBorrowCard
+                  <AvailableBorrowCard
                     key={item.libraryItemId}
                     libraryItem={item}
                   />
@@ -165,12 +179,12 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
         )}
 
         <DialogFooter className="flex items-center justify-end gap-2">
-          <DialogClose>Cancel</DialogClose>
+          <DialogClose>{t("cancel")}</DialogClose>
           <Button
             onClick={handleSubmit}
             disabled={!isAllowedBorrowRequest || isPending}
           >
-            Submit
+            {t("continue")}
             {isPending && <Loader2 className="ml-1 size-4 animate-spin" />}
           </Button>
         </DialogFooter>

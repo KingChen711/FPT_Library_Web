@@ -7,7 +7,7 @@ type BorrowRequestStore = {
   selectAll: (val: string[]) => void
 }
 
-export const userBorrowRequestStore = create<BorrowRequestStore>((set) => ({
+export const useBorrowRequestStore = create<BorrowRequestStore>((set) => ({
   selectedIds: [],
   toggleId: (val) =>
     set((state) => ({

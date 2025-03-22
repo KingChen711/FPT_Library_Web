@@ -50,7 +50,7 @@ const RecommendationResultTab = () => {
   const router = useRouter()
   const locale = useLocale()
 
-  const t = useTranslations("BookPage")
+  const t = useTranslations("AI")
   const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
     usePrediction()
 
@@ -85,12 +85,14 @@ const RecommendationResultTab = () => {
       {/* Book preview */}
       <div className="flex w-full gap-2">
         <section className="flex w-1/3 flex-col gap-2 p-4">
-          <h1 className="text-center text-xl font-semibold">Uploaded Book</h1>
-          <h1 className="text-center text-sm">Your uploaded Image</h1>
+          <h1 className="text-center text-xl font-semibold">
+            {t("uploaded book")}
+          </h1>
+          <h1 className="text-center text-sm">{t("your uploaded image")}</h1>
           <div className="flex justify-center">
             <Image
               src={URL.createObjectURL(uploadedImage)}
-              alt={"Uploaded Book"}
+              alt={t("uploaded book")}
               width={200}
               height={300}
               className="rounded-lg object-contain shadow-lg"
@@ -100,14 +102,18 @@ const RecommendationResultTab = () => {
 
         <section className="flex flex-1 flex-col items-center justify-center gap-4">
           <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
-            <Label className="text-lg font-semibold">Match percentage</Label>
+            <Label className="text-lg font-semibold">
+              {t("match percentage")}
+            </Label>
             <p className="text-lg">{ocrDetail?.matchPercentage.toFixed(2)}%</p>
           </div>
         </section>
 
         <section className="flex w-1/3 flex-col gap-2 p-4">
-          <h1 className="text-center text-xl font-semibold">Detected Book</h1>
-          <h1 className="text-center text-sm">Detected Image</h1>
+          <h1 className="text-center text-xl font-semibold">
+            {t("detected book")}
+          </h1>
+          <h1 className="text-center text-sm">{t("detected image")}</h1>
           <div className="flex justify-center">
             <TooltipProvider delayDuration={0}>
               <Tooltip>
@@ -141,7 +147,7 @@ const RecommendationResultTab = () => {
       {/* Book comparison */}
       <div className="flex w-full flex-col gap-4">
         <h1 className="text-xl font-semibold text-primary">
-          Book Recommendations
+          {t("book recommendations")}
         </h1>
         <div className="flex w-full items-center justify-start gap-4">
           <div className="relative w-1/3">
@@ -154,18 +160,20 @@ const RecommendationResultTab = () => {
             />
           </div>
           <Button className="flex items-center gap-2">
-            <Filter /> Filter
+            <Filter /> {t("filter")}
           </Button>
         </div>
 
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="font-semibold">Title</TableHead>
-              <TableHead className="font-semibold">Ratings</TableHead>
-              <TableHead className="font-semibold">Category</TableHead>
-              <TableHead className="font-semibold">Availability</TableHead>
-              <TableHead className="font-semibold">Status</TableHead>
+              <TableHead className="font-semibold">{t("title")}</TableHead>
+              <TableHead className="font-semibold">{t("ratings")}</TableHead>
+              <TableHead className="font-semibold">{t("category")}</TableHead>
+              <TableHead className="font-semibold">
+                {t("availability")}
+              </TableHead>
+              <TableHead className="font-semibold">{t("status")}</TableHead>
               <TableHead className="font-semibold"></TableHead>
             </TableRow>
           </TableHeader>
@@ -189,7 +197,7 @@ const RecommendationResultTab = () => {
                               variant={"danger"}
                               className="flex w-[180px] flex-nowrap justify-center text-nowrap"
                             >
-                              Highly recommended
+                              {t("highly recommended")}
                             </Badge>
                           )}
                           {index == 1 && (
@@ -197,7 +205,7 @@ const RecommendationResultTab = () => {
                               variant={"draft"}
                               className="flex w-[180px] flex-nowrap justify-center text-nowrap"
                             >
-                              Medium recommended
+                              {t("medium recommended")}
                             </Badge>
                           )}
                           {index == 2 && (
@@ -205,7 +213,7 @@ const RecommendationResultTab = () => {
                               variant={"success"}
                               className="flex w-[180px] flex-nowrap justify-center text-nowrap"
                             >
-                              Recommended
+                              {t("recommended")}
                             </Badge>
                           )}
                           <p className="text-sm font-semibold">
@@ -238,11 +246,11 @@ const RecommendationResultTab = () => {
                             color="white"
                             fill="#42bb4e"
                           />
-                          {t("fields.hard copy")}
+                          {t("hard copy")}
                         </div>
                         <div className="flex items-center gap-2">
                           <CircleX size={16} color="white" fill="#868d87" />
-                          {t("fields.audio book")}
+                          {t("audio book")}
                         </div>
                       </div>
                     </TableCell>
@@ -253,11 +261,11 @@ const RecommendationResultTab = () => {
                           result?.itemDetailDto?.libraryItemInventory
                             .availableUnits > 0 ? (
                             <Badge variant={"success"}>
-                              {t("fields.availability")}
+                              {t("availability")}
                             </Badge>
                           ) : (
                             <Badge variant={"danger"}>
-                              {t("fields.unavailability")}
+                              {t("unavailability")}
                             </Badge>
                           )}
                           {result?.itemDetailDto?.shelf && (
@@ -276,7 +284,7 @@ const RecommendationResultTab = () => {
                             variant={"outline"}
                             className="bg-background text-danger hover:bg-background hover:text-danger"
                           >
-                            Preview
+                            {t("preview")}
                           </Button>
                         </PopoverTrigger>
                         <PopoverContent
