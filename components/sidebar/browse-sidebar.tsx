@@ -119,14 +119,24 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                   </DropdownMenuLabel>
                   <DropdownMenuGroup>
                     <DropdownMenuItem
+                      className="cursor-pointer"
                       onClick={() => router.push("/me/account/profile")}
                     >
                       <BadgeCheck />
                       {t("account")}
                     </DropdownMenuItem>
+                    {user.role.roleId === 1 && (
+                      <DropdownMenuItem
+                        className="cursor-pointer"
+                        onClick={() => router.push("/management")}
+                      >
+                        <BadgeCheck />
+                        {t("management page")}
+                      </DropdownMenuItem>
+                    )}
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem className="cursor-pointer">
                     <LogOut />
                     {t("logout")}
                   </DropdownMenuItem>

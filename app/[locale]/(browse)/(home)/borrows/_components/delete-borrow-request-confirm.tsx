@@ -1,4 +1,6 @@
 import { LocalStorageKeys } from "@/constants"
+import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
+import { useTranslations } from "next-intl"
 
 import { localStorageHandler } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -25,28 +27,34 @@ const DeleteBorrowRequestConfirm = ({
   libraryItemId,
   libraryItemTitle,
 }: Props) => {
+  const t = useTranslations("BookPage")
+  const { selectedIds, toggleId } = useBorrowRequestStore()
+
   const handleSubmit = () => {
     localStorageHandler.setItem(LocalStorageKeys.BORROW, libraryItemId)
+    if (selectedIds.includes(libraryItemId)) {
+      toggleId(libraryItemId)
+    }
   }
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Are you absolutely sure to delete?</DialogTitle>
+          <DialogTitle>{t("are you absolutely sure to delete")}</DialogTitle>
           <DialogDescription>
-            This action cannot be undone. This will delete &nbsp;
+            {t("delete")} &nbsp;
             <span className="font-semibold">
               &quot;
               {libraryItemTitle}&quot;
-            </span>
-            &nbsp; from your borrow list.
+            </span>{" "}
+            {t("from your borrow list? This action cannot be undone")}
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="flex items-center justify-end gap-2">
-          <DialogClose>Cancel</DialogClose>
+          <DialogClose>{t("cancel")}</DialogClose>
           <Button onClick={handleSubmit} variant={"destructive"}>
-            Delete
+            {t("delete")}
           </Button>
         </DialogFooter>
       </DialogContent>

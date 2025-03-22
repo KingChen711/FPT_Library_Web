@@ -1,6 +1,7 @@
 import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
 import { CheckCircle2, CircleX, Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import {
   type LibraryItem,
@@ -20,6 +21,8 @@ const RecommendBookPreview = ({
   detectedLibraryItem,
   comparedLibraryItemId,
 }: Props) => {
+  const t = useTranslations("AI")
+  const tBookPage = useTranslations("BookPage")
   const router = useRouter()
   const { data: comparedLibraryItem, isLoading: isLoadingComparedLibraryItem } =
     useLibraryItemDetail(comparedLibraryItemId?.toString() || "")
@@ -29,7 +32,6 @@ const RecommendBookPreview = ({
     router.push("/ai-recommendation")
     return null
   }
-
   const renderTableRow = (
     label: string,
     detectedValue: string | undefined,
@@ -38,15 +40,15 @@ const RecommendBookPreview = ({
   ) => (
     <TableRow>
       <TableCell className="bg-primary font-semibold text-primary-foreground">
-        {label}
+        {tBookPage(`fields.${label.charAt(0).toLowerCase() + label.slice(1)}`)}
       </TableCell>
       <TableCell className="border">{detectedValue}</TableCell>
       <TableCell className="border">{comparedValue}</TableCell>
       <TableCell className="border text-center">
         {isMatched ? (
-          <CheckCircle2 size={24} className="mx-auto text-green-500" />
+          <CheckCircle2 size={24} className="mx-auto text-success" />
         ) : (
-          <CircleX size={24} className="mx-auto text-red-500" />
+          <CircleX size={24} className="mx-auto text-danger" />
         )}
       </TableCell>
     </TableRow>
@@ -88,16 +90,16 @@ const RecommendBookPreview = ({
         </TableRow>
 
         {/* Header Row */}
-        <TableRow className="bg-primary">
+        <TableRow className="bg-primary hover:bg-primary">
           <TableCell className="border font-semibold text-primary-foreground" />
           <TableCell className="border text-center font-semibold text-primary-foreground">
-            Detected Book
+            {t("detected book")}
           </TableCell>
           <TableCell className="border text-center font-semibold text-primary-foreground">
-            Compared Book
+            {t("compared book")}
           </TableCell>
           <TableCell className="border text-center font-semibold text-primary-foreground">
-            Match
+            {t("match")}
           </TableCell>
         </TableRow>
 

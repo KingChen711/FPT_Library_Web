@@ -4,6 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import {
   type BookResource,
+  type BorrowRequest,
   type DigitalBorrow,
   type DigitalTransaction,
 } from "@/lib/types/models"
@@ -13,14 +14,17 @@ export type DigitalBorrowDetail = DigitalBorrow & {
   transactions: DigitalTransaction[]
 }
 
-function useDigitalBorrowDetail(digitalBorrow: number) {
+function useBorrowRequestDetail(borrowRequestId: number) {
+  console.log(`/api/users/borrows/requests/${borrowRequestId}`)
+  console.log(`/api/users/borrows/requests/${borrowRequestId}`)
+
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: [`digital-borrows/${digitalBorrow}`],
+    queryKey: [`/borrows/requests/${borrowRequestId}`],
     queryFn: async () => {
       try {
-        const { data } = await http.get<DigitalBorrowDetail | null>(
-          `/api/users/borrows/digital/${digitalBorrow}`,
+        const { data } = await http.get<BorrowRequest | null>(
+          `/api/users/borrows/requests/${borrowRequestId}`,
           {
             headers: {
               Authorization: `Bearer ${accessToken}`,
@@ -38,4 +42,4 @@ function useDigitalBorrowDetail(digitalBorrow: number) {
   })
 }
 
-export default useDigitalBorrowDetail
+export default useBorrowRequestDetail

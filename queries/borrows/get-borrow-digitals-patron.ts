@@ -17,7 +17,7 @@ export type TGetDigitalBorrowData = {
   totalActualItem: number
 }
 
-const getDigitalBorrows = async (): Promise<TGetDigitalBorrowData> => {
+const getBorrowDigitalsPatron = async (): Promise<TGetDigitalBorrowData> => {
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<TGetDigitalBorrowData>(
@@ -43,4 +43,4 @@ const getDigitalBorrows = async (): Promise<TGetDigitalBorrowData> => {
   }
 }
 
-export default getDigitalBorrows
+export default getBorrowDigitalsPatron

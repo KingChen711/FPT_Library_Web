@@ -29,7 +29,7 @@ const AiRecommendationResult = () => {
             </TabsTrigger>
           </TabsList>
           <div className="flex gap-2">
-            <Button asChild>
+            <Button asChild variant="outline">
               <Link href="/ai-prediction">
                 <RefreshCcw /> {t("try again")}
               </Link>

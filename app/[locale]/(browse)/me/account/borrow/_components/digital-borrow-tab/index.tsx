@@ -1,7 +1,8 @@
-import getDigitalBorrows from "@/queries/borrows/get-digital-borrows"
+import getBorrowDigitalsPatron from "@/queries/borrows/get-borrow-digitals-patron"
 import { differenceInCalendarDays, format, parseISO } from "date-fns"
 import { Calendar, CheckCircle, XCircle } from "lucide-react"
 
+import { getTranslations } from "@/lib/get-translations"
 import { type BorrowItem } from "@/lib/types/models"
 import BorrowDigitalStatusBadge from "@/components/ui/borrow-digital-status-badge"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -23,15 +24,16 @@ const formatDate = (dateString: string): string => {
 }
 
 const DigitalBorrowTab = async () => {
-  const digitalBorrows = await getDigitalBorrows()
-  console.log("🚀 ~ DigitalBorrowTab ~ digitalBorrows:", digitalBorrows)
+  const t = await getTranslations("BookPage.borrow tracking")
+  const digitalBorrows = await getBorrowDigitalsPatron()
+  // console.log("🚀 ~ DigitalBorrowTab ~ digitalBorrows:", digitalBorrows)
 
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader className="pb-3">
           <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-            <CardTitle>Currently Borrowed Items</CardTitle>
+            <CardTitle>{t("currently borrowed items")}</CardTitle>
             <BorrowedReturnFilter />
           </div>
         </CardHeader>
@@ -41,14 +43,14 @@ const DigitalBorrowTab = async () => {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>No</TableHead>
-                    <TableHead>Title</TableHead>
-                    <TableHead>Register date</TableHead>
-                    <TableHead>Expiry date</TableHead>
-                    <TableHead>Is extended</TableHead>
-                    <TableHead>Extension count</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                    <TableHead>{t("ordinal number")}</TableHead>
+                    <TableHead>{t("title")}</TableHead>
+                    <TableHead>{t("register date")}</TableHead>
+                    <TableHead>{t("expiration date")}</TableHead>
+                    <TableHead>{t("is extended")}</TableHead>
+                    <TableHead>{t("extension count")}</TableHead>
+                    <TableHead>{t("status")}</TableHead>
+                    <TableHead className="text-right">{t("actions")}</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -113,11 +115,11 @@ const DigitalBorrowTab = async () => {
                               </div>
                               {isOverdue ? (
                                 <span className="text-xs font-medium text-danger">
-                                  {Math.abs(daysUntilDue)} days overdue
+                                  {Math.abs(daysUntilDue)} {t("days overdue")}
                                 </span>
                               ) : (
                                 <span className="text-xs text-muted-foreground">
-                                  {daysUntilDue} days remaining
+                                  {daysUntilDue} {t("days remaining")}
                                 </span>
                               )}
                               <Progress

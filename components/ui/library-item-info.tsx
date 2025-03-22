@@ -29,8 +29,14 @@ import {
 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { cn, formatPrice, localStorageHandler } from "@/lib/utils"
+import {
+  cn,
+  formatPrice,
+  localStorageHandler,
+  splitCamelCase,
+} from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
+import AddBorrowConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/add-borrow-confirm"
 import BookDigitalListDialog from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-digital-list-dialog"
 import BookInstancesTab from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-tabs/book-instances-tab"
 
@@ -56,6 +62,7 @@ const LibraryItemInfo = ({
   const t = useTranslations("BookPage")
   const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
   const [openDigitalList, setOpenDigitalList] = useState<boolean>(false)
+  const [openAddBorrowConfirm, setOpenAddBorrowConfirm] = useState(false)
 
   if (isLoading) {
     return <LibraryItemInfoLoading />
@@ -75,6 +82,12 @@ const LibraryItemInfo = ({
         resources={libraryItem.resources}
         open={openDigitalList}
         setOpen={setOpenDigitalList}
+      />
+
+      <AddBorrowConfirm
+        libraryItem={libraryItem}
+        open={openAddBorrowConfirm}
+        setOpen={setOpenAddBorrowConfirm}
       />
 
       <div className="flex items-start gap-4">
@@ -106,7 +119,7 @@ const LibraryItemInfo = ({
               No.{libraryItem.editionNumber} Edition
             </Badge>
             <Badge variant="draft" className="w-fit">
-              {libraryItem.category.englishName}
+              {splitCamelCase(libraryItem.category.englishName)}
             </Badge>
           </div>
           <div className="my-2 text-sm">
@@ -230,12 +243,9 @@ const LibraryItemInfo = ({
         </Button>
         {showResources && (
           <section className="flex items-center gap-4">
-            <Button
-              onClick={() =>
-                localStorageHandler.setItem(LocalStorageKeys.BORROW, id)
-              }
-            >
-              <Book /> <span>{t("borrow")}</span>
+            <Button onClick={() => setOpenAddBorrowConfirm(true)}>
+              <Book />
+              <span>{t("add borrow list")}</span>
             </Button>
 
             {libraryItem.resources && libraryItem.resources.length > 0 && (

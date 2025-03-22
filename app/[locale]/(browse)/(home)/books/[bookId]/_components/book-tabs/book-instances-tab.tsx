@@ -1,6 +1,7 @@
 "use client"
 
 import { EllipsisVertical } from "lucide-react"
+import { useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 
 import { type LibraryItem } from "@/lib/types/models"
@@ -26,16 +27,20 @@ type Props = {
 }
 
 const BookInstancesTab = ({ libraryItem }: Props) => {
+  const t = useTranslations("BookPage")
+
   return (
     <div>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead className="w-[100px] text-center">STT</TableHead>
-            <TableHead className="text-center">Code</TableHead>
-            <TableHead className="text-center">Barcode</TableHead>
-            <TableHead className="text-center">Status</TableHead>
-            <TableHead className="text-center">Action</TableHead>
+            <TableHead className="w-[100px] text-center">
+              {t("ordinal number")}
+            </TableHead>
+            <TableHead className="text-center">{t("code")}</TableHead>
+            <TableHead className="text-center">{t("barcode")}</TableHead>
+            <TableHead className="text-center">{t("status")}</TableHead>
+            <TableHead className="text-center">{t("action")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -55,7 +60,7 @@ const BookInstancesTab = ({ libraryItem }: Props) => {
                       width={1}
                       height={50}
                       fontSize={12}
-                      displayValue={false}
+                      // displayValue={false}
                     />
                   </div>
                 </TableCell>
@@ -73,9 +78,9 @@ const BookInstancesTab = ({ libraryItem }: Props) => {
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DropdownMenuItem>Borrow</DropdownMenuItem>
-                        <DropdownMenuItem>Locate</DropdownMenuItem>
-                        <DropdownMenuItem>Detail</DropdownMenuItem>
+                        <DropdownMenuItem>{t("borrow")}</DropdownMenuItem>
+                        <DropdownMenuItem>{t("locate")}</DropdownMenuItem>
+                        <DropdownMenuItem>{t("detail")}</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>

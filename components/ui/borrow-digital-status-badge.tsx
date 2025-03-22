@@ -27,7 +27,10 @@ function BorrowDigitalStatusBadge({ status }: Props) {
   const t = useTranslations("Badges.BorrowDigitalStatus")
 
   return (
-    <Badge variant={getTypeColor(status)} className="flex w-20 justify-center">
+    <Badge
+      variant={getTypeColor(status)}
+      className="flex w-20 justify-center text-nowrap"
+    >
       {t(status.toString())}
     </Badge>
   )

@@ -2,11 +2,13 @@
 
 import { useEffect, useState } from "react"
 import { LocalStorageKeys } from "@/constants"
-import { userBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
+import { useAuth } from "@/contexts/auth-provider"
+import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
 import { CheckCircle, Search } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 
 import { localStorageHandler } from "@/lib/utils"
+import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -16,9 +18,11 @@ import BorrowCard from "./_components/borrow-card"
 import CheckBorrowRequestDialog from "./_components/check-borrow-request-dialog"
 
 const BorrowsPage = () => {
+  const locale = useLocale()
+  const { user, isLoadingAuth } = useAuth()
   const t = useTranslations("BookPage")
   const [openCheckBorrow, setOpenCheckBorrow] = useState(false)
-  const { selectedIds, clear, selectAll } = userBorrowRequestStore()
+  const { selectedIds, clear, selectAll } = useBorrowRequestStore()
   const [borrowIdList, setBorrowIdList] = useState<string[]>([])
   const updateBorrows = () => {
     setBorrowIdList(localStorageHandler.getItem(LocalStorageKeys.BORROW))
@@ -39,6 +43,25 @@ const BorrowsPage = () => {
       window.removeEventListener(LocalStorageKeys.BORROW, handleCustomEvent)
     }
   }, [])
+
+  if (isLoadingAuth) {
+    return null
+  }
+
+  const handleCheckAvailable = () => {
+    if (!user) {
+      toast({
+        title: t("error toast"),
+        description:
+          locale === "vi"
+            ? "Vui lòng đăng nhập để mượn sách"
+            : "Please login to borrow",
+        variant: "warning",
+      })
+      return
+    }
+    setOpenCheckBorrow(true)
+  }
 
   return (
     <>
@@ -88,7 +111,7 @@ const BorrowsPage = () => {
               <Button
                 variant={"outline"}
                 disabled={selectedIds.length === 0}
-                onClick={() => setOpenCheckBorrow(true)}
+                onClick={handleCheckAvailable}
               >
                 <CheckCircle className="size-4" /> {t("borrow")}
               </Button>
