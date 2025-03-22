@@ -9,7 +9,10 @@ import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature, EPatronStatus } from "@/lib/types/enums"
 import { getFullName } from "@/lib/utils"
-import { searchPatronsSchema } from "@/lib/validations/patrons/search-patrons"
+import {
+  Column,
+  searchPatronsSchema,
+} from "@/lib/validations/patrons/search-patrons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
@@ -44,6 +47,7 @@ import IssuanceMethodBadge from "@/components/badges/issuance-method-badge"
 import PatronHasCardBadge from "@/components/badges/patron-has-card-badge"
 import PatronStatusBadge from "@/components/badges/patron-status-badge"
 import PatronTypeBadge from "@/components/badges/patron-type-badge"
+import Hidable from "@/components/hoc/hidable"
 
 import ColumnsButton from "./_components/columns-button"
 import ExportButton from "./_components/export-button"
@@ -63,7 +67,7 @@ async function HoldersManagementPage({ searchParams }: Props) {
   const t = await getTranslations("LibraryCardManagementPage")
   const formatLocale = await getFormatLocale()
 
-  const { search, pageIndex, sort, pageSize, tab, ...rest } =
+  const { search, pageIndex, sort, pageSize, tab, columns, ...rest } =
     searchPatronsSchema.parse(searchParams)
 
   const {
@@ -71,6 +75,7 @@ async function HoldersManagementPage({ searchParams }: Props) {
     totalActualItem,
     totalPage,
   } = await getPatrons({
+    columns,
     search,
     pageIndex,
     sort,
@@ -84,7 +89,7 @@ async function HoldersManagementPage({ searchParams }: Props) {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <h3 className="text-2xl font-semibold">{t("Patrons")}</h3>
         <div className="flex items-center gap-4">
-          <ColumnsButton />
+          <ColumnsButton columns={columns} />
           <Button asChild>
             <Link href="/management/library-card-holders/create">
               <Plus />
@@ -116,6 +121,7 @@ async function HoldersManagementPage({ searchParams }: Props) {
               sort,
               pageSize,
               tab,
+              columns,
               ...rest,
             }}
           />
@@ -130,187 +136,254 @@ async function HoldersManagementPage({ searchParams }: Props) {
               <TableHeader>
                 <TableRow>
                   <TableHead />
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Email")}
-                    sortKey="Email"
-                  />
 
-                  <TableHead className="text-nowrap font-bold">
-                    {t("Full name")}
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.FULLNAME)}>
+                    <TableHead className="text-nowrap font-bold">
+                      {t("Full name")}
+                    </TableHead>
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Phone")}
-                    sortKey="Phone"
-                  />
+                  <Hidable hide={!columns.includes(Column.EMAIL)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Email")}
+                      sortKey="Email"
+                    />
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Dob")}
-                    sortKey="Dob"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.PHONE)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Phone")}
+                      sortKey="Phone"
+                    />
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">{t("Gender")}</div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.DOB)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Dob")}
+                      sortKey="Dob"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-start">{t("Address")}</div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.GENDER)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">{t("Gender")}</div>
+                    </TableHead>
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">{t("Status")}</div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.ADDRESS)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-start">{t("Address")}</div>
+                    </TableHead>
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">{t("Type")}</div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.STATUS)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">{t("Status")}</div>
+                    </TableHead>
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Create date")}
-                    sortKey="CreateDate"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.TYPE)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">{t("Type")}</div>
+                    </TableHead>
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Modified date")}
-                    sortKey="ModifiedDate"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.CREATED_AT)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Create date")}
+                      sortKey="CreateDate"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Modified by")}
-                    sortKey="ModifiedBy"
-                  />
+                  <Hidable hide={!columns.includes(Column.MODIFIED_DATE)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Modified date")}
+                      sortKey="ModifiedDate"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Name on card")}
-                    sortKey="FullName"
-                  />
+                  <Hidable hide={!columns.includes(Column.MODIFIED_BY)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Modified by")}
+                      sortKey="ModifiedBy"
+                    />
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Avatar on card")}
-                    sortKey="FullName"
-                  />
+                  <Hidable hide={!columns.includes(Column.BARCODE)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Barcode")}
+                      sortKey="BarCode"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Barcode")}
-                    sortKey="BarCode"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.FULLNAME_ON_CARD)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Name on card")}
+                      sortKey="FullName"
+                    />
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Transaction code")}
-                    </div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.AVATAR)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Avatar on card")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Issuance method")}
-                    </div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.CARD_STATUS)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Card status")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Card status")}
-                    </div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.ISSUANCE_METHOD)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Issuance method")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Allow borrow more")}
-                    </div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.ISSUE_DATE)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Issue date")}
+                      sortKey="IssueDate"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Max item once time")}
-                    sortKey="MaxItemOnceTime"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.EXPIRY_DATE)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Expiry date")}
+                      sortKey="ExpiryDate"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Allow borrow more reason")}
-                    </div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.ALLOW_BORROW_MORE)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Allow borrow more")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Total missed pick up")}
-                    sortKey="TotalMissedPickup"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.MAX_ITEM_ONCE_TIME)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Max item once time")}
+                      sortKey="MaxItemOnceTime"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Reminder sent")}
-                    </div>
-                  </TableHead>
+                  <Hidable
+                    hide={!columns.includes(Column.ALLOW_BORROW_MORE_REASON)}
+                  >
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Allow borrow more reason")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">{t("Extended")}</div>
-                  </TableHead>
+                  <Hidable
+                    hide={!columns.includes(Column.TOTAL_MISSED_PICK_UP)}
+                  >
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Total missed pick up")}
+                      sortKey="TotalMissedPickup"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Extension count")}
-                    sortKey="ExtensionCount"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.REMINDER_SENT)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Reminder sent")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Issue date")}
-                    sortKey="IssueDate"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.EXTENDED)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">{t("Extended")}</div>
+                    </TableHead>
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Expiry date")}
-                    sortKey="ExpiryDate"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.EXTENSION_COUNT)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Extension count")}
+                      sortKey="ExtensionCount"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Suspension end date")}
-                    sortKey="SuspensionEndDate"
-                    position="center"
-                  />
+                  <Hidable hide={!columns.includes(Column.SUSPENSION_END_DATE)}>
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Suspension end date")}
+                      sortKey="SuspensionEndDate"
+                      position="center"
+                    />
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Suspension reason")}
-                    </div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.SUSPENSION_REASON)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Suspension reason")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Reject reason")}
-                    </div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.REJECT_REASON)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Reject reason")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">{t("Archived")}</div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.TRANSACTION_CODE)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Transaction code")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Archive reason")}
-                    </div>
-                  </TableHead>
+                  <Hidable hide={!columns.includes(Column.ARCHIVED)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">{t("Archived")}</div>
+                    </TableHead>
+                  </Hidable>
+
+                  <Hidable hide={!columns.includes(Column.ARCHIVE_REASON)}>
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Archive reason")}
+                      </div>
+                    </TableHead>
+                  </Hidable>
 
                   <TableHead className="text-nowrap font-bold">
                     <div className="flex justify-center">{t("Actions")}</div>
@@ -324,378 +397,467 @@ async function HoldersManagementPage({ searchParams }: Props) {
                       <PatronCheckbox id={patron.userId} />
                     </TableCell>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex items-center gap-2">
-                        <Avatar className="size-8">
-                          <AvatarImage src={patron.avatar || ""} />
-                          <AvatarFallback>
-                            {getFullName(patron.firstName, patron.lastName)
-                              .split(" ")
-                              .map((i) => i[0].toUpperCase())
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
+                    <Hidable hide={!columns.includes(Column.FULLNAME)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex items-center gap-2">
+                          {getFullName(patron.firstName, patron.lastName) ||
+                            "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.EMAIL)}>
+                      <TableCell className="text-nowrap">
                         {patron.email}
-                      </div>
-                    </TableCell>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      {getFullName(patron.firstName, patron.lastName) || "-"}
-                    </TableCell>
+                    <Hidable hide={!columns.includes(Column.PHONE)}>
+                      <TableCell className="text-nowrap">
+                        {patron.phone || "-"}
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      {patron.phone || "-"}
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.dob
-                          ? format(new Date(patron.dob), "dd MMM yyyy", {
-                              locale: formatLocale,
-                            })
-                          : "-"}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.gender ? (
-                          <GenderBadge gender={patron.gender} />
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      {patron.address || "-"}
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex items-center justify-center gap-2">
-                        <PatronStatusBadge
-                          status={
-                            patron.isDeleted
-                              ? EPatronStatus.DELETED
-                              : patron.isActive
-                                ? EPatronStatus.ACTIVE
-                                : EPatronStatus.INACTIVE
-                          }
-                        />
-                        <PatronHasCardBadge hasCard={!!patron.libraryCardId} />
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex items-center justify-center">
-                        <PatronTypeBadge
-                          isEmployeeCreated={patron.isEmployeeCreated}
-                        />
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.createDate
-                          ? format(new Date(patron.createDate), "dd MMM yyyy", {
-                              locale: formatLocale,
-                            })
-                          : "-"}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.modifiedDate
-                          ? format(
-                              new Date(patron.modifiedDate),
-                              "dd MMM yyyy",
-                              {
+                    <Hidable hide={!columns.includes(Column.DOB)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.dob
+                            ? format(new Date(patron.dob), "dd MMM yyyy", {
                                 locale: formatLocale,
-                              }
-                            )
-                          : "-"}
-                      </div>
-                    </TableCell>
+                              })
+                            : "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      {patron.modifiedBy || "-"}
-                    </TableCell>
+                    <Hidable hide={!columns.includes(Column.GENDER)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.gender ? (
+                            <GenderBadge gender={patron.gender} />
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      {patron.libraryCard?.fullName || "-"}
-                    </TableCell>
+                    <Hidable hide={!columns.includes(Column.ADDRESS)}>
+                      <TableCell className="text-nowrap">
+                        {patron.address || "-"}
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard ? (
-                          <Avatar>
-                            <AvatarImage
-                              src={patron.libraryCard.avatar || ""}
-                            />
-                            <AvatarFallback>
-                              {patron.libraryCard.fullName
-                                .split(" ")
-                                .map((i) => i[0].toUpperCase())
-                                .join("")}
-                            </AvatarFallback>
-                          </Avatar>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
-
-                    <TableCell></TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.transactionCode || "-"}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.issuanceMethod ? (
-                          <IssuanceMethodBadge
-                            status={patron.libraryCard.issuanceMethod}
+                    <Hidable hide={!columns.includes(Column.STATUS)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex items-center justify-center gap-2">
+                          <PatronStatusBadge
+                            status={
+                              patron.isDeleted
+                                ? EPatronStatus.DELETED
+                                : patron.isActive
+                                  ? EPatronStatus.ACTIVE
+                                  : EPatronStatus.INACTIVE
+                            }
                           />
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
+                          <PatronHasCardBadge
+                            hasCard={!!patron.libraryCardId}
+                          />
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.status ? (
-                          <CardStatusBadge status={patron.libraryCard.status} />
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
+                    <Hidable hide={!columns.includes(Column.TYPE)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex items-center justify-center">
+                          <PatronTypeBadge
+                            isEmployeeCreated={patron.isEmployeeCreated}
+                          />
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard ? (
-                          patron.libraryCard.isAllowBorrowMore ? (
-                            <Check className="text-success" />
+                    <Hidable hide={!columns.includes(Column.CREATED_AT)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.createDate
+                            ? format(
+                                new Date(patron.createDate),
+                                "dd MMM yyyy",
+                                {
+                                  locale: formatLocale,
+                                }
+                              )
+                            : "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.MODIFIED_DATE)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.modifiedDate
+                            ? format(
+                                new Date(patron.modifiedDate),
+                                "dd MMM yyyy",
+                                {
+                                  locale: formatLocale,
+                                }
+                              )
+                            : "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.MODIFIED_BY)}>
+                      <TableCell className="text-nowrap">
+                        {patron.modifiedBy || "-"}
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.BARCODE)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.barcode ? (
+                            // <Barcode
+                            //   value={patron.libraryCard.barcode}
+                            //   width={1}
+                            //   height={50}
+                            //   fontSize={12}
+                            //   displayValue={false}
+                            // />
+                            <></>
                           ) : (
-                            <X className="text-danger" />
-                          )
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.maxItemOnceTime ?? "-"}
-                      </div>
-                    </TableCell>
+                    <Hidable hide={!columns.includes(Column.FULLNAME_ON_CARD)}>
+                      <TableCell className="text-nowrap">
+                        {patron.libraryCard?.fullName || "-"}
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.allowBorrowMoreReason ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button size="sm" variant="secondary">
-                                {t("View content")}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
-                              <DialogHeader>
-                                <DialogTitle>{t("Description")}</DialogTitle>
-                                <DialogDescription>
-                                  <ParseHtml
-                                    data={
-                                      patron.libraryCard?.allowBorrowMoreReason
-                                    }
-                                  />
-                                </DialogDescription>
-                              </DialogHeader>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.totalMissedPickUp ?? "-"}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard ? (
-                          patron.libraryCard.isReminderSent ? (
-                            <Check className="text-success" />
+                    <Hidable hide={!columns.includes(Column.AVATAR)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard ? (
+                            <Avatar>
+                              <AvatarImage
+                                src={patron.libraryCard.avatar || ""}
+                              />
+                              <AvatarFallback>
+                                {patron.libraryCard.fullName
+                                  .split(" ")
+                                  .map((i) => i[0].toUpperCase())
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
                           ) : (
-                            <X className="text-danger" />
-                          )
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard ? (
-                          patron.libraryCard.isExtended ? (
-                            <Check className="text-success" />
+                    <Hidable hide={!columns.includes(Column.CARD_STATUS)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.status !== undefined ? (
+                            <CardStatusBadge
+                              status={patron.libraryCard.status}
+                            />
                           ) : (
-                            <X className="text-danger" />
-                          )
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.extensionCount ?? "-"}
-                      </div>
-                    </TableCell>
+                    <Hidable hide={!columns.includes(Column.ISSUANCE_METHOD)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.issuanceMethod !== undefined ? (
+                            <IssuanceMethodBadge
+                              status={patron.libraryCard.issuanceMethod}
+                            />
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.issueDate
-                          ? format(
-                              new Date(patron.libraryCard?.issueDate),
-                              "dd MMM yyyy",
-                              {
-                                locale: formatLocale,
-                              }
+                    <Hidable hide={!columns.includes(Column.ISSUE_DATE)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.issueDate
+                            ? format(
+                                new Date(patron.libraryCard?.issueDate),
+                                "dd MMM yyyy",
+                                {
+                                  locale: formatLocale,
+                                }
+                              )
+                            : "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.EXPIRY_DATE)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.expiryDate
+                            ? format(
+                                new Date(patron.libraryCard?.expiryDate),
+                                "dd MMM yyyy",
+                                {
+                                  locale: formatLocale,
+                                }
+                              )
+                            : "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.ALLOW_BORROW_MORE)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard ? (
+                            patron.libraryCard.isAllowBorrowMore ? (
+                              <Check className="text-success" />
+                            ) : (
+                              <X className="text-danger" />
                             )
-                          : "-"}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.expiryDate
-                          ? format(
-                              new Date(patron.libraryCard?.expiryDate),
-                              "dd MMM yyyy",
-                              {
-                                locale: formatLocale,
-                              }
-                            )
-                          : "-"}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.suspensionEndDate
-                          ? format(
-                              new Date(patron.libraryCard?.suspensionEndDate),
-                              "dd MMM yyyy",
-                              {
-                                locale: formatLocale,
-                              }
-                            )
-                          : "-"}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.suspensionReason ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button size="sm" variant="secondary">
-                                {t("View content")}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
-                              <DialogHeader>
-                                <DialogTitle>{t("Description")}</DialogTitle>
-                                <DialogDescription>
-                                  <ParseHtml
-                                    data={patron.libraryCard?.suspensionReason}
-                                  />
-                                </DialogDescription>
-                              </DialogHeader>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.rejectReason ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button size="sm" variant="secondary">
-                                {t("View content")}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
-                              <DialogHeader>
-                                <DialogTitle>{t("Description")}</DialogTitle>
-                                <DialogDescription>
-                                  <ParseHtml
-                                    data={patron.libraryCard?.rejectReason}
-                                  />
-                                </DialogDescription>
-                              </DialogHeader>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
-
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard ? (
-                          patron.libraryCard.isArchived ? (
-                            <Check className="text-success" />
                           ) : (
-                            <X className="text-danger" />
-                          )
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {patron.libraryCard?.archiveReason ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button size="sm" variant="secondary">
-                                {t("View content")}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
-                              <DialogHeader>
-                                <DialogTitle>{t("Description")}</DialogTitle>
-                                <DialogDescription>
-                                  <ParseHtml
-                                    data={patron.libraryCard?.archiveReason}
-                                  />
-                                </DialogDescription>
-                              </DialogHeader>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
+                    <Hidable
+                      hide={!columns.includes(Column.MAX_ITEM_ONCE_TIME)}
+                    >
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.maxItemOnceTime ?? "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable
+                      hide={!columns.includes(Column.ALLOW_BORROW_MORE_REASON)}
+                    >
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.allowBorrowMoreReason ? (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button size="sm" variant="secondary">
+                                  {t("View content")}
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle>{t("Description")}</DialogTitle>
+                                  <DialogDescription>
+                                    <ParseHtml
+                                      data={
+                                        patron.libraryCard
+                                          ?.allowBorrowMoreReason
+                                      }
+                                    />
+                                  </DialogDescription>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable
+                      hide={!columns.includes(Column.TOTAL_MISSED_PICK_UP)}
+                    >
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.totalMissedPickUp ?? "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.REMINDER_SENT)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard ? (
+                            patron.libraryCard.isReminderSent ? (
+                              <Check className="text-success" />
+                            ) : (
+                              <X className="text-danger" />
+                            )
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.EXTENDED)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard ? (
+                            patron.libraryCard.isExtended ? (
+                              <Check className="text-success" />
+                            ) : (
+                              <X className="text-danger" />
+                            )
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.EXTENSION_COUNT)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.extensionCount ?? "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable
+                      hide={!columns.includes(Column.SUSPENSION_END_DATE)}
+                    >
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.suspensionEndDate
+                            ? format(
+                                new Date(patron.libraryCard?.suspensionEndDate),
+                                "dd MMM yyyy",
+                                {
+                                  locale: formatLocale,
+                                }
+                              )
+                            : "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.SUSPENSION_REASON)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.suspensionReason ? (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button size="sm" variant="secondary">
+                                  {t("View content")}
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle>{t("Description")}</DialogTitle>
+                                  <DialogDescription>
+                                    <ParseHtml
+                                      data={
+                                        patron.libraryCard?.suspensionReason
+                                      }
+                                    />
+                                  </DialogDescription>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.REJECT_REASON)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.rejectReason ? (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button size="sm" variant="secondary">
+                                  {t("View content")}
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle>{t("Description")}</DialogTitle>
+                                  <DialogDescription>
+                                    <ParseHtml
+                                      data={patron.libraryCard?.rejectReason}
+                                    />
+                                  </DialogDescription>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.TRANSACTION_CODE)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.transactionCode || "-"}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.ARCHIVED)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard ? (
+                            patron.libraryCard.isArchived ? (
+                              <Check className="text-success" />
+                            ) : (
+                              <X className="text-danger" />
+                            )
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
+
+                    <Hidable hide={!columns.includes(Column.ARCHIVE_REASON)}>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {patron.libraryCard?.archiveReason ? (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button size="sm" variant="secondary">
+                                  {t("View content")}
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
+                                <DialogHeader>
+                                  <DialogTitle>{t("Description")}</DialogTitle>
+                                  <DialogDescription>
+                                    <ParseHtml
+                                      data={patron.libraryCard?.archiveReason}
+                                    />
+                                  </DialogDescription>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+                    </Hidable>
 
                     <TableCell>
                       <div className="flex items-center justify-center">

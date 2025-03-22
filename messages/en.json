@@ -499,6 +499,12 @@
     "Train AI": "Train AI"
   },
   "LibraryCardManagementPage": {
+    "Filters cards": "Filters cards",
+    "Cards": "Cards",
+    "Reset default": "Reset default",
+    "Columns": "Columns",
+    "Fullname": "Fullname",
+    "show hide columns": "Show/Hide columns",
     "Patrons": "Patrons",
     "Holders": "Patrons",
     "Create patron": "Create patron",
@@ -936,6 +942,10 @@
     "Import errors": "Import errors"
   },
   "NotificationsManagementPage": {
+    "Recipient": "Recipient",
+    "Sender": "Sender (who creates notification)",
+    "Reset": "Reset",
+    "Apply": "Apply",
     "Notifications": "Notifications",
     "Create notification": "Create notification",
     "Cancel": "Cancel",

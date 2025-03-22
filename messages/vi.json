@@ -501,6 +501,11 @@
     "Train AI": "Train AI"
   },
   "LibraryCardManagementPage": {
+    "Filters cards": "Bộ lọc thẻ",
+    "Reset default": "Khôi phục mặc định",
+    "Columns": "Cột",
+    "Fullname": "Tên đầy đủ",
+    "show hide columns": "Hiện/Ẩn các cột",
     "Patrons": "Bạn đọc",
     "Holders": "Bạn đọc",
     "Create patron": "Thêm bạn đọc",
@@ -601,7 +606,8 @@
     "Summary": "Tóm tắt",
     "Patron information": "Thông tin bạn đọc",
     "Card information": "Thông tin thẻ",
-    "Barcode": "ĐKCB",
+    "Barcode": "Mã thẻ",
+    "Cards": "Thẻ",
     "Max item once time": "Số lượng mượn tối đa đồng thời",
     "Allow borrow more reason": "Lý do cho phép mượn thêm",
     "Extension count": "Số lượng mở rộng",
@@ -940,6 +946,10 @@
     "Import errors": "Lỗi nạp dữ liệu"
   },
   "NotificationsManagementPage": {
+    "Recipient": "Người nhận",
+    "Sender": "Người gửi (người tạo thông báo)",
+    "Reset": "Khôi phục",
+    "Apply": "Áp dụng",
     "Notifications": "Thông báo",
     "Create notification": "Tạo thông báo",
     "Cancel": "Hủy",
@@ -1627,6 +1637,7 @@
       "Lost": "Mất",
       "Deleted": "Đã xóa"
     },
+
     "Visibility": { "Public": "Công khai", "Private": "Riêng tư" },
     "Trained": { "Trained": "Đã train", "NotYet": "Chưa train" },
     "AuditType": { "0": "Không đổi", "1": "Tạo", "2": "Sửa", "3": "Xóa" },

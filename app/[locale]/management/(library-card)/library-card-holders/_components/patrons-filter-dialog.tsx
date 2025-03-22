@@ -1,20 +1,21 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client"
 
 import React, { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { getLocalTimeZone } from "@internationalized/date"
-import { format } from "date-fns"
 import { Filter } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import { parseQueryDateRange, parseSearchParamsDateRange } from "@/lib/filters"
 import { ECardStatus, EIdxGender, EIssuanceMethod } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
 import {
   filterPatronSchema,
   type TFilterPatronSchema,
 } from "@/lib/validations/patrons/search-patrons"
+import { filterBooleanSchema } from "@/lib/zod"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -33,21 +34,11 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  createCalendarDate,
-  DateTimePicker,
-} from "@/components/form/date-time-picker"
+import BooleanFilter from "@/components/form/boolean-filter"
+import DateRangePickerFilter from "@/components/form/date-range-picker-filter"
+import SelectEnumFilter from "@/components/form/select-enum-filter"
 
 function FiltersPatronsDialog() {
-  const timezone = getLocalTimeZone()
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const t = useTranslations("LibraryCardManagementPage")
@@ -60,38 +51,65 @@ function FiltersPatronsDialog() {
   const form = useForm<TFilterPatronSchema>({
     resolver: zodResolver(filterPatronSchema),
     defaultValues: {
-      cardIssueDateRange: [null, null],
-      cardExpiryDateRange: [null, null],
-      suspensionDateRange: [null, null],
-      dobRange: [null, null],
+      cardExpiryDateRange: parseSearchParamsDateRange(
+        searchParams.getAll("cardExpiryDateRange")
+      ),
+      cardIssueDateRange: parseSearchParamsDateRange(
+        searchParams.getAll("cardIssueDateRange")
+      ),
+      suspensionDateRange: parseSearchParamsDateRange(
+        searchParams.getAll("suspensionDateRange")
+      ),
+      dobRange: parseSearchParamsDateRange(searchParams.getAll("dobRange")),
+
+      cardStatus: searchParams.get("cardStatus") || undefined,
+      gender: searchParams.get("gender") || undefined,
+      issuanceMethod: searchParams.get("issuanceMethod") || undefined,
+
+      isAllowBorrowMore: filterBooleanSchema().parse(
+        searchParams.get("isAllowBorrowMore")
+      ),
+      isArchived: filterBooleanSchema().parse(searchParams.get("isArchived")),
+      isExtended: filterBooleanSchema().parse(searchParams.get("isExtended")),
+      isReminderSent: filterBooleanSchema().parse(
+        searchParams.get("isReminderSent")
+      ),
     },
   })
 
   const resetFilters = () => {
-    form.setValue("gender", undefined)
-    form.setValue("issuanceMethod", undefined)
-    form.setValue("cardStatus", undefined)
-
-    form.setValue("isAllowBorrowMore", undefined)
-    form.setValue("isReminderSent", undefined)
-    form.setValue("isExtended", undefined)
-    form.setValue("isArchived", undefined)
-
-    form.setValue("cardIssueDateRange", [null, null])
-    form.setValue("cardExpiryDateRange", [null, null])
-    form.setValue("suspensionDateRange", [null, null])
-    form.setValue("dobRange", [null, null])
+    Object.keys(form.getValues()).forEach((key) => {
+      form.setValue(
+        //@ts-ignore
+        key,
+        //@ts-ignore
+        Array.isArray(form.getValues()[key]) ? [null, null] : undefined
+      )
+    })
+    setOpen(false)
+    router.push("/management/library-card-holders")
   }
+
+  const wCardStatus = form.watch("cardStatus")
+  const wGender = form.watch("gender")
+  const wIssuanceMethod = form.watch("issuanceMethod")
+  const wIsAllowBorrowMore = form.watch("isAllowBorrowMore")
+  const wIsArchived = form.watch("isArchived")
+  const wIsExtended = form.watch("isExtended")
+  const wIsReminderSent = form.watch("isReminderSent")
 
   const onSubmit = async (values: TFilterPatronSchema) => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        gender: values.gender ? values.gender.toString() : null,
-        issuanceMethod: values.issuanceMethod
-          ? values.issuanceMethod.toString()
-          : null,
-        cardStatus: values.cardStatus ? values.cardStatus.toString() : null,
+        cardExpiryDateRange: parseQueryDateRange(values.cardExpiryDateRange),
+        cardIssueDateRange: parseQueryDateRange(values.cardIssueDateRange),
+        suspensionDateRange: parseQueryDateRange(values.suspensionDateRange),
+        dobRange: parseQueryDateRange(values.dobRange),
+
+        cardStatus: values.cardStatus || null,
+        gender: values.gender || null,
+        issuanceMethod: values.issuanceMethod || null,
 
         isAllowBorrowMore:
           values.isAllowBorrowMore === undefined
@@ -99,39 +117,29 @@ function FiltersPatronsDialog() {
             : values.isAllowBorrowMore
               ? "true"
               : "false",
-        isReminderSent:
-          values.isAllowBorrowMore === undefined
+        isArchived:
+          values.isArchived === undefined
             ? null
-            : values.isAllowBorrowMore
+            : values.isArchived
               ? "true"
               : "false",
         isExtended:
-          values.isAllowBorrowMore === undefined
+          values.isExtended === undefined
             ? null
-            : values.isAllowBorrowMore
+            : values.isExtended
               ? "true"
               : "false",
-        isArchived:
-          values.isAllowBorrowMore === undefined
+        isReminderSent:
+          values.isReminderSent === undefined
             ? null
-            : values.isAllowBorrowMore
+            : values.isReminderSent
               ? "true"
               : "false",
-
-        cardIssueDateRange: values.cardIssueDateRange.map((date) =>
-          date ? format(date, "dd-MM-yyyy") : JSON.stringify(null)
-        ),
-        cardExpiryDateRange: values.cardExpiryDateRange.map((date) =>
-          date ? format(date, "dd-MM-yyyy") : JSON.stringify(null)
-        ),
-        suspensionDateRange: values.suspensionDateRange.map((date) =>
-          date ? format(date, "dd-MM-yyyy") : JSON.stringify(null)
-        ),
-        dobRange: values.dobRange.map((date) =>
-          date ? format(date, "dd-MM-yyyy") : JSON.stringify(null)
-        ),
       },
     })
+
+    console.log({ values, newUrl, wIsAllowBorrowMore })
+
     setOpen(false)
     router.replace(newUrl, { scroll: false })
   }
@@ -149,7 +157,7 @@ function FiltersPatronsDialog() {
       <DialogContent className="max-h-[80vh] w-full overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("Filters patrons")}</DialogTitle>
-          <DialogDescription>
+          <DialogDescription asChild>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -162,46 +170,11 @@ function FiltersPatronsDialog() {
                     <FormItem className="space-y-3">
                       <FormLabel>{t("Allow borrow more")}</FormLabel>
                       <FormControl>
-                        <RadioGroup
-                          onValueChange={(val) =>
-                            field.onChange(
-                              val === "all" ? undefined : val === "1"
-                            )
-                          }
-                          defaultValue={
-                            field.value === undefined
-                              ? "all"
-                              : field.value
-                                ? "1"
-                                : "0"
-                          }
-                          className="flex flex-row gap-4"
-                        >
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="all" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("All")}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="1" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("Yes")}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="0" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("No")}
-                            </FormLabel>
-                          </FormItem>
-                        </RadioGroup>
+                        <BooleanFilter
+                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                          value={wIsAllowBorrowMore}
+                          onChange={field.onChange}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -214,46 +187,11 @@ function FiltersPatronsDialog() {
                     <FormItem className="space-y-3">
                       <FormLabel>{t("Reminder sent")}</FormLabel>
                       <FormControl>
-                        <RadioGroup
-                          onValueChange={(val) =>
-                            field.onChange(
-                              val === "all" ? undefined : val === "1"
-                            )
-                          }
-                          defaultValue={
-                            field.value === undefined
-                              ? "all"
-                              : field.value
-                                ? "1"
-                                : "0"
-                          }
-                          className="flex flex-row gap-4"
-                        >
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="all" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("All")}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="1" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("Yes")}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="0" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("No")}
-                            </FormLabel>
-                          </FormItem>
-                        </RadioGroup>
+                        <BooleanFilter
+                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                          value={wIsReminderSent}
+                          onChange={field.onChange}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -266,46 +204,11 @@ function FiltersPatronsDialog() {
                     <FormItem className="space-y-3">
                       <FormLabel>{t("Extended")}</FormLabel>
                       <FormControl>
-                        <RadioGroup
-                          onValueChange={(val) =>
-                            field.onChange(
-                              val === "all" ? undefined : val === "1"
-                            )
-                          }
-                          defaultValue={
-                            field.value === undefined
-                              ? "all"
-                              : field.value
-                                ? "1"
-                                : "0"
-                          }
-                          className="flex flex-row gap-4"
-                        >
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="all" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("All")}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="1" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("Yes")}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="0" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("No")}
-                            </FormLabel>
-                          </FormItem>
-                        </RadioGroup>
+                        <BooleanFilter
+                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                          value={wIsExtended}
+                          onChange={field.onChange}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -318,46 +221,11 @@ function FiltersPatronsDialog() {
                     <FormItem className="space-y-3">
                       <FormLabel>{t("Archived")}</FormLabel>
                       <FormControl>
-                        <RadioGroup
-                          onValueChange={(val) =>
-                            field.onChange(
-                              val === "all" ? undefined : val === "1"
-                            )
-                          }
-                          defaultValue={
-                            field.value === undefined
-                              ? "all"
-                              : field.value
-                                ? "1"
-                                : "0"
-                          }
-                          className="flex flex-row gap-4"
-                        >
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="all" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("All")}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="1" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("Yes")}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex flex-1 items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem value="0" />
-                            </FormControl>
-                            <FormLabel className="font-normal">
-                              {t("No")}
-                            </FormLabel>
-                          </FormItem>
-                        </RadioGroup>
+                        <BooleanFilter
+                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                          value={wIsArchived}
+                          onChange={field.onChange}
+                        />
                       </FormControl>
                     </FormItem>
                   )}
@@ -369,38 +237,13 @@ function FiltersPatronsDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("Gender")}</FormLabel>
-                      <Select
-                        value={
-                          field.value === undefined
-                            ? "All"
-                            : field.value.toString()
-                        }
-                        onValueChange={(val) =>
-                          field.onChange(val === "All" ? undefined : +val)
-                        }
-                        defaultValue={
-                          field.value ? field.value.toString() : "All"
-                        }
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="All">{t("All")}</SelectItem>
-                          {Object.values(EIdxGender)
-                            .filter((e) => typeof e === "number")
-                            .map((option) => (
-                              <SelectItem
-                                key={option}
-                                value={option.toString()}
-                              >
-                                {tGender(option.toString())}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
+                      <SelectEnumFilter
+                        //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                        value={wGender}
+                        onChange={field.onChange}
+                        enumObj={EIdxGender}
+                        tEnum={tGender}
+                      />
 
                       <FormMessage />
                     </FormItem>
@@ -412,38 +255,13 @@ function FiltersPatronsDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("Issuance method")}</FormLabel>
-                      <Select
-                        value={
-                          field.value === undefined
-                            ? "All"
-                            : field.value.toString()
-                        }
-                        onValueChange={(val) =>
-                          field.onChange(val === "All" ? undefined : +val)
-                        }
-                        defaultValue={
-                          field.value ? field.value.toString() : "All"
-                        }
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="All">{t("All")}</SelectItem>
-                          {Object.values(EIssuanceMethod)
-                            .filter((e) => typeof e === "number")
-                            .map((option) => (
-                              <SelectItem
-                                key={option}
-                                value={option.toString()}
-                              >
-                                {tIssuanceMethod(option.toString())}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
+                      <SelectEnumFilter
+                        //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                        value={wIssuanceMethod}
+                        onChange={field.onChange}
+                        enumObj={EIssuanceMethod}
+                        tEnum={tIssuanceMethod}
+                      />
 
                       <FormMessage />
                     </FormItem>
@@ -455,38 +273,13 @@ function FiltersPatronsDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("Card status")}</FormLabel>
-                      <Select
-                        value={
-                          field.value === undefined
-                            ? "All"
-                            : field.value.toString()
-                        }
-                        onValueChange={(val) =>
-                          field.onChange(val === "All" ? undefined : +val)
-                        }
-                        defaultValue={
-                          field.value ? field.value.toString() : "All"
-                        }
-                      >
-                        <FormControl>
-                          <SelectTrigger>
-                            <SelectValue />
-                          </SelectTrigger>
-                        </FormControl>
-                        <SelectContent>
-                          <SelectItem value="All">{t("All")}</SelectItem>
-                          {Object.values(ECardStatus)
-                            .filter((e) => typeof e === "number")
-                            .map((option) => (
-                              <SelectItem
-                                key={option}
-                                value={option.toString()}
-                              >
-                                {tCardStatus(option.toString())}
-                              </SelectItem>
-                            ))}
-                        </SelectContent>
-                      </Select>
+                      <SelectEnumFilter
+                        //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                        value={wCardStatus}
+                        onChange={field.onChange}
+                        enumObj={ECardStatus}
+                        tEnum={tCardStatus}
+                      />
 
                       <FormMessage />
                     </FormItem>
@@ -500,35 +293,12 @@ function FiltersPatronsDialog() {
                     <FormItem>
                       <FormLabel>{t("Card issue date")}</FormLabel>
 
-                      <div className="flex items-center justify-between gap-3">
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[0])}
-                          onChange={(date) =>
-                            field.onChange([
-                              date ? date.toDate(timezone) : null,
-                              field.value[1],
-                            ])
-                          }
-                          disabled={(date) =>
-                            !!field.value[1] && date > new Date(field.value[1])
-                          }
+                      <FormControl>
+                        <DateRangePickerFilter
+                          value={field.value}
+                          onChange={field.onChange}
                         />
-
-                        <div>-</div>
-
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[1])}
-                          onChange={(date) =>
-                            field.onChange([
-                              field.value[0],
-                              date ? date.toDate(timezone) : null,
-                            ])
-                          }
-                          disabled={(date) =>
-                            !!field.value[0] && date < new Date(field.value[0])
-                          }
-                        />
-                      </div>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -540,35 +310,12 @@ function FiltersPatronsDialog() {
                     <FormItem>
                       <FormLabel>{t("Card expiry date")}</FormLabel>
 
-                      <div className="flex items-center justify-between gap-3">
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[0])}
-                          onChange={(date) =>
-                            field.onChange([
-                              date ? date.toDate(timezone) : null,
-                              field.value[1],
-                            ])
-                          }
-                          disabled={(date) =>
-                            !!field.value[1] && date > new Date(field.value[1])
-                          }
+                      <FormControl>
+                        <DateRangePickerFilter
+                          value={field.value}
+                          onChange={field.onChange}
                         />
-
-                        <div>-</div>
-
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[1])}
-                          onChange={(date) =>
-                            field.onChange([
-                              field.value[0],
-                              date ? date.toDate(timezone) : null,
-                            ])
-                          }
-                          disabled={(date) =>
-                            !!field.value[0] && date < new Date(field.value[0])
-                          }
-                        />
-                      </div>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -580,35 +327,12 @@ function FiltersPatronsDialog() {
                     <FormItem>
                       <FormLabel>{t("Suspension date")}</FormLabel>
 
-                      <div className="flex items-center justify-between gap-3">
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[0])}
-                          onChange={(date) =>
-                            field.onChange([
-                              date ? date.toDate(timezone) : null,
-                              field.value[1],
-                            ])
-                          }
-                          disabled={(date) =>
-                            !!field.value[1] && date > new Date(field.value[1])
-                          }
+                      <FormControl>
+                        <DateRangePickerFilter
+                          value={field.value}
+                          onChange={field.onChange}
                         />
-
-                        <div>-</div>
-
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[1])}
-                          onChange={(date) =>
-                            field.onChange([
-                              field.value[0],
-                              date ? date.toDate(timezone) : null,
-                            ])
-                          }
-                          disabled={(date) =>
-                            !!field.value[0] && date < new Date(field.value[0])
-                          }
-                        />
-                      </div>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -620,35 +344,12 @@ function FiltersPatronsDialog() {
                     <FormItem>
                       <FormLabel>{t("Dob")}</FormLabel>
 
-                      <div className="flex items-center justify-between gap-3">
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[0])}
-                          onChange={(date) =>
-                            field.onChange([
-                              date ? date.toDate(timezone) : null,
-                              field.value[1],
-                            ])
-                          }
-                          disabled={(date) =>
-                            !!field.value[1] && date > new Date(field.value[1])
-                          }
+                      <FormControl>
+                        <DateRangePickerFilter
+                          value={field.value}
+                          onChange={field.onChange}
                         />
-
-                        <div>-</div>
-
-                        <DateTimePicker
-                          value={createCalendarDate(field.value[1])}
-                          onChange={(date) =>
-                            field.onChange([
-                              field.value[0],
-                              date ? date.toDate(timezone) : null,
-                            ])
-                          }
-                          disabled={(date) =>
-                            !!field.value[0] && date < new Date(field.value[0])
-                          }
-                        />
-                      </div>
+                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}

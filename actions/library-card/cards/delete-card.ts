@@ -24,6 +24,8 @@ export async function deleteCard(
 
     revalidatePath("/management/library-card-holders")
     revalidatePath(`/management/library-card-holders/${userId}`)
+    revalidatePath(`/management/library-cards`)
+    revalidatePath(`/management/library-cards/${libraryCardId}`)
 
     return {
       isSuccess: true,
