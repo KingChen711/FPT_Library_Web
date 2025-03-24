@@ -459,6 +459,7 @@
     "Permissions": "Quyền"
   },
   "Routes": {
+    "Borrow records": "Lịch sử mượn",
     "Borrow requests": "Yêu cầu mượn",
     "Borrow and Return": "Mượn trả tài liệu",
     "Dashboard": "Bảng điều khiển",
@@ -711,8 +712,8 @@
       "reading": "Đang đọc",
       "have read": "Đã đọc",
       "hard copy": "Bản copy cứng",
-      "ebook": "Tài liệu điện tử",
-      "audio book": "Tài liệu nói",
+      "ebook": "Sách điện tử",
+      "audio book": "Sách liệu nói",
       "book serial no": "Số Seri sách",
       "return date": "Ngày trả",
       "pickup date": "Ngày nhận",
@@ -1028,13 +1029,13 @@
     "No category found": "Không tìm thấy",
     "Book resources": "Tài nguyên tài liệu",
     "Book editions": "Các ấn bản",
-    "More Ebook": "Thêm tài liệu điện tử",
-    "More AudioBook": "Thêm tài liệu nói",
+    "More Ebook": "Thêm sách điện tử",
+    "More AudioBook": "Thêm sách liệu nói",
     "Resource title": "Tiêu đề tài nguyên",
     "Edition title": "Tiêu đề ấn bản",
-    "EBook": "Tài liệu điện tử",
-    "Ebook": "Tài liệu điện tử",
-    "AudioBook": "Tài liệu nói",
+    "EBook": "Sách điện tử",
+    "Ebook": "Sách điện tử",
+    "AudioBook": "Sách liệu nói",
     "More edition": "Thêm ấn bản",
     "Edition number": "Số ấn bản",
     "Page count": "Số trang",
@@ -1612,12 +1613,12 @@
 
     "NotificationType": {
       "0": "Sự kiện",
-      "1": "Thông báo",
-      "2": "Nhắc nhở"
+      "1": "Nhắc nhở",
+      "2": "Thông báo"
     },
     "ResourceBookType": {
-      "AudioBook": "Tài liệu nói",
-      "Ebook": "Tài liệu điện tử"
+      "AudioBook": "Sách liệu nói",
+      "Ebook": "Sách điện tử"
     },
     "BookFormat": {
       "Paperback": "Bìa giấy",
@@ -1755,5 +1756,12 @@
     "Trained": "Đã train",
     "Untrained": "Chưa train"
   },
-  "AutocompleteLibraryItem": { "Available": "Có sẵn", "Out of shelf": "Đã hết" }
+  "AutocompleteLibraryItem": {
+    "Available": "Có sẵn",
+    "Out of shelf": "Đã hết"
+  },
+  "BorrowAndReturnManagementPage": {
+    "Create borrow record": "Tạo lịch sử mượn",
+    "Scan patrons card": "Quét thẻ của bạn đọc"
+  }
 }

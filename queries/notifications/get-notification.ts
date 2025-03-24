@@ -2,14 +2,20 @@ import { http } from "@/lib/http"
 
 import "server-only"
 
-import { type Notification } from "@/lib/types/models"
+import { type Employee, type Notification } from "@/lib/types/models"
 
 import { auth } from "../auth"
 
-const getNotification = async (id: number): Promise<Notification | null> => {
+type NotificationDetail = Notification & {
+  createdByNavigation: Employee
+}
+
+const getNotification = async (
+  id: number
+): Promise<NotificationDetail | null> => {
   const { getAccessToken } = auth()
   try {
-    const { data } = await http.get<Notification>(
+    const { data } = await http.get<NotificationDetail>(
       `/api/privacy/notifications/${id}`,
       {
         next: {

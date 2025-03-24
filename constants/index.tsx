@@ -75,17 +75,17 @@ export const managementRoutes = [
     },
     subRoutes: [
       {
+        route: "/management/borrows/records",
+        label: "Borrow records",
+        Icon: (props: { className?: string }) => {
+          return <Icons.BorrowBook {...props} />
+        },
+      },
+      {
         route: "/management/borrows/requests",
         label: "Borrow requests",
         Icon: (props: { className?: string }) => {
           return <Icons.BorrowRequest {...props} />
-        },
-      },
-      {
-        route: "/management/borrows",
-        label: "Borrows",
-        Icon: (props: { className?: string }) => {
-          return <Icons.BorrowBook {...props} />
         },
       },
       {

@@ -9,6 +9,7 @@ import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Button } from "@/components/ui/button"
 import Copitor from "@/components/ui/copitor"
 import {
@@ -99,17 +100,20 @@ async function CardDetailPage({ params }: Props) {
               </div>
             </div>
 
-            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <div className="col-span-12 flex flex-col border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
               <h4 className="font-bold">{t("Barcode")}</h4>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                <BarcodeGenerator
+                  value={card.barcode}
+                  options={{
+                    format: "CODE128",
+                    displayValue: true,
+                    fontSize: 12,
+                    width: 1,
+                    height: 18,
+                  }}
+                />
                 <Copitor content={card.barcode} />
-                {/* <Barcode
-                    value={card.barcode}
-                    width={1}
-                    height={50}
-                    fontSize={12}
-                    displayValue={false}
-                  /> */}
               </div>
             </div>
 

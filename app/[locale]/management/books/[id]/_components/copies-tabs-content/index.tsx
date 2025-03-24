@@ -246,7 +246,6 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
                       {copy.updatedBy || "-"}
                     </TableCell>
 
-                    {/* <TableCell className="text-nowrap">TODO</TableCell> */}
                     <TableCell>
                       <div className="flex justify-center">
                         <CopyDropdown

@@ -264,3 +264,8 @@ export enum EBorrowDigitalStatus {
   Expired,
   Cancelled,
 }
+
+export enum EBorrowType {
+  IN_LIBRARY,
+  TAKE_HOME,
+}

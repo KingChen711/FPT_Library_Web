@@ -12,10 +12,9 @@ import { parseQueryDateRange, parseSearchParamsDateRange } from "@/lib/filters"
 import { ENotificationType } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
 import {
-  filterNotificationSchema,
-  type TFilterNotificationSchema,
-} from "@/lib/validations/notifications/search-notifications"
-import { filterBooleanSchema } from "@/lib/zod"
+  filterNotificationPrivacySchema,
+  type TFilterNotificationPrivacySchema,
+} from "@/lib/validations/notifications/search-privacy-notifications"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -34,8 +33,6 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import BooleanFilter from "@/components/form/boolean-filter"
 import DateRangePickerFilter from "@/components/form/date-range-picker-filter"
 import SelectEnumFilter from "@/components/form/select-enum-filter"
 
@@ -47,16 +44,14 @@ function FiltersNotificationsDialog() {
 
   const searchParams = useSearchParams()
 
-  const form = useForm<TFilterNotificationSchema>({
-    resolver: zodResolver(filterNotificationSchema),
+  const form = useForm<TFilterNotificationPrivacySchema>({
+    resolver: zodResolver(filterNotificationPrivacySchema),
     defaultValues: {
       createDateRange: parseSearchParamsDateRange(
         searchParams.getAll("createdAtRange")
       ),
-      isPublic: filterBooleanSchema().parse(searchParams.get("isPublic")),
+
       notificationType: searchParams.get("notificationType") || undefined,
-      email: searchParams.get("email") || undefined,
-      createdBy: searchParams.get("createdBy") || undefined,
     },
   })
 
@@ -70,26 +65,18 @@ function FiltersNotificationsDialog() {
       )
     })
     setOpen(false)
-    router.push("/management/notifications")
+    router.push("/me/account/notifications")
   }
 
-  const wIsPublic = form.watch("isPublic")
   const wNotificationType = form.watch("notificationType")
 
-  const onSubmit = async (values: TFilterNotificationSchema) => {
+  const onSubmit = async (values: TFilterNotificationPrivacySchema) => {
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
         createDateRange: parseQueryDateRange(values.createDateRange),
-        isPublic:
-          values.isPublic === undefined
-            ? null
-            : values.isPublic
-              ? "true"
-              : "false",
+
         notificationType: values.notificationType || null,
-        email: values.email || null,
-        createdBy: values.createdBy || null,
       },
     })
     setOpen(false)
@@ -135,23 +122,6 @@ function FiltersNotificationsDialog() {
 
                 <FormField
                   control={form.control}
-                  name="isPublic"
-                  render={({ field }) => (
-                    <FormItem className="space-y-3">
-                      <FormLabel>{t("Public")}?</FormLabel>
-                      <FormControl>
-                        <BooleanFilter
-                          //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
-                          value={wIsPublic}
-                          onChange={field.onChange}
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
                   name="createDateRange"
                   render={({ field }) => (
                     <FormItem>
@@ -162,36 +132,6 @@ function FiltersNotificationsDialog() {
                           value={field.value}
                           onChange={field.onChange}
                         />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Recipient")}</FormLabel>
-
-                      <FormControl>
-                        <Input type="email" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="createdBy"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>{t("Sender")}</FormLabel>
-
-                      <FormControl>
-                        <Input type="email" {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

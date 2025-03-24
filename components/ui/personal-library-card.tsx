@@ -84,7 +84,7 @@ const PersonalLibraryCard = ({ user }: Props) => {
               />
             </div>
           </CardContent>
-          <CardFooter className="bg-gray-50 p-3 text-center text-xs">
+          <CardFooter className="p-3 text-center text-xs">
             <p className="w-full">
               This card remains the property of ELibrary. If found, please
               return to any ELibrary branch.
@@ -133,7 +133,7 @@ const PersonalLibraryCard = ({ user }: Props) => {
                 {
                   label: "Extension Count",
                   value: user.libraryCard.extensionCount,
-                  icon: <User className="size-4 text-teal-500" />,
+                  icon: <User className="size-4 text-primary" />,
                 },
                 {
                   label: "Expiry Date",
@@ -145,7 +145,7 @@ const PersonalLibraryCard = ({ user }: Props) => {
                   <td className="flex items-center gap-2 px-4 py-2 font-medium">
                     {item.icon} {item.label}
                   </td>
-                  <td className="px-4 py-2 text-right text-gray-700">
+                  <td className="px-4 py-2 text-right text-muted-foreground">
                     {item.value}
                   </td>
                 </tr>

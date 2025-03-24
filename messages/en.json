@@ -457,6 +457,7 @@
     "Permissions": "Permissions"
   },
   "Routes": {
+    "Borrow records": "Borrow records",
     "Borrow requests": "Borrow requests",
     "Borrow and Return": "Borrow and Return",
     "Dashboard": "Dashboard",
@@ -1604,7 +1605,7 @@
       "Damaged": "Damaged",
       "Lost": "Lost"
     },
-    "NotificationType": { "0": "Event", "1": "Notice", "2": "Reminder" },
+    "NotificationType": { "0": "Event", "1": "Reminder", "2": "Notice" },
     "ResourceBookType": { "AudioBook": "Audio book", "Ebook": "EBook" },
     "BookFormat": { "Paperback": "Paperback", "HardCover": "Hard cover" },
     "BookEditionStatus": { "0": "Draft", "1": "Published", "2": "Deleted" },
@@ -1736,5 +1737,9 @@
   "AutocompleteLibraryItem": {
     "Available": "Available",
     "Out of shelf": "Out of shelf"
+  },
+  "BorrowAndReturnManagementPage": {
+    "Create borrow record": "Create borrow record",
+    "Scan patrons card": "Scan patron's card"
   }
 }
