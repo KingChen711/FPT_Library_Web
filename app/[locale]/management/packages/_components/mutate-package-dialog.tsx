@@ -78,6 +78,17 @@ function MutatePackageDialog({
     form.clearErrors()
   }, [form, openEdit, open])
 
+  useEffect(() => {
+    if (type === "update" && libraryPackage) {
+      form.reset({
+        packageName: libraryPackage.packageName,
+        price: libraryPackage.price,
+        durationInMonths: libraryPackage.durationInMonths,
+        description: libraryPackage.description ?? "",
+      })
+    }
+  }, [libraryPackage, type, form])
+
   const handleOpenChange = (value: boolean) => {
     if (isPending) return
     if (type === "create") {

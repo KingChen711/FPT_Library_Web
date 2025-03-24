@@ -3,9 +3,8 @@
 // Types
 import Image from "next/image"
 import { differenceInDays, format } from "date-fns"
-import { Check, Loader2 } from "lucide-react"
+import { Check } from "lucide-react"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,

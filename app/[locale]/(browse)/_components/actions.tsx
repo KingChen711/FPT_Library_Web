@@ -8,6 +8,7 @@ import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
 import { NotificationBell } from "@/components/ui/noti-bell"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 import OverviewBorrowList from "./overview-borrow-list"
 import OverviewFavoriteList from "./overview-favorite-list"
@@ -81,6 +82,7 @@ function Actions() {
       )}
       <OverviewFavoriteList />
       <OverviewBorrowList />
+      <ThemeToggle />
       <NotificationBell />
     </div>
   )

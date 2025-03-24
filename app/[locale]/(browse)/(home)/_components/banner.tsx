@@ -111,7 +111,7 @@ const BannerHome = () => {
         </Carousel>
       </div>
 
-      <div className="col-span-2 flex h-full rounded-lg border-8 border-primary shadow-lg">
+      <div className="col-span-2 flex h-full overflow-x-hidden rounded-2xl border-8 border-primary shadow-lg">
         <div className="flex w-1/12 items-center justify-center bg-primary text-xl font-semibold text-accent">
           <p className="-rotate-90 text-nowrap text-primary-foreground dark:text-foreground">
             {t("new arrivals")}
@@ -134,7 +134,7 @@ const BannerHome = () => {
                 >
                   <div
                     onClick={() => router.push(`/books/${item.libraryItemId}`)}
-                    className="relative flex h-[180px] cursor-pointer items-center justify-center rounded-lg p-4 shadow-lg"
+                    className="relative flex h-[180px] cursor-pointer items-center justify-center rounded-lg p-4"
                   >
                     <Image
                       src={item.coverImage as string}

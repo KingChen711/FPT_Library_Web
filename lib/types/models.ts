@@ -752,6 +752,30 @@ export type BorrowRequest = {
   cancellationReason: string | null
   isReminderSent: boolean
   totalRequestItem: number
+  libraryItems: LibraryItem[]
+  reservationQueues: reservationQueue[]
+}
+
+export type reservationQueue = {
+  queueId: number
+  libraryItemId: number
+  libraryItemInstanceId: null | number
+  libraryCardId: string
+  queueStatus: number
+  borrowRequestId: number
+  isReservedAfterRequestFailed: boolean
+  expectedAvailableDateMin: null | string
+  expectedAvailableDateMax: null | string
+  reservationDate: string
+  expiryDate: null | string
+  reservationCode: null | string
+  isAppliedLabel: false
+  collectedDate: null | string
+  isNotified: false
+  cancelledBy: null | string
+  cancellationReason: null | string
+  libraryItem: LibraryItem
+  libraryItemInstance: null | string
 }
 
 export type DigitalTransaction = Transaction & {

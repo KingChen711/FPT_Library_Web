@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { Loader2, MapPin } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import { Badge } from "@/components/ui/badge"
@@ -13,6 +14,7 @@ import LibraryItemInfo from "@/components/ui/library-item-info"
 import { Separator } from "@/components/ui/separator"
 
 const PredictionResultTab = () => {
+  const t = useTranslations("AI")
   const router = useRouter()
   const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
     usePrediction()
@@ -48,7 +50,7 @@ const PredictionResultTab = () => {
             />
           </div>
           <Button className="flex w-full items-center gap-2">
-            <MapPin size={24} /> Locate
+            <MapPin size={24} /> {t("locate")}
           </Button>
         </div>
       </section>
@@ -64,21 +66,25 @@ const PredictionResultTab = () => {
 
       <section className="w-1/4 space-y-4 rounded-lg border p-4 shadow-lg">
         <h1 className="text-center text-2xl font-semibold text-primary">
-          AI-detected
+          {t("AI-predict")}
         </h1>
 
         {predictResult &&
           predictResult.bestItem?.ocrResult.fieldPointsWithThreshole.map(
             (item) => (
               <div key={item?.name} className="flex items-center gap-2">
-                <div className="w-1/4 font-semibold">{item?.name}:</div>
-                <div className="w-1/4 text-center">{item?.matchedPoint}%</div>
+                <div className="w-1/4 font-semibold">
+                  {t(item?.name.toLowerCase())}:
+                </div>
+                <div className="w-1/4 text-center">
+                  {item?.matchedPoint.toFixed(0)}%
+                </div>
                 <div className="flex-1">
                   <Badge
                     variant={item?.isPassed ? "success" : "danger"}
                     className="flex w-full items-center justify-center text-center"
                   >
-                    {item?.isPassed ? "Passed" : "Not passed"}
+                    {item?.isPassed ? t("passed") : t("not passed")}
                   </Badge>
                 </div>
               </div>
@@ -90,19 +96,22 @@ const PredictionResultTab = () => {
         {predictResult && (
           <div className="space-y-2">
             <div className="flex">
-              <div className="flex-1">Threshold value:</div>
-              <div className="flex-1 text-center font-semibold text-danger">
-                {predictResult.bestItem?.ocrResult.confidenceThreshold}%
+              <div className="flex-1 text-sm">{t("threshold value")}:</div>
+              <div className="flex-1 text-right font-semibold text-danger">
+                {predictResult.bestItem?.ocrResult.confidenceThreshold.toFixed(
+                  2
+                )}
+                %
               </div>
             </div>
             <div className="flex">
-              <div className="flex-1">Match overall:</div>
-              <div className="flex-1 text-center font-semibold text-danger">
-                {predictResult.bestItem?.ocrResult.totalPoint} %
+              <div className="flex-1 text-sm">{t("match overall")}:</div>
+              <div className="flex-1 text-right font-semibold text-danger">
+                {predictResult.bestItem?.ocrResult.totalPoint.toFixed(2)} %
               </div>
             </div>
             <div className="flex">
-              <div className="flex-1">Status:</div>
+              <div className="flex-1 text-sm">{t("status")}:</div>
               <div className="flex-1">
                 <Badge
                   variant={
@@ -115,8 +124,8 @@ const PredictionResultTab = () => {
                 >
                   {predictResult.bestItem?.ocrResult.totalPoint >=
                   predictResult.bestItem?.ocrResult.confidenceThreshold
-                    ? "Passed"
-                    : "Not passed"}
+                    ? t("passed")
+                    : t("not passed")}
                 </Badge>
               </div>
             </div>

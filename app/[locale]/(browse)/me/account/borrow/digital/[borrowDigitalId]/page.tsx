@@ -3,10 +3,11 @@
 import { Link } from "@/i18n/routing"
 import { format } from "date-fns"
 import { ArrowLeft, Calendar, Clock, Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import type { DigitalTransaction } from "@/lib/types/models"
 import { formatPrice } from "@/lib/utils"
-import useDigitalBorrowDetail from "@/hooks/library-items/use-digital-borrow-detail"
+import useBorrowDigitalDetail from "@/hooks/library-items/use-borrow-digital-detail"
 import { Badge } from "@/components/ui/badge"
 import BorrowDigitalStatusBadge from "@/components/ui/borrow-digital-status-badge"
 import { Button } from "@/components/ui/button"
@@ -17,8 +18,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
+import { Icons } from "@/components/ui/icons"
+import NoData from "@/components/ui/no-data"
 import { Progress } from "@/components/ui/progress"
 import { Separator } from "@/components/ui/separator"
+import { Skeleton } from "@/components/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -30,7 +34,7 @@ import {
 
 type Props = {
   params: {
-    digitalBorrowId: number
+    borrowDigitalId: number
   }
 }
 
@@ -51,9 +55,11 @@ const calculateProgress = (startDate: string, endDate: string): number => {
   return Math.round((elapsed / total) * 100)
 }
 
-const DigitalBorrowDetail = ({ params }: Props) => {
-  const { data: digitalBorrow, isLoading } = useDigitalBorrowDetail(
-    params.digitalBorrowId
+const BorrowDigitalDetail = ({ params }: Props) => {
+  const t = useTranslations("BookPage.borrow tracking")
+
+  const { data: digitalBorrow, isLoading } = useBorrowDigitalDetail(
+    params.borrowDigitalId
   )
 
   if (isLoading) {
@@ -61,36 +67,14 @@ const DigitalBorrowDetail = ({ params }: Props) => {
       <div className="flex h-[50vh] w-full items-center justify-center">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="size-12 animate-spin text-primary" />
-          <p className="text-sm text-muted-foreground">
-            Loading borrow details...
-          </p>
+          <Skeleton className="h-2 w-full text-sm text-muted-foreground" />
         </div>
       </div>
     )
   }
 
   if (!digitalBorrow) {
-    return (
-      <div className="flex h-[50vh] w-full items-center justify-center">
-        <Card className="w-full max-w-md">
-          <CardHeader>
-            <CardTitle>Resource Not Found</CardTitle>
-            <CardDescription>
-              The digital borrow information you are looking for could not be
-              found.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <Button variant="outline" className="w-full" asChild>
-              <Link href="/me/account/borrow">
-                <ArrowLeft className="mr-2 size-4" />
-                Back to Digital Borrows
-              </Link>
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    )
+    return <NoData />
   }
 
   const progress = calculateProgress(
@@ -106,16 +90,16 @@ const DigitalBorrowDetail = ({ params }: Props) => {
             <ArrowLeft className="size-4" />
           </Link>
         </Button>
-        <h1 className="text-2xl font-bold">Digital Borrow Details</h1>
+        <h1 className="text-2xl font-bold">{t("digital borrow detail")}</h1>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
         {/* Resource Information */}
         <Card className="md:col-span-2">
           <CardHeader>
-            <CardTitle>Resource Information</CardTitle>
+            <CardTitle>{t("resource information")}</CardTitle>
             <CardDescription>
-              Details about the borrowed digital resource
+              {t("details about the borrowed digital resource")}
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -124,36 +108,37 @@ const DigitalBorrowDetail = ({ params }: Props) => {
                 {digitalBorrow.libraryResource.resourceTitle}
               </h3>
               <div className="flex items-center gap-2">
-                <Badge variant="info" className="px-2 py-0">
-                  ID: {params.digitalBorrowId}
-                </Badge>
                 <BorrowDigitalStatusBadge status={digitalBorrow.status} />
               </div>
             </div>
 
             <Separator />
 
-            <div className="grid gap-4 sm:grid-cols-2">
-              <div className="space-y-1">
+            <div className="grid gap-4 sm:grid-cols-3">
+              <div className="flex items-center gap-2">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Resource Price
+                  {t("resource price")}
                 </p>
                 <p className="font-medium">
                   {formatPrice(digitalBorrow.libraryResource.borrowPrice!)}
                 </p>
               </div>
-              <div className="space-y-1">
+              <div className="flex items-center gap-2">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Extension Count
+                  {t("extension count")}
                 </p>
                 <p className="font-medium">{digitalBorrow.extensionCount}</p>
               </div>
-              <div className="space-y-1">
+              <div className="flex items-center gap-2">
                 <p className="text-sm font-medium text-muted-foreground">
-                  Extended
+                  {t("extended")}
                 </p>
                 <p className="font-medium">
-                  {digitalBorrow.isExtended ? "Yes" : "No"}
+                  {digitalBorrow.isExtended ? (
+                    <Icons.Check color="green" />
+                  ) : (
+                    <Icons.X color="red" />
+                  )}
                 </p>
               </div>
             </div>
@@ -163,14 +148,14 @@ const DigitalBorrowDetail = ({ params }: Props) => {
         {/* Borrow Period */}
         <Card>
           <CardHeader>
-            <CardTitle>Borrow Period</CardTitle>
+            <CardTitle>{t("borrow period")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
             <div className="space-y-4">
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-medium text-muted-foreground">
-                    Progress
+                    {t("progress")}
                   </p>
                   <p className="text-sm font-medium">{progress}%</p>
                 </div>
@@ -181,7 +166,7 @@ const DigitalBorrowDetail = ({ params }: Props) => {
                 <div className="mb-3 space-y-1">
                   <div className="flex items-center gap-1.5">
                     <Calendar className="size-4 text-muted-foreground" />
-                    <p className="text-sm font-medium">Register Date</p>
+                    <p className="text-sm font-medium">{t("register date")}</p>
                   </div>
                   <p className="pl-6 text-sm">
                     {formatDate(digitalBorrow.registerDate)}
@@ -191,7 +176,9 @@ const DigitalBorrowDetail = ({ params }: Props) => {
                 <div className="space-y-1">
                   <div className="flex items-center gap-1.5">
                     <Clock className="size-4 text-muted-foreground" />
-                    <p className="text-sm font-medium">Expiration Date</p>
+                    <p className="text-sm font-medium">
+                      {t("expiration date")}
+                    </p>
                   </div>
                   <p className="pl-6 text-sm">
                     {formatDate(digitalBorrow.expiryDate)}
@@ -206,9 +193,9 @@ const DigitalBorrowDetail = ({ params }: Props) => {
       {/* Transaction List */}
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Transaction History</CardTitle>
+          <CardTitle>{t("transaction history")}</CardTitle>
           <CardDescription>
-            All transactions related to this digital borrow
+            {t("all transactions related to this digital borrow")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -216,20 +203,20 @@ const DigitalBorrowDetail = ({ params }: Props) => {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>No</TableHead>
-                  <TableHead>Transaction Code</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Transaction Date</TableHead>
-                  <TableHead>Expiry Date</TableHead>
+                  <TableHead>{t("ordinal number")}</TableHead>
+                  <TableHead>{t("transaction code")}</TableHead>
+                  <TableHead>{t("amount")}</TableHead>
+                  <TableHead>{t("type")}</TableHead>
+                  <TableHead>{t("status")}</TableHead>
+                  <TableHead>{t("transaction date")}</TableHead>
+                  <TableHead>{t("expiration date")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {digitalBorrow.transactions.length === 0 ? (
                   <TableRow>
                     <TableCell colSpan={7} className="h-24 text-center">
-                      No transactions found
+                      {t("not found transaction")}
                     </TableCell>
                   </TableRow>
                 ) : (
@@ -290,13 +277,13 @@ const DigitalBorrowDetail = ({ params }: Props) => {
       {/* Additional Details (Collapsible) */}
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle>Additional Details</CardTitle>
+          <CardTitle>{t("additional information")}</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">
-                Created At
+                {t("created at")}
               </p>
               <div className="flex items-center">
                 <Calendar className="mr-1 size-3 text-muted-foreground" />
@@ -312,7 +299,7 @@ const DigitalBorrowDetail = ({ params }: Props) => {
 
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">
-                Cancelled At
+                {t("cancelled at")}
               </p>
               <div className="flex items-center">
                 <Calendar className="mr-1 size-3 text-muted-foreground" />
@@ -328,11 +315,11 @@ const DigitalBorrowDetail = ({ params }: Props) => {
 
             <div className="space-y-1">
               <p className="text-sm font-medium text-muted-foreground">
-                Description
+                {t("description")}
               </p>
               <p className="text-sm">
                 {digitalBorrow.transactions[0]?.description ||
-                  "No description available"}
+                  t("unavailable description")}
               </p>
             </div>
           </div>
@@ -342,4 +329,4 @@ const DigitalBorrowDetail = ({ params }: Props) => {
   )
 }
 
-export default DigitalBorrowDetail
+export default BorrowDigitalDetail

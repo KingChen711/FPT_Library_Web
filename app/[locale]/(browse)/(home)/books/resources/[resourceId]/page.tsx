@@ -26,8 +26,11 @@ import "react-pdf/dist/Page/TextLayer.css"
 
 import { WorkerPdfVersion } from "@/constants/library-version"
 import { useAuth } from "@/contexts/auth-provider"
+import { useRouter } from "@/i18n/routing"
 import {
   ArrowLeft,
+  Book,
+  Coins,
   Expand,
   Loader2,
   Minimize,
@@ -38,31 +41,46 @@ import { useTranslations } from "next-intl"
 
 import { http } from "@/lib/http"
 import useGetOwnResource from "@/hooks/library-items/get-own-resource"
+import useResourceDetail from "@/hooks/library-items/use-resource-detail"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 
+import { default as ResourcePayment } from "../_components/resource-payment"
+
 type Props = {
   params: {
+    bookId: string
     resourceId: string
   }
   searchParams: {
     resourceType: string
+    isPreview: string
   }
 }
-export default function EBookPage({ params }: Props) {
+
+export default function DigitalResourcePage({ params, searchParams }: Props) {
   const baseWidth = 400
   const baseHeight = 600
-  const [numPages, setNumPages] = useState<number>(0)
+  const { accessToken } = useAuth()
+  const flipBookRef = useRef(null)
+  const router = useRouter()
   const [isClient, setIsClient] = useState(false)
+  const [numPages, setNumPages] = useState<number>(0)
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(100)
-  const flipBookRef = useRef(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const tGeneralManagement = useTranslations("GeneralManagement")
-  const { accessToken } = useAuth()
   const { data, isLoading } = useGetOwnResource(+params.resourceId)
   const [pdfLink, setPdfLink] = useState<string>("")
   const [openPrintShotWarning, setOpenPrintShotWarning] = useState(false)
+  const t = useTranslations("BookPage")
+  const tGeneralManagement = useTranslations("GeneralManagement")
+  const [openPayment, setOpenPayment] = useState<boolean>(false)
+  const { data: resource, isLoading: isLoadingResource } = useResourceDetail(
+    params.resourceId
+  )
+
+  console.log(params.bookId)
+  console.log("🚀 ~ DigitalResourcePage ~ data:", data)
 
   useEffect(() => {
     setIsClient(true)
@@ -104,15 +122,28 @@ export default function EBookPage({ params }: Props) {
   useEffect(() => {
     async function fetchPdf() {
       try {
-        const { data } = await http.get<Blob>(
-          `/api/library-items/resource/${params.resourceId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-            responseType: "blob",
-          }
-        )
+        const { data } =
+          searchParams.isPreview === "true"
+            ? await http.get<Blob>(
+                // `/api/library-item/${params.bookId}/resource/${params.resourceId}/preview`,
+                `/api/library-item/resource/${params.resourceId}/preview`,
+
+                {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                  responseType: "blob",
+                }
+              )
+            : await http.get<Blob>(
+                `/api/library-items/resource/${params.resourceId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${accessToken}`,
+                  },
+                  responseType: "blob",
+                }
+              )
 
         if (data.size === 0) {
           toast({
@@ -135,13 +166,19 @@ export default function EBookPage({ params }: Props) {
     }
 
     fetchPdf()
-  }, [accessToken, params.resourceId, tGeneralManagement])
+  }, [
+    accessToken,
+    params.bookId,
+    params.resourceId,
+    searchParams.isPreview,
+    tGeneralManagement,
+  ])
 
-  if (isLoading) {
+  if (isLoading || isLoadingResource) {
     return <Loader2 className="size-6 animate-spin" />
   }
 
-  console.log("🚀 ~ EBookPage ~ data:", data)
+  console.log("🚀 ~ DigitalResourcePage ~ resource:", resource)
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages)
@@ -167,7 +204,7 @@ export default function EBookPage({ params }: Props) {
     setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50))
   }
 
-  if (!isClient) {
+  if (!isClient || !resource) {
     return null
   }
 
@@ -180,34 +217,70 @@ export default function EBookPage({ params }: Props) {
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="text-danger">
-              Screen Capturing is Prohibited
+              {t("screen capturing is prohibited")}
             </DialogTitle>
-            <DialogDescription>
-              For security and copyright protection, screen capturing is not
-              allowed. Repeated violations may result in permanent account
-              suspension and data removal.
-            </DialogDescription>
+            <DialogDescription>{t("screen capturing desc")}</DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <DialogClose asChild>
-              <Button variant={"destructive"}>
-                Got it, I won’t do it again
-              </Button>
+              <Button variant={"destructive"}>{t("prohibited promise")}</Button>
             </DialogClose>
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <ResourcePayment
+        open={openPayment}
+        setOpen={setOpenPayment}
+        libraryItemId={params.bookId}
+        selectedResource={resource}
+      />
 
       <div
         ref={containerRef}
         className="flex h-full flex-col overflow-hidden bg-secondary"
       >
         <div className="flex w-full items-center justify-between bg-zinc p-4 text-primary-foreground">
-          <Button variant={"ghost"} className="text-primary-foreground">
-            <ArrowLeft /> Back
+          <Button
+            variant={"ghost"}
+            onClick={() => router.back()}
+            className="text-primary-foreground"
+          >
+            <ArrowLeft /> {t("back")}
           </Button>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 rounded-full bg-zinc/50 p-2 text-primary-foreground">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={"ghost"}
+                      className="text-primary-foreground"
+                    >
+                      <Book />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t("add to borrow list")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={"ghost"}
+                      onClick={() => setOpenPayment(true)}
+                      className="text-primary-foreground"
+                    >
+                      <Coins />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t("payment")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <Button
                 variant="ghost"
                 size="icon"
@@ -246,7 +319,9 @@ export default function EBookPage({ params }: Props) {
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{isFullscreen ? "Exit full screen" : "Full screen"}</p>
+                  <p>
+                    {isFullscreen ? t("exit full screen") : t("full screen")}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

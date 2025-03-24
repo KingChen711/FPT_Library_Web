@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
-import { userBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
+import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
 import {
   Book,
   BookOpen,
@@ -14,6 +14,7 @@ import {
   Trash2,
   User,
 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import { Badge } from "@/components/ui/badge"
@@ -21,6 +22,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
+import NoData from "@/components/ui/no-data"
 import { Separator } from "@/components/ui/separator"
 
 import DeleteBorrowRequestConfirm from "./delete-borrow-request-confirm"
@@ -30,8 +32,10 @@ type Props = {
 }
 
 const BorrowCard = ({ libraryItemId }: Props) => {
+  const t = useTranslations("BookPage")
   const router = useRouter()
-  const { selectedIds, toggleId } = userBorrowRequestStore()
+  const { selectedLibraryItemIds: selectedIds, toggleLibraryItemId: toggleId } =
+    useBorrowRequestStore()
   const { data, isLoading } = useLibraryItemDetail(libraryItemId)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
 
@@ -41,9 +45,6 @@ const BorrowCard = ({ libraryItemId }: Props) => {
         <CardContent className="flex h-[300px] items-center justify-center p-6">
           <div className="flex flex-col items-center gap-2">
             <Loader2 className="size-8 animate-spin text-primary" />
-            <p className="text-sm text-muted-foreground">
-              Loading library item...
-            </p>
           </div>
         </CardContent>
       </Card>
@@ -51,19 +52,7 @@ const BorrowCard = ({ libraryItemId }: Props) => {
   }
 
   if (!data) {
-    return (
-      <Card className="w-full overflow-hidden">
-        <CardContent className="p-6">
-          <div className="flex flex-col items-center gap-2 py-8 text-center">
-            <Book className="size-12 text-muted-foreground" />
-            <h3 className="text-lg font-medium">Item Not Found</h3>
-            <p className="text-sm text-muted-foreground">
-              The library item you are looking for could not be found.
-            </p>
-          </div>
-        </CardContent>
-      </Card>
-    )
+    return <NoData />
   }
 
   const isAvailable = data.libraryItemInventory?.availableUnits > 0
@@ -99,22 +88,37 @@ const BorrowCard = ({ libraryItemId }: Props) => {
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <h1
                   onClick={() => router.push(`/books/${libraryItemId}`)}
-                  className="cursor-pointer text-xl font-bold leading-tight"
+                  className="flex-1 cursor-pointer text-xl font-bold leading-tight"
                 >
                   {data.title}
                 </h1>
-                <Button
-                  size={"icon"}
-                  variant={"ghost"}
-                  onClick={() => setOpenDelete(true)}
-                  className="flex items-center gap-2"
-                >
-                  <Trash2
-                    color="red"
-                    size={20}
-                    className="cursor-pointer text-muted-foreground"
-                  />
-                </Button>
+                <div className="flex items-center gap-4">
+                  <Button
+                    variant={"ghost"}
+                    onClick={() => toggleId(libraryItemId)}
+                    className="flex cursor-pointer items-center gap-2"
+                  >
+                    <Checkbox
+                      color="white"
+                      checked={selectedIds.includes(libraryItemId)}
+                    />
+                    <Label className="cursor-pointer">
+                      {t("select borrow")}
+                    </Label>
+                  </Button>
+                  <Button
+                    size={"icon"}
+                    variant={"ghost"}
+                    onClick={() => setOpenDelete(true)}
+                    className="flex items-center gap-2"
+                  >
+                    <Trash2
+                      color="red"
+                      size={20}
+                      className="cursor-pointer text-muted-foreground"
+                    />
+                  </Button>
+                </div>
               </div>
               {data.authors && data.authors.length > 0 && (
                 <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
@@ -128,7 +132,9 @@ const BorrowCard = ({ libraryItemId }: Props) => {
                 variant={isAvailable ? "success" : "destructive"}
                 className="w-fit font-normal"
               >
-                {isAvailable ? "Available" : "Unavailable"}
+                {isAvailable
+                  ? t("fields.availability")
+                  : t("fields.unavailability")}
               </Badge>
             </CardHeader>
 
@@ -147,7 +153,7 @@ const BorrowCard = ({ libraryItemId }: Props) => {
                 {data.publisher && (
                   <div className="space-y-0.5">
                     <p className="text-xs font-medium text-muted-foreground">
-                      Publisher
+                      {t("fields.publisher")}
                     </p>
                     <p>{data.publisher}</p>
                   </div>
@@ -155,7 +161,7 @@ const BorrowCard = ({ libraryItemId }: Props) => {
                 {data.publicationYear && (
                   <div className="space-y-0.5">
                     <p className="text-xs font-medium text-muted-foreground">
-                      Year
+                      {t("fields.year")}
                     </p>
                     <div className="flex items-center gap-1">
                       <Calendar className="size-3.5 text-muted-foreground" />
@@ -166,7 +172,7 @@ const BorrowCard = ({ libraryItemId }: Props) => {
                 {data.publicationPlace && (
                   <div className="space-y-0.5">
                     <p className="text-xs font-medium text-muted-foreground">
-                      Place
+                      {t("fields.year")}
                     </p>
                     <div className="flex items-center gap-1">
                       <MapPin className="size-3.5 text-muted-foreground" />
@@ -177,7 +183,7 @@ const BorrowCard = ({ libraryItemId }: Props) => {
                 {data.pageCount && (
                   <div className="space-y-0.5">
                     <p className="text-xs font-medium text-muted-foreground">
-                      Pages
+                      {t("fields.pageCount")}
                     </p>
                     <div className="flex items-center gap-1">
                       <BookOpen className="size-3.5 text-muted-foreground" />
@@ -188,7 +194,7 @@ const BorrowCard = ({ libraryItemId }: Props) => {
                 {data.isbn && (
                   <div className="space-y-0.5">
                     <p className="text-xs font-medium text-muted-foreground">
-                      ISBN
+                      {t("fields.isbn")}
                     </p>
                     <p className="font-mono text-xs">{data.isbn}</p>
                   </div>
@@ -196,7 +202,7 @@ const BorrowCard = ({ libraryItemId }: Props) => {
                 {data.language && (
                   <div className="space-y-0.5">
                     <p className="text-xs font-medium text-muted-foreground">
-                      Language
+                      {t("fields.language")}
                     </p>
                     <p className="capitalize">{data.language}</p>
                   </div>
@@ -205,27 +211,15 @@ const BorrowCard = ({ libraryItemId }: Props) => {
             </CardContent>
 
             <CardFooter className="flex justify-between gap-2 pt-2">
-              <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Clock className="size-3.5" />
-                {data.category?.totalBorrowDays ? (
+              {data.category?.totalBorrowDays && (
+                <div className="flex items-center gap-1 text-xs font-semibold text-muted-foreground">
+                  <Clock className="size-4" />
                   <span>
-                    Borrow period: {data.category.totalBorrowDays} days
+                    {t("borrow duration")}: {data.category.totalBorrowDays}{" "}
+                    {t("days")}
                   </span>
-                ) : (
-                  <span>Not available for borrowing</span>
-                )}
-              </div>
-              <Button
-                variant={"ghost"}
-                onClick={() => toggleId(libraryItemId)}
-                className="flex cursor-pointer items-center gap-2"
-              >
-                <Checkbox
-                  color="white"
-                  checked={selectedIds.includes(libraryItemId)}
-                />
-                <Label className="cursor-pointer">Chọn mượn</Label>
-              </Button>
+                </div>
+              )}
             </CardFooter>
           </div>
         </div>

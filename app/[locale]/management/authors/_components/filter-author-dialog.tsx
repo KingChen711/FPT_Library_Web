@@ -97,7 +97,7 @@ function FiltersAuthorsDialog() {
 
       <DialogContent className="max-h-[80vh] w-full overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t("filter.employee")}</DialogTitle>
+          <DialogTitle>{t("filter.author")}</DialogTitle>
           <DialogDescription>
             <Form {...form}>
               <form

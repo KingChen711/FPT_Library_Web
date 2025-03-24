@@ -5,6 +5,7 @@ import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import useOcrDetect from "@/hooks/ai/use-ocr-detect"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
@@ -26,6 +27,7 @@ enum EOcrDetectTab {
 }
 
 const PredictionOcrDetectTab = () => {
+  const t = useTranslations("AI")
   const router = useRouter()
   const [currentTab, setCurrentTab] = useState<EOcrDetectTab>(
     EOcrDetectTab.BOTH_BOOKS
@@ -57,12 +59,14 @@ const PredictionOcrDetectTab = () => {
       className="w-full"
     >
       <TabsList>
-        <TabsTrigger value={EOcrDetectTab.BOTH_BOOKS}>Both Books</TabsTrigger>
+        <TabsTrigger value={EOcrDetectTab.BOTH_BOOKS}>
+          {t("both books")}
+        </TabsTrigger>
         <TabsTrigger value={EOcrDetectTab.UPLOADED_BOOK}>
-          Uploaded book
+          {t("uploaded book")}
         </TabsTrigger>
         <TabsTrigger value={EOcrDetectTab.DETECTED_BOOK}>
-          Detected book
+          {t("detected book")}
         </TabsTrigger>
       </TabsList>
       {/* Both books */}
@@ -77,7 +81,9 @@ const PredictionOcrDetectTab = () => {
                 height={300}
                 className="overflow-hidden rounded-lg object-cover shadow-lg"
               />
-              <h1 className="text-center font-semibold">Uploaded Book</h1>
+              <h1 className="text-center font-semibold">
+                {t("uploaded book")}
+              </h1>
             </div>
 
             <div className="flex flex-col gap-2">
@@ -86,7 +92,7 @@ const PredictionOcrDetectTab = () => {
                   <TooltipTrigger asChild>
                     <Image
                       src={libraryItem?.coverImage as string}
-                      alt={"Detected Book"}
+                      alt={t("detected book")}
                       width={200}
                       height={300}
                       className="overflow-hidden rounded-lg object-cover shadow-lg"
@@ -106,7 +112,9 @@ const PredictionOcrDetectTab = () => {
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
-              <h1 className="text-center font-semibold">Detected Book</h1>
+              <h1 className="text-center font-semibold">
+                {t("detected book")}
+              </h1>
             </div>
           </div>
 
@@ -136,7 +144,7 @@ const PredictionOcrDetectTab = () => {
               height={300}
               className="rounded-lg object-contain shadow-lg"
             />
-            <h1 className="text-center font-semibold">Uploaded Book</h1>
+            <h1 className="text-center font-semibold">{t("uploaded book")}</h1>
           </div>
         </Card>
       </TabsContent>
@@ -175,7 +183,7 @@ const PredictionOcrDetectTab = () => {
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
-            <h1 className="text-center font-semibold">Detected Book</h1>
+            <h1 className="text-center font-semibold">{t("detected book")}</h1>
           </div>
         </Card>
       </TabsContent>

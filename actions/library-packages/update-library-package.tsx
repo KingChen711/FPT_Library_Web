@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidatePath } from "next/cache"
+import { revalidatePath, revalidateTag } from "next/cache"
 import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
@@ -24,6 +24,7 @@ export async function updateLibraryPackage(
     )
 
     revalidatePath("/management/packages")
+    revalidateTag("packages")
 
     return {
       isSuccess: true,

@@ -4,6 +4,7 @@ import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { Loader2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import useOcrDetail from "@/hooks/ai/use-ocr-detail"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
@@ -28,6 +29,7 @@ import {
 } from "@/components/ui/tooltip"
 
 const PredictionOcrDetailTab = () => {
+  const t = useTranslations("AI")
   const router = useRouter()
   const { uploadedImage, bestMatchedLibraryItemId, predictResult } =
     usePrediction()
@@ -54,12 +56,14 @@ const PredictionOcrDetailTab = () => {
       {/* Book preview */}
       <div className="flex w-full">
         <section className="flex flex-1 flex-col gap-2 p-4">
-          <h1 className="text-center text-xl font-semibold">Uploaded Book</h1>
-          <h1 className="text-center">Your uploaded Image</h1>
+          <h1 className="text-center text-xl font-semibold">
+            {t("uploaded book")}
+          </h1>
+          <h1 className="text-center">{t("your uploaded image")}</h1>
           <div className="flex justify-center">
             <Image
               src={URL.createObjectURL(uploadedImage)}
-              alt={"Uploaded Book"}
+              alt={t("uploaded book")}
               width={180}
               height={240}
               className="rounded-lg object-contain shadow-lg"
@@ -69,27 +73,33 @@ const PredictionOcrDetailTab = () => {
 
         <section className="flex w-1/5 flex-col items-center justify-center gap-4">
           <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
-            <Label className="text-lg font-semibold">Match percentage</Label>
-            <p className="text-lg">{ocrDetail?.matchPercentage}%</p>
+            <Label className="text-lg font-semibold">
+              {t("match percentage")}
+            </Label>
+            <p className="text-lg">{ocrDetail?.matchPercentage.toFixed(2)}%</p>
           </div>
           <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
-            <Label className="text-lg font-semibold">Overall threshold</Label>
+            <Label className="text-lg font-semibold">
+              {t("overall threshold")}
+            </Label>
             <p className="text-lg text-danger">
-              {ocrDetail?.overallPercentage}%
+              {ocrDetail?.overallPercentage.toFixed(2)}%
             </p>
           </div>
         </section>
 
         <section className="flex flex-1 flex-col gap-2 p-4">
-          <h1 className="text-center text-xl font-semibold">Detected Book</h1>
-          <h1 className="text-center">Detected Image</h1>
+          <h1 className="text-center text-xl font-semibold">
+            {t("detected book")}
+          </h1>
+          <h1 className="text-center">{t("detected image")}</h1>
           <div className="flex justify-center">
             <TooltipProvider delayDuration={0}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Image
                     src={libraryItem?.coverImage as string}
-                    alt={"Detected Book"}
+                    alt={t("detected book")}
                     width={180}
                     height={240}
                     className="rounded-lg object-contain shadow-lg"
@@ -118,7 +128,7 @@ const PredictionOcrDetailTab = () => {
         <section className="flex flex-1 justify-center">
           <div className="w-3/4 overflow-hidden rounded-lg border-2">
             <h1 className="bg-draft p-2 font-semibold text-primary-foreground">
-              OCR Text
+              {t("ocr text")}
             </h1>
 
             <div className="w-full overflow-y-auto">
@@ -133,24 +143,28 @@ const PredictionOcrDetailTab = () => {
                       </TooltipTrigger>
                       <TooltipContent align="end" className="border-2 bg-card">
                         <div className="flex flex-col gap-2 text-card-foreground">
-                          <h1 className="font-semibold">Assumption Values</h1>
+                          <h1 className="font-semibold">
+                            {t("assumption values")}
+                          </h1>
                           <Separator />
                           <div className="flex flex-nowrap items-center justify-between gap-2">
-                            <div className="font-semibold">Title:</div>
+                            <div className="font-semibold">{t("title")}:</div>
                             <div className="font-semibold text-danger">
-                              {item.matchedTitlePercentage}%
+                              {item.matchedTitlePercentage.toFixed(2)}%
                             </div>
                           </div>
                           <div className="flex flex-nowrap items-center justify-between gap-2">
-                            <div className="font-semibold">Author:</div>
+                            <div className="font-semibold">{t("author")}:</div>
                             <div className="font-semibold text-danger">
-                              {item.matchedAuthorPercentage}%
+                              {item.matchedAuthorPercentage.toFixed(2)}%
                             </div>
                           </div>
                           <div className="flex flex-nowrap items-center justify-between gap-2">
-                            <div className="font-semibold">Publisher:</div>
+                            <div className="font-semibold">
+                              {t("publisher")}:
+                            </div>
                             <div className="font-semibold text-danger">
-                              {item.matchedPublisherPercentage}%
+                              {item.matchedPublisherPercentage.toFixed(2)}%
                             </div>
                           </div>
                         </div>
@@ -164,7 +178,7 @@ const PredictionOcrDetailTab = () => {
 
         <section className="flex-1 overflow-hidden rounded-lg border-2">
           <h1 className="bg-draft p-2 font-semibold text-primary-foreground">
-            Comparison
+            {t("comparison")}
           </h1>
           <div className="w-full overflow-x-auto">
             <Table className="w-full table-fixed">
@@ -172,26 +186,30 @@ const PredictionOcrDetailTab = () => {
                 <TableRow className="border">
                   <TableHead className="sticky left-0 z-10 w-[140px] border bg-background">
                     <div className="absolute inset-0 flex items-center justify-center font-semibold">
-                      <span className="absolute bottom-1 left-1">Fields</span>
-                      <span className="absolute right-1 top-1">Details</span>
+                      <span className="absolute bottom-1 left-1">
+                        {t("fields")}
+                      </span>
+                      <span className="absolute right-1 top-1">
+                        {t("details")}
+                      </span>
                     </div>
                     {/* Đường gạch chéo */}
                     <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-black to-transparent [mask-image:linear-gradient(to_top_right,_transparent_49%,_black_49%,_black_51%,_transparent_51%)]" />
                   </TableHead>
                   <TableHead className="w-[140px] border text-center font-semibold">
-                    Match Phrase
+                    {t("match phrase")}
                   </TableHead>
                   <TableHead className="w-[140px] border text-center font-semibold">
-                    Fuzziness
+                    {t("fuzziness")}
                   </TableHead>
                   <TableHead className="w-[140px] border text-center font-semibold">
-                    Threshold
+                    {t("threshold")}
                   </TableHead>
                   <TableHead className="w-[140px] border text-center font-semibold">
-                    Match Value
+                    {t("match overall")}
                   </TableHead>
                   <TableHead className="w-[140px] text-nowrap border text-center font-semibold">
-                    Match Percentage
+                    {t("match percentage")}
                   </TableHead>
                 </TableRow>
               </TableHeader>
@@ -200,7 +218,8 @@ const PredictionOcrDetailTab = () => {
                   ocrDetail?.stringComparisions?.map((item) => (
                     <TableRow key={item?.propertyName}>
                       <TableCell className="sticky left-0 z-10 w-[200px] border bg-background text-center font-semibold capitalize">
-                        {item.propertyName}
+                        {/* {item.propertyName} */}
+                        {t(item?.propertyName.toLowerCase())}
                       </TableCell>
                       <ColorfulTableCell
                         number={item?.matchPhrasePoint}
