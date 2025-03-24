@@ -34,7 +34,8 @@ type Props = {
 const BorrowCard = ({ libraryItemId }: Props) => {
   const t = useTranslations("BookPage")
   const router = useRouter()
-  const { selectedIds, toggleId } = useBorrowRequestStore()
+  const { selectedLibraryItemIds: selectedIds, toggleLibraryItemId: toggleId } =
+    useBorrowRequestStore()
   const { data, isLoading } = useLibraryItemDetail(libraryItemId)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
 

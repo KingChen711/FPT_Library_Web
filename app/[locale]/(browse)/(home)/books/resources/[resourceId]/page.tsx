@@ -29,6 +29,8 @@ import { useAuth } from "@/contexts/auth-provider"
 import { useRouter } from "@/i18n/routing"
 import {
   ArrowLeft,
+  Book,
+  Coins,
   Expand,
   Loader2,
   Minimize,
@@ -39,11 +41,15 @@ import { useTranslations } from "next-intl"
 
 import { http } from "@/lib/http"
 import useGetOwnResource from "@/hooks/library-items/get-own-resource"
+import useResourceDetail from "@/hooks/library-items/use-resource-detail"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 
+import { default as ResourcePayment } from "../_components/resource-payment"
+
 type Props = {
   params: {
+    bookId: string
     resourceId: string
   }
   searchParams: {
@@ -51,6 +57,7 @@ type Props = {
     isPreview: string
   }
 }
+
 export default function DigitalResourcePage({ params, searchParams }: Props) {
   const baseWidth = 400
   const baseHeight = 600
@@ -67,6 +74,13 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
   const [openPrintShotWarning, setOpenPrintShotWarning] = useState(false)
   const t = useTranslations("BookPage")
   const tGeneralManagement = useTranslations("GeneralManagement")
+  const [openPayment, setOpenPayment] = useState<boolean>(false)
+  const { data: resource, isLoading: isLoadingResource } = useResourceDetail(
+    params.resourceId
+  )
+
+  console.log(params.bookId)
+  console.log("🚀 ~ DigitalResourcePage ~ data:", data)
 
   useEffect(() => {
     setIsClient(true)
@@ -111,7 +125,9 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
         const { data } =
           searchParams.isPreview === "true"
             ? await http.get<Blob>(
+                // `/api/library-item/${params.bookId}/resource/${params.resourceId}/preview`,
                 `/api/library-item/resource/${params.resourceId}/preview`,
+
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -152,16 +168,17 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
     fetchPdf()
   }, [
     accessToken,
+    params.bookId,
     params.resourceId,
     searchParams.isPreview,
     tGeneralManagement,
   ])
 
-  if (isLoading) {
+  if (isLoading || isLoadingResource) {
     return <Loader2 className="size-6 animate-spin" />
   }
 
-  console.log("🚀 ~ EBookPage ~ data:", data)
+  console.log("🚀 ~ DigitalResourcePage ~ resource:", resource)
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages)
@@ -187,7 +204,7 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
     setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50))
   }
 
-  if (!isClient) {
+  if (!isClient || !resource) {
     return null
   }
 
@@ -212,6 +229,13 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
         </DialogContent>
       </Dialog>
 
+      <ResourcePayment
+        open={openPayment}
+        setOpen={setOpenPayment}
+        libraryItemId={params.bookId}
+        selectedResource={resource}
+      />
+
       <div
         ref={containerRef}
         className="flex h-full flex-col overflow-hidden bg-secondary"
@@ -226,6 +250,37 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
           </Button>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 rounded-full bg-zinc/50 p-2 text-primary-foreground">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={"ghost"}
+                      className="text-primary-foreground"
+                    >
+                      <Book />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t("add to borrow list")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      variant={"ghost"}
+                      onClick={() => setOpenPayment(true)}
+                      className="text-primary-foreground"
+                    >
+                      <Coins />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{t("payment")}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
               <Button
                 variant="ghost"
                 size="icon"

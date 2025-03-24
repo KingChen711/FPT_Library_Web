@@ -849,6 +849,10 @@
       "description": "Mô tả",
       "unavailable description": "Không tìm thấy mô tả"
     },
+    "resources": "Tài liệu điện tử",
+    "payment": "Thanh toán",
+    "added to borrow list": "Đã thêm vào danh sách mượn",
+    "deleted to borrow list": "Đã xóa khỏi danh sách mượn",
     "error toast": "Lỗi",
     "borrow list": "Danh sách mượn",
     "your borrow library items": "Sách sách mượn của bạn",
@@ -938,6 +942,7 @@
     "days": "ngày",
     "preview": "Xem trước",
     "borrow resource confirm": "Xác nhận mượn tài liệu",
+    "add resource to borrow list": "Thêm tài liệu vào danh sách mượn",
     "title": "Tiêu đề",
     "ordinal number": "Số thứ tự",
     "code": "Mã",

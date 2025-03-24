@@ -29,7 +29,7 @@ type Props = {
 const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
   const t = useTranslations("BookPage")
   const locale = useLocale()
-  const { selectedIds } = useBorrowRequestStore()
+  const { selectedLibraryItemIds: selectedIds } = useBorrowRequestStore()
   const [isPending, startTransition] = useTransition()
   const [allowToReserveItems, setAllowToReserveItems] = useState<number[]>([])
 
@@ -57,7 +57,6 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
           data?.allowToBorrowItems?.map((id) => id.libraryItemId) || [],
         reservationItemIds: allowToReserveItems,
       })
-      console.log("🚀 ~ startTransition ~ res:", res)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",

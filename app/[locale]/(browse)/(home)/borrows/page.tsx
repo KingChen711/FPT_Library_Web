@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 
 import BorrowCard from "./_components/borrow-card"
+import BorrowResourceCard from "./_components/borrow-resource-card"
 import CheckBorrowRequestDialog from "./_components/check-borrow-request-dialog"
 
 const BorrowsPage = () => {
@@ -22,25 +23,50 @@ const BorrowsPage = () => {
   const { user, isLoadingAuth } = useAuth()
   const t = useTranslations("BookPage")
   const [openCheckBorrow, setOpenCheckBorrow] = useState(false)
-  const { selectedIds, clear, selectAll } = useBorrowRequestStore()
-  const [borrowIdList, setBorrowIdList] = useState<string[]>([])
+  const { selectedLibraryItemIds, selectedResourceIds, clear, selectAll } =
+    useBorrowRequestStore()
+  const [borrowLibraryItemIds, setBorrowLibraryItemIds] = useState<string[]>([])
+  const [borrowResourceIds, setBorrowResourcesIds] = useState<string[]>([])
+
   const updateBorrows = () => {
-    setBorrowIdList(localStorageHandler.getItem(LocalStorageKeys.BORROW))
+    setBorrowLibraryItemIds(
+      localStorageHandler.getItem(LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS)
+    )
+    setBorrowResourcesIds(
+      localStorageHandler.getItem(LocalStorageKeys.BORROW_RESOURCE_IDS)
+    )
   }
 
   useEffect(() => {
     updateBorrows()
     const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === LocalStorageKeys.BORROW) {
+      if (
+        event.key === LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS ||
+        event.key === LocalStorageKeys.BORROW_RESOURCE_IDS
+      ) {
         updateBorrows()
       }
     }
     const handleCustomEvent = () => updateBorrows()
     window.addEventListener("storage", handleStorageChange)
-    window.addEventListener(LocalStorageKeys.BORROW, handleCustomEvent)
+    window.addEventListener(
+      LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS,
+      handleCustomEvent
+    )
+    window.addEventListener(
+      LocalStorageKeys.BORROW_RESOURCE_IDS,
+      handleCustomEvent
+    )
     return () => {
       window.removeEventListener("storage", handleStorageChange)
-      window.removeEventListener(LocalStorageKeys.BORROW, handleCustomEvent)
+      window.removeEventListener(
+        LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS,
+        handleCustomEvent
+      )
+      window.removeEventListener(
+        LocalStorageKeys.BORROW_RESOURCE_IDS,
+        handleCustomEvent
+      )
     }
   }, [])
 
@@ -84,18 +110,26 @@ const BorrowsPage = () => {
           </div>
         </section>
 
-        <Card>
+        <Card className="border-none shadow-none">
           <CardContent className="p-0">
             <div className="flex items-center justify-between p-4">
               <div className="flex items-center gap-2">
                 <Checkbox
                   id="select-all"
-                  checked={selectedIds.length === borrowIdList.length}
+                  checked={
+                    selectedLibraryItemIds.length +
+                      selectedResourceIds.length ===
+                    borrowLibraryItemIds.length + borrowResourceIds.length
+                  }
                   onCheckedChange={() => {
-                    if (selectedIds.length === borrowIdList.length) {
+                    if (
+                      selectedLibraryItemIds.length +
+                        selectedResourceIds.length ===
+                      borrowLibraryItemIds.length + borrowResourceIds.length
+                    ) {
                       clear()
                     } else {
-                      selectAll(borrowIdList)
+                      selectAll(borrowLibraryItemIds, borrowResourceIds)
                     }
                   }}
                 />
@@ -103,14 +137,16 @@ const BorrowsPage = () => {
                   htmlFor="select-all"
                   className="cursor-pointer text-sm font-medium"
                 >
-                  {t("select all")} ({selectedIds.length}/{borrowIdList.length}{" "}
+                  {t("select all")} (
+                  {selectedLibraryItemIds.length + selectedResourceIds.length}/
+                  {borrowLibraryItemIds.length + borrowResourceIds.length}{" "}
                   {t("selected items")})
                 </label>
               </div>
 
               <Button
                 variant={"outline"}
-                disabled={selectedIds.length === 0}
+                disabled={selectedLibraryItemIds.length === 0}
                 onClick={handleCheckAvailable}
               >
                 <CheckCircle className="size-4" /> {t("borrow")}
@@ -118,10 +154,18 @@ const BorrowsPage = () => {
             </div>
 
             <div className="flex flex-col gap-4 p-4">
-              {borrowIdList &&
-                borrowIdList.length > 0 &&
-                borrowIdList.map((id) => (
+              <h1 className="font-semibold">{t("books")}</h1>
+              {borrowLibraryItemIds &&
+                borrowLibraryItemIds.length > 0 &&
+                borrowLibraryItemIds.map((id) => (
                   <BorrowCard key={id} libraryItemId={id} />
+                ))}
+
+              <h1 className="font-semibold">{t("resources")}</h1>
+              {borrowResourceIds &&
+                borrowResourceIds.length > 0 &&
+                borrowResourceIds.map((id) => (
+                  <BorrowResourceCard key={id} resourceId={id} />
                 ))}
             </div>
           </CardContent>

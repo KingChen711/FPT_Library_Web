@@ -310,8 +310,9 @@ export const browseRoutes = [
 
 export enum LocalStorageKeys {
   FAVORITE = "favorite",
-  BORROW = "borrow",
   OPENING_RECENT = "opening-recent",
+  BORROW_LIBRARY_ITEM_IDS = "borrow-library-item-Ids",
+  BORROW_RESOURCE_IDS = "borrow-resource-Ids",
 }
 
 export const editorPlugin = {

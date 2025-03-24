@@ -28,10 +28,14 @@ const DeleteBorrowRequestConfirm = ({
   libraryItemTitle,
 }: Props) => {
   const t = useTranslations("BookPage")
-  const { selectedIds, toggleId } = useBorrowRequestStore()
+  const { selectedLibraryItemIds: selectedIds, toggleLibraryItemId: toggleId } =
+    useBorrowRequestStore()
 
   const handleSubmit = () => {
-    localStorageHandler.setItem(LocalStorageKeys.BORROW, libraryItemId)
+    localStorageHandler.setItem(
+      LocalStorageKeys.BORROW_RESOURCE_IDS,
+      libraryItemId
+    )
     if (selectedIds.includes(libraryItemId)) {
       toggleId(libraryItemId)
     }

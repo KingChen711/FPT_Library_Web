@@ -78,7 +78,6 @@ const LibraryItemInfo = ({
   return (
     <div className="space-y-4 text-foreground">
       <BookDigitalListDialog
-        libraryItemId={id}
         resources={libraryItem.resources}
         open={openDigitalList}
         setOpen={setOpenDigitalList}

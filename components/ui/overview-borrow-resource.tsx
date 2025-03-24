@@ -1,14 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import Image from "next/image"
 import { LocalStorageKeys } from "@/constants"
-import { Link } from "@/i18n/routing"
 import { Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { EResourceBookType } from "@/lib/types/enums"
 import { localStorageHandler } from "@/lib/utils"
-import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
+import useResourceDetail from "@/hooks/library-items/use-resource-detail"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -20,24 +19,25 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import { Card, CardContent } from "@/components/ui/card"
 import { Skeleton } from "@/components/ui/skeleton"
 
+import { Badge } from "./badge"
 import NoData from "./no-data"
 
 type Props = {
-  libraryItemId: string
+  resourceId: string
 }
 
-const OverviewBorrowItem = ({ libraryItemId }: Props) => {
+const OverviewBorrowResource = ({ resourceId }: Props) => {
   const t = useTranslations("BookPage")
-  const { data: item, isLoading } = useLibraryItemDetail(libraryItemId)
+  const { data: resource, isLoading } = useResourceDetail(resourceId)
   const [openDelete, setOpenDelete] = useState(false)
 
   const handleRemoveBorrow = () => {
     localStorageHandler.setItem(
-      LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS,
-      libraryItemId
+      LocalStorageKeys.BORROW_RESOURCE_IDS,
+      resourceId
     )
     setOpenDelete(false)
   }
@@ -61,7 +61,7 @@ const OverviewBorrowItem = ({ libraryItemId }: Props) => {
     )
   }
 
-  if (!item) {
+  if (!resource) {
     return <NoData />
   }
 
@@ -74,7 +74,7 @@ const OverviewBorrowItem = ({ libraryItemId }: Props) => {
             <AlertDialogDescription>
               {t("are you sure you want to remove")}
               <span className="mx-2 font-semibold">
-                &quot;{item.title}&quot;
+                &quot;{resource.resourceTitle}&quot;
               </span>
               {t("from your favorites? This action cannot be undone")}
             </AlertDialogDescription>
@@ -92,36 +92,30 @@ const OverviewBorrowItem = ({ libraryItemId }: Props) => {
       </AlertDialog>
 
       <Card className="group overflow-hidden transition-all duration-200 hover:bg-accent/10">
-        <div className="flex items-start gap-4 p-4">
-          <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded-md shadow-sm transition-all duration-200 group-hover:shadow-md">
-            <Image
-              src={item.coverImage || "/placeholder.svg?height=96&width=64"}
-              alt={`${item.title} cover`}
-              fill
-              className="object-cover"
-              sizes="64px"
-            />
-          </div>
+        <div className="flex items-start justify-between gap-4 p-4">
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div className="space-y-1">
+                <h3 className="line-clamp-1 text-lg font-medium">
+                  {resource.resourceTitle}
+                </h3>
+                <div className="flex items-center gap-2">
+                  <Badge variant={"draft"} className="text-xs">
+                    {resource.resourceType === EResourceBookType.EBOOK
+                      ? t("ebook")
+                      : t("audio book")}
+                  </Badge>
+                </div>
+              </div>
+            </div>
 
-          <div className="flex-1 space-y-1">
-            <Link
-              href={`/books/${item.libraryItemId}`}
-              className="line-clamp-2 text-sm font-medium text-primary hover:text-primary hover:underline"
-            >
-              {item.title}
-            </Link>
-
-            {item.authors?.length > 0 && (
-              <p className="flex items-center gap-1 text-sm text-muted-foreground">
-                <span>{item.authors[0].fullName}</span>
-                {item.authors.length > 1 && (
-                  <span className="text-xs text-muted-foreground/70">
-                    +{item.authors.length - 1} more
-                  </span>
-                )}
+            {resource.defaultBorrowDurationDays && (
+              <p className="mt-2 text-sm text-muted-foreground">
+                {t("borrow duration")}: {resource.defaultBorrowDurationDays}{" "}
+                {t("days")}
               </p>
             )}
-          </div>
+          </CardContent>
 
           <Button
             variant="ghost"
@@ -138,4 +132,4 @@ const OverviewBorrowItem = ({ libraryItemId }: Props) => {
   )
 }
 
-export default OverviewBorrowItem
+export default OverviewBorrowResource
