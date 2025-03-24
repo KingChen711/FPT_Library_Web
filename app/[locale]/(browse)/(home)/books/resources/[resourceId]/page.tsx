@@ -125,9 +125,7 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
         const { data } =
           searchParams.isPreview === "true"
             ? await http.get<Blob>(
-                // `/api/library-item/${params.bookId}/resource/${params.resourceId}/preview`,
-                `/api/library-item/resource/${params.resourceId}/preview`,
-
+                `/api/library-items/resource/${params.resourceId}/preview`,
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -154,11 +152,9 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
           return
         }
 
-        // ✅ Tạo URL để gán vào Document component
         const blobUrl = URL.createObjectURL(data)
         setPdfLink(blobUrl)
 
-        // Optional: cleanup URL để tránh memory leak
         return () => URL.revokeObjectURL(blobUrl)
       } catch (error) {
         console.error("Error fetching PDF:", error)
@@ -261,7 +257,7 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{t("add to borrow list")}</p>
+                    <p>{t("added to borrow list")}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

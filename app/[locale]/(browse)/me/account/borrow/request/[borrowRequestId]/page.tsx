@@ -75,6 +75,8 @@ const BorrowRequestDetail = ({ params }: Props) => {
     params.borrowRequestId
   )
 
+  console.log("🚀 ~ BorrowRequestDetail ~ borrowRequest:", borrowRequest)
+
   // Handle cancel request
 
   if (isLoading) {
@@ -82,9 +84,6 @@ const BorrowRequestDetail = ({ params }: Props) => {
       <div className="flex h-[50vh] w-full items-center justify-center">
         <div className="flex flex-col items-center gap-2">
           <Loader2 className="size-12 animate-spin text-primary" />
-          <div className="text-sm text-muted-foreground">
-            Loading request details...
-          </div>
         </div>
       </div>
     )

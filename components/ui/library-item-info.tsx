@@ -36,9 +36,9 @@ import {
   splitCamelCase,
 } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
-import AddBorrowConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/add-borrow-confirm"
 import BookDigitalListDialog from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-digital-list-dialog"
 import BookInstancesTab from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-tabs/book-instances-tab"
+import BorrowLibraryItemConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/borrow-library-item-confirm"
 
 import { Badge } from "./badge"
 import { Button } from "./button"
@@ -83,7 +83,7 @@ const LibraryItemInfo = ({
         setOpen={setOpenDigitalList}
       />
 
-      <AddBorrowConfirm
+      <BorrowLibraryItemConfirm
         libraryItem={libraryItem}
         open={openAddBorrowConfirm}
         setOpen={setOpenAddBorrowConfirm}
