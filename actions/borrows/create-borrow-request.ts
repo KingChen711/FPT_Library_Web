@@ -10,6 +10,7 @@ type TBorrowRequest = {
   description: string
   libraryItemIds: number[]
   reservationItemIds: number[]
+  resourceIds: number[]
 }
 
 export async function createBorrowRequest(

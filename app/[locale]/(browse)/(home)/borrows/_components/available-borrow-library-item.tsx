@@ -14,14 +14,12 @@ import { Label } from "@/components/ui/label"
 
 type Props = {
   libraryItem: LibraryItem
-  onBorrow?: () => void
   allowToReserveItems?: number[]
   setAllowToReserveItems?: (ids: number[]) => void
 }
 
-const AvailableBorrowCard = ({
+const AvailableBorrowLibraryItem = ({
   libraryItem,
-  onBorrow,
   allowToReserveItems,
   setAllowToReserveItems,
 }: Props) => {
@@ -124,16 +122,8 @@ const AvailableBorrowCard = ({
           </div>
         </div>
       </div>
-
-      {onBorrow && (
-        <div className="flex justify-end px-4 pb-4 pt-0">
-          <Button size="sm" onClick={onBorrow}>
-            Mượn sách
-          </Button>
-        </div>
-      )}
     </Card>
   )
 }
 
-export default AvailableBorrowCard
+export default AvailableBorrowLibraryItem

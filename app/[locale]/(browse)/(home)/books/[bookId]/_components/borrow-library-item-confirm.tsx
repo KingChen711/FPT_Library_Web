@@ -1,5 +1,4 @@
 import { LocalStorageKeys } from "@/constants"
-import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
 import { useTranslations } from "next-intl"
 
 import { type LibraryItem } from "@/lib/types/models"
@@ -21,9 +20,7 @@ type Props = {
   libraryItem: LibraryItem
 }
 
-const AddBorrowConfirm = ({ open, setOpen, libraryItem }: Props) => {
-  const { selectedLibraryItemIds: selectedIds } = useBorrowRequestStore()
-  console.log("🚀 ~ AddBorrowConfirm ~ selectedIds:", selectedIds)
+const BorrowLibraryItemConfirm = ({ open, setOpen, libraryItem }: Props) => {
   const t = useTranslations("BookPage")
 
   const handleAddToBorrowList = () => {
@@ -54,4 +51,4 @@ const AddBorrowConfirm = ({ open, setOpen, libraryItem }: Props) => {
   )
 }
 
-export default AddBorrowConfirm
+export default BorrowLibraryItemConfirm

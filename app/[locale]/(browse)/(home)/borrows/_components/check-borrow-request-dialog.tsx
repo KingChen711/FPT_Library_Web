@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { useRouter } from "@/i18n/routing"
 import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -19,7 +20,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
-import AvailableBorrowCard from "./available-borrow-card"
+import AvailableBorrowLibraryItem from "./available-borrow-library-item"
+import AvailableBorrowResource from "./available-borrow-resource"
 
 type Props = {
   open: boolean
@@ -27,14 +29,20 @@ type Props = {
 }
 
 const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
+  const router = useRouter()
   const t = useTranslations("BookPage")
   const locale = useLocale()
-  const { selectedLibraryItemIds: selectedIds } = useBorrowRequestStore()
   const [isPending, startTransition] = useTransition()
+  const { selectedLibraryItemIds, selectedResourceIds } =
+    useBorrowRequestStore()
   const [allowToReserveItems, setAllowToReserveItems] = useState<number[]>([])
+  const [allowToBorrowResources, setAllowToBorrowResources] = useState<
+    number[]
+  >([])
 
-  const { data, isLoading, refetch } =
-    useCheckAvailableBorrowRequest(selectedIds)
+  const { data, isLoading, refetch } = useCheckAvailableBorrowRequest(
+    selectedLibraryItemIds
+  )
 
   const isAllowedBorrowRequest: boolean =
     data?.alreadyBorrowedItems.length === 0 &&
@@ -56,13 +64,18 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
         libraryItemIds:
           data?.allowToBorrowItems?.map((id) => id.libraryItemId) || [],
         reservationItemIds: allowToReserveItems,
+        resourceIds: allowToBorrowResources,
       })
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
-          description: res.data,
+          description:
+            locale === "vi"
+              ? "Yêu cầu mượn thành công"
+              : "Borrow request successfully",
           variant: "success",
         })
+        router.push("/me/account/borrow")
         setOpen(false)
         return
       }
@@ -86,7 +99,7 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
                   {t("allow to borrow")} ({data?.allowToBorrowItems.length})
                 </h1>
                 {data?.allowToBorrowItems.map((item) => (
-                  <AvailableBorrowCard
+                  <AvailableBorrowLibraryItem
                     key={item.libraryItemId}
                     libraryItem={item}
                   />
@@ -101,7 +114,7 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
                 </h1>
                 <p className="text-danger">{t("allow to reserve message")}</p>
                 {data?.allowToReserveItems.map((item) => (
-                  <AvailableBorrowCard
+                  <AvailableBorrowLibraryItem
                     key={item.libraryItemId}
                     libraryItem={item}
                     allowToReserveItems={allowToReserveItems}
@@ -114,66 +127,84 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
         )}
 
         {/* Fail to request borrow */}
-        {!isAllowedBorrowRequest && data && selectedIds.length > 0 && (
-          <div className="flex flex-col gap-2">
-            {data?.alreadyRequestedItems?.length > 0 && (
-              <div>
-                <h1 className="font-semibold">
-                  {t("already requested items")} (
-                  {data?.alreadyRequestedItems.length})
-                </h1>
-                <p className="text-danger">
-                  {t("the document has been requested by you")}. &nbsp;
-                  {t("please delete from borrow list")}
-                </p>
-                {data?.alreadyRequestedItems.map((item) => (
-                  <AvailableBorrowCard
-                    key={item.libraryItemId}
-                    libraryItem={item}
-                  />
-                ))}
-              </div>
-            )}
+        {!isAllowedBorrowRequest &&
+          data &&
+          selectedLibraryItemIds.length > 0 && (
+            <div className="flex flex-col gap-2">
+              {data?.alreadyRequestedItems?.length > 0 && (
+                <div>
+                  <h1 className="font-semibold">
+                    {t("already requested items")} (
+                    {data?.alreadyRequestedItems.length})
+                  </h1>
+                  <p className="text-danger">
+                    {t("the document has been requested by you")}. &nbsp;
+                    {t("please delete from borrow list")}
+                  </p>
+                  {data?.alreadyRequestedItems.map((item) => (
+                    <AvailableBorrowLibraryItem
+                      key={item.libraryItemId}
+                      libraryItem={item}
+                    />
+                  ))}
+                </div>
+              )}
 
-            {data?.alreadyBorrowedItems.length > 0 && (
-              <div>
-                <h1 className="font-semibold">
-                  {t("already borrowed items")} (
-                  {data?.alreadyBorrowedItems.length}
-                  &nbsp;items)
-                </h1>
-                <p className="text-danger">
-                  {t("the document is being borrowed by you")}. &nbsp;
-                  {t("please delete from borrow list")}
-                </p>
-                {data?.alreadyBorrowedItems.map((item) => (
-                  <AvailableBorrowCard
-                    key={item.libraryItemId}
-                    libraryItem={item}
-                  />
-                ))}
-              </div>
-            )}
+              {data?.alreadyBorrowedItems.length > 0 && (
+                <div>
+                  <h1 className="font-semibold">
+                    {t("already borrowed items")} (
+                    {data?.alreadyBorrowedItems.length}
+                    &nbsp;items)
+                  </h1>
+                  <p className="text-danger">
+                    {t("the document is being borrowed by you")}. &nbsp;
+                    {t("please delete from borrow list")}
+                  </p>
+                  {data?.alreadyBorrowedItems.map((item) => (
+                    <AvailableBorrowLibraryItem
+                      key={item.libraryItemId}
+                      libraryItem={item}
+                    />
+                  ))}
+                </div>
+              )}
 
-            {data?.alreadyReservedItems.length > 0 && (
-              <div>
-                <h1 className="font-semibold">
-                  {t("already reserved items")} (
-                  {data?.alreadyReservedItems.length}
-                  &nbsp; items)
-                </h1>
-                <p className="text-danger">
-                  {t("the document has been booked by you")}. &nbsp;
-                  {t("please delete from borrow list")}
-                </p>
-                {data?.alreadyReservedItems.map((item) => (
-                  <AvailableBorrowCard
-                    key={item.libraryItemId}
-                    libraryItem={item}
-                  />
-                ))}
-              </div>
-            )}
+              {data?.alreadyReservedItems.length > 0 && (
+                <div>
+                  <h1 className="font-semibold">
+                    {t("already reserved items")} (
+                    {data?.alreadyReservedItems.length}
+                    &nbsp; items)
+                  </h1>
+                  <p className="text-danger">
+                    {t("the document has been booked by you")}. &nbsp;
+                    {t("please delete from borrow list")}
+                  </p>
+                  {data?.alreadyReservedItems.map((item) => (
+                    <AvailableBorrowLibraryItem
+                      key={item.libraryItemId}
+                      libraryItem={item}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+        {selectedResourceIds.length > 0 && (
+          <div>
+            <h1 className="font-semibold">
+              {t("allow to borrow")} ({selectedResourceIds.length})
+            </h1>
+            {selectedResourceIds.map((id) => (
+              <AvailableBorrowResource
+                key={id}
+                allowToBorrowResources={allowToBorrowResources}
+                setAllowToBorrowResources={setAllowToBorrowResources}
+                resourceId={+id}
+              />
+            ))}
           </div>
         )}
 
