@@ -14,14 +14,9 @@ import BorrowDigitalConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/
 type ResourceCardProps = {
   resource: BookResource
   type: EResourceBookType
-  libraryItemId: string
 }
 
-const BorrowResourceCard = ({
-  resource,
-  type,
-  libraryItemId,
-}: ResourceCardProps) => {
+const BorrowResourceCard = ({ resource, type }: ResourceCardProps) => {
   const router = useRouter()
   const t = useTranslations("BookPage")
   const [openDigitalBorrow, setOpenDigitalBorrow] = useState<boolean>(false)
@@ -29,7 +24,6 @@ const BorrowResourceCard = ({
   return (
     <>
       <BorrowDigitalConfirm
-        libraryItemId={libraryItemId}
         selectedResource={resource}
         open={openDigitalBorrow}
         setOpen={setOpenDigitalBorrow}

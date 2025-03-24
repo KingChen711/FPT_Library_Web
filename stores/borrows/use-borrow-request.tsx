@@ -1,20 +1,45 @@
+import { LocalStorageKeys } from "@/constants"
 import { create } from "zustand"
 
 type BorrowRequestStore = {
-  selectedIds: string[]
-  toggleId: (val: string) => void
+  selectedLibraryItemIds: string[]
+  selectedResourceIds: string[]
+  toggleResourceId: (val: string) => void
+  toggleLibraryItemId: (val: string) => void
   clear: () => void
-  selectAll: (val: string[]) => void
+  selectAll: (
+    selectedLibraryItemIds: string[],
+    selectedResourceIds: string[]
+  ) => void
 }
 
 export const useBorrowRequestStore = create<BorrowRequestStore>((set) => ({
-  selectedIds: [],
-  toggleId: (val) =>
+  selectedLibraryItemIds:
+    JSON.parse(
+      localStorage.getItem(LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS) as string
+    ) || [],
+  selectedResourceIds:
+    JSON.parse(
+      localStorage.getItem(LocalStorageKeys.BORROW_RESOURCE_IDS) as string
+    ) || [],
+  toggleLibraryItemId: (val) =>
     set((state) => ({
-      selectedIds: state.selectedIds.includes(val)
-        ? state.selectedIds.filter((id) => id !== val)
-        : [...state.selectedIds, val],
+      selectedLibraryItemIds: state.selectedLibraryItemIds.includes(val)
+        ? state.selectedLibraryItemIds.filter((id) => id !== val)
+        : [...state.selectedLibraryItemIds, val],
     })),
-  clear: () => set(() => ({ selectedIds: [] })),
-  selectAll: (val) => set(() => ({ selectedIds: val })),
+  toggleResourceId: (val) =>
+    set((state) => ({
+      selectedResourceIds: state.selectedResourceIds.includes(val)
+        ? state.selectedResourceIds.filter((id) => id !== val)
+        : [...state.selectedResourceIds, val],
+    })),
+  clear: () =>
+    set(() => ({ selectedLibraryItemIds: [], selectedResourceIds: [] })),
+  // selectAll: (val) => set(() => ({ selectedLibraryItemIds: val })),
+  selectAll: (selectedLibraryItemIds, selectedResourceIds) =>
+    set(() => ({
+      selectedLibraryItemIds,
+      selectedResourceIds,
+    })),
 }))

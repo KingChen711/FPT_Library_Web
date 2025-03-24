@@ -846,6 +846,10 @@
       "description": "Description",
       "unavailable description": "Unavailable description"
     },
+    "resources": "Resources",
+    "payment": "Payment",
+    "added to borrow list": "Added to borrow list",
+    "deleted to borrow list": "Deleted to borrow list",
     "error toast": "Error",
     "borrow list": "Borrow list",
     "your borrow library items": "Your borrow library items",
@@ -937,6 +941,7 @@
     "days": "days",
     "preview": "Preview",
     "borrow resource confirm": "Borrow resource confirm",
+    "add resource to borrow list": "Add resource to borrow list",
     "title": "Title",
     "ordinal number": "No",
     "code": "Code",

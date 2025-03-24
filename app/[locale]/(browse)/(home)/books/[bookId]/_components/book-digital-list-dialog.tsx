@@ -16,18 +16,12 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 type Props = {
-  libraryItemId: string
   open: boolean
   setOpen: (value: boolean) => void
   resources: BookResource[]
 }
 
-const BookDigitalListDialog = ({
-  open,
-  setOpen,
-  resources,
-  libraryItemId,
-}: Props) => {
+const BookDigitalListDialog = ({ open, setOpen, resources }: Props) => {
   const t = useTranslations("BookPage")
 
   const ebookResources =
@@ -39,9 +33,6 @@ const BookDigitalListDialog = ({
     resources.filter(
       (resource) => resource.resourceType === EResourceBookType.AUDIO_BOOK
     ) || []
-
-  console.log("🚀 ~ ebookResources:", JSON.stringify(ebookResources))
-  // console.log("🚀 ~ audioBookResources:", JSON.stringify(audioBookResources))
 
   return (
     <>
@@ -70,7 +61,6 @@ const BookDigitalListDialog = ({
                       key={resource.resourceId}
                       resource={resource}
                       type={EResourceBookType.EBOOK}
-                      libraryItemId={libraryItemId}
                     />
                   ))}
                 </div>
@@ -92,7 +82,6 @@ const BookDigitalListDialog = ({
                       key={resource.resourceId}
                       resource={resource}
                       type={EResourceBookType.AUDIO_BOOK}
-                      libraryItemId={libraryItemId}
                     />
                   ))}
                 </div>
