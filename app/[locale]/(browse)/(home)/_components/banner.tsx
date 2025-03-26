@@ -48,7 +48,7 @@ const BannerHome = () => {
   if (!libraryItems || isLoading || libraryItems.length === 0) {
     return (
       <div className="grid h-[240px] w-full grid-cols-3 gap-4">
-        <div className="col-span-1 h-full overflow-hidden rounded-lg">
+        <div className="col-span-1 h-full overflow-hidden rounded-md">
           <Card className="size-full">
             <CardContent className="flex h-full flex-col justify-between gap-4 p-6">
               <Skeleton className="h-6 w-1/2" />
@@ -58,13 +58,13 @@ const BannerHome = () => {
           </Card>
         </div>
 
-        <div className="col-span-2 flex h-full rounded-lg border-8 border-primary shadow-lg">
-          <div className="flex w-1/12 items-center justify-center bg-primary">
+        <div className="col-span-2 flex h-full rounded-md border-8 border-primary shadow-lg">
+          <div className="flex w-20 items-center justify-center bg-primary">
             <Skeleton className="h-5 w-[100px] -rotate-90" />
           </div>
           <div className="flex flex-1 items-center justify-around px-4">
             {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-[180px] w-[120px] rounded-lg" />
+              <Skeleton key={i} className="h-[180px] w-[120px] rounded-md" />
             ))}
           </div>
         </div>
@@ -73,17 +73,17 @@ const BannerHome = () => {
   }
 
   return (
-    <div className="grid h-[240px] w-full grid-cols-3 gap-4">
-      <div className="col-span-1 h-full overflow-hidden rounded-lg">
+    <div className="grid w-full grid-cols-12 gap-4">
+      <div className="col-span-12 h-[240px] overflow-hidden rounded-md xl:col-span-5 2xl:col-span-4">
         <Carousel
           opts={{
             loop: true,
             align: "center",
-            duration: 150,
+            duration: 20,
           }}
           plugins={[
             Autoplay({
-              delay: 5000,
+              delay: 4000,
             }),
           ]}
         >
@@ -91,11 +91,11 @@ const BannerHome = () => {
             {quotes.map(({ id, author }, index) => (
               <CarouselItem key={id}>
                 <Card>
-                  <CardContent className="flex h-[240px] flex-col justify-between gap-6 overflow-hidden rounded-lg bg-gradient-to-br from-primary to-primary/70 p-8 shadow-lg">
+                  <CardContent className="flex flex-col justify-between gap-6 overflow-hidden rounded-md bg-gradient-to-br from-primary to-primary/70 p-8 shadow-lg">
                     <h1 className="mb-2 px-4 text-left text-2xl font-semibold text-primary-foreground dark:text-foreground">
                       {t("today quote")}
                     </h1>
-                    <div className="mb-2 px-4 text-center font-serif text-lg font-semibold text-primary-foreground dark:text-foreground">
+                    <div className="mb-2 px-4 text-center text-lg font-semibold text-primary-foreground dark:text-foreground">
                       {`"${t(`quote ${index + 1}`)}"`}
                     </div>
                     <div className="text-right text-sm font-medium italic text-primary-foreground dark:text-foreground">
@@ -111,38 +111,36 @@ const BannerHome = () => {
         </Carousel>
       </div>
 
-      <div className="col-span-2 flex h-full overflow-x-hidden rounded-2xl border-8 border-primary shadow-lg">
-        <div className="flex w-1/12 items-center justify-center bg-primary text-xl font-semibold text-accent">
+      <div className="col-span-12 flex h-[240px] overflow-x-hidden rounded-md bg-primary shadow-lg xl:col-span-7 2xl:col-span-8">
+        <div className="flex w-20 shrink-0 items-center justify-center bg-primary text-xl font-semibold text-accent">
           <p className="-rotate-90 text-nowrap text-primary-foreground dark:text-foreground">
             {t("new arrivals")}
           </p>
         </div>
 
-        <div className="flex flex-1 items-center justify-center">
+        <div className="flex flex-1 items-center justify-center rounded-md border-8 border-primary bg-background">
           <Carousel
             opts={{
               align: "start",
               loop: true,
             }}
-            className="w-full max-w-2xl"
           >
-            <CarouselContent className="flex h-full space-x-4">
+            <CarouselContent className="h-full space-x-4">
               {libraryItems.map((item) => (
                 <CarouselItem
                   key={item.libraryItemId}
-                  className="h-full basis-1/4"
+                  className="flex h-full justify-center sm:basis-1/3 xl:basis-1/4 2xl:basis-1/5"
                 >
                   <div
                     onClick={() => router.push(`/books/${item.libraryItemId}`)}
-                    className="relative flex h-[180px] cursor-pointer items-center justify-center rounded-lg p-4"
+                    className="cursor-pointer overflow-hidden"
                   >
                     <Image
                       src={item.coverImage as string}
-                      priority
-                      alt="Logo"
-                      objectFit="contain"
-                      fill
-                      className="rounded-lg object-cover"
+                      alt={item.title}
+                      height={360}
+                      width={240}
+                      className="aspect-[2/3] h-[180px] w-[120px] rounded-md object-cover"
                     />
                   </div>
                 </CarouselItem>

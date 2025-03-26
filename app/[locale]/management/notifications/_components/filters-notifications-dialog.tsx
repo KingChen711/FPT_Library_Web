@@ -70,7 +70,7 @@ function FiltersNotificationsDialog() {
       )
     })
     setOpen(false)
-    router.push("/management/library-cards")
+    router.push("/management/notifications")
   }
 
   const wIsPublic = form.watch("isPublic")

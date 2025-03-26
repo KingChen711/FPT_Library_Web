@@ -9,6 +9,7 @@ import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Button } from "@/components/ui/button"
 import Copitor from "@/components/ui/copitor"
 import {
@@ -24,6 +25,7 @@ import ParseHtml from "@/components/ui/parse-html"
 import CardStatusBadge from "@/components/badges/card-status-badge"
 import IssuanceMethodBadge from "@/components/badges/issuance-method-badge"
 
+import LibraryCardActionsDropdown from "../../library-card-holders/[id]/_components/card-actions-dropdown"
 import CardDetailBreadCrumb from "./_components/patron-detail-bread-crumb"
 
 type Props = {
@@ -69,11 +71,11 @@ async function CardDetailPage({ params }: Props) {
         <div className="flex flex-col gap-4 rounded-md border py-5">
           <div className="flex items-center justify-between gap-4 px-5">
             <h3 className="text-lg font-semibold">{t("Card information")}</h3>
-            {/* TODO: cần userId từ BE <LibraryCardActionsDropdown
+            <LibraryCardActionsDropdown
               libraryCard={card}
-              userId={card.}
-              canExtendCard={canExtendCard}
-            /> */}
+              canExtendCard={false}
+              userId=""
+            />
           </div>
           <div className="grid grid-cols-12 gap-y-6 text-sm">
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
@@ -99,17 +101,20 @@ async function CardDetailPage({ params }: Props) {
               </div>
             </div>
 
-            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <div className="col-span-12 flex flex-col border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
               <h4 className="font-bold">{t("Barcode")}</h4>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2">
+                <BarcodeGenerator
+                  value={card.barcode}
+                  options={{
+                    format: "CODE128",
+                    displayValue: true,
+                    fontSize: 12,
+                    width: 1,
+                    height: 18,
+                  }}
+                />
                 <Copitor content={card.barcode} />
-                {/* <Barcode
-                    value={card.barcode}
-                    width={1}
-                    height={50}
-                    fontSize={12}
-                    displayValue={false}
-                  /> */}
               </div>
             </div>
 

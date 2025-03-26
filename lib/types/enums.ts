@@ -264,3 +264,23 @@ export enum EBorrowDigitalStatus {
   Expired,
   Cancelled,
 }
+
+export enum EBorrowType {
+  IN_LIBRARY,
+  TAKE_HOME,
+}
+
+export enum EBorrowRecordStatus {
+  BORROWING,
+  RETURNED,
+  OVERDUE,
+  LOST,
+}
+
+export enum EReservationQueueStatus {
+  PENDING,
+  ASSIGNED,
+  COLLECTED,
+  EXPIRED,
+  CANCELLED,
+}

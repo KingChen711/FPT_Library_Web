@@ -23,14 +23,7 @@ export const searchNotificationsSchema = z
     pageIndex: z.coerce.number().min(1).catch(1),
     pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("5"),
     sort: z
-      .enum([
-        "Title",
-        "-Title",
-        "createDate",
-        "-createDate",
-        "createdBy",
-        "-createdBy",
-      ])
+      .enum(["Title", "-Title", "createDate", "-createDate"])
       .optional()
       .catch(undefined),
   })

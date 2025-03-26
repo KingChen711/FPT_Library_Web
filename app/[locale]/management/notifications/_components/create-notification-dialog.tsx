@@ -205,42 +205,21 @@ function CreateNotificationDialog() {
                           defaultValue={field.value.toString()}
                           className="flex flex-col space-y-1"
                         >
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem
-                                value={ENotificationType.EVENT.toString()}
-                              />
-                            </FormControl>
-                            <FormLabel className="cursor-pointer font-normal">
-                              {tNotificationType(
-                                ENotificationType.EVENT.toString()
-                              )}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem
-                                value={ENotificationType.NOTICE.toString()}
-                              />
-                            </FormControl>
-                            <FormLabel className="cursor-pointer font-normal">
-                              {tNotificationType(
-                                ENotificationType.NOTICE.toString()
-                              )}
-                            </FormLabel>
-                          </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem
-                                value={ENotificationType.REMINDER.toString()}
-                              />
-                            </FormControl>
-                            <FormLabel className="cursor-pointer font-normal">
-                              {tNotificationType(
-                                ENotificationType.REMINDER.toString()
-                              )}
-                            </FormLabel>
-                          </FormItem>
+                          {Object.values(ENotificationType)
+                            .filter((e) => typeof e === "number")
+                            .map((e) => (
+                              <FormItem
+                                key={e}
+                                className="flex items-center space-x-3 space-y-0"
+                              >
+                                <FormControl>
+                                  <RadioGroupItem value={e.toString()} />
+                                </FormControl>
+                                <FormLabel className="cursor-pointer font-normal">
+                                  {tNotificationType(e.toString())}
+                                </FormLabel>
+                              </FormItem>
+                            ))}
                         </RadioGroup>
                       </FormControl>
                       <FormMessage />

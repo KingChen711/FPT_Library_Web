@@ -242,7 +242,11 @@ function TrackingDetailRowField({
                                         />
                                       </div>
                                     </TooltipTrigger>
-                                    <TooltipContent side="right" asChild>
+                                    <TooltipContent
+                                      side="right"
+                                      asChild
+                                      className="bg-card text-card-foreground"
+                                    >
                                       <LibraryItemCard libraryItem={item} />
                                     </TooltipContent>
                                   </Tooltip>

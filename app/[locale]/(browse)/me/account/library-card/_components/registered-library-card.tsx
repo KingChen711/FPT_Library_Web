@@ -10,7 +10,7 @@ const RegisteredLibraryCard = ({ user }: Props) => {
 
   return (
     <div className="flex items-center justify-center">
-      <PersonalLibraryCard user={user} />
+      <PersonalLibraryCard patron={user} />
     </div>
   )
 }

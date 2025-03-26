@@ -89,7 +89,8 @@
     "light": "Sáng",
     "dark": "Tối",
     "system": "Hệ thống",
-    "toggle theme": "Chuyển màu nền"
+    "toggle theme": "Chuyển màu nền",
+    "welcome user": "Chào mừng quay lại! {userName}"
   },
   "Zod": {
     "min1": "Bắt buộc",
@@ -136,7 +137,9 @@
     "dateGteToday": "Bắt buộc phải lớn hơn hoặc bằng ngày hiện tại",
     "wrongCatalogInformation": "Thông tin biên mục phải chính xác",
     "lessThanRequire": "Ít hơn yêu cầu",
-    "greaterThanRequire": "Nhiều hơn yêu cầu"
+    "greaterThanRequire": "Nhiều hơn yêu cầu",
+    "mustAfterThanNow": "Phải lớn hơn thời điểm hiện tại",
+    "mustScannedAllItems": "Cần phải quét toàn bộ tài liệu"
   },
   "Me": {
     "account": "Tài khoản",
@@ -512,6 +515,7 @@
     "Permissions": "Quyền"
   },
   "Routes": {
+    "Borrow records": "Lịch sử mượn",
     "Borrow requests": "Yêu cầu mượn",
     "Borrow and Return": "Mượn trả tài liệu",
     "Dashboard": "Bảng điều khiển",
@@ -765,8 +769,8 @@
       "reading": "Đang đọc",
       "have read": "Đã đọc",
       "hard copy": "Bản copy cứng",
-      "ebook": "Tài liệu điện tử",
-      "audio book": "Tài liệu nói",
+      "ebook": "Sách điện tử",
+      "audio book": "Sách liệu nói",
       "book serial no": "Số Seri sách",
       "return date": "Ngày trả",
       "pickup date": "Ngày nhận",
@@ -1118,7 +1122,7 @@
     "Error while import data": "Lỗi trong khi nạp dữ liệu",
     "View details": "Xem chi tiết",
     "Row": "Hàng: ",
-    "Import errors": "Lỗi nạp dữ liệu"
+    "Import errors": "Import errors"
   },
   "NotificationsManagementPage": {
     "Recipient": "Người nhận",
@@ -1157,6 +1161,7 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "View more": "Xem thêm",
     "Add": "Thêm",
     "Filters": "Bộ lọc",
     "Search for articles, books, journals, and other content": "Tìm kiếm các bài viết, sách, tạp chí và các nội dung khác",
@@ -1203,13 +1208,13 @@
     "No category found": "Không tìm thấy",
     "Book resources": "Tài nguyên tài liệu",
     "Book editions": "Các ấn bản",
-    "More Ebook": "Thêm tài liệu điện tử",
-    "More AudioBook": "Thêm tài liệu nói",
+    "More Ebook": "Thêm sách điện tử",
+    "More AudioBook": "Thêm sách liệu nói",
     "Resource title": "Tiêu đề tài nguyên",
     "Edition title": "Tiêu đề ấn bản",
-    "EBook": "Tài liệu điện tử",
-    "Ebook": "Tài liệu điện tử",
-    "AudioBook": "Tài liệu nói",
+    "EBook": "Sách điện tử",
+    "Ebook": "Sách điện tử",
+    "AudioBook": "Sách liệu nói",
     "More edition": "Thêm ấn bản",
     "Edition number": "Số ấn bản",
     "Page count": "Số trang",
@@ -1319,7 +1324,7 @@
     "Delete permanently": "Xóa vĩnh viễn",
     "Move to trash": "Chuyển vào thùng rác",
     "Restore": "Khôi phục",
-    "Publish edition": "Xuất bản ấn bản",
+    "Publish edition": "Xuất bản tài liệu",
     "View inventory": "Xem kho bản sao",
     "Inventory copies": "Kho bản sao",
     "Borrowed copies": "Bản sao đã mượn",
@@ -1769,6 +1774,10 @@
     "No item found": "Không tìm thấy"
   },
   "Badges": {
+    "BorrowType": {
+      "0": "Tại thư viện",
+      "1": "Mang về"
+    },
     "StockTransactionType": {
       "0": "Nhập mới",
       "1": "Bổ sung",
@@ -1787,12 +1796,12 @@
 
     "NotificationType": {
       "0": "Sự kiện",
-      "1": "Thông báo",
-      "2": "Nhắc nhở"
+      "1": "Nhắc nhở",
+      "2": "Thông báo"
     },
     "ResourceBookType": {
-      "AudioBook": "Tài liệu nói",
-      "Ebook": "Tài liệu điện tử"
+      "AudioBook": "Sách liệu nói",
+      "Ebook": "Sách điện tử"
     },
     "BookFormat": {
       "Paperback": "Bìa giấy",
@@ -1930,5 +1939,49 @@
     "Trained": "Đã train",
     "Untrained": "Chưa train"
   },
-  "AutocompleteLibraryItem": { "Available": "Có sẵn", "Out of shelf": "Đã hết" }
+  "AutocompleteLibraryItem": {
+    "Available": "Có sẵn",
+    "Out of shelf": "Đã hết"
+  },
+  "BorrowAndReturnManagementPage": {
+    "Create borrow record": "Tạo lịch sử mượn",
+    "Scan patrons library card": "Quét thẻ của bạn đọc",
+    "Borrow request items": "Tài liệu đang yêu cầu",
+    "Borrow type": "Loại mượn",
+    "Borrow list": "Danh sách mượn",
+    "Scan items to confirm borrow list": "Quét các tài liệu để xác nhận danh sách mượn",
+    "Not scanned yet": "Chưa quét",
+    "Un request items": "Tài liệu chưa yêu cầu",
+    "Library card": "Thẻ thư viện",
+    "Cancel": "Hủy",
+    "Scanned": "Đã quét",
+    "Continue": "Tiếp tục",
+    "Please scan the patrons library card barcode to begin the checkout process": "Vui lòng quét mã vạch thẻ thư viện của bạn đọc để bắt đầu quá trình thanh toán",
+    "Borrow records": "Lịch sử mượn",
+    "Assigned reservation items": "Tài liệu đặt trước đã gán",
+    "Loading patron information": "Đang tải thông tin bạn đọc...",
+    "Take home description": "Mượn và trả tài liệu khi tới hạn của từng tài liệu.",
+    "In library description": "Mượn và trả tất cả tài liệu trong ngày.",
+    "Activity summary": "Tóm tắt hoạt động",
+    "Requesting": "Đang yêu cầu",
+    "Borrowing": "Đang mượn",
+    "Assigned reservations": "Đặt trước đã gán",
+    "Pending reservations": "Đặt trước đang chờ",
+    "Borrow limit": "Giới hạn mượn",
+    "Remaining": "Còn lại",
+    "Borrowing limit reached": "Đã tới giới hạn",
+    "Total activities": "Tổng hoạt động",
+    "Due date": "Trả lúc"
+  },
+  "LocateButton": {
+    "Floor": "Tầng",
+    "Zone": "Vùng",
+    "Section": "Khu vực",
+    "Shelf": "Kệ sách",
+    "Library item position": "Vị trí tài liệu",
+    "Not found": "Không tìm thấy",
+    "Locate": "Định vị",
+    "Cancel": "Hủy",
+    "Go to map": "Đi đến bản đồ"
+  }
 }

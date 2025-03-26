@@ -14,68 +14,47 @@ import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Card, CardContent } from "@/components/ui/card"
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "./accordion"
 import ParseHtml from "./parse-html"
 
 interface LibraryItemProps {
   libraryItem: BookEdition & {
     category?: Category
-    libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
+    libraryItemAuthors?: (LibraryItemAuthor & { author: Author })[]
+    authors?: Author[]
   }
   modal?: boolean
   className?: string
+
+  expandable?: boolean
 }
 
 export default function LibraryItemCard({
   libraryItem,
   modal,
   className,
+  expandable,
 }: LibraryItemProps) {
   const {
-    accompanyingMaterial,
-    additionalAuthors,
-
-    bibliographicalNote,
-
     category,
-
-    classificationNumber,
     coverImage,
-
-    cutterNumber,
-    dimensions,
-    ean,
-    edition,
-
-    estimatedPrice,
-    generalNote,
-    genres,
-
-    isbn,
-    language,
     libraryItemAuthors,
-
+    authors,
     pageCount,
-    physicalDetails,
-
     publicationYear,
     publisher,
-
     subTitle,
     summary,
     title,
-    topicalTerms,
   } = libraryItem
 
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
-
-  // Format price with VND currency
-  const formattedPrice = estimatedPrice
-    ? new Intl.NumberFormat("vi-VN", {
-        style: "currency",
-        currency: "VND",
-      }).format(estimatedPrice)
-    : null
 
   return (
     <Card
@@ -129,6 +108,13 @@ export default function LibraryItemCard({
                   </p>
                 )}
 
+                {authors && authors.length > 0 && (
+                  <p className="text-sm">
+                    <span className="font-medium">{t("Authors")}:</span>{" "}
+                    {authors.map((a) => a.fullName).join(", ")}
+                  </p>
+                )}
+
                 {publisher && (
                   <p className="text-sm">
                     <span className="font-medium">{t("Publisher")}:</span>{" "}
@@ -160,118 +146,168 @@ export default function LibraryItemCard({
             </div>
           </div>
 
-          <div className="mt-2 space-y-3 border-t pt-2">
-            <div className="grid grid-cols-1 gap-x-4 gap-y-2 text-sm sm:grid-cols-2 md:grid-cols-3">
-              {additionalAuthors && (
-                <div>
-                  <span className="font-medium">
-                    {t("Additional authors")}:
-                  </span>{" "}
-                  {additionalAuthors}
-                </div>
-              )}
-
-              {language && (
-                <div>
-                  <span className="font-medium">{t("Language")}:</span>{" "}
-                  {language}
-                </div>
-              )}
-
-              {edition && (
-                <div>
-                  <span className="font-medium">{t("Edition")}:</span> {edition}
-                </div>
-              )}
-
-              {isbn && (
-                <div>
-                  <span className="font-medium">ISBN:</span> {isbn}
-                </div>
-              )}
-
-              {ean && (
-                <div>
-                  <span className="font-medium">EAN:</span> {ean}
-                </div>
-              )}
-
-              {classificationNumber && (
-                <div>
-                  <span className="font-medium">DDC:</span>{" "}
-                  {classificationNumber}
-                </div>
-              )}
-
-              {cutterNumber && (
-                <div>
-                  <span className="font-medium">{t("Cutter number")}:</span>{" "}
-                  {cutterNumber}
-                </div>
-              )}
-
-              {estimatedPrice && (
-                <div>
-                  <span className="font-medium">{t("Estimated price")}:</span>{" "}
-                  {formattedPrice}
-                </div>
-              )}
-
-              {dimensions && (
-                <div>
-                  <span className="font-medium">{t("Dimensions")}:</span>{" "}
-                  {dimensions}
-                </div>
-              )}
-
-              {physicalDetails && (
-                <div>
-                  <span className="font-medium">{t("Physical details")}:</span>{" "}
-                  {physicalDetails}
-                </div>
-              )}
-
-              {accompanyingMaterial && (
-                <div>
-                  <span className="font-medium">
-                    {t("Accompanying material")}:
-                  </span>{" "}
-                  {accompanyingMaterial}
-                </div>
-              )}
-            </div>
-
-            {genres && (
-              <div className="text-sm">
-                <span className="font-medium">{t("Genres")}:</span> {genres}
-              </div>
-            )}
-
-            {topicalTerms && (
-              <div className="text-sm">
-                <span className="font-medium">{t("Topical terms")}:</span>{" "}
-                {topicalTerms}
-              </div>
-            )}
-
-            {generalNote && (
-              <div className="text-sm">
-                <span className="font-medium">{t("General note")}:</span>{" "}
-                {generalNote}
-              </div>
-            )}
-
-            {bibliographicalNote && (
-              <div className="text-sm">
-                <span className="font-medium">
-                  {t("Bibliographical note")}:
-                </span>{" "}
-                {bibliographicalNote}
-              </div>
-            )}
-          </div>
+          {expandable ? (
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem value="item-1">
+                <AccordionTrigger>{t("View more")}</AccordionTrigger>
+                <AccordionContent asChild>
+                  <ExpandInformation noBorderTop libraryItem={libraryItem} />
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
+          ) : (
+            <ExpandInformation libraryItem={libraryItem} />
+          )}
         </CardContent>
       </div>
     </Card>
+  )
+}
+
+function ExpandInformation({
+  libraryItem,
+  noBorderTop = false,
+}: {
+  libraryItem: BookEdition & {
+    category?: Category
+    libraryItemAuthors?: (LibraryItemAuthor & { author: Author })[]
+    authors?: Author[]
+  }
+  noBorderTop?: boolean
+}) {
+  const {
+    accompanyingMaterial,
+    additionalAuthors,
+    bibliographicalNote,
+    classificationNumber,
+    cutterNumber,
+    dimensions,
+    ean,
+    edition,
+    estimatedPrice,
+    generalNote,
+    genres,
+    isbn,
+    language,
+    physicalDetails,
+    topicalTerms,
+  } = libraryItem
+
+  const t = useTranslations("BooksManagementPage")
+
+  const formattedPrice = estimatedPrice
+    ? new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      }).format(estimatedPrice)
+    : null
+
+  return (
+    <div
+      className={cn(
+        "mt-2 space-y-3 border-t pt-2",
+        noBorderTop && "mt-0 border-t-0 pt-0"
+      )}
+    >
+      <div className="grid grid-cols-1 gap-x-4 gap-y-2 text-sm sm:grid-cols-2 md:grid-cols-3">
+        {additionalAuthors && (
+          <div>
+            <span className="font-medium">{t("Additional authors")}:</span>{" "}
+            {additionalAuthors}
+          </div>
+        )}
+
+        {language && (
+          <div>
+            <span className="font-medium">{t("Language")}:</span> {language}
+          </div>
+        )}
+
+        {edition && (
+          <div>
+            <span className="font-medium">{t("Edition")}:</span> {edition}
+          </div>
+        )}
+
+        {isbn && (
+          <div>
+            <span className="font-medium">ISBN:</span> {isbn}
+          </div>
+        )}
+
+        {ean && (
+          <div>
+            <span className="font-medium">EAN:</span> {ean}
+          </div>
+        )}
+
+        {classificationNumber && (
+          <div>
+            <span className="font-medium">DDC:</span> {classificationNumber}
+          </div>
+        )}
+
+        {cutterNumber && (
+          <div>
+            <span className="font-medium">{t("Cutter number")}:</span>{" "}
+            {cutterNumber}
+          </div>
+        )}
+
+        {estimatedPrice && (
+          <div>
+            <span className="font-medium">{t("Estimated price")}:</span>{" "}
+            {formattedPrice}
+          </div>
+        )}
+
+        {dimensions && (
+          <div>
+            <span className="font-medium">{t("Dimensions")}:</span> {dimensions}
+          </div>
+        )}
+
+        {physicalDetails && (
+          <div>
+            <span className="font-medium">{t("Physical details")}:</span>{" "}
+            {physicalDetails}
+          </div>
+        )}
+
+        {accompanyingMaterial && (
+          <div>
+            <span className="font-medium">{t("Accompanying material")}:</span>{" "}
+            {accompanyingMaterial}
+          </div>
+        )}
+      </div>
+
+      {genres && (
+        <div className="text-sm">
+          <span className="font-medium">{t("Genres")}:</span> {genres}
+        </div>
+      )}
+
+      {topicalTerms && (
+        <div className="text-sm">
+          <span className="font-medium">{t("Topical terms")}:</span>{" "}
+          {topicalTerms}
+        </div>
+      )}
+
+      {generalNote && (
+        <div className="text-sm">
+          <span className="font-medium">{t("General note")}:</span>{" "}
+          {generalNote}
+        </div>
+      )}
+
+      {bibliographicalNote && (
+        <div className="text-sm">
+          <span className="font-medium">{t("Bibliographical note")}:</span>{" "}
+          {bibliographicalNote}
+        </div>
+      )}
+    </div>
   )
 }

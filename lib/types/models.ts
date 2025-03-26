@@ -3,12 +3,15 @@ import {
   type EBookCopyStatus,
   type EBookEditionStatus,
   type EBookFormat,
+  type EBorrowRecordStatus,
   type EBorrowRequestStatus,
+  type EBorrowType,
   type ECardStatus,
   type EFineType,
   type EGender,
   type EIssuanceMethod,
   type ENotificationType,
+  type EReservationQueueStatus,
   type EResourceBookType,
   type ERoleType,
   type EStockTransactionType,
@@ -278,10 +281,10 @@ export type LibraryItem = {
   avgReviewedRate: number | null
   category: Category
   shelf: {
-    shelfId: number | null
-    sectionId: number | null
-    shelfNumber: string | null
-    createDate: string | null
+    shelfId: number
+    sectionId: number
+    shelfNumber: string
+    createDate: string
     updateDate: string | null
     isDeleted: boolean
     section: unknown
@@ -702,7 +705,7 @@ export type LibraryCard = {
   isExtended: boolean
   extensionCount: number
   issueDate: Date
-  expiryDate: Date | null
+  expiryDate: Date
   suspensionEndDate: Date | null
   suspensionReason: string | null
   rejectReason: string | null
@@ -753,10 +756,10 @@ export type BorrowRequest = {
   isReminderSent: boolean
   totalRequestItem: number
   libraryItems: LibraryItem[]
-  reservationQueues: reservationQueue[]
+  reservationQueues: ReservationQueue[]
 }
 
-export type reservationQueue = {
+export type ReservationQueue = {
   queueId: number
   libraryItemId: number
   libraryItemInstanceId: null | number
@@ -780,4 +783,60 @@ export type reservationQueue = {
 
 export type DigitalTransaction = Transaction & {
   qrCode: string
+}
+
+export type BorrowRequestManagement = {
+  borrowRequestId: number
+  libraryCardId: string
+  requestDate: Date
+  expirationDate: Date
+  status: EBorrowRequestStatus
+  description: string | null
+  cancelledAt: string | null
+  cancellationReason: string | null
+  isReminderSent: boolean
+  totalRequestItem: number
+}
+
+export type BorrowRecord = {
+  borrowRecordId: number
+  borrowRequestId: number
+  libraryCardId: string
+  borrowDate: Date
+  borrowType: EBorrowType
+  selfServiceBorrow: boolean
+  totalRecordItem: number
+  processedBy: string
+}
+
+export type BorrowRecordDetail = {
+  borrowRecordDetailId: number
+  borrowRecordId: number
+  libraryItemInstanceId: number
+  conditionId: number
+  returnConditionId: number | null
+  conditionCheckDate: Date | null
+  returnDate: Date | null
+  dueDate: Date
+  status: EBorrowRecordStatus
+  isReminderSent: boolean
+  totalExtension: number
+}
+
+export type ReservationQueueManagement = {
+  queueId: number
+  libraryItemId: number
+  libraryItemInstanceId: number | null
+  libraryCardId: string
+  queueStatus: EReservationQueueStatus
+  borrowRequestId: number | null
+  isReservedAfterRequestFailed: boolean
+  expectedAvailableDateMin: Date | null
+  expectedAvailableDateMax: Date | null
+  reservationDate: Date
+  expiryDate: Date | null
+  collectedDate: Date | null
+  isNotified: boolean
+  cancelledBy: string | null
+  cancellationReason: string | null
 }

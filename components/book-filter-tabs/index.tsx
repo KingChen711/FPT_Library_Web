@@ -243,7 +243,7 @@ const BookFilterTabs = ({
             {t("Advanced search")}
           </TabsTrigger>
         </TabsList>
-        <TabsContent value="basic-search">
+        <TabsContent value="quick-search">
           {!management && (
             <QuickSearchTab
               isMatchExact={isMatchExact}

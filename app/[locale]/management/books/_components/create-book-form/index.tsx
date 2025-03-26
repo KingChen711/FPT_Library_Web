@@ -95,6 +95,8 @@ function CreateBookForm({ trackingDetail }: Props) {
 
       console.log(values)
 
+      values.libraryItemInstances = []
+
       const res = await createBook(values)
       if (res.isSuccess) {
         toast({

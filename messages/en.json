@@ -85,7 +85,8 @@
     "light": "Light",
     "dark": "Dark",
     "system": "System",
-    "toggle theme": "Toggle theme"
+    "toggle theme": "Toggle theme",
+    "welcome user": "Welcome back! {userName}"
   },
   "Zod": {
     "min1": "Required",
@@ -132,7 +133,9 @@
     "dateGteToday": "Required must be greater than or equal to current date",
     "wrongCatalogInformation": "Cataloging information must be accurate",
     "lessThanRequire": "Less than required",
-    "greaterThanRequire": "More than required"
+    "greaterThanRequire": "More than required",
+    "mustAfterThanNow": "Must be greater than now",
+    "mustScannedAllItems": "Must scan all items"
   },
   "Me": {
     "account": "Account",
@@ -510,6 +513,7 @@
     "Permissions": "Permissions"
   },
   "Routes": {
+    "Borrow records": "Borrow records",
     "Borrow requests": "Borrow requests",
     "Borrow and Return": "Borrow and Return",
     "Dashboard": "Dashboard",
@@ -1042,6 +1046,7 @@
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm"
   },
   "SuppliersManagementPage": {
+    "Suppliers": "Suppliers",
     "Allowed": "Allowed",
     "Select a supplier": "Select a supplier",
     "Supplier": "Supplier",
@@ -1114,7 +1119,13 @@
     "Error while import data": "Error while import data",
     "View details": "View details",
     "Row": "Row: ",
-    "Import errors": "Import errors"
+    "Import errors": "Import errors",
+    "Import fines": "Import fines",
+    "File": "File",
+    "Duplicate handle": "Duplicate handle",
+    "Allow": "Allow",
+    "Replace": "Replace",
+    "Skip": "Skip"
   },
   "NotificationsManagementPage": {
     "Recipient": "Recipient",
@@ -1153,6 +1164,7 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "View more": "View more",
     "Filters": "Filters",
     "Add": "Add",
     "Search for articles, books, journals, and other content": "Search for articles, books, journals, and other content",
@@ -1312,7 +1324,7 @@
     "Delete permanently": "Delete permanently",
     "Move to trash": "Move to trash",
     "Restore": "Restore",
-    "Publish edition": "Publish edition",
+    "Publish edition": "Publish item",
     "View inventory": "View inventory",
     "Inventory copies": "Inventory copies",
     "Borrowed copies": "Borrowed copies",
@@ -1622,6 +1634,7 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Search library item": "Search library item",
     "Classification barcode description": "The classification barcode should be affixed to the spine of the book for easy searching on the shelf.",
     "Individual barcode description": "The individual barcode must be affixed to the upper corner of the book cover.",
     "How many barcode has glue": "How many books have you glued barcode?",
@@ -1764,6 +1777,10 @@
     "No item found": "No item found"
   },
   "Badges": {
+    "BorrowType": {
+      "0": "In library",
+      "1": "Take home"
+    },
     "StockTransactionType": {
       "0": "New",
       "1": "Additional",
@@ -1779,7 +1796,7 @@
       "Damaged": "Damaged",
       "Lost": "Lost"
     },
-    "NotificationType": { "0": "Event", "1": "Notice", "2": "Reminder" },
+    "NotificationType": { "0": "Event", "1": "Reminder", "2": "Notice" },
     "ResourceBookType": { "AudioBook": "Audio book", "Ebook": "EBook" },
     "BookFormat": { "Paperback": "Paperback", "HardCover": "Hard cover" },
     "BookEditionStatus": { "0": "Draft", "1": "Published", "2": "Deleted" },
@@ -1911,5 +1928,46 @@
   "AutocompleteLibraryItem": {
     "Available": "Available",
     "Out of shelf": "Out of shelf"
+  },
+  "BorrowAndReturnManagementPage": {
+    "Create borrow record": "Create borrow record",
+    "Scan patrons library card": "Scan patron's card",
+    "Borrow request items": "Borrow request items",
+    "Borrow type": "Borrow type",
+    "Borrow list": "Borrow list",
+    "Scan items to confirm borrow list": "Scan items to confirm borrow list",
+    "Not scanned yet": "Not scanned yet",
+    "Un request items": "Un request items",
+    "Library card": "Library card",
+    "Cancel": "Cancel",
+    "Scanned": "Scanned",
+    "Continue": "Continue",
+    "Please scan the patrons library card barcode to begin the checkout process": "Please scan the patron's library card barcode to begin the checkout process",
+    "Loading patron information": "Loading patron information...",
+    "Borrow records": "Borrow records",
+    "Assigned reservation items": "Assigned reservation items",
+    "Take home description": "Borrow items and return them when they are due.",
+    "In library description": "Borrow and return all library items at the same day.",
+    "Activity summary": "Activity summary",
+    "Requesting": "Requesting",
+    "Borrowing": "Borrowing",
+    "Assigned reservations": "Assigned reservations",
+    "Pending reservations": "Pending reservations",
+    "Borrow limit": "Borrow limit",
+    "Remaining": "Remaining",
+    "Borrowing limit reached": "Borrowing limit reached",
+    "Total activities": "Total activities",
+    "Due date": "Due date"
+  },
+  "LocateButton": {
+    "Floor": "Floor",
+    "Zone": "Zone",
+    "Section": "Section",
+    "Shelf": "Shelf",
+    "Library item position": "Library item's position",
+    "Not found": "Not found",
+    "Locate": "Locate",
+    "Cancel": "Cancel",
+    "Go to map": "Go to map"
   }
 }

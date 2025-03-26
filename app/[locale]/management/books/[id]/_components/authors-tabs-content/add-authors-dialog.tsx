@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { Loader2 } from "lucide-react"
+import { Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { useDebounce } from "use-debounce"
@@ -99,7 +99,10 @@ function AddAuthorsDialog({ bookId }: Props) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>{t("Add authors")}</Button>
+        <Button>
+          <Plus />
+          {t("Add authors")}
+        </Button>
       </DialogTrigger>
       <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto overflow-x-hidden">
         <DialogHeader>

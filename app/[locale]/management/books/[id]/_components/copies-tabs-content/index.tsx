@@ -28,7 +28,7 @@ import { TabsContent } from "@/components/ui/tabs"
 import BookCopyStatusBadge from "@/components/badges/book-copy-status-badge"
 import CirculatedBadge from "@/components/badges/circulated-badge"
 
-import AddCopiesDialog from "./add-copies-dialog"
+// import AddCopiesDialog from "./add-copies-dialog"
 import CopiesActionsDropdown from "./copies-actions-dropdown"
 import CopiesTabs from "./copies-tabs"
 import CopyDropdown from "./copy-dropdown"
@@ -100,7 +100,7 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
               copies={copies}
             />
           )}
-          <AddCopiesDialog bookId={bookId} prefix={prefix} />
+          {/* <AddCopiesDialog bookId={bookId} prefix={prefix} /> */}
         </div>
       </div>
       <div className="mt-4 rounded-md border p-4">
@@ -246,7 +246,6 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
                       {copy.updatedBy || "-"}
                     </TableCell>
 
-                    {/* <TableCell className="text-nowrap">TODO</TableCell> */}
                     <TableCell>
                       <div className="flex justify-center">
                         <CopyDropdown

@@ -13,6 +13,7 @@ import {
   searchCardsSchema,
 } from "@/lib/validations/patrons/cards/search-cards"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -291,7 +292,24 @@ async function CardsManagementPage({ searchParams }: Props) {
                     </TableCell>
 
                     <Hidable hide={!columns.includes(Column.BARCODE)}>
-                      <TableCell></TableCell>
+                      <TableCell className="text-nowrap">
+                        <div className="flex justify-center">
+                          {card.barcode ? (
+                            <BarcodeGenerator
+                              value={card.barcode}
+                              options={{
+                                format: "CODE128",
+                                displayValue: true,
+                                fontSize: 12,
+                                width: 1,
+                                height: 24,
+                              }}
+                            />
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
                     </Hidable>
 
                     <Hidable hide={!columns.includes(Column.FULLNAME_ON_CARD)}>

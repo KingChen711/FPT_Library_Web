@@ -14,6 +14,7 @@ import {
   searchPatronsSchema,
 } from "@/lib/validations/patrons/search-patrons"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -519,14 +520,16 @@ async function HoldersManagementPage({ searchParams }: Props) {
                       <TableCell className="text-nowrap">
                         <div className="flex justify-center">
                           {patron.libraryCard?.barcode ? (
-                            // <Barcode
-                            //   value={patron.libraryCard.barcode}
-                            //   width={1}
-                            //   height={50}
-                            //   fontSize={12}
-                            //   displayValue={false}
-                            // />
-                            <></>
+                            <BarcodeGenerator
+                              value={patron.libraryCard.barcode}
+                              options={{
+                                format: "CODE128",
+                                displayValue: true,
+                                fontSize: 12,
+                                width: 1,
+                                height: 24,
+                              }}
+                            />
                           ) : (
                             "-"
                           )}
