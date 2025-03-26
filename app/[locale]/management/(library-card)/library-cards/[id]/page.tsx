@@ -25,6 +25,7 @@ import ParseHtml from "@/components/ui/parse-html"
 import CardStatusBadge from "@/components/badges/card-status-badge"
 import IssuanceMethodBadge from "@/components/badges/issuance-method-badge"
 
+import LibraryCardActionsDropdown from "../../library-card-holders/[id]/_components/card-actions-dropdown"
 import CardDetailBreadCrumb from "./_components/patron-detail-bread-crumb"
 
 type Props = {
@@ -70,11 +71,11 @@ async function CardDetailPage({ params }: Props) {
         <div className="flex flex-col gap-4 rounded-md border py-5">
           <div className="flex items-center justify-between gap-4 px-5">
             <h3 className="text-lg font-semibold">{t("Card information")}</h3>
-            {/* TODO: cần userId từ BE <LibraryCardActionsDropdown
+            <LibraryCardActionsDropdown
               libraryCard={card}
-              userId={card.}
-              canExtendCard={canExtendCard}
-            /> */}
+              canExtendCard={false}
+              userId=""
+            />
           </div>
           <div className="grid grid-cols-12 gap-y-6 text-sm">
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">

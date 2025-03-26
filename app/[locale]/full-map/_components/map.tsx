@@ -1,12 +1,12 @@
 "use client"
 
 import React, { useCallback, useEffect, useRef, useState } from "react"
+import { useSearchParams } from "next/navigation"
 import { Loader2 } from "lucide-react"
 import { useScript } from "usehooks-ts"
 
 import { cn } from "@/lib/utils"
-
-// import { useGoogleTranslateScript } from "@/hooks/use-google-translate"
+import useAutoTranslate from "@/hooks/use-auto-translate"
 
 const conf: woosmap.map.IndoorRendererOptions = {
   defaultFloor: 1, //Render map with default floor
@@ -23,7 +23,18 @@ const widgetConf: woosmap.map.IndoorWidgetOptions = {
   },
 }
 
-const Map = () => {
+type Props = {
+  notFull?: boolean
+}
+
+const Map = ({ notFull = false }: Props) => {
+  const searchParams = useSearchParams()
+  const [indoorRenderer, setIndoorRenderer] =
+    useState<woosmap.map.IndoorWidget>()
+
+  const ref = searchParams.get("ref")
+
+  const containerRef = useAutoTranslate()
   const [mapLoaded, setHideLoader] = useState(false)
   const mapContainerRef = useRef(null)
   const scriptStatus = useScript(
@@ -31,25 +42,6 @@ const Map = () => {
   )
 
   const [isIndoorWidgetReady, setIsIndoorWidgetReady] = useState(false)
-
-  // useGoogleTranslateScript("google_translate_element")
-
-  // useEffect(() => {
-  //   const googleTranslateScript = document.createElement("script")
-  //   googleTranslateScript.src =
-  //     "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"
-  //   googleTranslateScript.async = true
-  //   document.body.appendChild(googleTranslateScript)
-
-  //   window.googleTranslateElementInit = () => {
-  //     console.log("googleTranslateElementInit")
-
-  //     new window.google.translate.TranslateElement(
-  //       { pageLanguage: "auto", includedLanguages: "vi" },
-  //       "google_translate_element"
-  //     )
-  //   }
-  // }, [])
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -64,37 +56,49 @@ const Map = () => {
     return () => clearInterval(interval)
   }, [])
 
-  const onIndoorVenueLoaded = useCallback((venue: woosmap.map.Venue) => {
-    console.log("Venue: ", venue)
+  const onIndoorVenueLoaded = useCallback(() => {
     setHideLoader(true)
   }, [])
 
   useEffect(() => {
     let indoorRenderer: woosmap.map.IndoorWidget
+
     if (isIndoorWidgetReady && scriptStatus === "ready") {
       const map = new window.woosmap.map.Map(
-        document.getElementById("google_translate_element") as HTMLElement
+        document.getElementById("library-indoor-map-element") as HTMLElement
       )
       indoorRenderer = new window.woosmap.map.IndoorWidget(widgetConf, conf)
       indoorRenderer.setMap(map)
-      console.log("Set  map", woosmap.map.IndoorWidget)
+
       indoorRenderer.addListener("indoor_venue_loaded", onIndoorVenueLoaded)
+      setIndoorRenderer(indoorRenderer)
     }
   }, [scriptStatus, isIndoorWidgetReady, onIndoorVenueLoaded])
 
   useEffect(() => {
-    const addGoogleTranslateScript = () => {
-      const script = document.createElement("script")
-      script.src = "https://translate.google.com/translate_a/element.js"
-      script.async = true
-      document.body.appendChild(script)
-    }
+    console.log({
+      mapLoaded,
+      ref,
+      mapContainerRef: mapContainerRef.current,
+      indoorRenderer,
+    })
 
-    addGoogleTranslateScript()
-  }, [])
+    if (!mapLoaded || !ref || !mapContainerRef.current || !indoorRenderer)
+      return
+
+    console.log("indoorRenderer?.highlightFeatureByRef(ref)", ref)
+
+    indoorRenderer?.highlightFeatureByRef(ref)
+  }, [ref, mapContainerRef, mapLoaded, indoorRenderer])
 
   return (
-    <div className="fixed h-screen w-screen">
+    <div
+      ref={containerRef}
+      style={{
+        fontFamily: "Arial, Helvetica, sans-serif !important",
+      }}
+      className={cn("absolute inset-0", notFull && "pt-[64px]")}
+    >
       <div
         className={cn(
           "z-10 flex size-full items-center justify-center",
@@ -104,9 +108,9 @@ const Map = () => {
         <Loader2 className="size-12 animate-spin" />
       </div>
       <div
-        id="google_translate_element"
-        className="size-full"
+        id="library-indoor-map-element"
         ref={mapContainerRef}
+        className="size-full"
       />
     </div>
   )

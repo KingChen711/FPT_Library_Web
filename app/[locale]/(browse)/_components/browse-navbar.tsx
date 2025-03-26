@@ -91,7 +91,10 @@ function BrowseNavbar() {
         <div className="relative flex w-full max-w-[560px] items-center rounded-md border">
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="relative">
+              <Button
+                variant="outline"
+                className="relative !border-none !outline-none !ring-0"
+              >
                 <Filter className="size-4 shrink-0" />
                 {t("filter.title")}
               </Button>
@@ -153,7 +156,10 @@ function BrowseNavbar() {
                             </Badge>
                           </Link>
                         </TooltipTrigger>
-                        <TooltipContent side="right" className="p-0">
+                        <TooltipContent
+                          side="right"
+                          className="bg-card p-0 text-card-foreground"
+                        >
                           <LibraryItemCard
                             className="max-w-[calc(95vw-840px)]"
                             libraryItem={acd}

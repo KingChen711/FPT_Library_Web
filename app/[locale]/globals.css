@@ -253,3 +253,14 @@ input[type="number"]::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
+
+#library-indoor-map-element
+  > div.mapboxgl-control-container
+  > div.mapboxgl-ctrl-top-left
+  > div
+  > div
+  > div.woosmap-panel__content.itinerary.left
+  > div.woosmap-panel__content__body.woosmap-panel__content__body--itinerary
+  > div.disability {
+  display: none;
+}

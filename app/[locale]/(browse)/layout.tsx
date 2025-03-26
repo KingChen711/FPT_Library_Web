@@ -30,8 +30,10 @@ function BrowserLayout({ children }: Props) {
         <BrowseNavbar />
         <div className="flex w-full">
           <BrowseSidebar />
-          <section className="flex min-h-screen flex-1 flex-col p-6 pt-[88px]">
-            <div className="mx-auto w-full max-w-[1620px]">{children}</div>
+          <section className="relative flex min-h-screen flex-1 flex-col p-6 pt-[88px]">
+            <div className="mx-auto w-full max-w-[1620px] flex-1">
+              {children}
+            </div>
           </section>
         </div>
       </div>

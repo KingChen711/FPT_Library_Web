@@ -2,9 +2,12 @@ import { useAuth } from "@/contexts/auth-provider"
 import { useMutation } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
-import { type LibraryCard, type LibraryCardHolder } from "@/lib/types/models"
+import { type LibraryCard, type Patron } from "@/lib/types/models"
 
-export type ScannedPatron = LibraryCardHolder & { libraryCard: LibraryCard }
+export type ScannedPatron = Patron & {
+  libraryCard: LibraryCard
+  libraryCardId: string
+}
 
 function useGetPatronByBarcode() {
   const { accessToken } = useAuth()

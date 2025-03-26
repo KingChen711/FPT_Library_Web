@@ -26,7 +26,7 @@ export function useGoogleTranslateScript(id: string) {
   //         includedLanguages: "vi", //here include all languages that you need,
   //         autoDisplay: true, // Tự động dịch
   //       },
-  //       "google_translate_element"
+  //       "library-indoor-map-element"
   //     )
 
   //     console.log("should work")

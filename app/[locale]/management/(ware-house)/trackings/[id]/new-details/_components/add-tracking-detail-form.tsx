@@ -421,7 +421,7 @@ function AddTrackingDetailForm({ trackingId }: Props) {
                                       </div>
                                     </TooltipTrigger>
                                     <TooltipContent
-                                      className="!z-[9999]"
+                                      className="!z-[9999] bg-card text-card-foreground"
                                       side="right"
                                       asChild
                                     >

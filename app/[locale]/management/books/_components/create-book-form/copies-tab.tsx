@@ -23,7 +23,6 @@ import { Label } from "@/components/ui/label"
 import BookConditionStatusBadge from "@/components/badges/book-condition-status-badge"
 
 import { BarcodesContainer } from "./barcodes-container"
-import BookCopiesDialog from "./book-copies-dialog"
 
 type Props = {
   form: UseFormReturn<TBookEditionSchema>
@@ -34,14 +33,7 @@ type Props = {
   setHasConfirmedChangeStatus: (val: boolean) => void
 }
 
-export default function CopiesTab({
-  form,
-  isPending,
-  show,
-  selectedCategory,
-  hasConfirmedChangeStatus,
-  setHasConfirmedChangeStatus,
-}: Props) {
+export default function CopiesTab({ form, isPending, show }: Props) {
   const t = useTranslations("BooksManagementPage")
   const barcodesPrintRef = useRef<HTMLDivElement>(null)
   const handlePrintBarcodes = useReactToPrint({
@@ -81,14 +73,14 @@ export default function CopiesTab({
                   *
                 </span>
               </FormLabel>
-              <BookCopiesDialog
+              {/* <BookCopiesDialog
                 selectedCategory={selectedCategory!}
                 form={form}
                 isPending={isPending}
                 hasConfirmedChangeStatus={hasConfirmedChangeStatus}
                 setHasConfirmedChangeStatus={setHasConfirmedChangeStatus}
                 conditions={conditions!}
-              />
+              /> */}
             </div>
             <div className="flex flex-wrap items-center gap-3">
               {field.value.length === 0 && (
