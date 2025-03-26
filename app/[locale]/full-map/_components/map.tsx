@@ -96,7 +96,7 @@ const Map = ({ notFull = false }: Props) => {
     >
       <div
         className={cn(
-          "z-10 flex size-full items-center justify-center",
+          "absolute inset-0 z-10 flex items-center justify-center bg-background",
           mapLoaded && "hidden"
         )}
       >
