@@ -12,7 +12,7 @@ const conf: woosmap.map.IndoorRendererOptions = {
   defaultFloor: 1, //Render map with default floor
   centerMap: true,
   venue: "intelligent_library_v2",
-  responsive: "auto",
+  responsive: "desktop",
 }
 
 const widgetConf: woosmap.map.IndoorWidgetOptions = {
@@ -33,6 +33,7 @@ const Map = ({ notFull = false }: Props) => {
     useState<woosmap.map.IndoorWidget>()
 
   const ref = searchParams.get("ref")
+  const responsive = searchParams.get("responsive")
 
   const containerRef = useAutoTranslate()
   const [mapLoaded, setHideLoader] = useState(false)
@@ -67,26 +68,20 @@ const Map = ({ notFull = false }: Props) => {
       const map = new window.woosmap.map.Map(
         document.getElementById("library-indoor-map-element") as HTMLElement
       )
-      indoorRenderer = new window.woosmap.map.IndoorWidget(widgetConf, conf)
+      indoorRenderer = new window.woosmap.map.IndoorWidget(widgetConf, {
+        ...conf,
+        responsive: responsive === "mobile" ? responsive : "auto",
+      })
       indoorRenderer.setMap(map)
 
       indoorRenderer.addListener("indoor_venue_loaded", onIndoorVenueLoaded)
       setIndoorRenderer(indoorRenderer)
     }
-  }, [scriptStatus, isIndoorWidgetReady, onIndoorVenueLoaded])
+  }, [scriptStatus, isIndoorWidgetReady, onIndoorVenueLoaded, responsive])
 
   useEffect(() => {
-    console.log({
-      mapLoaded,
-      ref,
-      mapContainerRef: mapContainerRef.current,
-      indoorRenderer,
-    })
-
     if (!mapLoaded || !ref || !mapContainerRef.current || !indoorRenderer)
       return
-
-    console.log("indoorRenderer?.highlightFeatureByRef(ref)", ref)
 
     indoorRenderer?.highlightFeatureByRef(ref)
   }, [ref, mapContainerRef, mapLoaded, indoorRenderer])
