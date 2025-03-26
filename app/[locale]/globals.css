@@ -262,5 +262,34 @@ input[type="number"]::-webkit-inner-spin-button {
   > div.woosmap-panel__content.itinerary.left
   > div.woosmap-panel__content__body.woosmap-panel__content__body--itinerary
   > div.disability {
+  @apply m-0 h-4 p-0;
+}
+
+#library-indoor-map-element
+  > div.mapboxgl-control-container
+  > div.mapboxgl-ctrl-top-left
+  > div
+  > div
+  > div.woosmap-panel__content.itinerary.left
+  > div.woosmap-panel__content__body.woosmap-panel__content__body--itinerary
+  > div.disability
+  > svg,
+#library-indoor-map-element
+  > div.mapboxgl-control-container
+  > div.mapboxgl-ctrl-top-left
+  > div
+  > div
+  > div.woosmap-panel__content.itinerary.left
+  > div.woosmap-panel__content__body.woosmap-panel__content__body--itinerary
+  > div.disability
+  > div {
   display: none;
+}
+#library-indoor-map-element
+  > div.mapboxgl-control-container
+  > div.mapboxgl-ctrl-top-left
+  > div
+  > div
+  > div.woosmap-panel__header {
+  @apply mx-auto mb-10 h-9 w-full max-w-[85%];
 }
