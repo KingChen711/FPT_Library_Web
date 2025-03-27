@@ -71,18 +71,18 @@ export default async function RootLayout({
           <NextIntlClientProvider messages={messages}>
             <AuthProvider>
               {/* <SocketProvider> */}
-              <TrainAIProvider>
-                <ThemeProvider
-                  attribute="class"
-                  defaultTheme="system"
-                  enableSystem
-                  disableTransitionOnChange
-                >
-                  {children}
-                  <Toaster />
-                  <TrainAIToast />
-                </ThemeProvider>
-              </TrainAIProvider>
+              {/* <TrainAIProvider> */}
+              <ThemeProvider
+                attribute="class"
+                defaultTheme="system"
+                enableSystem
+                disableTransitionOnChange
+              >
+                {children}
+                <Toaster />
+                {/* <TrainAIToast /> */}
+              </ThemeProvider>
+              {/* </TrainAIProvider> */}
               {/* </SocketProvider> */}
             </AuthProvider>
           </NextIntlClientProvider>

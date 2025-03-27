@@ -262,7 +262,7 @@ input[type="number"]::-webkit-inner-spin-button {
   > div.woosmap-panel__content.itinerary.left
   > div.woosmap-panel__content__body.woosmap-panel__content__body--itinerary
   > div.disability {
-  @apply m-0 h-4 p-0;
+  @apply pointer-events-none m-0 h-4 cursor-default bg-white p-0;
 }
 
 #library-indoor-map-element
@@ -285,11 +285,14 @@ input[type="number"]::-webkit-inner-spin-button {
   > div {
   display: none;
 }
+
 #library-indoor-map-element
   > div.mapboxgl-control-container
-  > div.mapboxgl-ctrl-top-left
+  > div.woosmap-navigation-panel
+  > div.woosmap-navigation-panel__footer
   > div
+  > div.woosmap-navigation-panel__footer__content__right
   > div
-  > div.woosmap-panel__header {
-  @apply mx-auto mb-10 h-9 w-full max-w-[85%];
+  > button.btn.btn--square.btn--bordered.btn--sound {
+  @apply pointer-events-none invisible;
 }

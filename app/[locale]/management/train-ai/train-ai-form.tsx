@@ -30,6 +30,7 @@ import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
 
+import GroupCheckResultDialog from "../books/[id]/_components/group-check-result-dialog"
 import GroupField from "./group-field"
 import TrainCheckBox from "./train-check-box"
 
@@ -95,6 +96,7 @@ function TrainAIForm({ groups }: Props) {
 
     startTransition(async () => {
       const formData = new FormData()
+      const obj: Record<string, string | File[] | string[]> = {}
 
       await Promise.all(
         values.groups.map(async (g, groupIndex) => {
@@ -106,12 +108,27 @@ function TrainAIForm({ groups }: Props) {
                   bookIndex
                 ].libraryItemId.toString()
               )
+
+              obj[
+                `TrainingData[${groupIndex}].ItemsInGroup[${bookIndex}].LibraryItemId`
+              ] =
+                selectedGroups[groupIndex].items[
+                  bookIndex
+                ].libraryItemId.toString()
+
               await Promise.all(
                 b.imageList.map(async (image, index) => {
                   formData.append(
                     `TrainingData[${groupIndex}].ItemsInGroup[${bookIndex}].ImageFiles`,
                     image.file!
                   )
+
+                  const key = `TrainingData[${groupIndex}].ItemsInGroup[${bookIndex}].ImageFiles`
+
+                  obj[key] = obj[key]
+                    ? [...(obj[key] as File[]), image.file!]
+                    : [image.file!]
+
                   if (
                     image.file &&
                     values.groups[groupIndex].books[bookIndex].imageList[
@@ -139,12 +156,23 @@ function TrainAIForm({ groups }: Props) {
                     values.groups[groupIndex].books[bookIndex].imageList[index]
                       .coverImage || ""
                   )
+
+                  const key2 = `TrainingData[${groupIndex}].ItemsInGroup[${bookIndex}].ImageUrls`
+                  const value =
+                    values.groups[groupIndex].books[bookIndex].imageList[index]
+                      .coverImage || ""
+
+                  obj[key2] = obj[key2]
+                    ? [...(obj[key2] as string[]), value]
+                    : [value]
                 })
               )
             })
           )
         })
       )
+
+      console.log(obj)
 
       const res = await trainV2(formData)
 
@@ -191,8 +219,6 @@ function TrainAIForm({ groups }: Props) {
     if (watchSelectedGroup?.length === 0) return
 
     const getFiles = async () => {
-      console.log("getFiles")
-
       try {
         const groupCoverFiles = await Promise.all(
           selectedGroups.map(async (g) => ({
@@ -273,6 +299,7 @@ function TrainAIForm({ groups }: Props) {
                   </AccordionTrigger>
                   <AccordionContent asChild>
                     <div className="flex flex-col gap-4">
+                      <GroupCheckResultDialog results={g.groupCheckResult} />
                       {g.items.map((item) => (
                         <LibraryItemCard
                           key={item.libraryItemId}

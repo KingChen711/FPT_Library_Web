@@ -35,12 +35,14 @@ type Props = {
   management?: boolean
   isTrained?: boolean
   canBorrow?: boolean
+  autoComplete?: boolean
 }
 
 const BookFilterTabs = ({
   management = false,
   canBorrow: initCanBorrow,
   isTrained: initIsTrained,
+  autoComplete = false,
 }: Props) => {
   const t = useTranslations("BasicSearchTab")
   const searchParams = useSearchParams()
@@ -246,6 +248,7 @@ const BookFilterTabs = ({
         <TabsContent value="quick-search">
           {!management && (
             <QuickSearchTab
+              autoComplete={autoComplete}
               isMatchExact={isMatchExact}
               keywordValue={keywordValue}
               searchValue={searchValue}

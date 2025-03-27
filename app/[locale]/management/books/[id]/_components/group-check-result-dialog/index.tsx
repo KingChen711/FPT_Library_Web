@@ -16,6 +16,7 @@ import {
   DialogContent,
   DialogDescription,
   DialogHeader,
+  DialogTrigger,
 } from "@/components/ui/dialog"
 
 const getStatusInfo = (status: EGroupCheckType) => {
@@ -115,12 +116,10 @@ const ItemDetail: React.FC<TGroupCheckRes["listCheckedGroupDetail"][0]> = ({
 }
 
 type Props = {
-  open: boolean
-  setOpen: (value: boolean) => void
-  results: TGroupCheckRes | null | undefined
+  results: TGroupCheckRes
 }
 
-function GroupCheckResultDialog({ open, setOpen, results }: Props) {
+function GroupCheckResultDialog({ results }: Props) {
   const t = useTranslations("BooksManagementPage")
   const router = useRouter()
 
@@ -143,7 +142,12 @@ function GroupCheckResultDialog({ open, setOpen, results }: Props) {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog>
+      <DialogTrigger asChild>
+        <Button size="sm" className="w-fit">
+          {t("Group check results")}
+        </Button>
+      </DialogTrigger>
       <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogDescription>

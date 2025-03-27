@@ -2,11 +2,14 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
+import { useRouter } from "@/i18n/routing"
 import { Loader2 } from "lucide-react"
+import { useLocale } from "next-intl"
 import { useScript } from "usehooks-ts"
 
 import { cn } from "@/lib/utils"
 import useAutoTranslate from "@/hooks/use-auto-translate"
+import { Button } from "@/components/ui/button"
 
 const conf: woosmap.map.IndoorRendererOptions = {
   defaultFloor: 1, //Render map with default floor
@@ -28,6 +31,8 @@ type Props = {
 }
 
 const Map = ({ notFull = false }: Props) => {
+  const locale = useLocale()
+  const router = useRouter()
   const searchParams = useSearchParams()
   const [indoorRenderer, setIndoorRenderer] =
     useState<woosmap.map.IndoorWidget>()
@@ -82,9 +87,60 @@ const Map = ({ notFull = false }: Props) => {
   useEffect(() => {
     if (!mapLoaded || !ref || !mapContainerRef.current || !indoorRenderer)
       return
-
-    indoorRenderer?.highlightFeatureByRef(ref)
+    indoorRenderer.setDirections(null)
+    indoorRenderer.unselectFeature()
+    indoorRenderer.setNavigationMode(false)
+    indoorRenderer.setNavigationMode(true)
+    indoorRenderer.highlightFeatureByRef(ref)
   }, [ref, mapContainerRef, mapLoaded, indoorRenderer])
+
+  const observerRef = useRef<MutationObserver | null>(null)
+
+  useEffect(() => {
+    // Định nghĩa selector
+    const selector =
+      "#library-indoor-map-element > div.mapboxgl-control-container > div.woosmap-navigation-panel > div.woosmap-navigation-panel__footer > div > div.woosmap-navigation-panel__footer__content__right > div > button.btn.btn--square.btn--bordered.btn--sound"
+
+    // Hàm kiểm tra và xử lý khi element được mount
+    const checkElement = () => {
+      const button = document.querySelector(selector) as HTMLButtonElement
+      if (button) {
+        const svg = button.querySelector("svg")
+        if (svg) {
+          const dataTestId = svg.getAttribute("data-testid")
+
+          // Thêm logic xử lý nếu cần
+          if (dataTestId === "icon-sound" && locale === "vi") {
+            console.log("Cần phải mute 😡🤬💢")
+            button.click()
+          }
+        }
+      }
+    }
+
+    // Sử dụng MutationObserver để theo dõi thay đổi trong DOM
+    observerRef.current = new MutationObserver((mutations) => {
+      mutations.forEach(() => {
+        checkElement()
+      })
+    })
+
+    // Bắt đầu quan sát document.body
+    observerRef.current.observe(document.body, {
+      childList: true,
+      subtree: true,
+    })
+
+    // Kiểm tra ngay lập tức khi component mount
+    checkElement()
+
+    // Cleanup khi component unmount
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+      }
+    }
+  }, [locale]) // Dependency array rỗng để chỉ chạy một lần khi mount
 
   return (
     <div
@@ -102,6 +158,9 @@ const Map = ({ notFull = false }: Props) => {
       >
         <Loader2 className="size-12 animate-spin" />
       </div>
+      <Button onClick={() => router.push(`/full-map?ref=1;shelf;G-01`)}>
+        Click
+      </Button>
       <div
         id="library-indoor-map-element"
         ref={mapContainerRef}

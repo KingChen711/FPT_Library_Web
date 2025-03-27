@@ -5,6 +5,7 @@ import { useAuth } from "@/contexts/auth-provider"
 import { Calendar, Clock } from "lucide-react"
 
 import { NotificationBell } from "@/components/ui/noti-bell"
+import { ThemeToggle } from "@/components/theme-toggle"
 
 function Actions() {
   const { user } = useAuth()
@@ -46,6 +47,7 @@ function Actions() {
         </div>
       </section>
       {user && <NotificationBell />}
+      <ThemeToggle />
     </div>
   )
 }

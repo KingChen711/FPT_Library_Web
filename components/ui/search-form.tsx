@@ -10,6 +10,7 @@ import { useDebounce } from "use-debounce"
 import { cn, formUrlQuery } from "@/lib/utils"
 
 import { Input } from "../ui/input"
+import { Skeleton } from "./skeleton"
 
 type Props = {
   search: string
@@ -67,3 +68,7 @@ function SearchForm({ search, className }: Props) {
 }
 
 export default SearchForm
+
+export function SearchFormSkeleton() {
+  return <Skeleton className="h-10 w-[235px]" />
+}

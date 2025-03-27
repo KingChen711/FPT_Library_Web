@@ -1,11 +1,11 @@
-"use client"
-
 import { type ComponentProps } from "react"
-import { useAuth } from "@/contexts/auth-provider"
-import { Link, useRouter } from "@/i18n/routing"
-import { BadgeCheck, ChevronsUpDown, Loader2, LogOut, User } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import Link from "next/link"
+import { auth } from "@/queries/auth"
+import { BadgeCheck, ChevronsUpDown, LogOut, User } from "lucide-react"
+import { getLocale } from "next-intl/server"
 
+import { getTranslations } from "@/lib/get-translations"
+import { ERoleType } from "@/lib/types/enums"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -26,22 +26,19 @@ import {
   SidebarRail,
   SidebarSeparator,
   SidebarTrigger,
-  useSidebar,
 } from "@/components/ui/sidebar"
 
 import { Icons } from "../ui/icons"
 import ManagementSidebarContent from "./management-sidebar-content"
 import SidebarLogoItem from "./sidebar-logo-item"
 
-export function ManagementSidebar({
+export async function ManagementSidebar({
   ...props
 }: ComponentProps<typeof Sidebar>) {
-  const router = useRouter()
-  const locale = useLocale()
-  const { user } = useAuth()
-  const t = useTranslations("Me")
-  const tRoutes = useTranslations("Routes")
-  const { isMobile, open } = useSidebar()
+  const tRoutes = await getTranslations("Routes")
+  const user = await auth().whoAmI()
+  const locale = await getLocale()
+  const t = await getTranslations("Me")
 
   return (
     <Sidebar className="sticky" collapsible="icon" {...props}>
@@ -57,33 +54,36 @@ export function ManagementSidebar({
         <ManagementSidebarContent />
       </SidebarContent>
       <SidebarSeparator />
-      {user ? (
-        <SidebarFooter>
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip={tRoutes("Settings")} asChild>
-                <Link href={"/settings"}>
-                  <Icons.Setting />
-                  <span>{tRoutes("Settings")}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
 
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip={tRoutes("Settings")} asChild>
+              <Link href={"/settings"}>
+                <Icons.Setting />
+                <span>{tRoutes("Settings")}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          <SidebarMenuItem>
+            <SidebarMenuButton tooltip={tRoutes("Help")} asChild>
+              <Link href={"/help"}>
+                <Icons.Help />
+                <span>{tRoutes("Help")}</span>
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          {user && (
             <SidebarMenuItem>
-              <SidebarMenuButton tooltip={tRoutes("Help")} asChild>
-                <Link href={"/help"}>
-                  <Icons.Help />
-                  <span>{tRoutes("Help")}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            <SidebarMenuItem>
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Link href={`#`} className="flex items-center gap-2 p-2">
-                    <User size={20} />
-                    {open && (
-                      <div className="flex flex-1 justify-between text-left text-sm leading-tight">
+              <SidebarMenuButton asChild>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <div className="peer/menu-button flex h-10 w-full cursor-pointer items-center gap-2 overflow-hidden rounded-md p-2 text-left text-sm outline-none ring-sidebar-ring transition-[width,height,padding] hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 active:bg-sidebar-accent active:text-sidebar-accent-foreground disabled:pointer-events-none disabled:opacity-50 group-has-[[data-sidebar=menu-action]]/menu-item:pr-8 aria-disabled:pointer-events-none aria-disabled:opacity-50 data-[active=true]:bg-sidebar-accent data-[active=true]:font-medium data-[active=true]:text-sidebar-accent-foreground data-[state=open]:hover:bg-sidebar-accent data-[state=open]:hover:text-sidebar-accent-foreground group-data-[collapsible=icon]:!size-8 group-data-[collapsible=icon]:!p-2 [&>span:last-child]:truncate [&>svg]:size-4 [&>svg]:shrink-0">
+                      <User className="size-4" />
+
+                      <div className="flex flex-1 items-center justify-between text-left text-sm leading-tight">
                         <div className="flex flex-col">
                           <span className="truncate font-semibold">{`${user?.firstName} ${user?.lastName}`}</span>
                           <span className="truncate text-xs">
@@ -94,49 +94,58 @@ export function ManagementSidebar({
                         </div>
                         <ChevronsUpDown className="ml-auto size-4" />
                       </div>
-                    )}
-                  </Link>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent
-                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
-                  side={isMobile ? "bottom" : "right"}
-                  align="end"
-                  sideOffset={4}
-                >
-                  <DropdownMenuLabel className="p-0 font-normal">
-                    <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
-                      <User size={40} />
-                      <div className="grid flex-1 text-left text-sm leading-tight">
-                        <span className="truncate font-semibold">{`${user?.firstName} ${user?.lastName}`}</span>
-                        <span className="truncate text-xs">
-                          {locale === "vi"
-                            ? user?.role.vietnameseName
-                            : user?.role.englishName}
-                        </span>
-                      </div>
                     </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuGroup>
-                    <DropdownMenuItem
-                      onClick={() => router.push("/me/account/profile")}
-                    >
-                      <BadgeCheck />
-                      {t("account")}
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent
+                    className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-lg"
+                    side="right"
+                    align="end"
+                    sideOffset={4}
+                  >
+                    <DropdownMenuLabel className="p-0 font-normal">
+                      <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                        <User size={40} />
+                        <div className="grid flex-1 text-left text-sm leading-tight">
+                          <span className="truncate font-semibold">{`${user?.firstName} ${user?.lastName}`}</span>
+                          <span className="truncate text-xs">
+                            {locale === "vi"
+                              ? user?.role.vietnameseName
+                              : user?.role.englishName}
+                          </span>
+                        </div>
+                      </div>
+                    </DropdownMenuLabel>
+                    <DropdownMenuGroup>
+                      <DropdownMenuItem className="cursor-pointer" asChild>
+                        <Link href="/me/account/profile">
+                          <BadgeCheck />
+                          {t("account")}
+                        </Link>
+                      </DropdownMenuItem>
+                      {(user.role.roleType === ERoleType.EMPLOYEE ||
+                        user.role.roleId === 1) && (
+                        <DropdownMenuItem className="cursor-pointer" asChild>
+                          <Link href="/management">
+                            <BadgeCheck />
+                            {t("management page")}
+                          </Link>
+                        </DropdownMenuItem>
+                      )}
+                    </DropdownMenuGroup>
+                    <DropdownMenuSeparator />
+                    {/* TODO:logout */}
+                    <DropdownMenuItem className="cursor-pointer">
+                      <LogOut />
+                      {t("logout")}
                     </DropdownMenuItem>
-                  </DropdownMenuGroup>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem>
-                    <LogOut />
-                    {t("logout")}
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </SidebarMenuButton>
             </SidebarMenuItem>
-          </SidebarMenu>
-        </SidebarFooter>
-      ) : (
-        <Loader2 className="animate-spin" />
-      )}
+          )}
+        </SidebarMenu>
+      </SidebarFooter>
+
       <SidebarRail />
     </Sidebar>
   )

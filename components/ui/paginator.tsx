@@ -10,6 +10,7 @@ import { Button, buttonVariants } from "../../components/ui/button"
 import { cn, formUrlQuery } from "../../lib/utils"
 import { Command, CommandGroup, CommandItem, CommandList } from "./command"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
+import { Skeleton } from "./skeleton"
 
 const rowsPerPageOptions = [
   { label: "5", value: "5" },
@@ -156,3 +157,19 @@ function Paginator({
 }
 
 export default Paginator
+
+export function PaginatorSkeleton() {
+  return (
+    <div className={cn("flex w-full flex-wrap items-center gap-4")}>
+      <div className="flex-1">
+        <Skeleton className="h-8 w-[240px]" />
+      </div>
+      <div>
+        <Skeleton className="h-9 w-[285px]" />
+      </div>
+      <div className="flex flex-1 justify-end">
+        <Skeleton className="h-8 w-[240px]" />
+      </div>
+    </div>
+  )
+}

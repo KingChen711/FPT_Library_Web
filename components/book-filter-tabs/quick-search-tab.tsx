@@ -1,9 +1,13 @@
 import { type SetStateAction } from "react"
+import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
+import { Link } from "@/i18n/routing"
 import { useTranslations } from "next-intl"
+import { useDebounce } from "use-debounce"
 
 import { ESearchType } from "@/lib/types/enums"
-import { formUrlQuery } from "@/lib/utils"
+import { cn, formUrlQuery } from "@/lib/utils"
+import useAutoCompleteBooks from "@/hooks/books/use-auto-complete-books"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -16,6 +20,15 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
+import { Badge } from "../ui/badge"
+import LibraryItemCard from "../ui/book-card"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "../ui/tooltip"
+
 type Props = {
   keywordValue: string
   setKeywordValue: React.Dispatch<SetStateAction<string>>
@@ -25,6 +38,7 @@ type Props = {
   setIsMatchExact: React.Dispatch<SetStateAction<boolean>>
   searchValue: string
   setSearchValue: React.Dispatch<SetStateAction<string>>
+  autoComplete?: boolean
 }
 
 const QuickSearchTab = ({
@@ -36,10 +50,19 @@ const QuickSearchTab = ({
   setKeywordValue,
   setSearchValue,
   setSearchWithSpecial,
+  autoComplete = false,
 }: Props) => {
   const router = useRouter()
   const searchParams = useSearchParams()
   const t = useTranslations("BasicSearchTab")
+  const tAutocomplete = useTranslations("AutocompleteLibraryItem")
+
+  const [debouncedSearchTerm] = useDebounce(searchValue, 300)
+
+  const { data: autoCompleteData } = useAutoCompleteBooks(
+    debouncedSearchTerm,
+    autoComplete
+  )
 
   const resetFields = () => {
     setIsMatchExact(false)
@@ -88,12 +111,68 @@ const QuickSearchTab = ({
           </SelectContent>
         </Select>
 
-        <Input
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-          className="flex-1"
-          placeholder={`${t("Search")}...`}
-        />
+        <div className="relative w-full">
+          <Input
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+            className="peer flex-1"
+            placeholder={`${t("Search")}...`}
+          />
+
+          {autoCompleteData && autoCompleteData.length > 0 && (
+            <div
+              className={cn(
+                "absolute left-0 top-[calc(100%+4px)] !z-[10000] hidden w-full max-w-[500px] flex-col overflow-hidden rounded-md border bg-muted peer-focus:flex"
+              )}
+            >
+              {autoCompleteData.map((acd) => (
+                <TooltipProvider key={acd.libraryItemId}>
+                  <Tooltip delayDuration={0}>
+                    <TooltipTrigger asChild>
+                      <Link
+                        href={`/books/${acd.libraryItemId}`}
+                        key={acd.libraryItemId}
+                        className="group z-0 flex items-center gap-2 px-2 py-1 hover:bg-background"
+                      >
+                        {acd.coverImage ? (
+                          <Image
+                            width={24}
+                            height={36}
+                            src={acd.coverImage}
+                            alt={acd.title}
+                            className="h-9 w-6 shrink-0 rounded-md border object-cover"
+                          />
+                        ) : (
+                          <div className="h-9 w-6 shrink-0 bg-transparent"></div>
+                        )}
+                        <div className={cn("line-clamp-1 flex-1 text-sm")}>
+                          {acd.title}
+                        </div>
+                        <Badge
+                          className="flex w-[92px] shrink-0 justify-center"
+                          variant={acd.available ? "success" : "warning"}
+                        >
+                          {tAutocomplete(
+                            acd.available ? "Available" : "Out of shelf"
+                          )}
+                        </Badge>
+                      </Link>
+                    </TooltipTrigger>
+                    <TooltipContent
+                      side="right"
+                      className="z-10 bg-card p-0 text-card-foreground"
+                    >
+                      <LibraryItemCard
+                        className="max-w-[calc(98vw-952px)]"
+                        libraryItem={acd}
+                      />
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       <div className="flex justify-between">
         <div className="flex flex-1 justify-start gap-8">

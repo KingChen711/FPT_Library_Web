@@ -488,9 +488,9 @@ async function BooksManagementPage({ searchParams }: Props) {
                             <Image
                               src={book.coverImage || defaultBookCover}
                               alt={book.title}
-                              width={48}
-                              height={72}
-                              className="h-[72px] w-12 rounded-md border object-cover"
+                              width={48 * 3}
+                              height={72 * 3}
+                              className="aspect-[2/3] h-[72px] w-12 rounded-md border object-cover"
                             />
                           </div>
                         </div>
