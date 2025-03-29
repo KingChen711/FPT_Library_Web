@@ -2,14 +2,12 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react"
 import { useSearchParams } from "next/navigation"
-import { useRouter } from "@/i18n/routing"
 import { Loader2 } from "lucide-react"
 import { useLocale } from "next-intl"
 import { useScript } from "usehooks-ts"
 
 import { cn } from "@/lib/utils"
 import useAutoTranslate from "@/hooks/use-auto-translate"
-import { Button } from "@/components/ui/button"
 
 const conf: woosmap.map.IndoorRendererOptions = {
   defaultFloor: 1, //Render map with default floor
@@ -32,7 +30,7 @@ type Props = {
 
 const Map = ({ notFull = false }: Props) => {
   const locale = useLocale()
-  const router = useRouter()
+
   const searchParams = useSearchParams()
   const [indoorRenderer, setIndoorRenderer] =
     useState<woosmap.map.IndoorWidget>()
@@ -158,9 +156,6 @@ const Map = ({ notFull = false }: Props) => {
       >
         <Loader2 className="size-12 animate-spin" />
       </div>
-      <Button onClick={() => router.push(`/full-map?ref=1;shelf;G-01`)}>
-        Click
-      </Button>
       <div
         id="library-indoor-map-element"
         ref={mapContainerRef}

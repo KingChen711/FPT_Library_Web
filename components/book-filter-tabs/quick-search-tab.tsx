@@ -1,4 +1,4 @@
-import { type SetStateAction } from "react"
+import { useEffect, useState, type SetStateAction } from "react"
 import Image from "next/image"
 import { useRouter, useSearchParams } from "next/navigation"
 import { Link } from "@/i18n/routing"
@@ -56,7 +56,7 @@ const QuickSearchTab = ({
   const searchParams = useSearchParams()
   const t = useTranslations("BasicSearchTab")
   const tAutocomplete = useTranslations("AutocompleteLibraryItem")
-
+  const [suggestion, setSuggestion] = useState("")
   const [debouncedSearchTerm] = useDebounce(searchValue, 300)
 
   const { data: autoCompleteData } = useAutoCompleteBooks(
@@ -87,6 +87,27 @@ const QuickSearchTab = ({
     router.push(newUrl)
   }
 
+  useEffect(() => {
+    if (!searchValue) return setSuggestion("")
+    const match = autoCompleteData?.find((s) =>
+      s.title.toLowerCase().startsWith(searchValue.toLowerCase())
+    )
+
+    setSuggestion(
+      match && match.title !== searchValue
+        ? match.title.slice(searchValue.length)
+        : ""
+    )
+  }, [autoCompleteData, searchValue])
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Tab" && suggestion) {
+      e.preventDefault()
+      setSearchValue(searchValue + suggestion)
+      setSuggestion("")
+    }
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex items-center gap-2">
@@ -114,10 +135,20 @@ const QuickSearchTab = ({
         <div className="relative w-full">
           <Input
             value={searchValue}
-            onChange={(e) => setSearchValue(e.target.value)}
+            onChange={(e) => {
+              setSearchValue(e.target.value)
+            }}
+            onKeyDown={handleKeyDown}
             className="peer flex-1"
             placeholder={`${t("Search")}...`}
           />
+
+          {suggestion && (
+            <span className="pointer-events-none absolute top-1/2 ml-[13px] hidden -translate-y-1/2 overflow-hidden text-nowrap pr-3 text-sm text-muted-foreground peer-focus:inline">
+              <span className="text-transparent">{searchValue}</span>
+              <span className="text-muted-foreground">{suggestion}</span>
+            </span>
+          )}
 
           {autoCompleteData && autoCompleteData.length > 0 && (
             <div

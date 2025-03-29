@@ -50,6 +50,8 @@ import PersonalLibraryCard from "@/components/ui/personal-library-card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { TimePicker } from "@/components/form/time-picker"
 
+import PatronActivityCard from "../../../../_components/patron-activity-card"
+
 function LibrarianCheckoutForm() {
   const t = useTranslations("BorrowAndReturnManagementPage")
   const tBorrowType = useTranslations("Badges.BorrowType")
@@ -121,18 +123,6 @@ function LibrarianCheckoutForm() {
           return
         }
 
-        if (data.status !== EBookCopyStatus.IN_SHELF) {
-          toast({
-            title: locale === "vi" ? "Lỗi" : "Error",
-            description:
-              locale === "vi"
-                ? "Chỉ có thể mượn tài liệu đang trên kệ"
-                : "Only can borrow in-shelf item",
-            variant: "warning",
-          })
-          return
-        }
-
         //check borrowed
         const borrowingItemIds =
           patronActivity?.borrowingItems.map((i) => i.libraryItemId) || []
@@ -185,6 +175,18 @@ function LibrarianCheckoutForm() {
               locale === "vi"
                 ? "Đúng tài liệu nhưng sai bản vật lý đã gán"
                 : "Correct library item but wrong physical copy",
+            variant: "warning",
+          })
+          return
+        }
+
+        if (data.status !== EBookCopyStatus.IN_SHELF) {
+          toast({
+            title: locale === "vi" ? "Lỗi" : "Error",
+            description:
+              locale === "vi"
+                ? "Chỉ có thể mượn tài liệu đang trên kệ"
+                : "Only can borrow in-shelf item",
             variant: "warning",
           })
           return
@@ -306,6 +308,10 @@ function LibrarianCheckoutForm() {
     })
   }
 
+  useEffect(() => {
+    console.log(patronActivity)
+  }, [patronActivity])
+
   return (
     <>
       <Form {...form}>
@@ -348,124 +354,13 @@ function LibrarianCheckoutForm() {
                     *
                   </span>
                 </FormLabel>
-                <div className="flex flex-col gap-4 md:flex-row">
+                <div className="flex flex-col gap-4 xl:flex-row">
                   <PersonalLibraryCard
                     cardOnly
                     patron={scannedPatron}
                     cardClassName="max-w-lg"
                   />
-                  <div className="flex-1 rounded-lg border bg-card p-5 shadow-sm">
-                    <h3 className="mb-4 flex items-center text-lg font-semibold">
-                      <span className="mr-2 inline-block size-2 rounded-full bg-primary"></span>
-                      {t("Activity summary")}
-                    </h3>
-
-                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <span className="text-muted-foreground">
-                            {t("Borrowing")}
-                          </span>
-                          <span className="text-lg font-medium">
-                            {patronActivity.summaryActivity.totalBorrowing}
-                          </span>
-                        </div>
-                        <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
-                          <div
-                            className="h-full rounded-full bg-warning"
-                            style={{
-                              width: `${(patronActivity.summaryActivity.totalBorrowing * 100) / patronActivity.summaryActivity.totalBorrowOnce}%`,
-                            }}
-                          ></div>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <span className="text-muted-foreground">
-                            {t("Requesting")}
-                          </span>
-                          <span className="text-lg font-medium">
-                            {patronActivity.summaryActivity.totalRequesting}
-                          </span>
-                        </div>
-                        <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
-                          <div
-                            className="h-full rounded-full bg-info"
-                            style={{
-                              width: `${(patronActivity.summaryActivity.totalRequesting * 100) / patronActivity.summaryActivity.totalBorrowOnce}%`,
-                            }}
-                          ></div>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <span className="text-muted-foreground">
-                            {t("Assigned reservations")}
-                          </span>
-                          <span className="text-lg font-medium">
-                            {
-                              patronActivity.summaryActivity
-                                .totalAssignedReserving
-                            }
-                          </span>
-                        </div>
-                        <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
-                          <div
-                            className="h-full rounded-full bg-success"
-                            style={{
-                              width: `${(patronActivity.summaryActivity.totalAssignedReserving * 100) / patronActivity.summaryActivity.totalBorrowOnce}%`,
-                            }}
-                          ></div>
-                        </div>
-                      </div>
-
-                      <div className="flex flex-col justify-between">
-                        <div>
-                          <div className="mb-2 flex items-center justify-between">
-                            <span className="text-muted-foreground">
-                              {t("Pending reservations")}
-                            </span>
-                            <span className="text-lg font-medium">
-                              {
-                                patronActivity.summaryActivity
-                                  .totalPendingReserving
-                              }
-                            </span>
-                          </div>
-
-                          <div className="mb-2 flex items-center justify-between">
-                            <span className="text-muted-foreground">
-                              {t("Borrow limit")}
-                            </span>
-                            <span className="text-lg font-medium">
-                              {patronActivity.summaryActivity.totalBorrowOnce}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <span className="text-muted-foreground">
-                              {t("Remaining")}
-                            </span>
-                            <span className="text-lg font-medium">
-                              {patronActivity.summaryActivity.remainTotal}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 border-t pt-4">
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm text-muted-foreground">
-                          {t("Total activities")}
-                        </span>
-                        <div className="flex items-center gap-2">
-                          <div className="size-3 rounded-full bg-warning"></div>
-                          <div className="size-3 rounded-full bg-info"></div>
-                          <div className="size-3 rounded-full bg-success"></div>
-                          <span className="font-semibold">4/3</span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+                  <PatronActivityCard patronActivity={patronActivity} />
                 </div>
               </div>
 
@@ -628,10 +523,11 @@ function LibrarianCheckoutForm() {
                                       <LibraryItemCard
                                         libraryItem={item}
                                         expandable
+                                        className="max-w-full"
                                       />
 
-                                      <div className="ml-auto flex w-[360px] shrink-0 items-center gap-6">
-                                        <div className="flex justify-center">
+                                      <div className="ml-auto flex w-[370px] shrink-0 items-center justify-between gap-6">
+                                        <div className="flex w-[106px] justify-center">
                                           {item.barcode ? (
                                             <div className="flex flex-col items-center">
                                               <ArrowRight className="size-10 text-primary" />
@@ -693,10 +589,11 @@ function LibrarianCheckoutForm() {
                                       <LibraryItemCard
                                         libraryItem={item}
                                         expandable
+                                        className="max-w-full"
                                       />
 
-                                      <div className="ml-auto flex w-[360px] shrink-0 items-center gap-6">
-                                        <div className="flex justify-center">
+                                      <div className="ml-auto flex w-[370px] shrink-0 items-center justify-between gap-6">
+                                        <div className="flex w-[106px] justify-center">
                                           {item.barcode ? (
                                             <div className="flex flex-col items-center">
                                               <ArrowRight className="size-10 text-primary" />
@@ -748,48 +645,61 @@ function LibrarianCheckoutForm() {
                                   <div
                                     key={item.libraryItemId}
                                     className={cn(
-                                      "flex items-center gap-6 rounded-lg border bg-card p-4 transition-all",
+                                      "flex flex-col gap-2 rounded-lg border bg-card p-4 transition-all",
                                       item.scanned
                                         ? "border-2 border-primary/50 shadow-sm"
                                         : "border-muted"
                                     )}
                                   >
-                                    <LibraryItemCard
-                                      libraryItem={item}
-                                      expandable
-                                    />
+                                    <div className="ml-1 flex items-center gap-2">
+                                      <p className="text-sm font-bold">
+                                        {t("Valid barcodes")}:
+                                      </p>
+                                      <p>
+                                        {item.libraryItemInstances
+                                          .map((instance) => instance.barcode)
+                                          .join(", ")}
+                                      </p>
+                                    </div>
+                                    <div className="flex items-center gap-6">
+                                      <LibraryItemCard
+                                        libraryItem={item}
+                                        expandable
+                                        className="max-w-full"
+                                      />
 
-                                    <div className="ml-auto flex w-[360px] shrink-0 items-center gap-6">
-                                      <div className="flex justify-center">
-                                        {item.scanned ? (
-                                          <div className="flex flex-col items-center">
-                                            <ArrowRight className="size-10 text-primary" />
-                                            <span className="mt-1 text-nowrap text-xs font-medium text-primary">
-                                              {t("Scanned")}
-                                            </span>
-                                          </div>
-                                        ) : (
-                                          <div className="flex items-center gap-2 rounded-md bg-muted px-3 py-2">
-                                            <div className="size-2 animate-pulse rounded-full bg-warning"></div>
-                                            <span className="text-nowrap text-sm font-medium text-muted-foreground">
-                                              {t("Not scanned yet")}
-                                            </span>
+                                      <div className="ml-auto flex w-[370px] shrink-0 items-center justify-between gap-6">
+                                        <div className="flex w-[106px] justify-center">
+                                          {item.scanned ? (
+                                            <div className="flex flex-col items-center">
+                                              <ArrowRight className="size-10 text-primary" />
+                                              <span className="mt-1 text-nowrap text-xs font-medium text-primary">
+                                                {t("Scanned")}
+                                              </span>
+                                            </div>
+                                          ) : (
+                                            <div className="flex items-center gap-2 rounded-md bg-muted px-3 py-2">
+                                              <div className="size-2 animate-pulse rounded-full bg-warning"></div>
+                                              <span className="text-nowrap text-sm font-medium text-muted-foreground">
+                                                {t("Not scanned yet")}
+                                              </span>
+                                            </div>
+                                          )}
+                                        </div>
+                                        {item.barcode && (
+                                          <div className="rounded-md border border-primary/20 bg-white p-2 shadow-sm">
+                                            <div className="flex flex-col items-center justify-center">
+                                              <Barcode
+                                                value={item.barcode}
+                                                width={2}
+                                                height={48}
+                                                fontSize={20}
+                                                fontOptions="bold"
+                                              />
+                                            </div>
                                           </div>
                                         )}
                                       </div>
-                                      {item.barcode && (
-                                        <div className="rounded-md border border-primary/20 bg-white p-2 shadow-sm">
-                                          <div className="flex flex-col items-center justify-center">
-                                            <Barcode
-                                              value={item.barcode}
-                                              width={2}
-                                              height={48}
-                                              fontSize={20}
-                                              fontOptions="bold"
-                                            />
-                                          </div>
-                                        </div>
-                                      )}
                                     </div>
                                   </div>
                                 ))}

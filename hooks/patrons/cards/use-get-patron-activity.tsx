@@ -2,6 +2,7 @@ import { useAuth } from "@/contexts/auth-provider"
 import { useMutation } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
+import { type EBorrowRecordStatus, type EBorrowType } from "@/lib/types/enums"
 import {
   type Author,
   type BookEdition,
@@ -24,7 +25,14 @@ export type Response = Patron & {
     })[]
   })[]
   activeBorrowRecords: (BorrowRecord & {
-    borrowRecordDetails: (BorrowRecordDetail & { libraryItem: BookEdition })[]
+    borrowRecordDetails: (BorrowRecordDetail & {
+      libraryItem: BookEdition & {
+        category: Category
+        shelf: Shelf | null
+        authors: Author[]
+        libraryItemInstances: LibraryItemInstance[]
+      }
+    })[]
   })[]
   assignedReservationQueues: (ReservationQueueManagement & {
     libraryItemInstanceId: number
@@ -63,7 +71,17 @@ export type PatronActivity = {
     barcode: string | null
     instanceId: number | null
   })[]
-  borrowingItems: BookEdition[]
+  borrowingItems: (BookEdition & {
+    category: Category
+    shelf: Shelf | null
+    authors: Author[]
+    scanned: boolean
+    barcode: string
+    instanceId: number
+    borrowRecordDetailId: number
+    borrowStatus: EBorrowRecordStatus
+    borrowType: EBorrowType
+  })[]
   assignedItems: (BookEdition & {
     category: Category
     shelf: Shelf | null
@@ -115,13 +133,27 @@ function useGetPatronActivity() {
             })),
           unRequestingItems: [],
           borrowingItems: data.activeBorrowRecords
-            .flatMap((br) => br.borrowRecordDetails)
-            .map((rd) => rd.libraryItem),
+            .flatMap((br) =>
+              br.borrowRecordDetails.map((detail) => ({
+                ...detail,
+                borrowType: br.borrowType,
+              }))
+            )
+            .map((item) => ({
+              ...item.libraryItem,
+              scanned: false,
+              barcode: item.libraryItem.libraryItemInstances[0].barcode,
+              instanceId:
+                item.libraryItem.libraryItemInstances[0].libraryItemInstanceId,
+              borrowRecordDetailId: item.borrowRecordDetailId,
+              borrowStatus: item.status,
+              borrowType: item.borrowType,
+            })),
           assignedItems: data.assignedReservationQueues.map((item) => ({
             ...item.libraryItem,
             scanned: false,
             barcode: null,
-            instanceId: item.libraryItemInstanceId,
+            instanceId: null,
           })),
         }
       } catch {

@@ -25,8 +25,9 @@ function useConditions() {
       }
     },
     enabled: !!accessToken,
-    placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
+    placeholderData: keepPreviousData,
+    // staleTime: 60,
   })
 }
 

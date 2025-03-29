@@ -161,9 +161,9 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
                         </span>
                       </FormLabel>
                       <Select
-                        value={field.value}
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
+                        value={field.value.toString()}
+                        onValueChange={(val) => field.onChange(+val)}
+                        defaultValue={field.value.toString()}
                       >
                         <FormControl>
                           <SelectTrigger>
@@ -171,11 +171,16 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          {Object.values(EFineType).map((option) => (
-                            <SelectItem key={option} value={option}>
-                              {t(option)}
-                            </SelectItem>
-                          ))}
+                          {Object.values(EFineType)
+                            .filter((e) => typeof e === "number")
+                            .map((option) => (
+                              <SelectItem
+                                key={option}
+                                value={option.toString()}
+                              >
+                                {t(option)}
+                              </SelectItem>
+                            ))}
                         </SelectContent>
                       </Select>
 

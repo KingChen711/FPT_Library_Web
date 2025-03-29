@@ -35,7 +35,7 @@ function FineActionDropdown({ fine }: Props) {
       />
       <DeleteFineDialog
         fineId={fine.finePolicyId}
-        fineName={fine.conditionType}
+        fineName={fine.description || ""}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
       />

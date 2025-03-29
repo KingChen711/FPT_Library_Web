@@ -50,6 +50,7 @@ function BrowseNavbar() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const [openVoiceToText, setOpenVoiceToText] = useState<boolean>(false)
+  const [suggestion, setSuggestion] = useState("")
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get("search") || "")
   const [debouncedSearchTerm] = useDebounce(searchTerm, 300)
@@ -77,6 +78,27 @@ function BrowseNavbar() {
     }).replace(window.location.pathname, "/search/result")
 
     router.push(newUrl)
+  }
+
+  useEffect(() => {
+    if (!searchTerm) return setSuggestion("")
+    const match = autoCompleteData?.find((s) =>
+      s.title.toLowerCase().startsWith(searchTerm.toLowerCase())
+    )
+
+    setSuggestion(
+      match && match.title !== searchTerm
+        ? match.title.slice(searchTerm.length)
+        : ""
+    )
+  }, [autoCompleteData, searchTerm])
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Tab" && suggestion) {
+      e.preventDefault()
+      setSearchTerm(searchTerm + suggestion)
+      setSuggestion("")
+    }
   }
 
   return (
@@ -109,13 +131,21 @@ function BrowseNavbar() {
               size={16}
               className="absolute left-3 top-1/2 -translate-y-1/2"
             />
-            <form onSubmit={handleSubmit}>
+            <form className="relative" onSubmit={handleSubmit}>
               <Input
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyDown={handleKeyDown}
                 placeholder={`${t("search")}...`}
                 className="peer flex-1 rounded-none !border-transparent pl-9 !outline-none !ring-transparent"
               />
+
+              {suggestion && (
+                <span className="pointer-events-none absolute left-[37px] top-1/2 hidden -translate-y-1/2 overflow-hidden text-nowrap pr-3 text-sm text-muted-foreground peer-focus:inline">
+                  <span className="text-transparent">{searchTerm}</span>
+                  <span className="text-muted-foreground">{suggestion}</span>
+                </span>
+              )}
 
               {autoCompleteData && autoCompleteData.length > 0 && (
                 <div
