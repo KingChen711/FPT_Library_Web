@@ -109,167 +109,153 @@ const UserImportDialog = () => {
             <FileDown size={16} /> {tGeneralManagement("btn.import")}
           </DialogTrigger>
         </Button>
-        <DialogContent className="m-0 overflow-hidden p-0">
-          <DialogHeader className="w-full space-y-4 bg-primary p-4">
-            <DialogTitle className="text-center text-primary-foreground">
-              {tGeneralManagement("btn.import")}
-            </DialogTitle>
+        <DialogContent className="max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>{tGeneralManagement("btn.import")}</DialogTitle>
           </DialogHeader>
 
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="space-y-4 p-4">
-                <div>
-                  {importErrors.length > 0 && (
-                    <Dialog>
-                      <DialogTrigger className="w-full text-left text-sm font-semibold">
-                        <p className="text-danger">
-                          Invoke errors while import data &nbsp;
-                          <span className="text-secondary-foreground underline">
-                            view detail
-                          </span>
-                        </p>
-                      </DialogTrigger>
-                      <DialogContent>
-                        <DialogHeader>
-                          <DialogTitle>Import Errors</DialogTitle>
-                        </DialogHeader>
-                        <div className="max-h-[80vh] w-full overflow-y-auto">
-                          <Accordion type="multiple" className="w-full p-4">
-                            {importErrors.map((error, index) => (
-                              <AccordionItem
-                                key={index}
-                                value={`item-${index + 2}`}
-                              >
-                                <AccordionTrigger className="font-semibold text-danger">
-                                  Row: {error.rowNumber}
-                                </AccordionTrigger>
-                                <AccordionContent className="flex flex-col gap-2">
-                                  {error.errors.map((err, index) => (
-                                    <p key={index}>{err}</p>
-                                  ))}
-                                </AccordionContent>
-                              </AccordionItem>
-                            ))}
-                          </Accordion>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              {importErrors.length > 0 && (
+                <Dialog>
+                  <DialogTrigger className="w-full text-left text-sm font-semibold">
+                    <p className="text-danger">
+                      Invoke errors while import data &nbsp;
+                      <span className="text-secondary-foreground underline">
+                        view detail
+                      </span>
+                    </p>
+                  </DialogTrigger>
+                  <DialogContent>
+                    <DialogHeader>
+                      <DialogTitle>Import Errors</DialogTitle>
+                    </DialogHeader>
+                    <div className="max-h-[80vh] w-full overflow-y-auto">
+                      <Accordion type="multiple" className="w-full p-4">
+                        {importErrors.map((error, index) => (
+                          <AccordionItem
+                            key={index}
+                            value={`item-${index + 2}`}
+                          >
+                            <AccordionTrigger className="font-semibold text-danger">
+                              Row: {error.rowNumber}
+                            </AccordionTrigger>
+                            <AccordionContent className="flex flex-col gap-2">
+                              {error.errors.map((err, index) => (
+                                <p key={index}>{err}</p>
+                              ))}
+                            </AccordionContent>
+                          </AccordionItem>
+                        ))}
+                      </Accordion>
+                    </div>
+                  </DialogContent>
+                </Dialog>
+              )}
+              <Label>{tGeneralManagement("setting")}</Label>
+              <Separator />
+
+              <FormField
+                control={form.control}
+                name="file"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-4">
+                    <FormLabel className="w-1/3">
+                      {tGeneralManagement("file")} (csv, xlsx, xlsm)
+                    </FormLabel>
+                    <FormControl className="flex-1">
+                      <Input
+                        type="file"
+                        placeholder={tGeneralManagement("placeholder.file")}
+                        accept=".csv, .xlsx"
+                        onChange={(e) => handleUploadFile(e, field.onChange)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <Label>{tGeneralManagement("duplicate control")}</Label>
+              <Separator />
+
+              <FormField
+                control={form.control}
+                name="isSendEmail"
+                render={({ field }) => (
+                  <FormItem className="flex items-center gap-4">
+                    <FormLabel className="w-1/3">
+                      {tGeneralManagement("scanning")}
+                    </FormLabel>
+                    <FormControl className="flex-1">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center space-x-2">
+                          <Checkbox
+                            id="isSendEmail"
+                            checked={field.value}
+                            onCheckedChange={(checked) =>
+                              field.onChange(checked)
+                            }
+                          />
+                          <Label htmlFor="isSendEmail" className="font-normal">
+                            {tGeneralManagement("fields.isSendEmail")}
+                          </Label>
                         </div>
-                      </DialogContent>
-                    </Dialog>
-                  )}
-                </div>
-                <Label>{tGeneralManagement("setting")}</Label>
-                <Separator />
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="file"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-4">
-                      <FormLabel className="w-1/3">
-                        {tGeneralManagement("file")} (csv, xlsx, xlsm)
-                      </FormLabel>
-                      <FormControl className="flex-1">
-                        <Input
-                          type="file"
-                          placeholder={tGeneralManagement("placeholder.file")}
-                          accept=".csv, .xlsx"
-                          onChange={(e) => handleUploadFile(e, field.onChange)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </div>
-
-              <div className="space-y-4 p-4">
-                <Label>{tGeneralManagement("duplicate control")}</Label>
-                <Separator />
-
-                <FormField
-                  control={form.control}
-                  name="isSendEmail"
-                  render={({ field }) => (
-                    <FormItem className="flex items-center gap-4">
-                      <FormLabel className="w-1/3">
-                        {tGeneralManagement("scanning")}
-                      </FormLabel>
-                      <FormControl className="flex-1">
-                        <div className="flex items-center gap-4">
-                          <div className="flex items-center space-x-2">
-                            <Checkbox
-                              id="isSendEmail"
-                              checked={field.value}
-                              onCheckedChange={(checked) =>
-                                field.onChange(checked)
-                              }
-                            />
-                            <Label
-                              htmlFor="isSendEmail"
-                              className="font-normal"
-                            >
-                              {tGeneralManagement("fields.isSendEmail")}
-                            </Label>
-                          </div>
+              <FormField
+                control={form.control}
+                name="duplicateHandle"
+                render={({}) => (
+                  <FormItem className="flex items-center gap-4">
+                    <FormLabel className="w-1/3">
+                      {tGeneralManagement("duplicate handle")}
+                    </FormLabel>
+                    <FormControl className="flex-1">
+                      <RadioGroup
+                        defaultValue="0"
+                        className="flex items-center gap-4"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="0" id="option-one" />
+                          <Label className="font-normal" htmlFor="option-one">
+                            {tGeneralManagement("allow")}
+                          </Label>
                         </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="1" id="option-two" />
+                          <Label className="font-normal" htmlFor="option-two">
+                            {tGeneralManagement("replace")}
+                          </Label>
+                        </div>
+                        <div className="flex items-center space-x-2">
+                          <RadioGroupItem value="2" id="option-three" />
+                          <Label className="font-normal" htmlFor="option-three">
+                            {tGeneralManagement("skip")}
+                          </Label>
+                        </div>
+                      </RadioGroup>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-                <FormField
-                  control={form.control}
-                  name="duplicateHandle"
-                  render={({}) => (
-                    <FormItem className="flex items-center gap-4">
-                      <FormLabel className="w-1/3">
-                        {tGeneralManagement("duplicate handle")}
-                      </FormLabel>
-                      <FormControl className="flex-1">
-                        <RadioGroup
-                          defaultValue="0"
-                          className="flex items-center gap-4"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="0" id="option-one" />
-                            <Label className="font-normal" htmlFor="option-one">
-                              {tGeneralManagement("allow")}
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="1" id="option-two" />
-                            <Label className="font-normal" htmlFor="option-two">
-                              {tGeneralManagement("replace")}
-                            </Label>
-                          </div>
-                          <div className="flex items-center space-x-2">
-                            <RadioGroupItem value="2" id="option-three" />
-                            <Label
-                              className="font-normal"
-                              htmlFor="option-three"
-                            >
-                              {tGeneralManagement("skip")}
-                            </Label>
-                          </div>
-                        </RadioGroup>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
+              <div className="flex justify-end gap-4">
+                <Button type="submit">
+                  {tGeneralManagement("btn.import")}
+                  {pendingSubmit && (
+                    <Loader2 className="ml-1 size-4 animate-spin" />
                   )}
-                />
-
-                <div className="flex justify-end gap-4">
-                  <Button type="submit">
-                    {tGeneralManagement("btn.import")}
-                    {pendingSubmit && (
-                      <Loader2 className="ml-1 size-4 animate-spin" />
-                    )}
-                  </Button>
-                  <Button variant="outline" onClick={() => handleCancel()}>
-                    {tGeneralManagement("btn.cancel")}
-                  </Button>
-                </div>
+                </Button>
+                <Button variant="outline" onClick={() => handleCancel()}>
+                  {tGeneralManagement("btn.cancel")}
+                </Button>
               </div>
             </form>
           </Form>

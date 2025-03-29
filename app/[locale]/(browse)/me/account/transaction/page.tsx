@@ -27,7 +27,6 @@ const TransactionPage = () => {
             <Download className="mr-2 size-4" />
             Export
           </Button>
-          <Button size="sm">New Transaction</Button>
         </div>
       </div>
 

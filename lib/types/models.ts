@@ -759,6 +759,18 @@ export type BorrowRequest = {
   reservationQueues: ReservationQueue[]
 }
 
+export type BorrowRequestResource = {
+  borrowRequestResourceId: number
+  borrowRequestId: number
+  resourceId: number
+  resourceTitle: string
+  borrowPrice: number
+  defaultBorrowDurationDays: number
+  transactionId: number | null
+  libraryResource: BookResource
+  transaction: null
+}
+
 export type ReservationQueue = {
   queueId: number
   libraryItemId: number

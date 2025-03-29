@@ -1,17 +1,20 @@
-import { ArrowUpDown, Calendar, MoreHorizontal } from "lucide-react"
+import { useRouter } from "@/i18n/routing"
+import { Loader2, MoreHorizontal } from "lucide-react"
 
+import { ETransactionStatus, ETransactionType } from "@/lib/types/enums"
+import { formatPrice } from "@/lib/utils"
+import useGetOwnTransactions from "@/hooks/transactions/get-own-transactions"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Checkbox } from "@/components/ui/checkbox"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import NoData from "@/components/ui/no-data"
+import Paginator from "@/components/ui/paginator"
 import {
   Table,
   TableBody,
@@ -20,36 +23,48 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
-import { currentTransactions } from "./dummy-transaction"
 import LibraryTransactionFilter from "./library-transaction-filter"
 
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString)
+const formatDate = (date: string | Date | null | undefined) => {
+  if (!date) return "N/A"
+  const parsedDate = new Date(date)
+  if (isNaN(parsedDate.getTime())) return "Invalid Date"
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date)
+    // hour: "2-digit",
+    // minute: "2-digit",
+  }).format(parsedDate)
 }
 
-const statusColors: Record<string, string> = {
-  completed: "bg-green-100 text-green-800",
-  pending: "bg-yellow-100 text-yellow-800",
-  failed: "bg-red-100 text-red-800",
-  refunded: "bg-blue-100 text-blue-800",
-  processing: "bg-purple-100 text-purple-800",
+const transactionTypeLabels: Record<ETransactionType, string> = {
+  [ETransactionType.FINE]: "Phí phạt",
+  [ETransactionType.DIGITAL_BORROW]: "Mượn tài liệu điện tử",
+  [ETransactionType.LIBRARY_CARD_REGISTER]: "Đăng ký thẻ thư viện",
+  [ETransactionType.LIBRARY_CARD_EXTENSION]: "Gia hạn thẻ thư viện",
+  [ETransactionType.DIGITAL_EXTENSION]: "Gia hạn tài liệu điện tử",
+}
+
+const transactionStatusLabels: Record<ETransactionStatus, string> = {
+  [ETransactionStatus.PENDING]: "Chờ xử lý",
+  [ETransactionStatus.EXPIRED]: "Hết hạn",
+  [ETransactionStatus.PAID]: "Đã thanh toán",
+  [ETransactionStatus.CANCELLED]: "Đã hủy",
 }
 
 const TransactionTab = () => {
+  const router = useRouter()
+  const { data: allTransactions, isLoading } = useGetOwnTransactions()
+
+  if (isLoading) {
+    return <Loader2 className="animate-spin" />
+  }
+
+  if (!allTransactions) return <NoData />
+
+  console.log("🚀 ~ TransactionTab ~ allTransactions:", allTransactions)
   return (
     <Card>
       <CardHeader className="pb-3">
@@ -62,130 +77,81 @@ const TransactionTab = () => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className="w-12">
-                <Checkbox onCheckedChange={() => {}} aria-label="Select all" />
-              </TableHead>
-              <TableHead>
-                <div className="flex w-[100px] cursor-pointer items-center">
-                  ID
-                  <ArrowUpDown className="ml-2 size-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex w-[180px] cursor-pointer items-center">
-                  Date
-                  <ArrowUpDown className="ml-2 size-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex cursor-pointer items-center">
-                  Customer
-                  <ArrowUpDown className="ml-2 size-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex cursor-pointer items-center">
-                  Type
-                  <ArrowUpDown className="ml-2 size-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex cursor-pointer items-center">
-                  Amount
-                  <ArrowUpDown className="ml-2 size-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex cursor-pointer items-center">
-                  Status
-                  <ArrowUpDown className="ml-2 size-4" />
-                </div>
-              </TableHead>
-              <TableHead>
-                <div className="flex cursor-pointer items-center">
-                  Payment Method
-                  <ArrowUpDown className="ml-2 size-4" />
-                </div>
-              </TableHead>
+              <TableHead className="text-nowrap">Transaction Code</TableHead>
+              <TableHead className="text-nowrap">Amount</TableHead>
+              <TableHead className="text-nowrap">Description</TableHead>
+              <TableHead className="text-nowrap">Status</TableHead>
+              <TableHead className="text-nowrap">Type</TableHead>
+              <TableHead className="text-nowrap">Date</TableHead>
+              <TableHead className="text-nowrap">Expired at</TableHead>
+              <TableHead className="text-nowrap">Created at</TableHead>
+              <TableHead className="text-nowrap">Cancelled at</TableHead>
+              <TableHead className="text-nowrap">Cancellation reason</TableHead>
               <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {currentTransactions.map((transaction) => (
-              <TableRow key={transaction.id}>
-                <TableCell>
-                  <Checkbox aria-label={`Select ${transaction.id}`} />
+            {allTransactions?.sources.map((transaction) => (
+              <TableRow key={transaction.transactionId}>
+                <TableCell className="text-nowrap">
+                  {transaction.transactionCode}
                 </TableCell>
-                <TableCell className="font-medium">{transaction.id}</TableCell>
-                <TableCell>
-                  <TooltipProvider>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <div className="flex items-center">
-                          <Calendar className="mr-2 size-4 text-muted-foreground" />
-                          <span>{formatDate(transaction.date)}</span>
-                        </div>
-                      </TooltipTrigger>
-                      <TooltipContent>
-                        <p>IP: {transaction.ipAddress}</p>
-                        <p>Device: {transaction.device}</p>
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
+                <TableCell className="text-nowrap">
+                  {formatPrice(transaction.amount)}
                 </TableCell>
-                <TableCell>
-                  <div className="flex flex-col">
-                    <span>{transaction.customer.name}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {transaction.customer.email}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell className="capitalize">{transaction.type}</TableCell>
-                <TableCell>
-                  <div className="flex flex-col">
-                    <span className="font-medium">
-                      {transaction.amount.toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      })}
-                    </span>
-                    <span className="text-xs text-muted-foreground">
-                      Fee:{" "}
-                      {transaction.fee.toLocaleString("en-US", {
-                        style: "currency",
-                        currency: "USD",
-                      })}
-                    </span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge
-                    className={`${statusColors[transaction.status] || "bg-gray-100 text-gray-800"}`}
-                  >
-                    {transaction.status.charAt(0).toUpperCase() +
-                      transaction.status.slice(1)}
+                <TableCell>{transaction.description}</TableCell>
+                <TableCell className="text-nowrap">
+                  <Badge variant="default" className="text-nowrap capitalize">
+                    {transactionStatusLabels[transaction.transactionStatus] ||
+                      "Không xác định"}
                   </Badge>
                 </TableCell>
-                <TableCell className="capitalize">
-                  {transaction.paymentMethod.replace("_", " ")}
+                <TableCell>
+                  <Badge variant="success" className="text-nowrap capitalize">
+                    {transactionTypeLabels[transaction.transactionType] ||
+                      "Không xác định"}
+                  </Badge>
                 </TableCell>
+                <TableCell className="text-nowrap">
+                  {transaction.transactionDate
+                    ? formatDate(transaction.transactionDate)
+                    : ""}
+                </TableCell>
+                <TableCell className="text-nowrap">
+                  {transaction.expiredAt
+                    ? formatDate(transaction.expiredAt)
+                    : ""}
+                </TableCell>
+                <TableCell className="text-nowrap">
+                  {transaction.createdAt
+                    ? formatDate(transaction.createdAt)
+                    : ""}
+                </TableCell>
+                <TableCell className="text-nowrap">
+                  {transaction.cancelledAt
+                    ? formatDate(transaction.cancelledAt)
+                    : ""}
+                </TableCell>
+                <TableCell className="text-nowrap">
+                  {transaction.cancellationReason}
+                </TableCell>
+
                 <TableCell className="text-right">
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="ghost" size="icon">
                         <MoreHorizontal className="size-4" />
-                        <span className="sr-only">Open menu</span>
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                      <DropdownMenuItem>View details</DropdownMenuItem>
-                      <DropdownMenuItem>Download receipt</DropdownMenuItem>
-                      <DropdownMenuSeparator />
-                      <DropdownMenuItem>Refund transaction</DropdownMenuItem>
-                      <DropdownMenuItem className="text-danger">
-                        Cancel transaction
+                      <DropdownMenuItem
+                        onClick={() =>
+                          router.push(
+                            `/me/account/transaction/${transaction.transactionId}`
+                          )
+                        }
+                      >
+                        View details
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -194,6 +160,14 @@ const TransactionTab = () => {
             ))}
           </TableBody>
         </Table>
+
+        <Paginator
+          pageIndex={1}
+          pageSize={allTransactions.pageSize}
+          totalPage={allTransactions.totalPage}
+          totalActualItem={allTransactions.totalActualItem}
+          className="mt-4"
+        />
       </CardContent>
     </Card>
   )
