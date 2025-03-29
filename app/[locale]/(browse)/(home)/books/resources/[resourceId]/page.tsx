@@ -49,12 +49,12 @@ import { default as ResourcePayment } from "../_components/resource-payment"
 
 type Props = {
   params: {
-    bookId: string
     resourceId: string
   }
   searchParams: {
     resourceType: string
     isPreview: string
+    bookId: string
   }
 }
 
@@ -74,13 +74,11 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
   const [openPrintShotWarning, setOpenPrintShotWarning] = useState(false)
   const t = useTranslations("BookPage")
   const tGeneralManagement = useTranslations("GeneralManagement")
+  console.log("🚀 ~ DigitalResourcePage ~ data:", data)
   const [openPayment, setOpenPayment] = useState<boolean>(false)
   const { data: resource, isLoading: isLoadingResource } = useResourceDetail(
     params.resourceId
   )
-
-  console.log(params.bookId)
-  console.log("🚀 ~ DigitalResourcePage ~ data:", data)
 
   useEffect(() => {
     setIsClient(true)
@@ -164,7 +162,6 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
     fetchPdf()
   }, [
     accessToken,
-    params.bookId,
     params.resourceId,
     searchParams.isPreview,
     tGeneralManagement,
@@ -228,7 +225,7 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
       <ResourcePayment
         open={openPayment}
         setOpen={setOpenPayment}
-        libraryItemId={params.bookId}
+        libraryItemId={searchParams.bookId}
         selectedResource={resource}
       />
 

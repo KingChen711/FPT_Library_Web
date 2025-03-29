@@ -4,7 +4,7 @@ import { Book, BookOpen, Headphones } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { EResourceBookType } from "@/lib/types/enums"
-import type { BookResource } from "@/lib/types/models"
+import type { BookResource, LibraryItem } from "@/lib/types/models"
 import BorrowResourceCard from "@/components/ui/borrow-resource-card"
 import {
   Dialog,
@@ -16,12 +16,18 @@ import {
 import { Separator } from "@/components/ui/separator"
 
 type Props = {
+  libraryItem: LibraryItem
   open: boolean
   setOpen: (value: boolean) => void
   resources: BookResource[]
 }
 
-const BookDigitalListDialog = ({ open, setOpen, resources }: Props) => {
+const BookDigitalListDialog = ({
+  open,
+  setOpen,
+  resources,
+  libraryItem,
+}: Props) => {
   const t = useTranslations("BookPage")
 
   const ebookResources =
@@ -58,6 +64,7 @@ const BookDigitalListDialog = ({ open, setOpen, resources }: Props) => {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {ebookResources.map((resource) => (
                     <BorrowResourceCard
+                      libraryItem={libraryItem}
                       key={resource.resourceId}
                       resource={resource}
                       type={EResourceBookType.EBOOK}
@@ -79,6 +86,7 @@ const BookDigitalListDialog = ({ open, setOpen, resources }: Props) => {
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {audioBookResources.map((resource) => (
                     <BorrowResourceCard
+                      libraryItem={libraryItem}
                       key={resource.resourceId}
                       resource={resource}
                       type={EResourceBookType.AUDIO_BOOK}

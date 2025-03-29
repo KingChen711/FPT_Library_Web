@@ -64,6 +64,7 @@ const BorrowTrackingPage = async ({ searchParams }: Props) => {
           </span>
         </div>
       </Card>
+
       <div className="flex-1">
         <Tabs defaultValue={EBorrowTab.REQUEST_BORROW} className="w-full">
           <TabsList>
