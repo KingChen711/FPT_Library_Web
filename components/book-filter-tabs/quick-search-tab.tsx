@@ -20,7 +20,6 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 
-import { Badge } from "../ui/badge"
 import LibraryItemCard from "../ui/book-card"
 import {
   Tooltip,
@@ -55,7 +54,7 @@ const QuickSearchTab = ({
   const router = useRouter()
   const searchParams = useSearchParams()
   const t = useTranslations("BasicSearchTab")
-  const tAutocomplete = useTranslations("AutocompleteLibraryItem")
+
   const [suggestion, setSuggestion] = useState("")
   const [debouncedSearchTerm] = useDebounce(searchValue, 300)
 
@@ -167,26 +166,35 @@ const QuickSearchTab = ({
                       >
                         {acd.coverImage ? (
                           <Image
-                            width={24}
-                            height={36}
+                            width={72}
+                            height={108}
                             src={acd.coverImage}
                             alt={acd.title}
-                            className="h-9 w-6 shrink-0 rounded-md border object-cover"
+                            className="h-9 w-6 shrink-0 rounded-sm border object-cover"
                           />
                         ) : (
                           <div className="h-9 w-6 shrink-0 bg-transparent"></div>
                         )}
-                        <div className={cn("line-clamp-1 flex-1 text-sm")}>
-                          {acd.title}
+                        <div className="flex flex-1 flex-col">
+                          <div className={cn("line-clamp-1 text-sm font-bold")}>
+                            {acd.title}
+                          </div>
+                          <div
+                            className={cn(
+                              "line-clamp-1 text-xs italic text-muted-foreground"
+                            )}
+                          >
+                            {acd.subTitle}
+                          </div>
                         </div>
-                        <Badge
+                        {/* <Badge
                           className="flex w-[92px] shrink-0 justify-center"
                           variant={acd.available ? "success" : "warning"}
                         >
                           {tAutocomplete(
                             acd.available ? "Available" : "Out of shelf"
                           )}
-                        </Badge>
+                        </Badge> */}
                       </Link>
                     </TooltipTrigger>
                     <TooltipContent

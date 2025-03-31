@@ -26,12 +26,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import FineTypeBadge from "@/components/badges/fine-type-badge"
 
 type Props = {
   onSelect: (Fine: Fine) => void
   disabled?: boolean
   disableFineIds?: number[]
   isLost?: boolean
+  isOverdue?: boolean
 }
 
 function SelectFinesDialog({
@@ -39,6 +41,7 @@ function SelectFinesDialog({
   disabled = false,
   disableFineIds = [],
   isLost,
+  isOverdue,
 }: Props) {
   const t = useTranslations("FinesManagementPage")
   const [open, setOpen] = useState(false)
@@ -95,7 +98,9 @@ function SelectFinesDialog({
                             {t("Title")}
                           </TableHead>
                           <TableHead className="text-nowrap font-bold">
-                            {t("Condition type")}
+                            <div className="flex justify-center">
+                              {t("Condition type")}
+                            </div>
                           </TableHead>
                           <TableHead className="text-nowrap font-bold">
                             {t("Fixed fine amount")}
@@ -110,7 +115,11 @@ function SelectFinesDialog({
                         {data?.sources.map((fine) => (
                           <TableRow key={fine.finePolicyId}>
                             <TableCell>{fine.finePolicyTitle}</TableCell>
-                            <TableCell>{fine.conditionType}</TableCell>
+                            <TableCell>
+                              <div className="flex justify-center">
+                                <FineTypeBadge type={fine.conditionType} />
+                              </div>
+                            </TableCell>
                             <TableCell>
                               {fine.fixedFineAmount
                                 ? formatPrice(fine.fixedFineAmount)
@@ -129,7 +138,9 @@ function SelectFinesDialog({
                                     (isLost &&
                                       fine.conditionType !== EFineType.LOST) ||
                                     (isLost === false &&
-                                      fine.conditionType === EFineType.LOST)
+                                      fine.conditionType === EFineType.LOST) ||
+                                    (isOverdue === false &&
+                                      fine.conditionType === EFineType.OVER_DUE)
                                   }
                                   onClick={(e) => {
                                     e.preventDefault()
@@ -146,7 +157,11 @@ function SelectFinesDialog({
                                           fine.conditionType !==
                                             EFineType.LOST) ||
                                         (isLost === false &&
-                                          fine.conditionType === EFineType.LOST)
+                                          fine.conditionType ===
+                                            EFineType.LOST) ||
+                                        (isOverdue === false &&
+                                          fine.conditionType ===
+                                            EFineType.OVER_DUE)
                                       ? t("Not valid")
                                       : t("Select")}
                                 </Button>

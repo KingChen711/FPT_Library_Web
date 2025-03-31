@@ -1889,6 +1889,11 @@
       "1": "Expired",
       "2": "Cancelled"
     },
+    "FineType": {
+      "0": "Overdue",
+      "1": "Lost",
+      "2": "Damaged"
+    },
     "Circulated": {
       "Circulated": "Circulated",
       "UnCirculated": "Un-circulated"
@@ -1944,6 +1949,9 @@
     "Out of shelf": "Out of shelf"
   },
   "BorrowAndReturnManagementPage": {
+    "Reservation date": "Reservation date",
+    "Expired date": "Expired date",
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
     "Condition": "Condition",
     "Lost item": "Lost item",
     "Fines": "Fines",
@@ -1995,7 +2003,8 @@
     "Patron card code": "Patron card code",
     "Confirm apply label": "Confirm apply label",
     "Confirm": "Confirm",
-    "How many labels have you applied": "How many labels have you applied?"
+    "How many labels have you applied": "How many labels have you applied?",
+    "Cancel request item": "Cancel request {title}"
   },
   "LocateButton": {
     "Floor": "Floor",

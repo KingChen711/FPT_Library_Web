@@ -208,11 +208,43 @@ export default function AssignReservationsForm({
 
                           <div className="space-y-2">
                             <p className="text-sm text-muted-foreground">
+                              {t("Reservation date")}:
+                            </p>
+                            <p className="font-medium">
+                              {format(
+                                new Date(
+                                  assignedReservation!.reservationQueue.reservationDate
+                                ),
+                                "dd MMM yyyy",
+                                { locale: formatLocale }
+                              )}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex flex-wrap justify-between gap-4">
+                          <div className="space-y-2">
+                            <p className="text-sm text-muted-foreground">
                               {t("Assigned date")}:
                             </p>
                             <p className="font-medium">
                               {format(
                                 new Date(assignedReservation!.assignedDate),
+                                "dd MMM yyyy",
+                                { locale: formatLocale }
+                              )}
+                            </p>
+                          </div>
+
+                          <div className="space-y-2">
+                            <p className="text-sm text-muted-foreground">
+                              {t("Expired date")}:
+                            </p>
+                            <p className="font-medium">
+                              {format(
+                                new Date(
+                                  assignedReservation!.reservationQueue.expiryDate!
+                                ),
                                 "dd MMM yyyy",
                                 { locale: formatLocale }
                               )}

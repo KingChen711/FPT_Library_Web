@@ -6,6 +6,7 @@ import { Link, useRouter } from "@/i18n/routing"
 import { BadgeCheck, ChevronsUpDown, LogOut, User } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
+import { ERoleType } from "@/lib/types/enums"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -125,13 +126,13 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                       <BadgeCheck />
                       {t("account")}
                     </DropdownMenuItem>
-                    {user.role.roleId === 1 && (
-                      <DropdownMenuItem
-                        className="cursor-pointer"
-                        onClick={() => router.push("/management")}
-                      >
-                        <BadgeCheck />
-                        {t("management page")}
+                    {(user.role.roleType === ERoleType.EMPLOYEE ||
+                      user.role.roleId === 1) && (
+                      <DropdownMenuItem className="cursor-pointer" asChild>
+                        <Link href="/management">
+                          <BadgeCheck />
+                          {t("management page")}
+                        </Link>
                       </DropdownMenuItem>
                     )}
                   </DropdownMenuGroup>

@@ -17,6 +17,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import FineTypeBadge from "@/components/badges/fine-type-badge"
 
 import DeleteFinesButton from "./_components/delete-fines-button"
 import FineActionDropdown from "./_components/fine-action-dropdown"
@@ -86,6 +87,7 @@ async function FinesManagementPage({ searchParams }: Props) {
                   currentSort={sort}
                   label={t("Condition type")}
                   sortKey="ConditionType"
+                  position="center"
                 />
                 <SortableTableHead
                   currentSort={sort}
@@ -109,7 +111,11 @@ async function FinesManagementPage({ searchParams }: Props) {
                     <FineCheckbox id={fine.finePolicyId} />
                   </TableCell>
                   <TableCell>{fine.finePolicyTitle}</TableCell>
-                  <TableCell>{fine.conditionType}</TableCell>
+                  <TableCell>
+                    <div className="flex justify-center">
+                      <FineTypeBadge type={fine.conditionType} />
+                    </div>
+                  </TableCell>
                   <TableCell>
                     {fine.fixedFineAmount
                       ? formatPrice(fine.fixedFineAmount)

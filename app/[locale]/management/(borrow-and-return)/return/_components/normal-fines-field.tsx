@@ -39,6 +39,7 @@ function NormalFinesField({ form, isPending, itemIndex, scanned }: Props) {
   }, [scanned, form, itemIndex])
 
   const wIsLost = form.watch(`borrowRecordDetails.${itemIndex}.isLost`)
+  const wIOverdue = form.watch(`borrowRecordDetails.${itemIndex}.isOverdue`)
   const wScanned = form.watch(`borrowRecordDetails.${itemIndex}.scanned`)
   const isNeedConfirm = form.watch(`isNeedConfirm`)
 
@@ -140,6 +141,7 @@ function NormalFinesField({ form, isPending, itemIndex, scanned }: Props) {
           <FormMessage />
           <SelectFinesDialog
             isLost={wIsLost}
+            isOverdue={wIOverdue}
             disabled={isPending}
             disableFineIds={fields.map((f) => f.finePolicyId)}
             onSelect={(fine) => {

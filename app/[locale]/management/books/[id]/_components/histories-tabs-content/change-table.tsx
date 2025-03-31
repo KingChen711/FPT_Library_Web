@@ -17,6 +17,7 @@ interface ChangesTableProps {
   oldValue: object | null
   newValue: object | null
   renderValue: (value: any) => string | React.JSX.Element
+  index: number
 }
 
 function flattenObject(obj: any, prefix = "") {
@@ -39,6 +40,7 @@ export function ChangesTable({
   oldValue,
   newValue,
   renderValue,
+  index,
 }: ChangesTableProps) {
   const t = useTranslations("BooksManagementPage")
 
@@ -51,6 +53,7 @@ export function ChangesTable({
     (key) =>
       ![
         "categoryId",
+        "category.totalBorrowDays",
         "category.categoryId",
         "shelfId",
         "shelf.sectionId",
@@ -59,12 +62,24 @@ export function ChangesTable({
         "isDeleted",
         "shelf.isDeleted",
         "libraryItemId",
+        "ConditionHistoryId",
+        "ConditionId",
+        "LibraryItemInstanceId",
       ].includes(key)
   )
 
+  if (
+    allKeys.every((key) => {
+      const oldValue = JSON.stringify(flatOldValue[key])
+      const newValue = JSON.stringify(flatNewValue[key])
+      return oldValue === newValue
+    })
+  )
+    return null
+
   return (
-    <div className="grid w-full">
-      <div className="overflow-x-auto rounded-md">
+    <div className={cn("grid w-full", index !== 0 && "mb-4")}>
+      <div className="overflow-x-auto rounded-md border">
         <Table className="max-w-full">
           <TableHeader>
             <TableRow>

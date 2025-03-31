@@ -26,7 +26,7 @@ function PatronActivityCard({ patronActivity }: Props) {
               {patronActivity.summaryActivity.totalBorrowing}
             </span>
           </div>
-          <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-warning-100">
             <div
               className="h-full rounded-full bg-warning"
               style={{
@@ -41,7 +41,7 @@ function PatronActivityCard({ patronActivity }: Props) {
               {patronActivity.summaryActivity.totalRequesting}
             </span>
           </div>
-          <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-info-100">
             <div
               className="h-full rounded-full bg-info"
               style={{
@@ -58,7 +58,7 @@ function PatronActivityCard({ patronActivity }: Props) {
               {patronActivity.summaryActivity.totalAssignedReserving}
             </span>
           </div>
-          <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-success-100">
             <div
               className="h-full rounded-full bg-success"
               style={{
@@ -77,7 +77,7 @@ function PatronActivityCard({ patronActivity }: Props) {
               {patronActivity.summaryActivity.totalPendingReserving}
             </span>
           </div>
-          <div className="h-1 w-full overflow-hidden rounded-full bg-muted">
+          <div className="h-1 w-full overflow-hidden rounded-full bg-progress-100">
             <div
               className="h-full rounded-full bg-progress"
               style={{
@@ -111,12 +111,11 @@ function PatronActivityCard({ patronActivity }: Props) {
             <div className="size-3 rounded-full bg-warning"></div>
             <div className="size-3 rounded-full bg-info"></div>
             <div className="size-3 rounded-full bg-success"></div>
-            <div className="size-3 rounded-full bg-progress"></div>
+            {/* <div className="size-3 rounded-full bg-progress"></div> */}
             <span className="font-semibold">
               {patronActivity.summaryActivity.totalBorrowing +
                 patronActivity.summaryActivity.totalRequesting +
-                patronActivity.summaryActivity.totalAssignedReserving +
-                patronActivity.summaryActivity.totalPendingReserving}
+                patronActivity.summaryActivity.totalAssignedReserving}
               /{patronActivity.summaryActivity.totalBorrowOnce}
             </span>
           </div>

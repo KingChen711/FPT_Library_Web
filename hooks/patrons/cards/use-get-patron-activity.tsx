@@ -70,6 +70,7 @@ export type PatronActivity = {
     scanned: boolean
     barcode: string | null
     instanceId: number | null
+    requestId: number
   })[]
   borrowingItems: (BookEdition & {
     category: Category
@@ -124,12 +125,18 @@ function useGetPatronActivity() {
         return {
           ...data,
           requestingItems: data.pendingBorrowRequests
-            .flatMap((r) => r.libraryItems)
+            .flatMap((r) =>
+              r.libraryItems.map((item) => ({
+                ...item,
+                requestId: r.borrowRequestId,
+              }))
+            )
             .map((item) => ({
               ...item,
               scanned: false,
               barcode: null,
               instanceId: null,
+              requestId: item.requestId,
             })),
           unRequestingItems: [],
           borrowingItems: data.activeBorrowRecords

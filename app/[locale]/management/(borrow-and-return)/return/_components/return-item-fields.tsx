@@ -1,6 +1,6 @@
-import React, { useState } from "react"
-import { ArrowRight, Check, ChevronsUpDown } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import React from "react"
+import { ArrowRight } from "lucide-react"
+import { useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 import { useFieldArray, type UseFormReturn } from "react-hook-form"
 
@@ -13,31 +13,18 @@ import {
 } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { type TProcessReturnSchema } from "@/lib/validations/borrow-records/process-return"
-import useConditions from "@/hooks/conditions/use-conditions"
 import LibraryItemCard from "@/components/ui/book-card"
-import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
-import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command"
 import {
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
 } from "@/components/ui/form"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
 import BorrowRecordStatusBadge from "@/components/badges/borrow-record-status-badge"
 import BorrowTypeBadge from "@/components/badges/borrow-type-bade"
 
+import ConditionField from "./condition-field"
 import NormalFinesField from "./normal-fines-field"
 
 type Props = {
@@ -62,10 +49,6 @@ function ReturnItemFields({ form, isPending, borrowingItems }: Props) {
     name: "borrowRecordDetails",
     control: form.control,
   })
-
-  const locale = useLocale()
-  const { data: conditionItems } = useConditions()
-  const [openComboboxCondition, setOpenComboboxCondition] = useState(false)
 
   return (
     <div className="flex flex-col space-y-4">
@@ -148,91 +131,10 @@ function ReturnItemFields({ form, isPending, borrowingItems }: Props) {
               form.watch(`borrowRecordDetails.${index}.isLost`)) && (
               <>
                 {!form.watch(`borrowRecordDetails.${index}.isLost`) && (
-                  <FormField
-                    control={form.control}
-                    name={`borrowRecordDetails.${index}.returnConditionId`}
-                    render={({ field }) => (
-                      <FormItem className="flex flex-col">
-                        <FormLabel>
-                          {t("Return condition")}
-                          <span className="ml-1 text-xl font-bold leading-none text-primary">
-                            *
-                          </span>
-                        </FormLabel>
-                        <Popover
-                          open={openComboboxCondition}
-                          onOpenChange={setOpenComboboxCondition}
-                        >
-                          <PopoverTrigger asChild>
-                            <FormControl>
-                              <Button
-                                variant="outline"
-                                role="combobox"
-                                className={cn(
-                                  "w-40 justify-between",
-                                  !field.value && "text-muted-foreground"
-                                )}
-                              >
-                                {field.value
-                                  ? locale === "vi"
-                                    ? conditionItems?.find(
-                                        (condition) =>
-                                          condition.conditionId === field.value
-                                      )?.vietnameseName
-                                    : conditionItems?.find(
-                                        (condition) =>
-                                          condition.conditionId === field.value
-                                      )?.englishName
-                                  : t("Select condition")}
-                                <ChevronsUpDown className="opacity-50" />
-                              </Button>
-                            </FormControl>
-                          </PopoverTrigger>
-                          <PopoverContent side="top" className="p-0">
-                            <Command>
-                              <CommandList>
-                                <CommandGroup>
-                                  {conditionItems?.map((condition) => (
-                                    <CommandItem
-                                      value={
-                                        locale === "vi"
-                                          ? condition.vietnameseName
-                                          : condition.englishName
-                                      }
-                                      key={condition.conditionId}
-                                      onSelect={() => {
-                                        form.setValue(
-                                          `borrowRecordDetails.${index}.returnConditionId`,
-                                          condition.conditionId
-                                        )
-                                        form.clearErrors(
-                                          `borrowRecordDetails.${index}.returnConditionId`
-                                        )
-                                        setOpenComboboxCondition(false)
-                                      }}
-                                    >
-                                      {locale === "vi"
-                                        ? condition.vietnameseName
-                                        : condition.englishName}
-                                      <Check
-                                        className={cn(
-                                          "ml-auto",
-                                          condition.conditionId === field.value
-                                            ? "opacity-100"
-                                            : "opacity-0"
-                                        )}
-                                      />
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </CommandList>
-                            </Command>
-                          </PopoverContent>
-                        </Popover>
-
-                        <FormMessage />
-                      </FormItem>
-                    )}
+                  <ConditionField
+                    form={form}
+                    isPending={isPending}
+                    itemIndex={index}
                   />
                 )}
 

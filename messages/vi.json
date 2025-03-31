@@ -1826,7 +1826,11 @@
       "1": "Xuất bản",
       "2": "Đã xóa"
     },
-
+    "FineType": {
+      "0": "Quá hạn",
+      "1": "Mất",
+      "2": "Hư hỏng"
+    },
     "BookCopyStatus": {
       "InShelf": "Trên kệ",
       "OutOfShelf": "Trong kho",
@@ -1958,6 +1962,9 @@
     "Out of shelf": "Đã hết"
   },
   "BorrowAndReturnManagementPage": {
+    "Reservation date": "Ngày đặt",
+    "Expired date": "Ngày hết hạn",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
     "Condition": "Tình trạng",
     "Lost item": "Mất tài liệu",
     "Fines": "Phí phạt",
@@ -2009,7 +2016,8 @@
     "Patron card code": "Mã thẻ bạn đọc",
     "Confirm apply label": "Xác nhận dán nhãn",
     "Confirm": "Xác nhận",
-    "How many labels have you applied": "Bạn đã dán bao nhiêu nhãn?"
+    "How many labels have you applied": "Bạn đã dán bao nhiêu nhãn?",
+    "Cancel request item": "Hủy yêu cầu {title}"
   },
   "LocateButton": {
     "Floor": "Tầng",

@@ -11,7 +11,6 @@ import { useDebounce } from "use-debounce"
 import { ESearchType } from "@/lib/types/enums"
 import { cn, formUrlQuery } from "@/lib/utils"
 import useAutoCompleteBooks from "@/hooks/books/use-auto-complete-books"
-import { Badge } from "@/components/ui/badge"
 import LibraryItemCard from "@/components/ui/book-card"
 import { Button } from "@/components/ui/button"
 import {
@@ -44,7 +43,7 @@ import Actions from "./actions"
 
 function BrowseNavbar() {
   const t = useTranslations("GeneralManagement")
-  const tAutocomplete = useTranslations("AutocompleteLibraryItem")
+
   const router = useRouter()
   const { open } = useSidebar()
   const pathname = usePathname()
@@ -164,26 +163,37 @@ function BrowseNavbar() {
                           >
                             {acd.coverImage ? (
                               <Image
-                                width={24}
-                                height={36}
+                                width={72}
+                                height={108}
                                 src={acd.coverImage}
                                 alt={acd.title}
-                                className="h-9 w-6 shrink-0 rounded-md border object-cover"
+                                className="h-9 w-6 shrink-0 rounded-sm border object-cover"
                               />
                             ) : (
                               <div className="h-9 w-6 shrink-0 bg-transparent"></div>
                             )}
-                            <div className={cn("line-clamp-1 flex-1 text-sm")}>
-                              {acd.title}
+                            <div className="flex flex-1 flex-col">
+                              <div
+                                className={cn("line-clamp-1 text-sm font-bold")}
+                              >
+                                {acd.title}
+                              </div>
+                              <div
+                                className={cn(
+                                  "line-clamp-1 text-xs italic text-muted-foreground"
+                                )}
+                              >
+                                {acd.subTitle}
+                              </div>
                             </div>
-                            <Badge
+                            {/* <Badge
                               className="flex w-[92px] shrink-0 justify-center"
                               variant={acd.available ? "success" : "warning"}
                             >
                               {tAutocomplete(
                                 acd.available ? "Available" : "Out of shelf"
                               )}
-                            </Badge>
+                            </Badge> */}
                           </Link>
                         </TooltipTrigger>
                         <TooltipContent

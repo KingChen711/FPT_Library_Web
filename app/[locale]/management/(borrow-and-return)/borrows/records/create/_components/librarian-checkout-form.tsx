@@ -23,6 +23,7 @@ import {
   type TLibrarianCheckoutSchema,
 } from "@/lib/validations/borrow-records/librarian-checkout"
 import { createBorrowRecord } from "@/actions/borrow-records/create-record"
+import useCancelRequestItem from "@/hooks/borrow/use-cancel-request-item"
 import useGetItemByBarcode from "@/hooks/library-items/use-get-item-by-barcode"
 import useGetPatronActivity, {
   type PatronActivity,
@@ -51,6 +52,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { TimePicker } from "@/components/form/time-picker"
 
 import PatronActivityCard from "../../../../_components/patron-activity-card"
+import CancelRequestItemDialog from "./cancel-request-item-dialog"
 
 function LibrarianCheckoutForm() {
   const t = useTranslations("BorrowAndReturnManagementPage")
@@ -80,6 +82,8 @@ function LibrarianCheckoutForm() {
 
   const { mutate: getPatronByBarcode, isPending: fetchingPatron } =
     useGetPatronByBarcode()
+  const { mutate: cancelRequestItem, isPending: cancellingRequestItem } =
+    useCancelRequestItem()
   const { mutate: getItemByBarcode } = useGetItemByBarcode()
   const { mutate: getPatronActivity, isPending: fetchingPatronActivity } =
     useGetPatronActivity()
@@ -308,9 +312,35 @@ function LibrarianCheckoutForm() {
     })
   }
 
-  useEffect(() => {
-    console.log(patronActivity)
-  }, [patronActivity])
+  const handelCancel = (body: {
+    libraryCardId: string
+    libraryItemId: number
+    requestId: number
+  }) => {
+    cancelRequestItem(body, {
+      onSuccess: (res) => {
+        if (res.isSuccess) {
+          toast({
+            title: locale === "vi" ? "Thành công" : "Success",
+            description: res.data,
+            variant: "success",
+          })
+
+          setPatronActivity((prev) => {
+            if (!prev?.requestingItems) return prev
+            prev.requestingItems = prev.requestingItems.filter(
+              (item) => item.libraryItemId !== body.libraryItemId
+            )
+            return prev
+          })
+
+          return
+        }
+
+        handleServerActionError(res, locale)
+      },
+    })
+  }
 
   return (
     <>
@@ -580,12 +610,23 @@ function LibrarianCheckoutForm() {
                                     <div
                                       key={item.libraryItemId}
                                       className={cn(
-                                        "flex items-center gap-6 rounded-lg border bg-card p-4 transition-all",
+                                        "relative flex items-center gap-6 rounded-lg border bg-card p-4 transition-all",
                                         item.barcode
                                           ? "border-2 border-primary/50 shadow-sm"
                                           : "border-muted"
                                       )}
                                     >
+                                      <CancelRequestItemDialog
+                                        cancelling={cancellingRequestItem}
+                                        title={item.title}
+                                        onCancel={() => {
+                                          handelCancel({
+                                            libraryCardId: wLibraryCardId,
+                                            libraryItemId: item.libraryItemId,
+                                            requestId: item.requestId,
+                                          })
+                                        }}
+                                      />
                                       <LibraryItemCard
                                         libraryItem={item}
                                         expandable
