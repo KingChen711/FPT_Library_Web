@@ -121,7 +121,7 @@ function CoverImageField({
         control={form.control}
         name={`groups.${groupIndex}.books.${bookIndex}.imageList.${indexImage}.coverImage`}
         render={({ field }) => (
-          <FormItem>
+          <FormItem className="shrink-0">
             <FormLabel>
               <div>{t("Cover image")}</div>
               {field.value && (
@@ -134,9 +134,9 @@ function CoverImageField({
                   <Image
                     src={field.value}
                     alt="imageUrl"
-                    width={192}
-                    height={288}
-                    className="aspect-[2/3] rounded-md border object-fill"
+                    width={192 * 2}
+                    height={288 * 2}
+                    className="aspect-[2/3] h-[288px] w-[192px] rounded-md border object-fill"
                   />
                 </div>
               )}

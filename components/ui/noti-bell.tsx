@@ -16,9 +16,7 @@ import {
   onReceiveNotification,
   type SocketNotification,
 } from "@/lib/signalR/receive-notification-signalR"
-import { ENotificationType } from "@/lib/types/enums"
 import { type Notification } from "@/lib/types/models"
-import { cn } from "@/lib/utils"
 import useInfiniteNotifications from "@/hooks/notifications/use-infinite-notifications"
 import useResetUnread from "@/hooks/notifications/use-reset-unread"
 import useUnreadAmount from "@/hooks/notifications/use-unread-amount"
@@ -32,20 +30,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 
+import NotificationTypeBadge from "../badges/notification-type-badge"
 import ParseHtml from "./parse-html"
-
-const getTypeColor = (type: ENotificationType): string => {
-  switch (type) {
-    case ENotificationType.EVENT:
-      return "bg-success"
-    case ENotificationType.NOTICE:
-      return "bg-info"
-    case ENotificationType.REMINDER:
-      return "bg-danger"
-    default:
-      return "bg-primary"
-  }
-}
 
 export function NotificationBell() {
   const { accessToken } = useAuth()
@@ -205,13 +191,9 @@ export function NotificationBell() {
                     <span className="line-clamp-2 font-semibold">
                       {notification.title}
                     </span>
-                    <Badge
-                      className={cn(
-                        `text-xs ${getTypeColor(notification.notificationType)}`
-                      )}
-                    >
-                      {notification.notificationType}
-                    </Badge>
+                    <NotificationTypeBadge
+                      type={notification.notificationType}
+                    />
                   </div>
                   <p className="line-clamp-3 text-sm leading-none text-card-foreground">
                     <ParseHtml

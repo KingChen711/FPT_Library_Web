@@ -22,7 +22,7 @@ type OkResponse<TData = undefined> = {
 
 export class HttpError extends Error {
   resultCode: string
-  type: "unknown" | "warning" | "error" | "form"
+  type: "unknown" | "warning" | "error" | "form" | "forbidden"
   fieldErrors: Record<string, string[]>
   data: any
   constructor({
@@ -33,13 +33,16 @@ export class HttpError extends Error {
     data,
   }: {
     resultCode: string
-    type: "unknown" | "warning" | "error" | "form"
+    type: "unknown" | "warning" | "error" | "form" | "forbidden"
     message?: string
     fieldErrors?: Record<string, string[]>
     data?: any
   } & (
     | {
         type: "unknown"
+      }
+    | {
+        type: "forbidden"
       }
     | {
         type: "warning" | "error"
@@ -64,6 +67,13 @@ export function handleHttpError(error: unknown): ServerActionError {
     return {
       isSuccess: false,
       typeError: "unknown",
+    }
+  }
+
+  if (error.type === "forbidden") {
+    return {
+      isSuccess: false,
+      typeError: "forbidden",
     }
   }
 
@@ -181,17 +191,24 @@ const request = async <TData = undefined>(
       })
     }
 
-    if (res.status !== 422) {
+    if (res.status === 422) {
       throw new HttpError({
-        type: "unknown",
+        type: "form",
+        // @ts-ignore
+        fieldErrors: payload.Extensions || {},
+        resultCode: "",
+      })
+    }
+
+    if (res.status === 403) {
+      throw new HttpError({
+        type: "forbidden",
         resultCode: "",
       })
     }
 
     throw new HttpError({
-      type: "form",
-      // @ts-ignore
-      fieldErrors: payload.Extensions || {},
+      type: "unknown",
       resultCode: "",
     })
   }

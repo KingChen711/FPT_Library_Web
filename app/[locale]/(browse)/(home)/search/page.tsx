@@ -14,7 +14,7 @@ const SearchPage = () => {
           {t("Search for articles, books, journals, and other content")}
         </h1>
         {/* <SheetSearchBook /> */}
-        <BookFilterTabs />
+        <BookFilterTabs autoComplete />
       </section>
     </div>
   )

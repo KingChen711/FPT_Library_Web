@@ -188,9 +188,9 @@ export enum EBookCopyStatus {
 }
 
 export enum EFineType {
-  OVER_DUE = "OverDue",
-  LOST = "Lost",
-  DAMAGE = "Damage",
+  OVER_DUE,
+  LOST,
+  DAMAGE,
 }
 
 export enum EDuplicateHandle {
@@ -203,12 +203,6 @@ export const EDuplicateHandleToIndex: Map<EDuplicateHandle, number> = new Map([
   [EDuplicateHandle.ALLOW, 0],
   [EDuplicateHandle.REPLACE, 1],
   [EDuplicateHandle.SKIP, 2],
-])
-
-export const EFineTypeToIndex: Map<EFineType, number> = new Map([
-  [EFineType.OVER_DUE, 0],
-  [EFineType.LOST, 1],
-  [EFineType.DAMAGE, 2],
 ])
 
 export enum ESearchType {

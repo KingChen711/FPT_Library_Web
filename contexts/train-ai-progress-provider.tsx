@@ -2,6 +2,7 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { type HubConnection } from "@microsoft/signalr"
+import { useLocale } from "next-intl"
 
 import { connectToSignalR, disconnectSignalR } from "@/lib/signalR"
 import {
@@ -10,6 +11,7 @@ import {
   type SocketTrainAI,
 } from "@/lib/signalR/receive-train-ai-signalR"
 import { ERoleType } from "@/lib/types/enums"
+import { toast } from "@/hooks/use-toast"
 
 import { useAuth } from "./auth-provider"
 
@@ -23,16 +25,18 @@ type TrainAIProviderProps = {
 }
 
 type TrainAIContextType = {
-  trainingGroups: TrainingGroup[]
-  setTrainingGroups: React.Dispatch<React.SetStateAction<TrainingGroup[]>>
+  trainingGroup: TrainingGroup | null
+  setTrainingGroup: React.Dispatch<React.SetStateAction<TrainingGroup | null>>
 }
 
 export const TrainAIContext = createContext<TrainAIContextType | null>(null)
 
 const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
-  const [trainingGroups, setTrainingGroups] = useState<TrainingGroup[]>([])
+  const [trainingGroup, setTrainingGroup] = useState<TrainingGroup | null>(null)
   const { accessToken, user } = useAuth()
   const [connection, setConnection] = useState<HubConnection | null>(null)
+
+  const locale = useLocale()
 
   useEffect(() => {
     if (!accessToken || !user || user.role.roleType !== ERoleType.EMPLOYEE)
@@ -50,28 +54,20 @@ const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
     if (!connection) return
 
     const callback = (notification: SocketTrainAI) => {
-      setTrainingGroups((prev) => {
-        const existGroupCode = prev.some(
-          (i) => i.groupCode === notification.groupCode.name
-        )
-
-        if (existGroupCode) {
-          return prev.map((i) => {
-            if (i.groupCode !== notification.groupCode.name) return i
-            return {
-              groupCode: notification.groupCode.name,
-              progress: notification.message,
-            }
-          })
-        }
-
-        return [
-          {
-            groupCode: notification.groupCode.name,
-            progress: notification.message,
-          },
-          ...prev,
-        ]
+      if (notification.message.toString() === "100") {
+        setTrainingGroup(null)
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description:
+            locale === "vi" ? "Train AI thành công" : "Train AI success",
+          variant: "success",
+        })
+        return
+      }
+      setTrainingGroup({
+        groupCode:
+          locale === "vi" ? "Tiến trình Train AI" : "Train AI progress",
+        progress: notification.message,
       })
     }
 
@@ -80,10 +76,12 @@ const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
     return () => {
       offReceiveTrainAI(connection, callback)
     }
-  }, [connection])
+  }, [connection, locale])
 
   return (
-    <TrainAIContext.Provider value={{ trainingGroups, setTrainingGroups }}>
+    <TrainAIContext.Provider
+      value={{ trainingGroup: trainingGroup, setTrainingGroup }}
+    >
       {children}
     </TrainAIContext.Provider>
   )

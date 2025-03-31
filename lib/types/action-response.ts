@@ -6,6 +6,7 @@ export type ActionResponse<TData = undefined> =
 
 export type ServerActionError =
   | { isSuccess: false; typeError: "unknown" }
+  | { isSuccess: false; typeError: "forbidden" }
   | {
       isSuccess: false
       typeError: "warning"

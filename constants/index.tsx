@@ -89,7 +89,7 @@ export const managementRoutes = [
         },
       },
       {
-        route: "/management/returns",
+        route: "/management/return",
         label: "Returns",
         Icon: (props: { className?: string }) => {
           return <Icons.Return {...props} />

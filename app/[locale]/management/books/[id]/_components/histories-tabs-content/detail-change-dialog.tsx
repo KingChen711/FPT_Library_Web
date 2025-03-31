@@ -91,10 +91,11 @@ function DetailChangeDialog({ dateUtc, trailType }: Props) {
                       <TabsTrigger value="json">JSON</TabsTrigger>
                     </TabsList>
                     <TabsContent value="table">
-                      <ScrollArea className="h-[400px] w-full rounded-md border p-4">
+                      <ScrollArea className="flex h-[400px] w-full flex-col gap-4">
                         {data?.map((d, i) => (
                           <ChangesTable
                             key={i}
+                            index={i}
                             renderValue={renderValue}
                             oldValue={d.oldValues}
                             newValue={d.newValues}

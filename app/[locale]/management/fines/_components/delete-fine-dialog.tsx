@@ -29,7 +29,7 @@ function DeleteFineDialog({
   fineId,
 }: Props) {
   const locale = useLocale()
-  const message = `${locale === "vi" ? "xóa" : "delete"} ${fineName}`
+  const message = `${locale === "vi" ? "xóa" : "delete"}${fineName ? ` ${fineName}` : ""}`
   const t = useTranslations("FinesManagementPage")
   const [value, setValue] = useState("")
 

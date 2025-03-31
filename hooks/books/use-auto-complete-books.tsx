@@ -8,7 +8,7 @@ import {
   type LibraryItemAuthor,
 } from "@/lib/types/models"
 
-function useAutoCompleteBooks(term = "") {
+function useAutoCompleteBooks(term = "", enabled = true) {
   return useQuery({
     queryKey: ["autocomplete-books", term],
     queryFn: async (): Promise<
@@ -167,7 +167,7 @@ function useAutoCompleteBooks(term = "") {
         return []
       }
     },
-
+    enabled,
     placeholderData: keepPreviousData,
   })
 }

@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 
 import { SidebarMenuButton, SidebarMenuItem } from "@/components/ui/sidebar"
 

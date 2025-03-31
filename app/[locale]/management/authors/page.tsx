@@ -107,12 +107,10 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                   sortKey="fullName"
                 />
 
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.image")}
-                  sortKey="image"
-                  position="center"
-                />
+                <TableHead className="text-nowrap font-bold">
+                  <div className="flex justify-center">{t("fields.image")}</div>
+                </TableHead>
+
                 <SortableTableHead
                   currentSort={sort}
                   label={t("fields.authorCode")}
@@ -168,16 +166,17 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                     {author.fullName}
                   </TableCell>
                   <TableCell>
-                    <div className="flex items-center justify-center">
+                    <div className="flex items-center justify-center overflow-hidden">
                       {isImageLinkValid(author.authorImage) ? (
                         <Image
                           src={author.authorImage}
                           alt="avatar"
-                          width={30}
-                          height={30}
+                          width={36}
+                          height={36}
+                          className="aspect-square size-9 rounded-full border"
                         />
                       ) : (
-                        <ImageIcon size={30} />
+                        <ImageIcon size={36} className="rounded-full border" />
                       )}
                     </div>
                   </TableCell>

@@ -22,7 +22,7 @@ export async function createBorrowRecord(
       }
     )
 
-    revalidatePath("/borrows/records")
+    revalidatePath("/management/borrows/records")
 
     return {
       isSuccess: true,

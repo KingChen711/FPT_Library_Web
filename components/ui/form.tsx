@@ -149,7 +149,10 @@ const FormMessage = React.forwardRef<
 >(({ className, children, ...props }, ref) => {
   const { error, formMessageId } = useFormField()
   const t = useTranslations("Zod")
-  const body = error ? t(String(error?.message)).replace("Zod.", "") : children
+
+  const body = error
+    ? t(String(error?.message || error.root?.message)).replace("Zod.", "")
+    : children
 
   if (!body) {
     return null

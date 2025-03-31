@@ -20,7 +20,7 @@
     "@ianvs/prettier-plugin-sort-imports": "^4.4.0",
     "@internationalized/date": "^3.6.0",
     "@microsoft/signalr": "^8.0.7",
-    "@next/bundle-analyzer": "^15.0.3",
+    "@next/bundle-analyzer": "14.2.18",
     "@radix-ui/react-accordion": "^1.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.6",
     "@radix-ui/react-aspect-ratio": "^1.1.1",
@@ -72,12 +72,10 @@
     "jsbarcode": "^3.11.6",
     "jsonwebtoken": "^9.0.2",
     "jwt-decode": "^4.0.0",
-    "library": "file:",
     "lint-staged": "^15.2.10",
     "lucide-react": "^0.460.0",
     "luxon": "^3.5.0",
     "next": "14.2.18",
-    "next-cloudinary": "^6.16.0",
     "next-intl": "^3.25.1",
     "next-themes": "^0.4.3",
     "node-loader": "^2.1.0",
@@ -130,12 +128,18 @@
     "@types/wav-encoder": "^1.3.3",
     "@yudiel/react-qr-scanner": "^2.1.0",
     "eslint": "^8",
-    "eslint-config-next": "15.0.3",
+    "eslint-config-next": "14.2.18",
     "husky": "^8.0.0",
     "postcss": "^8",
     "react-qr-reader": "^3.0.0-beta-1",
     "tailwindcss": "^3.4.1",
     "typescript": ">=4.7.4 <5.7.0"
+  },
+  "overrides": {
+    "@tinymce/tinymce-react": {
+      "react": "$react",
+      "react-dom": "$react-dom"
+    }
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [

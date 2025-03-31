@@ -23,6 +23,18 @@ function handleServerActionError(
     return
   }
 
+  if (error.typeError === "forbidden") {
+    toast({
+      title: locale === "vi" ? "Lỗi" : "Error",
+      description:
+        locale === "vi"
+          ? "Bạn không có quyền làm điều này."
+          : "You do not have permission to do this action.",
+      variant: "danger",
+    })
+    return
+  }
+
   if (error.typeError === "unknown") {
     toast({
       title: locale === "vi" ? "Lỗi" : "Error",

@@ -139,7 +139,11 @@
     "lessThanRequire": "Ít hơn yêu cầu",
     "greaterThanRequire": "Nhiều hơn yêu cầu",
     "mustAfterThanNow": "Phải lớn hơn thời điểm hiện tại",
-    "mustScannedAllItems": "Cần phải quét toàn bộ tài liệu"
+    "mustScannedAllItems": "Cần phải quét toàn bộ tài liệu",
+    "atLeast1ScannedOrLost": "Cần ít nhất một tài liệu đã quét hoặc bị mất",
+    "undefined": "",
+    "addFineLost": "Phải thêm phí phạt 'Mất'",
+    "addFineOverdue": "Phải thêm phí phạt 'Quá hạn'"
   },
   "Me": {
     "account": "Tài khoản",
@@ -183,7 +187,7 @@
     "employee management": "Quản lí nhân viên",
     "user management": "Quản lí người dùng",
     "role management": "Quản lí vai trò",
-    "author management": "Quản lí tác giả",
+    "author management": "Tác giả",
     "category management": "Quản lí loại",
     "resource management": "Quản lí tài nguyên",
     "notification management": "Quản lí thông báo",
@@ -191,8 +195,8 @@
     "borrow management": "Quản lí mượn sách",
     "transaction management": "Quản lí giao dịch",
     "report management": "Quản lí báo cáo",
-    "package management": "Quản lí gói thư viện",
-    "condition management": "Quản lí tình trạng vật dụng thư viện",
+    "package management": "Gói thư viện",
+    "condition management": "Tình trạng tài liệu",
     "voice to text": "Tìm kiếm bằng giọng nói",
     "voice description": "Nhấn nút micrô và bắt đầu nói. Văn bản sẽ được nhận dạng và viết vào trường văn bản.",
     "ai prediction": "AI dự đoán",
@@ -1117,6 +1121,10 @@
     "Scan supplier name description": "Kiểm tra tên nhà cung cấp đã tồn tại trong cơ sở dữ liệu hay chưa"
   },
   "FinesManagementPage": {
+    "Not valid": "Không phù hợp",
+    "Selected": "Đã chọn",
+    "Select": "Chọn",
+    "Add fine": "Thêm phí phạt",
     "Fines": "Phí",
     "Condition type": "Loại điều kiện",
     "Fixed fine amount": "Số tiền cố định",
@@ -1799,8 +1807,14 @@
     "No item found": "Không tìm thấy"
   },
   "Badges": {
+    "BorrowRecordStatus": {
+      "0": "Đang mượn",
+      "1": "Đã trả",
+      "2": "Quá hạn",
+      "3": "Mất"
+    },
     "BorrowType": {
-      "0": "Tại thư viện",
+      "0": "Trong ngày",
       "1": "Mang về"
     },
     "StockTransactionType": {
@@ -1837,7 +1851,11 @@
       "1": "Xuất bản",
       "2": "Đã xóa"
     },
-
+    "FineType": {
+      "0": "Quá hạn",
+      "1": "Mất",
+      "2": "Hư hỏng"
+    },
     "BookCopyStatus": {
       "InShelf": "Trên kệ",
       "OutOfShelf": "Trong kho",
@@ -1969,24 +1987,35 @@
     "Out of shelf": "Đã hết"
   },
   "BorrowAndReturnManagementPage": {
+    "Reservation date": "Ngày đặt",
+    "Expired date": "Ngày hết hạn",
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
+    "Condition": "Tình trạng",
+    "Lost item": "Mất tài liệu",
+    "Fines": "Phí phạt",
+    "Add fine": "Thêm phí phạt",
+    "Return condition": "Tình trạng khi trả",
+    "Valid barcodes": "ĐKCB hợp lệ",
     "Create borrow record": "Tạo lịch sử mượn",
     "Scan patrons library card": "Quét thẻ của bạn đọc",
     "Borrow request items": "Tài liệu đang yêu cầu",
     "Borrow type": "Loại mượn",
     "Borrow list": "Danh sách mượn",
     "Scan items to confirm borrow list": "Quét các tài liệu để xác nhận danh sách mượn",
+    "Return list": "Danh sách trả",
+    "Scan items to confirm return list": "Quét các tài liệu để xác nhận danh sách trả",
     "Not scanned yet": "Chưa quét",
     "Un request items": "Tài liệu chưa yêu cầu",
     "Library card": "Thẻ thư viện",
     "Cancel": "Hủy",
     "Scanned": "Đã quét",
     "Continue": "Tiếp tục",
-    "Please scan the patrons library card barcode to begin the checkout process": "Vui lòng quét mã vạch thẻ thư viện của bạn đọc để bắt đầu quá trình thanh toán",
+    "Please scan the patrons library card barcode to begin the checkout process": "Vui lòng quét mã vạch thẻ thư viện của bạn đọc để tiếp tục",
     "Borrow records": "Lịch sử mượn",
     "Assigned reservation items": "Tài liệu đặt trước đã gán",
     "Loading patron information": "Đang tải thông tin bạn đọc...",
     "Take home description": "Mượn và trả tài liệu khi tới hạn của từng tài liệu.",
-    "In library description": "Mượn và trả tất cả tài liệu trong ngày.",
+    "In library description": "Mượn để đọc tại thư viện và trả tất cả tài liệu trong ngày.",
     "Activity summary": "Tóm tắt hoạt động",
     "Requesting": "Đang yêu cầu",
     "Borrowing": "Đang mượn",
@@ -1996,7 +2025,24 @@
     "Remaining": "Còn lại",
     "Borrowing limit reached": "Đã tới giới hạn",
     "Total activities": "Tổng hoạt động",
-    "Due date": "Trả lúc"
+    "Due date": "Trả lúc",
+    "Return library item": "Trả tài liệu",
+    "fineNote": "Ghi chú phạt...",
+    "Confirm missing": "Xác nhận chưa trả",
+    "Confirm missing description": "Xác nhận rằng bạn đọc chưa trả các tài liệu đã quá hạn hoặc/và các tài liệu mượn trong ngày.",
+    "Assign reservations": "Gán các đơn đặt trước",
+    "Assign list": "Danh sách gán",
+    "Confirm assign": "Xác nhận gán",
+    "Confirm assign description": "Xác nhận rằng bản vật lý này phù hợp để gán cho đơn đặt trước",
+    "Reservation info": "Thông tin đặt",
+    "Reservation code": "Mã đặt",
+    "Fullname": "Tên bạn đọc",
+    "Assigned date": "Ngày gán",
+    "Patron card code": "Mã thẻ bạn đọc",
+    "Confirm apply label": "Xác nhận dán nhãn",
+    "Confirm": "Xác nhận",
+    "How many labels have you applied": "Bạn đã dán bao nhiêu nhãn?",
+    "Cancel request item": "Hủy yêu cầu {title}"
   },
   "LocateButton": {
     "Floor": "Tầng",

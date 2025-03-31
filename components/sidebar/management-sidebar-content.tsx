@@ -1,3 +1,5 @@
+"use client"
+
 import { usePathname } from "next/navigation"
 import { managementRoutes } from "@/constants"
 import { Link } from "@/i18n/routing"

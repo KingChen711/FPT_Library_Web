@@ -851,4 +851,8 @@ export type ReservationQueueManagement = {
   isNotified: boolean
   cancelledBy: string | null
   cancellationReason: string | null
+
+  reservationCode: string | null
+  isAppliedLabel: boolean
+  isAssignable: boolean
 }
