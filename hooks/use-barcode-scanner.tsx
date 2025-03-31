@@ -4,17 +4,19 @@ type OnScanCallback = (scannedData: string) => void
 
 interface ScannerOptions {
   threshold?: number
+  disabled?: boolean
 }
 
 function useBarcodeScanner(
   onScan: OnScanCallback,
   options: ScannerOptions = {}
 ): string {
-  const { threshold = 50 } = options
+  const { threshold = 50, disabled = false } = options
   const [buffer, setBuffer] = useState<string>("")
   const [lastKeyTime, setLastKeyTime] = useState<number>(0)
 
   useEffect(() => {
+    if (disabled) return
     const handleKeyPress = (event: KeyboardEvent) => {
       const currentTime = Date.now()
       const timeDiff = currentTime - lastKeyTime
@@ -54,7 +56,7 @@ function useBarcodeScanner(
     return () => {
       window.removeEventListener("keydown", handleKeyPress)
     }
-  }, [buffer, lastKeyTime, onScan, threshold])
+  }, [buffer, lastKeyTime, onScan, threshold, disabled])
 
   return buffer // Trả về buffer nếu muốn theo dõi quá trình quét
 }

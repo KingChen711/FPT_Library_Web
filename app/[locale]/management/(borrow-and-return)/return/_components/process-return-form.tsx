@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, useTransition } from "react"
+import React, { useCallback, useEffect, useState, useTransition } from "react"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { BarcodeIcon, Loader2 } from "lucide-react"
@@ -34,7 +34,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import PersonalLibraryCard from "@/components/ui/personal-library-card"
+import { Switch } from "@/components/ui/switch"
 
 import PatronActivityCard from "../../_components/patron-activity-card"
 import ReturnItemFields from "./return-item-fields"
@@ -72,62 +74,79 @@ function ProcessReturnForm() {
   const { mutate: getPatronActivity, isPending: fetchingPatronActivity } =
     useGetPatronActivity()
 
-  useBarcodeScanner((scannedData) => {
-    const scanCard = !wLibraryCardBarcode
+  const [mode, setMode] = useState<"scan" | "manual">("scan")
+  const [barcodeInputValue, setBarcodeInputValue] = useState("")
 
-    if (scanCard) {
-      if (fetchingPatron) return
-      form.setValue("libraryCardBarcode", scannedData)
-      getPatronByBarcode(scannedData, {
-        onSuccess: (data) => {
-          if (!data) {
-            toast({
-              title: locale === "vi" ? "Lỗi" : "Error",
-              description:
-                locale === "vi" ? "Không tìm thấy bạn đọc" : "Not found patron",
-              variant: "warning",
-            })
-            return
-          }
-          form.setValue("libraryCardId", data.libraryCardId)
-          setScannedPatron(data)
-        },
-      })
+  const handleBarcodeData = useCallback(
+    (scannedData: string) => {
+      const scanCard = !wLibraryCardBarcode
 
-      return
-    }
+      if (scanCard) {
+        if (fetchingPatron) return
+        form.setValue("libraryCardBarcode", scannedData)
+        getPatronByBarcode(scannedData, {
+          onSuccess: (data) => {
+            if (!data) {
+              toast({
+                title: locale === "vi" ? "Lỗi" : "Error",
+                description:
+                  locale === "vi"
+                    ? "Không tìm thấy bạn đọc"
+                    : "Not found patron",
+                variant: "warning",
+              })
+              return
+            }
+            form.setValue("libraryCardId", data.libraryCardId)
+            setScannedPatron(data)
+          },
+        })
 
-    const borrowingBarcodes =
-      patronActivity?.borrowingItems.map((i) => i.barcode) || []
+        return
+      }
 
-    if (!borrowingBarcodes.includes(scannedData)) {
-      toast({
-        title: locale === "vi" ? "Lỗi" : "Error",
-        description:
-          locale === "vi"
-            ? "Tài liệu này không thuộc danh sách trả"
-            : "This library item is not in return list",
-        variant: "warning",
-      })
-      return
-    }
+      const borrowingBarcodes =
+        patronActivity?.borrowingItems.map((i) => i.barcode) || []
 
-    setPatronActivity((prev) =>
-      prev
-        ? {
-            ...prev,
-            borrowingItems:
-              prev?.borrowingItems?.map((item) => {
-                if (item.barcode !== scannedData) return item
-                return {
-                  ...item,
-                  scanned: true,
-                }
-              }) || [],
-          }
-        : null
-    )
-  })
+      if (!borrowingBarcodes.includes(scannedData)) {
+        toast({
+          title: locale === "vi" ? "Lỗi" : "Error",
+          description:
+            locale === "vi"
+              ? "Tài liệu này không thuộc danh sách trả"
+              : "This library item is not in return list",
+          variant: "warning",
+        })
+        return
+      }
+
+      setPatronActivity((prev) =>
+        prev
+          ? {
+              ...prev,
+              borrowingItems:
+                prev?.borrowingItems?.map((item) => {
+                  if (item.barcode !== scannedData) return item
+                  return {
+                    ...item,
+                    scanned: true,
+                  }
+                }) || [],
+            }
+          : null
+      )
+    },
+    [
+      fetchingPatron,
+      form,
+      getPatronByBarcode,
+      locale,
+      patronActivity?.borrowingItems,
+      wLibraryCardBarcode,
+    ]
+  )
+
+  useBarcodeScanner(handleBarcodeData, { disabled: mode === "manual" })
 
   useEffect(() => {
     if (!wLibraryCardId) return
@@ -209,29 +228,89 @@ function ProcessReturnForm() {
   }
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-6">
-          {(!scannedPatron || !patronActivity) &&
-            !fetchingPatron &&
-            !fetchingPatronActivity && (
-              <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/50 bg-muted/30 p-8">
-                <div className="mb-4 rounded-full bg-primary/10 p-4">
-                  <BarcodeIcon className="size-12 text-primary" />
-                </div>
-                <h3 className="mb-2 text-xl font-semibold">
-                  {t("Scan patrons library card")}
-                </h3>
-                <p className="mb-4 max-w-md text-center text-muted-foreground">
-                  {t(
-                    "Please scan the patrons library card barcode to begin the checkout process"
-                  )}
-                </p>
-                <div className="h-1 w-64 animate-pulse bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-                <Input className="hidden" autoFocus={!wLibraryCardBarcode} />
-              </div>
-            )}
+    <div className="flex flex-col">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+        <h3 className="text-2xl font-semibold">{t("Return library item")}</h3>
+        <div className="flex items-center space-x-2">
+          <Label
+            htmlFor="barcode-mode"
+            className={
+              mode === "scan" ? "font-medium" : "text-muted-foreground"
+            }
+          >
+            {t("Scan")}
+          </Label>
+          <Switch
+            id="barcode-mode"
+            checked={mode === "manual"}
+            onCheckedChange={() => {
+              setMode((prev) => (prev === "manual" ? "scan" : "manual"))
+            }}
+          />
+          <Label
+            htmlFor="barcode-mode"
+            className={
+              mode === "manual" ? "font-medium" : "text-muted-foreground"
+            }
+          >
+            {t("Manual")}
+          </Label>
+        </div>
+      </div>
+      {(!scannedPatron || !patronActivity) &&
+        !fetchingPatron &&
+        !fetchingPatronActivity &&
+        mode === "scan" && (
+          <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/50 bg-muted/30 p-8">
+            <div className="mb-4 rounded-full bg-primary/10 p-4">
+              <BarcodeIcon className="size-12 text-primary" />
+            </div>
+            <h3 className="mb-2 text-xl font-semibold">
+              {t("Scan patrons library card")}
+            </h3>
+            <p className="mb-4 max-w-md text-center text-muted-foreground">
+              {t(
+                "Please scan the patrons library card barcode to begin the checkout process"
+              )}
+            </p>
+            <div className="h-1 w-64 animate-pulse bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          </div>
+        )}
 
+      {mode === "manual" && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            if (!barcodeInputValue) return
+            handleBarcodeData(barcodeInputValue)
+            setBarcodeInputValue("")
+          }}
+        >
+          <div className="mb-6 flex flex-col gap-2">
+            <Label>
+              {wLibraryCardBarcode
+                ? t("Enter items individual registration code")
+                : t("Enter patrons library card")}
+            </Label>
+            <Input
+              value={barcodeInputValue}
+              onChange={(e) => setBarcodeInputValue(e.target.value)}
+              placeholder={
+                wLibraryCardBarcode
+                  ? locale === "vi"
+                    ? "VD: SD00001"
+                    : "EX: SD00001"
+                  : locale === "vi"
+                    ? "VD: EC-D458F3723476"
+                    : "EX: EC-D458F3723476"
+              }
+            />
+          </div>
+        </form>
+      )}
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {(fetchingPatron || fetchingPatronActivity) && (
             <div className="flex flex-col items-center justify-center rounded-lg bg-muted/30 p-6">
               <Loader2 className="mb-2 size-8 animate-spin text-primary" />
@@ -339,7 +418,7 @@ function ProcessReturnForm() {
           )}
         </form>
       </Form>
-    </>
+    </div>
   )
 }
 
