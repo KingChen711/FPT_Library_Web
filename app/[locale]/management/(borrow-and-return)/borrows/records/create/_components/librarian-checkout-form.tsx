@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, useTransition } from "react"
+import React, { useCallback, useEffect, useState, useTransition } from "react"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
@@ -49,6 +49,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import PersonalLibraryCard from "@/components/ui/personal-library-card"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
+import { Switch } from "@/components/ui/switch"
 import { TimePicker } from "@/components/form/time-picker"
 
 import PatronActivityCard from "../../../../_components/patron-activity-card"
@@ -60,6 +61,7 @@ function LibrarianCheckoutForm() {
   const locale = useLocale()
   const formatLocale = useFormatLocale()
   const router = useRouter()
+  const [mode, setMode] = useState<"scan" | "manual">("scan")
 
   const [scannedPatron, setScannedPatron] = useState<ScannedPatron | null>(null)
   const [patronActivity, setPatronActivity] = useState<PatronActivity | null>(
@@ -88,175 +90,194 @@ function LibrarianCheckoutForm() {
   const { mutate: getPatronActivity, isPending: fetchingPatronActivity } =
     useGetPatronActivity()
 
-  useBarcodeScanner((scannedData) => {
-    const scanCard = !wLibraryCardBarcode
+  const [barcodeInputValue, setBarcodeInputValue] = useState("")
 
-    if (scanCard) {
-      if (fetchingPatron) return
-      form.setValue("libraryCardBarcode", scannedData)
-      getPatronByBarcode(scannedData, {
+  const handleBarcodeData = useCallback(
+    (scannedData: string) => {
+      const scanCard = !wLibraryCardBarcode
+
+      if (scanCard) {
+        if (fetchingPatron) return
+        form.setValue("libraryCardBarcode", scannedData)
+        getPatronByBarcode(scannedData, {
+          onSuccess: (data) => {
+            if (!data) {
+              toast({
+                title: locale === "vi" ? "Lỗi" : "Error",
+                description:
+                  locale === "vi"
+                    ? "Không tìm thấy bạn đọc"
+                    : "Not found patron",
+                variant: "warning",
+              })
+              return
+            }
+            form.setValue("libraryCardId", data.libraryCardId)
+            setScannedPatron(data)
+          },
+        })
+
+        return
+      }
+
+      getItemByBarcode(scannedData, {
         onSuccess: (data) => {
           if (!data) {
             toast({
               title: locale === "vi" ? "Lỗi" : "Error",
               description:
-                locale === "vi" ? "Không tìm thấy bạn đọc" : "Not found patron",
+                locale === "vi"
+                  ? "Không tìm thấy tài liệu"
+                  : "Not found library item",
               variant: "warning",
             })
             return
           }
-          form.setValue("libraryCardId", data.libraryCardId)
-          setScannedPatron(data)
-        },
-      })
 
-      return
-    }
+          //check borrowed
+          const borrowingItemIds =
+            patronActivity?.borrowingItems.map((i) => i.libraryItemId) || []
 
-    getItemByBarcode(scannedData, {
-      onSuccess: (data) => {
-        if (!data) {
-          toast({
-            title: locale === "vi" ? "Lỗi" : "Error",
-            description:
-              locale === "vi"
-                ? "Không tìm thấy tài liệu"
-                : "Not found library item",
-            variant: "warning",
-          })
-          return
-        }
+          if (borrowingItemIds.includes(data.libraryItemId)) {
+            toast({
+              title: locale === "vi" ? "Lỗi" : "Error",
+              description:
+                locale === "vi"
+                  ? "Bạn đọc đã mượn tài liệu này"
+                  : "Patron has already borrowed this item",
+              variant: "warning",
+            })
+            return
+          }
 
-        //check borrowed
-        const borrowingItemIds =
-          patronActivity?.borrowingItems.map((i) => i.libraryItemId) || []
-
-        if (borrowingItemIds.includes(data.libraryItemId)) {
-          toast({
-            title: locale === "vi" ? "Lỗi" : "Error",
-            description:
-              locale === "vi"
-                ? "Bạn đọc đã mượn tài liệu này"
-                : "Patron has already borrowed this item",
-            variant: "warning",
-          })
-          return
-        }
-
-        //check assigned
-        const assignedItem = patronActivity?.assignedItems.find(
-          (item) => item.libraryItemId === data?.libraryItemId
-        )
-
-        const existMatchInstance = assignedItem?.libraryItemInstances?.find(
-          (instance) => instance.barcode === scannedData
-        )
-
-        if (existMatchInstance) {
-          setPatronActivity((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  assignedItems:
-                    prev?.assignedItems?.map((item) => {
-                      if (item.libraryItemId !== data?.libraryItemId)
-                        return item
-                      return {
-                        ...item,
-                        scanned: true,
-                        barcode: scannedData,
-                        instanceId: data.libraryItemInstanceId,
-                      }
-                    }) || [],
-                }
-              : null
-          )
-          return
-        } else if (assignedItem && assignedItem.barcode !== scannedData) {
-          toast({
-            title: locale === "vi" ? "Lỗi" : "Error",
-            description:
-              locale === "vi"
-                ? "Đúng tài liệu nhưng sai bản vật lý đã gán"
-                : "Correct library item but wrong physical copy",
-            variant: "warning",
-          })
-          return
-        }
-
-        if (data.status !== EBookCopyStatus.IN_SHELF) {
-          toast({
-            title: locale === "vi" ? "Lỗi" : "Error",
-            description:
-              locale === "vi"
-                ? "Chỉ có thể mượn tài liệu đang trên kệ"
-                : "Only can borrow in-shelf item",
-            variant: "warning",
-          })
-          return
-        }
-
-        //check requesting
-        const requestingItemIds =
-          patronActivity?.requestingItems.map((i) => i.libraryItemId) || []
-
-        if (requestingItemIds.includes(data.libraryItemId)) {
-          setPatronActivity((prev) =>
-            prev
-              ? {
-                  ...prev,
-                  requestingItems:
-                    prev?.requestingItems?.map((item) => {
-                      if (item.libraryItemId !== data?.libraryItemId)
-                        return item
-                      return {
-                        ...item,
-                        scanned: true,
-                        barcode: scannedData,
-                        instanceId: data.libraryItemInstanceId,
-                      }
-                    }) || [],
-                }
-              : null
+          //check assigned
+          const assignedItem = patronActivity?.assignedItems.find(
+            (item) => item.libraryItemId === data?.libraryItemId
           )
 
-          return
-        }
+          const existMatchInstance = assignedItem?.libraryItemInstances?.find(
+            (instance) => instance.barcode === scannedData
+          )
 
-        //un request item
-        setPatronActivity((prev) =>
-          prev
-            ? {
-                ...prev,
-                unRequestingItems: prev.unRequestingItems.find(
-                  (item) => item.libraryItemId === data.libraryItemId
-                )
-                  ? prev.unRequestingItems.map((item) => {
-                      if (item.libraryItemId === data.libraryItemId) {
+          if (existMatchInstance) {
+            setPatronActivity((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    assignedItems:
+                      prev?.assignedItems?.map((item) => {
+                        if (item.libraryItemId !== data?.libraryItemId)
+                          return item
                         return {
                           ...item,
                           scanned: true,
                           barcode: scannedData,
                           instanceId: data.libraryItemInstanceId,
                         }
-                      }
-                      return item
-                    })
-                  : [
-                      ...prev.unRequestingItems,
-                      {
-                        ...data.libraryItem,
-                        scanned: true,
-                        barcode: scannedData,
-                        instanceId: data.libraryItemInstanceId,
-                      },
-                    ],
-              }
-            : null
-        )
-      },
-    })
-  })
+                      }) || [],
+                  }
+                : null
+            )
+            return
+          } else if (assignedItem && assignedItem.barcode !== scannedData) {
+            toast({
+              title: locale === "vi" ? "Lỗi" : "Error",
+              description:
+                locale === "vi"
+                  ? "Đúng tài liệu nhưng sai bản vật lý đã gán"
+                  : "Correct library item but wrong physical copy",
+              variant: "warning",
+            })
+            return
+          }
+
+          if (data.status !== EBookCopyStatus.IN_SHELF) {
+            toast({
+              title: locale === "vi" ? "Lỗi" : "Error",
+              description:
+                locale === "vi"
+                  ? "Chỉ có thể mượn tài liệu đang trên kệ"
+                  : "Only can borrow in-shelf item",
+              variant: "warning",
+            })
+            return
+          }
+
+          //check requesting
+          const requestingItemIds =
+            patronActivity?.requestingItems.map((i) => i.libraryItemId) || []
+
+          if (requestingItemIds.includes(data.libraryItemId)) {
+            setPatronActivity((prev) =>
+              prev
+                ? {
+                    ...prev,
+                    requestingItems:
+                      prev?.requestingItems?.map((item) => {
+                        if (item.libraryItemId !== data?.libraryItemId)
+                          return item
+                        return {
+                          ...item,
+                          scanned: true,
+                          barcode: scannedData,
+                          instanceId: data.libraryItemInstanceId,
+                        }
+                      }) || [],
+                  }
+                : null
+            )
+
+            return
+          }
+
+          //un request item
+          setPatronActivity((prev) =>
+            prev
+              ? {
+                  ...prev,
+                  unRequestingItems: prev.unRequestingItems.find(
+                    (item) => item.libraryItemId === data.libraryItemId
+                  )
+                    ? prev.unRequestingItems.map((item) => {
+                        if (item.libraryItemId === data.libraryItemId) {
+                          return {
+                            ...item,
+                            scanned: true,
+                            barcode: scannedData,
+                            instanceId: data.libraryItemInstanceId,
+                          }
+                        }
+                        return item
+                      })
+                    : [
+                        ...prev.unRequestingItems,
+                        {
+                          ...data.libraryItem,
+                          scanned: true,
+                          barcode: scannedData,
+                          instanceId: data.libraryItemInstanceId,
+                        },
+                      ],
+                }
+              : null
+          )
+        },
+      })
+    },
+    [
+      fetchingPatron,
+      form,
+      getItemByBarcode,
+      getPatronByBarcode,
+      locale,
+      patronActivity?.assignedItems,
+      patronActivity?.borrowingItems,
+      patronActivity?.requestingItems,
+      wLibraryCardBarcode,
+    ]
+  )
+
+  useBarcodeScanner(handleBarcodeData, { disabled: mode === "manual" })
 
   useEffect(() => {
     if (!wLibraryCardId) return
@@ -343,29 +364,90 @@ function LibrarianCheckoutForm() {
   }
 
   return (
-    <>
+    <div className="space-y-0">
+      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+        <h3 className="text-2xl font-semibold">{t("Create borrow record")}</h3>
+        <div className="flex items-center space-x-2">
+          <Label
+            htmlFor="barcode-mode"
+            className={
+              mode === "scan" ? "font-medium" : "text-muted-foreground"
+            }
+          >
+            {t("Scan")}
+          </Label>
+          <Switch
+            id="barcode-mode"
+            checked={mode === "manual"}
+            onCheckedChange={() => {
+              setMode((prev) => (prev === "manual" ? "scan" : "manual"))
+            }}
+          />
+          <Label
+            htmlFor="barcode-mode"
+            className={
+              mode === "manual" ? "font-medium" : "text-muted-foreground"
+            }
+          >
+            {t("Manual")}
+          </Label>
+        </div>
+      </div>
+      {(!scannedPatron || !patronActivity) &&
+        !fetchingPatron &&
+        !fetchingPatronActivity &&
+        mode === "scan" && (
+          <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/50 bg-muted/30 p-8">
+            <div className="mb-4 rounded-full bg-primary/10 p-4">
+              <BarcodeIcon className="size-12 text-primary" />
+            </div>
+            <h3 className="mb-2 text-xl font-semibold">
+              {t("Scan patrons library card")}
+            </h3>
+            <p className="mb-4 max-w-md text-center text-muted-foreground">
+              {t(
+                "Please scan the patrons library card barcode to begin the checkout process"
+              )}
+            </p>
+            <div className="h-1 w-64 animate-pulse bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+          </div>
+        )}
+
+      {mode === "manual" && (
+        <form
+          onSubmit={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            if (!barcodeInputValue) return
+            handleBarcodeData(barcodeInputValue)
+            setBarcodeInputValue("")
+          }}
+        >
+          <div className="mb-6 flex flex-col gap-2">
+            <Label>
+              {wLibraryCardBarcode
+                ? t("Enter items individual registration code")
+                : t("Enter patrons library card")}
+            </Label>
+            <Input
+              value={barcodeInputValue}
+              onChange={(e) => setBarcodeInputValue(e.target.value)}
+              placeholder={
+                wLibraryCardBarcode
+                  ? locale === "vi"
+                    ? "VD: SD00001"
+                    : "EX: SD00001"
+                  : locale === "vi"
+                    ? "VD: EC-D458F3723476"
+                    : "EX: EC-D458F3723476"
+              }
+            />
+          </div>
+        </form>
+      )}
+
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="mt-4 space-y-6">
-          {(!scannedPatron || !patronActivity) &&
-            !fetchingPatron &&
-            !fetchingPatronActivity && (
-              <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/50 bg-muted/30 p-8">
-                <div className="mb-4 rounded-full bg-primary/10 p-4">
-                  <BarcodeIcon className="size-12 text-primary" />
-                </div>
-                <h3 className="mb-2 text-xl font-semibold">
-                  {t("Scan patrons library card")}
-                </h3>
-                <p className="mb-4 max-w-md text-center text-muted-foreground">
-                  {t(
-                    "Please scan the patrons library card barcode to begin the checkout process"
-                  )}
-                </p>
-                <div className="h-1 w-64 animate-pulse bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-                <Input className="hidden" autoFocus={!wLibraryCardBarcode} />
-              </div>
-            )}
-
           {(fetchingPatron || fetchingPatronActivity) && (
             <div className="flex flex-col items-center justify-center rounded-lg bg-muted/30 p-6">
               <Loader2 className="mb-2 size-8 animate-spin text-primary" />
@@ -767,7 +849,7 @@ function LibrarianCheckoutForm() {
           )}
         </form>
       </Form>
-    </>
+    </div>
   )
 }
 

@@ -1987,6 +1987,10 @@
     "Out of shelf": "Đã hết"
   },
   "BorrowAndReturnManagementPage": {
+    "Enter items individual registration code": "Nhập ĐKCB của tài liệu",
+    "Scan": "Quét",
+    "Manual": "Thủ công",
+    "Enter patrons library card": "Nhập mã thẻ bạn đọc",
     "Reservation date": "Ngày đặt",
     "Expired date": "Ngày hết hạn",
     "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",

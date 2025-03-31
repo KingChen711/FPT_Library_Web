@@ -1,9 +1,11 @@
 import React from "react"
 import { notFound, redirect } from "next/navigation"
+import { auth } from "@/queries/auth"
 import checkAssignable from "@/queries/reservations/check-assignable"
 import { z } from "zod"
 
 import { getTranslations } from "@/lib/get-translations"
+import { EFeature } from "@/lib/types/enums"
 import { Label } from "@/components/ui/label"
 
 import AssignReservationsForm from "./_components/assign-reservations-form"
@@ -13,6 +15,8 @@ type Props = {
 }
 
 async function AssignReservations({ searchParams }: Props) {
+  await auth().protect(EFeature.BORROW_MANAGEMENT)
+
   const instanceIds = z.coerce
     .number()
     .or(z.array(z.coerce.number()))
