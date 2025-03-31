@@ -14,7 +14,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 
-import BorrowCard from "./_components/borrow-card"
+import BorrowLibraryItemCard from "./_components/borrow-library-item-card"
 import BorrowResourceCard from "./_components/borrow-resource-card"
 import CheckBorrowRequestDialog from "./_components/check-borrow-request-dialog"
 
@@ -25,7 +25,10 @@ const BorrowsPage = () => {
   const [openCheckBorrow, setOpenCheckBorrow] = useState(false)
   const { selectedLibraryItemIds, selectedResourceIds, clear, selectAll } =
     useBorrowRequestStore()
+
+  // Get library items from local storage
   const [borrowLibraryItemIds, setBorrowLibraryItemIds] = useState<string[]>([])
+  // Get resources from local storage
   const [borrowResourceIds, setBorrowResourcesIds] = useState<string[]>([])
 
   const updateBorrows = () => {
@@ -146,19 +149,23 @@ const BorrowsPage = () => {
 
               <Button
                 variant={"outline"}
-                disabled={selectedLibraryItemIds.length === 0}
+                disabled={
+                  selectedLibraryItemIds.length === 0 &&
+                  selectedResourceIds.length === 0
+                }
                 onClick={handleCheckAvailable}
               >
                 <CheckCircle className="size-4" /> {t("borrow")}
               </Button>
             </div>
 
+            {/* Get data from Local storage */}
             <div className="flex flex-col gap-4 p-4">
               <h1 className="font-semibold">{t("books")}</h1>
               {borrowLibraryItemIds &&
                 borrowLibraryItemIds.length > 0 &&
                 borrowLibraryItemIds.map((id) => (
-                  <BorrowCard key={id} libraryItemId={id} />
+                  <BorrowLibraryItemCard key={id} libraryItemId={id} />
                 ))}
 
               <h1 className="font-semibold">{t("resources")}</h1>

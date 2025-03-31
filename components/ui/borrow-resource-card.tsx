@@ -4,7 +4,7 @@ import { Eye } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { EResourceBookType } from "@/lib/types/enums"
-import { type BookResource } from "@/lib/types/models"
+import { type BookResource, type LibraryItem } from "@/lib/types/models"
 import { formatPrice } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -12,11 +12,16 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import BorrowDigitalConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/borrow-digital-confirm"
 
 type ResourceCardProps = {
+  libraryItem: LibraryItem
   resource: BookResource
   type: EResourceBookType
 }
 
-const BorrowResourceCard = ({ resource, type }: ResourceCardProps) => {
+const BorrowResourceCard = ({
+  resource,
+  type,
+  libraryItem,
+}: ResourceCardProps) => {
   const router = useRouter()
   const t = useTranslations("BookPage")
   const [openDigitalBorrow, setOpenDigitalBorrow] = useState<boolean>(false)
@@ -64,7 +69,7 @@ const BorrowResourceCard = ({ resource, type }: ResourceCardProps) => {
             className="flex-1"
             onClick={() =>
               router.push(
-                `/books/resources/${resource.resourceId}?resourceType=${type}&isPreview=true`
+                `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItem.libraryItemId}&isPreview=true`
               )
             }
           >

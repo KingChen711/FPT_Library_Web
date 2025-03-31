@@ -1,11 +1,12 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { type HubConnection } from "@microsoft/signalr"
-import { BadgeCheck, BookOpen, Clock, DollarSign, Loader2 } from "lucide-react"
+import { BookOpen, Clock, DollarSign, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -72,6 +73,7 @@ const BorrowDigitalConfirm = ({
   const t = useTranslations("BookPage")
   const locale = useLocale()
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [connection, setConnection] = useState<HubConnection | null>(null)
   const { user, isLoadingAuth, accessToken } = useAuth()
   const { data: paymentMethods, isLoading: isLoadingPaymentMethods } =
@@ -152,7 +154,7 @@ const BorrowDigitalConfirm = ({
       if (!paymentStates.canNavigate) return
       const navigateTime = paymentStates.navigateTime - 1
       if (navigateTime <= 0) {
-        router.push(`/books/${libraryItemId}`)
+        router.push(`/books/${searchParams.get("libraryItemId")}`)
         return
       }
       setPaymentStates((prev) => ({ ...prev, navigateTime }))
@@ -163,6 +165,7 @@ const BorrowDigitalConfirm = ({
     paymentStates.canNavigate,
     paymentStates.navigateTime,
     router,
+    searchParams,
   ])
 
   if (isLoadingAuth || isLoadingPaymentMethods) {
@@ -224,10 +227,7 @@ const BorrowDigitalConfirm = ({
         })}
       >
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-lg font-semibold sm:text-xl">
-            <BadgeCheck className="size-5 text-success" />
-            {t("borrow resource confirm")}
-          </DialogTitle>
+          <DialogTitle>{t("borrow resource confirm")}</DialogTitle>
         </DialogHeader>
 
         {!paymentData && (

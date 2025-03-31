@@ -3,15 +3,13 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
 import {
-  type BookResource,
   type BorrowRequest,
-  type DigitalBorrow,
-  type DigitalTransaction,
+  type BorrowRequestResource,
 } from "@/lib/types/models"
 
-export type DigitalBorrowDetail = DigitalBorrow & {
-  libraryResource: BookResource
-  transactions: DigitalTransaction[]
+export type BorrowRequestDetail = BorrowRequest & {
+  isExistPendingResources: boolean
+  borrowRequestResources: BorrowRequestResource[]
 }
 
 function useBorrowRequestDetail(borrowRequestId: number) {
@@ -23,7 +21,7 @@ function useBorrowRequestDetail(borrowRequestId: number) {
     queryKey: [`/borrows/requests/${borrowRequestId}`],
     queryFn: async () => {
       try {
-        const { data } = await http.get<BorrowRequest | null>(
+        const { data } = await http.get<BorrowRequestDetail | null>(
           `/api/users/borrows/requests/${borrowRequestId}`,
           {
             headers: {

@@ -26,13 +26,13 @@ import {
 const getStatusLabel = (status: number) => {
   switch (status) {
     case 0:
-      return { label: "Created", color: "bg-green-500" }
+      return { label: "created", color: "bg-green-500" }
     case 1:
-      return { label: "Expired", color: "bg-yellow-500" }
+      return { label: "expired", color: "bg-yellow-500" }
     case 2:
-      return { label: "Borrowed", color: "bg-blue-500" }
+      return { label: "borrowed", color: "bg-blue-500" }
     case 3:
-      return { label: "Cancelled", color: "bg-red-500" }
+      return { label: "cancelled", color: "bg-red-500" }
     default:
       return { label: "_", color: "bg-gray-400" }
   }
@@ -113,7 +113,7 @@ export default async function BorrowRequestTab() {
                   </TableCell>
                   <TableCell>{request.totalRequestItem}</TableCell>
                   <TableCell>
-                    <Badge className={status.color}>{status.label}</Badge>
+                    <Badge className={status.color}>{t(status.label)}</Badge>
                   </TableCell>
                   <TableCell className="text-right">
                     <Button variant="ghost" size="sm" asChild>

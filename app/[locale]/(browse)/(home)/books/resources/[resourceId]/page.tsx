@@ -49,12 +49,12 @@ import { default as ResourcePayment } from "../_components/resource-payment"
 
 type Props = {
   params: {
-    bookId: string
     resourceId: string
   }
   searchParams: {
     resourceType: string
     isPreview: string
+    bookId: string
   }
 }
 
@@ -74,13 +74,11 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
   const [openPrintShotWarning, setOpenPrintShotWarning] = useState(false)
   const t = useTranslations("BookPage")
   const tGeneralManagement = useTranslations("GeneralManagement")
+  console.log("🚀 ~ DigitalResourcePage ~ data:", data)
   const [openPayment, setOpenPayment] = useState<boolean>(false)
   const { data: resource, isLoading: isLoadingResource } = useResourceDetail(
     params.resourceId
   )
-
-  console.log(params.bookId)
-  console.log("🚀 ~ DigitalResourcePage ~ data:", data)
 
   useEffect(() => {
     setIsClient(true)
@@ -125,9 +123,7 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
         const { data } =
           searchParams.isPreview === "true"
             ? await http.get<Blob>(
-                // `/api/library-item/${params.bookId}/resource/${params.resourceId}/preview`,
-                `/api/library-item/resource/${params.resourceId}/preview`,
-
+                `/api/library-items/resource/${params.resourceId}/preview`,
                 {
                   headers: {
                     Authorization: `Bearer ${accessToken}`,
@@ -154,11 +150,9 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
           return
         }
 
-        // ✅ Tạo URL để gán vào Document component
         const blobUrl = URL.createObjectURL(data)
         setPdfLink(blobUrl)
 
-        // Optional: cleanup URL để tránh memory leak
         return () => URL.revokeObjectURL(blobUrl)
       } catch (error) {
         console.error("Error fetching PDF:", error)
@@ -168,7 +162,6 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
     fetchPdf()
   }, [
     accessToken,
-    params.bookId,
     params.resourceId,
     searchParams.isPreview,
     tGeneralManagement,
@@ -232,7 +225,7 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
       <ResourcePayment
         open={openPayment}
         setOpen={setOpenPayment}
-        libraryItemId={params.bookId}
+        libraryItemId={searchParams.bookId}
         selectedResource={resource}
       />
 
@@ -261,7 +254,7 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{t("add to borrow list")}</p>
+                    <p>{t("added to borrow list")}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

@@ -5,6 +5,7 @@ import { format } from "date-fns"
 import { ArrowLeft, Calendar, Clock, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { ETransactionStatus, ETransactionType } from "@/lib/types/enums"
 import type { DigitalTransaction } from "@/lib/types/models"
 import { formatPrice } from "@/lib/utils"
 import useBorrowDigitalDetail from "@/hooks/library-items/use-borrow-digital-detail"
@@ -40,6 +41,21 @@ type Props = {
 
 const formatDate = (dateString: string): string => {
   return format(new Date(dateString), "MMM dd, yyyy")
+}
+
+const transactionTypeLabels: Record<ETransactionType, string> = {
+  [ETransactionType.FINE]: "Phí phạt",
+  [ETransactionType.DIGITAL_BORROW]: "Mượn tài liệu điện tử",
+  [ETransactionType.LIBRARY_CARD_REGISTER]: "Đăng ký thẻ thư viện",
+  [ETransactionType.LIBRARY_CARD_EXTENSION]: "Gia hạn thẻ thư viện",
+  [ETransactionType.DIGITAL_EXTENSION]: "Gia hạn tài liệu điện tử",
+}
+
+const transactionStatusLabels: Record<ETransactionStatus, string> = {
+  [ETransactionStatus.PENDING]: "Chờ xử lý",
+  [ETransactionStatus.EXPIRED]: "Hết hạn",
+  [ETransactionStatus.PAID]: "Đã thanh toán",
+  [ETransactionStatus.CANCELLED]: "Đã hủy",
 }
 
 const calculateProgress = (startDate: string, endDate: string): number => {
@@ -234,14 +250,19 @@ const BorrowDigitalDetail = ({ params }: Props) => {
                         </TableCell>
                         <TableCell>
                           <Badge variant="success">
-                            {transaction.transactionType}
+                            {transactionTypeLabels[
+                              transaction.transactionType
+                            ] || "Không xác định"}
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={"default"} className="capitalize">
-                            {transaction.transactionStatus}
+                          <Badge variant="default" className="capitalize">
+                            {transactionStatusLabels[
+                              transaction.transactionStatus
+                            ] || "Không xác định"}
                           </Badge>
                         </TableCell>
+
                         <TableCell>
                           <div className="flex items-center">
                             <Calendar className="mr-1 size-3 text-muted-foreground" />

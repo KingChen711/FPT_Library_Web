@@ -31,10 +31,10 @@ type Props = {
   libraryItemId: string
 }
 
-const BorrowCard = ({ libraryItemId }: Props) => {
+const BorrowLibraryItemCard = ({ libraryItemId }: Props) => {
   const t = useTranslations("BookPage")
   const router = useRouter()
-  const { selectedLibraryItemIds: selectedIds, toggleLibraryItemId: toggleId } =
+  const { selectedLibraryItemIds, toggleLibraryItemId } =
     useBorrowRequestStore()
   const { data, isLoading } = useLibraryItemDetail(libraryItemId)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
@@ -95,12 +95,12 @@ const BorrowCard = ({ libraryItemId }: Props) => {
                 <div className="flex items-center gap-4">
                   <Button
                     variant={"ghost"}
-                    onClick={() => toggleId(libraryItemId)}
+                    onClick={() => toggleLibraryItemId(libraryItemId)}
                     className="flex cursor-pointer items-center gap-2"
                   >
                     <Checkbox
                       color="white"
-                      checked={selectedIds.includes(libraryItemId)}
+                      checked={selectedLibraryItemIds.includes(libraryItemId)}
                     />
                     <Label className="cursor-pointer">
                       {t("select borrow")}
@@ -228,4 +228,4 @@ const BorrowCard = ({ libraryItemId }: Props) => {
   )
 }
 
-export default BorrowCard
+export default BorrowLibraryItemCard
