@@ -95,7 +95,7 @@ export default function PDFDropzone({ value, onChange }: Props) {
         <Label className="mx-auto mt-8 max-w-xl">
           <div
             className={cn(
-              "relative rounded-lg border-2 border-dashed p-8 text-center",
+              "relative rounded-md border-2 border-dashed p-8 text-center",
               isDragActive && "border-primary"
             )}
             onDragEnter={handleDragEnter}

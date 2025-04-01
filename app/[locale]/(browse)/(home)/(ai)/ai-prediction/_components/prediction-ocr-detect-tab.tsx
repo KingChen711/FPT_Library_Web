@@ -79,7 +79,7 @@ const PredictionOcrDetectTab = () => {
                 alt={"Uploaded Book"}
                 width={200}
                 height={300}
-                className="overflow-hidden rounded-lg object-cover shadow-lg"
+                className="overflow-hidden rounded-md object-cover shadow-lg"
               />
               <h1 className="text-center font-semibold">
                 {t("uploaded book")}
@@ -95,7 +95,7 @@ const PredictionOcrDetectTab = () => {
                       alt={t("detected book")}
                       width={200}
                       height={300}
-                      className="overflow-hidden rounded-lg object-cover shadow-lg"
+                      className="overflow-hidden rounded-md object-cover shadow-lg"
                     />
                   </TooltipTrigger>
                   <TooltipContent
@@ -142,7 +142,7 @@ const PredictionOcrDetectTab = () => {
               alt={"Uploaded Book"}
               width={200}
               height={300}
-              className="rounded-lg object-contain shadow-lg"
+              className="rounded-md object-contain shadow-lg"
             />
             <h1 className="text-center font-semibold">{t("uploaded book")}</h1>
           </div>
@@ -166,7 +166,7 @@ const PredictionOcrDetectTab = () => {
                     alt={"Detected Book"}
                     width={200}
                     height={300}
-                    className="overflow-hidden rounded-lg object-cover shadow-lg"
+                    className="overflow-hidden rounded-md object-cover shadow-lg"
                   />
                 </TooltipTrigger>
                 <TooltipContent

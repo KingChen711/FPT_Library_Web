@@ -40,7 +40,7 @@ async function GuideDdcPage({ params: { locale } }: Props) {
 
         <section className="mb-8">
           <h2 className="mb-4 text-2xl font-semibold">{t("DDC example")}</h2>
-          <pre className="overflow-x-auto rounded-lg bg-muted p-4">
+          <pre className="overflow-x-auto rounded-md bg-muted p-4">
             <code className="!text-muted-foreground">
               {t("DDC example code")}
             </code>

@@ -34,7 +34,7 @@ function NoResult({ title, description, link, linkTitle }: Props) {
       </p>
       {link && (
         <Link href={link}>
-          <Button className="mt-5 min-h-[46px] rounded-lg bg-primary px-4 py-3 text-[16px] font-medium leading-[22.4px] hover:bg-primary">
+          <Button className="mt-5 min-h-[46px] rounded-md bg-primary px-4 py-3 text-[16px] font-medium leading-[22.4px] hover:bg-primary">
             {linkTitle}
           </Button>
         </Link>

@@ -28,21 +28,21 @@ const BookOverviewTab = async ({ libraryItemId }: Props) => {
   return (
     <div>
       <section className="flex items-center gap-4">
-        <div className="flex-1 rounded-lg border p-4 text-center shadow-md">
+        <div className="flex-1 rounded-md border p-4 text-center shadow-md">
           <p className="text-sm font-semibold">{t("fields.publicationYear")}</p>
           <p>{libraryItem?.publicationYear}</p>
         </div>
-        <div className="flex-1 rounded-lg border p-4 text-center shadow-md">
+        <div className="flex-1 rounded-md border p-4 text-center shadow-md">
           <p className="text-sm font-semibold">{t("fields.Publisher")}</p>
           <p className="text-sm text-foreground">{libraryItem?.publisher}</p>
         </div>
-        <div className="flex-1 rounded-lg border p-4 text-center shadow-md">
+        <div className="flex-1 rounded-md border p-4 text-center shadow-md">
           <p className="text-sm font-semibold">{t("fields.language")}</p>
           <p className="text-sm capitalize text-foreground">
             {libraryItem?.originLanguage}
           </p>
         </div>
-        <div className="flex-1 rounded-lg border p-4 text-center shadow-md">
+        <div className="flex-1 rounded-md border p-4 text-center shadow-md">
           <p className="text-sm font-semibold">{t("fields.pageCount")}</p>
           <p className="text-sm text-foreground">{libraryItem?.pageCount}</p>
         </div>
@@ -58,7 +58,7 @@ const BookOverviewTab = async ({ libraryItemId }: Props) => {
         <StyledReadMore>{libraryItem.summary}</StyledReadMore>
 
         <div className="flex gap-4">
-          <section className="flex-1 space-y-4 rounded-lg border p-4 shadow-md">
+          <section className="flex-1 space-y-4 rounded-md border p-4 shadow-md">
             <h1 className="text-xl font-bold text-primary">
               {t("book details")}
             </h1>
@@ -147,7 +147,7 @@ const BookOverviewTab = async ({ libraryItemId }: Props) => {
             </section>
           </section>
 
-          <section className="h-fit flex-1 space-y-4 rounded-lg border p-4 shadow-md">
+          <section className="h-fit flex-1 space-y-4 rounded-md border p-4 shadow-md">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-bold text-primary">
                 {t("community reviews")}

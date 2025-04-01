@@ -40,7 +40,7 @@ const BookEditionTab = async ({ libraryItemId }: Props) => {
       {detailEditions.sources.map((edition) => (
         <div
           key={edition.libraryItemId}
-          className="rounded-lg border p-4 shadow-lg"
+          className="rounded-md border p-4 shadow-lg"
         >
           <div className="flex items-start gap-4">
             <Image

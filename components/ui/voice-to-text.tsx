@@ -277,7 +277,7 @@ const VoiceToText = ({ open, setOpen }: Props) => {
                   <FormItem>
                     <FormLabel>Audio File</FormLabel>
                     <FormControl>
-                      <div className="flex flex-col gap-2 rounded-lg">
+                      <div className="flex flex-col gap-2 rounded-md">
                         <Button
                           type="button"
                           variant="outline"

@@ -29,7 +29,7 @@ const MachineBorrowPreview = () => {
 
   return (
     <div className="flex size-full flex-col gap-4">
-      <div className="flex flex-1 flex-col gap-2 rounded-lg bg-background p-6">
+      <div className="flex flex-1 flex-col gap-2 rounded-md bg-background p-6">
         <MachineHomeBtn />
         <div className="flex flex-1 items-start justify-center gap-8">
           <div className="h-full w-1/5 space-y-4">
@@ -42,7 +42,7 @@ const MachineBorrowPreview = () => {
             <h1 className="text-xl font-semibold">
               Danh sách tài liệu được mượn
             </h1>
-            <Table className="overflow-hidden rounded-lg border p-4 shadow-lg">
+            <Table className="overflow-hidden rounded-md border p-4 shadow-lg">
               <TableHeader>
                 <TableRow>
                   <TableHead className="w-[150px]">Số lượng</TableHead>

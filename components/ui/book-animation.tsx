@@ -50,7 +50,7 @@ const BookAnimation = () => {
   return (
     <div
       ref={containerRef}
-      className="relative flex h-2/3 w-full items-center justify-center overflow-hidden rounded-lg border bg-accent shadow-lg"
+      className="relative flex h-2/3 w-full items-center justify-center overflow-hidden rounded-md border bg-accent shadow-lg"
     >
       <motion.div
         animate={controls}

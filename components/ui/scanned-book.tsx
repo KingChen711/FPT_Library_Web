@@ -51,7 +51,7 @@ function ScannedBook({ book }: Props) {
   }
 
   return (
-    <div className="h-full w-[672px] overflow-hidden rounded-lg border shadow-lg">
+    <div className="h-full w-[672px] overflow-hidden rounded-md border shadow-lg">
       <div className="md:flex">
         <div className="group relative md:shrink-0">
           {book.coverImage ? (

@@ -58,7 +58,7 @@ function ReturnItemFields({ form, isPending, borrowingItems }: Props) {
           <div
             key={field.id}
             className={cn(
-              "relative flex flex-col gap-4 rounded-lg border bg-card p-4 transition-all",
+              "relative flex flex-col gap-4 rounded-md border bg-card p-4 transition-all",
               item.scanned
                 ? "border-2 border-primary/50 shadow-sm"
                 : "border-muted"

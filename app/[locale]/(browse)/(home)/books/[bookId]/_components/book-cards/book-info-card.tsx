@@ -28,7 +28,7 @@ const BookInfoCard = async ({ libraryItem }: Props) => {
   return (
     <div
       className={cn(
-        "flex w-3/5 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg"
+        "flex w-3/5 flex-col justify-between overflow-y-auto rounded-md border bg-card p-4 shadow-lg"
       )}
     >
       <div className="space-y-2">

@@ -178,7 +178,7 @@ const BorrowDigitalDetail = ({ params }: Props) => {
                 <Progress value={progress} className="h-2" />
               </div>
 
-              <div className="rounded-lg border p-3">
+              <div className="rounded-md border p-3">
                 <div className="mb-3 space-y-1">
                   <div className="flex items-center gap-1.5">
                     <Calendar className="size-4 text-muted-foreground" />

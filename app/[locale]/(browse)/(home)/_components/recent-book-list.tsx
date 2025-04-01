@@ -50,7 +50,7 @@ const RecentBookList = () => {
           </Label>
         </div>
       )}
-      <div className="mt-6 grid w-full gap-6 md:grid-cols-3 lg:grid-cols-5">
+      <div className="mt-4 grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
         {recentIdList &&
           recentIdList.length > 0 &&
           recentIdList.map((id) => (

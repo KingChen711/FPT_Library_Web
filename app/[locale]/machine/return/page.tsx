@@ -37,7 +37,7 @@ const MachineReturnPage = () => {
         </div>
       </div>
 
-      <div className="flex flex-1 items-center justify-center rounded-lg bg-background">
+      <div className="flex flex-1 items-center justify-center rounded-md bg-background">
         <div className="flex w-full flex-col items-center justify-center gap-2">
           <motion.div
             animate={{ y: isAnimating ? -20 : 20 }}

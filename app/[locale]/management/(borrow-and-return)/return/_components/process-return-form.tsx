@@ -261,7 +261,7 @@ function ProcessReturnForm() {
         !fetchingPatron &&
         !fetchingPatronActivity &&
         mode === "scan" && (
-          <div className="flex flex-col items-center justify-center rounded-lg border-2 border-dashed border-primary/50 bg-muted/30 p-8">
+          <div className="flex flex-col items-center justify-center rounded-md border-2 border-dashed border-primary/50 bg-muted/30 p-8">
             <div className="mb-4 rounded-full bg-primary/10 p-4">
               <BarcodeIcon className="size-12 text-primary" />
             </div>
@@ -312,7 +312,7 @@ function ProcessReturnForm() {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {(fetchingPatron || fetchingPatronActivity) && (
-            <div className="flex flex-col items-center justify-center rounded-lg bg-muted/30 p-6">
+            <div className="flex flex-col items-center justify-center rounded-md bg-muted/30 p-6">
               <Loader2 className="mb-2 size-8 animate-spin text-primary" />
               <p className="font-medium text-muted-foreground">
                 {t("Loading patron information")}

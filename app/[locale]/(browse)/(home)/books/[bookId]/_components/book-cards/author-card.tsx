@@ -26,7 +26,7 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
 
   if (libraryItem.authors.length === 0) {
     return (
-      <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg">
+      <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-md border bg-card p-4 shadow-lg">
         <div className="flex flex-1 flex-col gap-2">
           <h1 className="text-xl font-semibold capitalize">
             <span className="text-primary">
@@ -66,7 +66,7 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
   )
 
   return (
-    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg">
+    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-md border bg-card p-4 shadow-lg">
       <div>
         <h1 className="text-xl font-semibold capitalize">
           <span className="text-primary">{t("about")}</span>&nbsp;
@@ -102,7 +102,7 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
               alt="Author"
               width={100}
               height={120}
-              className="rounded-lg object-cover"
+              className="rounded-md object-cover"
             />
           )}
         </div>
@@ -128,7 +128,7 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
                     >
                       <Link
                         href={`#`}
-                        className="flex items-center justify-center overflow-hidden rounded-lg shadow-lg"
+                        className="flex items-center justify-center overflow-hidden rounded-md shadow-lg"
                       >
                         <Image
                           src={author.authorImage || ""}
@@ -171,7 +171,7 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
                       >
                         <Link
                           href={`/books/${item.libraryItemId}`}
-                          className="flex items-center justify-center overflow-hidden rounded-lg shadow-lg"
+                          className="flex items-center justify-center overflow-hidden rounded-md shadow-lg"
                         >
                           <Image
                             src={item.coverImage || ""}

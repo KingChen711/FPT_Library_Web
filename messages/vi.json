@@ -1194,6 +1194,8 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "From": "Từ",
+    "To": "Đến",
     "View more": "Xem thêm",
     "Add": "Thêm",
     "Filters": "Bộ lọc",

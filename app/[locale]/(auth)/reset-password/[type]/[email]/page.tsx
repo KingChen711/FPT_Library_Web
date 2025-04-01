@@ -22,8 +22,8 @@ const ResetPasswordPage = async ({ params }: Props) => {
 
   const t = await getTranslations("ResetPasswordPage")
   return (
-    <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-lg bg-background shadow-lg">
-      <div className="container space-y-4 rounded-lg border-2 p-8 shadow-2xl">
+    <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-md bg-background shadow-lg">
+      <div className="container space-y-4 rounded-md border-2 p-8 shadow-2xl">
         <div className="flex flex-col items-center justify-center">
           <Image
             src={systemLogo}

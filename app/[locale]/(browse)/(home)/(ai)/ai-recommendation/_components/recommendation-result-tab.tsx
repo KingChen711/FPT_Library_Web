@@ -81,7 +81,7 @@ const RecommendationResultTab = () => {
   }
 
   return (
-    <Card className="flex w-full flex-col rounded-lg border-2 p-4">
+    <Card className="flex w-full flex-col rounded-md border-2 p-4">
       {/* Book preview */}
       <div className="flex w-full gap-2">
         <section className="flex w-1/3 flex-col gap-2 p-4">
@@ -95,13 +95,13 @@ const RecommendationResultTab = () => {
               alt={t("uploaded book")}
               width={200}
               height={300}
-              className="rounded-lg object-contain shadow-lg"
+              className="rounded-md object-contain shadow-lg"
             />
           </div>
         </section>
 
         <section className="flex flex-1 flex-col items-center justify-center gap-4">
-          <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
+          <div className="flex w-full flex-col rounded-md border-4 border-primary p-2 text-center shadow-lg">
             <Label className="text-lg font-semibold">
               {t("match percentage")}
             </Label>
@@ -123,7 +123,7 @@ const RecommendationResultTab = () => {
                     alt={detectedLibraryItem.title}
                     width={200}
                     height={300}
-                    className="rounded-lg object-contain shadow-lg"
+                    className="rounded-md object-contain shadow-lg"
                   />
                 </TooltipTrigger>
                 <TooltipContent

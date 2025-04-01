@@ -22,7 +22,7 @@ const PredictionOtherMatchesTab = () => {
       {predictResult?.otherItems?.map((item) => (
         <Card
           key={item.libraryItemId}
-          className="flex h-[460px] w-full gap-4 rounded-lg p-4"
+          className="flex h-[460px] w-full gap-4 rounded-md p-4"
         >
           <PredictLibraryItemInfo
             libraryItemId={item.libraryItemId.toString()}

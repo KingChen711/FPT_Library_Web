@@ -9,7 +9,7 @@ type Props = {
 }
 const BookPreview = ({ objectUrl }: Props) => {
   return (
-    <div className="mt-4 flex items-start justify-between gap-x-4 overflow-hidden rounded-lg border p-4 shadow-lg">
+    <div className="mt-4 flex items-start justify-between gap-x-4 overflow-hidden rounded-md border p-4 shadow-lg">
       <div>
         <Image
           src={URL.createObjectURL(objectUrl)}

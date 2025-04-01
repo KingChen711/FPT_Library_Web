@@ -273,7 +273,7 @@ const BookAudio = ({ bookId }: Props) => {
                   step={0.01}
                   value={[isMuted ? 0 : volume]}
                   onValueChange={handleVolumeChange}
-                  className="h-24 w-4 rounded-xl bg-primary/60"
+                  className="h-24 w-4 rounded-md bg-primary/60"
                   orientation="vertical"
                 />
               </TooltipContent>

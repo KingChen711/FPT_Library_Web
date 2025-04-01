@@ -29,7 +29,7 @@ const BookReviewsTab = async ({ libraryItemId }: Props) => {
       {reviews.sources.map((review) => (
         <Card
           key={review.reviewId}
-          className="rounded-xl p-4 shadow-md transition-all duration-200 hover:shadow-lg"
+          className="rounded-md p-4 shadow-md transition-all duration-200 hover:shadow-lg"
         >
           <div className="flex items-center gap-3 border-b pb-3">
             {/* <Avatar>

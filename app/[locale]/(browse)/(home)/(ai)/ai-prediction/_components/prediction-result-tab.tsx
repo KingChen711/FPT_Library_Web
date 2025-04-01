@@ -38,7 +38,7 @@ const PredictionResultTab = () => {
   }
 
   return (
-    <Card className="flex w-full gap-4 rounded-lg border-2 p-4">
+    <Card className="flex w-full gap-4 rounded-md border-2 p-4">
       <section className="w-1/5">
         <div className="flex flex-col gap-2 overflow-hidden">
           <div className="flex justify-center">
@@ -55,7 +55,7 @@ const PredictionResultTab = () => {
         </div>
       </section>
 
-      <section className="flex h-[60vh] flex-1 flex-col justify-between overflow-y-auto rounded-lg bg-card p-4">
+      <section className="flex h-[60vh] flex-1 flex-col justify-between overflow-y-auto rounded-md bg-card p-4">
         <LibraryItemInfo
           id={libraryItem?.libraryItemId.toString()}
           showInstances={true}
@@ -64,7 +64,7 @@ const PredictionResultTab = () => {
         />
       </section>
 
-      <section className="w-1/4 space-y-4 rounded-lg border p-4 shadow-lg">
+      <section className="w-1/4 space-y-4 rounded-md border p-4 shadow-lg">
         <h1 className="text-center text-2xl font-semibold text-primary">
           {t("AI-predict")}
         </h1>

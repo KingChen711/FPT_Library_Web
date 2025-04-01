@@ -42,7 +42,7 @@ const BookRelatedItemsTab = async ({ libraryItemId }: Props) => {
       {relatedItems?.sources?.map((item) => (
         <div
           key={item.libraryItemId}
-          className="rounded-lg border p-4 shadow-lg"
+          className="rounded-md border p-4 shadow-lg"
         >
           <div className="flex items-start gap-4">
             <Image

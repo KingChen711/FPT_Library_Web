@@ -22,7 +22,7 @@ function ManagementUsersLoading() {
       </div>
       <div className="my-4 grid w-full">
         <div className="relative overflow-x-auto">
-          <Table className="mb-2 border-collapse rounded-xl border-y border-r">
+          <Table className="mb-2 border-collapse rounded-md border-y border-r">
             <TableHeader>
               <TableRow>
                 <TableHead>

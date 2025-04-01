@@ -18,11 +18,11 @@ const ProfileManagementPage = async () => {
 
   return (
     <div className="flex flex-col gap-4 overflow-y-auto">
-      <div className="flex h-[150px] w-full items-center gap-8 overflow-hidden rounded-lg">
+      <div className="flex h-[150px] w-full items-center gap-8 overflow-hidden rounded-md">
         <ProfileAvatar />
-        <div className="flex h-full w-1/5 flex-col justify-between rounded-lg bg-primary p-4 text-primary-foreground shadow-lg">
+        <div className="flex h-full w-1/5 flex-col justify-between rounded-md bg-primary p-4 text-primary-foreground shadow-lg">
           <div className="flex">
-            <div className="rounded-lg bg-background p-2">
+            <div className="rounded-md bg-background p-2">
               <BookOpen className="size-12 text-primary" />
             </div>
             <p className="flex h-full flex-1 items-center justify-center text-4xl">
@@ -31,9 +31,9 @@ const ProfileManagementPage = async () => {
           </div>
           <p className="text-xl">{t("reading")}</p>
         </div>
-        <div className="flex h-full w-1/5 flex-col justify-between rounded-lg bg-purple-400 p-4 text-primary-foreground shadow-lg">
+        <div className="flex h-full w-1/5 flex-col justify-between rounded-md bg-purple-400 p-4 text-primary-foreground shadow-lg">
           <div className="flex">
-            <div className="rounded-lg bg-background p-2">
+            <div className="rounded-md bg-background p-2">
               <Notebook className="size-12 text-purple-400" />
             </div>
             <p className="flex h-full flex-1 items-center justify-center text-4xl">
