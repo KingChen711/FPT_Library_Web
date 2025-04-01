@@ -182,7 +182,7 @@ const MeLibraryCard = () => {
                         setSelectedPackageId(null)
                       }}
                       className={cn(
-                        "w-full max-w-sm cursor-pointer overflow-hidden rounded-xl border-2 transition-all hover:border-primary/50",
+                        "w-full max-w-sm cursor-pointer overflow-hidden rounded-md border-2 transition-all hover:border-primary/50",
                         {
                           "ring-2 ring-primary":
                             item.libraryCardPackageId === selectedPackageId,

@@ -57,7 +57,7 @@ function Actions() {
           <SelectItem value="vi">{t("vietnamese")}</SelectItem>
         </SelectContent>
       </Select> */}
-      <section className="flex items-center gap-4 text-nowrap rounded-lg p-1 text-muted-foreground max-xl:hidden">
+      <section className="flex items-center gap-4 text-nowrap rounded-md p-1 text-muted-foreground max-xl:hidden">
         <div className="flex items-center gap-2 text-muted-foreground">
           <Clock size={16} />
           {currentDate || "--:--"}

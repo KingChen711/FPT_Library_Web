@@ -70,7 +70,7 @@ const AccountHeaderTab = ({ locale }: AccountHeaderTabProps) => {
             key={route.label}
             href={`/${locale}${route.route}`}
             className={cn(
-              "flex items-center space-x-3 rounded-lg px-3 py-2 text-sm font-medium transition-all hover:bg-muted",
+              "flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium transition-all hover:bg-muted",
               isActive(route.route)
                 ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
                 : "text-muted-foreground hover:text-foreground"

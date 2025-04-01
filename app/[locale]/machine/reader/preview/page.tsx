@@ -33,12 +33,12 @@ const userReaderInfo = {
 const MachineReaderPreview = () => {
   return (
     <div className="flex size-full flex-col gap-4">
-      <div className="flex flex-1 flex-col gap-2 rounded-lg bg-background p-6">
+      <div className="flex flex-1 flex-col gap-2 rounded-md bg-background p-6">
         <MachineHomeBtn />
         <div className="flex flex-1 flex-col items-start justify-start gap-2">
           <div className="flex w-full flex-1 items-start justify-between gap-4">
             {/* Thông tin người đọc */}
-            <Card className="flex h-auto w-1/4 flex-col items-center gap-4 rounded-lg border p-6 shadow-lg">
+            <Card className="flex h-auto w-1/4 flex-col items-center gap-4 rounded-md border p-6 shadow-lg">
               {/* Avatar */}
               <Avatar className="size-24 border-2 shadow-md">
                 <AvatarImage
@@ -48,7 +48,7 @@ const MachineReaderPreview = () => {
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
 
-              <Separator className="h-1 w-full rounded-lg" />
+              <Separator className="h-1 w-full rounded-md" />
 
               <div className="w-full space-y-4">
                 <div className="flex items-center justify-between">
@@ -85,7 +85,7 @@ const MachineReaderPreview = () => {
             <div className="flex-1">
               <Tabs
                 defaultValue={EReaderTab.BOOKING}
-                className="w-full rounded-lg border bg-card p-4 shadow-lg"
+                className="w-full rounded-md border bg-card p-4 shadow-lg"
               >
                 <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger

@@ -267,7 +267,7 @@ const TransactionDetailPage = async ({ params }: Props) => {
               </CardDescription>
             </CardHeader>
             <CardContent className="flex justify-center">
-              <div className="rounded-lg bg-white p-4">
+              <div className="rounded-md bg-white p-4">
                 <Image
                   src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(transaction.qrCode)}`}
                   alt="Payment QR Code"

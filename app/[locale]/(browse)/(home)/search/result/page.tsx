@@ -57,7 +57,7 @@ const SearchResult = async ({ searchParams }: Props) => {
       {data.libraryItems.length > 0 ? (
         <section className="space-y-4 px-12">
           {data.libraryItems.map((item: LibraryItem, i) => (
-            <div key={i} className="rounded-lg border-2 p-4 shadow-lg">
+            <div key={i} className="rounded-md border-2 p-4 shadow-lg">
               <div className="flex items-center justify-between">
                 <p className="text-sm font-semibold">Sách</p>
                 <Button asChild variant={"link"}>

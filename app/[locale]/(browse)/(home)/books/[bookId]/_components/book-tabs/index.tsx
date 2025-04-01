@@ -25,7 +25,7 @@ const BookTabs = async ({ libraryItemId }: Props) => {
   return (
     <Tabs
       defaultValue="overview"
-      className="w-full rounded-lg border bg-card p-4 shadow-lg"
+      className="w-full rounded-md border bg-card p-4 shadow-lg"
     >
       <TabsList className="grid w-full grid-cols-5">
         <TabsTrigger className="w-full" value="overview">

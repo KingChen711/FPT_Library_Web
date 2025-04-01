@@ -1197,6 +1197,8 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "From": "From",
+    "To": "To",
     "View more": "View more",
     "Filters": "Filters",
     "Add": "Add",

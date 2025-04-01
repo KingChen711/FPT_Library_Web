@@ -57,7 +57,7 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
             <div className="flex h-[60vh] gap-4">
               <div
                 className={cn(
-                  "flex w-3/5 flex-col justify-between overflow-y-auto rounded-lg border bg-card p-4 shadow-lg"
+                  "flex w-3/5 flex-col justify-between overflow-y-auto rounded-md border bg-card p-4 shadow-lg"
                 )}
               >
                 <LibraryItemInfo
@@ -76,7 +76,7 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
             <div className="flex h-[70vh] gap-4">
               <div
                 className={cn(
-                  "flex w-full justify-between gap-4 rounded-lg border bg-card p-4 shadow-lg"
+                  "flex w-full justify-between gap-4 rounded-md border bg-card p-4 shadow-lg"
                 )}
               >
                 <section className="h-full w-1/3 bg-card">

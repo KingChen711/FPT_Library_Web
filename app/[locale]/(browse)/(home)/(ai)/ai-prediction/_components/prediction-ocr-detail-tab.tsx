@@ -52,7 +52,7 @@ const PredictionOcrDetailTab = () => {
   }
 
   return (
-    <Card className="flex w-full flex-col rounded-lg border-2 p-4">
+    <Card className="flex w-full flex-col rounded-md border-2 p-4">
       {/* Book preview */}
       <div className="flex w-full">
         <section className="flex flex-1 flex-col gap-2 p-4">
@@ -66,19 +66,19 @@ const PredictionOcrDetailTab = () => {
               alt={t("uploaded book")}
               width={180}
               height={240}
-              className="rounded-lg object-contain shadow-lg"
+              className="rounded-md object-contain shadow-lg"
             />
           </div>
         </section>
 
         <section className="flex w-1/5 flex-col items-center justify-center gap-4">
-          <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
+          <div className="flex w-full flex-col rounded-md border-4 border-primary p-2 text-center shadow-lg">
             <Label className="text-lg font-semibold">
               {t("match percentage")}
             </Label>
             <p className="text-lg">{ocrDetail?.matchPercentage.toFixed(2)}%</p>
           </div>
-          <div className="flex w-full flex-col rounded-lg border-4 border-primary p-2 text-center shadow-lg">
+          <div className="flex w-full flex-col rounded-md border-4 border-primary p-2 text-center shadow-lg">
             <Label className="text-lg font-semibold">
               {t("overall threshold")}
             </Label>
@@ -102,7 +102,7 @@ const PredictionOcrDetailTab = () => {
                     alt={t("detected book")}
                     width={180}
                     height={240}
-                    className="rounded-lg object-contain shadow-lg"
+                    className="rounded-md object-contain shadow-lg"
                   />
                 </TooltipTrigger>
                 <TooltipContent
@@ -126,7 +126,7 @@ const PredictionOcrDetailTab = () => {
       {/* Book comparison */}
       <div className="flex w-full gap-4">
         <section className="flex flex-1 justify-center">
-          <div className="w-3/4 overflow-hidden rounded-lg border-2">
+          <div className="w-3/4 overflow-hidden rounded-md border-2">
             <h1 className="bg-draft p-2 font-semibold text-primary-foreground">
               {t("ocr text")}
             </h1>
@@ -176,7 +176,7 @@ const PredictionOcrDetailTab = () => {
           </div>
         </section>
 
-        <section className="flex-1 overflow-hidden rounded-lg border-2">
+        <section className="flex-1 overflow-hidden rounded-md border-2">
           <h1 className="bg-draft p-2 font-semibold text-primary-foreground">
             {t("comparison")}
           </h1>

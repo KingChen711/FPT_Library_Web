@@ -55,7 +55,7 @@ function ResourcesTabsContent({ resources, bookId }: Props) {
         <div className="flex flex-wrap items-center gap-4">
           <div
             className={cn(
-              "flex max-w-md flex-1 items-center rounded-lg border-2 px-2"
+              "flex max-w-md flex-1 items-center rounded-md border-2 px-2"
             )}
           >
             <Search className="size-6" />

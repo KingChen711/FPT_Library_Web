@@ -69,7 +69,7 @@ const PaymentCard = ({
               <div className="relative">
                 <div
                   className={cn(
-                    "flex w-full justify-center rounded-lg border-2 bg-white p-4",
+                    "flex w-full justify-center rounded-md border-2 bg-white p-4",
                     paymentStates.status !== ETransactionStatus.PENDING &&
                       "blur"
                   )}

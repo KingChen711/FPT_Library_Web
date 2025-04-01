@@ -46,7 +46,7 @@
 //           <div
 //             onClick={() => toggle()}
 //             className={cn(
-//               "flex cursor-pointer items-center justify-start rounded-lg p-4 text-muted-foreground transition-all hover:bg-border/30 max-lg:hidden",
+//               "flex cursor-pointer items-center justify-start rounded-md p-4 text-muted-foreground transition-all hover:bg-border/30 max-lg:hidden",
 //               !isCollapsed && "absolute right-0 top-0",
 //               isCollapsed && "w-fit"
 //             )}
@@ -90,7 +90,7 @@
 //                   key={route}
 //                   href={route}
 //                   className={cn(
-//                     "flex items-center justify-start gap-4 rounded-lg p-4 text-muted-foreground hover:bg-border/30 max-lg:w-fit",
+//                     "flex items-center justify-start gap-4 rounded-md p-4 text-muted-foreground hover:bg-border/30 max-lg:w-fit",
 //                     isActive && "bg-border/30 text-primary",
 //                     isCollapsed && "w-fit"
 //                   )}

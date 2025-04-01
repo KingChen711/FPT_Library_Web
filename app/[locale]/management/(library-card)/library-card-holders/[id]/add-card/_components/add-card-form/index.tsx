@@ -381,7 +381,7 @@ function AddCardForm({ userId }: Props) {
                     <div className="relative">
                       <div
                         className={cn(
-                          "rounded-lg border-2 bg-white p-4",
+                          "rounded-md border-2 bg-white p-4",
                           paymentStates.status !== ETransactionStatus.PENDING &&
                             "blur"
                         )}

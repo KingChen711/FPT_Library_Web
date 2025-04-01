@@ -141,7 +141,7 @@ const AiRecommendationPage = () => {
                   <FormControl>
                     <Card
                       {...getRootProps({ disabled: isPending })}
-                      className={`flex w-full flex-1 cursor-pointer flex-col items-center justify-center gap-4 rounded-lg border-4 border-dashed bg-card p-4 ${
+                      className={`flex w-full flex-1 cursor-pointer flex-col items-center justify-center gap-4 rounded-md border-4 border-dashed bg-card p-4 ${
                         isDragActive
                           ? "border-primary bg-primary/10"
                           : "border-primary"

@@ -92,7 +92,7 @@ async function Marc21Guide({ params: { locale } }: Props) {
 
         <section className="mb-8">
           <h2 className="mb-4 text-2xl font-semibold">{t("MARC21 sample")}</h2>
-          <pre className="overflow-x-auto rounded-lg bg-muted p-4">
+          <pre className="overflow-x-auto rounded-md bg-muted p-4">
             <code className="!text-muted-foreground">
               {`020	#	#	a	978-604-1-24395-8
             c	170000đ

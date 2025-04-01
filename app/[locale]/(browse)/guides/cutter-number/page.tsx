@@ -59,7 +59,7 @@ export default async function CutterNumberPage({ params: { locale } }: Props) {
             {t("Cutter number sample title")}
           </h2>
           <p className="mb-4">{t("Cutter number sample detail")}</p>
-          <pre className="overflow-x-auto rounded-lg bg-muted p-4">
+          <pre className="overflow-x-auto rounded-md bg-muted p-4">
             <code className="!text-muted-foreground">
               {t("Cutter number sample code")}
             </code>

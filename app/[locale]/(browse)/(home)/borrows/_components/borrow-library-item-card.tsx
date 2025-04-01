@@ -73,7 +73,7 @@ const BorrowLibraryItemCard = ({ libraryItemId }: Props) => {
               <Image
                 src={data.coverImage || "/placeholder.svg"}
                 alt={data.title}
-                className="rounded-lg object-cover"
+                className="rounded-md object-cover"
                 height={240}
                 width={160}
               />

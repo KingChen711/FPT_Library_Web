@@ -12,7 +12,7 @@ type Props = {
 function PatronActivityCard({ patronActivity }: Props) {
   const t = useTranslations("BorrowAndReturnManagementPage")
   return (
-    <div className="flex-1 rounded-lg border bg-card p-5 shadow-sm">
+    <div className="flex-1 rounded-md border bg-card p-5 shadow-sm">
       <h3 className="mb-4 flex items-center text-lg font-semibold">
         <span className="mr-2 inline-block size-2 rounded-full bg-primary"></span>
         {t("Activity summary")}

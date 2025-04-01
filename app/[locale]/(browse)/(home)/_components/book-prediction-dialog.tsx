@@ -65,7 +65,7 @@ const BookPredictionDialog = ({ open, setOpen }: Props) => {
 
         <section
           {...getRootProps()}
-          className={`flex flex-col items-center justify-center gap-4 rounded-lg border-2 border-dashed p-4 ${
+          className={`flex flex-col items-center justify-center gap-4 rounded-md border-2 border-dashed p-4 ${
             isDragActive ? "border-primary bg-primary/10" : "border-primary"
           }`}
         >

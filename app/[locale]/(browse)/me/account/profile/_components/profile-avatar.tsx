@@ -26,7 +26,7 @@ const ProfileAvatar = () => {
   }
 
   return (
-    <div className="flex h-full w-1/5 flex-col justify-between rounded-lg text-primary-foreground">
+    <div className="flex h-full w-1/5 flex-col justify-between rounded-md text-primary-foreground">
       <p className="text-center font-semibold text-primary">
         {t("yourProfilePicture")}
       </p>

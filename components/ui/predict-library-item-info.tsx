@@ -30,7 +30,7 @@ const PredictLibraryItemInfo = ({ libraryItemId, ocrResult }: Props) => {
     <div className="flex size-full items-stretch gap-4">
       <div className="flex flex-1 items-start justify-between gap-4 p-4">
         <section className="flex h-full w-1/4 flex-col gap-2">
-          <div className="flex flex-1 items-center justify-center overflow-hidden rounded-lg">
+          <div className="flex flex-1 items-center justify-center overflow-hidden rounded-md">
             <AspectRatio ratio={3 / 4}>
               <Image
                 src={libraryItem?.coverImage || ""}
@@ -47,7 +47,7 @@ const PredictLibraryItemInfo = ({ libraryItemId, ocrResult }: Props) => {
           </Button>
         </section>
 
-        <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-lg px-4">
+        <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-md px-4">
           <LibraryItemInfo
             id={libraryItemId}
             shownInventory={true}
@@ -57,7 +57,7 @@ const PredictLibraryItemInfo = ({ libraryItemId, ocrResult }: Props) => {
         </section>
       </div>
 
-      <section className="w-1/4 space-y-2 rounded-lg border p-4 shadow-lg">
+      <section className="w-1/4 space-y-2 rounded-md border p-4 shadow-lg">
         <h1 className="text-center text-2xl font-semibold text-primary">
           {t("AI-predict")}
         </h1>
