@@ -199,6 +199,12 @@ export enum EDuplicateHandle {
   SKIP = "Skip",
 }
 
+export enum EFineBorrowStatus {
+  PENDING,
+  PAID,
+  EXPIRED,
+}
+
 export const EDuplicateHandleToIndex: Map<EDuplicateHandle, number> = new Map([
   [EDuplicateHandle.ALLOW, 0],
   [EDuplicateHandle.REPLACE, 1],

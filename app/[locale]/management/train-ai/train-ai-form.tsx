@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useTransition } from "react"
 import { useRouter } from "@/i18n/routing"
+import { type TrainProgress } from "@/queries/books/get-train-progress"
 import { type UntrainedGroup } from "@/queries/books/get-untrained-group"
 import { useUntrainedGroupsStore } from "@/stores/books/use-untrained-group"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -29,6 +30,7 @@ import LibraryItemCard from "@/components/ui/book-card"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
+import { Progress } from "@/components/ui/progress"
 
 import GroupCheckResultDialog from "../books/[id]/_components/group-check-result-dialog"
 import GroupField from "./group-field"
@@ -36,9 +38,10 @@ import TrainCheckBox from "./train-check-box"
 
 type Props = {
   groups: UntrainedGroup[]
+  trainProgress: TrainProgress | null
 }
 
-function TrainAIForm({ groups }: Props) {
+function TrainAIForm({ groups, trainProgress }: Props) {
   const { groups: selectedGroups } = useUntrainedGroupsStore()
   const [showForm, setShowForm] = useState(false)
   const t = useTranslations("BooksManagementPage")
@@ -62,6 +65,8 @@ function TrainAIForm({ groups }: Props) {
   const [currentBookIndex, setCurrentBookIndex] = useState(0)
   const [preventChangeCurrentBookIndex, setPreventChangeCurrentBookIndex] =
     useState(false)
+
+  const trainingPercentage = trainProgress?.trainingPercentage || null
 
   useEffect(() => {
     if (!showForm || selectedGroups.length === 0) return
@@ -287,11 +292,31 @@ function TrainAIForm({ groups }: Props) {
   if (!showForm)
     return (
       <>
+        {trainingPercentage !== null && trainingPercentage !== 100 && (
+          <div className="mb-6 flex-1 space-y-1">
+            <div className="flex justify-between gap-4 text-sm">
+              <span className="font-bold">
+                {locale === "vi" ? "Tiến trình Train AI" : "Train AI progress"}
+              </span>
+              <span>{Math.floor(trainingPercentage)}%</span>
+            </div>
+            <Progress
+              skeletonEffect
+              value={trainingPercentage}
+              className="h-2"
+            />
+          </div>
+        )}
         <Label>{t("Untrained groups")}</Label>
         <div className="flex flex-col gap-6">
           {groups.map((g) => (
             <div key={g.id} className="flex gap-4">
-              <TrainCheckBox group={g} />
+              <TrainCheckBox
+                disabled={
+                  trainingPercentage !== null && trainingPercentage !== 100
+                }
+                group={g}
+              />
               <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="font-bold">

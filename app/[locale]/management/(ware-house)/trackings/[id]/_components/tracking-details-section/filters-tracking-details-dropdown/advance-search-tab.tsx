@@ -231,7 +231,7 @@ export function AdvancedSearchItem({
         <PopoverContent className="w-[200px] shrink-0 p-0" side="bottom">
           <Command>
             <CommandInput placeholder={t("Search")} className="h-9" />
-            <CommandList>
+            <CommandList className="max-h-[50dvh] overflow-y-auto">
               <CommandEmpty>{t("Not found")}</CommandEmpty>
               <CommandGroup>
                 {trackingDetailAdvancedFilters.map((f) => {

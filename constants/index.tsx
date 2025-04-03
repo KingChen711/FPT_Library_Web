@@ -89,6 +89,13 @@ export const managementRoutes = [
         },
       },
       {
+        route: "/management/borrows/reservations",
+        label: "Borrow reservations",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Reservation {...props} />
+        },
+      },
+      {
         route: "/management/return",
         label: "Returns",
         Icon: (props: { className?: string }) => {

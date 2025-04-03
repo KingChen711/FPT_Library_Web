@@ -58,6 +58,10 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
     setSelectedCopyIds([])
   }, [tab])
 
+  useEffect(() => {
+    console.log(copies.map((c) => c.status))
+  }, [copies, filteredCopies])
+
   return (
     <TabsContent value="copies">
       <div className="flex items-center justify-between gap-4">
@@ -84,7 +88,11 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
               })}
               <X
                 className="size-4 cursor-pointer"
-                onClick={() => setSelectedCopyIds([])}
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setSelectedCopyIds([])
+                }}
               />
             </div>
           )}

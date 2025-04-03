@@ -1,6 +1,8 @@
 import React from "react"
 import Image from "next/image"
 import Link from "next/link"
+// import NoResultImageVi from "@/public/images/no-result-vi.png"
+import NoResultImage from "@/public/images/no-result.png"
 
 import { Button } from "../ui/button"
 
@@ -13,21 +15,15 @@ type Props = {
 
 function NoResult({ title, description, link, linkTitle }: Props) {
   return (
-    <div className="mt-10 flex w-full flex-col items-center justify-center">
+    <div className="mt-8 flex w-full flex-col items-center justify-center overflow-hidden">
       <Image
-        src="/assets/images/light-illustration.png"
+        src={NoResultImage}
         alt="no result"
-        width={270}
-        height={270}
-        className="block object-contain dark:hidden"
+        width={305}
+        height={264}
+        className="block rounded-md object-contain"
       />
-      <Image
-        src="/assets/images/dark-illustration.png"
-        alt="no result"
-        width={270}
-        height={270}
-        className="hidden object-contain dark:flex"
-      />
+
       <h2 className="mt-8 text-[24px] font-bold leading-[31.2px]">{title}</h2>
       <p className="my-3 max-w-md text-center text-[14px] font-normal leading-[19.6px] text-muted-foreground">
         {description}

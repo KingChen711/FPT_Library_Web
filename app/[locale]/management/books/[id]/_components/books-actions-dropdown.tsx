@@ -130,8 +130,6 @@ function BooksActionsDropdown({ tab }: Props) {
   //   })
   // }
 
-  if (selectedIds.length === 0) return null
-
   return (
     <>
       {/* <GroupCheckResultDialog
@@ -153,7 +151,7 @@ function BooksActionsDropdown({ tab }: Props) {
       />
       <DropdownMenu open={openDropdown} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger asChild>
-          <Button variant="outline">
+          <Button disabled={selectedIds.length === 0} variant="outline">
             {t("Actions")} {openDropdown ? <ChevronUp /> : <ChevronDown />}
           </Button>
         </DropdownMenuTrigger>

@@ -1,5 +1,6 @@
 import React from "react"
 import { auth } from "@/queries/auth"
+import { getTrainProgress } from "@/queries/books/get-train-progress"
 import { getUntrainedGroups } from "@/queries/books/get-untrained-group"
 
 import { EFeature } from "@/lib/types/enums"
@@ -9,6 +10,12 @@ import TrainAIForm from "./train-ai-form"
 async function BooksManagementPage() {
   await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const groups = await getUntrainedGroups()
+  const trainProgress = await getTrainProgress()
+
+  console.log({
+    trainProgress,
+    trainingPercentage: trainProgress?.trainingPercentage,
+  })
 
   return (
     <div>
@@ -16,7 +23,7 @@ async function BooksManagementPage() {
         <h3 className="text-2xl font-semibold">Train AI</h3>
       </div>
 
-      <TrainAIForm groups={groups} />
+      <TrainAIForm trainProgress={trainProgress} groups={groups} />
     </div>
   )
 }

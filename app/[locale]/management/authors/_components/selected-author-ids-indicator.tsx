@@ -1,12 +1,13 @@
 "use client"
 
+import React from "react"
 import { useManagementAuthorsStore } from "@/stores/authors/use-management-authors"
 import { CheckSquare, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-function SelectedAuthorIdsIndicator() {
+function SelectedIdsIndicator() {
   const { selectedIds, clear } = useManagementAuthorsStore()
-  const t = useTranslations("AuthorManagement")
+  const t = useTranslations("GeneralManagement")
 
   if (selectedIds.length === 0) return null
 
@@ -21,4 +22,4 @@ function SelectedAuthorIdsIndicator() {
   )
 }
 
-export default SelectedAuthorIdsIndicator
+export default SelectedIdsIndicator

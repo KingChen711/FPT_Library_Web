@@ -6,7 +6,7 @@ import { format } from "date-fns"
 import { http } from "@/lib/http"
 import { type BorrowRequest } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
-import { type TSearchBorrowRequestsSchema } from "@/lib/validations/borrows/search-borrow-requests"
+import { type TSearchBorrowRequestsSchema } from "@/lib/validations/borrow-requests/search-borrow-requests"
 
 function usePatronBorrowRequests(
   userId: string,
