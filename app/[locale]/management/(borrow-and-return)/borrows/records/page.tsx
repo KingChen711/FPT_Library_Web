@@ -9,7 +9,6 @@ import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { searchBorrowRecordsSchema } from "@/lib/validations/borrow-records/search-borrow-records"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -142,15 +141,6 @@ async function BorrowRecordsManagementPage({ searchParams }: Props) {
                         href={`/management/library-cards/${record.librarycard.libraryCardId}`}
                         className="group flex items-center gap-2"
                       >
-                        <Avatar className="size-8">
-                          <AvatarImage src={record.librarycard?.avatar || ""} />
-                          <AvatarFallback>
-                            {record.librarycard?.fullName
-                              .split(" ")
-                              .map((i) => i[0].toUpperCase())
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
                         <p className="group-hover:underline">
                           {record.librarycard?.fullName}
                         </p>

@@ -25,9 +25,6 @@ const getUserPermissions = async (
     const { data } = await http.get<TUserPermissions>(
       `/api/management/roles/user-permissions?isRoleVerticalLayout=${isRoleVerticalLayout}`,
       {
-        next: {
-          tags: ["user-permissions"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

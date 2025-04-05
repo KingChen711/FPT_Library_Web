@@ -19,6 +19,7 @@ import {
   type ESupplierType,
   type ETrackingStatus,
   type ETrackingType,
+  type ETrainingStatus,
   type ETransactionMethod,
   type ETransactionStatus,
   type ETransactionType,
@@ -657,6 +658,24 @@ export type Condition = {
   conditionId: number
   englishName: string
   vietnameseName: string
+}
+
+export type TrainSession = {
+  trainingSessionId: number
+  model: number
+  totalTrainedItem: number
+  totalTrainedTime: number | null
+  trainingStatus: ETrainingStatus
+  errorMessage: string | null
+  trainingPercentage: number
+  trainDate: Date
+  trainBy: string
+}
+
+export type TrainDetail = {
+  trainingDetailId: number
+  trainingSessionId: number
+  libraryItemId: number
 }
 
 export type ConditionHistory = {

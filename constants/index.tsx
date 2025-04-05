@@ -1,4 +1,4 @@
-import { Bell } from "lucide-react"
+import { Bell, Brain } from "lucide-react"
 
 import { EFeature } from "@/lib/types/enums"
 import { Icons } from "@/components/ui/icons"
@@ -190,6 +190,16 @@ export const managementRoutes = [
       return <Icons.Employees {...props} />
     },
   },
+
+  {
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
+    route: "/management/train-sessions",
+    label: "Train sessions",
+    Icon: (props: { className?: string }) => {
+      return <Brain {...props} />
+    },
+  },
+
   {
     feature: EFeature.ROLE_MANAGEMENT,
     label: "Identity and Access",

@@ -18,9 +18,6 @@ const getNotification = async (
     const { data } = await http.get<NotificationDetail>(
       `/api/privacy/notifications/${id}`,
       {
-        next: {
-          tags: ["management-notification"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

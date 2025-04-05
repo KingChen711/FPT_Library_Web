@@ -518,6 +518,7 @@
     "Permissions": "Permissions"
   },
   "Routes": {
+    "Train sessions": "Train sessions",
     "Borrow reservations": "Reservations",
     "Borrow records": "Records",
     "Borrow requests": "Requests",
@@ -1673,6 +1674,17 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Trained images": "Trained images",
+    "Train items": "Train items",
+    "Train information": "Train information",
+    "Progress": "Progress",
+    "Train date": "Train date",
+    "Total trained items": "Total trained items",
+    "Error message": "Error message",
+    "Trained by": "Trained by",
+    "Train sessions": "Train sessions",
+    "Training date": "Training date",
+    "Filters trainSessions": "Filters train sessions",
     "Search library item": "Search library item",
     "Classification barcode description": "The classification barcode should be affixed to the spine of the book for easy searching on the shelf.",
     "Individual barcode description": "The individual barcode must be affixed to the upper corner of the book cover.",
@@ -1940,6 +1952,11 @@
       "2": "Collected",
       "3": "Expired",
       "4": "Cancelled"
+    },
+    "TrainingStatus": {
+      "0": "In progress",
+      "1": "Completed",
+      "2": "Failed"
     }
   },
   "IsbnScanner": {

@@ -81,6 +81,7 @@ function ReservationActionsDropdown({
         open={openAssign}
         setOpen={setOpenAssign}
         reservationId={reservationId}
+        setOpenConfirmApply={setOpenConfirmApply}
       />
 
       <ConfirmApplyLabelDialog

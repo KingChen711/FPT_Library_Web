@@ -29,7 +29,6 @@ export default function Loading() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <Skeleton className="h-9 w-[104px]" />
           <Skeleton className="h-9 w-[136px]" />
         </div>
       </div>

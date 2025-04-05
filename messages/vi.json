@@ -522,6 +522,7 @@
     "Permissions": "Quyền"
   },
   "Routes": {
+    "Train sessions": "Phiên train AI",
     "Borrow reservations": "Đặt trước",
     "Borrow records": "Lịch sử mượn",
     "Borrow requests": "Yêu cầu mượn",
@@ -1672,6 +1673,18 @@
     "DDC additional info": "Ngoài ra, nhiều thư viện công cộng và đại học cũng cung cấp hướng dẫn và tài liệu về cách sử dụng DDC. Bạn có thể tham khảo trang web của thư viện địa phương hoặc trường đại học gần nhất để biết thêm thông tin."
   },
   "TrackingsManagementPage": {
+    "Trained images": "Các ảnh được train",
+    "Train items": "Danh sách train",
+    "Train information": "Thông tin train",
+    "Progress": "Tiến trình",
+    "Train date": "Ngày train",
+    "Total trained items": "Số lượng tài liệu",
+    "Training percentage": "Tiến trình",
+    "Error message": "Thông báo lỗi",
+    "Trained by": "Train bởi",
+    "Train sessions": "Phiên train AI",
+    "Training date": "Ngày train",
+    "Filters trainSessions": "Lọc phiên train AI",
     "Individual barcode description": "Mã ĐKCB cần được dán ở góc trên của bìa tài liệu.",
     "Classification barcode description": "Mã phân loại cần được dán ở gáy tài liệu để dễ dàng tìm kiếm trên kệ.",
     "How many barcode has glue": "Bạn đã dán ĐKCB cho bao nhiêu tài liệu?",
@@ -1955,6 +1968,11 @@
       "2": "Đã lấy",
       "3": "Quá hạn",
       "4": "Đã hủy"
+    },
+    "TrainingStatus": {
+      "0": "Đang train",
+      "1": "Hoàn thành",
+      "2": "Thất bại"
     }
   },
   "IsbnScanner": {

@@ -48,21 +48,21 @@ function usePatronBorrowRequests(
                 JSON.stringify([null, null])
                   ? null
                   : searchParams.requestDateRange.map((d) =>
-                      d === null ? "null" : formatDate(new Date(d))
+                      d === null ? "" : formatDate(new Date(d))
                     ),
               expirationDateRange:
                 JSON.stringify(searchParams.expirationDateRange) ===
                 JSON.stringify([null, null])
                   ? null
                   : searchParams.expirationDateRange.map((d) =>
-                      d === null ? "null" : formatDate(new Date(d))
+                      d === null ? "" : formatDate(new Date(d))
                     ),
               cancelledAtRange:
                 JSON.stringify(searchParams.cancelledAtRange) ===
                 JSON.stringify([null, null])
                   ? null
                   : searchParams.cancelledAtRange.map((d) =>
-                      d === null ? "null" : formatDate(new Date(d))
+                      d === null ? "" : formatDate(new Date(d))
                     ),
             },
           }

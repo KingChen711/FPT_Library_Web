@@ -1,6 +1,7 @@
 import React from "react"
 import Image from "next/image"
 import { notFound } from "next/navigation"
+import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
 import getBorrowRequest from "@/queries/borrows/get-borrow-request"
 import { format } from "date-fns"
@@ -539,13 +540,6 @@ async function BorrowRequestDetailPage({ params }: Props) {
         <div className="flex flex-col gap-3">
           <h3 className="text-xl font-semibold">{t("Request items")}</h3>
 
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex flex-row items-center"></div>
-            </div>
-            <div className="flex flex-wrap items-center gap-4"></div>
-          </div>
-
           <div className="grid w-full">
             <div className="overflow-x-auto rounded-md border">
               <Table className="overflow-hidden">
@@ -578,7 +572,11 @@ async function BorrowRequestDetailPage({ params }: Props) {
                   {request.libraryItems.map((item) => (
                     <TableRow key={item.libraryItemId}>
                       <TableCell className="text-nowrap font-bold">
-                        <div className="flex items-center gap-2">
+                        <Link
+                          target="_blank"
+                          href={`/management/books/${item.libraryItemId}`}
+                          className="group flex items-center gap-2 pr-8"
+                        >
                           {item.coverImage ? (
                             <Image
                               alt={item.title}
@@ -590,8 +588,10 @@ async function BorrowRequestDetailPage({ params }: Props) {
                           ) : (
                             <div className="h-12 w-8 rounded-sm border"></div>
                           )}
-                          {item.title}
-                        </div>
+                          <p className="font-bold group-hover:underline">
+                            {item.title}
+                          </p>
+                        </Link>
                       </TableCell>
                       <TableCell className="text-nowrap">
                         {item.authors.length > 0 ? (

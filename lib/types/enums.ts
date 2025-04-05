@@ -284,3 +284,9 @@ export enum EReservationQueueStatus {
   EXPIRED,
   CANCELLED,
 }
+
+export enum ETrainingStatus {
+  IN_PROGRESS,
+  COMPLETED,
+  FAILED,
+}

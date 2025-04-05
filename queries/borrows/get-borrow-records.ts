@@ -43,9 +43,6 @@ const getBorrowRecords = async (
     const { data } = await http.get<Pagination<BorrowRecords>>(
       `/api/management/borrows/records`,
       {
-        next: {
-          tags: ["borrowRecords"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

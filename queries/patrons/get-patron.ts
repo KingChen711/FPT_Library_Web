@@ -14,9 +14,6 @@ const getPatron = async (userId: string): Promise<PatronDetail | null> => {
     const { data } = await http.get<PatronDetail>(
       `/api/management/library-card-holders/${userId}`,
       {
-        next: {
-          tags: ["patrons"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

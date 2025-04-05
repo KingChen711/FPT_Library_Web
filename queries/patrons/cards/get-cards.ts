@@ -21,9 +21,6 @@ const getCards = async (
     const { data } = await http.get<Pagination<Cards>>(
       `/api/management/library-cards`,
       {
-        next: {
-          tags: ["management-book-editions"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
@@ -34,21 +31,21 @@ const getCards = async (
             JSON.stringify([null, null])
               ? null
               : searchParams.issueDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           expiryDateRange:
             JSON.stringify(searchParams.expiryDateRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.expiryDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           suspensionDateRange:
             JSON.stringify(searchParams.suspensionDateRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.suspensionDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
         },
       }

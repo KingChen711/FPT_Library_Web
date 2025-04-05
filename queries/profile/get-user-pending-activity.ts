@@ -20,9 +20,6 @@ const getUserPendingActivity = async (): Promise<TGetUserPendingActivity> => {
     const { data } = await http.get<TGetUserPendingActivity>(
       `/api/users/borrows/records/user-pending-activity`,
       {
-        next: {
-          tags: ["/user-pending-activity", getAccessToken()!],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

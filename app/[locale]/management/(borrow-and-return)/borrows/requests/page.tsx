@@ -3,22 +3,13 @@ import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
 import getBorrowRequests from "@/queries/borrows/get-borrow-requests"
 import { format } from "date-fns"
-import { Check, Eye, MoreHorizontal, X } from "lucide-react"
+import { Eye, MoreHorizontal } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { searchBorrowRequestsSchema } from "@/lib/validations/borrow-requests/search-borrow-requests"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +18,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import NoResult from "@/components/ui/no-result"
 import Paginator from "@/components/ui/paginator"
-import ParseHtml from "@/components/ui/parse-html"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
@@ -129,31 +119,6 @@ async function BorrowRequestsManagementPage({ searchParams }: Props) {
                   </TableHead>
 
                   <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Reminder sent")}
-                    </div>
-                  </TableHead>
-
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Description")}
-                    </div>
-                  </TableHead>
-
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Cancelled at")}
-                    sortKey="CancelledAt"
-                    position="center"
-                  />
-
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Cancellation reason")}
-                    </div>
-                  </TableHead>
-
-                  <TableHead className="text-nowrap font-bold">
                     <div className="flex justify-center">{t("Actions")}</div>
                   </TableHead>
                 </TableRow>
@@ -167,17 +132,6 @@ async function BorrowRequestsManagementPage({ searchParams }: Props) {
                         href={`/management/library-cards/${request.libraryCard.libraryCardId}`}
                         className="group flex items-center gap-2"
                       >
-                        <Avatar className="size-8">
-                          <AvatarImage
-                            src={request.libraryCard?.avatar || ""}
-                          />
-                          <AvatarFallback>
-                            {request.libraryCard?.fullName
-                              .split(" ")
-                              .map((i) => i[0].toUpperCase())
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
                         <p className="group-hover:underline">
                           {request.libraryCard?.fullName}
                         </p>
@@ -211,78 +165,7 @@ async function BorrowRequestsManagementPage({ searchParams }: Props) {
                         <BorrowRequestStatusBadge status={request.status} />
                       </div>
                     </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {request.isReminderSent ? (
-                          <Check className="text-success" />
-                        ) : (
-                          <X className="text-danger" />
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {request.description ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                {t("View content")}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
-                              <DialogHeader>
-                                <DialogTitle>{t("Description")}</DialogTitle>
-                                <DialogDescription>
-                                  <ParseHtml data={request.description} />
-                                </DialogDescription>
-                              </DialogHeader>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {request.cancelledAt
-                          ? format(
-                              new Date(request.cancelledAt),
-                              "dd MMM yyyy HH:mm",
-                              {
-                                locale: formatLocale,
-                              }
-                            )
-                          : "-"}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {request.cancellationReason ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                {t("View content")}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
-                              <DialogHeader>
-                                <DialogTitle>
-                                  {t("Cancellation reason")}
-                                </DialogTitle>
-                                <DialogDescription>
-                                  <ParseHtml
-                                    data={request.cancellationReason}
-                                  />
-                                </DialogDescription>
-                              </DialogHeader>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
+
                     <TableCell>
                       <div className="flex items-center justify-center">
                         <DropdownMenu>

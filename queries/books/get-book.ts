@@ -36,9 +36,6 @@ const getBook = async (id: number): Promise<BookDetail | null> => {
     const { data } = await http.get<BookDetail>(
       `/api/management/library-items/${id}`,
       {
-        next: {
-          tags: ["management-book-editions"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

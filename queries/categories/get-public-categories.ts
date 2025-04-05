@@ -12,9 +12,6 @@ const getCategories = async (): Promise<Categories> => {
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<Categories>(`/api/categories?`, {
-      next: {
-        tags: ["categories"],
-      },
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

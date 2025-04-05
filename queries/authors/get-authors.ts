@@ -23,9 +23,6 @@ export async function getAuthors(
     const { data } = await http.get<TGetAuthorsData>(
       `/api/management/authors`,
       {
-        next: {
-          tags: ["authors"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

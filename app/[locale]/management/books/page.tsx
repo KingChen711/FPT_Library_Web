@@ -5,15 +5,7 @@ import defaultBookCover from "@/public/assets/images/default-book-cover.jpg"
 import { auth } from "@/queries/auth"
 import getBookEditions from "@/queries/books/get-book-editions"
 import { format } from "date-fns"
-import {
-  Brain,
-  Check,
-  Eye,
-  Filter,
-  MoreHorizontal,
-  Plus,
-  X,
-} from "lucide-react"
+import { Check, Eye, Filter, MoreHorizontal, Plus, X } from "lucide-react"
 import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
@@ -160,12 +152,6 @@ async function BooksManagementPage({ searchParams }: Props) {
           <SelectedIdsIndicator />
         </div>
         <div className="flex items-center gap-4">
-          <Button asChild>
-            <Link href="/management/train-ai">
-              <Brain />
-              Train AI
-            </Link>
-          </Button>
           <Button asChild>
             <Link href="/management/books/create">
               <Plus />

@@ -22,9 +22,6 @@ const getPatrons = async (
     const { data } = await http.get<Pagination<Patrons>>(
       `/api/management/library-card-holders`,
       {
-        next: {
-          tags: ["management-book-editions"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
@@ -35,28 +32,28 @@ const getPatrons = async (
             JSON.stringify([null, null])
               ? null
               : searchParams.cardIssueDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           cardExpiryDateRange:
             JSON.stringify(searchParams.cardExpiryDateRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.cardExpiryDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           suspensionDateRange:
             JSON.stringify(searchParams.suspensionDateRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.suspensionDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           dobRange:
             JSON.stringify(searchParams.dobRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.dobRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
         },
       }

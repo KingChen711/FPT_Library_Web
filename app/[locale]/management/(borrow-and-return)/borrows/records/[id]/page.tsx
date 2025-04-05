@@ -550,7 +550,11 @@ async function BorrowRecordDetailPage({ params }: Props) {
                   {record.borrowRecordDetails.map((detail) => (
                     <TableRow key={detail.borrowRecordId}>
                       <TableCell className="text-nowrap font-bold">
-                        <div className="flex items-center gap-2">
+                        <Link
+                          target="_blank"
+                          href={`/management/books/${detail.libraryItem.libraryItemId}`}
+                          className="group flex items-center gap-2 pr-8"
+                        >
                           {detail.libraryItem.coverImage ? (
                             <Image
                               alt={detail.libraryItem.title}
@@ -562,8 +566,10 @@ async function BorrowRecordDetailPage({ params }: Props) {
                           ) : (
                             <div className="h-12 w-8 rounded-sm border"></div>
                           )}
-                          {detail.libraryItem.title}
-                        </div>
+                          <p className="font-bold group-hover:underline">
+                            {detail.libraryItem.title}
+                          </p>
+                        </Link>
                       </TableCell>
                       <TableCell className="text-nowrap">
                         <div className="flex justify-center">

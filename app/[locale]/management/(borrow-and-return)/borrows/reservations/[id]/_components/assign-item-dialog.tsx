@@ -25,9 +25,15 @@ type Props = {
   open: boolean
   setOpen: (value: boolean) => void
   reservationId: number
+  setOpenConfirmApply: (val: boolean) => void
 }
 
-function AssignItemDialog({ reservationId, open, setOpen }: Props) {
+function AssignItemDialog({
+  reservationId,
+  open,
+  setOpen,
+  setOpenConfirmApply,
+}: Props) {
   const t = useTranslations("BorrowAndReturnManagementPage")
 
   const locale = useLocale()
@@ -54,6 +60,7 @@ function AssignItemDialog({ reservationId, open, setOpen }: Props) {
           variant: "success",
         })
         setOpen(false)
+        setOpenConfirmApply(true)
         return
       }
 
@@ -75,6 +82,7 @@ function AssignItemDialog({ reservationId, open, setOpen }: Props) {
                   </div>
                 ))}
               {!isLoading &&
+                !isPending &&
                 assignableItems &&
                 (assignableItems?.length === 0 ? (
                   <div className="flex justify-center">

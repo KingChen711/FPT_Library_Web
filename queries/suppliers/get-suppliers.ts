@@ -12,9 +12,6 @@ const getSuppliers = async (): Promise<Suppliers> => {
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<Suppliers>(`/api/management/suppliers?`, {
-      next: {
-        tags: ["suppliers"],
-      },
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

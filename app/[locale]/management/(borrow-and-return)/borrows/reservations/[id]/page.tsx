@@ -1,5 +1,7 @@
 import React from "react"
+import Image from "next/image"
 import { notFound } from "next/navigation"
+import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
 import getReservation from "@/queries/borrows/get-reservation"
 import { format } from "date-fns"
@@ -290,17 +292,35 @@ async function BorrowReservationDetailPage({ params }: Props) {
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
               <h4 className="font-bold">{t("Reserved item")}</h4>
               <div className="flex items-center gap-2">
-                <Copitor content={reservation.libraryItem.title} />
-                {reservation.libraryItem.title}
+                <Link
+                  target="_blank"
+                  href={`/management/books/${reservation.libraryItem.libraryItemId}`}
+                  className="group flex items-center gap-2 pr-8"
+                >
+                  {reservation.libraryItem.coverImage ? (
+                    <Image
+                      alt={reservation.libraryItem.title}
+                      src={reservation.libraryItem.coverImage}
+                      width={40}
+                      height={60}
+                      className="aspect-[2/3] h-12 w-8 rounded-sm border object-cover"
+                    />
+                  ) : (
+                    <div className="h-12 w-8 rounded-sm border"></div>
+                  )}
+                  <p className="font-bold group-hover:underline">
+                    {reservation.libraryItem.title}
+                  </p>
+                </Link>
               </div>
             </div>
 
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
               <h4 className="font-bold">{t("Assigned barcode")}</h4>
               <div className="flex gap-2">
-                {reservation.libraryItemInstance.barcode ? (
+                {reservation.libraryItemInstance?.barcode ? (
                   <BarcodeGenerator
-                    value={reservation.libraryItemInstance.barcode}
+                    value={reservation.libraryItemInstance?.barcode}
                     options={{
                       containerHeight: 64,
                       containerWidth: 230,
@@ -314,7 +334,7 @@ async function BorrowReservationDetailPage({ params }: Props) {
                 ) : (
                   <NoData />
                 )}
-                <Copitor content={reservation.libraryItemInstance.barcode} />
+                <Copitor content={reservation.libraryItemInstance?.barcode} />
               </div>
             </div>
           </div>

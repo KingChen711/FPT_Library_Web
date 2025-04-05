@@ -1,24 +1,16 @@
 import React from "react"
+import Image from "next/image"
 import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
 import getBorrowReservations from "@/queries/borrows/get-reservations"
 import { format } from "date-fns"
-import { ArrowRight, Check, Eye, MoreHorizontal, X } from "lucide-react"
+import { Check, Eye, MoreHorizontal, X } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { searchBorrowReservationsSchema } from "@/lib/validations/reservations/search-reservations"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,7 +19,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import NoResult from "@/components/ui/no-result"
 import Paginator from "@/components/ui/paginator"
-import ParseHtml from "@/components/ui/parse-html"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
@@ -104,10 +95,10 @@ async function BorrowReservationsManagementPage({ searchParams }: Props) {
               <TableHeader>
                 <TableRow>
                   <TableHead className="text-nowrap font-bold">
-                    {t("Patron")}
+                    {t("Library item")}
                   </TableHead>
                   <TableHead className="text-nowrap font-bold">
-                    {t("Library item")}
+                    {t("Patron")}
                   </TableHead>
                   <SortableTableHead
                     currentSort={sort}
@@ -135,56 +126,6 @@ async function BorrowReservationsManagementPage({ searchParams }: Props) {
                     sortKey="ReservationDate"
                     position="center"
                   />
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Expected date")}
-                    sortKey="ExpectedAvailableDateMin"
-                    position="center"
-                  />
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Assigned date")}
-                    sortKey="AssignedDate"
-                    position="center"
-                  />
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Collected date")}
-                    sortKey="CollectedDate"
-                    position="center"
-                  />
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Expiry date")}
-                    sortKey="ExpiryDate"
-                    position="center"
-                  />
-                  <SortableTableHead
-                    currentSort={sort}
-                    label={t("Total extend pickup")}
-                    sortKey="TotalExtendPickup"
-                    position="center"
-                  />
-
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">{t("Notified")}</div>
-                  </TableHead>
-
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex">{t("Cancelled by")}</div>
-                  </TableHead>
-
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Cancellation reason")}
-                    </div>
-                  </TableHead>
-
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Reserved after request failed")}
-                    </div>
-                  </TableHead>
 
                   <TableHead className="text-nowrap font-bold">
                     <div className="flex justify-center">{t("Actions")}</div>
@@ -197,30 +138,38 @@ async function BorrowReservationsManagementPage({ searchParams }: Props) {
                     <TableCell className="text-nowrap">
                       <Link
                         target="_blank"
+                        href={`/management/books/${reservation.libraryItem.libraryItemId}`}
+                        className="group flex items-center gap-2 pr-8"
+                      >
+                        {reservation.libraryItem.coverImage ? (
+                          <Image
+                            alt={reservation.libraryItem.title}
+                            src={reservation.libraryItem.coverImage}
+                            width={40}
+                            height={60}
+                            className="aspect-[2/3] h-12 w-8 rounded-sm border object-cover"
+                          />
+                        ) : (
+                          <div className="h-12 w-8 rounded-sm border"></div>
+                        )}
+                        <p className="font-bold group-hover:underline">
+                          {reservation.libraryItem.title}
+                        </p>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <Link
+                        target="_blank"
                         href={`/management/library-cards/${reservation.libraryCard.libraryCardId}`}
                         className="group flex items-center gap-2"
                       >
-                        <Avatar className="size-8">
-                          <AvatarImage
-                            src={reservation.libraryCard?.avatar || ""}
-                          />
-                          <AvatarFallback>
-                            {reservation.libraryCard?.fullName
-                              .split(" ")
-                              .map((i) => i[0].toUpperCase())
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
                         <p className="group-hover:underline">
                           {reservation.libraryCard?.fullName}
                         </p>
                       </Link>
                     </TableCell>
                     <TableCell className="text-nowrap">
-                      {reservation.libraryItem.title}
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
+                      <div className="flex">
                         {reservation.reservationCode || "-"}
                       </div>
                     </TableCell>
@@ -258,123 +207,6 @@ async function BorrowReservationsManagementPage({ searchParams }: Props) {
                           {
                             locale: formatLocale,
                           }
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex items-center justify-center gap-1">
-                        {reservation.expectedAvailableDateMin
-                          ? format(
-                              new Date(reservation.expectedAvailableDateMin),
-                              "dd MMM yyyy",
-                              {
-                                locale: formatLocale,
-                              }
-                            )
-                          : "-"}
-                        <ArrowRight className="size-3" />
-                        {reservation.expectedAvailableDateMax
-                          ? format(
-                              new Date(reservation.expectedAvailableDateMax),
-                              "dd MMM yyyy",
-                              {
-                                locale: formatLocale,
-                              }
-                            )
-                          : "-"}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex items-center justify-center gap-1">
-                        {reservation.assignedDate
-                          ? format(
-                              new Date(reservation.assignedDate),
-                              "dd MMM yyyy",
-                              {
-                                locale: formatLocale,
-                              }
-                            )
-                          : "-"}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex items-center justify-center gap-1">
-                        {reservation.collectedDate
-                          ? format(
-                              new Date(reservation.collectedDate),
-                              "dd MMM yyyy",
-                              {
-                                locale: formatLocale,
-                              }
-                            )
-                          : "-"}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex items-center justify-center gap-1">
-                        {reservation.expiryDate
-                          ? format(
-                              new Date(reservation.expiryDate),
-                              "dd MMM yyyy",
-                              {
-                                locale: formatLocale,
-                              }
-                            )
-                          : "-"}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex items-center justify-center gap-1">
-                        {reservation.totalExtendPickup}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {reservation.isNotified ? (
-                          <Check className="text-success" />
-                        ) : (
-                          <X className="text-danger" />
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {reservation.cancelledBy || "-"}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {reservation.cancellationReason ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button variant="outline" size="sm">
-                                {t("View content")}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
-                              <DialogHeader>
-                                <DialogTitle>
-                                  {t("Cancellation reason")}
-                                </DialogTitle>
-                                <DialogDescription>
-                                  <ParseHtml
-                                    data={reservation.cancellationReason}
-                                  />
-                                </DialogDescription>
-                              </DialogHeader>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {reservation.isReservedAfterRequestFailed ? (
-                          <Check className="text-success" />
-                        ) : (
-                          <X className="text-danger" />
                         )}
                       </div>
                     </TableCell>

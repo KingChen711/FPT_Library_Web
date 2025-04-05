@@ -28,9 +28,6 @@ const getTrackings = async (
     const { data } = await http.get<Pagination<Trackings>>(
       `/api/management/warehouse-trackings`,
       {
-        next: {
-          tags: ["management-book-editions"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
@@ -55,35 +52,35 @@ const getTrackings = async (
             JSON.stringify([null, null])
               ? null
               : searchParams.entryDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           expectedReturnDateRange:
             JSON.stringify(searchParams.expectedReturnDateRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.expectedReturnDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           actualReturnDateRange:
             JSON.stringify(searchParams.actualReturnDateRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.actualReturnDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           createdAtRange:
             JSON.stringify(searchParams.createdAtRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.createdAtRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           updatedAtRange:
             JSON.stringify(searchParams.updatedAtRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.updatedAtRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
         },
       }

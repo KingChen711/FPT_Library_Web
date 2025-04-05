@@ -31,9 +31,6 @@ const getAllOwnTransactions = async (): Promise<
     const { data } = await http.get<Pagination<TGetAllTransactionData[]>>(
       `/api/users/transactions`,
       {
-        next: {
-          tags: ["/get-all-own-transactions"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

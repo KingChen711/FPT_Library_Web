@@ -57,8 +57,13 @@ function GroupField({
                     const imageList = form.watch(
                       `groups.${groupIndex}.books.${index}.imageList`
                     )
+
+                    const isSingleBook =
+                      form.watch(`groups.${groupIndex}.books.${index}.type`) ===
+                      "Single"
+
                     const isDone =
-                      imageList.length >= 5 &&
+                      (!isSingleBook || imageList.length >= 5) &&
                       imageList.every((image) => image.validImage)
 
                     return (

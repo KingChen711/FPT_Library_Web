@@ -11,7 +11,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useFieldArray, useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { cn, fileUrlToFile } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import {
   trainGroupsSchema,
   type TTrainGroupsSchema,
@@ -39,10 +39,11 @@ import TrainCheckBox from "./train-check-box"
 type Props = {
   groups: UntrainedGroup[]
   trainProgress: TrainProgress | null
+  maxItemToTrainAtOnce: number
 }
 
-function TrainAIForm({ groups, trainProgress }: Props) {
-  const { groups: selectedGroups } = useUntrainedGroupsStore()
+function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
+  const { groups: selectedGroups, clear } = useUntrainedGroupsStore()
   const [showForm, setShowForm] = useState(false)
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
@@ -77,6 +78,10 @@ function TrainAIForm({ groups, trainProgress }: Props) {
         books: g.items.map((b) => ({
           isbn: b.isbn || "",
           title: b.title,
+          type:
+            b.category.englishName === "BookSeries"
+              ? "Series"
+              : ("Single" as "Single" | "Series"),
           imageList: [],
         })),
         groupName: g.groupName,
@@ -97,8 +102,6 @@ function TrainAIForm({ groups, trainProgress }: Props) {
   const watchSelectedGroup = form.getValues("groups")
 
   const onSubmit = (values: TTrainGroupsSchema) => {
-    console.log(values)
-
     startTransition(async () => {
       const formData = new FormData()
       const obj: Record<string, string | File[] | string[]> = {}
@@ -123,9 +126,10 @@ function TrainAIForm({ groups, trainProgress }: Props) {
 
               await Promise.all(
                 b.imageList.map(async (image, index) => {
+                  if (index === 0) return
                   formData.append(
                     `TrainingData[${groupIndex}].ItemsInGroup[${bookIndex}].ImageFiles`,
-                    image.file!
+                    image.file || ""
                   )
 
                   const key = `TrainingData[${groupIndex}].ItemsInGroup[${bookIndex}].ImageFiles`
@@ -206,6 +210,8 @@ function TrainAIForm({ groups, trainProgress }: Props) {
         })
       })
 
+      console.log(res)
+
       handleServerActionError(res, locale)
     })
   }
@@ -221,24 +227,19 @@ function TrainAIForm({ groups, trainProgress }: Props) {
   }))
 
   useEffect(() => {
+    console.log(form.formState.errors)
+  }, [form.formState.errors])
+
+  useEffect(() => {
     if (watchSelectedGroup?.length === 0) return
 
     const getFiles = async () => {
       try {
-        const groupCoverFiles = await Promise.all(
-          selectedGroups.map(async (g) => ({
-            files: await Promise.all(
-              g.items.map((b) => fileUrlToFile(b.coverImage!, b.isbn!))
-            ),
-          }))
-        )
-
-        groupCoverFiles.forEach((g, i) => {
-          g.files.forEach((file, j) =>
+        selectedGroups.forEach((g, i) => {
+          g.items.forEach((_, j) =>
             form.setValue(`groups.${i}.books.${j}.imageList`, [
               {
                 coverImage: selectedGroups[i].items[j].coverImage!,
-                file,
                 validImage: true,
               },
             ])
@@ -341,7 +342,19 @@ function TrainAIForm({ groups, trainProgress }: Props) {
         <div className="flex justify-end">
           <Button
             disabled={selectedGroups.length === 0}
-            onClick={() => setShowForm(true)}
+            onClick={() => {
+              if (selectedGroups.length <= maxItemToTrainAtOnce)
+                return setShowForm(true)
+
+              toast({
+                title: locale === "vi" ? "Thất bại" : "Fail",
+                description:
+                  locale === "vi"
+                    ? `Chỉ có thể train tối đa ${maxItemToTrainAtOnce} nhóm cùng lúc`
+                    : `Only can train up to ${maxItemToTrainAtOnce} at once`,
+                variant: "warning",
+              })
+            }}
           >
             {t("Continue")}
           </Button>
@@ -374,9 +387,12 @@ function TrainAIForm({ groups, trainProgress }: Props) {
                         {fields.map((field, index) => {
                           const group = form.watch(`groups.${index}`)
 
-                          const isDone = group.books.every((b) => {
+                          const isDone = group.books.every((b, i) => {
+                            const isSingleBook =
+                              form.watch(`groups.${index}.books.${i}.type`) ===
+                              "Single"
                             return (
-                              b.imageList.length >= 5 &&
+                              (!isSingleBook || b.imageList.length >= 5) &&
                               b.imageList.every((image) => image.validImage)
                             )
                           })
@@ -443,6 +459,12 @@ function TrainAIForm({ groups, trainProgress }: Props) {
               className="float-right mt-4"
               onClick={() => {
                 setShowForm(false)
+                form.setValue("groups", [])
+                clear()
+                setIsConvertedUrlsToFiles(false)
+                setCurrentGroupIndex(0)
+                setCurrentBookIndex(0)
+                setPreventChangeCurrentBookIndex(false)
               }}
             >
               {t("Back")}
