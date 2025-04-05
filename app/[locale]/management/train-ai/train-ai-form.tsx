@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState, useTransition } from "react"
 import { useRouter } from "@/i18n/routing"
+import { type TrainProgress } from "@/queries/books/get-train-progress"
 import { type UntrainedGroup } from "@/queries/books/get-untrained-group"
 import { useUntrainedGroupsStore } from "@/stores/books/use-untrained-group"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -10,7 +11,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useFieldArray, useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import { cn, fileUrlToFile } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import {
   trainGroupsSchema,
   type TTrainGroupsSchema,
@@ -29,6 +30,7 @@ import LibraryItemCard from "@/components/ui/book-card"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
+import { Progress } from "@/components/ui/progress"
 
 import GroupCheckResultDialog from "../books/[id]/_components/group-check-result-dialog"
 import GroupField from "./group-field"
@@ -36,10 +38,12 @@ import TrainCheckBox from "./train-check-box"
 
 type Props = {
   groups: UntrainedGroup[]
+  trainProgress: TrainProgress | null
+  maxItemToTrainAtOnce: number
 }
 
-function TrainAIForm({ groups }: Props) {
-  const { groups: selectedGroups } = useUntrainedGroupsStore()
+function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
+  const { groups: selectedGroups, clear } = useUntrainedGroupsStore()
   const [showForm, setShowForm] = useState(false)
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
@@ -63,6 +67,8 @@ function TrainAIForm({ groups }: Props) {
   const [preventChangeCurrentBookIndex, setPreventChangeCurrentBookIndex] =
     useState(false)
 
+  const trainingPercentage = trainProgress?.trainingPercentage || null
+
   useEffect(() => {
     if (!showForm || selectedGroups.length === 0) return
 
@@ -72,6 +78,10 @@ function TrainAIForm({ groups }: Props) {
         books: g.items.map((b) => ({
           isbn: b.isbn || "",
           title: b.title,
+          type:
+            b.category.englishName === "BookSeries"
+              ? "Series"
+              : ("Single" as "Single" | "Series"),
           imageList: [],
         })),
         groupName: g.groupName,
@@ -92,8 +102,6 @@ function TrainAIForm({ groups }: Props) {
   const watchSelectedGroup = form.getValues("groups")
 
   const onSubmit = (values: TTrainGroupsSchema) => {
-    console.log(values)
-
     startTransition(async () => {
       const formData = new FormData()
       const obj: Record<string, string | File[] | string[]> = {}
@@ -118,9 +126,10 @@ function TrainAIForm({ groups }: Props) {
 
               await Promise.all(
                 b.imageList.map(async (image, index) => {
+                  if (index === 0) return
                   formData.append(
                     `TrainingData[${groupIndex}].ItemsInGroup[${bookIndex}].ImageFiles`,
-                    image.file!
+                    image.file || ""
                   )
 
                   const key = `TrainingData[${groupIndex}].ItemsInGroup[${bookIndex}].ImageFiles`
@@ -201,6 +210,8 @@ function TrainAIForm({ groups }: Props) {
         })
       })
 
+      console.log(res)
+
       handleServerActionError(res, locale)
     })
   }
@@ -216,24 +227,19 @@ function TrainAIForm({ groups }: Props) {
   }))
 
   useEffect(() => {
+    console.log(form.formState.errors)
+  }, [form.formState.errors])
+
+  useEffect(() => {
     if (watchSelectedGroup?.length === 0) return
 
     const getFiles = async () => {
       try {
-        const groupCoverFiles = await Promise.all(
-          selectedGroups.map(async (g) => ({
-            files: await Promise.all(
-              g.items.map((b) => fileUrlToFile(b.coverImage!, b.isbn!))
-            ),
-          }))
-        )
-
-        groupCoverFiles.forEach((g, i) => {
-          g.files.forEach((file, j) =>
+        selectedGroups.forEach((g, i) => {
+          g.items.forEach((_, j) =>
             form.setValue(`groups.${i}.books.${j}.imageList`, [
               {
                 coverImage: selectedGroups[i].items[j].coverImage!,
-                file,
                 validImage: true,
               },
             ])
@@ -287,11 +293,31 @@ function TrainAIForm({ groups }: Props) {
   if (!showForm)
     return (
       <>
+        {trainingPercentage !== null && trainingPercentage !== 100 && (
+          <div className="mb-6 flex-1 space-y-1">
+            <div className="flex justify-between gap-4 text-sm">
+              <span className="font-bold">
+                {locale === "vi" ? "Tiến trình Train AI" : "Train AI progress"}
+              </span>
+              <span>{Math.floor(trainingPercentage)}%</span>
+            </div>
+            <Progress
+              skeletonEffect
+              value={trainingPercentage}
+              className="h-2"
+            />
+          </div>
+        )}
         <Label>{t("Untrained groups")}</Label>
         <div className="flex flex-col gap-6">
           {groups.map((g) => (
             <div key={g.id} className="flex gap-4">
-              <TrainCheckBox group={g} />
+              <TrainCheckBox
+                disabled={
+                  trainingPercentage !== null && trainingPercentage !== 100
+                }
+                group={g}
+              />
               <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
                   <AccordionTrigger className="font-bold">
@@ -316,7 +342,19 @@ function TrainAIForm({ groups }: Props) {
         <div className="flex justify-end">
           <Button
             disabled={selectedGroups.length === 0}
-            onClick={() => setShowForm(true)}
+            onClick={() => {
+              if (selectedGroups.length <= maxItemToTrainAtOnce)
+                return setShowForm(true)
+
+              toast({
+                title: locale === "vi" ? "Thất bại" : "Fail",
+                description:
+                  locale === "vi"
+                    ? `Chỉ có thể train tối đa ${maxItemToTrainAtOnce} nhóm cùng lúc`
+                    : `Only can train up to ${maxItemToTrainAtOnce} at once`,
+                variant: "warning",
+              })
+            }}
           >
             {t("Continue")}
           </Button>
@@ -349,9 +387,12 @@ function TrainAIForm({ groups }: Props) {
                         {fields.map((field, index) => {
                           const group = form.watch(`groups.${index}`)
 
-                          const isDone = group.books.every((b) => {
+                          const isDone = group.books.every((b, i) => {
+                            const isSingleBook =
+                              form.watch(`groups.${index}.books.${i}.type`) ===
+                              "Single"
                             return (
-                              b.imageList.length >= 5 &&
+                              (!isSingleBook || b.imageList.length >= 5) &&
                               b.imageList.every((image) => image.validImage)
                             )
                           })
@@ -418,6 +459,12 @@ function TrainAIForm({ groups }: Props) {
               className="float-right mt-4"
               onClick={() => {
                 setShowForm(false)
+                form.setValue("groups", [])
+                clear()
+                setIsConvertedUrlsToFiles(false)
+                setCurrentGroupIndex(0)
+                setCurrentBookIndex(0)
+                setPreventChangeCurrentBookIndex(false)
               }}
             >
               {t("Back")}

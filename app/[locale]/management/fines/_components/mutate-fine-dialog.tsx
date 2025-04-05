@@ -63,6 +63,7 @@ type Props = {
 
 function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
   const t = useTranslations("FinesManagementPage")
+  const tConditionType = useTranslations("Badges.FineType")
   const locale = useLocale()
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -178,7 +179,7 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
                                 key={option}
                                 value={option.toString()}
                               >
-                                {t(option)}
+                                {tConditionType(option.toString())}
                               </SelectItem>
                             ))}
                         </SelectContent>

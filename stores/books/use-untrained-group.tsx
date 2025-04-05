@@ -5,6 +5,7 @@ type UntrainedGroupsStore = {
   groups: UntrainedGroup[]
   add: (group: UntrainedGroup) => void
   remove: (id: string) => void
+  clear: () => void
 }
 
 export const useUntrainedGroupsStore = create<UntrainedGroupsStore>((set) => ({
@@ -16,5 +17,9 @@ export const useUntrainedGroupsStore = create<UntrainedGroupsStore>((set) => ({
   remove: (id) =>
     set((state) => ({
       groups: state.groups.filter((g) => g.id !== id),
+    })),
+  clear: () =>
+    set(() => ({
+      groups: [],
     })),
 }))

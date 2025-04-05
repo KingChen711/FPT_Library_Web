@@ -9,9 +9,6 @@ export async function getConditions(): Promise<Condition[]> {
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<Condition[]>(`/api/management/conditions`, {
-      next: {
-        tags: ["conditions"],
-      },
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

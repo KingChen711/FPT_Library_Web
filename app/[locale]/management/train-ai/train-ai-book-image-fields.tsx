@@ -52,6 +52,9 @@ function BookImageFields({
     form.formState.errors.groups?.[groupIndex]?.books?.[bookIndex]?.imageList
       ?.root?.message
 
+  const isSingleBook =
+    form.watch(`groups.${groupIndex}.books.${bookIndex}.type`) === "Single"
+
   return (
     <FormField
       control={form.control}
@@ -59,7 +62,7 @@ function BookImageFields({
       render={() => (
         <FormItem>
           <FormLabel>
-            {t("Cover images")} {t("min5CoverImages")}
+            {t("Cover images")} {isSingleBook ? t("min5CoverImages") : null}
           </FormLabel>
           <FormControl>
             <div className="flex flex-col space-y-6">

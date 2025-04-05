@@ -17,7 +17,7 @@ import {
 } from "@/components/form/date-time-picker"
 
 type Props = {
-  form: UseFormReturn<TEmployeesFilterSchema, unknown, undefined>
+  form: UseFormReturn<TEmployeesFilterSchema>
   name: keyof TEmployeesFilterSchema
   label: string
 }

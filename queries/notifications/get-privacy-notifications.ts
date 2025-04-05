@@ -33,7 +33,7 @@ const getPrivacyNotifications = async (
             JSON.stringify([null, null])
               ? null
               : searchParams.createDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
         },
       }

@@ -16,9 +16,6 @@ const getUserRoles = async (): Promise<TUserRole[]> => {
     const { data } = await http.get<TUserRole[]>(
       `/api/management/roles/users`,
       {
-        next: {
-          tags: ["user-roles"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

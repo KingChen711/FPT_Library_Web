@@ -12,7 +12,7 @@ import { type ServerActionError } from "./types/action-response"
 function handleServerActionError(
   error: ServerActionError,
   locale: string,
-  form?: UseFormReturn<any, any, undefined>
+  form?: UseFormReturn<any, any, any>
 ) {
   if (error.typeError === "error" || error.typeError === "warning") {
     toast({
@@ -53,7 +53,7 @@ function handleServerActionError(
   const keys = Object.keys(error.fieldErrors)
   keys.forEach((key) =>
     //@ts-ignore
-    form.setError(key.replace("[", ".").replace("]", ""), {
+    form.setError(key.replaceAll("[", ".").replaceAll("]", ""), {
       message: error.fieldErrors[key][0],
     })
   )

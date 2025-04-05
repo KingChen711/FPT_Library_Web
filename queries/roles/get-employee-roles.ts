@@ -16,9 +16,6 @@ const getEmployeeRoles = async (): Promise<TEmployeeRole[]> => {
     const { data } = await http.get<TEmployeeRole[]>(
       `/api/management/roles/employees`,
       {
-        next: {
-          tags: ["employee-roles"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

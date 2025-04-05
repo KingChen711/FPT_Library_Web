@@ -8,6 +8,7 @@ import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { formatDate, isImageLinkValid } from "@/lib/utils"
 import { searchAuthorsSchema } from "@/lib/validations/author/search-author"
+import NoResult from "@/components/ui/no-result"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -56,7 +57,6 @@ async function AuthorsManagementPage({ searchParams }: Props) {
     tab,
     ...rest,
   })
-  console.log("🚀 ~ AuthorsManagementPage ~ authorsData:", authorsData)
 
   if (!authorsData) {
     return (
@@ -70,14 +70,13 @@ async function AuthorsManagementPage({ searchParams }: Props) {
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <h3 className="text-2xl font-semibold">{t("author management")}</h3>
-        <CreateAuthorDialog />
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-row items-center">
             <SearchForm
-              className="h-full rounded-r-none border-r-0"
+              className="h-10 rounded-r-none border-r-0"
               search={search}
             />
             <FiltersAuthorsDialog />
@@ -85,146 +84,172 @@ async function AuthorsManagementPage({ searchParams }: Props) {
 
           <SelectedAuthorIdsIndicator />
         </div>
-        <div className="flex flex-wrap items-center gap-x-4">
-          <AuthorsActionsDropdown tab={tab} />
-          <AuthorExport />
-          <AuthorImportDialog />
-        </div>
+        <CreateAuthorDialog />
       </div>
 
-      <div className="mt-4 grid w-full">
-        <div className="overflow-x-auto rounded-md border p-4">
-          <AuthorsTabs tab={tab} />
-
-          <Table className="overflow-hidden">
-            <TableHeader>
-              <TableRow>
-                <TableHead></TableHead>
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.fullName")}
-                  sortKey="fullName"
-                />
-
-                <TableHead className="text-nowrap font-bold">
-                  <div className="flex justify-center">{t("fields.image")}</div>
-                </TableHead>
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.authorCode")}
-                  sortKey="authorCode"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.biography")}
-                  sortKey="biography"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.dob")}
-                  sortKey="dob"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.dateOfDeath")}
-                  sortKey="dateOfDeath"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.nationality")}
-                  sortKey="nationality"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.createDate")}
-                  sortKey="createDate"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.updateDate")}
-                  sortKey="updateDate"
-                />
-                <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
-                  {t("action")}
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {authorsData?.sources?.map((author) => (
-                <TableRow key={author.authorId}>
-                  <TableCell>
-                    <AuthorCheckbox id={author.authorId.toString()} />
-                  </TableCell>
-                  <TableCell className="text-nowrap">
-                    {author.fullName}
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center justify-center overflow-hidden">
-                      {isImageLinkValid(author.authorImage) ? (
-                        <Image
-                          src={author.authorImage}
-                          alt="avatar"
-                          width={36}
-                          height={36}
-                          className="aspect-square size-9 rounded-full border"
-                        />
-                      ) : (
-                        <ImageIcon size={36} className="rounded-full border" />
-                      )}
-                    </div>
-                  </TableCell>
-                  <TableCell>{author.authorCode}</TableCell>
-                  <TableCell className="ml-0 flex items-center pl-0">
-                    <div className="flex items-center gap-2 overflow-hidden">
-                      <AuthorBioDialog bio={author.biography} />
-                      <div
-                        className="line-clamp-1 max-w-[260px] flex-1 text-ellipsis"
-                        dangerouslySetInnerHTML={{ __html: author.biography }}
-                      />
-                    </div>
-                  </TableCell>
-
-                  <TableCell>
-                    {author?.dob ? formatDate(author?.dob) : "_"}
-                  </TableCell>
-
-                  <TableCell>
-                    {author.dateOfDeath
-                      ? format(new Date(author.dateOfDeath), "dd MMM yyyy")
-                      : "-"}
-                  </TableCell>
-                  <TableCell className="text-nowrap">
-                    {author.nationality}
-                  </TableCell>
-                  <TableCell>
-                    {author?.createDate ? formatDate(author?.createDate) : "_"}
-                  </TableCell>
-                  <TableCell>
-                    {author?.updateDate ? formatDate(author?.updateDate) : "_"}
-                  </TableCell>
-                  <TableCell className="flex justify-center">
-                    <AuthorActionDropdown author={author} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+      <div className="mt-4 rounded-md border p-4">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <AuthorsTabs tab={tab} />{" "}
+          <div className="flex flex-wrap items-center gap-x-4">
+            <AuthorsActionsDropdown tab={tab} />
+            <AuthorExport />
+            <AuthorImportDialog />
+          </div>
         </div>
+        {authorsData.sources.length === 0 ? (
+          <div className="flex justify-center p-4">
+            <NoResult
+              title={t("Authors Not Found")}
+              description={t(
+                "No authors matching your request were found Please check your information or try searching with different criteria"
+              )}
+            />
+          </div>
+        ) : (
+          <div className="mt-4 grid w-full">
+            <div className="overflow-x-auto">
+              <Table className="overflow-hidden">
+                <TableHeader>
+                  <TableRow>
+                    <TableHead></TableHead>
 
-        <Paginator
-          pageSize={+pageSize}
-          pageIndex={pageIndex}
-          totalActualItem={authorsData.totalActualItem}
-          totalPage={authorsData.totalPage}
-          className="mt-6"
-        />
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("fields.fullName")}
+                      sortKey="fullName"
+                    />
+
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("fields.image")}
+                      </div>
+                    </TableHead>
+
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("fields.authorCode")}
+                      sortKey="authorCode"
+                    />
+
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("fields.biography")}
+                      sortKey="biography"
+                    />
+
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("fields.dob")}
+                      sortKey="dob"
+                    />
+
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("fields.dateOfDeath")}
+                      sortKey="dateOfDeath"
+                    />
+
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("fields.nationality")}
+                      sortKey="nationality"
+                    />
+
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("fields.createDate")}
+                      sortKey="createDate"
+                    />
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("fields.updateDate")}
+                      sortKey="updateDate"
+                    />
+                    <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
+                      {t("action")}
+                    </TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {authorsData?.sources?.map((author) => (
+                    <TableRow key={author.authorId}>
+                      <TableCell>
+                        <AuthorCheckbox id={author.authorId.toString()} />
+                      </TableCell>
+                      <TableCell className="text-nowrap">
+                        {author.fullName}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center justify-center overflow-hidden">
+                          {isImageLinkValid(author.authorImage) ? (
+                            <Image
+                              src={author.authorImage}
+                              alt="avatar"
+                              width={36}
+                              height={36}
+                              className="aspect-square size-9 rounded-full border"
+                            />
+                          ) : (
+                            <ImageIcon
+                              size={36}
+                              className="rounded-full border"
+                            />
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>{author.authorCode}</TableCell>
+                      <TableCell className="ml-0 flex items-center pl-0">
+                        <div className="flex items-center gap-2 overflow-hidden">
+                          <AuthorBioDialog bio={author.biography} />
+                          <div
+                            className="line-clamp-1 max-w-[260px] flex-1 text-ellipsis"
+                            dangerouslySetInnerHTML={{
+                              __html: author.biography,
+                            }}
+                          />
+                        </div>
+                      </TableCell>
+
+                      <TableCell>
+                        {author?.dob ? formatDate(author?.dob) : "_"}
+                      </TableCell>
+
+                      <TableCell>
+                        {author.dateOfDeath
+                          ? format(new Date(author.dateOfDeath), "dd MMM yyyy")
+                          : "-"}
+                      </TableCell>
+                      <TableCell className="text-nowrap">
+                        {author.nationality}
+                      </TableCell>
+                      <TableCell>
+                        {author?.createDate
+                          ? formatDate(author?.createDate)
+                          : "_"}
+                      </TableCell>
+                      <TableCell>
+                        {author?.updateDate
+                          ? formatDate(author?.updateDate)
+                          : "_"}
+                      </TableCell>
+                      <TableCell className="flex justify-center">
+                        <AuthorActionDropdown author={author} />
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            <Paginator
+              pageSize={+pageSize}
+              pageIndex={pageIndex}
+              totalActualItem={authorsData.totalActualItem}
+              totalPage={authorsData.totalPage}
+              className="mt-6"
+            />
+          </div>
+        )}
       </div>
     </div>
   )

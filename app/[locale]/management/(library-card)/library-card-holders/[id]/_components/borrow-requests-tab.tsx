@@ -5,7 +5,6 @@ import { format } from "date-fns"
 import { Check, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { ESearchType } from "@/lib/types/enums"
 import usePatronBorrowRequests from "@/hooks/patrons/use-patron-borrow-requests"
 import useFormatLocale from "@/hooks/utils/use-format-locale"
 import { Button } from "@/components/ui/button"
@@ -52,7 +51,7 @@ function BorrowRequestsTab({ userId }: Props) {
     cancelledAtRange: [null, null],
     expirationDateRange: [null, null],
     requestDateRange: [null, null],
-    searchType: ESearchType.QUICK_SEARCH.toString(),
+
     search: "",
   })
 

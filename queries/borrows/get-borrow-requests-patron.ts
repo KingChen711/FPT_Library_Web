@@ -7,7 +7,7 @@ import { format } from "date-fns"
 
 import { type BorrowRequest, type LibraryCard } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
-import { type TSearchBorrowRequestsSchema } from "@/lib/validations/borrows/search-borrow-requests"
+import { type TSearchBorrowRequestsSchema } from "@/lib/validations/borrow-requests/search-borrow-requests"
 
 import { auth } from "../auth"
 
@@ -43,21 +43,21 @@ const getBorrowRequestsPatron = async (
             JSON.stringify([null, null])
               ? null
               : searchParams.requestDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           expirationDateRange:
             JSON.stringify(searchParams.expirationDateRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.expirationDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           cancelledAtRange:
             JSON.stringify(searchParams.cancelledAtRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.cancelledAtRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
         },
       }

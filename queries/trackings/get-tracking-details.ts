@@ -77,9 +77,6 @@ const getTrackingDetails = async (
     const { data } = await http.get<Response>(
       `/api/management/warehouse-trackings/${trackingId}/details`,
       {
-        next: {
-          tags: ["trackingDetails"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

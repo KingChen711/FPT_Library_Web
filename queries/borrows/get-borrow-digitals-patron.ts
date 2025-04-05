@@ -41,9 +41,6 @@ const getBorrowDigitalsPatron = async (
     const { data } = await http.get<TGetDigitalBorrowData>(
       `/api/users/borrows/digital`,
       {
-        next: {
-          tags: ["/borrows/digital", getAccessToken()!],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
@@ -53,14 +50,14 @@ const getBorrowDigitalsPatron = async (
             JSON.stringify([null, null])
               ? null
               : searchParams.registerDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
           expiryDateRange:
             JSON.stringify(searchParams.expiryDateRange) ===
             JSON.stringify([null, null])
               ? null
               : searchParams.expiryDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
         },
       }

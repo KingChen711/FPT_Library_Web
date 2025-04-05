@@ -8,12 +8,14 @@ import { Checkbox } from "@/components/ui/checkbox"
 
 type Props = {
   group: UntrainedGroup
+  disabled: boolean
 }
 
-function TrainCheckBox({ group }: Props) {
+function TrainCheckBox({ group, disabled }: Props) {
   const { groups, add, remove } = useUntrainedGroupsStore()
   return (
     <Checkbox
+      disabled={disabled}
       checked={!!groups.find((g) => g.id === group.id)}
       onCheckedChange={(val) => (val ? add(group) : remove(group.id))}
       className="mt-4"

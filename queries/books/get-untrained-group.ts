@@ -7,6 +7,7 @@ import { type EGroupCheckType } from "@/lib/types/enums"
 import {
   type Author,
   type BookEdition,
+  type Category,
   type LibraryItemAuthor,
 } from "@/lib/types/models"
 import { type TGroupCheckRes } from "@/actions/books/group-checks"
@@ -15,6 +16,7 @@ import { auth } from "../auth"
 
 type ItemDetail = BookEdition & {
   libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
+  category: Category
 }
 
 export type UntrainedGroup = {
@@ -32,6 +34,7 @@ export async function getUntrainedGroups(): Promise<UntrainedGroup[]> {
         listCheckedGroupDetail: {
           item: BookEdition & {
             libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
+            category: Category
           }
           isRoot: boolean
           propertiesChecked: {

@@ -35,11 +35,12 @@ export const trainGroupSchema = z.object({
   id: z.string(),
   groupName: z.string(),
   books: z.array(
-    z.object({
-      title: z.string(),
-      isbn: z.string(),
-      imageList: z
-        .array(
+    z
+      .object({
+        title: z.string(),
+        isbn: z.string(),
+        type: z.enum(["Single", "Series"]),
+        imageList: z.array(
           z
             .object({
               coverImage: z.string().trim().min(1, "min1").optional(),
@@ -70,9 +71,12 @@ export const trainGroupSchema = z.object({
               message: "validImageAI",
               path: ["coverImage"],
             })
-        )
-        .min(5, { message: "imagesMin5" }),
-    })
+        ),
+      })
+      .refine((data) => data.type === "Series" || data.imageList.length >= 5, {
+        message: "imagesMin5",
+        path: ["imageList"],
+      })
   ),
 })
 

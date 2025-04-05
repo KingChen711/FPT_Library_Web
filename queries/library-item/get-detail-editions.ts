@@ -24,9 +24,6 @@ const getDetailEditions = async (
     const { data } = await http.get<TGetEditionsLibraryItemsData>(
       `/api/library-items/${categoryId}/editions`,
       {
-        next: {
-          tags: ["library-items"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

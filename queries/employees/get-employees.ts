@@ -25,9 +25,6 @@ const getEmployees = async (
     const { data } = await http.get<TGetEmployeesData>(
       `/api/management/employees`,
       {
-        next: {
-          tags: ["employees"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

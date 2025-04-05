@@ -7,10 +7,10 @@ const SidebarLogoItem = () => {
   return (
     <SidebarMenuItem>
       <SidebarMenuButton asChild tooltip={"Intelligent Library System"}>
-        <Link href="/">
+        <Link href="/" className="flex h-12 items-center">
           <Image src="/images/logo.png" alt="logo" width={28} height={28} />
           <div className="flex flex-col text-primary">
-            <span className="text-sm font-semibold">E-Library System</span>
+            <span className="text-base font-semibold">E-Library System</span>
           </div>
         </Link>
       </SidebarMenuButton>

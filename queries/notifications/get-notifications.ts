@@ -21,9 +21,6 @@ const getNotifications = async (
     const { data } = await http.get<Pagination<Notifications>>(
       `/api/management/notifications`,
       {
-        next: {
-          tags: ["management-notifications"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },
@@ -34,7 +31,7 @@ const getNotifications = async (
             JSON.stringify([null, null])
               ? null
               : searchParams.createDateRange.map((d) =>
-                  d === null ? "null" : formatDate(new Date(d))
+                  d === null ? "" : formatDate(new Date(d))
                 ),
         },
       }

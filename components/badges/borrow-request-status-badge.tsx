@@ -14,11 +14,11 @@ type Props = {
 const getTypeColor = (type: EBorrowRequestStatus) => {
   switch (type) {
     case EBorrowRequestStatus.BORROWED:
-      return "success"
+      return "info"
     case EBorrowRequestStatus.CANCELLED:
       return "warning"
     case EBorrowRequestStatus.CREATED:
-      return "info"
+      return "progress"
     case EBorrowRequestStatus.EXPIRED:
       return "danger"
     default:

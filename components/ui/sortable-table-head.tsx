@@ -70,7 +70,7 @@ function SortableTableHead({
       <div
         className={cn(
           "flex items-center",
-          position === "center" && "justify-center",
+          position === "center" && "justify-center pl-2",
           position === "right" && "justify-end",
           currentSort?.includes(sortKey) && "text-primary"
         )}

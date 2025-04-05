@@ -8,10 +8,10 @@ interface DecodedToken {
   email: string
   exp: number
   userType: "user" | "employee"
-  //...
+  //...s
 }
 
-// export default async function getBase64(imageUrl: string) {
+// export default async function getBase64(imageUrl: string): Promise<string> {
 //   try {
 //     const res = await fetch(imageUrl)
 
@@ -26,6 +26,7 @@ interface DecodedToken {
 //     return base64
 //   } catch (e) {
 //     if (e instanceof Error) console.log(e.stack)
+//     return ""
 //   }
 // }
 

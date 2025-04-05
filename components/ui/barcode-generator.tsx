@@ -7,7 +7,10 @@ import { cn } from "@/lib/utils"
 
 type Props = {
   value: string
-  options?: JsBarcode.Options
+  options?: JsBarcode.Options & {
+    containerWidth?: number
+    containerHeight?: number
+  }
 }
 
 const BarcodeGenerator = ({ value, options }: Props) => {
@@ -25,13 +28,24 @@ const BarcodeGenerator = ({ value, options }: Props) => {
   }, [value, options])
 
   return (
-    <svg
-      // eslint-disable-next-line tailwindcss/no-custom-classname
+    <div
+      style={{
+        width: options?.containerWidth && `${options.containerWidth}px`,
+        height: options?.containerHeight && `${options.containerHeight}px`,
+      }}
       className={cn(
-        !mounted && `hidden ${options?.height ? `h-[${options.height}px]` : ""}`
+        "flex w-fit justify-center overflow-hidden rounded-md border bg-white"
       )}
-      ref={barcodeRef}
-    ></svg>
+    >
+      <svg
+        // eslint-disable-next-line tailwindcss/no-custom-classname
+        className={cn(
+          !mounted &&
+            `hidden ${options?.height ? `h-[${options.height}px]` : ""}`
+        )}
+        ref={barcodeRef}
+      ></svg>
+    </div>
   )
 }
 
