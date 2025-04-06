@@ -20,7 +20,7 @@ const PredictionResultTab = () => {
     usePrediction()
 
   const { data: libraryItem, isLoading } = useLibraryItemDetail(
-    bestMatchedLibraryItemId?.toString() || ""
+    bestMatchedLibraryItemId
   )
 
   if (isLoading) {
@@ -57,7 +57,7 @@ const PredictionResultTab = () => {
 
       <section className="flex h-[60vh] flex-1 flex-col justify-between overflow-y-auto rounded-md bg-card p-4">
         <LibraryItemInfo
-          id={libraryItem?.libraryItemId.toString()}
+          id={libraryItem?.libraryItemId}
           showInstances={true}
           shownInventory={true}
           showResources={false}

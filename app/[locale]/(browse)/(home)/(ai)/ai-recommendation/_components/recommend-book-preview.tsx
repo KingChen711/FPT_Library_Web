@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 type Props = {
   result: LibraryItemsRecommendation
   detectedLibraryItem: LibraryItem
-  comparedlibraryItemId: number
+  comparedLibraryItemId: number
 }
 
 const RecommendBookPreview = ({
@@ -25,7 +25,7 @@ const RecommendBookPreview = ({
   const tBookPage = useTranslations("BookPage")
   const router = useRouter()
   const { data: comparedLibraryItem, isLoading: isLoadingComparedLibraryItem } =
-    useLibraryItemDetail(comparedLibraryItemId?.toString() || "")
+    useLibraryItemDetail(comparedLibraryItemId)
 
   if (isLoadingComparedLibraryItem) return <Loader2 className="animate-spin" />
   if (!detectedLibraryItem || !comparedLibraryItem) {

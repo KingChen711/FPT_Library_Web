@@ -15,7 +15,6 @@ import { Skeleton } from "./skeleton"
 const rowsPerPageOptions = [
   { label: "5", value: "5" },
   { label: "10", value: "10" },
-  { label: "15", value: "15" },
   { label: "30", value: "30" },
   { label: "50", value: "50" },
   { label: "100", value: "100" },
@@ -28,7 +27,7 @@ type Props = {
   totalActualItem: number
   className?: string
   onPaginate?: (page: number) => void
-  onChangePageSize?: (size: "5" | "10" | "15" | "30" | "50" | "100") => void
+  onChangePageSize?: (size: "5" | "10" | "30" | "50" | "100") => void
 }
 
 function Paginator({
@@ -64,7 +63,7 @@ function Paginator({
   const handleChangeRowsPerPage = (pageSize: string) => {
     if (onChangePageSize) {
       setOpen(false)
-      onChangePageSize(pageSize as "5" | "10" | "15" | "30" | "50" | "100")
+      onChangePageSize(pageSize as "5" | "10" | "30" | "50" | "100")
       return
     }
 
