@@ -25,7 +25,7 @@ const PredictionOtherMatchesTab = () => {
           className="flex h-[460px] w-full gap-4 rounded-md p-4"
         >
           <PredictLibraryItemInfo
-            libraryItemId={item.libraryItemId.toString()}
+            libraryItemId={item.libraryItemId}
             ocrResult={item.ocrResult}
           />
         </Card>

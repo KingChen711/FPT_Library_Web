@@ -36,18 +36,23 @@ const PredictionOcrDetectTab = () => {
     usePrediction()
 
   const { data: ocrDetect, isLoading } = useOcrDetect(
-    bestMatchedLibraryItemId?.toString() as string,
+    bestMatchedLibraryItemId,
     uploadedImage!
   )
 
   const { data: libraryItem, isLoading: isLoadingLibraryItem } =
-    useLibraryItemDetail(bestMatchedLibraryItemId?.toString() || "")
+    useLibraryItemDetail(bestMatchedLibraryItemId)
 
   if (isLoading || isLoadingLibraryItem || !ocrDetect) {
     return <Loader2 className="animate-spin" />
   }
 
-  if (!predictResult || !bestMatchedLibraryItemId || !uploadedImage) {
+  if (
+    !predictResult ||
+    !bestMatchedLibraryItemId ||
+    !uploadedImage ||
+    !libraryItem
+  ) {
     router.push("/ai-prediction")
     return
   }
@@ -104,7 +109,7 @@ const PredictionOcrDetectTab = () => {
                     className="max-h-[60vh] overflow-y-auto border-2 bg-card"
                   >
                     <LibraryItemInfo
-                      id={libraryItem?.libraryItemId?.toString() as string}
+                      id={libraryItem?.libraryItemId}
                       showInstances={false}
                       showResources={false}
                       shownInventory={true}
@@ -175,7 +180,7 @@ const PredictionOcrDetectTab = () => {
                   className="max-h-[60vh] overflow-y-auto border-2 bg-card"
                 >
                   <LibraryItemInfo
-                    id={libraryItem?.libraryItemId?.toString() as string}
+                    id={libraryItem?.libraryItemId}
                     showInstances={false}
                     showResources={false}
                     shownInventory={true}

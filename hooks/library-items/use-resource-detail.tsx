@@ -4,7 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import { type BookResource } from "@/lib/types/models"
 
-function useResourceDetail(resourceId: string) {
+function useResourceDetail(resourceId: number) {
   const { accessToken } = useAuth()
   return useQuery({
     queryKey: [`library-items/resources/${resourceId}`],

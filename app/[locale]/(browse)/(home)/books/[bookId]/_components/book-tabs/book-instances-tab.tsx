@@ -1,17 +1,9 @@
 "use client"
 
-import { EllipsisVertical } from "lucide-react"
 import { useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 
 import { type LibraryItem } from "@/lib/types/models"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import {
   Table,
   TableBody,
@@ -40,15 +32,14 @@ const BookInstancesTab = ({ libraryItem }: Props) => {
             <TableHead className="text-center">{t("code")}</TableHead>
             <TableHead className="text-center">{t("barcode")}</TableHead>
             <TableHead className="text-center">{t("status")}</TableHead>
-            <TableHead className="text-center">{t("action")}</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {libraryItem.libraryItemInstances &&
-            libraryItem.libraryItemInstances.map((instance) => (
+            libraryItem.libraryItemInstances.map((instance, index) => (
               <TableRow key={instance.libraryItemInstanceId}>
                 <TableCell className="text-center font-medium">
-                  {instance.libraryItemInstanceId}
+                  {index + 1}
                 </TableCell>
                 <TableCell className="text-center">
                   {instance.barcode}
@@ -57,7 +48,7 @@ const BookInstancesTab = ({ libraryItem }: Props) => {
                   <div className="flex w-full justify-center">
                     <Barcode
                       value={instance.barcode}
-                      width={1}
+                      width={1.5}
                       height={50}
                       fontSize={12}
                       // displayValue={false}
@@ -67,22 +58,6 @@ const BookInstancesTab = ({ libraryItem }: Props) => {
                 <TableCell>
                   <div className="flex w-full justify-center">
                     <BookCopyStatusBadge status={instance.status} />
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex w-full justify-center">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                          <EllipsisVertical />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuItem>{t("borrow")}</DropdownMenuItem>
-                        <DropdownMenuItem>{t("locate")}</DropdownMenuItem>
-                        <DropdownMenuItem>{t("detail")}</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
                   </div>
                 </TableCell>
               </TableRow>

@@ -1,10 +1,8 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { LocalStorageKeys } from "@/constants"
+import { useState } from "react"
 import { Heart } from "lucide-react"
 
-import { localStorageHandler } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import OverviewFavoriteItem from "@/components/ui/overview-favorite-item"
 import {
@@ -23,27 +21,27 @@ import {
 } from "@/components/ui/tooltip"
 
 const OverviewFavoriteList = () => {
-  const [likedLibraryItem, setLikedLibraryItem] = useState<string[]>([])
+  const [likedLibraryItem] = useState<number[]>([])
 
-  const updateFavorites = () => {
-    setLikedLibraryItem(localStorageHandler.getItem(LocalStorageKeys.FAVORITE))
-  }
+  // const updateFavorites = () => {
+  //   setLikedLibraryItem(localStorageHandler.getItem(LocalStorageKeys.FAVORITE))
+  // }
 
-  useEffect(() => {
-    updateFavorites()
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === LocalStorageKeys.FAVORITE) {
-        updateFavorites()
-      }
-    }
-    const handleCustomEvent = () => updateFavorites()
-    window.addEventListener("storage", handleStorageChange)
-    window.addEventListener(LocalStorageKeys.FAVORITE, handleCustomEvent)
-    return () => {
-      window.removeEventListener("storage", handleStorageChange)
-      window.removeEventListener(LocalStorageKeys.FAVORITE, handleCustomEvent)
-    }
-  }, [])
+  // useEffect(() => {
+  //   updateFavorites()
+  //   const handleStorageChange = (event: StorageEvent) => {
+  //     if (event.key === LocalStorageKeys.FAVORITE) {
+  //       updateFavorites()
+  //     }
+  //   }
+  //   const handleCustomEvent = () => updateFavorites()
+  //   window.addEventListener("storage", handleStorageChange)
+  //   window.addEventListener(LocalStorageKeys.FAVORITE, handleCustomEvent)
+  //   return () => {
+  //     window.removeEventListener("storage", handleStorageChange)
+  //     window.removeEventListener(LocalStorageKeys.FAVORITE, handleCustomEvent)
+  //   }
+  // }, [])
 
   return (
     <Sheet>
@@ -58,7 +56,7 @@ const OverviewFavoriteList = () => {
                     className="transition-transform duration-200 hover:scale-110"
                   />
                   {likedLibraryItem?.length > 0 && (
-                    <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-danger text-xs font-bold text-white shadow-md">
+                    <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-danger text-xs font-bold text-primary-foreground shadow-md">
                       {likedLibraryItem.length}
                     </span>
                   )}
@@ -95,13 +93,7 @@ const OverviewFavoriteList = () => {
 
         {likedLibraryItem.length > 0 && (
           <div className="flex justify-end">
-            <Button
-              variant="destructive"
-              className="px-4"
-              onClick={() =>
-                localStorageHandler.clear(LocalStorageKeys.FAVORITE)
-              }
-            >
+            <Button variant="destructive" className="px-4" onClick={() => {}}>
               Remove All
             </Button>
           </div>

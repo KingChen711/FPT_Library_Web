@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { useAuth } from "@/contexts/auth-provider"
 import { useRouter } from "@/i18n/routing"
 import { Eye } from "lucide-react"
 import { useTranslations } from "next-intl"
@@ -22,6 +23,7 @@ const BorrowResourceCard = ({
   type,
   libraryItem,
 }: ResourceCardProps) => {
+  const { isManager } = useAuth()
   const router = useRouter()
   const t = useTranslations("BookPage")
   const [openDigitalBorrow, setOpenDigitalBorrow] = useState<boolean>(false)
@@ -80,6 +82,7 @@ const BorrowResourceCard = ({
             variant="outline"
             size="sm"
             className="flex-1"
+            disabled={isManager}
             onClick={() => setOpenDigitalBorrow(true)}
           >
             {t("borrow")}

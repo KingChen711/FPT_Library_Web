@@ -7,7 +7,7 @@ type TPrediction = {
   setUploadImage: (image: File) => void
   detectedLibraryItemIds: number[]
   setDetectedLibraryItemIds: (ids: number[]) => void
-  bestMatchedLibraryItemId: number | null
+  bestMatchedLibraryItemId: number
   setBestMatchedLibraryItemId: (id: number) => void
   predictResult: PredictResult | null
   setPredictResult: (result: PredictResult) => void
@@ -21,7 +21,7 @@ export const usePrediction = create<TPrediction>((set) => ({
   setDetectedLibraryItemIds: (ids: number[]) =>
     set({ detectedLibraryItemIds: ids }),
 
-  bestMatchedLibraryItemId: null,
+  bestMatchedLibraryItemId: 0,
   setBestMatchedLibraryItemId: (id: number) =>
     set({ bestMatchedLibraryItemId: id }),
 

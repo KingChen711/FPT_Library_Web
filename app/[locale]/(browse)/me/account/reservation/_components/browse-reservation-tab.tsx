@@ -159,7 +159,7 @@ const BrowseReservationTab = () => {
                       </DialogHeader>
 
                       <LibraryItemInfo
-                        id="1"
+                        id={1}
                         showInstances={false}
                         showResources={false}
                         showImage={true}

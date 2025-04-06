@@ -7,7 +7,7 @@ import { type LibraryItem } from "@/lib/types/models"
 import { auth } from "../auth"
 
 const getLibraryItem = async (
-  libraryItemId: string
+  libraryItemId: number
 ): Promise<LibraryItem | null> => {
   const { getAccessToken } = auth()
   try {

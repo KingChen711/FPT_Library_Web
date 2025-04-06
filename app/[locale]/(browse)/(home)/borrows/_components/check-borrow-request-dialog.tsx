@@ -1,8 +1,14 @@
 "use client"
 
-import { useEffect, useState, useTransition } from "react"
+import {
+  useEffect,
+  useState,
+  useTransition,
+  type Dispatch,
+  type SetStateAction,
+} from "react"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { useRouter } from "@/i18n/routing"
-import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -20,28 +26,35 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
+import { type SelectedBorrow } from "../page"
 import AvailableBorrowLibraryItem from "./available-borrow-library-item"
 import AvailableBorrowResource from "./available-borrow-resource"
 
 type Props = {
   open: boolean
   setOpen: (value: boolean) => void
+  selectedBorrow: SelectedBorrow
+  setSelectedBorrow: Dispatch<SetStateAction<SelectedBorrow>>
 }
 
-const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
+const CheckBorrowRequestDialog = ({
+  open,
+  setOpen,
+  selectedBorrow,
+  setSelectedBorrow,
+}: Props) => {
   const router = useRouter()
   const t = useTranslations("BookPage")
   const locale = useLocale()
   const [isPending, startTransition] = useTransition()
-  const { selectedLibraryItemIds, selectedResourceIds } =
-    useBorrowRequestStore()
+
   const [allowToReserveItems, setAllowToReserveItems] = useState<number[]>([])
   const [allowToBorrowResources, setAllowToBorrowResources] = useState<
     number[]
   >([])
-
+  const { borrowedLibraryItems, borrowedResources } = useLibraryStorage()
   const { data, isLoading, refetch } = useCheckAvailableBorrowRequest(
-    selectedLibraryItemIds
+    selectedBorrow.selectedLibraryItemIds
   )
 
   const isAllowedBorrowRequest: boolean =
@@ -74,6 +87,18 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
               ? "Yêu cầu mượn thành công"
               : "Borrow request successfully",
           variant: "success",
+        })
+        borrowedLibraryItems.removeItems(
+          data?.allowToBorrowItems?.map((id) => id.libraryItemId) || []
+        )
+        borrowedResources.removeItems(
+          data?.allowToBorrowItems?.map((id) => id.libraryItemId) || []
+        )
+        setAllowToReserveItems([])
+        setAllowToBorrowResources([])
+        setSelectedBorrow({
+          selectedLibraryItemIds: [],
+          selectedResourceIds: [],
         })
         router.push("/me/account/borrow")
         setOpen(false)
@@ -129,7 +154,7 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
         {/* Fail to request borrow */}
         {!isAllowedBorrowRequest &&
           data &&
-          selectedLibraryItemIds.length > 0 && (
+          selectedBorrow.selectedLibraryItemIds.length > 0 && (
             <div className="flex flex-col gap-2">
               {data?.alreadyRequestedItems?.length > 0 && (
                 <div>
@@ -192,12 +217,13 @@ const CheckBorrowRequestDialog = ({ open, setOpen }: Props) => {
             </div>
           )}
 
-        {selectedResourceIds.length > 0 && (
+        {selectedBorrow.selectedResourceIds.length > 0 && (
           <div>
             <h1 className="font-semibold">
-              {t("allow to borrow")} ({selectedResourceIds.length})
+              {t("allow to borrow")} (
+              {selectedBorrow.selectedResourceIds.length})
             </h1>
-            {selectedResourceIds.map((id) => (
+            {selectedBorrow.selectedResourceIds.map((id) => (
               <AvailableBorrowResource
                 key={id}
                 allowToBorrowResources={allowToBorrowResources}

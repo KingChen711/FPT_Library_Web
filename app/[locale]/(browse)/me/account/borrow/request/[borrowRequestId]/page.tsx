@@ -2,7 +2,6 @@
 
 import type React from "react"
 import { useState } from "react"
-import Image from "next/image"
 import { Link } from "@/i18n/routing"
 import {
   AlertCircle,
@@ -14,8 +13,6 @@ import {
   Clock,
   Clock3,
   FileText,
-  Globe,
-  HomeIcon as House,
   Loader2,
   XCircle,
 } from "lucide-react"
@@ -33,24 +30,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-import { Icons } from "@/components/ui/icons"
 import NoData from "@/components/ui/no-data"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
 
 import BorrowRequestTransactionDialog from "../_components/borrow-request-transaction-dialog"
+import BorrowBookPreview from "../../_components/borrow-book-preview"
+import BorrowReserveItemPreview from "../../_components/borrow-reserve-item-preview"
 
 type Props = {
   params: {
@@ -58,7 +42,6 @@ type Props = {
   }
 }
 
-// Helper function to get request status label
 const getBorrowRequestStatusLabel = (
   status: number
 ): {
@@ -106,48 +89,6 @@ const getBorrowRequestStatusLabel = (
   }
 }
 
-// Helper function to get queue status label
-const getBorrowQueueStatusLabel = (status: number) => {
-  switch (status) {
-    case 0:
-      return {
-        label: "Waiting",
-        color: "bg-blue-500",
-        icon: <Clock className="mr-1.5 size-3.5" />,
-      }
-    case 1:
-      return {
-        label: "Ready for Pickup",
-        color: "bg-green-500",
-        icon: <CheckCircle2 className="mr-1.5 size-3.5" />,
-      }
-    case 2:
-      return {
-        label: "Collected",
-        color: "bg-purple-500",
-        icon: <CheckCircle2 className="mr-1.5 size-3.5" />,
-      }
-    case 3:
-      return {
-        label: "Expired",
-        color: "bg-red-500",
-        icon: <AlertCircle className="mr-1.5 size-3.5" />,
-      }
-    case 4:
-      return {
-        label: "Cancelled",
-        color: "bg-gray-500",
-        icon: <XCircle className="mr-1.5 size-3.5" />,
-      }
-    default:
-      return {
-        label: "Unknown",
-        color: "bg-gray-400",
-        icon: <AlertCircle className="mr-1.5 size-3.5" />,
-      }
-  }
-}
-
 const BorrowRequestDetail = ({ params }: Props) => {
   const [openTransaction, setOpenTransaction] = useState(false)
   const t = useTranslations("BookPage.borrow tracking")
@@ -178,7 +119,7 @@ const BorrowRequestDetail = ({ params }: Props) => {
         open={openTransaction}
         setOpen={setOpenTransaction}
       />
-      <div className="mb-6 flex items-center justify-between gap-2">
+      <section className="mb-6 flex items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
@@ -192,33 +133,25 @@ const BorrowRequestDetail = ({ params }: Props) => {
           </Button>
           <h1 className="text-2xl font-bold">{t("digital borrow detail")}</h1>
         </div>
-
-        {borrowRequest.isExistPendingResources && (
-          <Button onClick={() => setOpenTransaction(true)}>
-            {t("payment")}
-          </Button>
-        )}
-      </div>
+      </section>
 
       {/* Status overview card */}
       <Card className="mb-6 overflow-hidden border-none bg-gradient-to-r from-primary/10 to-primary/5 shadow-md">
         <CardContent className="p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
+            <div className="flex items-center gap-2">
               <h2 className="text-xl font-semibold text-primary">
                 {t("status")}
               </h2>
-              <div className="mt-2 flex items-center">
-                <Badge
-                  variant={
-                    getBorrowRequestStatusLabel(borrowRequest.status).variant
-                  }
-                  className="flex items-center px-3 py-1 text-sm font-medium"
-                >
-                  {getBorrowRequestStatusLabel(borrowRequest.status).icon}
-                  {t(getBorrowRequestStatusLabel(borrowRequest.status).label)}
-                </Badge>
-              </div>
+              <Badge
+                variant={
+                  getBorrowRequestStatusLabel(borrowRequest.status).variant
+                }
+                className="flex items-center px-3 py-1 text-sm font-medium"
+              >
+                {getBorrowRequestStatusLabel(borrowRequest.status).icon}
+                {t(getBorrowRequestStatusLabel(borrowRequest.status).label)}
+              </Badge>
             </div>
 
             <div className="grid grid-cols-2 gap-4 md:flex md:items-center md:gap-6">
@@ -262,7 +195,7 @@ const BorrowRequestDetail = ({ params }: Props) => {
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Request Information Card */}
-        <Card className="overflow-hidden shadow-sm transition-all hover:shadow-md lg:col-span-1">
+        <Card className="overflow-hidden shadow-sm transition-all lg:col-span-1">
           <CardHeader className="bg-muted/30 pb-3">
             <CardTitle className="flex items-center text-lg">
               <FileText className="mr-2 size-5 text-primary" />
@@ -336,206 +269,85 @@ const BorrowRequestDetail = ({ params }: Props) => {
         </Card>
 
         {/* Library Items Card */}
-        <Card className="overflow-hidden shadow-sm transition-all hover:shadow-md lg:col-span-2">
-          <CardHeader className="bg-muted/30 pb-3">
-            <CardTitle className="flex items-center text-lg">
-              <BookOpen className="mr-2 size-5 text-primary" />
-              {t("library items")}
-            </CardTitle>
-            <CardDescription>
-              {t("library items information description")}
-            </CardDescription>
-          </CardHeader>
-          <CardContent className="p-4">
-            <div className="space-y-4">
-              {borrowRequest.libraryItems.map((libraryItem) => (
-                <Card
-                  key={libraryItem.libraryItemId}
-                  className="overflow-hidden border border-muted/50 transition-all hover:border-primary/20 hover:shadow-md"
-                >
-                  <div className="flex flex-col p-4 sm:flex-row">
-                    <div className="relative mb-4 h-[160px] w-full max-w-[120px] overflow-hidden rounded-md sm:mb-0 sm:mr-4">
-                      <Image
-                        src={
-                          libraryItem.coverImage ||
-                          "/placeholder.svg?height=160&width=120" ||
-                          "/placeholder.svg"
-                        }
-                        fill
-                        style={{ objectFit: "cover" }}
-                        alt={libraryItem.title}
-                        className="rounded-md"
-                      />
-                    </div>
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex w-full items-start justify-between">
-                        <div className="w-full">
-                          <div className="flex items-center justify-between">
-                            <h3 className="line-clamp-1 flex-1 font-semibold text-primary">
-                              {libraryItem.title}
-                            </h3>
-                          </div>
-                          <div className="mt-1 flex items-center">
-                            <Icons.User className="mr-1.5 size-3.5 text-muted-foreground" />
-                            <p className="text-sm text-muted-foreground">
-                              {libraryItem.authors[0]?.fullName}
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-
-                      <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-                        {libraryItem.summary}
-                      </p>
-
-                      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 md:grid-cols-4">
-                        {libraryItem.publicationYear && (
-                          <div className="flex items-center text-xs text-muted-foreground">
-                            <Calendar className="mr-1.5 size-3.5 text-primary/70" />
-                            <span>{libraryItem.publicationYear}</span>
-                          </div>
-                        )}
-
-                        {libraryItem.language && (
-                          <div className="flex items-center text-xs text-muted-foreground">
-                            <Globe className="mr-1.5 size-3.5 text-primary/70" />
-                            <span>{libraryItem.language}</span>
-                          </div>
-                        )}
-
-                        {libraryItem.pageCount && (
-                          <div className="flex items-center text-xs text-muted-foreground">
-                            <BookOpen className="mr-1.5 size-3.5 text-primary/70" />
-                            <span>
-                              {libraryItem.pageCount} {t("pages")}
-                            </span>
-                          </div>
-                        )}
-
-                        {libraryItem.publicationPlace && (
-                          <div className="flex items-center text-xs text-muted-foreground">
-                            <House className="mr-1.5 size-3.5 shrink-0 text-primary/70" />
-                            <span className="truncate">
-                              {libraryItem.publicationPlace}
-                            </span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </Card>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
+        {borrowRequest.libraryItems &&
+          borrowRequest.libraryItems.length > 0 && (
+            <Card className="overflow-hidden shadow-sm transition-all lg:col-span-3">
+              <CardHeader className="bg-muted/30 pb-3">
+                <CardTitle className="flex items-center text-lg">
+                  <BookOpen className="mr-2 size-5 text-primary" />
+                  {t("library items")}
+                </CardTitle>
+                <CardDescription>
+                  {t("library items information description")}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="space-y-4">
+                  {borrowRequest.libraryItems.map((libraryItem) => (
+                    <BorrowBookPreview
+                      expandable={true}
+                      libraryItem={libraryItem}
+                      key={`/borrow/library-items/${libraryItem.libraryItemId}`}
+                    />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
         {/* Reservation Queue Card */}
-        {borrowRequest.reservationQueues.length > 0 && (
-          <Card className="overflow-hidden shadow-sm transition-all hover:shadow-md lg:col-span-3">
-            <CardHeader className="bg-muted/30 pb-3">
-              <CardTitle className="flex items-center text-lg">
-                <Clock className="mr-2 size-5 text-primary" />
-                {t("reservation queue")}
-              </CardTitle>
-              <CardDescription>
-                {t("reservation queue description")}
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-4">
-              <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>{t("status")}</TableHead>
-                      <TableHead>{t("reservation date")}</TableHead>
-                      <TableHead>{t("expiry date")}</TableHead>
-                      <TableHead>{t("expected available date")}</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {borrowRequest.reservationQueues.map((queue) => {
-                      const queueStatus = getBorrowQueueStatusLabel(
-                        queue.queueStatus
-                      )
-                      return (
-                        <TableRow key={queue.queueId}>
-                          <TableCell>
-                            <Badge
-                              className="flex w-fit items-center gap-1 px-2 py-1"
-                              style={{ backgroundColor: queueStatus.color }}
-                            >
-                              {queueStatus.icon}
-                              {queueStatus.label}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {formatDate(queue.reservationDate.toString())}
-                          </TableCell>
-                          <TableCell>
-                            {queue.expiryDate
-                              ? formatDate(queue.expiryDate.toString())
-                              : t("not available")}
-                          </TableCell>
-                          <TableCell>
-                            <TooltipProvider>
-                              <Tooltip>
-                                <TooltipTrigger asChild>
-                                  <span className="cursor-help underline decoration-dotted">
-                                    {formatDate(
-                                      queue.expectedAvailableDateMin
-                                        ? queue.expectedAvailableDateMin.toString()
-                                        : t("not available")
-                                    )}
-                                  </span>
-                                </TooltipTrigger>
-                                <TooltipContent>
-                                  <p>
-                                    {t("expected available range")}:
-                                    {formatDate(
-                                      queue.expectedAvailableDateMin
-                                        ? queue.expectedAvailableDateMin.toString()
-                                        : t("not available")
-                                    )}
-                                    -
-                                    {formatDate(
-                                      queue.expectedAvailableDateMax
-                                        ? queue.expectedAvailableDateMax.toString()
-                                        : t("not available")
-                                    )}
-                                  </p>
-                                </TooltipContent>
-                              </Tooltip>
-                            </TooltipProvider>
-                          </TableCell>
-                        </TableRow>
-                      )
-                    })}
-                  </TableBody>
-                </Table>
-              </div>
-            </CardContent>
-          </Card>
-        )}
+        {borrowRequest.reservationQueues &&
+          borrowRequest.reservationQueues.length > 0 && (
+            <Card className="overflow-hidden shadow-sm transition-all lg:col-span-3">
+              <CardHeader className="bg-muted/30 pb-3">
+                <CardTitle className="flex items-center text-lg">
+                  <Clock className="mr-2 size-5 text-primary" />
+                  {t("reservation queue")}
+                </CardTitle>
+                <CardDescription>
+                  {t("reservation queue description")}
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="p-4">
+                <div className="space-y-4">
+                  {borrowRequest.reservationQueues.map((queue) => (
+                    <BorrowReserveItemPreview
+                      reservationQueue={queue}
+                      expandable={true}
+                      libraryItem={queue.libraryItem}
+                      key={`/borrow/reservation-queues/${queue.libraryItemId}`}
+                    />
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          )}
 
         {/* Borrow Request Resources Card */}
         {borrowRequest.borrowRequestResources.length > 0 && (
-          <Card className="overflow-hidden shadow-sm transition-all hover:shadow-md lg:col-span-3">
-            <CardHeader className="bg-muted/30 pb-3">
-              <CardTitle className="flex items-center text-lg">
-                <FileText className="mr-2 size-5 text-primary" />
-                {t("borrow request resource")}
-              </CardTitle>
-              <CardDescription>
-                {t("borrow request resource description")}
-              </CardDescription>
+          <Card className="overflow-hidden shadow-sm transition-all lg:col-span-3">
+            <CardHeader className="flex w-full flex-row items-center justify-between bg-muted/30 pb-3">
+              <div>
+                <CardTitle className="flex items-center text-lg">
+                  <FileText className="mr-2 size-5 text-primary" />
+                  {t("borrow request resource")}
+                </CardTitle>
+                <CardDescription>
+                  {t("borrow request resource description")}
+                </CardDescription>
+              </div>
+              {borrowRequest.isExistPendingResources && (
+                <Button onClick={() => setOpenTransaction(true)}>
+                  {t("payment")}
+                </Button>
+              )}
             </CardHeader>
             <CardContent className="p-4">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {borrowRequest.borrowRequestResources.map((resource) => (
                   <Card
                     key={resource.borrowRequestResourceId}
-                    className="overflow-hidden border border-muted/50 transition-all hover:border-primary/20 hover:shadow-md"
+                    className="overflow-hidden border transition-all hover:border-primary hover:shadow-lg"
                   >
                     <CardHeader className="bg-muted/10 pb-2 pt-3">
                       <CardTitle className="line-clamp-1 text-base">

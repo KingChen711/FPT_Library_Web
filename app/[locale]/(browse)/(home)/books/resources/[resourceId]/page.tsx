@@ -26,6 +26,7 @@ import "react-pdf/dist/Page/TextLayer.css"
 
 import { WorkerPdfVersion } from "@/constants/library-version"
 import { useAuth } from "@/contexts/auth-provider"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { useRouter } from "@/i18n/routing"
 import {
   ArrowLeft,
@@ -40,7 +41,7 @@ import {
 import { useTranslations } from "next-intl"
 
 import { http } from "@/lib/http"
-import useGetOwnResource from "@/hooks/library-items/get-own-resource"
+import { cn } from "@/lib/utils"
 import useResourceDetail from "@/hooks/library-items/use-resource-detail"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -49,19 +50,19 @@ import { default as ResourcePayment } from "../_components/resource-payment"
 
 type Props = {
   params: {
-    resourceId: string
+    resourceId: number
   }
   searchParams: {
     resourceType: string
     isPreview: string
-    bookId: string
+    bookId: number
   }
 }
 
 export default function DigitalResourcePage({ params, searchParams }: Props) {
   const baseWidth = 400
   const baseHeight = 600
-  const { accessToken } = useAuth()
+  const { accessToken, isManager } = useAuth()
   const flipBookRef = useRef(null)
   const router = useRouter()
   const [isClient, setIsClient] = useState(false)
@@ -69,16 +70,19 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
   const [isFullscreen, setIsFullscreen] = useState(false)
   const [zoomLevel, setZoomLevel] = useState(100)
   const containerRef = useRef<HTMLDivElement>(null)
-  const { data, isLoading } = useGetOwnResource(+params.resourceId)
+  // const { data, isLoading } = useGetOwnResource(+params.resourceId)
   const [pdfLink, setPdfLink] = useState<string>("")
   const [openPrintShotWarning, setOpenPrintShotWarning] = useState(false)
   const t = useTranslations("BookPage")
   const tGeneralManagement = useTranslations("GeneralManagement")
-  console.log("🚀 ~ DigitalResourcePage ~ data:", data)
   const [openPayment, setOpenPayment] = useState<boolean>(false)
+  const [openBorrowDigital, setOpenBorrowDigital] = useState<boolean>(false)
   const { data: resource, isLoading: isLoadingResource } = useResourceDetail(
     params.resourceId
   )
+  const { borrowedResources } = useLibraryStorage()
+
+  const isAdded = borrowedResources.has(Number(params.resourceId))
 
   useEffect(() => {
     setIsClient(true)
@@ -167,7 +171,7 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
     tGeneralManagement,
   ])
 
-  if (isLoading || isLoadingResource) {
+  if (isLoadingResource) {
     return <Loader2 className="size-6 animate-spin" />
   }
 
@@ -197,12 +201,22 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
     setZoomLevel((prevZoom) => Math.max(prevZoom - 10, 50))
   }
 
+  const handleBorrowDigital = () => {
+    borrowedResources.toggle(Number(params.resourceId))
+    toast({
+      title: isAdded ? t("deleted to borrow list") : t("added to borrow list"),
+      variant: "default",
+    })
+    setOpenBorrowDigital(false)
+  }
+
   if (!isClient || !resource) {
     return null
   }
 
   return (
     <>
+      {/* Open warning */}
       <Dialog
         open={openPrintShotWarning}
         onOpenChange={setOpenPrintShotWarning}
@@ -222,13 +236,31 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
         </DialogContent>
       </Dialog>
 
+      {/* Open Borrow Digital */}
+      <Dialog open={openBorrowDigital} onOpenChange={setOpenBorrowDigital}>
+        <DialogContent
+          className={cn("sm:max-w-xl", {
+            paymentData: "sm:max-w-2xl",
+          })}
+        >
+          <DialogHeader>
+            <DialogTitle>{t("add resource to borrow list")}</DialogTitle>
+          </DialogHeader>
+          <DialogFooter className="flex items-center justify-end gap-4">
+            <DialogClose>{t("cancel")}</DialogClose>
+            <Button onClick={handleBorrowDigital}>
+              {t(isAdded ? "delete" : "add")}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
       <ResourcePayment
         open={openPayment}
         setOpen={setOpenPayment}
         libraryItemId={searchParams.bookId}
         selectedResource={resource}
       />
-
       <div
         ref={containerRef}
         className="flex h-full flex-col overflow-hidden bg-secondary"
@@ -243,37 +275,43 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
           </Button>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2 rounded-full bg-zinc/50 p-2 text-primary-foreground">
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={"ghost"}
-                      className="text-primary-foreground"
-                    >
-                      <Book />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("added to borrow list")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
-              <TooltipProvider>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <Button
-                      variant={"ghost"}
-                      onClick={() => setOpenPayment(true)}
-                      className="text-primary-foreground"
-                    >
-                      <Coins />
-                    </Button>
-                  </TooltipTrigger>
-                  <TooltipContent>
-                    <p>{t("payment")}</p>
-                  </TooltipContent>
-                </Tooltip>
-              </TooltipProvider>
+              {!isManager && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant={"ghost"}
+                        onClick={() => setOpenBorrowDigital(true)}
+                        className="text-primary-foreground"
+                      >
+                        <Book />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{t("added to borrow list")}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
+
+              {!isManager && (
+                <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <Button
+                        variant={"ghost"}
+                        onClick={() => setOpenPayment(true)}
+                        className="text-primary-foreground"
+                      >
+                        <Coins />
+                      </Button>
+                    </TooltipTrigger>
+                    <TooltipContent>
+                      <p>{t("payment")}</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+              )}
               <Button
                 variant="ghost"
                 size="icon"

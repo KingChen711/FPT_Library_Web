@@ -135,6 +135,10 @@ html body[data-scroll-locked] {
   margin-right: 0 !important;
 }
 
+svg.star-svg {
+  display: inline;
+}
+
 /* hidden tiny editor water mark  */
 .tox-notifications-container {
   display: none !important;
