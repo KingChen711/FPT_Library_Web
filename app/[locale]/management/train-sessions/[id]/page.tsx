@@ -17,6 +17,7 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import NoData from "@/components/ui/no-data"
 import TrainingStatusBadge from "@/components/badges/training-status-badge"
@@ -132,14 +133,26 @@ async function TrainSessionDetailPage({ params }: Props) {
                   <Label>{t("Trained images")}</Label>
                   <div className="flex flex-wrap gap-4">
                     {detail.trainingImages.map((i) => (
-                      <Image
-                        key={i.imageUrl}
-                        alt={i.imageUrl}
-                        src={i.imageUrl}
-                        width={160}
-                        height={240}
-                        className="h-[120px] w-20 rounded-md border"
-                      />
+                      <Dialog key={i.imageUrl}>
+                        <DialogTrigger>
+                          <Image
+                            alt={i.imageUrl}
+                            src={i.imageUrl}
+                            width={500}
+                            height={500}
+                            className="h-[120px] w-auto cursor-pointer rounded-md border hover:border-primary"
+                          />
+                        </DialogTrigger>
+                        <DialogContent className="flex w-fit max-w-[80vw] justify-center">
+                          <Image
+                            alt={i.imageUrl}
+                            src={i.imageUrl}
+                            width={1500}
+                            height={1500}
+                            className="h-[400px] w-auto rounded-md border"
+                          />
+                        </DialogContent>
+                      </Dialog>
                     ))}
                   </div>
                 </div>

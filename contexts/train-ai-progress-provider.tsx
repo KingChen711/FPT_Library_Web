@@ -18,6 +18,8 @@ import { useAuth } from "./auth-provider"
 export type TrainingGroup = {
   progress: number
   groupCode: string
+  sessionId: number
+  totalItems: number
 }
 
 type TrainAIProviderProps = {
@@ -68,6 +70,8 @@ const TrainAIProvider = ({ children }: TrainAIProviderProps) => {
         groupCode:
           locale === "vi" ? "Tiến trình Train AI" : "Train AI progress",
         progress: notification.message,
+        sessionId: notification.session,
+        totalItems: notification.NumberOfTrainingItems,
       })
     }
 

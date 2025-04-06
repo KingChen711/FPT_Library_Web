@@ -1,5 +1,7 @@
 export type SocketTrainAI = {
   message: number
+  session: number
+  NumberOfTrainingItems: number
   groupCode: {
     id: string
     name: string
