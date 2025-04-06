@@ -16,9 +16,6 @@ const getFines = async (
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<Pagination<Fines>>(`/api/fines/policy`, {
-      next: {
-        tags: ["management-fines"],
-      },
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

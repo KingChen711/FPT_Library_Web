@@ -65,7 +65,7 @@ export const searchCardsSchema = z
     tab: z.enum(["Active", "Archived"]).catch("Active"),
     search: z.string().catch(""),
     pageIndex: z.coerce.number().min(1).catch(1),
-    pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("10"),
+    pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("5"),
     sort: z
       .enum([
         "Email",

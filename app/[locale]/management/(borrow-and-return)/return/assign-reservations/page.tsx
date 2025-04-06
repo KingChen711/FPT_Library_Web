@@ -6,7 +6,6 @@ import { z } from "zod"
 
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
-import { Label } from "@/components/ui/label"
 
 import AssignReservationsForm from "./_components/assign-reservations-form"
 
@@ -38,10 +37,8 @@ async function AssignReservations({ searchParams }: Props) {
         <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
           <h3 className="text-2xl font-semibold">{t("Assign reservations")}</h3>
         </div>
-        <div className="flex flex-col gap-2">
-          <Label className="text-base">{t("Assign list")}</Label>
-          <AssignReservationsForm reservations={reservationQueues} />
-        </div>
+
+        <AssignReservationsForm reservations={reservationQueues} />
       </div>
     </div>
   )

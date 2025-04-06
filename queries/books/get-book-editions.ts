@@ -40,9 +40,6 @@ const getBookEditions = async (
     const { data } = await http.get<Pagination<BookEditions>>(
       `/api/management/library-items`,
       {
-        next: {
-          tags: ["management-book-editions"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

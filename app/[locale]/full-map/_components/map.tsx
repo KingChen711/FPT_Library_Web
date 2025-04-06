@@ -19,7 +19,7 @@ const conf: woosmap.map.IndoorRendererOptions = {
 const widgetConf: woosmap.map.IndoorWidgetOptions = {
   units: "metric", // Define the distance unit for route distance calculation
   ui: {
-    primaryColor: "#2af0ea",
+    primaryColor: "#147672",
     secondaryColor: "#fe2858",
   },
 }

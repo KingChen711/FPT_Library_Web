@@ -208,7 +208,7 @@ const BookFilterTabs = ({
                 setCanBorrow(
                   value === "all"
                     ? undefined
-                    : value === "can borrow"
+                    : value === "canBorrow"
                       ? true
                       : false
                 )

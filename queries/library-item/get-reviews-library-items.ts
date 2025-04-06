@@ -24,9 +24,6 @@ const getReviewsLibraryItem = async (
     const { data } = await http.get<TGetReviewsLibraryItemsData>(
       `/api/library-items/${categoryId}/reviews`,
       {
-        next: {
-          tags: ["library-items"],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

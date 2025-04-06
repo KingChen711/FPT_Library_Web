@@ -23,9 +23,6 @@ const getRelatedLibraryItemsByAuthor = async (
     const { data } = await http.get<TGetRelatedLibraryItemsData>(
       `/api/library-items/author-related-items`,
       {
-        next: {
-          tags: [`related-library-items-${searchParams.authorId}`],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

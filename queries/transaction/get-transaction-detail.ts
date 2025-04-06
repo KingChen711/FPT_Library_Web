@@ -34,9 +34,6 @@ const getTransactionDetail = async ({
     const { data } = await http.get<TGetTransactionData | null>(
       `/api/users/transactions/${transactionId}`,
       {
-        next: {
-          tags: [`/get-all-own-transactions/${transactionId}`],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

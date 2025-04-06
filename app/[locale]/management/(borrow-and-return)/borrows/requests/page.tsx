@@ -1,295 +1,210 @@
 import React from "react"
+import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
+import getBorrowRequests from "@/queries/borrows/get-borrow-requests"
+import { format } from "date-fns"
+import { Eye, MoreHorizontal } from "lucide-react"
 
+import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
+import { searchBorrowRequestsSchema } from "@/lib/validations/borrow-requests/search-borrow-requests"
+import { Button } from "@/components/ui/button"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import NoResult from "@/components/ui/no-result"
+import Paginator from "@/components/ui/paginator"
+import SearchForm from "@/components/ui/search-form"
+import SortableTableHead from "@/components/ui/sortable-table-head"
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table"
+import BorrowRequestStatusBadge from "@/components/badges/borrow-request-status-badge"
+
+import FiltersBorrowRequestsDialog from "./_components/filter-borrow-requests-dialog"
 
 type Props = {
   searchParams: Record<string, string | string[] | undefined>
 }
 
-async function WarehouseBorrowRequestsManagementPage({ searchParams }: Props) {
+async function BorrowRequestsManagementPage({ searchParams }: Props) {
   await auth().protect(EFeature.BORROW_MANAGEMENT)
-  const t = await getTranslations("BorrowRequestsManagementPage")
-  console.log(searchParams)
 
-  // const formatLocale = await getFormatLocale()
+  const t = await getTranslations("BorrowAndReturnManagementPage")
 
-  // const { search, pageIndex, sort, pageSize, ...rest } =
-  //   searchBorrowRequestsSchema.parse(searchParams)
+  const formatLocale = await getFormatLocale()
 
-  // const {
-  //   sources: borrowRequests,
-  //   totalActualItem,
-  //   totalPage,
-  // } = await getBorrowRequests({
-  //   search,
-  //   pageIndex,
-  //   sort,
-  //   pageSize,
-  //   ...rest,
-  // })
+  const { search, pageIndex, sort, pageSize, ...rest } =
+    searchBorrowRequestsSchema.parse(searchParams)
+
+  const {
+    sources: borrowRequests,
+    totalActualItem,
+    totalPage,
+  } = await getBorrowRequests({
+    search,
+    pageIndex,
+    sort,
+    pageSize,
+    ...rest,
+  })
+
+  console.log(borrowRequests)
 
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-        <h3 className="text-2xl font-semibold">
-          {t("Warehouse borrowRequests")}
-        </h3>
+        <h3 className="text-2xl font-semibold">{t("Borrow requests")}</h3>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-row items-center">
-            {/* <SearchForm
+            <SearchForm
               className="h-full rounded-r-none border-r-0"
               search={search}
-            /> */}
-            {/* <FiltersBorrowRequestsDialog /> */}
+            />
+            <FiltersBorrowRequestsDialog />
           </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-x-4">
-          {/* <CreateBorrowRequestDialog /> */}
         </div>
       </div>
 
-      {/* <div className="mt-4 grid w-full">
-        <div className="overflow-x-auto rounded-md border">
-          <Table className="overflow-hidden">
-            <TableHeader>
-              <TableRow>
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Receipt number")}
-                  sortKey="ReceiptNumber"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Supplier name")}
-                  sortKey="SupplierName"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Total item")}
-                  sortKey="TotalItem"
-                  position="center"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Total amount")}
-                  sortKey="TotalAmount"
-                  position="center"
-                />
-
-                <TableHead className="text-nowrap font-bold">
-                  <div className="flex justify-center">
-                    {t("BorrowRequest type")}
-                  </div>
-                </TableHead>
-
-                <TableHead className="text-nowrap font-bold">
-                  <div className="flex justify-start">{t("Status")}</div>
-                </TableHead>
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Entry date")}
-                  sortKey="EntryDate"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Expected return date")}
-                  sortKey="ExpectedReturnDate"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Actual return date")}
-                  sortKey="ActualReturnDate"
-                />
-
-                <TableHead className="text-nowrap font-bold">
-                  <div className="flex justify-start">
-                    {t("Transfer location")}
-                  </div>
-                </TableHead>
-
-                <TableHead className="text-nowrap font-bold">
-                  <div className="flex justify-start">{t("Description")}</div>
-                </TableHead>
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Create at")}
-                  sortKey="CreatedAt"
-                />
-
-                <TableHead className="text-nowrap font-bold">
-                  {t("Created by")}
-                </TableHead>
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Updated at")}
-                  sortKey="UpdatedAt"
-                />
-                <TableHead className="text-nowrap font-bold">
-                  {t("Updated by")}
-                </TableHead>
-
-                <TableHead className="text-nowrap font-bold">
-                  <div className="flex justify-center">{t("Actions")}</div>
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {borrowRequests.map((borrowRequest) => (
-                <TableRow key={borrowRequest.borrowRequestId}>
-                  <TableCell className="text-nowrap font-bold">
-                    {borrowRequest.receiptNumber}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {borrowRequest?.supplier?.supplierName}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    <div className="flex justify-center">
-                      {borrowRequest.totalItem || "-"}
-                    </div>
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    <div className="flex justify-center">
-                      {borrowRequest.totalAmount
-                        ? formatPrice(borrowRequest.totalAmount)
-                        : "-"}
-                    </div>
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    <BorrowRequestTypeBadge
-                      type={borrowRequest.borrowRequestType}
-                    />
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    <BorrowRequestStatusBadge status={borrowRequest.status} />
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {format(new Date(borrowRequest.entryDate), "dd MMM yyyy", {
-                      locale: formatLocale,
-                    })}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {borrowRequest.expectedReturnDate
-                      ? format(
-                          new Date(borrowRequest.expectedReturnDate),
-                          "dd MMM yyyy",
-                          { locale: formatLocale }
-                        )
-                      : "-"}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {borrowRequest.actualReturnDate
-                      ? format(
-                          new Date(borrowRequest.actualReturnDate),
-                          "dd MMM yyyy",
-                          { locale: formatLocale }
-                        )
-                      : "-"}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {borrowRequest.transferLocation || "-"}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {borrowRequest.description || "-"}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {borrowRequest.createdAt
-                      ? format(
-                          new Date(borrowRequest.createdAt),
-                          "dd MMM yyyy",
-                          {
-                            locale: formatLocale,
-                          }
-                        )
-                      : "-"}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {borrowRequest.createdBy || "-"}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {borrowRequest.updatedAt
-                      ? format(
-                          new Date(borrowRequest.updatedAt),
-                          "dd MMM yyyy",
-                          {
-                            locale: formatLocale,
-                          }
-                        )
-                      : "-"}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {borrowRequest.updatedBy || "-"}
-                  </TableCell>
-
-                  <TableCell>
-                    <div className="flex items-center justify-center">
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon">
-                            <MoreHorizontal />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>
-                            <Link
-                              href={`/management/borrowRequests/${borrowRequest.borrowRequestId}`}
-                              className="flex items-center gap-2"
-                            >
-                              <Eye className="size-4" />
-                              {t("View details")}
-                            </Link>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-          {borrowRequests.length === 0 && (
-            <div className="flex justify-center p-4">
-              <NoData />
-            </div>
-          )}
+      {borrowRequests.length === 0 ? (
+        <div className="flex justify-center p-4">
+          <NoResult
+            title={t("Borrow Requests Not Found")}
+            description={t(
+              "No borrow requests matching your request were found Please check your information or try searching with different criteria"
+            )}
+          />
         </div>
+      ) : (
+        <div className="mt-4 grid w-full">
+          <div className="overflow-x-auto rounded-md border">
+            <Table className="overflow-hidden">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Patron")}
+                  </TableHead>
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Request date")}
+                    sortKey="RequestDate"
+                    position="center"
+                  />
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Expiration date")}
+                    sortKey="ExpirationDate"
+                    position="center"
+                  />
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Total request items")}
+                    sortKey="TotalRequestItem"
+                    position="center"
+                  />
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">{t("Status")}</div>
+                  </TableHead>
 
-        <Paginator
-          pageSize={+pageSize}
-          pageIndex={pageIndex}
-          totalPage={totalPage}
-          totalActualItem={totalActualItem}
-          className="mt-6"
-        />
-      </div> */}
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">{t("Actions")}</div>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {borrowRequests.map((request) => (
+                  <TableRow key={request.borrowRequestId}>
+                    <TableCell className="text-nowrap">
+                      <Link
+                        target="_blank"
+                        href={`/management/library-cards/${request.libraryCard.libraryCardId}`}
+                        className="group flex items-center gap-2"
+                      >
+                        <p className="group-hover:underline">
+                          {request.libraryCard?.fullName}
+                        </p>
+                      </Link>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {format(new Date(request.requestDate), "dd MMM yyyy", {
+                          locale: formatLocale,
+                        })}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {format(
+                          new Date(request.expirationDate),
+                          "dd MMM yyyy",
+                          {
+                            locale: formatLocale,
+                          }
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {request.totalRequestItem}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        <BorrowRequestStatusBadge status={request.status} />
+                      </div>
+                    </TableCell>
+
+                    <TableCell>
+                      <div className="flex items-center justify-center">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>
+                              <Link
+                                href={`/management/borrows/requests/${request.borrowRequestId}`}
+                                className="flex items-center gap-2"
+                              >
+                                <Eye className="size-4" />
+                                {t("View details")}
+                              </Link>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          <Paginator
+            pageSize={+pageSize}
+            pageIndex={pageIndex}
+            totalPage={totalPage}
+            totalActualItem={totalActualItem}
+            className="mt-6"
+          />
+        </div>
+      )}
     </div>
   )
 }
 
-export default WarehouseBorrowRequestsManagementPage
+export default BorrowRequestsManagementPage

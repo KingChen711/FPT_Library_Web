@@ -16,9 +16,6 @@ const getAudits = async (
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<Pagination<Audits>>(`/api/audits/policy`, {
-      next: {
-        tags: ["management-audits"],
-      },
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

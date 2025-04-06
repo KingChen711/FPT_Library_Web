@@ -1,9 +1,9 @@
 import { z } from "zod"
 
-import { EBorrowRequestStatus, ESearchType } from "@/lib/types/enums"
+import { EBorrowRequestStatus } from "@/lib/types/enums"
 import { filterDateRangeSchema, filterEnumSchema } from "@/lib/zod"
 
-export const filterBorrowRequestsSchema = z.object({
+export const filterBorrowRequestSchema = z.object({
   status: filterEnumSchema(EBorrowRequestStatus),
 
   requestDateRange: filterDateRangeSchema,
@@ -27,19 +27,30 @@ export const filterBorrowRequestsSchema = z.object({
     .catch([]),
 })
 
-export type TFilterBorrowRequestsSchema = z.infer<
-  typeof filterBorrowRequestsSchema
+export type TFilterBorrowRequestSchema = z.infer<
+  typeof filterBorrowRequestSchema
 >
 
 export const searchBorrowRequestsSchema = z
   .object({
-    search: z.string().catch(""),
-    searchType: filterEnumSchema(ESearchType),
     pageIndex: z.coerce.number().min(1).catch(1),
-    pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("10"),
-    sort: z.enum(["Demo", "-Demo"]).optional().catch(undefined),
+    pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("5"),
+    search: z.string().catch(""),
+    sort: z
+      .enum([
+        "TotalRequestItem",
+        "-TotalRequestItem",
+        "RequestDate",
+        "-RequestDate",
+        "ExpirationDate",
+        "-ExpirationDate",
+        "CancelledAt",
+        "-CancelledAt",
+      ])
+      .optional()
+      .catch(undefined),
   })
-  .and(filterBorrowRequestsSchema)
+  .and(filterBorrowRequestSchema)
 
 export type TSearchBorrowRequestsSchema = z.infer<
   typeof searchBorrowRequestsSchema

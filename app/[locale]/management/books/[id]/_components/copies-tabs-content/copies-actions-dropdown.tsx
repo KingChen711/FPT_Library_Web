@@ -61,10 +61,10 @@ function CopiesActionsDropdown({
 
     const updatedCopies = copies
       .filter((c) => selectedCopyIds.includes(c.libraryItemInstanceId))
-      .map((c) => {
-        c.status = status
-        return c
-      })
+      .map((c) => ({
+        ...c,
+        status,
+      }))
 
     startTransition(async () => {
       const res = await changeCopiesStatus({

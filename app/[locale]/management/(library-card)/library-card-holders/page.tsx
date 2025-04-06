@@ -523,6 +523,8 @@ async function HoldersManagementPage({ searchParams }: Props) {
                             <BarcodeGenerator
                               value={patron.libraryCard.barcode}
                               options={{
+                                containerWidth: 240,
+                                containerHeight: 60,
                                 format: "CODE128",
                                 displayValue: true,
                                 fontSize: 12,

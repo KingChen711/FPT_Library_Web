@@ -18,9 +18,6 @@ const getBackupCodes = async (): Promise<TGetBackupCodes> => {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
-      next: {
-        tags: ["backup-codes"],
-      },
     })
 
     return { backupCodes: data, hasActiveMfa: true }

@@ -9,7 +9,6 @@ export async function getPackages(): Promise<Package[]> {
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<Package[]>(`/api/management/packages`, {
-      next: { tags: ["packages"] },
       headers: { Authorization: `Bearer ${getAccessToken()}` },
     })
     return data

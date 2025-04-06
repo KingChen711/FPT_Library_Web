@@ -27,9 +27,6 @@ const getTracking = async (
         warehouseTrackingInventory: WarehouseTrackingInventory
       }
     >(`/api/management/warehouse-trackings/${trackingId}`, {
-      next: {
-        tags: ["trackings"],
-      },
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

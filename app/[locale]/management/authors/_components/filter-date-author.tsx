@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/popover"
 
 type Props = {
-  form: UseFormReturn<TAuthorsFilterSchema, unknown, undefined>
+  form: UseFormReturn<TAuthorsFilterSchema>
   name: keyof TAuthorsFilterSchema
   label: string
 }

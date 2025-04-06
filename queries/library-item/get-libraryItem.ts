@@ -14,9 +14,6 @@ const getLibraryItem = async (
     const { data } = await http.get<LibraryItem>(
       `/api/library-items/${libraryItemId}`,
       {
-        next: {
-          tags: [`library-items/${libraryItemId}`],
-        },
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
         },

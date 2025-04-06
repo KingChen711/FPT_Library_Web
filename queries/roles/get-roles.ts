@@ -12,9 +12,6 @@ const getRoles = async (): Promise<Roles> => {
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<Roles>(`/api/management/roles`, {
-      next: {
-        tags: ["roles"],
-      },
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

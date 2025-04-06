@@ -6,12 +6,7 @@ import "server-only"
 const getAvailableLanguages = async (): Promise<LibraryItemLanguage[]> => {
   try {
     const { data } = await http.get<LibraryItemLanguage[]>(
-      `/api/library-items/available-languages`,
-      {
-        next: {
-          tags: ["library-items-languages"],
-        },
-      }
+      `/api/library-items/available-languages`
     )
     return data
   } catch {

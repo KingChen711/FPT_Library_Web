@@ -19,10 +19,6 @@ export default function Loading() {
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
         <Skeleton className="h-9 w-[120px]" />
-        <div className="flex items-center gap-4">
-          <Skeleton className="h-9 w-[104px]" />
-          <Skeleton className="h-9 w-[136px]" />
-        </div>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -32,18 +28,23 @@ export default function Loading() {
             <Skeleton className="h-10 w-[97px]" />
           </div>
         </div>
-        <div className="flex flex-wrap items-center gap-x-4">
-          <Skeleton className="h-9 w-[80px]" />
-          <Skeleton className="h-9 w-[130px]" />
-          <Skeleton className="h-9 w-[134px]" />
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-9 w-[136px]" />
         </div>
       </div>
 
       <div className="mb-6 mt-4 rounded-md border p-4">
         {/* tabs */}
-        <div className="flex items-center gap-1">
-          <Skeleton className="h-10 w-[120px]" />
-          <Skeleton className="h-10 w-[120px]" />
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex items-center gap-1">
+            <Skeleton className="h-10 w-[120px]" />
+            <Skeleton className="h-10 w-[120px]" />
+          </div>
+          <div className="flex flex-wrap items-center gap-x-4">
+            <Skeleton className="h-9 w-[80px]" />
+            <Skeleton className="h-9 w-[130px]" />
+            <Skeleton className="h-9 w-[134px]" />
+          </div>
         </div>
 
         <div className="mt-4 grid w-full">

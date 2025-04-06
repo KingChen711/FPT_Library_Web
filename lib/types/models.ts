@@ -7,6 +7,7 @@ import {
   type EBorrowRequestStatus,
   type EBorrowType,
   type ECardStatus,
+  type EFineBorrowStatus,
   type EFineType,
   type EGender,
   type EIssuanceMethod,
@@ -18,6 +19,7 @@ import {
   type ESupplierType,
   type ETrackingStatus,
   type ETrackingType,
+  type ETrainingStatus,
   type ETransactionMethod,
   type ETransactionStatus,
   type ETransactionType,
@@ -343,6 +345,18 @@ export type Fine = {
   description: string | null
 }
 
+export type FineBorrow = {
+  fineId: number
+  borrowRecordDetailId: number
+  finePolicyId: number
+  fineAmount: number
+  fineNote: string | null
+  status: EFineBorrowStatus
+  createdAt: Date
+  expiryAt: Date
+  createdBy: string
+}
+
 export type Category = {
   categoryId: number
   prefix: string
@@ -638,6 +652,24 @@ export type Condition = {
   vietnameseName: string
 }
 
+export type TrainSession = {
+  trainingSessionId: number
+  model: number
+  totalTrainedItem: number
+  totalTrainedTime: number | null
+  trainingStatus: ETrainingStatus
+  errorMessage: string | null
+  trainingPercentage: number
+  trainDate: Date
+  trainBy: string
+}
+
+export type TrainDetail = {
+  trainingDetailId: number
+  trainingSessionId: number
+  libraryItemId: number
+}
+
 export type ConditionHistory = {
   conditionHistoryId: number
   libraryItemInstanceId: number
@@ -799,6 +831,7 @@ export type BorrowRequestManagement = {
   cancelledAt: string | null
   cancellationReason: string | null
   isReminderSent: boolean
+  isExistPendingResources: boolean
   totalRequestItem: number
 }
 
@@ -809,6 +842,8 @@ export type BorrowRecord = {
   borrowDate: Date
   borrowType: EBorrowType
   selfServiceBorrow: boolean
+  selfServiceReturn: boolean
+  hasFineToPayment: boolean
   totalRecordItem: number
   processedBy: string
 }
@@ -838,12 +873,13 @@ export type ReservationQueueManagement = {
   expectedAvailableDateMin: Date | null
   expectedAvailableDateMax: Date | null
   reservationDate: Date
+  assignedDate: Date | null
   expiryDate: Date | null
   collectedDate: Date | null
   isNotified: boolean
   cancelledBy: string | null
   cancellationReason: string | null
-
+  totalExtendPickup: number
   reservationCode: string | null
   isAppliedLabel: boolean
   isAssignable: boolean

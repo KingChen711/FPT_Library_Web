@@ -23,9 +23,6 @@ const getUsers = async (
   const { getAccessToken } = auth()
   try {
     const { data } = await http.get<TGetUsersData>(`/api/management/users`, {
-      next: {
-        tags: ["users"],
-      },
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },

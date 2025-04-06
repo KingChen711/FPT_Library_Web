@@ -65,6 +65,36 @@ export const Icons = {
       ></path>
     </svg>
   ),
+  Label: ({ className, ...props }: IconProps) => (
+    <svg
+      height="200"
+      width="200"
+      viewBox="0 0 432 432"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        d="M414 207q13 13 13 30.5T414 267L265 417q-13 12-30.5 12T205 417L13 225Q0 212 0 195V45q0-17 12.5-29.5T43 3h149q18 0 30 12zM74.5 109q13.5 0 23-9t9.5-22.5t-9.5-23t-23-9.5T52 54.5t-9 23t9 22.5t22.5 9z"
+        fill="currentColor"
+      />
+    </svg>
+  ),
+  Assign: ({ className, ...props }: IconProps) => (
+    <svg
+      height="200"
+      width="200"
+      viewBox="0 0 24 24"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        d="M11.825 13H15q.425 0 .713-.288T16 12q0-.425-.288-.713T15 11h-3.175l.9-.9Q13 9.825 13 9.412t-.3-.712q-.275-.275-.7-.275t-.7.275l-2.6 2.6q-.3.3-.3.7t.3.7l2.6 2.6q.275.275.688.287t.712-.287q.275-.275.275-.7t-.275-.7l-.875-.9ZM5 21q-.825 0-1.413-.588T3 19V5q0-.825.588-1.413T5 3h4.2q.325-.9 1.088-1.45T12 1q.95 0 1.713.55T14.8 3H19q.825 0 1.413.588T21 5v14q0 .825-.588 1.413T19 21H5Zm0-2h14V5H5v14Zm7-14.75q.325 0 .537-.213t.213-.537q0-.325-.213-.537T12 2.75q-.325 0-.537.213t-.213.537q0 .325.213.537T12 4.25ZM5 19V5v14Z"
+        fill="currentColor"
+      />
+    </svg>
+  ),
   BorrowReturn: ({ className, ...props }: IconProps) => (
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -104,6 +134,21 @@ export const Icons = {
         strokeWidth="2"
         d="M5 6 1 4.5v13.943L12 23l11-4.557V4l-4 2M5 16V2l7 3 7-3v14l-7 3zm6.95-11v14"
       ></path>
+    </svg>
+  ),
+  Reservation: ({ className, ...props }: IconProps) => (
+    <svg
+      height="200"
+      width="200"
+      viewBox="0 0 2048 2048"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        d="M896 512v128H512V512h384zM512 896V768h384v128H512zm0 256v-128h256v128H512zM384 512v128H256V512h128zm0 256v128H256V768h128zm-128 384v-128h128v128H256zM128 128v1792h640v128H0V0h1115l549 549v219h-128V640h-512V128H128zm1024 91v293h293l-293-293zm640 805h256v1024H896V1024h256V896h128v128h384V896h128v128zm128 896v-512h-896v512h896zm0-640v-128h-896v128h896z"
+        fill="currentColor"
+      />
     </svg>
   ),
   BorrowRequest: ({ className, ...props }: IconProps) => (

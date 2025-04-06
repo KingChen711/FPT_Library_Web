@@ -143,7 +143,7 @@ const request = async <TData = undefined>(
         url: url,
         query: options?.searchParams,
       },
-      { skipNull: true, skipEmptyString: true }
+      { skipNull: true }
     )
 
   const res = await fetch(fetchUrl, {
