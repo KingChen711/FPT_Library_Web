@@ -882,6 +882,9 @@
       "days": "Ngày",
       "pending resources": "Tài liệu bị hoãn"
     },
+    "number of edition": "Số ấn bản {editionNumber}",
+    "edition": "Ấn bản",
+    "ratings": "Đánh giá",
     "resources": "Tài liệu điện tử",
     "payment": "Thanh toán",
     "added to borrow list": "Đã thêm vào danh sách mượn",
@@ -945,7 +948,7 @@
     "preview available in": "Xem thông tin bằng",
     "published in": "Thời gian xuất bản",
     "category": "Loại tài liệu",
-    "cutter number": "Số mã hóa",
+    "cutter number": "Kí hiệu sách giá",
     "dimensions": "Kích thước",
     "responsibility": "Chịu trách nhiệm",
     "edition notes": "Ghi chú",

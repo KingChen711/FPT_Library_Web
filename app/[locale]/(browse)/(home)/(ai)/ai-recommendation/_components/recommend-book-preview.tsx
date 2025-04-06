@@ -13,7 +13,7 @@ import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table"
 type Props = {
   result: LibraryItemsRecommendation
   detectedLibraryItem: LibraryItem
-  comparedLibraryItemId: string
+  comparedlibraryItemId: number
 }
 
 const RecommendBookPreview = ({

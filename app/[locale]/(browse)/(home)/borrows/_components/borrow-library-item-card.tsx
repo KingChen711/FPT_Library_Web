@@ -1,9 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, type Dispatch, type SetStateAction } from "react"
 import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
-import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
 import {
   Book,
   BookOpen,
@@ -25,17 +24,22 @@ import { Label } from "@/components/ui/label"
 import NoData from "@/components/ui/no-data"
 import { Separator } from "@/components/ui/separator"
 
+import { type SelectedBorrow } from "../page"
 import DeleteBorrowRequestConfirm from "./delete-borrow-request-confirm"
 
 type Props = {
-  libraryItemId: string
+  libraryItemId: number
+  selectedBorrow: SelectedBorrow
+  setSelectedBorrow: Dispatch<SetStateAction<SelectedBorrow>>
 }
 
-const BorrowLibraryItemCard = ({ libraryItemId }: Props) => {
+const BorrowLibraryItemCard = ({
+  libraryItemId,
+  selectedBorrow,
+  setSelectedBorrow,
+}: Props) => {
   const t = useTranslations("BookPage")
   const router = useRouter()
-  const { selectedLibraryItemIds, toggleLibraryItemId } =
-    useBorrowRequestStore()
   const { data, isLoading } = useLibraryItemDetail(libraryItemId)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
 
@@ -57,13 +61,29 @@ const BorrowLibraryItemCard = ({ libraryItemId }: Props) => {
 
   const isAvailable = data.libraryItemInventory?.availableUnits > 0
 
+  const handleToggleSelect = () => {
+    const libraryItemIds = [...selectedBorrow.selectedLibraryItemIds]
+    if (libraryItemIds.includes(libraryItemId)) {
+      console.log(123)
+      libraryItemIds.splice(libraryItemIds.indexOf(libraryItemId), 1)
+    } else {
+      libraryItemIds.push(libraryItemId)
+    }
+    setSelectedBorrow((prev) => ({
+      ...prev,
+      selectedLibraryItemIds: Array.from(libraryItemIds),
+    }))
+  }
+
   return (
     <>
       <DeleteBorrowRequestConfirm
         libraryItemTitle={data.title}
         open={openDelete}
         setOpen={setOpenDelete}
-        libraryItemId={libraryItemId}
+        id={libraryItemId}
+        type="library-item"
+        setSelectedBorrow={setSelectedBorrow}
       />
       <Card className="w-full overflow-hidden transition-all hover:shadow-md">
         <div className="flex flex-col md:flex-row">
@@ -95,12 +115,14 @@ const BorrowLibraryItemCard = ({ libraryItemId }: Props) => {
                 <div className="flex items-center gap-4">
                   <Button
                     variant={"ghost"}
-                    onClick={() => toggleLibraryItemId(libraryItemId)}
+                    onClick={handleToggleSelect}
                     className="flex cursor-pointer items-center gap-2"
                   >
                     <Checkbox
                       color="white"
-                      checked={selectedLibraryItemIds.includes(libraryItemId)}
+                      checked={selectedBorrow.selectedLibraryItemIds.includes(
+                        libraryItemId
+                      )}
                     />
                     <Label className="cursor-pointer">
                       {t("select borrow")}

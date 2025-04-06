@@ -1,12 +1,11 @@
 "use client"
 
 import { useState } from "react"
-import { LocalStorageKeys } from "@/constants"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { EResourceBookType } from "@/lib/types/enums"
-import { localStorageHandler } from "@/lib/utils"
 import useResourceDetail from "@/hooks/library-items/use-resource-detail"
 import {
   AlertDialog,
@@ -26,7 +25,7 @@ import { Badge } from "./badge"
 import NoData from "./no-data"
 
 type Props = {
-  resourceId: string
+  resourceId: number
 }
 
 const OverviewBorrowResource = ({ resourceId }: Props) => {
@@ -34,11 +33,10 @@ const OverviewBorrowResource = ({ resourceId }: Props) => {
   const { data: resource, isLoading } = useResourceDetail(resourceId)
   const [openDelete, setOpenDelete] = useState(false)
 
+  const { borrowedResources } = useLibraryStorage()
+
   const handleRemoveBorrow = () => {
-    localStorageHandler.setItem(
-      LocalStorageKeys.BORROW_RESOURCE_IDS,
-      resourceId
-    )
+    borrowedResources.remove(resourceId)
     setOpenDelete(false)
   }
 

@@ -12,7 +12,7 @@ type TData = {
   allowToBorrowItems: LibraryItem[] | []
 }
 
-function useCheckAvailableBorrowRequest(libraryItemIds: string[]) {
+function useCheckAvailableBorrowRequest(libraryItemIds: number[]) {
   const { accessToken } = useAuth()
   return useQuery({
     queryKey: [`check-available-borrow-request`, libraryItemIds],

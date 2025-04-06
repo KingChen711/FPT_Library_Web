@@ -1,8 +1,8 @@
-import { LocalStorageKeys } from "@/constants"
-import { useTranslations } from "next-intl"
+import { useLibraryStorage } from "@/contexts/library-provider"
+import { useLocale, useTranslations } from "next-intl"
 
 import { type LibraryItem } from "@/lib/types/models"
-import { localStorageHandler } from "@/lib/utils"
+import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -21,13 +21,25 @@ type Props = {
 }
 
 const BorrowLibraryItemConfirm = ({ open, setOpen, libraryItem }: Props) => {
+  const locale = useLocale()
   const t = useTranslations("BookPage")
+  const { borrowedLibraryItems } = useLibraryStorage()
 
   const handleAddToBorrowList = () => {
-    localStorageHandler.setItem(
-      LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS,
-      libraryItem.libraryItemId.toString()
-    )
+    if (borrowedLibraryItems.has(libraryItem.libraryItemId)) {
+      toast({
+        title: locale === "vi" ? "Thất bại" : "Failed",
+        description: t("added to borrow list"),
+        variant: "warning",
+      })
+    } else {
+      borrowedLibraryItems.add(libraryItem.libraryItemId)
+      toast({
+        title: locale === "vi" ? "Thành công" : "Success",
+        description: t("add borrow list"),
+        variant: "success",
+      })
+    }
     setOpen(false)
   }
 

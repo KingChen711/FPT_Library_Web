@@ -2,11 +2,10 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { LocalStorageKeys } from "@/constants"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { Link } from "@/i18n/routing"
 import { BookOpen, Calendar, Trash2 } from "lucide-react"
 
-import { localStorageHandler } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import {
   AlertDialog,
@@ -26,15 +25,16 @@ import { Skeleton } from "@/components/ui/skeleton"
 import NoData from "./no-data"
 
 type Props = {
-  libraryItemId: string
+  libraryItemId: number
 }
 
 const OverviewFavoriteItem = ({ libraryItemId }: Props) => {
   const { data: item, isLoading } = useLibraryItemDetail(libraryItemId)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const { favorites } = useLibraryStorage()
 
   const handleRemoveFavorite = () => {
-    localStorageHandler.setItem(LocalStorageKeys.FAVORITE, libraryItemId)
+    favorites.remove(libraryItemId)
     setShowDeleteConfirm(false)
   }
 

@@ -106,10 +106,10 @@ export default async function BorrowRequestTab() {
                 <TableRow key={request.borrowRequestId}>
                   <TableCell className="font-medium">{index + 1}</TableCell>
                   <TableCell>
-                    {format(new Date(request.requestDate), "MMM d, yyyy")}
+                    {format(new Date(request.requestDate), "dd/MM/yyyy")}
                   </TableCell>
                   <TableCell>
-                    {format(new Date(request.expirationDate), "MMM d, yyyy")}
+                    {format(new Date(request.expirationDate), "dd/MM/yyyy")}
                   </TableCell>
                   <TableCell>{request.totalRequestItem}</TableCell>
                   <TableCell>
@@ -130,7 +130,6 @@ export default async function BorrowRequestTab() {
           </TableBody>
         </Table>
       </div>
-
       <Paginator
         pageIndex={pageIndex}
         totalActualItem={totalActualItem}

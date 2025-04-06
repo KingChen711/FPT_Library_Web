@@ -1,13 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { LocalStorageKeys } from "@/constants"
-import { BadgeCheck } from "lucide-react"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { useTranslations } from "next-intl"
 
 import { EResourceBookType } from "@/lib/types/enums"
 import { type BookResource } from "@/lib/types/models"
-import { cn, formatPrice, localStorageHandler } from "@/lib/utils"
+import { cn, formatPrice } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -29,47 +27,13 @@ type Props = {
 
 const BorrowDigitalConfirm = ({ open, setOpen, selectedResource }: Props) => {
   const t = useTranslations("BookPage")
-  const [borrowResourceIds, setBorrowResourcesIds] = useState<string[]>([])
 
-  const updateBorrows = () => {
-    setBorrowResourcesIds(
-      localStorageHandler.getItem(LocalStorageKeys.BORROW_RESOURCE_IDS)
-    )
-  }
+  const { borrowedResources } = useLibraryStorage()
 
-  useEffect(() => {
-    updateBorrows()
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === LocalStorageKeys.BORROW_RESOURCE_IDS) {
-        updateBorrows()
-      }
-    }
-    const handleCustomEvent = () => updateBorrows()
-    window.addEventListener("storage", handleStorageChange)
-
-    window.addEventListener(
-      LocalStorageKeys.BORROW_RESOURCE_IDS,
-      handleCustomEvent
-    )
-    return () => {
-      window.removeEventListener("storage", handleStorageChange)
-
-      window.removeEventListener(
-        LocalStorageKeys.BORROW_RESOURCE_IDS,
-        handleCustomEvent
-      )
-    }
-  }, [])
-
-  const isAdded = borrowResourceIds.includes(
-    selectedResource.resourceId.toString()
-  )
+  const isAdded = borrowedResources.has(selectedResource.resourceId)
 
   const handleBorrowDigital = () => {
-    localStorageHandler.setItem(
-      LocalStorageKeys.BORROW_RESOURCE_IDS,
-      selectedResource.resourceId.toString()
-    )
+    borrowedResources.toggle(selectedResource.resourceId)
     toast({
       title: isAdded ? t("deleted to borrow list") : t("added to borrow list"),
       variant: "default",
@@ -85,10 +49,7 @@ const BorrowDigitalConfirm = ({ open, setOpen, selectedResource }: Props) => {
         })}
       >
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-lg font-semibold sm:text-xl">
-            <BadgeCheck className="size-5 text-success" />
-            {t("add resource to borrow list")}
-          </DialogTitle>
+          <DialogTitle>{t("add resource to borrow list")}</DialogTitle>
         </DialogHeader>
         <Card className="p-4">
           <div className="flex items-start justify-between">

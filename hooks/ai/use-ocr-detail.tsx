@@ -4,7 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import { type OcrDetail } from "@/lib/types/models"
 
-function useOcrDetail(libraryItemId: string, imageToPredict: File) {
+function useOcrDetail(libraryItemId: number, imageToPredict: File) {
   const formData = new FormData()
   formData.append("imageToPredict", imageToPredict)
 

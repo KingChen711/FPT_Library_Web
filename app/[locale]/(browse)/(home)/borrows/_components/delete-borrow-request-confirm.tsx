@@ -1,8 +1,7 @@
-import { LocalStorageKeys } from "@/constants"
-import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
+import { type Dispatch, type SetStateAction } from "react"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { useTranslations } from "next-intl"
 
-import { localStorageHandler } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -14,31 +13,60 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 
+import { type SelectedBorrow } from "../page"
+
 type Props = {
   open: boolean
   setOpen: (value: boolean) => void
-  libraryItemId: string
+  id: number
   libraryItemTitle: string
+  type: "library-item" | "resource"
+  setSelectedBorrow: Dispatch<SetStateAction<SelectedBorrow>>
 }
 
 const DeleteBorrowRequestConfirm = ({
   open,
   setOpen,
-  libraryItemId,
+  id,
   libraryItemTitle,
+  type,
+  setSelectedBorrow,
 }: Props) => {
   const t = useTranslations("BookPage")
-  const { selectedLibraryItemIds: selectedIds, toggleLibraryItemId: toggleId } =
-    useBorrowRequestStore()
 
+  const { borrowedLibraryItems, borrowedResources } = useLibraryStorage()
   const handleSubmit = () => {
-    localStorageHandler.setItem(
-      LocalStorageKeys.BORROW_RESOURCE_IDS,
-      libraryItemId
-    )
-    if (selectedIds.includes(libraryItemId)) {
-      toggleId(libraryItemId)
+    if (type === "library-item") {
+      borrowedLibraryItems.remove(id)
+      borrowedLibraryItems.refresh()
+      setSelectedBorrow((prev) => {
+        if (prev.selectedLibraryItemIds.includes(id)) {
+          return {
+            ...prev,
+            selectedLibraryItemIds: prev.selectedLibraryItemIds.filter(
+              (id) => id !== id
+            ),
+          }
+        }
+        return prev
+      })
     }
+    if (type === "resource") {
+      borrowedResources.remove(id)
+      borrowedResources.refresh()
+      setSelectedBorrow((prev) => {
+        if (prev.selectedResourceIds.includes(id)) {
+          return {
+            ...prev,
+            selectedResourceIds: prev.selectedResourceIds.filter(
+              (id) => id !== id
+            ),
+          }
+        }
+        return prev
+      })
+    }
+    setOpen(false)
   }
 
   return (
@@ -51,7 +79,8 @@ const DeleteBorrowRequestConfirm = ({
             <span className="font-semibold">
               &quot;
               {libraryItemTitle}&quot;
-            </span>{" "}
+            </span>
+            &nbsp;
             {t("from your borrow list? This action cannot be undone")}
           </DialogDescription>
         </DialogHeader>

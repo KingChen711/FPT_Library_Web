@@ -83,7 +83,7 @@ const BannerHome = () => {
           }}
           plugins={[
             Autoplay({
-              delay: 4000,
+              delay: 6000,
             }),
           ]}
         >

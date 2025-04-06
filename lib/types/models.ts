@@ -280,15 +280,7 @@ export type LibraryItem = {
   status: number | null
   avgReviewedRate: number | null
   category: Category
-  shelf: {
-    shelfId: number
-    sectionId: number
-    shelfNumber: string
-    createDate: string
-    updateDate: string | null
-    isDeleted: boolean
-    section: unknown
-  } | null
+  shelf: Shelf | null
   libraryItemInventory: LibraryItemInventory
   resources: BookResource[]
   authors: {
@@ -790,7 +782,7 @@ export type ReservationQueue = {
   cancelledBy: null | string
   cancellationReason: null | string
   libraryItem: LibraryItem
-  libraryItemInstance: null | string
+  libraryItemInstance: null | LibraryItemInstance
 }
 
 export type DigitalTransaction = Transaction & {

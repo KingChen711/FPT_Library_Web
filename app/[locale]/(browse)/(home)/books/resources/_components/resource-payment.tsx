@@ -53,7 +53,7 @@ type Props = {
   open: boolean
   setOpen: (value: boolean) => void
   selectedResource: BookResource
-  libraryItemId: string
+  libraryItemId: number
 }
 
 const formSchema = z.object({

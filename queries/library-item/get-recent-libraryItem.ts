@@ -7,7 +7,7 @@
 // import { auth } from "../auth"
 
 // const getRecentLibraryItem = async (
-//   libraryItemId: string
+//   libraryItemId: number
 // ): Promise<LibraryItem | null> => {
 //   const { getAccessToken } = auth()
 //   try {

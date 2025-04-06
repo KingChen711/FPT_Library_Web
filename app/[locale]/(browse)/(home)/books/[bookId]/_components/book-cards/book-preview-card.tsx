@@ -1,6 +1,6 @@
 import Image from "next/image"
 import NoImage from "@/public/assets/images/no-image.png"
-import { MapPin, NotebookPen, Share } from "lucide-react"
+import { MapPin, NotebookPen } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
 import { type LibraryItem } from "@/lib/types/models"
@@ -16,14 +16,12 @@ const BookPreviewCard = async ({ libraryItem }: Props) => {
 
   return (
     <div className="flex h-[60vh] flex-col justify-between overflow-hidden rounded-md border bg-card shadow-lg">
-      <div className="flex flex-1 shrink-0 items-center justify-center overflow-hidden rounded-t-lg p-4">
+      <div className="relative aspect-[2/3] size-full overflow-hidden rounded-t-lg">
         <Image
           src={libraryItem?.coverImage || NoImage}
           alt="Logo"
-          width={200}
-          height={250}
-          unoptimized
-          className="object-contain"
+          fill
+          className="object-contain p-4"
         />
       </div>
       <div className="flex flex-col border-t-2">
@@ -41,10 +39,6 @@ const BookPreviewCard = async ({ libraryItem }: Props) => {
         <div className="flex items-center justify-between py-2">
           <div className="flex flex-1 cursor-pointer items-center justify-center gap-2 hover:text-primary">
             <NotebookPen size={16} /> {t("review")}
-          </div>
-          <div className="h-6 w-0.5 bg-primary" />
-          <div className="flex flex-1 cursor-pointer items-center justify-center gap-2 hover:text-primary">
-            <Share size={16} /> {t("share")}
           </div>
         </div>
       </div>

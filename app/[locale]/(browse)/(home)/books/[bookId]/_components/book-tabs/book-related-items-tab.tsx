@@ -5,10 +5,11 @@ import { Earth, Search } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
 
 type Props = {
-  libraryItemId: string
+  libraryItemId: number
 }
 
 const BookRelatedItemsTab = async ({ libraryItemId }: Props) => {
@@ -19,13 +20,7 @@ const BookRelatedItemsTab = async ({ libraryItemId }: Props) => {
   })
 
   if (relatedItems.sources.length === 0) {
-    return (
-      <div className="flex flex-col gap-4">
-        <p className="text-center text-lg font-semibold">
-          No related items found
-        </p>
-      </div>
-    )
+    return <NoData />
   }
 
   return (
@@ -42,9 +37,9 @@ const BookRelatedItemsTab = async ({ libraryItemId }: Props) => {
       {relatedItems?.sources?.map((item) => (
         <div
           key={item.libraryItemId}
-          className="rounded-md border p-4 shadow-lg"
+          className="flex items-start gap-4 rounded-md border p-4 shadow-lg"
         >
-          <div className="flex items-start gap-4">
+          <div className="flex w-full items-start justify-between gap-4">
             <Image
               src={item.coverImage as string}
               alt="Logo"
@@ -54,9 +49,11 @@ const BookRelatedItemsTab = async ({ libraryItemId }: Props) => {
             />
             <div className="flex flex-1 items-center justify-between">
               <div className="space-y-2">
-                <h1 className="text-lg font-semibold text-primary">
-                  {item.title}
-                </h1>
+                <Link href={`/books/${item.libraryItemId}`}>
+                  <h1 className="text-lg font-semibold text-primary">
+                    {item.title}
+                  </h1>
+                </Link>
                 {item.authors && (
                   <p className="text-sm">{item.authors[0]?.fullName}</p>
                 )}

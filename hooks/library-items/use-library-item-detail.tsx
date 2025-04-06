@@ -4,7 +4,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import { type LibraryItem } from "@/lib/types/models"
 
-function useLibraryItemDetail(libraryItemId: string) {
+function useLibraryItemDetail(libraryItemId: number) {
   const { user } = useAuth()
   return useQuery({
     queryKey: [`library-items/${libraryItemId}`],

@@ -1,16 +1,21 @@
 import { auth } from "@/queries/auth"
-import { BookOpen, Notebook } from "lucide-react"
+import getUserPendingActivity from "@/queries/profile/get-user-pending-activity"
 
 import { getTranslations } from "@/lib/get-translations"
+import { formatPrice } from "@/lib/utils"
+import { Card } from "@/components/ui/card"
+import { Label } from "@/components/ui/label"
 
 import ProfileAvatar from "./_components/profile-avatar"
 import ProfileForm from "./_components/profile-form"
 
 const ProfileManagementPage = async () => {
-  const t = await getTranslations("Me")
+  const tBookTracking = await getTranslations("BookPage.borrow tracking")
+
   const { whoAmI, protect } = auth()
   await protect()
 
+  const data = await getUserPendingActivity()
   const currentUser = await whoAmI()
   if (!currentUser) {
     throw new Error("Current User not found")
@@ -20,28 +25,40 @@ const ProfileManagementPage = async () => {
     <div className="flex flex-col gap-4 overflow-y-auto">
       <div className="flex h-[150px] w-full items-center gap-8 overflow-hidden rounded-md">
         <ProfileAvatar />
-        <div className="flex h-full w-1/5 flex-col justify-between rounded-md bg-primary p-4 text-primary-foreground shadow-lg">
-          <div className="flex">
-            <div className="rounded-md bg-background p-2">
-              <BookOpen className="size-12 text-primary" />
-            </div>
-            <p className="flex h-full flex-1 items-center justify-center text-4xl">
-              120
-            </p>
+        <Card className="grid grid-cols-3 gap-4 p-4">
+          <div className="flex grid-cols-1 items-center justify-between gap-2">
+            <Label className="font-normal">
+              {tBookTracking("total borrow")}
+            </Label>
+            <span className="font-semibold">{data.totalBorrowing}</span>
           </div>
-          <p className="text-xl">{t("reading")}</p>
-        </div>
-        <div className="flex h-full w-1/5 flex-col justify-between rounded-md bg-purple-400 p-4 text-primary-foreground shadow-lg">
-          <div className="flex">
-            <div className="rounded-md bg-background p-2">
-              <Notebook className="size-12 text-purple-400" />
-            </div>
-            <p className="flex h-full flex-1 items-center justify-center text-4xl">
-              10
-            </p>
+          <div className="flex grid-cols-1 items-center justify-between gap-2">
+            <Label className="font-normal">
+              {tBookTracking("total request")}
+            </Label>
+            <span className="font-semibold">{data.totalRequesting}</span>
           </div>
-          <p className="text-xl">{t("contribution")}</p>
-        </div>
+          <div className="flex grid-cols-1 items-center justify-between gap-2">
+            <Label className="font-normal">
+              {tBookTracking("total borrow in once")}
+            </Label>
+            <span className="font-semibold">{data.totalBorrowOnce}</span>
+          </div>
+          <div className="flex grid-cols-1 items-center justify-between gap-2">
+            <Label className="font-normal">
+              {tBookTracking("remain total")}
+            </Label>
+            <span className="font-semibold">{data.remainTotal}</span>
+          </div>
+          <div className="flex grid-cols-1 items-center justify-between gap-2">
+            <Label className="font-normal">
+              {tBookTracking("unpaid fees")}
+            </Label>
+            <span className="font-semibold text-yellow-600">
+              {formatPrice(15000)}
+            </span>
+          </div>
+        </Card>
       </div>
 
       <ProfileForm currentUser={currentUser} />

@@ -2,9 +2,10 @@ import getReviewsLibraryItem from "@/queries/library-item/get-reviews-library-it
 import { User2 } from "lucide-react"
 
 import { Card } from "@/components/ui/card"
+import NoData from "@/components/ui/no-data"
 
 type Props = {
-  libraryItemId: string
+  libraryItemId: number
 }
 
 const BookReviewsTab = async ({ libraryItemId }: Props) => {
@@ -15,13 +16,7 @@ const BookReviewsTab = async ({ libraryItemId }: Props) => {
   })
 
   if (reviews.sources.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center gap-4 p-6">
-        <p className="text-center text-lg font-semibold text-muted-foreground">
-          No reviews found
-        </p>
-      </div>
-    )
+    return <NoData />
   }
 
   return (
@@ -32,10 +27,6 @@ const BookReviewsTab = async ({ libraryItemId }: Props) => {
           className="rounded-md p-4 shadow-md transition-all duration-200 hover:shadow-lg"
         >
           <div className="flex items-center gap-3 border-b pb-3">
-            {/* <Avatar>
-              <AvatarImage src={"https://github.com/shadcn.png"} />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar> */}
             <div className="flex h-full items-center justify-between overflow-hidden rounded-full border-2 border-black p-2">
               <User2 size={24} />
             </div>
