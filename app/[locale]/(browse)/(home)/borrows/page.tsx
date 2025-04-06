@@ -1,77 +1,34 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { LocalStorageKeys } from "@/constants"
+import { useState } from "react"
 import { useAuth } from "@/contexts/auth-provider"
-import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
-import { CheckCircle, Search } from "lucide-react"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { useLocale, useTranslations } from "next-intl"
 
-import { localStorageHandler } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
-import { Input } from "@/components/ui/input"
 
 import BorrowLibraryItemCard from "./_components/borrow-library-item-card"
 import BorrowResourceCard from "./_components/borrow-resource-card"
 import CheckBorrowRequestDialog from "./_components/check-borrow-request-dialog"
 
+export type SelectedBorrow = {
+  selectedLibraryItemIds: number[]
+  selectedResourceIds: number[]
+}
 const BorrowsPage = () => {
   const locale = useLocale()
   const { user, isLoadingAuth } = useAuth()
   const t = useTranslations("BookPage")
   const [openCheckBorrow, setOpenCheckBorrow] = useState(false)
-  const { selectedLibraryItemIds, selectedResourceIds, clear, selectAll } =
-    useBorrowRequestStore()
+  const [selectedBorrow, setSelectedBorrow] = useState<SelectedBorrow>({
+    selectedLibraryItemIds: [],
+    selectedResourceIds: [],
+  })
 
-  // Get library items from local storage
-  const [borrowLibraryItemIds, setBorrowLibraryItemIds] = useState<string[]>([])
-  // Get resources from local storage
-  const [borrowResourceIds, setBorrowResourcesIds] = useState<string[]>([])
-
-  const updateBorrows = () => {
-    setBorrowLibraryItemIds(
-      localStorageHandler.getItem(LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS)
-    )
-    setBorrowResourcesIds(
-      localStorageHandler.getItem(LocalStorageKeys.BORROW_RESOURCE_IDS)
-    )
-  }
-
-  useEffect(() => {
-    updateBorrows()
-    const handleStorageChange = (event: StorageEvent) => {
-      if (
-        event.key === LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS ||
-        event.key === LocalStorageKeys.BORROW_RESOURCE_IDS
-      ) {
-        updateBorrows()
-      }
-    }
-    const handleCustomEvent = () => updateBorrows()
-    window.addEventListener("storage", handleStorageChange)
-    window.addEventListener(
-      LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS,
-      handleCustomEvent
-    )
-    window.addEventListener(
-      LocalStorageKeys.BORROW_RESOURCE_IDS,
-      handleCustomEvent
-    )
-    return () => {
-      window.removeEventListener("storage", handleStorageChange)
-      window.removeEventListener(
-        LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS,
-        handleCustomEvent
-      )
-      window.removeEventListener(
-        LocalStorageKeys.BORROW_RESOURCE_IDS,
-        handleCustomEvent
-      )
-    }
-  }, [])
+  const { borrowedLibraryItems, borrowedResources } = useLibraryStorage()
 
   if (isLoadingAuth) {
     return null
@@ -97,20 +54,12 @@ const BorrowsPage = () => {
       <CheckBorrowRequestDialog
         open={openCheckBorrow}
         setOpen={setOpenCheckBorrow}
+        selectedBorrow={selectedBorrow}
+        setSelectedBorrow={setSelectedBorrow}
       />
-      <div className="container mx-auto space-y-6 py-6">
+      <div className="container mx-auto space-y-2">
         <section className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-center">
           <h1 className="text-2xl font-bold">{t("borrow list")}</h1>
-          <div className="flex w-full flex-col gap-2 sm:flex-row md:w-auto">
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-2.5 top-2.5 size-4 text-muted-foreground" />
-              <Input
-                type="search"
-                placeholder="Search books..."
-                className="w-full pl-8"
-              />
-            </div>
-          </div>
         </section>
 
         <Card className="border-none shadow-none">
@@ -120,19 +69,24 @@ const BorrowsPage = () => {
                 <Checkbox
                   id="select-all"
                   checked={
-                    selectedLibraryItemIds.length +
-                      selectedResourceIds.length ===
-                    borrowLibraryItemIds.length + borrowResourceIds.length
+                    selectedBorrow.selectedLibraryItemIds.length ===
+                      borrowedLibraryItems.items.length &&
+                    selectedBorrow.selectedResourceIds.length ===
+                      borrowedResources.items.length &&
+                    borrowedLibraryItems.items.length > 0 &&
+                    borrowedResources.items.length > 0
                   }
-                  onCheckedChange={() => {
-                    if (
-                      selectedLibraryItemIds.length +
-                        selectedResourceIds.length ===
-                      borrowLibraryItemIds.length + borrowResourceIds.length
-                    ) {
-                      clear()
+                  onCheckedChange={(checked) => {
+                    if (checked) {
+                      setSelectedBorrow({
+                        selectedLibraryItemIds: borrowedLibraryItems.items,
+                        selectedResourceIds: borrowedResources.items,
+                      })
                     } else {
-                      selectAll(borrowLibraryItemIds, borrowResourceIds)
+                      setSelectedBorrow({
+                        selectedLibraryItemIds: [],
+                        selectedResourceIds: [],
+                      })
                     }
                   }}
                 />
@@ -141,39 +95,58 @@ const BorrowsPage = () => {
                   className="cursor-pointer text-sm font-medium"
                 >
                   {t("select all")} (
-                  {selectedLibraryItemIds.length + selectedResourceIds.length}/
-                  {borrowLibraryItemIds.length + borrowResourceIds.length}{" "}
+                  {selectedBorrow.selectedLibraryItemIds.length +
+                    selectedBorrow.selectedResourceIds.length}
+                  /
+                  {borrowedLibraryItems.items.length +
+                    borrowedResources.items.length}
+                  &nbsp;
                   {t("selected items")})
                 </label>
               </div>
 
               <Button
-                variant={"outline"}
                 disabled={
-                  selectedLibraryItemIds.length === 0 &&
-                  selectedResourceIds.length === 0
+                  selectedBorrow.selectedLibraryItemIds.length === 0 &&
+                  selectedBorrow.selectedResourceIds.length === 0
                 }
                 onClick={handleCheckAvailable}
               >
-                <CheckCircle className="size-4" /> {t("borrow")}
+                {t("borrow")}
               </Button>
             </div>
 
             {/* Get data from Local storage */}
             <div className="flex flex-col gap-4 p-4">
-              <h1 className="font-semibold">{t("books")}</h1>
-              {borrowLibraryItemIds &&
-                borrowLibraryItemIds.length > 0 &&
-                borrowLibraryItemIds.map((id) => (
-                  <BorrowLibraryItemCard key={id} libraryItemId={id} />
-                ))}
+              {borrowedLibraryItems.items &&
+                borrowedLibraryItems.items.length > 0 && (
+                  <div className="space-y-4">
+                    <h1 className="font-semibold">{t("books")}</h1>
+                    {borrowedLibraryItems.items.map((id) => (
+                      <BorrowLibraryItemCard
+                        key={`library-item-${id}`}
+                        libraryItemId={id}
+                        selectedBorrow={selectedBorrow}
+                        setSelectedBorrow={setSelectedBorrow}
+                      />
+                    ))}
+                  </div>
+                )}
 
-              <h1 className="font-semibold">{t("resources")}</h1>
-              {borrowResourceIds &&
-                borrowResourceIds.length > 0 &&
-                borrowResourceIds.map((id) => (
-                  <BorrowResourceCard key={id} resourceId={id} />
-                ))}
+              {borrowedResources.items &&
+                borrowedResources.items.length > 0 && (
+                  <div className="space-y-4">
+                    <h1 className="font-semibold">{t("resources")}</h1>
+                    {borrowedResources.items.map((id) => (
+                      <BorrowResourceCard
+                        key={`resource-${id}`}
+                        resourceId={id}
+                        selectedBorrow={selectedBorrow}
+                        setSelectedBorrow={setSelectedBorrow}
+                      />
+                    ))}
+                  </div>
+                )}
             </div>
           </CardContent>
         </Card>

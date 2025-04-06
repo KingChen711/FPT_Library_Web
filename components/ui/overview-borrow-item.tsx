@@ -2,12 +2,11 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import { LocalStorageKeys } from "@/constants"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { Link } from "@/i18n/routing"
 import { Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { localStorageHandler } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import {
   AlertDialog,
@@ -26,7 +25,7 @@ import { Skeleton } from "@/components/ui/skeleton"
 import NoData from "./no-data"
 
 type Props = {
-  libraryItemId: string
+  libraryItemId: number
 }
 
 const OverviewBorrowItem = ({ libraryItemId }: Props) => {
@@ -34,11 +33,10 @@ const OverviewBorrowItem = ({ libraryItemId }: Props) => {
   const { data: item, isLoading } = useLibraryItemDetail(libraryItemId)
   const [openDelete, setOpenDelete] = useState(false)
 
+  const { borrowedLibraryItems } = useLibraryStorage()
+
   const handleRemoveBorrow = () => {
-    localStorageHandler.setItem(
-      LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS,
-      libraryItemId
-    )
+    borrowedLibraryItems.remove(libraryItemId)
     setOpenDelete(false)
   }
 

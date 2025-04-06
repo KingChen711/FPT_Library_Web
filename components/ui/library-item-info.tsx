@@ -1,13 +1,15 @@
 "use client"
 
 import {
+  useEffect,
   useState,
   type ForwardRefExoticComponent,
   type JSX,
   type RefAttributes,
 } from "react"
 import Image from "next/image"
-import { LocalStorageKeys } from "@/constants"
+import { useAuth } from "@/contexts/auth-provider"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import {
   Book,
   BookMarked,
@@ -27,15 +29,17 @@ import {
   Users,
   type LucideProps,
 } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
+import { Rating } from "react-simple-star-rating"
 
-import {
-  cn,
-  formatPrice,
-  localStorageHandler,
-  splitCamelCase,
-} from "@/lib/utils"
+import { cn, formatPrice, splitCamelCase } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import BookDigitalListDialog from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-digital-list-dialog"
 import BookInstancesTab from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-tabs/book-instances-tab"
 import BorrowLibraryItemConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/borrow-library-item-confirm"
@@ -46,7 +50,7 @@ import { Separator } from "./separator"
 import { Skeleton } from "./skeleton"
 
 type Props = {
-  id: string
+  id: number
   shownInventory?: boolean
   showResources?: boolean
   showInstances?: boolean
@@ -60,20 +64,31 @@ const LibraryItemInfo = ({
   showImage = false,
 }: Props): JSX.Element | null => {
   const t = useTranslations("BookPage")
+  const locale = useLocale()
+  const { isManager } = useAuth()
   const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
   const [openDigitalList, setOpenDigitalList] = useState<boolean>(false)
   const [openAddBorrowConfirm, setOpenAddBorrowConfirm] = useState(false)
+
+  const { recentlyOpened } = useLibraryStorage()
+
+  useEffect(() => {
+    if (libraryItem) {
+      if (recentlyOpened.items.includes(libraryItem.libraryItemId)) {
+        recentlyOpened.remove(libraryItem.libraryItemId)
+        recentlyOpened.add(libraryItem.libraryItemId)
+        return
+      }
+      recentlyOpened.add(libraryItem.libraryItemId)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [libraryItem])
 
   if (isLoading) {
     return <LibraryItemInfoLoading />
   }
 
   if (!libraryItem) return null
-
-  localStorageHandler.addRecentItem(
-    LocalStorageKeys.OPENING_RECENT,
-    libraryItem.libraryItemId.toString()
-  )
 
   return (
     <div className="space-y-4 text-foreground">
@@ -116,14 +131,31 @@ const LibraryItemInfo = ({
           )}
           <div className="flex flex-wrap gap-2">
             <Badge variant="draft" className="w-fit">
-              No.{libraryItem.editionNumber} Edition
+              {t("edition")} {libraryItem.editionNumber}
             </Badge>
             <Badge variant="draft" className="w-fit">
-              {splitCamelCase(libraryItem.category.englishName)}
+              {locale === "vi"
+                ? splitCamelCase(libraryItem.category.vietnameseName)
+                : splitCamelCase(libraryItem.category.englishName)}
             </Badge>
           </div>
-          <div className="my-2 text-sm">
-            ⭐ {libraryItem.avgReviewedRate} / 5 {t("fields.ratings")}
+          <div className="flex flex-row items-center justify-between gap-2">
+            <div className="flex items-center gap-1 text-sm font-semibold">
+              <span>{t("ratings")}</span>
+              <Rating
+                rtl={locale === "ar"}
+                size={20}
+                iconsCount={5}
+                allowFraction
+                readonly
+                initialValue={libraryItem?.avgReviewedRate || 0}
+                disableFillHover
+                className="mb-1 flex"
+              />
+            </div>
+            <p className="text-xs font-semibold">
+              {libraryItem.pageCount} {t("pages")}
+            </p>
           </div>
 
           {libraryItem.summary && (
@@ -174,11 +206,26 @@ const LibraryItemInfo = ({
             label={t("fields.publisher")}
             value={libraryItem.publisher}
           />
-          <InfoItem
-            icon={MapPin}
-            label={t("fields.shelf")}
-            value={libraryItem.shelf?.shelfNumber}
-          />
+
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <InfoItem
+                  icon={MapPin}
+                  label={t("fields.shelf")}
+                  value={libraryItem.shelf?.shelfNumber}
+                  className="cursor-pointer font-semibold"
+                />
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>
+                  {locale === "vi"
+                    ? libraryItem.shelf?.vieShelfName
+                    : libraryItem.shelf?.engShelfName}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </section>
       <InfoItem
@@ -188,6 +235,7 @@ const LibraryItemInfo = ({
         value={libraryItem.responsibility}
       />
       <InfoItem
+        className="text-sm"
         icon={BookOpen}
         label={t("fields.genres")}
         value={libraryItem.genres}
@@ -234,19 +282,19 @@ const LibraryItemInfo = ({
         </section>
       }
       <section className="flex flex-col items-start justify-start gap-4">
-        <Button
-          onClick={() =>
-            localStorageHandler.setItem(LocalStorageKeys.FAVORITE, id)
-          }
-        >
-          <Plus className="mr-1 size-4" /> {t("add to favorite")}
-        </Button>
+        {!isManager && (
+          <Button>
+            <Plus className="mr-1 size-4" /> {t("add to favorite")}
+          </Button>
+        )}
         {showResources && (
           <section className="flex items-center gap-4">
-            <Button onClick={() => setOpenAddBorrowConfirm(true)}>
-              <Book />
-              <span>{t("add borrow list")}</span>
-            </Button>
+            {!isManager && (
+              <Button onClick={() => setOpenAddBorrowConfirm(true)}>
+                <Book />
+                <span>{t("add borrow list")}</span>
+              </Button>
+            )}
 
             {libraryItem.resources && libraryItem.resources.length > 0 && (
               <Button

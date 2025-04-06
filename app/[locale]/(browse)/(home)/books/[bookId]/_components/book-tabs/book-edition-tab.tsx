@@ -5,10 +5,11 @@ import { Earth, Search } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
+import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
 
 type Props = {
-  libraryItemId: string
+  libraryItemId: number
 }
 
 const BookEditionTab = async ({ libraryItemId }: Props) => {
@@ -19,11 +20,7 @@ const BookEditionTab = async ({ libraryItemId }: Props) => {
   })
 
   if (detailEditions.sources.length === 0) {
-    return (
-      <div className="flex flex-col gap-4">
-        <p className="text-center text-lg font-semibold">No editions found</p>
-      </div>
-    )
+    return <NoData />
   }
 
   return (
@@ -52,14 +49,20 @@ const BookEditionTab = async ({ libraryItemId }: Props) => {
             />
             <div className="flex flex-1 items-center justify-between">
               <div className="space-y-2">
-                <h1 className="text-lg font-semibold text-primary">
-                  {edition.title}
-                </h1>
-                <p className="text-sm">{edition.authors[0].fullName}</p>
-                <div className="flex items-center gap-2 text-sm capitalize">
-                  <Earth size={16} className="text-primary" />
-                  {edition.language}
-                </div>
+                {edition.title && (
+                  <h1 className="text-lg font-semibold text-primary">
+                    {edition.title}
+                  </h1>
+                )}
+                {edition.authors && edition.authors.length > 0 && (
+                  <p className="text-sm">{edition.authors[0].fullName}</p>
+                )}
+                {edition.language && (
+                  <div className="flex items-center gap-2 text-sm capitalize">
+                    <Earth size={16} className="text-primary" />
+                    {edition.language}
+                  </div>
+                )}
               </div>
               <Button variant="link" asChild>
                 <Link href={`/books/${edition.libraryItemId}`}>Detail</Link>

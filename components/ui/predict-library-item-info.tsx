@@ -14,7 +14,7 @@ import { Separator } from "@/components/ui/separator"
 import LibraryItemInfo from "./library-item-info"
 
 type Props = {
-  libraryItemId: string
+  libraryItemId: number
   ocrResult: OcrResult
 }
 

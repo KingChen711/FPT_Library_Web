@@ -66,7 +66,7 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
   )
 
   return (
-    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto rounded-md border bg-card p-4 shadow-lg">
+    <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto overflow-x-hidden rounded-md border bg-card p-4 px-6 shadow-lg">
       <div>
         <h1 className="text-xl font-semibold capitalize">
           <span className="text-primary">{t("about")}</span>&nbsp;
@@ -130,14 +130,14 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
                         href={`#`}
                         className="flex items-center justify-center overflow-hidden rounded-md shadow-lg"
                       >
-                        <Image
-                          src={author.authorImage || ""}
-                          priority
-                          alt="Logo"
-                          width={240}
-                          height={320}
-                          className="object-cover duration-150 ease-in-out hover:scale-105"
-                        />
+                        <div className="relative aspect-[2/3] size-full overflow-hidden rounded-t-lg">
+                          <Image
+                            src={author.authorImage || ""}
+                            alt="Logo"
+                            fill
+                            className="object-contain duration-150 ease-in-out hover:scale-105"
+                          />
+                        </div>
                       </Link>
                     </CarouselItem>
                   )
@@ -156,12 +156,10 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
           <h1 className="mt-4 text-xl font-semibold">{t("other books")}</h1>
           <div className="flex flex-1 items-center justify-center">
             <Carousel
-              opts={{
-                align: "start",
-              }}
-              className="w-full max-w-xl"
+              opts={{ loop: false, slidesToScroll: 2 }}
+              className="w-full"
             >
-              <CarouselContent className="flex h-full">
+              <CarouselContent className="space-x-2">
                 {libraryItems.sources.map((item) => {
                   if (item.libraryItemId !== libraryItem.libraryItemId) {
                     return (
@@ -173,14 +171,14 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
                           href={`/books/${item.libraryItemId}`}
                           className="flex items-center justify-center overflow-hidden rounded-md shadow-lg"
                         >
-                          <Image
-                            src={item.coverImage || ""}
-                            priority
-                            alt="Logo"
-                            width={240}
-                            height={320}
-                            className="object-cover duration-150 ease-in-out hover:scale-105"
-                          />
+                          <div className="relative aspect-[2/3] size-full overflow-hidden rounded-t-lg">
+                            <Image
+                              src={item.coverImage || ""}
+                              alt="Logo"
+                              fill
+                              className="object-contain duration-150 ease-in-out hover:scale-105"
+                            />
+                          </div>
                         </Link>
                       </CarouselItem>
                     )
@@ -188,8 +186,8 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
                 })}
               </CarouselContent>
 
-              <CarouselPrevious className="absolute left-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
-              <CarouselNext className="absolute right-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
+              <CarouselPrevious className="ml-1" />
+              <CarouselNext className="mr-1" />
             </Carousel>
           </div>
         </div>

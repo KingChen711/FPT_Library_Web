@@ -1,9 +1,16 @@
 "use client"
 
-import React, { createContext, useContext, useEffect, useMemo } from "react"
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
+import { ERoleType } from "@/lib/types/enums"
 import { type CurrentUser } from "@/lib/types/models"
 
 type Token = {
@@ -19,12 +26,14 @@ type AuthContextType = {
   accessToken: string | null
   isLoadingAuth: boolean
   user: CurrentUser | null
+  isManager: boolean
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
   const queryClient = useQueryClient()
+  const [isManager, setIsManager] = useState<boolean>(false)
 
   const { data: token, isFetching: isLoadingToken } = useQuery<
     Token | undefined
@@ -55,7 +64,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   const user = useMemo(() => {
     if (!userData) return null
-
+    if (
+      userData.role.roleType === ERoleType.EMPLOYEE ||
+      (userData.role.roleType === ERoleType.USER &&
+        userData.role.englishName === "Administration")
+    ) {
+      setIsManager(true)
+    }
     return userData
   }, [userData])
 
@@ -83,6 +98,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         accessToken,
         isLoadingAuth: isLoadingToken || isLoadingUser,
         user,
+        isManager,
       }}
     >
       {children}

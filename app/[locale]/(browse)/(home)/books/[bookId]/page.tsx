@@ -19,7 +19,7 @@ import BookTabs from "./_components/book-tabs"
 
 type Props = {
   params: {
-    bookId: string
+    bookId: number
   }
 }
 
@@ -61,13 +61,13 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
                 )}
               >
                 <LibraryItemInfo
-                  id={libraryItem.libraryItemId.toString()}
+                  id={libraryItem.libraryItemId}
                   showInstances={false}
                 />
               </div>
               <BookAuthorCard libraryItem={libraryItem} />
             </div>
-            <BookTabs libraryItemId={libraryItem.libraryItemId.toString()} />
+            <BookTabs libraryItemId={libraryItem.libraryItemId} />
           </section>
         </div>
       ) : (
@@ -84,13 +84,13 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
                 </section>
                 <div className="overflow-y-auto">
                   <LibraryItemInfo
-                    id={libraryItem.libraryItemId.toString()}
+                    id={libraryItem.libraryItemId}
                     showInstances={false}
                   />
                 </div>
               </div>
             </div>
-            <BookTabs libraryItemId={libraryItem.libraryItemId.toString()} />
+            <BookTabs libraryItemId={libraryItem.libraryItemId} />
           </section>
         </div>
       )}

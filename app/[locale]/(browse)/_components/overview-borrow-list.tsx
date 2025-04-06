@@ -1,12 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { LocalStorageKeys } from "@/constants"
+import { useState } from "react"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { useRouter } from "@/i18n/routing"
 import { Book, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { localStorageHandler } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -20,7 +19,6 @@ import {
 } from "@/components/ui/dialog"
 import OverviewBorrowItem from "@/components/ui/overview-borrow-item"
 import OverviewBorrowResource from "@/components/ui/overview-borrow-resource"
-import { Separator } from "@/components/ui/separator"
 import {
   Sheet,
   SheetContent,
@@ -39,52 +37,8 @@ const OverviewBorrowList = () => {
   const t = useTranslations("BookPage")
   const router = useRouter()
   const [openDelete, setOpenDelete] = useState(false)
-  const [borrowLibraryItemIds, setBorrowLibraryItemsIds] = useState<string[]>(
-    []
-  )
-  const [borrowResourceIds, setBorrowResourcesIds] = useState<string[]>([])
-
-  const updateBorrows = () => {
-    setBorrowLibraryItemsIds(
-      localStorageHandler.getItem(LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS)
-    )
-    setBorrowResourcesIds(
-      localStorageHandler.getItem(LocalStorageKeys.BORROW_RESOURCE_IDS)
-    )
-  }
-
-  useEffect(() => {
-    updateBorrows()
-    const handleStorageChange = (event: StorageEvent) => {
-      if (
-        event.key === LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS ||
-        event.key === LocalStorageKeys.BORROW_RESOURCE_IDS
-      ) {
-        updateBorrows()
-      }
-    }
-    const handleCustomEvent = () => updateBorrows()
-    window.addEventListener("storage", handleStorageChange)
-    window.addEventListener(
-      LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS,
-      handleCustomEvent
-    )
-    window.addEventListener(
-      LocalStorageKeys.BORROW_RESOURCE_IDS,
-      handleCustomEvent
-    )
-    return () => {
-      window.removeEventListener("storage", handleStorageChange)
-      window.removeEventListener(
-        LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS,
-        handleCustomEvent
-      )
-      window.removeEventListener(
-        LocalStorageKeys.BORROW_RESOURCE_IDS,
-        handleCustomEvent
-      )
-    }
-  }, [])
+  const [openSheet, setOpenSheet] = useState(false)
+  const { borrowedLibraryItems, borrowedResources } = useLibraryStorage()
 
   return (
     <>
@@ -102,12 +56,8 @@ const OverviewBorrowList = () => {
               <Button
                 variant="destructive"
                 onClick={() => {
-                  localStorageHandler.clear(
-                    LocalStorageKeys.BORROW_LIBRARY_ITEM_IDS
-                  )
-                  localStorageHandler.clear(
-                    LocalStorageKeys.BORROW_RESOURCE_IDS
-                  )
+                  borrowedLibraryItems.clear()
+                  borrowedResources.clear()
                   setOpenDelete(false)
                 }}
               >
@@ -118,21 +68,28 @@ const OverviewBorrowList = () => {
         </DialogContent>
       </Dialog>
 
-      <Sheet>
+      <Sheet open={openSheet} onOpenChange={setOpenSheet}>
         <SheetTrigger asChild>
           <div className="relative">
             <TooltipProvider delayDuration={0}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Button variant="ghost" size="icon" className="relative">
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setOpenSheet(true)}
+                    className="relative"
+                  >
                     <Book
                       size={20}
                       className="transition-transform duration-200 hover:scale-110"
                     />
-                    {borrowResourceIds?.length + borrowLibraryItemIds?.length >
+                    {borrowedResources?.items.length +
+                      borrowedLibraryItems?.items.length >
                       0 && (
-                      <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-danger text-xs font-bold text-white shadow-md">
-                        {borrowLibraryItemIds.length + borrowResourceIds.length}
+                      <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-danger text-xs font-bold text-primary-foreground shadow-md">
+                        {borrowedLibraryItems.items.length +
+                          borrowedResources.items.length}
                       </span>
                     )}
                   </Button>
@@ -153,33 +110,41 @@ const OverviewBorrowList = () => {
           </SheetHeader>
 
           <div className="flex-1 space-y-2 overflow-y-auto">
-            <h1 className="font-semibold">{t("books")}</h1>
-            {borrowLibraryItemIds.length > 0 &&
-              borrowLibraryItemIds.map((libraryItemId) => (
-                <OverviewBorrowItem
-                  key={libraryItemId}
-                  libraryItemId={libraryItemId}
-                />
-              ))}
+            {borrowedLibraryItems.items.length > 0 && (
+              <div className="space-y-2">
+                <h1 className="font-semibold">{t("books")}</h1>
+                {borrowedLibraryItems.items.map((libraryItemId) => (
+                  <OverviewBorrowItem
+                    key={libraryItemId}
+                    libraryItemId={libraryItemId}
+                  />
+                ))}
+              </div>
+            )}
 
-            <Separator className="my-4" />
-            <h1 className="font-semibold">{t("resources")}</h1>
-            {borrowResourceIds.length > 0 &&
-              borrowResourceIds.map((libraryItemId) => (
-                <OverviewBorrowResource
-                  key={libraryItemId}
-                  resourceId={libraryItemId}
-                />
-              ))}
+            {borrowedResources.items.length > 0 && (
+              <div className="space-y-2">
+                <h1 className="font-semibold">{t("resources")}</h1>
+                {borrowedResources.items.map((resourceId) => (
+                  <OverviewBorrowResource
+                    key={resourceId}
+                    resourceId={resourceId}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          {(borrowLibraryItemIds.length > 0 ||
-            borrowResourceIds.length > 0) && (
+          {(borrowedLibraryItems.items.length > 0 ||
+            borrowedResources.items.length > 0) && (
             <div className="flex justify-end gap-2">
               <Button
                 variant="destructive"
                 className="px-4"
-                onClick={() => setOpenDelete(true)}
+                onClick={() => {
+                  setOpenDelete(true)
+                  setOpenSheet(false)
+                }}
               >
                 <Trash2 className="size-4" /> {t("remove all")}
               </Button>
@@ -187,7 +152,10 @@ const OverviewBorrowList = () => {
               <Button
                 variant="outline"
                 className="px-4"
-                onClick={() => router.push("/borrows")}
+                onClick={() => {
+                  router.push("/borrows")
+                  setOpenSheet(false)
+                }}
               >
                 {t("borrow all")}
               </Button>

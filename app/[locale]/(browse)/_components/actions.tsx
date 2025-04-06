@@ -16,7 +16,7 @@ import OverviewFavoriteList from "./overview-favorite-list"
 function Actions() {
   const t = useTranslations("GeneralManagement")
   const router = useRouter()
-  const { user, isLoadingAuth } = useAuth()
+  const { user, isLoadingAuth, isManager } = useAuth()
   const [currentDate, setCurrentDate] = useState<string | null>(null)
   // const locale = useLocale()
   // const pathname = usePathname()
@@ -71,7 +71,7 @@ function Actions() {
           })}
         </div>
       </section>
-      {user && !user.libraryCard && (
+      {!isManager && user && !user.libraryCard && (
         <Button
           variant={"outline"}
           onClick={() => router.push("/me/account/library-card")}
@@ -80,10 +80,14 @@ function Actions() {
           {t("register library card")}
         </Button>
       )}
-      <OverviewFavoriteList />
-      <OverviewBorrowList />
+      {!isManager && (
+        <div className="flex items-center">
+          <OverviewFavoriteList />
+          <OverviewBorrowList />
+        </div>
+      )}
       <ThemeToggle />
-      <NotificationBell />
+      {user && <NotificationBell />}
     </div>
   )
 }

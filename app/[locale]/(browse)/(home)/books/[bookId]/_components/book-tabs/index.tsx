@@ -11,7 +11,7 @@ import BookRelatedItemsTab from "./book-related-items-tab"
 import BookReviewsTab from "./book-reviews-tab"
 
 type Props = {
-  libraryItemId: string
+  libraryItemId: number
 }
 
 const BookTabs = async ({ libraryItemId }: Props) => {

@@ -882,6 +882,9 @@
       "days": "days",
       "pending resources": "Pending resources"
     },
+    "ratings": "Ratings",
+    "number of edition": "Number of edition: {editionNumber}",
+    "edition": "Edition",
     "resources": "Resources",
     "payment": "Payment",
     "added to borrow list": "Added to borrow list",

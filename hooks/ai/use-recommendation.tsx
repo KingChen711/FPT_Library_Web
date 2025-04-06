@@ -3,7 +3,7 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import { type LibraryItemsRecommendation } from "@/lib/types/models"
 
-function useLibraryItemRecommendation(libraryItemId: string) {
+function useLibraryItemRecommendation(libraryItemId: number) {
   return useQuery({
     queryKey: [`library-items/${libraryItemId}/recommendation`],
     queryFn: async () => {

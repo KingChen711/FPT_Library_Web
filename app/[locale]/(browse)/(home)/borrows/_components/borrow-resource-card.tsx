@@ -1,7 +1,6 @@
 "use client"
 
-import { useState } from "react"
-import { useBorrowRequestStore } from "@/stores/borrows/use-borrow-request"
+import { useState, type Dispatch, type SetStateAction } from "react"
 import { Loader2, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
@@ -14,15 +13,21 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Label } from "@/components/ui/label"
 import NoData from "@/components/ui/no-data"
 
+import { type SelectedBorrow } from "../page"
 import DeleteBorrowRequestConfirm from "./delete-borrow-request-confirm"
 
 type Props = {
-  resourceId: string
+  resourceId: number
+  selectedBorrow: SelectedBorrow
+  setSelectedBorrow: Dispatch<SetStateAction<SelectedBorrow>>
 }
 
-const BorrowResourceCard = ({ resourceId }: Props) => {
+const BorrowResourceCard = ({
+  resourceId,
+  selectedBorrow,
+  setSelectedBorrow,
+}: Props) => {
   const t = useTranslations("BookPage")
-  const { selectedResourceIds, toggleResourceId } = useBorrowRequestStore()
   const { data, isLoading } = useResourceDetail(resourceId)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
 
@@ -42,19 +47,35 @@ const BorrowResourceCard = ({ resourceId }: Props) => {
     return <NoData />
   }
 
+  const handleToggleSelect = () => {
+    const resourceIds = [...selectedBorrow.selectedResourceIds]
+    if (resourceIds.includes(resourceId)) {
+      console.log(123)
+      resourceIds.splice(resourceIds.indexOf(resourceId), 1)
+    } else {
+      resourceIds.push(resourceId)
+    }
+    setSelectedBorrow((prev: SelectedBorrow) => ({
+      ...prev,
+      selectedResourceIds: Array.from(resourceIds),
+    }))
+  }
+
   return (
     <>
       <DeleteBorrowRequestConfirm
         libraryItemTitle={data.resourceTitle}
         open={openDelete}
         setOpen={setOpenDelete}
-        libraryItemId={resourceId}
+        id={resourceId}
+        type="resource"
+        setSelectedBorrow={setSelectedBorrow}
       />
       <Card className="w-full overflow-hidden transition-all hover:shadow-md">
         <div className="flex flex-col md:flex-row">
           {/* Content */}
           <div className="flex flex-1 flex-col">
-            <CardHeader className="pb-2">
+            <CardHeader className="pb-0">
               <div className="flex flex-wrap items-start justify-between gap-2">
                 <h1 className="flex-1 cursor-pointer text-xl font-bold leading-tight">
                   {data.resourceTitle}
@@ -62,12 +83,14 @@ const BorrowResourceCard = ({ resourceId }: Props) => {
                 <div className="flex items-center gap-4">
                   <Button
                     variant={"ghost"}
-                    onClick={() => toggleResourceId(resourceId)}
+                    onClick={() => handleToggleSelect()}
                     className="flex cursor-pointer items-center gap-2"
                   >
                     <Checkbox
                       color="white"
-                      checked={selectedResourceIds.includes(resourceId)}
+                      checked={selectedBorrow.selectedResourceIds.includes(
+                        resourceId
+                      )}
                     />
                     <Label className="cursor-pointer">
                       {t("select borrow")}
@@ -89,12 +112,9 @@ const BorrowResourceCard = ({ resourceId }: Props) => {
               </div>
             </CardHeader>
 
-            <CardContent className="p-4">
+            <CardContent className="px-4">
               <div className="flex items-start justify-between">
                 <div className="space-y-1">
-                  <h3 className="line-clamp-1 text-lg font-medium">
-                    {data.resourceTitle}
-                  </h3>
                   <div className="flex items-center gap-2">
                     <Badge variant={"draft"} className="text-xs">
                       {data.resourceType === EResourceBookType.EBOOK

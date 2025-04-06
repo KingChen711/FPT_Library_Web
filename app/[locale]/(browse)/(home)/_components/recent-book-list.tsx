@@ -1,61 +1,51 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { LocalStorageKeys } from "@/constants"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { useTranslations } from "next-intl"
 
-import { localStorageHandler } from "@/lib/utils"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 import { Label } from "@/components/ui/label"
-import RecentBookItem from "@/components/ui/recent-book-item"
+
+import BookItemCard from "./book-item-card"
 
 const RecentBookList = () => {
   const t = useTranslations("HomePage")
-  const [recentIdList, setRecentIdList] = useState<string[]>([])
-  const updateBorrows = () => {
-    setRecentIdList(
-      localStorageHandler.getItem(LocalStorageKeys.OPENING_RECENT)
-    )
-  }
+  const { recentlyOpened } = useLibraryStorage()
 
-  useEffect(() => {
-    updateBorrows()
-    const handleStorageChange = (event: StorageEvent) => {
-      if (event.key === LocalStorageKeys.OPENING_RECENT) {
-        updateBorrows()
-      }
-    }
-    const handleCustomEvent = () => updateBorrows()
-    window.addEventListener("storage", handleStorageChange)
-    window.addEventListener(LocalStorageKeys.OPENING_RECENT, handleCustomEvent)
-    return () => {
-      window.removeEventListener("storage", handleStorageChange)
-      window.removeEventListener(
-        LocalStorageKeys.OPENING_RECENT,
-        handleCustomEvent
-      )
-    }
-  }, [])
-
-  if (recentIdList.length === 0) return null
+  if (recentlyOpened.items.length === 0) return null
 
   return (
     <div>
-      {recentIdList && recentIdList.length > 0 && (
+      {recentlyOpened.items && recentlyOpened.items.length > 0 && (
         <div className="flex items-center justify-between">
           <Label className="text-2xl font-bold text-foreground">
             {t("recent read")} &nbsp;
-            <span className="text-lg text-muted-foreground">
-              ({recentIdList.length} {t("books")})
-            </span>
           </Label>
         </div>
       )}
-      <div className="mt-4 grid w-full gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
-        {recentIdList &&
-          recentIdList.length > 0 &&
-          recentIdList.map((id) => (
-            <RecentBookItem key={id} libraryItem={id} />
-          ))}
+      <div className="mt-4 w-full">
+        <Carousel opts={{ loop: false, slidesToScroll: 2 }} className="w-full">
+          <CarouselContent className="space-x-2">
+            {recentlyOpened.items.length > 0 &&
+              recentlyOpened.items.map((id) => (
+                <CarouselItem
+                  key={id}
+                  className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 2xl:basis-1/6"
+                >
+                  <BookItemCard libraryItem={id} />
+                </CarouselItem>
+              ))}
+          </CarouselContent>
+
+          <CarouselPrevious className="ml-3" />
+          <CarouselNext className="mr-3" />
+        </Carousel>
       </div>
     </div>
   )
