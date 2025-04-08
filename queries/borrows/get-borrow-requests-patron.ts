@@ -38,6 +38,7 @@ const getBorrowRequestsPatron = async (
           Authorization: `Bearer ${getAccessToken()}`,
         },
         searchParams: {
+          ...searchParams,
           requestDateRange:
             JSON.stringify(searchParams.requestDateRange) ===
             JSON.stringify([null, null])

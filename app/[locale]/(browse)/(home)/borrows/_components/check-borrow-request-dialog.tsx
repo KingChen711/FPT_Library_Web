@@ -72,10 +72,12 @@ const CheckBorrowRequestDialog = ({
 
   const handleSubmit = () => {
     startTransition(async () => {
+      const libraryItemIds =
+        data?.allowToBorrowItems?.map((id) => id.libraryItemId) || []
+
       const res = await createBorrowRequest({
         description: "",
-        libraryItemIds:
-          data?.allowToBorrowItems?.map((id) => id.libraryItemId) || [],
+        libraryItemIds,
         reservationItemIds: allowToReserveItems,
         resourceIds: allowToBorrowResources,
       })
@@ -88,18 +90,18 @@ const CheckBorrowRequestDialog = ({
               : "Borrow request successfully",
           variant: "success",
         })
-        borrowedLibraryItems.removeItems(
-          data?.allowToBorrowItems?.map((id) => id.libraryItemId) || []
-        )
-        borrowedResources.removeItems(
-          data?.allowToBorrowItems?.map((id) => id.libraryItemId) || []
-        )
+        borrowedLibraryItems.removeItems([
+          ...libraryItemIds,
+          ...allowToReserveItems,
+        ])
+        borrowedResources.removeItems(allowToBorrowResources)
         setAllowToReserveItems([])
         setAllowToBorrowResources([])
         setSelectedBorrow({
           selectedLibraryItemIds: [],
           selectedResourceIds: [],
         })
+
         router.push("/me/account/borrow")
         setOpen(false)
         return

@@ -2,15 +2,7 @@
 
 import Image from "next/image"
 import { format } from "date-fns"
-import {
-  AlertCircle,
-  BookOpen,
-  CheckCircle2,
-  Clock,
-  MapPin,
-  Trash2,
-  XCircle,
-} from "lucide-react"
+import { BookOpen } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 
@@ -23,7 +15,6 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Icons } from "@/components/ui/icons"
 import NoData from "@/components/ui/no-data"
@@ -42,6 +33,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import ReservationStatusBadge from "@/components/badges/reservation-status-badge"
 
 type Props = {
   libraryItem: LibraryItem
@@ -52,47 +44,6 @@ type Props = {
     totalExtendPickup?: number
   }
   expandable?: boolean
-}
-
-const getBorrowQueueStatusLabel = (status: number) => {
-  switch (status) {
-    case 0:
-      return {
-        label: "Waiting",
-        color: "bg-blue-500",
-        icon: <Clock className="mr-1.5 size-3.5" />,
-      }
-    case 1:
-      return {
-        label: "Ready for Pickup",
-        color: "bg-green-500",
-        icon: <CheckCircle2 className="mr-1.5 size-3.5" />,
-      }
-    case 2:
-      return {
-        label: "Collected",
-        color: "bg-purple-500",
-        icon: <CheckCircle2 className="mr-1.5 size-3.5" />,
-      }
-    case 3:
-      return {
-        label: "Expired",
-        color: "bg-red-500",
-        icon: <AlertCircle className="mr-1.5 size-3.5" />,
-      }
-    case 4:
-      return {
-        label: "Cancelled",
-        color: "bg-gray-500",
-        icon: <XCircle className="mr-1.5 size-3.5" />,
-      }
-    default:
-      return {
-        label: "Unknown",
-        color: "bg-gray-400",
-        icon: <AlertCircle className="mr-1.5 size-3.5" />,
-      }
-  }
 }
 
 const BorrowReserveItemPreview = ({
@@ -116,8 +67,6 @@ const BorrowReserveItemPreview = ({
   const locale = useLocale()
   const t = useTranslations("BooksManagementPage")
   const tBorrowTracking = useTranslations("BookPage.borrow tracking")
-
-  const queueStatus = getBorrowQueueStatusLabel(queue.queueStatus)
 
   return (
     <Card
@@ -147,14 +96,6 @@ const BorrowReserveItemPreview = ({
               <div>
                 <div className="mt-2 flex items-center justify-between">
                   <h3 className="line-clamp-1 text-lg font-bold">{title}</h3>
-                  <div className="flex items-center gap-2">
-                    <Button variant={"destructive"}>
-                      <Trash2 />
-                    </Button>
-                    <Button variant={"outline"}>
-                      <MapPin />
-                    </Button>
-                  </div>
                 </div>
                 {subTitle && (
                   <p className="text-sm text-muted-foreground">{subTitle}</p>
@@ -222,13 +163,7 @@ const BorrowReserveItemPreview = ({
             <TableBody>
               <TableRow>
                 <TableCell>
-                  <Badge
-                    className="flex w-fit items-center gap-1 px-2 py-1"
-                    style={{ backgroundColor: queueStatus.color }}
-                  >
-                    {queueStatus.icon}
-                    {queueStatus.label}
-                  </Badge>
+                  <ReservationStatusBadge status={queue.queueStatus} />
                 </TableCell>
                 <TableCell>
                   {formatDate(queue.reservationDate.toString())}

@@ -4,7 +4,6 @@ import getUserPendingActivity from "@/queries/profile/get-user-pending-activity"
 import { getTranslations } from "@/lib/get-translations"
 import { formatPrice } from "@/lib/utils"
 import { Card } from "@/components/ui/card"
-import { Label } from "@/components/ui/label"
 
 import ProfileAvatar from "./_components/profile-avatar"
 import ProfileForm from "./_components/profile-form"
@@ -23,40 +22,35 @@ const ProfileManagementPage = async () => {
 
   return (
     <div className="flex flex-col gap-4 overflow-y-auto">
-      <div className="flex h-[150px] w-full items-center gap-8 overflow-hidden rounded-md">
+      <div className="flex w-full items-center gap-8 overflow-hidden rounded-md">
         <ProfileAvatar />
-        <Card className="grid grid-cols-3 gap-4 p-4">
-          <div className="flex grid-cols-1 items-center justify-between gap-2">
-            <Label className="font-normal">
-              {tBookTracking("total borrow")}
-            </Label>
-            <span className="font-semibold">{data.totalBorrowing}</span>
+
+        <Card className="grid w-full grid-cols-12 gap-y-6 p-4 text-sm">
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-4">
+            <h4 className="font-bold">{tBookTracking("total borrow")}</h4>
+            <div className="flex items-center gap-2">{data.totalBorrowing}</div>
           </div>
-          <div className="flex grid-cols-1 items-center justify-between gap-2">
-            <Label className="font-normal">
-              {tBookTracking("total request")}
-            </Label>
-            <span className="font-semibold">{data.totalRequesting}</span>
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-4">
+            <h4 className="font-bold">{tBookTracking("total request")}</h4>
+            <div className="flex items-center gap-2">
+              {data.totalRequesting}
+            </div>
           </div>
-          <div className="flex grid-cols-1 items-center justify-between gap-2">
-            <Label className="font-normal">
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-4">
+            <h4 className="font-bold">
               {tBookTracking("total borrow in once")}
-            </Label>
-            <span className="font-semibold">{data.totalBorrowOnce}</span>
+            </h4>
+            <div className="flex items-center gap-2">
+              {data.totalBorrowOnce}
+            </div>
           </div>
-          <div className="flex grid-cols-1 items-center justify-between gap-2">
-            <Label className="font-normal">
-              {tBookTracking("remain total")}
-            </Label>
-            <span className="font-semibold">{data.remainTotal}</span>
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-4">
+            <h4 className="font-bold">{tBookTracking("remain total")}</h4>
+            <div className="flex items-center gap-2">{data.remainTotal}</div>
           </div>
-          <div className="flex grid-cols-1 items-center justify-between gap-2">
-            <Label className="font-normal">
-              {tBookTracking("unpaid fees")}
-            </Label>
-            <span className="font-semibold text-yellow-600">
-              {formatPrice(15000)}
-            </span>
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-4">
+            <h4 className="font-bold">{tBookTracking("unpaid fees")}</h4>
+            <div className="flex items-center gap-2">{formatPrice(15000)}</div>
           </div>
         </Card>
       </div>

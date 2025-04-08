@@ -24,7 +24,7 @@ const AvailableBorrowResource = ({
 }: Props) => {
   const t = useTranslations("BookPage")
 
-  const { data: resource, isLoading } = useResourceDetail(resourceId.toString())
+  const { data: resource, isLoading } = useResourceDetail(resourceId)
 
   if (isLoading) {
     return <Loader2 className="size-6 animate-spin" />

@@ -28,7 +28,7 @@ import {
 import DigitalBorrowActions from "./digital-borrow-actions"
 
 const formatDate = (dateString: string): string => {
-  return format(new Date(dateString), "MMM dd, yyyy")
+  return format(new Date(dateString), "dd/MM/yyyy")
 }
 
 const DigitalBorrowTab = async () => {

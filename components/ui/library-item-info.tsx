@@ -207,25 +207,31 @@ const LibraryItemInfo = ({
             value={libraryItem.publisher}
           />
 
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger>
-                <InfoItem
-                  icon={MapPin}
-                  label={t("fields.shelf")}
-                  value={libraryItem.shelf?.shelfNumber}
-                  className="cursor-pointer font-semibold"
-                />
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>
-                  {locale === "vi"
-                    ? libraryItem.shelf?.vieShelfName
-                    : libraryItem.shelf?.engShelfName}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+          {libraryItem.shelf && (
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger>
+                  <InfoItem
+                    icon={MapPin}
+                    label={t("fields.shelf")}
+                    value={libraryItem.shelf?.shelfNumber}
+                    className="cursor-pointer font-semibold"
+                  />
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>
+                    {locale === "vi"
+                      ? libraryItem.shelf?.vieShelfName
+                      : libraryItem.shelf?.engShelfName}
+                  </p>
+                  <p>
+                    {libraryItem.shelf.classificationNumberRangeFrom} -{" "}
+                    {libraryItem.shelf.classificationNumberRangeTo}
+                  </p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+          )}
         </div>
       </section>
       <InfoItem

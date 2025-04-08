@@ -19,13 +19,13 @@ type Props = {
 const RecommendBookPreview = ({
   result,
   detectedLibraryItem,
-  comparedLibraryItemId,
+  comparedlibraryItemId,
 }: Props) => {
   const t = useTranslations("AI")
   const tBookPage = useTranslations("BookPage")
   const router = useRouter()
   const { data: comparedLibraryItem, isLoading: isLoadingComparedLibraryItem } =
-    useLibraryItemDetail(comparedLibraryItemId?.toString() || "")
+    useLibraryItemDetail(comparedlibraryItemId)
 
   if (isLoadingComparedLibraryItem) return <Loader2 className="animate-spin" />
   if (!detectedLibraryItem || !comparedLibraryItem) {

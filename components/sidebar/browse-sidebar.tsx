@@ -6,7 +6,6 @@ import { Link, useRouter } from "@/i18n/routing"
 import { BadgeCheck, ChevronsUpDown, LogOut, User } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
-import { ERoleType } from "@/lib/types/enums"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -38,11 +37,11 @@ import SidebarLogoItem from "./sidebar-logo-item"
 export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const router = useRouter()
   const locale = useLocale()
-  const { user } = useAuth()
   const t = useTranslations("Me")
   const tRoutes = useTranslations("Routes")
   const { isMobile, open } = useSidebar()
-
+  const { user, isManager } = useAuth()
+  console.log({ user, isManager })
   return (
     <Sidebar className="sticky" collapsible="icon" {...props}>
       <SidebarTrigger className="absolute left-full top-8 z-50 -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground max-lg:hidden" />
@@ -126,8 +125,7 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                       <BadgeCheck />
                       {t("account")}
                     </DropdownMenuItem>
-                    {(user.role.roleType === ERoleType.EMPLOYEE ||
-                      user.role.roleId === 1) && (
+                    {isManager && (
                       <DropdownMenuItem className="cursor-pointer" asChild>
                         <Link href="/management">
                           <BadgeCheck />

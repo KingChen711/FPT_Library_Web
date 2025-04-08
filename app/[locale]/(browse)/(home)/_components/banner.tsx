@@ -1,11 +1,15 @@
 "use client"
 
+import { useEffect, useRef } from "react"
 import Image from "next/image"
 import { useRouter } from "@/i18n/routing"
 import Autoplay from "embla-carousel-autoplay"
+import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
+import { useInView } from "react-intersection-observer"
 
-import useNewArrivals from "@/hooks/library-items/use-new-arrivals"
+import { cn } from "@/lib/utils"
+import useInfiniteNewArrivals from "@/hooks/library-items/use-infinite-new-arrivals"
 import { Card, CardContent } from "@/components/ui/card"
 import {
   Carousel,
@@ -14,7 +18,8 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel"
-import { Skeleton } from "@/components/ui/skeleton"
+import { Icons } from "@/components/ui/icons"
+import { useSidebar } from "@/components/ui/sidebar"
 
 const quotes = [
   {
@@ -26,12 +31,12 @@ const quotes = [
   {
     id: 2,
     quote:
-      "Your time is limited, so don’t waste it living someone else’s life.",
+      "Your time is limited, so don't waste it living someone else's life.",
     author: "Steve Jobs",
   },
   {
     id: 3,
-    quote: "Life is what happens when you’re busy making other plans.",
+    quote: "Life is what happens when you're busy making other plans.",
     author: "John Lennon",
   },
   {
@@ -40,37 +45,23 @@ const quotes = [
     author: "Theodore Roosevelt",
   },
 ]
+
 const BannerHome = () => {
   const t = useTranslations("HomePage")
   const router = useRouter()
-  const { data: libraryItems, isLoading } = useNewArrivals()
+  const { ref, inView } = useInView()
+  const carouselRef = useRef(null)
+  const { state: statusSidebar } = useSidebar()
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, status } =
+    useInfiniteNewArrivals({ pageSize: 30 })
 
-  if (!libraryItems || isLoading || libraryItems.length === 0) {
-    return (
-      <div className="grid h-[240px] w-full grid-cols-3 gap-4">
-        <div className="col-span-1 h-full overflow-hidden rounded-md">
-          <Card className="size-full">
-            <CardContent className="flex h-full flex-col justify-between gap-4 p-6">
-              <Skeleton className="h-6 w-1/2" />
-              <Skeleton className="h-5 w-full" />
-              <Skeleton className="h-4 w-1/3 self-end" />
-            </CardContent>
-          </Card>
-        </div>
+  const newArrivals = data?.pages.flatMap((page) => page.items) ?? []
 
-        <div className="col-span-2 flex h-full rounded-md border-8 border-primary shadow-lg">
-          <div className="flex w-20 items-center justify-center bg-primary">
-            <Skeleton className="h-5 w-[100px] -rotate-90" />
-          </div>
-          <div className="flex flex-1 items-center justify-around px-4">
-            {[...Array(4)].map((_, i) => (
-              <Skeleton key={i} className="h-[180px] w-[120px] rounded-md" />
-            ))}
-          </div>
-        </div>
-      </div>
-    )
-  }
+  useEffect(() => {
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage()
+    }
+  }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
   return (
     <div className="grid w-full grid-cols-12 gap-4">
@@ -118,36 +109,60 @@ const BannerHome = () => {
           </p>
         </div>
 
-        <div className="flex flex-1 items-center justify-center rounded-md border-8 border-primary bg-background">
+        <div className="flex flex-1 items-center justify-center rounded-md border-8 border-primary bg-background px-8">
           <Carousel
+            ref={carouselRef}
             opts={{
-              align: "start",
               loop: true,
+              align: "center",
+              slidesToScroll: 6,
             }}
+            className={cn(
+              statusSidebar === "expanded" ? "max-w-[40vw]" : "max-w-[50vw]"
+            )}
           >
-            <CarouselContent className="h-full space-x-4">
-              {libraryItems.map((item) => (
-                <CarouselItem
-                  key={item.libraryItemId}
-                  className="flex h-full justify-center sm:basis-1/3 xl:basis-1/4 2xl:basis-1/5"
-                >
-                  <div
-                    onClick={() => router.push(`/books/${item.libraryItemId}`)}
-                    className="cursor-pointer overflow-hidden"
+            <CarouselContent className="px-8">
+              {status === "pending" ? (
+                <Loader2 className="mr-2 animate-spin" />
+              ) : status === "error" ? (
+                <div>
+                  <Icons.X /> Error
+                </div>
+              ) : (
+                newArrivals.map((item) => (
+                  <CarouselItem
+                    key={item.libraryItemId}
+                    className="flex h-full basis-1/6 justify-center md:basis-1/6 lg:basis-1/6"
+                    style={{
+                      flex: "0 0 auto",
+                      width: "auto",
+                      maxWidth: "120px",
+                    }}
                   >
-                    <Image
-                      src={item.coverImage as string}
-                      alt={item.title}
-                      height={360}
-                      width={240}
-                      className="aspect-[2/3] h-[180px] w-[120px] rounded-md object-cover"
-                    />
-                  </div>
-                </CarouselItem>
-              ))}
+                    <div
+                      onClick={() =>
+                        router.push(`/books/${item.libraryItemId}`)
+                      }
+                      className="cursor-pointer overflow-hidden"
+                    >
+                      <Image
+                        src={(item.coverImage as string) || "/placeholder.svg"}
+                        alt={item.title}
+                        height={360}
+                        width={240}
+                        className="aspect-[2/3] h-[180px] w-[120px] rounded-md object-cover"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))
+              )}
+
+              {newArrivals.length > 0 && hasNextPage && (
+                <div ref={ref} className="size-1" />
+              )}
             </CarouselContent>
-            <CarouselPrevious className="absolute left-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
-            <CarouselNext className="absolute right-2 top-1/2 size-4 -translate-y-1/2 rounded-full" />
+            <CarouselPrevious className="ml-3 size-6" />
+            <CarouselNext className="mr-3 size-6" />
           </Carousel>
         </div>
       </div>

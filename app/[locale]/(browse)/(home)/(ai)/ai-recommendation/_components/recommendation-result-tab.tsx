@@ -55,15 +55,15 @@ const RecommendationResultTab = () => {
     usePrediction()
 
   const { data: ocrDetail, isLoading: isLoadingOcrDetail } = useOcrDetail(
-    bestMatchedLibraryItemId?.toString() as string,
+    bestMatchedLibraryItemId,
     uploadedImage!
   )
 
   const { data: detectedLibraryItem, isLoading: isLoadingLibraryItem } =
-    useLibraryItemDetail(bestMatchedLibraryItemId?.toString() || "")
+    useLibraryItemDetail(bestMatchedLibraryItemId)
 
   const { data: recommendationResult, isLoading: isLoadingRecommendation } =
-    useLibraryItemRecommendation(bestMatchedLibraryItemId?.toString() as string)
+    useLibraryItemRecommendation(bestMatchedLibraryItemId)
 
   if (isLoadingOcrDetail || isLoadingRecommendation || isLoadingLibraryItem) {
     return <Loader2 className="animate-spin" />
@@ -132,7 +132,7 @@ const RecommendationResultTab = () => {
                   className="border-2 bg-card"
                 >
                   <LibraryItemInfo
-                    id={detectedLibraryItem?.libraryItemId?.toString()}
+                    id={detectedLibraryItem?.libraryItemId}
                     showInstances={false}
                     showResources={false}
                     shownInventory={true}
@@ -295,7 +295,9 @@ const RecommendationResultTab = () => {
                           <RecommendBookPreview
                             result={result}
                             detectedLibraryItem={detectedLibraryItem}
-                            comparedLibraryItemId={result.itemDetailDto.libraryItemId.toString()}
+                            comparedlibraryItemId={
+                              result.itemDetailDto.libraryItemId
+                            }
                           />
                         </PopoverContent>
                       </Popover>

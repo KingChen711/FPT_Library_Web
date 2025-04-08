@@ -18,7 +18,7 @@ export default async function Home() {
   const user = await auth().whoAmI()
 
   return (
-    <div className="grid w-full gap-4">
+    <div className="container grid w-full gap-4">
       <BannerHome />
       <h1 className="mt-4 text-center text-2xl font-semibold text-foreground">
         👋{" "}
