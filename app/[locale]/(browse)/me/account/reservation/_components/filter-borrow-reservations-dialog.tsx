@@ -93,7 +93,7 @@ function FiltersBorrowReservationsDialog() {
     })
     setOpen(false)
 
-    router.push("/me/account/reservation")
+    router.push("/management/borrows/reservations")
   }
 
   const wStatus = form.watch("queueStatus")

@@ -80,6 +80,8 @@ function Paginator({
     router.push(newUrl, { scroll: false })
   }
 
+  if (totalPage === 0) return null
+
   return (
     <div className={cn("flex flex-wrap items-center gap-4", className)}>
       <div className="flex-1 text-nowrap text-sm">

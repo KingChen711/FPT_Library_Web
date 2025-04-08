@@ -191,7 +191,7 @@ async function BorrowRecordDetailPage({ params }: Props) {
               </div>
 
               <div className="col-span-12 flex flex-col border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Barcode")}</h4>
+                <h4 className="font-bold">{t("Card barcode")}</h4>
                 <div className="flex items-center gap-2">
                   <BarcodeGenerator
                     value={record.librarycard.barcode}

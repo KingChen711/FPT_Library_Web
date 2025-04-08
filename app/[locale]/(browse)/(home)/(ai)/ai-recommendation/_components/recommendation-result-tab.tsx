@@ -295,7 +295,7 @@ const RecommendationResultTab = () => {
                           <RecommendBookPreview
                             result={result}
                             detectedLibraryItem={detectedLibraryItem}
-                            comparedlibraryItemId={
+                            comparedLibraryItemId={
                               result.itemDetailDto.libraryItemId
                             }
                           />

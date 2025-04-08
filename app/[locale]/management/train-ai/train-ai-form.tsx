@@ -1,10 +1,11 @@
 "use client"
 
 import React, { useEffect, useState, useTransition } from "react"
+import Link from "next/link"
+import { useTrainAI } from "@/contexts/train-ai-progress-provider"
 import { useRouter } from "@/i18n/routing"
 import { type TrainProgress } from "@/queries/books/get-train-progress"
 import { type UntrainedGroup } from "@/queries/books/get-untrained-group"
-import { useUntrainedGroupsStore } from "@/stores/books/use-untrained-group"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Check, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -43,11 +44,12 @@ type Props = {
 }
 
 function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
-  const { groups: selectedGroups, clear } = useUntrainedGroupsStore()
+  const [selectedGroups, setSelectedGroups] = useState<UntrainedGroup[]>([])
   const [showForm, setShowForm] = useState(false)
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
   const router = useRouter()
+  const { trainingGroup } = useTrainAI()
 
   const [isConvertedUrlsToFiles, setIsConvertedUrlsToFiles] = useState(false)
   const [isPending, startTransition] = useTransition()
@@ -67,7 +69,10 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
   const [preventChangeCurrentBookIndex, setPreventChangeCurrentBookIndex] =
     useState(false)
 
-  const trainingPercentage = trainProgress?.trainingPercentage || null
+  const trainingPercentage =
+    trainingGroup?.progress || trainProgress?.trainingPercentage || null
+  const trainingSessionId =
+    trainingGroup?.sessionId || trainProgress?.trainingSessionId || null
 
   useEffect(() => {
     if (!showForm || selectedGroups.length === 0) return
@@ -192,7 +197,13 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
           variant: "success",
         })
         setShowForm(false)
-        router.push("/management/books")
+        form.setValue("groups", [])
+        setSelectedGroups([])
+        setIsConvertedUrlsToFiles(false)
+        setCurrentGroupIndex(0)
+        setCurrentBookIndex(0)
+        setPreventChangeCurrentBookIndex(false)
+        router.push("/management/train-sessions")
         return
       }
 
@@ -227,13 +238,9 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
   }))
 
   useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form.formState.errors])
-
-  useEffect(() => {
     if (watchSelectedGroup?.length === 0) return
 
-    const getFiles = async () => {
+    const getFiles = () => {
       try {
         selectedGroups.forEach((g, i) => {
           g.items.forEach((_, j) =>
@@ -296,10 +303,32 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
         {trainingPercentage !== null && trainingPercentage !== 100 && (
           <div className="mb-6 flex-1 space-y-1">
             <div className="flex justify-between gap-4 text-sm">
-              <span className="font-bold">
-                {locale === "vi" ? "Tiến trình Train AI" : "Train AI progress"}
-              </span>
-              <span>{Math.floor(trainingPercentage)}%</span>
+              <div className="flex items-center gap-1">
+                <p className="font-bold">
+                  {locale === "vi"
+                    ? "Tiến trình Train AI: "
+                    : "Train AI progress: "}
+                </p>
+                <span>{Math.floor(trainingPercentage)}%</span>
+              </div>
+              <div>
+                {trainingSessionId ? (
+                  <>
+                    <Link
+                      href={`/management/train-sessions/${trainingSessionId}`}
+                    >
+                      {locale === "vi" ? "Xem chi tiết" : "View details"}
+                    </Link>
+                  </>
+                ) : (
+                  <div className="flex items-center gap-1">
+                    {locale === "vi"
+                      ? "Đang tạo phiên Train AI mới"
+                      : "Creating new Train AI session"}
+                    <Loader2 className="size-4 animate-spin" />
+                  </div>
+                )}
+              </div>
             </div>
             <Progress
               skeletonEffect
@@ -313,10 +342,12 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
           {groups.map((g) => (
             <div key={g.id} className="flex gap-4">
               <TrainCheckBox
+                groups={selectedGroups}
+                setGroups={setSelectedGroups}
                 disabled={
                   trainingPercentage !== null && trainingPercentage !== 100
                 }
-                group={g}
+                currentGroup={g}
               />
               <Accordion type="single" collapsible>
                 <AccordionItem value="item-1">
@@ -460,7 +491,7 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
               onClick={() => {
                 setShowForm(false)
                 form.setValue("groups", [])
-                clear()
+                setSelectedGroups([])
                 setIsConvertedUrlsToFiles(false)
                 setCurrentGroupIndex(0)
                 setCurrentBookIndex(0)

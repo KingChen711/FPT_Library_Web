@@ -56,6 +56,10 @@ const PredictionOcrDetailTab = () => {
     return
   }
 
+  if (!libraryItem) {
+    return null
+  }
+
   return (
     <Card className="flex w-full flex-col rounded-md border-2 p-4">
       {/* Book preview */}
