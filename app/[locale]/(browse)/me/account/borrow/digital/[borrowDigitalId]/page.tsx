@@ -40,7 +40,7 @@ type Props = {
 }
 
 const formatDate = (dateString: string): string => {
-  return format(new Date(dateString), "MMM dd, yyyy")
+  return format(new Date(dateString), "dd/MM/yyyy")
 }
 
 const transactionTypeLabels: Record<ETransactionType, string> = {
@@ -266,23 +266,27 @@ const BorrowDigitalDetail = ({ params }: Props) => {
                         <TableCell>
                           <div className="flex items-center">
                             <Calendar className="mr-1 size-3 text-muted-foreground" />
-                            <span className="text-sm">
-                              {transaction.transactionDate
-                                ? formatDate(
-                                    transaction.transactionDate.toString()
-                                  )
-                                : "N/A"}
-                            </span>
+                            {transaction.transactionDate ? (
+                              <span>
+                                {formatDate(
+                                  transaction.transactionDate.toString()
+                                )}
+                              </span>
+                            ) : (
+                              <NoData />
+                            )}
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="flex items-center">
                             <Clock className="mr-1 size-3 text-muted-foreground" />
-                            <span className="text-sm">
-                              {transaction.expiredAt
-                                ? formatDate(transaction.expiredAt.toString())
-                                : "N/A"}
-                            </span>
+                            {transaction.expiredAt ? (
+                              <span>
+                                {formatDate(transaction.expiredAt.toString())}
+                              </span>
+                            ) : (
+                              <NoData />
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
@@ -308,13 +312,16 @@ const BorrowDigitalDetail = ({ params }: Props) => {
               </p>
               <div className="flex items-center">
                 <Calendar className="mr-1 size-3 text-muted-foreground" />
-                <p className="text-sm">
-                  {digitalBorrow.transactions[0]?.createdAt
-                    ? formatDate(
-                        digitalBorrow.transactions[0].createdAt.toString()
-                      )
-                    : "N/A"}
-                </p>
+
+                {digitalBorrow.transactions[0]?.createdAt ? (
+                  <p>
+                    {formatDate(
+                      digitalBorrow.transactions[0].createdAt.toString()
+                    )}
+                  </p>
+                ) : (
+                  <NoData />
+                )}
               </div>
             </div>
 
@@ -324,13 +331,15 @@ const BorrowDigitalDetail = ({ params }: Props) => {
               </p>
               <div className="flex items-center">
                 <Calendar className="mr-1 size-3 text-muted-foreground" />
-                <p className="text-sm">
-                  {digitalBorrow.transactions[0]?.cancelledAt
-                    ? formatDate(
-                        digitalBorrow.transactions[0].cancelledAt.toString()
-                      )
-                    : "N/A"}
-                </p>
+                {digitalBorrow.transactions[0]?.cancelledAt ? (
+                  <p>
+                    {formatDate(
+                      digitalBorrow.transactions[0].cancelledAt.toString()
+                    )}
+                  </p>
+                ) : (
+                  <NoData />
+                )}
               </div>
             </div>
 
@@ -338,10 +347,7 @@ const BorrowDigitalDetail = ({ params }: Props) => {
               <p className="text-sm font-medium text-muted-foreground">
                 {t("description")}
               </p>
-              <p className="text-sm">
-                {digitalBorrow.transactions[0]?.description ||
-                  t("unavailable description")}
-              </p>
+              {digitalBorrow.transactions[0]?.description || <NoData />}
             </div>
           </div>
         </CardContent>

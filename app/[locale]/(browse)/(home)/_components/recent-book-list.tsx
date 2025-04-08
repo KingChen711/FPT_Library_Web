@@ -3,6 +3,7 @@
 import { useLibraryStorage } from "@/contexts/library-provider"
 import { useTranslations } from "next-intl"
 
+import { cn } from "@/lib/utils"
 import {
   Carousel,
   CarouselContent,
@@ -11,11 +12,13 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel"
 import { Label } from "@/components/ui/label"
+import { useSidebar } from "@/components/ui/sidebar"
 
 import BookItemCard from "./book-item-card"
 
 const RecentBookList = () => {
   const t = useTranslations("HomePage")
+  const { state } = useSidebar()
   const { recentlyOpened } = useLibraryStorage()
 
   if (recentlyOpened.items.length === 0) return null
@@ -29,9 +32,19 @@ const RecentBookList = () => {
           </Label>
         </div>
       )}
-      <div className="mt-4 w-full">
-        <Carousel opts={{ loop: false, slidesToScroll: 2 }} className="w-full">
-          <CarouselContent className="space-x-2">
+      <div className="mt-4 flex items-center justify-center">
+        <Carousel
+          opts={{
+            loop: true,
+            align: "center",
+            slidesToScroll: 6,
+          }}
+          className={cn(
+            "w-full",
+            state === "expanded" ? "max-w-[74vw]" : "max-w-[90vw]"
+          )}
+        >
+          <CarouselContent className="-ml-1">
             {recentlyOpened.items.length > 0 &&
               recentlyOpened.items.map((id) => (
                 <CarouselItem
@@ -42,9 +55,8 @@ const RecentBookList = () => {
                 </CarouselItem>
               ))}
           </CarouselContent>
-
-          <CarouselPrevious className="ml-3" />
-          <CarouselNext className="mr-3" />
+          <CarouselPrevious />
+          <CarouselNext />
         </Carousel>
       </div>
     </div>

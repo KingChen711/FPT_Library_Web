@@ -79,7 +79,7 @@ const BorrowTrackingPage = async ({ searchParams }: Props) => {
             </TabsTrigger>
           </TabsList>
           <TabsContent value={EBorrowTab.REQUEST_BORROW}>
-            <BorrowRequestTab />
+            <BorrowRequestTab searchParams={searchParams} />
           </TabsContent>
           <TabsContent value={EBorrowTab.BORROW_RECORD}>
             <BorrowRecordTab />
