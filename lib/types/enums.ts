@@ -290,3 +290,9 @@ export enum ETrainingStatus {
   COMPLETED,
   FAILED,
 }
+
+export enum EDashboardPeriodLabel {
+  DAILY,
+  WEEKLY,
+  MONTHLY,
+}

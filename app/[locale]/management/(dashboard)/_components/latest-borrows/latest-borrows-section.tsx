@@ -2,14 +2,14 @@
 
 import React, { useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import { Link } from "@/i18n/routing"
 import { format } from "date-fns"
 import { useTranslations } from "next-intl"
 
 import { parseSearchParamsDateRange } from "@/lib/filters"
 import { EDashboardPeriodLabel } from "@/lib/types/enums"
-import useDashboardAssignable from "@/hooks/dash-board/use-dashboard-assignables"
+import useLatestBorrowBorrows from "@/hooks/dash-board/use-dashboard-latest-borrow"
 import useFormatLocale from "@/hooks/utils/use-format-locale"
 import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
@@ -21,11 +21,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import ReservationStatusBadge from "@/components/badges/reservation-status-badge"
+import BorrowRecordStatusBadge from "@/components/badges/borrow-record-status-badge"
 
-function AssignableReservationsSection() {
-  const formatLocale = useFormatLocale()
+function LatestBorrowsSection() {
   const t = useTranslations("Dashboard")
+  const formatLocale = useFormatLocale()
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState<"5" | "10" | "30" | "50" | "100">(
     "5"
@@ -37,7 +37,7 @@ function AssignableReservationsSection() {
     searchParams.get("period") || EDashboardPeriodLabel.DAILY.toString()
   const dateRange = parseSearchParamsDateRange(searchParams.getAll("dateRange"))
 
-  const { data, isLoading } = useDashboardAssignable({
+  const { data, isLoading } = useLatestBorrowBorrows({
     period: +period,
     startDate: dateRange[0],
     endDate: dateRange[1],
@@ -53,13 +53,11 @@ function AssignableReservationsSection() {
     setPageSize(size)
   }
 
-  if (isLoading || !data) return
+  if (isLoading || !data) return null
 
   return (
     <div className="mb-8 rounded-md border p-4">
-      <h2 className="mb-4 text-xl font-semibold">
-        {t("Assignable reservations")}
-      </h2>
+      <h2 className="mb-4 text-xl font-semibold">{t("Latest borrows")}</h2>
       <div className="mt-4 grid w-full">
         <div className="overflow-x-auto rounded-md border">
           {data.sources.length > 0 && (
@@ -69,13 +67,15 @@ function AssignableReservationsSection() {
                   <TableHead className="text-nowrap font-bold">
                     {t("Library item")}
                   </TableHead>
+
                   <TableHead className="text-nowrap font-bold">
                     {t("Patron")}
                   </TableHead>
 
                   <TableHead className="text-nowrap font-bold">
-                    {t("Reservation date")}
+                    {t("Due date")}
                   </TableHead>
+
                   <TableHead className="text-nowrap font-bold">
                     <div className="flex justify-center">{t("Status")}</div>
                   </TableHead>
@@ -83,7 +83,9 @@ function AssignableReservationsSection() {
               </TableHeader>
               <TableBody>
                 {data.sources.map((source) => (
-                  <TableRow key={source.queueId}>
+                  <TableRow
+                    key={source.borrowRecordDetail.borrowRecordDetailId}
+                  >
                     <TableCell className="text-nowrap">
                       <Link
                         target="_blank"
@@ -120,12 +122,12 @@ function AssignableReservationsSection() {
                     <TableCell className="text-nowrap font-bold">
                       <Link
                         target="_blank"
-                        href={`/management/borrows/reservations/${source.queueId}`}
+                        href={`/management/borrows/records/${source.borrowRecordDetail.borrowRecordId}`}
                         className="hover:underline"
                       >
-                        {source.reservationDate
+                        {source.borrowRecordDetail.dueDate
                           ? format(
-                              new Date(source.reservationDate),
+                              new Date(source.borrowRecordDetail.dueDate),
                               "dd MMM yyyy",
                               {
                                 locale: formatLocale,
@@ -137,7 +139,9 @@ function AssignableReservationsSection() {
 
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
-                        <ReservationStatusBadge status={source.queueStatus} />
+                        <BorrowRecordStatusBadge
+                          status={source.borrowRecordDetail.status}
+                        />
                       </div>
                     </TableCell>
                   </TableRow>
@@ -166,4 +170,4 @@ function AssignableReservationsSection() {
   )
 }
 
-export default AssignableReservationsSection
+export default LatestBorrowsSection

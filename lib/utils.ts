@@ -89,7 +89,10 @@ export function formUrlQuery({
 }
 
 export function formatPrice(price: number): string {
-  return price.toLocaleString("vi-VN", { style: "currency", currency: "VND" })
+  return Math.round(price).toLocaleString("vi-VN", {
+    style: "currency",
+    currency: "VND",
+  })
 }
 
 export function formatFileSize(bytes: number): string {

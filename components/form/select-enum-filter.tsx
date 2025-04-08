@@ -17,9 +17,16 @@ type Props = {
   onChange: (val: string | undefined) => void
   enumObj: Record<string, string | number>
   tEnum: (key: string) => string
+  noAll?: boolean
 }
 
-function SelectEnumFilter({ onChange, value, enumObj, tEnum }: Props) {
+function SelectEnumFilter({
+  onChange,
+  value,
+  enumObj,
+  tEnum,
+  noAll = false,
+}: Props) {
   const locale = useLocale()
 
   return (
@@ -33,9 +40,11 @@ function SelectEnumFilter({ onChange, value, enumObj, tEnum }: Props) {
         </SelectTrigger>
       </FormControl>
       <SelectContent>
-        <SelectItem value="All">
-          {locale === "vi" ? "Tất cả" : "All"}
-        </SelectItem>
+        {!noAll && (
+          <SelectItem value="All">
+            {locale === "vi" ? "Tất cả" : "All"}
+          </SelectItem>
+        )}
         {Object.values(enumObj)
           .filter((value) => typeof value === "number")
           .map((option) => (
