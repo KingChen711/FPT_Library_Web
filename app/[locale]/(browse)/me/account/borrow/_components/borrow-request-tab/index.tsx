@@ -3,7 +3,6 @@ import getBorrowRequestsPatron from "@/queries/borrows/get-borrow-requests-patro
 import { format } from "date-fns"
 import { Eye, MoreHorizontal } from "lucide-react"
 
-import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { searchBorrowRequestsSchema } from "@/lib/validations/borrow-requests/search-borrow-requests"
 import { Button } from "@/components/ui/button"
@@ -35,7 +34,6 @@ type Props = {
 
 export default async function BorrowRequestTab({ searchParams }: Props) {
   const t = await getTranslations("BookPage.borrow tracking")
-  const formatLocale = await getFormatLocale()
 
   const { search, pageIndex, sort, pageSize, ...rest } =
     searchBorrowRequestsSchema.parse(searchParams)
@@ -119,19 +117,17 @@ export default async function BorrowRequestTab({ searchParams }: Props) {
                     </TableCell>
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
-                        {format(new Date(request.requestDate), "dd MMM yyyy", {
-                          locale: formatLocale,
-                        })}
+                        {format(
+                          new Date(request.requestDate),
+                          "HH:mm dd/MM/yyyy"
+                        )}
                       </div>
                     </TableCell>
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
                         {format(
                           new Date(request.expirationDate),
-                          "dd MMM yyyy",
-                          {
-                            locale: formatLocale,
-                          }
+                          "HH:mm dd/MM/yyyy"
                         )}
                       </div>
                     </TableCell>

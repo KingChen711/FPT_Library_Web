@@ -90,13 +90,14 @@ const CheckBorrowRequestDialog = ({
               : "Borrow request successfully",
           variant: "success",
         })
+
+        // Clear local storage
         borrowedLibraryItems.removeItems([
           ...libraryItemIds,
           ...allowToReserveItems,
         ])
+
         borrowedResources.removeItems(allowToBorrowResources)
-        setAllowToReserveItems([])
-        setAllowToBorrowResources([])
         setSelectedBorrow({
           selectedLibraryItemIds: [],
           selectedResourceIds: [],

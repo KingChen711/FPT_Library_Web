@@ -13,9 +13,6 @@ export type BorrowRequestDetail = BorrowRequest & {
 }
 
 function useBorrowRequestDetail(borrowRequestId: number) {
-  console.log(`/api/users/borrows/requests/${borrowRequestId}`)
-  console.log(`/api/users/borrows/requests/${borrowRequestId}`)
-
   const { accessToken } = useAuth()
   return useQuery({
     queryKey: [`/borrows/requests/${borrowRequestId}`],

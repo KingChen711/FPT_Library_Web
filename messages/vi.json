@@ -241,6 +241,7 @@
     "addFineOverdue": "Phải thêm phí phạt 'Quá hạn'"
   },
   "Me": {
+    "fine": "Phạt",
     "account": "Tài khoản",
     "profile": "Hồ sơ",
     "setting": "Cài đặt",
@@ -929,8 +930,16 @@
       "law": "Luật"
     },
     "borrow tracking": {
+      "cancel": "Hủy",
+      "submit": "Xác nhận",
+      "create borrow request transaction": "Tạo giao dịch yêu cầu mượn",
+      "borrow request transaction desc": "Hành động này không thể hoàn tác. Vui lòng kiểm tra chi tiết yêu cầu mượn bên dưới",
       "view details": "Xem chi tiết",
       "total request items": "Số lượng yêu cầu",
+      "isReservedAfterRequestFailed": "Được đặt sau khi yêu cầu thất bại",
+      "collectedDate": "Ngày thu",
+      "assignedDate": "Ngày kí",
+      "totalExtendPickup": "Tổng ngày gia hạn",
       "pages": "Trang",
       "payment": "Thanh toán",
       "filter": "Bộ lọc",
@@ -1012,6 +1021,8 @@
       "Borrow Requests Not Found": "Không tìm thấy yêu cầu mượn",
       "No borrow requests matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có yêu cầu mượn nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác."
     },
+    "view": "Xem",
+    "extend": "Gia hạn",
     "number of edition": "Số ấn bản {editionNumber}",
     "edition": "Ấn bản",
     "ratings": "Đánh giá",
