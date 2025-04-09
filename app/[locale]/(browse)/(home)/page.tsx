@@ -28,7 +28,7 @@ export default async function Home() {
             })
           : t("welcome")}
       </h1>
-      {/* <RecentBookList />
+      <RecentBookList />
       {categories?.map((category) => (
         <Suspense
           key={category.categoryId}
@@ -51,7 +51,7 @@ export default async function Home() {
             }
           />
         </Suspense>
-      ))} */}
+      ))}
     </div>
   )
 }
