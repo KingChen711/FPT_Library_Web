@@ -534,6 +534,7 @@ export type Tracking = {
   entryDate: Date
   createdAt: Date
   updatedAt: Date | null
+  dataFinalizationDate: Date | null
   createdBy: string
   updatedBy: string | null
 }
@@ -883,4 +884,51 @@ export type ReservationQueueManagement = {
   reservationCode: string | null
   isAppliedLabel: boolean
   isAssignable: boolean
+}
+
+export type StockRecommendedBook = {
+  id: string
+  title: string
+  author: string
+  publisher: string
+  publishedDate?: string
+  description?: string
+  selfLink?: string
+  isbn?: string
+  pageCount?: number
+  estimatedPrice?: number // Giá có lúc có lúc không trong GG API, nên có thể lúc demo mình lấy giá của quyển related giá ước chừng
+  dimensions?: string
+  categories?: string
+  language?: string
+  averageRating?: number // Để null nếu kh cóF
+  ratingsCount?: number // Để null nếu kh có
+  // imageLinks -> thumbnail. Hình trên API rất nhỏ chỉ tầm 130 x 200 -> Có thể FE tự động tăng size khi get detail sau
+  coverImageLink?: string
+  previewLink?: string
+  infoLink?: string
+  // Cái này cực quan trọng. Nó xác định xem cái item mà GG recommend là cho tài liệu nào đã có sẵn trên hệ thống
+  // Nên bắt đầu trước từ warehouseTrackingDetails -> sau đó lấy đc các item mà có data cho là nên nhập thêm -> sau đó mới gọi recommend cho các cuốn đó
+  // Theo flow từ trên xuống, 1 WH detail - tức 1 item thì có thể có nhiều supplementRequestDetails (nhiều itemId trùng)
+  relatedLibraryItemId: number
+}
+
+export type SupplementRequest = {
+  trackingId: 3
+  supplierId: null
+  receiptNumber: "PN7982994"
+  totalItem: 5
+  totalAmount: 1390000.0
+  trackingType: 1
+  transferLocation: null
+  description: null
+  status: 0
+  expectedReturnDate: null
+  actualReturnDate: null
+  entryDate: "2025-04-09T00:00:00"
+  dataFinalizationDate: "2025-04-09T00:00:00"
+  createdAt: "2025-04-09T06:26:41.14"
+  updatedAt: null
+  createdBy: "librarian@gmail.com"
+  updatedBy: null
+  warehouseTrackingInventory: WarehouseTrackingInventory
 }

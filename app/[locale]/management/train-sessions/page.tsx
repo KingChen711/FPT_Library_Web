@@ -131,7 +131,7 @@ async function TrainSessionsManagementPage({ searchParams }: Props) {
                     {trainSession.trainDate
                       ? format(
                           new Date(trainSession.trainDate),
-                          "dd MMM yyyy HH:mm",
+                          "HH:mm dd MMM yyyy",
                           { locale: formatLocale }
                         )
                       : "-"}

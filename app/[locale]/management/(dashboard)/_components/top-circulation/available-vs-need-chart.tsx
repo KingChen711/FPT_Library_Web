@@ -18,7 +18,10 @@ interface ChartData {
   needUnits: number
 }
 
-const AvailableVsNeedBarChart: React.FC<{ data: ChartData }> = ({ data }) => {
+const AvailableVsNeedBarChart: React.FC<{
+  data: ChartData
+  size?: "default" | "sm"
+}> = ({ data, size = "default" }) => {
   const t = useTranslations("Dashboard")
   const { availableUnits, needUnits } = data
 
@@ -36,7 +39,7 @@ const AvailableVsNeedBarChart: React.FC<{ data: ChartData }> = ({ data }) => {
       <h2 className="mb-4 text-center text-lg font-semibold">
         {t("Available vs Need Units")}
       </h2>
-      <ResponsiveContainer width="100%" height={300}>
+      <ResponsiveContainer width="100%" height={size === "sm" ? 200 : 300}>
         <BarChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis dataKey="name" />

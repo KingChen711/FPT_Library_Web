@@ -1,4 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
+import { addDays, format } from "date-fns"
 import { jwtDecode } from "jwt-decode"
 import queryString from "query-string"
 import { twMerge } from "tailwind-merge"
@@ -93,6 +94,16 @@ export function formatPrice(price: number): string {
     style: "currency",
     currency: "VND",
   })
+}
+
+export function getDateRangeString(days: number): string {
+  const today = new Date()
+  const futureDate = addDays(today, days)
+
+  const formattedToday = format(today, "dd/MM/yyyy")
+  const formattedFutureDate = format(futureDate, "dd/MM/yyyy")
+
+  return `${formattedToday} - ${formattedFutureDate}`
 }
 
 export function formatFileSize(bytes: number): string {

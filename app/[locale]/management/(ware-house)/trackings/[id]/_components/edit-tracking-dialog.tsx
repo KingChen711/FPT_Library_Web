@@ -87,8 +87,6 @@ function EditTrackingDialog({ open, setOpen, tracking }: Props) {
     },
   })
 
-  const isTransferType = form.watch("trackingType") === ETrackingType.TRANSFER
-
   const [openComboboxSupplier, setOpenComboboxSupplier] = useState(false)
   const { data: supplierItems } = useSuppliers()
 
@@ -238,17 +236,6 @@ function EditTrackingDialog({ open, setOpen, tracking }: Props) {
                               {t("Stock out")}
                             </FormLabel>
                           </FormItem>
-                          <FormItem className="flex items-center space-x-3 space-y-0">
-                            <FormControl>
-                              <RadioGroupItem
-                                checked={field.value === ETrackingType.TRANSFER}
-                                value={ETrackingType.TRANSFER.toString()}
-                              />
-                            </FormControl>
-                            <FormLabel className="cursor-pointer font-normal">
-                              {t("Transfer")}
-                            </FormLabel>
-                          </FormItem>
                         </RadioGroup>
                       </FormControl>
                       <FormMessage />
@@ -350,102 +337,6 @@ function EditTrackingDialog({ open, setOpen, tracking }: Props) {
                     </FormItem>
                   )}
                 />
-
-                {isTransferType && (
-                  <>
-                    {/* <FormField
-                        control={form.control}
-                        name="expectedReturnDate"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>{t("Expected return date")}</FormLabel>
-                            <FormControl>
-                              <Input {...field} type="date" />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      /> */}
-                    <FormField
-                      control={form.control}
-                      name="expectedReturnDate"
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col">
-                          <FormLabel>{t("Expected return date")}</FormLabel>
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant={"outline"}
-                                  className={cn(
-                                    "w-[240px] pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground"
-                                  )}
-                                >
-                                  {field.value ? (
-                                    format(field.value, "dd/MM/yyyy")
-                                  ) : (
-                                    <span>{t("Pick a date")}</span>
-                                  )}
-                                  <CalendarIcon className="ml-auto size-4 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
-                            >
-                              <Calendar
-                                mode="single"
-                                selected={field.value}
-                                onSelect={field.onChange}
-                                disabled={(date) =>
-                                  date > new Date() ||
-                                  date < new Date("1900-01-01")
-                                }
-                                initialFocus
-                              />
-                            </PopoverContent>
-                          </Popover>
-
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </>
-                )}
-
-                {isTransferType && (
-                  <FormField
-                    control={form.control}
-                    name="transferLocation"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("Transfer location")}</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                {isTransferType && (
-                  <FormField
-                    control={form.control}
-                    name="reason"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{t("Reason")}</FormLabel>
-                        <FormControl>
-                          <Input {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
 
                 <FormField
                   control={form.control}

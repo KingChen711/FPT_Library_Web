@@ -121,8 +121,9 @@ export enum ESupplierType {
 
 export enum ETrackingType {
   STOCK_IN,
+  SUPPLEMENT_REQUEST,
+  STOCK_CHECKING,
   STOCK_OUT,
-  TRANSFER,
 }
 
 export enum ETrackingStatus {

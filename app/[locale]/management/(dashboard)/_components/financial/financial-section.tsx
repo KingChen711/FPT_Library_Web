@@ -186,7 +186,7 @@ function FinancialSection() {
                       {source.transactionDate
                         ? format(
                             new Date(source.transactionDate),
-                            "dd MMM yyyy HH:mm",
+                            "HH:mm dd MMM yyyy",
                             {
                               locale: formatLocale,
                             }

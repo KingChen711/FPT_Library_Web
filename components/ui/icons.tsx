@@ -80,6 +80,22 @@ export const Icons = {
       />
     </svg>
   ),
+  SupplementRequests: ({ className, ...props }: IconProps) => (
+    <svg
+      height="200"
+      width="200"
+      viewBox="0 0 16 16"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+      className={cn(className)}
+    >
+      <path
+        d="m10.71 1.29l3 3L14 5v9l-1 1H4l-1-1V2l1-1h6l.71.29ZM4 14h9V5l-3-3H4v12Zm4-8H6v1h2v2h1V7h2V6H9V4H8v2Zm-2 5h5v1H6v-1Z"
+        fill="currentColor"
+        fillRule="evenodd"
+      />
+    </svg>
+  ),
   Assign: ({ className, ...props }: IconProps) => (
     <svg
       height="200"

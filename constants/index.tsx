@@ -1,6 +1,7 @@
 import { Bell, Brain } from "lucide-react"
 
 import { EFeature } from "@/lib/types/enums"
+import { cn } from "@/lib/utils"
 import { Icons } from "@/components/ui/icons"
 
 export const ServerUrl = process.env.NEXT_PUBLIC_API_ENDPOINT
@@ -12,7 +13,7 @@ export const DEFAULT_PAGE_SIZE = 5
 // Routes Configuration
 export const managementRoutes = [
   {
-    feature: EFeature.DASHBOARD_MANAGEMENT,
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
     route: "/management",
     label: "Dashboard",
     Icon: (props: { className?: string }) => {
@@ -170,6 +171,18 @@ export const managementRoutes = [
         label: "Trackings",
         Icon: (props: { className?: string }) => {
           return <Icons.Tracking {...props} />
+        },
+      },
+      {
+        route: "/management/supplement-requests",
+        label: "Supplement requests",
+        Icon: (props: { className?: string }) => {
+          return (
+            <Icons.SupplementRequests
+              {...props}
+              className={cn("size-4", props?.className)}
+            />
+          )
         },
       },
     ],

@@ -11,6 +11,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
 import {
   EDuplicateHandle,
   EDuplicateHandleToIndex,
@@ -105,8 +106,6 @@ function CreateTrackingImportForm() {
     },
   })
 
-  const isTransferType = form.watch("trackingType") === ETrackingType.TRANSFER
-
   const onSubmit = async (values: TCreateTrackingSchema) => {
     startTransition(async () => {
       const formData = new FormData()
@@ -192,7 +191,7 @@ function CreateTrackingImportForm() {
         setImportErrors(null)
       }
 
-      // handleServerActionError(res, locale, form)
+      handleServerActionError(res, locale, form)
     })
   }
 
@@ -504,60 +503,12 @@ function CreateTrackingImportForm() {
                           {t("Stock out")}
                         </FormLabel>
                       </FormItem>
-                      <FormItem className="flex items-center space-x-3 space-y-0">
-                        <FormControl>
-                          <RadioGroupItem
-                            checked={field.value === ETrackingType.TRANSFER}
-                            value={ETrackingType.TRANSFER.toString()}
-                          />
-                        </FormControl>
-                        <FormLabel className="cursor-pointer font-normal">
-                          {t("Transfer")}
-                        </FormLabel>
-                      </FormItem>
                     </RadioGroup>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-
-            {isTransferType && (
-              <FormField
-                control={form.control}
-                name="transferLocation"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Transfer location")}</FormLabel>
-                    <FormControl>
-                      <Input {...field} />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
-
-            {isTransferType && (
-              <FormField
-                control={form.control}
-                name="expectedReturnDate"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>{t("Expected return date")}</FormLabel>
-                    <FormControl>
-                      <DateTimePicker
-                        value={createCalendarDate(field.value)}
-                        onChange={(date) =>
-                          field.onChange(date ? date.toDate(timezone) : null)
-                        }
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            )}
 
             <FormField
               control={form.control}

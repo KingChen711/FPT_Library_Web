@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, useTransition } from "react"
+import React, { useState, useTransition } from "react"
 import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { getLocalTimeZone } from "@internationalized/date"
@@ -288,10 +288,6 @@ function CreateTrackingManualForm() {
     }
     return flag
   }
-
-  useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form.formState.errors])
 
   return (
     <Form {...form}>

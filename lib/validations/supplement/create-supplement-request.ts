@@ -1,7 +1,13 @@
 import { DateTime } from "luxon"
 import { z } from "zod"
 
+export enum ESupplementRequestItemType {
+  TOP_CIRCULATION,
+  CUSTOM,
+}
+
 export const supplementRequestDetailSchema = z.object({
+  id: z.string(),
   // Link data mẫu: https://www.googleapis.com/books/v1/volumes/BUTroQEACAAJ
   // BE đã tự hiểu những data này đã được FE dịch và truyền về
   title: z.string({ message: "min1" }).trim().min(1, "min1"),
@@ -16,11 +22,11 @@ export const supplementRequestDetailSchema = z.object({
   categories: z.string().optional(),
   language: z.string().optional(),
   averageRating: z
-    .string()
+    .number()
     .optional()
     .transform((data) => (data ? data : null)), // Để null nếu kh có
   ratingsCount: z
-    .string()
+    .number()
     .optional()
     .transform((data) => (data ? data : null)), // Để null nếu kh có
   // imageLinks -> thumbnail. Hình trên API rất nhỏ chỉ tầm 130 x 200 -> Có thể FE tự động tăng size khi get detail sau
@@ -34,7 +40,8 @@ export const supplementRequestDetailSchema = z.object({
 })
 
 export const warehouseTrackingDetailSchema = z.object({
-  libraryItemId: z.coerce.number(),
+  type: z.nativeEnum(ESupplementRequestItemType),
+  libraryItemId: z.coerce.number().optional(),
   itemName: z.string({ message: "min1" }).trim().min(1, "min1"),
   itemTotal: z.coerce.number({ message: "min1" }).gt(0, "gt0"),
   isbn: z
@@ -45,6 +52,7 @@ export const warehouseTrackingDetailSchema = z.object({
     .refine((data) => data === undefined || data.length >= 1, {
       message: "min1",
     }),
+  hasInitPrice: z.boolean(),
   unitPrice: z.coerce.number({ message: "min1" }).gt(0, "gt0"),
   totalAmount: z.coerce.number({ message: "min1" }).gt(0, "gt0"),
   conditionId: z.coerce.number({ message: "min1" }),
@@ -57,13 +65,13 @@ export const warehouseTrackingDetailSchema = z.object({
     .refine((data) => data.length <= 255, {
       message: "max255",
     }),
-  borrowSuccessCount: z.number(),
-  reserveCount: z.number(),
-  borrowFailedCount: z.number(),
-  borrowFailedRate: z.number(),
-  availableUnits: z.number(),
-  needUnits: z.number(),
-  averageNeedSatisfactionRate: z.number(),
+  borrowSuccessCount: z.number().optional(),
+  reserveCount: z.number().optional(),
+  borrowFailedCount: z.number().optional(),
+  borrowFailedRate: z.number().optional(),
+  availableUnits: z.number().optional(),
+  needUnits: z.number().optional(),
+  averageNeedSatisfactionRate: z.number().optional(),
 })
 
 export type TWarehouseTrackingDetailSchema = z.infer<

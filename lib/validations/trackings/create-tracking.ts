@@ -67,30 +67,7 @@ export const createTrackingSchema = z
       path: ["file"],
     }
   )
-  .refine(
-    (data) => {
-      return (
-        data.trackingType !== ETrackingType.TRANSFER || data.transferLocation
-      )
-    },
-    {
-      //require on validate, not on initial
-      message: "transferLocation",
-      path: ["min1"],
-    }
-  )
-  .refine(
-    (data) => {
-      return (
-        data.trackingType !== ETrackingType.TRANSFER || data.expectedReturnDate
-      )
-    },
-    {
-      //require on validate, not on initial
-      message: "expectedReturnDate",
-      path: ["min1"],
-    }
-  )
+
   .refine(
     (data) => {
       return (

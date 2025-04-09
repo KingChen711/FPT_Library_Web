@@ -274,7 +274,7 @@ function TrackingDetailRowField({
                         <Input
                           disabled={isPending}
                           {...field}
-                          className="w-96 !border-none px-0 !outline-none !ring-0"
+                          className="w-96 !border-none px-0 !shadow-none !outline-none !ring-0"
                           onChange={(e) => {
                             field.onChange(e)
                             if (
@@ -327,7 +327,7 @@ function TrackingDetailRowField({
                         watchStockType === EStockTransactionType.ADDITIONAL
                       }
                       {...field}
-                      className="w-36 !border-none px-0 text-center !outline-none !ring-0"
+                      className="w-36 !border-none px-0 text-center !shadow-none !outline-none !ring-0"
                       onChange={(e) => {
                         field.onChange(e)
                         if (
@@ -554,7 +554,7 @@ function TrackingDetailRowField({
                     <Input
                       disabled={isPending}
                       {...field}
-                      className="w-28 !border-none px-0 text-center !outline-none !ring-0"
+                      className="w-28 !border-none px-0 text-center !shadow-none !outline-none !ring-0"
                       type="number"
                       step="1"
                     />
@@ -577,7 +577,7 @@ function TrackingDetailRowField({
                       {...field}
                       disabled={isPending}
                       type="number"
-                      className="w-28 !border-none px-0 text-center !outline-none !ring-0"
+                      className="w-28 !border-none px-0 text-center !shadow-none !outline-none !ring-0"
                       onChange={(num) => {
                         field.onChange(num)
                         if (
@@ -614,7 +614,7 @@ function TrackingDetailRowField({
                       {...field}
                       disabled
                       type="number"
-                      className="w-28 !border-none px-0 text-center !outline-none !ring-0"
+                      className="w-28 !border-none px-0 text-center !shadow-none !outline-none !ring-0"
                     />
                   </FormControl>
                 </div>

@@ -17,9 +17,9 @@ import {
 import { ETrackingStatus } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
 import {
-  filterTrackingSchema,
-  type TFilterTrackingSchema,
-} from "@/lib/validations/trackings/search-trackings"
+  filterSupplementRequestSchema,
+  type TFilterSupplementRequestSchema,
+} from "@/lib/validations/trackings/search-supplement-requests"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -42,16 +42,16 @@ import DateRangePickerFilter from "@/components/form/date-range-picker-filter"
 import NumRangeFilter from "@/components/form/num-range-filter"
 import SelectEnumFilter from "@/components/form/select-enum-filter"
 
-function FiltersTrackingsDialog() {
+function FiltersSupplementRequestsDialog() {
   const router = useRouter()
   const [open, setOpen] = useState(false)
   const t = useTranslations("TrackingsManagementPage")
-  const tTrackingStatus = useTranslations("Badges.TrackingStatus")
+  const tSupplementRequestStatus = useTranslations("Badges.TrackingStatus")
 
   const searchParams = useSearchParams()
 
-  const form = useForm<TFilterTrackingSchema>({
-    resolver: zodResolver(filterTrackingSchema),
+  const form = useForm<TFilterSupplementRequestSchema>({
+    resolver: zodResolver(filterSupplementRequestSchema),
     defaultValues: {
       actualReturnDateRange: parseSearchParamsDateRange(
         searchParams.getAll("actualReturnDateRange")
@@ -90,12 +90,12 @@ function FiltersTrackingsDialog() {
       )
     })
     setOpen(false)
-    router.push("/management/trackings")
+    router.push("/management/supplementRequests")
   }
 
   const wStatus = form.watch("status")
 
-  const onSubmit = async (values: TFilterTrackingSchema) => {
+  const onSubmit = async (values: TFilterSupplementRequestSchema) => {
     setOpen(false)
 
     const newUrl = formUrlQuery({
@@ -131,7 +131,7 @@ function FiltersTrackingsDialog() {
 
       <DialogContent className="max-h-[80vh] w-full overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t("Filters trackings")}</DialogTitle>
+          <DialogTitle>{t("Filters supplement requests")}</DialogTitle>
           <DialogDescription asChild>
             <Form {...form}>
               <form
@@ -149,7 +149,7 @@ function FiltersTrackingsDialog() {
                         value={wStatus}
                         onChange={field.onChange}
                         enumObj={ETrackingStatus}
-                        tEnum={tTrackingStatus}
+                        tEnum={tSupplementRequestStatus}
                       />
                       <FormMessage />
                     </FormItem>
@@ -305,4 +305,4 @@ function FiltersTrackingsDialog() {
   )
 }
 
-export default FiltersTrackingsDialog
+export default FiltersSupplementRequestsDialog
