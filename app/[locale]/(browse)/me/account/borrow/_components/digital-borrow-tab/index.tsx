@@ -1,19 +1,11 @@
 import getBorrowDigitalsPatron from "@/queries/borrows/get-borrow-digitals-patron"
 import { differenceInCalendarDays, format, parseISO } from "date-fns"
-import { Calendar, CheckCircle, Filter, Search, XCircle } from "lucide-react"
+import { Calendar, CheckCircle, XCircle } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
 import { type BorrowItem } from "@/lib/types/models"
 import { formatPrice } from "@/lib/utils"
 import BorrowDigitalStatusBadge from "@/components/ui/borrow-digital-status-badge"
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Input } from "@/components/ui/input"
 import Paginator from "@/components/ui/paginator"
 import { Progress } from "@/components/ui/progress"
 import {
@@ -27,13 +19,13 @@ import {
 
 import DigitalBorrowActions from "./digital-borrow-actions"
 
-const formatDate = (dateString: string): string => {
-  return format(new Date(dateString), "dd/MM/yyyy")
+type Props = {
+  searchParams: Record<string, string | string[] | undefined>
 }
 
-const DigitalBorrowTab = async () => {
+const DigitalBorrowTab = async ({ searchParams }: Props) => {
   const t = await getTranslations("BookPage.borrow tracking")
-
+  console.log(searchParams)
   const {
     sources: digitalBorrows,
     totalActualItem,
@@ -42,7 +34,7 @@ const DigitalBorrowTab = async () => {
     totalPage,
   } = await getBorrowDigitalsPatron({
     pageIndex: 1,
-    pageSize: "10",
+    pageSize: "30",
     search: "",
     registerDateRange: [],
     expiryDateRange: [],
@@ -54,32 +46,6 @@ const DigitalBorrowTab = async () => {
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-col justify-between gap-4 sm:flex-row">
-        <div className="flex gap-2">
-          <Input placeholder={t("search")} className="w-full sm:w-64" />
-          <Button variant="secondary" size="icon">
-            <Search className="size-4" />
-          </Button>
-        </div>
-
-        <div className="flex gap-2">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" size="sm">
-                <Filter className="mr-2 size-4" />
-                {t("filter")}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuItem>{t("created")}</DropdownMenuItem>
-              <DropdownMenuItem>{t("expired")}</DropdownMenuItem>
-              <DropdownMenuItem>{t("borrowed")}</DropdownMenuItem>
-              <DropdownMenuItem>{t("cancelled")}</DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -133,7 +99,12 @@ const DigitalBorrowTab = async () => {
                   <TableCell>
                     <div className="flex items-center">
                       <Calendar className="mr-1 size-3 text-muted-foreground" />
-                      <span>{formatDate(borrowedItem.registerDate)}</span>
+                      <span>
+                        {format(
+                          new Date(borrowedItem.registerDate),
+                          "HH:mm dd/MM/yyyy"
+                        )}
+                      </span>
                     </div>
                   </TableCell>
 
@@ -141,7 +112,12 @@ const DigitalBorrowTab = async () => {
                     <div className="flex flex-col">
                       <div className="flex items-center">
                         <Calendar className="mr-1 size-3 text-muted-foreground" />
-                        <span>{formatDate(borrowedItem.expiryDate)}</span>
+                        <span>
+                          {format(
+                            new Date(borrowedItem.expiryDate),
+                            "HH:mm dd/MM/yyyy"
+                          )}
+                        </span>
                       </div>
                       {isOverdue ? (
                         <span className="text-xs font-medium text-danger">

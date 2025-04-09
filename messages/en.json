@@ -236,6 +236,7 @@
     "addFineOverdue": "Must add 'Overdue' fine"
   },
   "Me": {
+    "fine": "Fine",
     "account": "Account",
     "profile": "Profile",
     "setting": "Setting",
@@ -902,8 +903,16 @@
       "law": "Law"
     },
     "borrow tracking": {
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "create borrow request transaction": "Create borrow request transaction",
+      "borrow request transaction desc": "This action cannot be undone. Please check your borrow request details below.",
       "view details": "View details",
       "total request items": "Total request items",
+      "isReservedAfterRequestFailed": "Is reserved after request failed",
+      "collectedDate": "Collected date",
+      "assignedDate": "Assigned date",
+      "totalExtendPickup": "Total extend pickup",
       "pages": "Pages",
       "payment": "Payment",
       "filter": "Filter",
@@ -985,6 +994,8 @@
       "Borrow Requests Not Found": "Borrow Requests Not Found",
       "No borrow requests matching your request were found Please check your information or try searching with different criteria": "No borrow requests matching your request were found. Please check your information or try searching with different criteria"
     },
+    "view": "View",
+    "extend": "Extend",
     "ratings": "Ratings",
     "number of edition": "Number of edition: {editionNumber}",
     "edition": "Edition",

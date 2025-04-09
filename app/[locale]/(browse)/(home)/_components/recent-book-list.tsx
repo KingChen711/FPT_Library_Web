@@ -40,11 +40,11 @@ const RecentBookList = () => {
             slidesToScroll: 6,
           }}
           className={cn(
-            "w-full",
-            state === "expanded" ? "max-w-[74vw]" : "max-w-[90vw]"
+            "relative w-full",
+            state === "expanded" ? "max-w-[80vw]" : "max-w-[90vw]"
           )}
         >
-          <CarouselContent className="-ml-1">
+          <CarouselContent>
             {recentlyOpened.items.length > 0 &&
               recentlyOpened.items.map((id) => (
                 <CarouselItem
@@ -55,8 +55,8 @@ const RecentBookList = () => {
                 </CarouselItem>
               ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious className="ml-8 size-8" />
+          <CarouselNext className="mr-8 size-8" />
         </Carousel>
       </div>
     </div>
