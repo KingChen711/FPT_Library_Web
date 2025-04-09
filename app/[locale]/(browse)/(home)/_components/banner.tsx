@@ -132,25 +132,20 @@ const BannerHome = () => {
                 newArrivals.map((item) => (
                   <CarouselItem
                     key={item.libraryItemId}
-                    className="flex h-full basis-1/6 justify-center md:basis-1/6 lg:basis-1/6"
-                    style={{
-                      flex: "0 0 auto",
-                      width: "auto",
-                      maxWidth: "120px",
-                    }}
+                    className="flex h-full basis-1/6 justify-center gap-4 md:basis-1/4"
                   >
                     <div
                       onClick={() =>
                         router.push(`/books/${item.libraryItemId}`)
                       }
-                      className="cursor-pointer overflow-hidden"
+                      className="cursor-pointer"
                     >
                       <Image
                         src={(item.coverImage as string) || "/placeholder.svg"}
                         alt={item.title}
                         height={360}
                         width={240}
-                        className="aspect-[2/3] h-[180px] w-[120px] rounded-md object-cover"
+                        className="aspect-[2/3] h-[180px] w-[120px] rounded-md object-fill"
                       />
                     </div>
                   </CarouselItem>

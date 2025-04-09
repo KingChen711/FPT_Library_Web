@@ -82,10 +82,10 @@ const BorrowTrackingPage = async ({ searchParams }: Props) => {
             <BorrowRequestTab searchParams={searchParams} />
           </TabsContent>
           <TabsContent value={EBorrowTab.BORROW_RECORD}>
-            <BorrowRecordTab />
+            <BorrowRecordTab searchParams={searchParams} />
           </TabsContent>
           <TabsContent value={EBorrowTab.DIGITAL_BORROW}>
-            <DigitalBorrowTab />
+            <DigitalBorrowTab searchParams={searchParams} />
           </TabsContent>
         </Tabs>
       </div>

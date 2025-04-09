@@ -7,7 +7,7 @@ import { type LibraryItem } from "@/lib/types/models"
 function useLibraryItemDetail(libraryItemId: number) {
   const { user } = useAuth()
   return useQuery({
-    queryKey: [`library-items/${libraryItemId}`],
+    queryKey: [`library-items/${libraryItemId}`, user?.email],
     queryFn: async () => {
       try {
         const { data } = await http.get<LibraryItem | null>(

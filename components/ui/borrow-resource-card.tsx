@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useAuth } from "@/contexts/auth-provider"
 import { useRouter } from "@/i18n/routing"
 import { Eye } from "lucide-react"
@@ -27,6 +27,24 @@ const BorrowResourceCard = ({
   const router = useRouter()
   const t = useTranslations("BookPage")
   const [openDigitalBorrow, setOpenDigitalBorrow] = useState<boolean>(false)
+  const [isBorrowed, setIsBorrowed] = useState<boolean>(false)
+  const { digitalBorrows } = libraryItem
+
+  useEffect(() => {
+    if (digitalBorrows && digitalBorrows.length > 0) {
+      digitalBorrows.forEach((digitalBorrow) => {
+        if (
+          digitalBorrow.resourceId === resource.resourceId &&
+          digitalBorrow.status === 0
+        ) {
+          setIsBorrowed(true)
+          return
+        }
+      })
+    }
+  }, [digitalBorrows, openDigitalBorrow, resource.resourceId])
+
+  console.log("🚀 ~ isBorrowed:", isBorrowed)
 
   return (
     <>
@@ -40,7 +58,7 @@ const BorrowResourceCard = ({
           <div className="flex items-start justify-between">
             <div className="space-y-1">
               <h3 className="line-clamp-1 text-lg font-medium">
-                {resource.resourceTitle}
+                {resource.resourceTitle} _ {isBorrowed && "Borrowed"}
               </h3>
               <div className="flex items-center gap-2">
                 <Badge variant={"draft"} className="text-xs">
@@ -64,30 +82,58 @@ const BorrowResourceCard = ({
             </p>
           )}
         </CardContent>
-        <CardFooter className="flex justify-between gap-2 p-4 pt-0">
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex-1"
-            onClick={() =>
-              router.push(
-                `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItem.libraryItemId}&isPreview=true`
-              )
-            }
-          >
-            <Eye className="mr-2 size-4" />
-            {t("preview")}
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="flex-1"
-            disabled={isManager}
-            onClick={() => setOpenDigitalBorrow(true)}
-          >
-            {t("borrow")}
-          </Button>
-        </CardFooter>
+
+        {isBorrowed ? (
+          <CardFooter className="flex justify-between gap-2 p-4 pt-0">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              onClick={() =>
+                router.push(
+                  `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItem.libraryItemId}`
+                )
+              }
+            >
+              <Eye className="mr-2 size-4" />
+              {t("view")}
+            </Button>
+            {/* TODO: add extend */}
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              disabled={isManager}
+            >
+              {t("extend")}
+            </Button>
+          </CardFooter>
+        ) : (
+          <CardFooter className="flex justify-between gap-2 p-4 pt-0">
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              onClick={() =>
+                router.push(
+                  `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItem.libraryItemId}&isPreview=true`
+                )
+              }
+            >
+              <Eye className="mr-2 size-4" />
+              {t("preview")}
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              disabled={isManager}
+              onClick={() => setOpenDigitalBorrow(true)}
+            >
+              {t("borrow")}
+            </Button>
+          </CardFooter>
+        )}
       </Card>
     </>
   )

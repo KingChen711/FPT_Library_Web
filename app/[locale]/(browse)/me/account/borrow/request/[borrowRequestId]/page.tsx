@@ -74,13 +74,13 @@ const BorrowRequestDetail = ({ params }: Props) => {
   console.log("🚀 ~ BorrowRequestDetail ~ borrowRequest:", borrowRequest)
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="container mx-auto">
       <BorrowRequestTransactionDialog
         borrowRequestId={+params.borrowRequestId}
         open={openTransaction}
         setOpen={setOpenTransaction}
       />
-      <section className="mb-6 flex items-center justify-between gap-2">
+      <section className="mb-4 flex items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
@@ -97,7 +97,7 @@ const BorrowRequestDetail = ({ params }: Props) => {
       </section>
 
       {/* Status overview card */}
-      <Card className="mb-6 overflow-hidden border-none bg-gradient-to-r from-primary/10 to-primary/5 shadow-md">
+      <Card className="mb-4 overflow-hidden border-none bg-gradient-to-r from-primary/10 to-primary/5 shadow-md">
         <CardContent className="p-6">
           <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
             <div className="flex items-center gap-2">

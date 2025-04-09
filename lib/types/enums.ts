@@ -95,6 +95,7 @@ export enum ESystemRoutes {
   RETURN_MANAGEMENT = "/me/account/return",
   RESERVATION_MANAGEMENT = "/me/account/reservation",
   TRANSACTION_MANAGEMENT = "/me/account/transaction",
+  FINE_MANAGEMENT = "/me/account/fine",
   SECURITY_MANAGEMENT = "/me/account/security",
   INTERFACE_MANAGEMENT = "/me/account/interface",
   NOTIFICATION_MANAGEMENT = "/me/account/notifications",

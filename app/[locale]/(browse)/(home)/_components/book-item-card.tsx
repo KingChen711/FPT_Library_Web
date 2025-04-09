@@ -45,9 +45,9 @@ const BookItemCard = ({ libraryItem }: Props) => {
                 <Image
                   src={item.coverImage || NoImage.src}
                   alt={item.title}
-                  height={360}
-                  width={240}
-                  className="aspect-[2/3] h-[240px] w-[160px] rounded-md object-cover"
+                  height={540}
+                  width={360}
+                  className="aspect-[2/3] h-[270px] w-[180px] rounded-md object-fill"
                 />
               </div>
 
@@ -86,7 +86,11 @@ const BookItemCard = ({ libraryItem }: Props) => {
               </div>
             </Card>
           </TooltipTrigger>
-          <TooltipContent align="start" side="right">
+          <TooltipContent
+            align="start"
+            side="right"
+            className="m-0 bg-card p-0 text-card-foreground"
+          >
             <BookTooltip libraryItem={item} />
           </TooltipContent>
         </Tooltip>

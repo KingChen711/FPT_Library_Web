@@ -211,13 +211,15 @@ const BorrowReserveItemPreview = ({
           <section className="space-y-4 rounded-xl p-6 shadow-md">
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div className="flex flex-col">
-                <div className="text-sm font-medium">Status</div>
+                <div className="text-sm font-medium">
+                  {tBorrowTracking("status")}
+                </div>
                 <div>{queue.queueStatus}</div>
               </div>
 
               <div className="flex flex-col">
                 <div className="text-sm font-medium">
-                  Reserved after failed?
+                  {tBorrowTracking("isReservedAfterRequestFailed")}
                 </div>
                 <div>
                   {queue.isReservedAfterRequestFailed ? (
@@ -229,7 +231,9 @@ const BorrowReserveItemPreview = ({
               </div>
 
               <div className="flex flex-col">
-                <div className="text-sm font-medium">Expiry date</div>
+                <div className="text-sm font-medium">
+                  {tBorrowTracking("expiry date")}
+                </div>
                 <div>
                   {queue.expiryDate ? (
                     format(new Date(queue.expiryDate), "dd/MM/yyyy")
@@ -240,23 +244,31 @@ const BorrowReserveItemPreview = ({
               </div>
 
               <div className="flex flex-col">
-                <div className="text-sm font-medium">Collected date</div>
+                <div className="text-sm font-medium">
+                  {tBorrowTracking("collectedDate")}
+                </div>
                 <div>{queue.collectedDate || <NoData />}</div>
               </div>
 
               <div className="flex flex-col">
-                <div className="text-sm font-medium">Assigned date</div>
+                <div className="text-sm font-medium">
+                  {tBorrowTracking("assignedDate")}
+                </div>
                 <div>{queue.assignedDate || <NoData />}</div>
               </div>
 
               <div className="flex flex-col">
-                <div className="text-sm font-medium">Total extend pickup</div>
+                <div className="text-sm font-medium">
+                  {tBorrowTracking("totalExtendPickup")}
+                </div>
                 <div>{queue.totalExtendPickup || <NoData />}</div>
               </div>
 
               {queue.libraryItemInstance && (
                 <div className="flex flex-col space-y-2">
-                  <div className="text-sm font-medium">Library barcode</div>
+                  <div className="text-sm font-medium">
+                    {tBorrowTracking("barcode")}
+                  </div>
                   <Barcode
                     value={queue.libraryItemInstance?.barcode}
                     width={1.5}

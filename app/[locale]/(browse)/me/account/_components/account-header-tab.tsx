@@ -33,6 +33,11 @@ const accountRoutes = [
     route: ESystemRoutes.RESERVATION_MANAGEMENT,
     icon: IdCard,
   },
+  // {
+  //   label: "fine",
+  //   route: ESystemRoutes.FINE_MANAGEMENT,
+  //   icon: IdCard,
+  // },
   {
     label: "transaction",
     route: ESystemRoutes.TRANSACTION_MANAGEMENT,

@@ -59,11 +59,11 @@ const BookList = ({ title, categoryId }: Props) => {
             slidesToScroll: 6,
           }}
           className={cn(
-            "w-full",
-            state === "expanded" ? "max-w-[74vw]" : "max-w-[90vw]"
+            "relative w-full",
+            state === "expanded" ? "max-w-[80vw]" : "max-w-[90vw]"
           )}
         >
-          <CarouselContent className="-ml-1">
+          <CarouselContent>
             {status === "pending" ? (
               <Loader2 className="mr-2 animate-spin" />
             ) : status === "error" ? (
@@ -87,8 +87,8 @@ const BookList = ({ title, categoryId }: Props) => {
               <div ref={ref} className="size-1" />
             )}
           </CarouselContent>
-          <CarouselPrevious className="ml-1" />
-          <CarouselNext className="mr-1" />
+          <CarouselPrevious className="ml-8 size-8" />
+          <CarouselNext className="mr-8 size-8" />
         </Carousel>
       </div>
     </div>

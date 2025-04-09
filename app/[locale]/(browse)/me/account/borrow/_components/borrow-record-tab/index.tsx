@@ -1,14 +1,22 @@
-"use client"
+import { Link } from "@/i18n/routing"
+import getBorrowRecordsPatron from "@/queries/borrows/get-borrow-records-patron"
+import { format } from "date-fns"
+import { Check, Eye, MoreHorizontal, X } from "lucide-react"
 
-import { useState } from "react"
-import Image from "next/image"
-import { differenceInDays, format } from "date-fns"
-import { Book, BookOpen, Calendar, RotateCcw } from "lucide-react"
-
-import { Badge } from "@/components/ui/badge"
+import { getTranslations } from "@/lib/get-translations"
+import { searchBorrowRecordsSchema } from "@/lib/validations/borrow-records/search-borrow-records"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Progress } from "@/components/ui/progress"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+import { Icons } from "@/components/ui/icons"
+import NoResult from "@/components/ui/no-result"
+import Paginator from "@/components/ui/paginator"
+import SearchForm from "@/components/ui/search-form"
+import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
   Table,
   TableBody,
@@ -17,321 +25,171 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { dummyBooks } from "@/app/[locale]/(browse)/(home)/_components/dummy-books"
+import BorrowTypeBadge from "@/components/badges/borrow-type-bade"
 
-import BorrowedReturnFilter from "../../../return/_components/borrowed-return-filter"
-import {
-  activeBorrowedItems,
-  returnedOrLostItems,
-  type BorrowedItem,
-  type BorrowStatus,
-  type ItemType,
-  type ReturnCondition,
-} from "../../../return/_components/dummy-return"
-import ReturnBorrowedForm from "../../../return/_components/return-borrowed-form"
+import FiltersBorrowRecordsDialog from "./filters-borrow-records-dialog"
 
-// Helper functions
-const formatDate = (dateString: string): string => {
-  return format(new Date(dateString), "MMM dd, yyyy")
+type Props = {
+  searchParams: Record<string, string | string[] | undefined>
 }
 
-const getDaysUntilDue = (dueDate: string): number => {
-  const today = new Date()
-  const due = new Date(dueDate)
-  return differenceInDays(due, today)
-}
+const BorrowRecordTab = async ({ searchParams }: Props) => {
+  const t = await getTranslations("BorrowAndReturnManagementPage")
 
-const getStatusColor = (status: BorrowStatus): string => {
-  switch (status) {
-    case "borrowed":
-      return "bg-green-100 text-green-800"
-    case "overdue":
-      return "bg-red-100 text-red-800"
-    case "returned":
-      return "bg-blue-100 text-blue-800"
-    case "lost":
-      return "bg-gray-100 text-gray-800"
-    default:
-      return "bg-gray-100 text-gray-800"
-  }
-}
+  const { search, pageIndex, sort, pageSize, ...rest } =
+    searchBorrowRecordsSchema.parse(searchParams)
 
-const getConditionColor = (condition: ReturnCondition): string => {
-  switch (condition) {
-    case "excellent":
-      return "bg-green-100 text-green-800"
-    case "good":
-      return "bg-blue-100 text-blue-800"
-    case "fair":
-      return "bg-yellow-100 text-yellow-800"
-    case "damaged":
-      return "bg-orange-100 text-orange-800"
-    case "lost":
-      return "bg-red-100 text-red-800"
-    default:
-      return "bg-gray-100 text-gray-800"
-  }
-}
-
-const getItemTypeIcon = (type: ItemType) => {
-  switch (type) {
-    case "book":
-      return <Book className="size-4" />
-    case "ebook":
-      return <BookOpen className="size-4" />
-    case "audiobook":
-      return <BookOpen className="size-4" />
-    case "journal":
-      return <BookOpen className="size-4" />
-    case "magazine":
-      return <BookOpen className="size-4" />
-    case "dvd":
-      return <BookOpen className="size-4" />
-    default:
-      return <Book className="size-4" />
-  }
-}
-
-const BorrowRecordTab = () => {
-  const [showReturnDialog, setShowReturnDialog] = useState(false)
-  const [selectedItem, setSelectedItem] = useState<BorrowedItem | null>(null)
-
-  const handleReturn = (item: BorrowedItem) => {
-    setSelectedItem(item)
-    setShowReturnDialog(true)
-  }
+  const {
+    sources: borrowRecords,
+    totalActualItem,
+    totalPage,
+  } = await getBorrowRecordsPatron({
+    search,
+    pageIndex,
+    sort,
+    pageSize,
+    ...rest,
+  })
 
   return (
-    <div className="space-y-6">
-      {selectedItem && (
-        <ReturnBorrowedForm
-          selectedItem={selectedItem}
-          setShowReturnDialog={setShowReturnDialog}
-          showReturnDialog={showReturnDialog}
-        />
-      )}
-      <Card>
-        <CardHeader className="pb-3">
-          <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-            <CardTitle>Currently Borrowed Items</CardTitle>
-            <BorrowedReturnFilter />
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-row items-center">
+            <SearchForm
+              className="h-full rounded-r-none border-r-0"
+              search={search}
+            />
+            <FiltersBorrowRecordsDialog />
           </div>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-6">
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Item</TableHead>
-                    <TableHead>Borrow Date</TableHead>
-                    <TableHead>Due Date</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Late Fee</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {activeBorrowedItems.map((borrowedItem, index) => {
-                    const daysUntilDue = getDaysUntilDue(borrowedItem.dueDate)
-                    const isOverdue = daysUntilDue < 0
+        </div>
+      </div>
 
-                    return (
-                      <TableRow key={borrowedItem.id}>
-                        <TableCell>
-                          <div className="flex items-start gap-3">
-                            <Image
-                              src={
-                                dummyBooks[index % dummyBooks.length].image ||
-                                ""
-                              }
-                              alt={"Selected Book"}
-                              width={30}
-                              height={40}
-                              className="rounded-md object-cover"
-                            />
-                            <div>
-                              <div className="font-medium">
-                                {borrowedItem.item.title}
-                              </div>
-                              <div className="text-xs text-muted-foreground">
-                                by {borrowedItem.item.author}
-                              </div>
-                              <div className="flex items-center text-xs text-muted-foreground">
-                                {getItemTypeIcon(borrowedItem.item.type)}
-                                <span className="ml-1 capitalize">
-                                  {borrowedItem.item.type}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex items-center">
-                            <Calendar className="mr-1 size-3 text-muted-foreground" />
-                            <span>{formatDate(borrowedItem.borrowDate)}</span>
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <div className="flex items-center">
-                              <Calendar className="mr-1 size-3 text-muted-foreground" />
-                              <span>{formatDate(borrowedItem.dueDate)}</span>
-                            </div>
-                            {isOverdue ? (
-                              <span className="text-xs font-medium text-danger">
-                                {Math.abs(daysUntilDue)} days overdue
-                              </span>
-                            ) : (
-                              <span className="text-xs text-muted-foreground">
-                                {daysUntilDue} days remaining
-                              </span>
-                            )}
-                            <Progress
-                              value={Math.min(
-                                100,
-                                ((14 - Math.min(daysUntilDue, 14)) / 14) * 100
-                              )}
-                              className={
-                                isOverdue
-                                  ? "bg-danger"
-                                  : daysUntilDue <= 3
-                                    ? "bg-yellow-500"
-                                    : ""
-                              }
-                            />
-                          </div>
-                        </TableCell>
-                        <TableCell>
-                          <Badge
-                            className={getStatusColor(borrowedItem.status)}
-                          >
-                            {borrowedItem.status.charAt(0).toUpperCase() +
-                              borrowedItem.status.slice(1)}
-                          </Badge>
-                        </TableCell>
-                        <TableCell>
-                          {borrowedItem.lateFee > 0 ? (
-                            <span className="font-medium text-danger">
-                              ${borrowedItem.lateFee.toFixed(2)}
-                            </span>
-                          ) : (
-                            <span className="text-muted-foreground">None</span>
-                          )}
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleReturn(borrowedItem)}
-                            className="text-primary hover:bg-primary/10"
-                          >
-                            <RotateCcw className="mr-2 size-4" />
-                            Return
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    )
-                  })}
-                </TableBody>
-              </Table>
-            </div>
-
-            {returnedOrLostItems.length > 0 && (
-              <div>
-                <h3 className="mb-4 text-lg font-medium">
-                  Recently Returned or Lost Items
-                </h3>
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Item</TableHead>
-                        <TableHead>Borrow Date</TableHead>
-                        <TableHead>Return Date</TableHead>
-                        <TableHead>Status</TableHead>
-                        <TableHead>Condition</TableHead>
-                        <TableHead>Late Fee</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {returnedOrLostItems.map((borrowedItem, index) => (
-                        <TableRow key={borrowedItem.id}>
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <Image
-                                src={
-                                  dummyBooks[index % dummyBooks.length].image ||
-                                  ""
-                                }
-                                alt={"Selected Book"}
-                                width={30}
-                                height={40}
-                                className="rounded-md object-cover"
-                              />
-                              <div>
-                                <div className="font-medium">
-                                  {borrowedItem.item.title}
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  by {borrowedItem.item.author}
-                                </div>
-                              </div>
-                            </div>
-                          </TableCell>
-                          <TableCell>
-                            {formatDate(borrowedItem.borrowDate)}
-                          </TableCell>
-                          <TableCell>
-                            {borrowedItem.returnDate
-                              ? formatDate(borrowedItem.returnDate)
-                              : "N/A"}
-                          </TableCell>
-                          <TableCell>
-                            <Badge
-                              className={getStatusColor(borrowedItem.status)}
-                            >
-                              {borrowedItem.status.charAt(0).toUpperCase() +
-                                borrowedItem.status.slice(1)}
-                            </Badge>
-                          </TableCell>
-                          <TableCell>
-                            {borrowedItem.condition ? (
-                              <Badge
-                                className={getConditionColor(
-                                  borrowedItem.condition
-                                )}
-                              >
-                                {borrowedItem.condition
-                                  .charAt(0)
-                                  .toUpperCase() +
-                                  borrowedItem.condition.slice(1)}
-                              </Badge>
-                            ) : (
-                              "N/A"
-                            )}
-                          </TableCell>
-                          <TableCell>
-                            {borrowedItem.lateFee > 0 ? (
-                              <span className="font-medium text-danger">
-                                ${borrowedItem.lateFee.toFixed(2)}
-                              </span>
-                            ) : (
-                              <span className="text-muted-foreground">
-                                None
-                              </span>
-                            )}
-                          </TableCell>
-                        </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
-                </div>
-              </div>
+      {borrowRecords.length === 0 ? (
+        <div className="flex justify-center p-4">
+          <NoResult
+            title={t("Borrow Records Not Found")}
+            description={t(
+              "No borrow records matching your request were found Please check your information or try searching with different criteria"
             )}
+          />
+        </div>
+      ) : (
+        <div className="mt-4 grid w-full">
+          <div className="overflow-x-auto rounded-md border">
+            <Table className="overflow-hidden">
+              <TableHeader>
+                <TableRow>
+                  <TableHead className="text-nowrap font-bold">STT</TableHead>
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Borrow date")}
+                    sortKey="BorrowDate"
+                    position="center"
+                  />
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">
+                      {t("Borrow type")}
+                    </div>
+                  </TableHead>
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Total record items")}
+                    sortKey="TotalRecordItem"
+                    position="center"
+                  />
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">
+                      {t("Has fine to payment")}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Process by")}
+                  </TableHead>
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">{t("Actions")}</div>
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {borrowRecords.map((record, index) => (
+                  <TableRow key={record.borrowRecordId}>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">{index + 1}</div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {format(
+                          new Date(record.borrowDate),
+                          "HH:mm dd/MM/yyyy"
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        <BorrowTypeBadge status={record.borrowType} />
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {record.totalRecordItem}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {record.hasFineToPayment ? (
+                          <Check className="text-success" />
+                        ) : (
+                          <X className="text-danger" />
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      {record.processedByNavigation.email}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-center">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>
+                              <Link
+                                href={`/me/account/borrow/record/${record.borrowRecordId}`}
+                                className="flex items-center gap-2"
+                              >
+                                <Eye className="size-4" />
+                                {t("View details")}
+                              </Link>
+                            </DropdownMenuItem>
+                            {record.hasFineToPayment && (
+                              <DropdownMenuItem>
+                                <Icons.Fine className="size-4" />
+                                {t("Pay fines")}
+                              </DropdownMenuItem>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
           </div>
-        </CardContent>
-      </Card>
+
+          <Paginator
+            pageSize={+pageSize}
+            pageIndex={pageIndex}
+            totalPage={totalPage}
+            totalActualItem={totalActualItem}
+            className="mt-6"
+          />
+        </div>
+      )}
     </div>
   )
 }
