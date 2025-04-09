@@ -3,10 +3,10 @@
 "use client"
 
 import { useState, useTransition } from "react"
+import { useAuth } from "@/contexts/auth-provider"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useGoogleLogin } from "@react-oauth/google"
-import { useQueryClient } from "@tanstack/react-query"
 import { EyeClosedIcon, EyeIcon, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 // import { type ReactFacebookLoginInfo } from "react-facebook-login"
@@ -39,7 +39,8 @@ function RegisterForm() {
   const t = useTranslations("RegisterPage")
   const [pending, startTransition] = useTransition()
   const router = useRouter()
-  const queryClient = useQueryClient()
+  // const queryClient = useQueryClient()
+  const { refetchToken } = useAuth()
   const [showPassword, setShowPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -73,9 +74,10 @@ function RegisterForm() {
         const res = await loginGoogle(googleRes.code)
 
         if (res.isSuccess) {
-          queryClient.invalidateQueries({
-            queryKey: ["token"],
-          })
+          // queryClient.invalidateQueries({
+          //   queryKey: ["token"],
+          // })
+          refetchToken()
           router.push(`/`)
           return
         }
