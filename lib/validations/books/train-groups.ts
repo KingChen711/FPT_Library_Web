@@ -31,15 +31,14 @@ export const imageSchema = z
 
 export type TImageSchema = z.infer<typeof imageSchema>
 
-export const trainGroupSchema = z.object({
-  id: z.string(),
-  groupName: z.string(),
-  books: z.array(
-    z
-      .object({
+export const trainGroupSchema = z
+  .object({
+    id: z.string(),
+    groupName: z.string(),
+    books: z.array(
+      z.object({
         title: z.string(),
         isbn: z.string(),
-        type: z.enum(["Single", "Series"]),
         imageList: z.array(
           z
             .object({
@@ -73,12 +72,12 @@ export const trainGroupSchema = z.object({
             })
         ),
       })
-      .refine((data) => data.type === "Series" || data.imageList.length >= 5, {
-        message: "imagesMin5",
-        path: ["imageList"],
-      })
-  ),
-})
+    ),
+  })
+  .refine((data) => data.books.flatMap((b) => b.imageList).length >= 5, {
+    message: "min1",
+    path: ["books"],
+  })
 
 export type TTrainGroupSchema = z.infer<typeof trainGroupSchema>
 

@@ -5,8 +5,13 @@ import { useFieldArray, type UseFormReturn } from "react-hook-form"
 
 import { cn } from "@/lib/utils"
 import { type TTrainGroupsSchema } from "@/lib/validations/books/train-groups"
-import { FormControl, FormField, FormItem } from "@/components/ui/form"
-import { Label } from "@/components/ui/label"
+import {
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
 
 import BookImageFields from "./train-ai-book-image-fields"
 
@@ -24,6 +29,7 @@ type Props = {
   setCurrentBookIndex: React.Dispatch<React.SetStateAction<number>>
   currentBookIndex: number
   hashes: Set<string>
+  isDone: boolean
 }
 
 function GroupField({
@@ -34,6 +40,7 @@ function GroupField({
   setCurrentBookIndex,
   currentBookIndex,
   hashes,
+  isDone,
 }: Props) {
   const t = useTranslations("BooksManagementPage")
 
@@ -51,21 +58,14 @@ function GroupField({
           <FormControl>
             <div className="flex flex-col space-y-6">
               <div className="flex flex-col gap-2">
-                <Label> {t("Library item")}</Label>
+                <div className="flex items-center gap-2">
+                  <FormLabel>
+                    {t("Library item")} ({t("min5CoverImagesPerGroup")})
+                  </FormLabel>
+                  <FormMessage />
+                </div>
                 <div className="flex flex-wrap items-center gap-4">
                   {fields.map((field, index) => {
-                    const imageList = form.watch(
-                      `groups.${groupIndex}.books.${index}.imageList`
-                    )
-
-                    const isSingleBook =
-                      form.watch(`groups.${groupIndex}.books.${index}.type`) ===
-                      "Single"
-
-                    const isDone =
-                      (!isSingleBook || imageList.length >= 5) &&
-                      imageList.every((image) => image.validImage)
-
                     return (
                       <div
                         key={field.id}

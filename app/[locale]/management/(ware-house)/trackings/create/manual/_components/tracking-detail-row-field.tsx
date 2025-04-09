@@ -141,12 +141,12 @@ function TrackingDetailRowField({
         setOpen={setOpenCataloDialog}
       />
       <TableRow key={field.id}>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <div className="mt-2 flex justify-center">
             <StockTransactionTypeBadge type={field.stockTransactionType} />
           </div>
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           {watchStockType === EStockTransactionType.ADDITIONAL ? (
             <FormField
               control={form.control}
@@ -313,7 +313,7 @@ function TrackingDetailRowField({
           )}
         </TableCell>
 
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.isbn`}
@@ -352,7 +352,7 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.categoryId`}
@@ -460,7 +460,7 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.conditionId`}
@@ -543,7 +543,7 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.itemTotal`}
@@ -565,7 +565,7 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.unitPrice`}
@@ -602,7 +602,7 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.totalAmount`}
@@ -623,7 +623,7 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <div className="flex justify-center">
             <Button
               onClick={() => {

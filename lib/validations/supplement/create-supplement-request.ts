@@ -37,6 +37,17 @@ export const supplementRequestDetailSchema = z.object({
   // Nên bắt đầu trước từ warehouseTrackingDetails -> sau đó lấy đc các item mà có data cho là nên nhập thêm -> sau đó mới gọi recommend cho các cuốn đó
   // Theo flow từ trên xuống, 1 WH detail - tức 1 item thì có thể có nhiều supplementRequestDetails (nhiều itemId trùng)
   relatedLibraryItemId: z.coerce.number(),
+
+  supplementRequestReason: z
+    .string({ message: "min1" })
+    .trim()
+    .min(5, "min5")
+    .refine((data) => data.length >= 5, {
+      message: "min5",
+    })
+    .refine((data) => data.length <= 255, {
+      message: "max255",
+    }),
 })
 
 export const warehouseTrackingDetailSchema = z.object({
@@ -61,7 +72,10 @@ export const warehouseTrackingDetailSchema = z.object({
   supplementRequestReason: z
     .string({ message: "min1" })
     .trim()
-    .min(1, "min1")
+    .min(5, "min5")
+    .refine((data) => data.length >= 5, {
+      message: "min5",
+    })
     .refine((data) => data.length <= 255, {
       message: "max255",
     }),

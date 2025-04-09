@@ -1,4 +1,5 @@
 import { useState, useTransition } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -27,6 +28,7 @@ function DeletePackageDialog({
   libraryPackageId,
 }: Props) {
   const locale = useLocale()
+  const queryClient = useQueryClient()
   const message = `${locale === "vi" ? "xóa" : "delete"}`
   const t = useTranslations("LibraryPackagesManagementPage")
   const [value, setValue] = useState("")
@@ -43,6 +45,7 @@ function DeletePackageDialog({
           variant: "success",
         })
         setOpenDelete(false)
+        queryClient.invalidateQueries({ queryKey: ["packages"] })
         return
       }
       handleServerActionError(res, locale)

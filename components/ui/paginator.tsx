@@ -28,6 +28,7 @@ type Props = {
   className?: string
   onPaginate?: (page: number) => void
   onChangePageSize?: (size: "5" | "10" | "30" | "50" | "100") => void
+  scrollOnPaginate?: boolean
 }
 
 function Paginator({
@@ -38,6 +39,7 @@ function Paginator({
   totalActualItem,
   onPaginate,
   onChangePageSize,
+  scrollOnPaginate: scrollOnChangePage = false,
 }: Props) {
   const router = useRouter()
   const t = useTranslations("Paginator")
@@ -57,7 +59,7 @@ function Paginator({
       },
     })
 
-    router.push(newUrl, { scroll: false })
+    router.push(newUrl, { scroll: scrollOnChangePage })
   }
 
   const handleChangeRowsPerPage = (pageSize: string) => {

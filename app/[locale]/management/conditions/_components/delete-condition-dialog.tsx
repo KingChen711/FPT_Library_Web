@@ -1,4 +1,5 @@
 import { useState, useTransition } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -27,6 +28,7 @@ function DeleteConditionDialog({
   conditionId,
 }: Props) {
   const locale = useLocale()
+  const queryClient = useQueryClient()
   const message = `${locale === "vi" ? "xóa" : "delete"}`
   const t = useTranslations("ConditionsManagementPage")
   const [value, setValue] = useState("")
@@ -42,6 +44,7 @@ function DeleteConditionDialog({
           description: res.data,
           variant: "success",
         })
+        queryClient.invalidateQueries({ queryKey: ["conditions"] })
         setOpenDelete(false)
         return
       }

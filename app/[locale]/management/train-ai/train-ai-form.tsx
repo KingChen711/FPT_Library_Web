@@ -297,6 +297,10 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
     setPreventChangeCurrentBookIndex(true)
   }, [fields, form.formState.errors.groups])
 
+  useEffect(() => {
+    console.log(form.formState.errors)
+  }, [form.formState.errors])
+
   if (!showForm)
     return (
       <>
@@ -413,20 +417,13 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
                 <FormControl>
                   <div className="flex flex-col space-y-6">
                     <div className="flex flex-col gap-2">
-                      <Label> {t("Group")}</Label>
+                      <Label>{t("Group")}</Label>
                       <div className="flex flex-wrap items-center gap-4">
                         {fields.map((field, index) => {
                           const group = form.watch(`groups.${index}`)
 
-                          const isDone = group.books.every((b, i) => {
-                            const isSingleBook =
-                              form.watch(`groups.${index}.books.${i}.type`) ===
-                              "Single"
-                            return (
-                              (!isSingleBook || b.imageList.length >= 5) &&
-                              b.imageList.every((image) => image.validImage)
-                            )
-                          })
+                          const isDone =
+                            group.books.flatMap((b) => b.imageList).length >= 5
 
                           return (
                             <div
@@ -456,8 +453,13 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
                     </div>
                     {fields.map((field, index) => {
                       if (index !== currentGroupIndex) return null
+                      const group = form.watch(`groups.${index}`)
+                      const isDone =
+                        group.books.flatMap((b) => b.imageList).length >= 5
+
                       return (
                         <GroupField
+                          isDone={isDone}
                           hashes={
                             new Set(
                               form

@@ -34,6 +34,7 @@ import TrackingTypeBadge from "@/components/badges/tracking-type-badge"
 
 import CreateTrackingDialog from "./_components/create-tracking-dialog"
 import FiltersTrackingsDialog from "./_components/filters-tracking-dialog"
+import UpdateTrackingStatusDropdownItem from "./_components/update-tracking-status-dropdown-item"
 
 type Props = {
   searchParams: Record<string, string | string[] | undefined>
@@ -262,6 +263,10 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
                               {t("View details")}
                             </Link>
                           </DropdownMenuItem>
+                          <UpdateTrackingStatusDropdownItem
+                            status={tracking.status}
+                            trackingId={tracking.trackingId}
+                          />
                         </DropdownMenuContent>
                       </DropdownMenu>
                     </div>

@@ -23,7 +23,8 @@ export function CurrencyInput({
 }: CurrencyInputProps) {
   // Format number to VND string
   const formatValue = React.useCallback((num: number | undefined) => {
-    if (!num) return ""
+    //do not use !num -> want to show 0 value
+    if (num === null || num === undefined) return ""
     return num.toLocaleString("vi-VN")
   }, [])
 

@@ -286,6 +286,13 @@ export const browseRoutes = [
         },
       },
       {
+        route: "/recommend",
+        label: "Recommend for you",
+        Icon: (props: { className?: string }) => {
+          return <Icons.Recommend {...props} />
+        },
+      },
+      {
         route: "/ai-prediction",
         label: "AI prediction",
         Icon: (props: { className?: string }) => {

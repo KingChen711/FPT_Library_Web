@@ -2,6 +2,7 @@
 
 import { useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -65,6 +66,7 @@ function MutateCategoryDialog({
   const locale = useLocale()
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const queryClient = useQueryClient()
 
   const handleOpenChange = (value: boolean) => {
     if (isPending) return
@@ -106,6 +108,7 @@ function MutateCategoryDialog({
           setOpenEdit(false)
         }
 
+        queryClient.invalidateQueries({ queryKey: ["categories"] })
         return
       }
       handleServerActionError(res, locale, form)

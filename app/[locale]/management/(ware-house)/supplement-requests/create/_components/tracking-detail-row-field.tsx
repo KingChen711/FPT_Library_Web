@@ -12,8 +12,8 @@ import {
 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import {
-  useFieldArray,
   type FieldArrayWithId,
+  type UseFieldArrayAppend,
   type UseFormReturn,
 } from "react-hook-form"
 import { useDebounce } from "use-debounce"
@@ -99,6 +99,10 @@ type Props = {
   category: Category | null
   setCategory: (val: Category | null) => void
   wSupplementItemIds: string[]
+  recommendAppend: UseFieldArrayAppend<
+    TCreateSupplementRequestSchema,
+    "supplementRequestDetails"
+  >
 }
 
 function TrackingDetailRowField({
@@ -110,6 +114,7 @@ function TrackingDetailRowField({
   onGlobalCalculate,
   wSupplementItemIds,
   setCategory,
+  recommendAppend,
 }: Props) {
   const t = useTranslations("TrackingsManagementPage")
   const locale = useLocale()
@@ -144,11 +149,6 @@ function TrackingDetailRowField({
   const watchItemTotal = form.watch(
     `warehouseTrackingDetails.${index}.itemTotal`
   )
-
-  const { append } = useFieldArray({
-    name: "supplementRequestDetails",
-    control: form.control,
-  })
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -187,7 +187,7 @@ function TrackingDetailRowField({
           </div>
         </TableCell>
 
-        <TableCell className="border align-top">
+        <TableCell className="border">
           {watchType === ESupplementRequestItemType.CUSTOM ? (
             <FormField
               control={form.control}
@@ -329,7 +329,7 @@ function TrackingDetailRowField({
           )}
         </TableCell>
 
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.isbn`}
@@ -350,7 +350,7 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.categoryId`}
@@ -434,90 +434,8 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        {/* <TableCell className="border align-top">
-          <FormField
-            control={form.control}
-            name={`warehouseTrackingDetails.${index}.conditionId`}
-            render={({ field }) => (
-              <FormItem>
-                <div className="flex w-full justify-center">
-                  <Popover
-                    open={openComboboxCondition}
-                    onOpenChange={setOpenComboboxCondition}
-                  >
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant="outline"
-                          role="combobox"
-                          className={cn(
-                            "w-40 justify-between",
-                            !field.value && "text-muted-foreground"
-                          )}
-                        >
-                          {field.value
-                            ? locale === "vi"
-                              ? conditionItems?.find(
-                                  (condition) =>
-                                    condition.conditionId === field.value
-                                )?.vietnameseName
-                              : conditionItems?.find(
-                                  (condition) =>
-                                    condition.conditionId === field.value
-                                )?.englishName
-                            : t("Select condition")}
-                          <ChevronsUpDown className="opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent side="top" className="p-0">
-                      <Command>
-                        <CommandList>
-                          <CommandGroup>
-                            {conditionItems?.map((condition) => (
-                              <CommandItem
-                                value={
-                                  locale === "vi"
-                                    ? condition.vietnameseName
-                                    : condition.englishName
-                                }
-                                key={condition.conditionId}
-                                onSelect={() => {
-                                  form.setValue(
-                                    `warehouseTrackingDetails.${index}.conditionId`,
-                                    condition.conditionId
-                                  )
-                                  form.clearErrors(
-                                    `warehouseTrackingDetails.${index}.conditionId`
-                                  )
-                                  setOpenComboboxCondition(false)
-                                }}
-                              >
-                                {locale === "vi"
-                                  ? condition.vietnameseName
-                                  : condition.englishName}
-                                <Check
-                                  className={cn(
-                                    "ml-auto",
-                                    condition.conditionId === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                              </CommandItem>
-                            ))}
-                          </CommandGroup>
-                        </CommandList>
-                      </Command>
-                    </PopoverContent>
-                  </Popover>
-                </div>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </TableCell> */}
-        <TableCell className="border align-top">
+
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.itemTotal`}
@@ -539,7 +457,7 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.unitPrice`}
@@ -566,7 +484,7 @@ function TrackingDetailRowField({
             )}
           />
         </TableCell>
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.totalAmount`}
@@ -588,7 +506,7 @@ function TrackingDetailRowField({
           />
         </TableCell>
 
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <FormField
             control={form.control}
             name={`warehouseTrackingDetails.${index}.supplementRequestReason`}
@@ -599,7 +517,7 @@ function TrackingDetailRowField({
                     <Input
                       disabled={isPending}
                       {...field}
-                      className="w-full !border-none px-0 !shadow-none !outline-none !ring-0"
+                      className="w-full min-w-60 !border-none px-0 !shadow-none !outline-none !ring-0"
                     />
                   </FormControl>
                 </div>
@@ -609,10 +527,10 @@ function TrackingDetailRowField({
           />
         </TableCell>
 
-        <TableCell className="border align-top">
+        <TableCell className="border">
           <ItemRowDropdown
             onSelect={(val) => {
-              append({
+              recommendAppend({
                 author: val.author,
                 //@ts-ignore
                 averageRating: val.averageRating,
@@ -633,6 +551,7 @@ function TrackingDetailRowField({
                 language: val.language,
                 previewLink: val.previewLink,
                 publishedDate: val.publishedDate,
+                supplementRequestReason: "",
               })
             }}
             wSupplementItemIds={wSupplementItemIds}

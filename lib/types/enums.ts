@@ -127,7 +127,7 @@ export enum ETrackingType {
 }
 
 export enum ETrackingStatus {
-  DRAFT,
+  PROCESSING,
   COMPLETED,
   CANCELLED,
 }

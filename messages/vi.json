@@ -209,6 +209,7 @@
     "categoriesMin1": "Cần ít nhất 1 loại",
     "authorsMin1": "Cần ít nhất 1 tác giả",
     "imagesMin5": "Cần ít nhất 5 ảnh",
+    "imagesMin5PerGroup": "Cần ít nhất 5 ảnh mỗi nhóm",
     "copiesMin1": "Cần ít nhất 1 mã bản sao",
     "gt0": "Phải lớn hơn 0",
     "gte3": "Phải lớn hơn 3",
@@ -616,6 +617,7 @@
     "Permissions": "Quyền"
   },
   "Routes": {
+    "Recommend for you": "Đề xuất cho bạn",
     "Supplement requests": "Yêu cầu bổ sung",
     "Train sessions": "Phiên train AI",
     "Borrow reservations": "Đặt trước",
@@ -849,7 +851,27 @@
     "Password": "Mật khẩu"
   },
   "NotificationsPage": { "Search": "Tìm kiếm..." },
+  "RecommendPage": {
+    "Filters": "Bộ lọc",
+    "Filters recommend": "Lọc đề xuất",
+    "Best recommend": "Tốt nhất",
+    "Best recommend desc": "Đề xuất dựa trên các cài đặt mặc địch",
+    "Custom": "Tùy chỉnh",
+    "Include title": "Tiêu đề",
+    "Include title desc": "Đề xuất dựa trên các TIÊU ĐỀ đã tương tác",
+    "Include author": "Tác giả",
+    "Include author desc": "Đề xuất dựa trên các TÁC GIẢ đã tương tác",
+    "Include genre": "Thể loại",
+    "Include genre desc": "Đề xuất dựa trên các THỂ LOẠI đã tương tác",
+    "Include topical term": "Từ khóa",
+    "Include topical term desc": "Đề xuất dựa trên các TỪ KHÓA đã tương tác",
+    "Limit works of author": "Hạn chế cùng tác giả",
+    "Limit works of author desc": "Hạn chế đề xuất quá nhiều tài liệu cùng tác giả",
+    "Apply": "Áp dụng",
+    "Cancel": "Hủy"
+  },
   "BookPage": {
+    "Recommend for you": "Đề xuất cho bạn",
     "fields": {
       "year": "Năm",
       "title": "Tiêu đề",
@@ -1305,6 +1327,7 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "min5CoverImagesPerGroup": "Ít nhất 5 ảnh mỗi nhóm",
     "Library Items Not Found": "Không tìm thấy tài liệu",
     "No library items matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có tài liệu nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "From": "Từ",
@@ -1597,7 +1620,7 @@
     "Individual registration": "Đăng ký cá biệt",
     "Born": "Sinh",
     "Died": "Mất",
-    "Borrow duration": "Thời lượng mượn",
+    "Borrow duration": "Thời gian mượn",
     "days": "ngày",
     "View resource": "Xem tài nguyên",
     "Select resource type": "Chọn loại tài nguyên",
@@ -2175,7 +2198,7 @@
     "Out of shelf": "Đã hết"
   },
   "BorrowAndReturnManagementPage": {
-    "Borrow duration": "Thời lượng mượn",
+    "Borrow duration": "Thời gian mượn",
     "Extend pickup date": "Gia hạn ngày lấy",
     "Floor": "Tầng",
     "Zone": "Vùng",

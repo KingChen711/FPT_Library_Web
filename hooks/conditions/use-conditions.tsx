@@ -27,7 +27,7 @@ function useConditions() {
     enabled: !!accessToken,
     refetchOnWindowFocus: false,
     placeholderData: keepPreviousData,
-    staleTime: 30 * 1000,
+    staleTime: 60 * 1000,
   })
 }
 
