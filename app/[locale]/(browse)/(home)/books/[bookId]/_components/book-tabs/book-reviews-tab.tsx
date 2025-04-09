@@ -1,19 +1,31 @@
+import getCurrentUserReview from "@/queries/library-item/get-current-user-review"
 import getReviewsLibraryItem from "@/queries/library-item/get-reviews-library-items"
+import { format } from "date-fns"
 import { User2 } from "lucide-react"
+import { getTranslations } from "next-intl/server"
 
+import { getFormatLocale } from "@/lib/get-format-locale"
 import { Card } from "@/components/ui/card"
 import NoData from "@/components/ui/no-data"
+import Rating from "@/components/ui/rating"
+
+import RatingDialog from "./rating-dialog"
 
 type Props = {
   libraryItemId: number
+  averageRating: number
 }
 
-const BookReviewsTab = async ({ libraryItemId }: Props) => {
+const BookReviewsTab = async ({ libraryItemId, averageRating }: Props) => {
+  const t = await getTranslations("BookPage")
   const reviews = await getReviewsLibraryItem(Number(libraryItemId), {
     search: "",
     pageIndex: 1,
     pageSize: "5",
   })
+
+  const currentUserReview = await getCurrentUserReview(libraryItemId)
+  const formatLocale = await getFormatLocale()
 
   if (reviews.sources.length === 0) {
     return <NoData />
@@ -21,6 +33,22 @@ const BookReviewsTab = async ({ libraryItemId }: Props) => {
 
   return (
     <div className="space-y-4">
+      <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center gap-2 font-bold">
+          <div className="text-xl font-normal">{t("Review")}:</div>
+          <span className="text-3xl">{averageRating}</span>
+          <span className="text-lg">/{5}</span>
+          <Rating size="lg" value={averageRating} />
+          <span className="text-xl font-normal">
+            ({reviews.totalActualItem})
+          </span>
+        </div>
+        <RatingDialog
+          libraryItemId={libraryItemId}
+          ratingValue={currentUserReview?.ratingValue || undefined}
+          reviewText={currentUserReview?.reviewText || undefined}
+        />
+      </div>
       {reviews.sources.map((review) => (
         <Card
           key={review.reviewId}
@@ -36,7 +64,9 @@ const BookReviewsTab = async ({ libraryItemId }: Props) => {
               </p>
               <p className="text-sm text-muted-foreground">
                 {review.createDate &&
-                  new Date(review.createDate).toDateString()}
+                  format(new Date(review.createDate), "HH:mm dd MMM yyyy", {
+                    locale: formatLocale,
+                  })}
               </p>
             </div>
           </div>
@@ -45,10 +75,7 @@ const BookReviewsTab = async ({ libraryItemId }: Props) => {
             <p className="flex items-center gap-2 text-lg font-semibold">
               ⭐{review.ratingValue} / 5
             </p>
-            <p className="mt-2 text-muted-foreground">
-              {review.reviewText} Lorem ipsum dolor sit amet consectetur,
-              adipisicing elit. Asperiores, nisi?
-            </p>
+            <p className="mt-2 text-muted-foreground">{review.reviewText}</p>
           </div>
         </Card>
       ))}

@@ -54,7 +54,10 @@ const BookTabs = async ({ libraryItemId }: Props) => {
         <BookInstancesTab libraryItem={libraryItem} />
       </TabsContent>
       <TabsContent value="review">
-        <BookReviewsTab libraryItemId={libraryItemId} />
+        <BookReviewsTab
+          averageRating={libraryItem.avgReviewedRate || 0}
+          libraryItemId={libraryItemId}
+        />
       </TabsContent>
       <TabsContent value="related-items">
         <BookRelatedItemsTab libraryItemId={libraryItemId} />

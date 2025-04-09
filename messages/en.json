@@ -867,6 +867,18 @@
     "Cancel": "Cancel"
   },
   "BookPage": {
+    "Satisfaction level": "Satisfaction level",
+    "Very Poor": "Very Poor",
+    "Poor": "Poor",
+    "Average": "Average",
+    "Good": "Good",
+    "Excellent": "Excellent",
+    "Add review": "Add review",
+    "Review book": "Review book",
+    "Cancel": "Cancel",
+    "Review": "Review",
+    "Content": "Content",
+    "Continue": "Continue",
     "Recommend for you": "Recommend for you",
     "fields": {
       "year": "Year",

@@ -7,6 +7,7 @@ import "./globals.css"
 
 import { notFound } from "next/navigation"
 import AuthProvider from "@/contexts/auth-provider"
+import FavouriteProvider from "@/contexts/favourite-provider"
 import { LibraryProvider } from "@/contexts/library-provider"
 import { ReactQueryProvider } from "@/contexts/react-query-provider"
 // import SocketProvider from "@/contexts/socket-provider"
@@ -73,18 +74,20 @@ export default async function RootLayout({
             <LibraryProvider>
               <AuthProvider>
                 {/* <SocketProvider> */}
-                <TrainAIProvider>
-                  <ThemeProvider
-                    attribute="class"
-                    defaultTheme="system"
-                    enableSystem
-                    disableTransitionOnChange
-                  >
-                    {children}
-                    <Toaster />
-                    <TrainAIToast />
-                  </ThemeProvider>
-                </TrainAIProvider>
+                <FavouriteProvider>
+                  <TrainAIProvider>
+                    <ThemeProvider
+                      attribute="class"
+                      defaultTheme="system"
+                      enableSystem
+                      disableTransitionOnChange
+                    >
+                      {children}
+                      <Toaster />
+                      <TrainAIToast />
+                    </ThemeProvider>
+                  </TrainAIProvider>
+                </FavouriteProvider>
 
                 {/* </SocketProvider> */}
               </AuthProvider>

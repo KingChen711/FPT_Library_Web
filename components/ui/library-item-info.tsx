@@ -9,6 +9,7 @@ import {
 } from "react"
 import Image from "next/image"
 import { useAuth } from "@/contexts/auth-provider"
+import { useFavourite } from "@/contexts/favourite-provider"
 import { useLibraryStorage } from "@/contexts/library-provider"
 import {
   Book,
@@ -21,7 +22,6 @@ import {
   Globe,
   Languages,
   MapPin,
-  Plus,
   TagIcon as PriceTag,
   Printer,
   ScrollText,
@@ -46,6 +46,7 @@ import BorrowLibraryItemConfirm from "@/app/[locale]/(browse)/(home)/books/[book
 
 import { Badge } from "./badge"
 import { Button } from "./button"
+import { Icons } from "./icons"
 import { Separator } from "./separator"
 import { Skeleton } from "./skeleton"
 
@@ -69,6 +70,10 @@ const LibraryItemInfo = ({
   const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
   const [openDigitalList, setOpenDigitalList] = useState<boolean>(false)
   const [openAddBorrowConfirm, setOpenAddBorrowConfirm] = useState(false)
+  const { favouriteItemIds, toggleFavorite } = useFavourite()
+  const isFavourite = libraryItem
+    ? favouriteItemIds.includes(libraryItem?.libraryItemId)
+    : false
 
   const { recentlyOpened } = useLibraryStorage()
 
@@ -287,21 +292,22 @@ const LibraryItemInfo = ({
           </div>
         </section>
       }
-      <section className="flex flex-col items-start justify-start gap-4">
+      <section className="flex items-start justify-start gap-4">
         {!isManager && (
-          <Button>
-            <Plus className="mr-1 size-4" /> {t("add to favorite")}
+          <Button
+            onClick={() => toggleFavorite(libraryItem.libraryItemId)}
+            variant="outline"
+          >
+            {isFavourite ? (
+              <Icons.FillHeart className="mr-1 size-4 text-danger" />
+            ) : (
+              <Icons.Heart className="mr-1 size-4" />
+            )}{" "}
+            {t("add to favorite")}
           </Button>
         )}
         {showResources && (
           <section className="flex items-center gap-4">
-            {!isManager && (
-              <Button onClick={() => setOpenAddBorrowConfirm(true)}>
-                <Book />
-                <span>{t("add borrow list")}</span>
-              </Button>
-            )}
-
             {libraryItem.resources && libraryItem.resources.length > 0 && (
               <Button
                 asChild
@@ -313,6 +319,13 @@ const LibraryItemInfo = ({
                   <BookOpen className="mr-1 size-4" />
                   {t("digital list")}
                 </div>
+              </Button>
+            )}
+
+            {!isManager && (
+              <Button onClick={() => setOpenAddBorrowConfirm(true)}>
+                <Book />
+                <span>{t("add borrow list")}</span>
               </Button>
             )}
           </section>

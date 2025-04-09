@@ -1,3 +1,5 @@
+"use client"
+
 import React, { createContext, useContext, useEffect, useState } from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 
@@ -23,7 +25,11 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
 
   const [favouriteItemIds, setFavouriteItemIds] = useState<number[]>([])
 
-  const { data: favouriteData, refetch } = useQuery({
+  const {
+    data: favouriteData,
+    refetch,
+    isLoading,
+  } = useQuery({
     queryKey: ["favourite", accessToken],
     enabled: accessToken !== undefined,
     queryFn: async () =>
@@ -65,23 +71,23 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
     }
   }, [favouriteData])
 
+  useEffect(() => {
+    console.log({ favouriteItemIds })
+  }, [favouriteItemIds])
+
   const { mutate: deleteFavourite } = useMutation({
     mutationFn: async (itemId: number) => {
-      const { data } = await http.delete<{ token: string }>(
-        `/api/user-favorite/remove/${itemId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      )
-      return data.token
+      await http.delete(`/api/user-favorite/remove/${itemId}`, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      })
     },
   })
 
   const { mutate: addFavourite } = useMutation({
     mutationFn: async (itemId: number) => {
-      const { data } = await http.post<{ token: string }>(
+      await http.post(
         `/api/user-favorite/add/${itemId}`,
         {},
         {
@@ -90,11 +96,11 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
           },
         }
       )
-      return data.token
     },
   })
 
   const toggleFavorite = (itemId: number) => {
+    if (isLoading) return
     const isFavourite = favouriteItemIds.includes(itemId)
 
     // Optimistic update
@@ -108,8 +114,10 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
       onSuccess: () => {
         refetch()
       },
-      onError: () => {
+      onError: (error) => {
         // Rollback khi có lỗi
+        console.log("Roll back", error)
+
         setFavouriteItemIds((prev) =>
           isFavourite ? [...prev, itemId] : prev.filter((id) => id !== itemId)
         )

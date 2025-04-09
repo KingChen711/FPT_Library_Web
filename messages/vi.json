@@ -872,6 +872,18 @@
     "Cancel": "Hủy"
   },
   "BookPage": {
+    "Satisfaction level": "Mức độ hài lòng",
+    "Very Poor": "Rất kém",
+    "Poor": "Kém",
+    "Average": "Trung bình",
+    "Good": "Tốt",
+    "Excellent": "Xuất sắc",
+    "Add review": "Đánh giá",
+    "Review book": "Đánh giá",
+    "Cancel": "Hủy",
+    "Review": "Đánh giá",
+    "Content": "Nội dung",
+    "Continue": "Tiếp tục",
     "Recommend for you": "Đề xuất cho bạn",
     "fields": {
       "year": "Năm",
