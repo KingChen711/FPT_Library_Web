@@ -205,6 +205,7 @@
     "categoriesMin1": "Need at least 1 category",
     "authorsMin1": "Need at least 1 author",
     "imagesMin5": "Need at least 5 images",
+    "imagesMin5PerGroup": "Need at least 5 images per group",
     "copiesMin1": "Need at least 1 copy code",
     "gt0": "Must larger than 0",
     "gte3": "Must larger than 3",
@@ -656,7 +657,8 @@
     "Patrons": "Patrons",
     "Holders": "Patrons",
     "Cards": "Cards",
-    "Train AI": "Train AI"
+    "Train AI": "Train AI",
+    "Recommend for you": "Recommend for you"
   },
   "LibraryCardManagementPage": {
     "Filters cards": "Filters cards",
@@ -845,7 +847,39 @@
     "Password": "Password"
   },
   "NotificationsPage": { "Search": "Search..." },
+  "RecommendPage": {
+    "Filters": "Filters",
+    "Filters recommend": "Filters recommend",
+    "Best recommend": "Best recommend",
+    "Best recommend desc": "Recommended by available settings",
+    "Custom": "Custom",
+    "Include title": "Title",
+    "Include title desc": "Recommendations based on TITLES you've interacted with",
+    "Include author": "Author",
+    "Include author desc": "Recommendations based on AUTHORS you've interacted with",
+    "Include genre": "Genre",
+    "Include genre desc": "Recommendations based on GENRES you've interacted with",
+    "Include topical term": "Topical terms",
+    "Include topical term desc": "Recommendations based on TOPICAL TERMS you've interacted with",
+    "Limit works of author": "Limit works of author",
+    "Limit works of author desc": "Limit recommending too many documents with the author",
+    "Apply": "Apply",
+    "Cancel": "Cancel"
+  },
   "BookPage": {
+    "Satisfaction level": "Satisfaction level",
+    "Very Poor": "Very Poor",
+    "Poor": "Poor",
+    "Average": "Average",
+    "Good": "Good",
+    "Excellent": "Excellent",
+    "Add review": "Add review",
+    "Review book": "Review book",
+    "Cancel": "Cancel",
+    "Review": "Review",
+    "Content": "Content",
+    "Continue": "Continue",
+    "Recommend for you": "Recommend for you",
     "fields": {
       "year": "Year",
       "title": "Title",
@@ -1317,6 +1351,7 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "min5CoverImagesPerGroup": "At least 5 item image per group",
     "Library Items Not Found": "Library Items Not Found",
     "No library items matching your request were found Please check your information or try searching with different criteria": "No library items matching your request were found. Please check your information or try searching with different criteria",
     "From": "From",
@@ -2012,7 +2047,11 @@
     "NotificationType": { "0": "Event", "1": "Reminder", "2": "Notice" },
     "ResourceBookType": { "AudioBook": "Audio book", "Ebook": "EBook" },
     "BookFormat": { "Paperback": "Paperback", "HardCover": "Hard cover" },
-    "BookEditionStatus": { "0": "Draft", "1": "Published", "2": "Deleted" },
+    "BookEditionStatus": {
+      "0": "Processing",
+      "1": "Published",
+      "2": "Deleted"
+    },
     "BookCopyStatus": {
       "InShelf": "In shelf",
       "OutOfShelf": "Out of shelf",
@@ -2032,7 +2071,7 @@
       "2": "Stock check",
       "4": "Stock out"
     },
-    "TrackingStatus": { "0": "Draft", "1": "Completed", "2": "Cancelled" },
+    "TrackingStatus": { "0": "Processing", "1": "Completed", "2": "Cancelled" },
     "Cataloged": { "Cataloged": "Cataloged", "Uncataloged": "Uncataloged" },
     "PatronStatus": { "0": "Active", "1": "Inactive", "2": "Deleted" },
     "PatronType": { "0": "Self made", "1": "Employee made" },

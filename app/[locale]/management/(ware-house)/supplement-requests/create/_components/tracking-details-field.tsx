@@ -1,7 +1,11 @@
 import React from "react"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useFieldArray, type UseFormReturn } from "react-hook-form"
+import {
+  useFieldArray,
+  type UseFieldArrayAppend,
+  type UseFormReturn,
+} from "react-hook-form"
 
 import { type Category } from "@/lib/types/models"
 import {
@@ -34,6 +38,10 @@ type Props = {
   setSelectedCategories: React.Dispatch<
     React.SetStateAction<(Category | null)[]>
   >
+  recommendAppend: UseFieldArrayAppend<
+    TCreateSupplementRequestSchema,
+    "supplementRequestDetails"
+  >
 }
 
 function TrackingDetailsField({
@@ -41,6 +49,7 @@ function TrackingDetailsField({
   isPending,
   selectedCategories,
   setSelectedCategories,
+  recommendAppend,
 }: Props) {
   const t = useTranslations("TrackingsManagementPage")
   const { fields, append, remove } = useFieldArray({
@@ -169,6 +178,7 @@ function TrackingDetailsField({
                     <TableBody>
                       {fields.map((field, index) => (
                         <TrackingDetailRowField
+                          recommendAppend={recommendAppend}
                           wSupplementItemIds={wSupplementItemIds}
                           key={field.id}
                           field={field}

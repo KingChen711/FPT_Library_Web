@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -58,6 +59,7 @@ function MutatePackageDialog({
   setOpenEdit,
 }: Props) {
   const locale = useLocale()
+  const queryClient = useQueryClient()
   const t = useTranslations("LibraryPackagesManagementPage")
   const tGeneral = useTranslations("GeneralManagement")
   const [open, setOpen] = useState(false)
@@ -119,6 +121,7 @@ function MutatePackageDialog({
         } else {
           setOpenEdit(false)
         }
+        queryClient.invalidateQueries({ queryKey: ["packages"] })
         form.reset()
         form.clearErrors()
         return

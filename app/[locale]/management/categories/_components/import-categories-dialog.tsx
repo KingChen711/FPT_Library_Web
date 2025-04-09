@@ -2,6 +2,7 @@
 
 import { useState, useTransition, type ChangeEvent } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { FileDown, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -44,6 +45,7 @@ const ImportCategoriesDialog = () => {
   const t = useTranslations("CategoriesManagementPage")
 
   const locale = useLocale()
+  const queryClient = useQueryClient()
   const [pendingSubmit, startTransition] = useTransition()
   const [open, setOpen] = useState(false)
   const [importErrors, setImportErrors] = useState<
@@ -109,6 +111,7 @@ const ImportCategoriesDialog = () => {
           description: res.data,
           variant: "success",
         })
+        queryClient.invalidateQueries({ queryKey: ["categories"] })
         setOpen(false)
         return
       }

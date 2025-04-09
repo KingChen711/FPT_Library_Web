@@ -17,7 +17,7 @@ const getTypeColor = (type: ETrackingStatus) => {
       return "danger"
     case ETrackingStatus.COMPLETED:
       return "success"
-    case ETrackingStatus.DRAFT:
+    case ETrackingStatus.PROCESSING:
       return "draft"
     default:
       return "default"

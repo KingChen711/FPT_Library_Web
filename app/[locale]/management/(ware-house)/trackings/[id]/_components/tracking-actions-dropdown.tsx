@@ -2,7 +2,15 @@
 
 import React, { useState, useTransition } from "react"
 import { useAuth } from "@/contexts/auth-provider"
-import { Check, ChevronDown, ChevronUp, Pencil, Trash2, X } from "lucide-react"
+import {
+  Check,
+  ChevronDown,
+  ChevronUp,
+  Loader2,
+  Pencil,
+  Trash2,
+  X,
+} from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
@@ -83,7 +91,7 @@ function TrackingActionsDropdown({ tracking }: Props) {
           {/* ! TODO:hardcode */}
           {user?.role.englishName === "HeadLibrarian" && (
             <>
-              {tracking.status === ETrackingStatus.DRAFT && (
+              {tracking.status === ETrackingStatus.PROCESSING && (
                 <>
                   <DropdownMenuItem
                     disabled={isPending}
@@ -92,7 +100,11 @@ function TrackingActionsDropdown({ tracking }: Props) {
                       handleChangeStatus(ETrackingStatus.COMPLETED)
                     }
                   >
-                    <Check />
+                    {isPending ? (
+                      <Loader2 className="size-4" />
+                    ) : (
+                      <Check className="size-4" />
+                    )}
                     {t("Completed")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
@@ -102,7 +114,11 @@ function TrackingActionsDropdown({ tracking }: Props) {
                       handleChangeStatus(ETrackingStatus.CANCELLED)
                     }
                   >
-                    <X />
+                    {isPending ? (
+                      <Loader2 className="size-4" />
+                    ) : (
+                      <X className="size-4" />
+                    )}
                     {t("Cancelled")}
                   </DropdownMenuItem>
                 </>
@@ -113,10 +129,12 @@ function TrackingActionsDropdown({ tracking }: Props) {
                   <DropdownMenuItem
                     disabled={isPending}
                     className="cursor-pointer"
-                    onClick={() => handleChangeStatus(ETrackingStatus.DRAFT)}
+                    onClick={() =>
+                      handleChangeStatus(ETrackingStatus.PROCESSING)
+                    }
                   >
                     <Icons.Draft />
-                    {t("Chuyển sang bản nháp")}
+                    {t("Change to draft")}
                   </DropdownMenuItem>
                 </>
               )}

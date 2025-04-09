@@ -202,9 +202,7 @@ async function TrackingDetailsSection({
                       />
                     </div>
                   </TableCell>
-                  <TableCell className="text-nowrap font-bold">
-                    {trackingDetail.itemName}
-                  </TableCell>
+
                   <TableCell className="text-nowrap">
                     {trackingDetail.libraryItem ? (
                       <Link
@@ -233,6 +231,11 @@ async function TrackingDetailsSection({
                       </div>
                     )}
                   </TableCell>
+
+                  <TableCell className="text-nowrap">
+                    {trackingDetail.isbn}
+                  </TableCell>
+
                   <TableCell className="text-nowrap">
                     {locale === "vi"
                       ? trackingDetail.category.vietnameseName

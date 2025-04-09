@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { getLocalTimeZone } from "@internationalized/date"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import { useForm } from "react-hook-form"
+import { useFieldArray, useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { type Category } from "@/lib/types/models"
@@ -78,6 +78,15 @@ function CreateStockRequestForm() {
       handleServerActionError(res, locale, form)
     })
   }
+
+  const {
+    fields: recommendFields,
+    remove: recommendRemove,
+    append: recommendAppend,
+  } = useFieldArray({
+    name: "supplementRequestDetails",
+    control: form.control,
+  })
 
   const triggerCatalogs = async () => {
     let flag = true
@@ -227,13 +236,19 @@ function CreateStockRequestForm() {
         />
 
         <TrackingDetailsField
+          recommendAppend={recommendAppend}
           selectedCategories={selectedCategories}
           setSelectedCategories={setSelectedCategories}
           form={form}
           isPending={isPending}
         />
 
-        <SupplementBooks form={form} />
+        <SupplementBooks
+          fields={recommendFields}
+          remove={recommendRemove}
+          isPending={isPending}
+          form={form}
+        />
 
         <div className="flex items-center justify-end gap-4">
           <Button

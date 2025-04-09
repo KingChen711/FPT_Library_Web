@@ -1,12 +1,15 @@
 import React from "react"
 
+import { cn } from "@/lib/utils"
+
 type Props = {
   value: number | undefined | null
+  size?: "default" | "lg"
 }
 
-function Rating({ value }: Props) {
+function Rating({ value, size = "default" }: Props) {
   return (
-    <div className="flex min-w-20">
+    <div className={cn("flex min-w-20", size === "lg" && "min-w-32")}>
       <svg viewBox="0 0 1000 200" className="mb-0">
         <defs>
           <polygon
@@ -26,7 +29,7 @@ function Rating({ value }: Props) {
 
         <rect
           width={(value || 0) * 20 + "%"}
-          className="h-full fill-[#eab308]"
+          className="h-full fill-warning"
           clipPath="url(#stars)"
         />
       </svg>

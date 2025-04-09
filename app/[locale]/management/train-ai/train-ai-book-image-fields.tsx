@@ -52,18 +52,13 @@ function BookImageFields({
     form.formState.errors.groups?.[groupIndex]?.books?.[bookIndex]?.imageList
       ?.root?.message
 
-  const isSingleBook =
-    form.watch(`groups.${groupIndex}.books.${bookIndex}.type`) === "Single"
-
   return (
     <FormField
       control={form.control}
       name={`groups.${groupIndex}.books.${bookIndex}.imageList`}
       render={() => (
         <FormItem>
-          <FormLabel>
-            {t("Cover images")} {isSingleBook ? t("min5CoverImages") : null}
-          </FormLabel>
+          <FormLabel>{t("Cover images")}</FormLabel>
           <FormControl>
             <div className="flex flex-col space-y-6">
               <MultiImageDropzone hashes={hashes} append={append} />

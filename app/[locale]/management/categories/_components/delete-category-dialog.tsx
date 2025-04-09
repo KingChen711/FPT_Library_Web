@@ -1,4 +1,5 @@
 import React, { useState, useTransition } from "react"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -29,6 +30,7 @@ function DeleteCategoryDialog({
   categoryId,
 }: Props) {
   const locale = useLocale()
+  const queryClient = useQueryClient()
   const message = `${locale === "vi" ? "xóa" : "delete"} ${categoryName}`
   const t = useTranslations("CategoriesManagementPage")
   const [value, setValue] = useState("")
@@ -46,6 +48,7 @@ function DeleteCategoryDialog({
           variant: "success",
         })
         setOpenDelete(false)
+        queryClient.invalidateQueries({ queryKey: ["categories"] })
         return
       }
 
