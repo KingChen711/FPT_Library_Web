@@ -30,14 +30,14 @@ const BorrowLibraryItemConfirm = ({ open, setOpen, libraryItem }: Props) => {
       toast({
         title: locale === "vi" ? "Thất bại" : "Failed",
         description: t("added to borrow list"),
-        variant: "warning",
+        variant: "info",
       })
     } else {
       borrowedLibraryItems.add(libraryItem.libraryItemId)
       toast({
         title: locale === "vi" ? "Thành công" : "Success",
         description: t("add borrow list"),
-        variant: "success",
+        variant: "default",
       })
     }
     setOpen(false)

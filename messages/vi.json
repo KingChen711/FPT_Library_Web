@@ -907,6 +907,8 @@
       "law": "Luật"
     },
     "borrow tracking": {
+      "view details": "Xem chi tiết",
+      "total request items": "Số lượng yêu cầu",
       "pages": "Trang",
       "payment": "Thanh toán",
       "filter": "Bộ lọc",
@@ -980,7 +982,13 @@
       "audio book": "Sách nói",
       "borrow duration": "Thời gian mượn",
       "days": "Ngày",
-      "pending resources": "Tài liệu bị hoãn"
+      "pending resources": "Tài liệu bị hoãn",
+      "Borrow Reservations Not Found": "Không tìm thấy đặt trước",
+      "No borrow reservations matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có đặt trước nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
+      "Borrow Records Not Found": "Không tìm thấy lịch sử mượn",
+      "No borrow records matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có lịch sử mượn nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
+      "Borrow Requests Not Found": "Không tìm thấy yêu cầu mượn",
+      "No borrow requests matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có yêu cầu mượn nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác."
     },
     "number of edition": "Số ấn bản {editionNumber}",
     "edition": "Ấn bản",

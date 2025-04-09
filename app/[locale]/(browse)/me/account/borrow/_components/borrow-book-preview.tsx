@@ -1,6 +1,8 @@
 "use client"
 
+import { useState } from "react"
 import Image from "next/image"
+import { useParams } from "next/navigation"
 import { BookOpen, MapPin, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -16,6 +18,8 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import ParseHtml from "@/components/ui/parse-html"
+
+import CancelSpecificLibraryItemDialog from "../request/_components/cancel-specific-library-item-dialog"
 
 type Props = {
   libraryItem: LibraryItem
@@ -38,109 +42,127 @@ const BorrowBookPreview = ({ libraryItem, className, expandable }: Props) => {
 
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
+  const params = useParams()
+  const [openCancel, setOpenCancel] = useState(false)
+
   return (
-    <Card
-      className={cn(
-        "relative w-full overflow-hidden rounded-md border-2",
-        className
-      )}
-    >
-      <div className="flex flex-col sm:flex-row">
-        <CardContent className="flex-1 p-4">
-          <div className="flex w-full gap-4">
-            <div className="relative aspect-[2/3] h-[180px] w-[120px] shrink-0 overflow-hidden rounded-md border">
-              {coverImage ? (
-                <Image
-                  src={coverImage}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                  <BookOpen className="size-16 text-muted-foreground" />
-                </div>
-              )}
-            </div>
-            <div className="flex-1 space-y-3">
-              <div>
-                <div className="mt-2 flex items-center justify-between">
-                  <h3 className="line-clamp-1 text-lg font-bold">{title}</h3>
-                  <div className="flex items-center gap-2">
-                    <Button variant={"destructive"}>
-                      <Trash2 />
-                    </Button>
-                    <Button variant={"outline"}>
-                      <MapPin />
-                    </Button>
+    <>
+      <CancelSpecificLibraryItemDialog
+        open={openCancel}
+        setOpen={setOpenCancel}
+        borrowRequestId={+params.borrowRequestId}
+        libraryItem={libraryItem}
+        expandable
+      />
+      <Card
+        className={cn(
+          "relative w-full overflow-hidden rounded-md border-2",
+          className
+        )}
+      >
+        <div className="flex flex-col sm:flex-row">
+          <CardContent className="flex-1 p-4">
+            <div className="flex w-full gap-4">
+              <div className="relative aspect-[2/3] h-[180px] w-[120px] shrink-0 overflow-hidden rounded-md border">
+                {coverImage ? (
+                  <Image
+                    src={coverImage}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                    <BookOpen className="size-16 text-muted-foreground" />
                   </div>
-                </div>
-                {subTitle && (
-                  <p className="text-sm text-muted-foreground">{subTitle}</p>
                 )}
               </div>
-
-              {category && (
-                <Badge>
-                  {locale === "vi"
-                    ? category.vietnameseName
-                    : category.englishName}
-                </Badge>
-              )}
-
-              <div className="flex flex-wrap gap-x-6 gap-y-2">
-                {authors && authors.length > 0 && (
-                  <p className="text-sm">
-                    <span className="font-medium">{t("Authors")}:</span>{" "}
-                    {authors.map((a) => a.fullName).join(", ")}
-                  </p>
-                )}
-
-                {publisher && (
-                  <p className="text-sm">
-                    <span className="font-medium">{t("Publisher")}:</span>{" "}
-                    {publisher}
-                  </p>
-                )}
-
-                {publicationYear && (
-                  <p className="text-sm">
-                    <span className="font-medium">{t("Year")}:</span>{" "}
-                    {publicationYear}
-                  </p>
-                )}
-
-                {pageCount && (
-                  <p className="text-sm">
-                    <span className="font-medium">{t("Page count")}:</span>{" "}
-                    {pageCount}
-                  </p>
-                )}
-              </div>
-
-              {summary && (
+              <div className="flex-1 space-y-3">
                 <div>
-                  <ParseHtml className="line-clamp-2 text-sm" data={summary} />
+                  <div className="mt-2 flex items-center justify-between">
+                    <h3 className="line-clamp-1 text-lg font-bold">{title}</h3>
+                    <div className="flex items-center gap-2">
+                      <Button
+                        variant={"destructive"}
+                        onClick={() => setOpenCancel(true)}
+                      >
+                        <Trash2 />
+                      </Button>
+                      <Button variant={"outline"}>
+                        <MapPin />
+                      </Button>
+                    </div>
+                  </div>
+                  {subTitle && (
+                    <p className="text-sm text-muted-foreground">{subTitle}</p>
+                  )}
                 </div>
-              )}
-            </div>
-          </div>
 
-          {expandable ? (
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>{t("View more")}</AccordionTrigger>
-                <AccordionContent asChild>
-                  <ExpandInformation noBorderTop libraryItem={libraryItem} />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ) : (
-            <ExpandInformation libraryItem={libraryItem} />
-          )}
-        </CardContent>
-      </div>
-    </Card>
+                {category && (
+                  <Badge>
+                    {locale === "vi"
+                      ? category.vietnameseName
+                      : category.englishName}
+                  </Badge>
+                )}
+
+                <div className="flex flex-wrap gap-x-6 gap-y-2">
+                  {authors && authors.length > 0 && (
+                    <p className="text-sm">
+                      <span className="font-medium">{t("Authors")}:</span>{" "}
+                      {authors.map((a) => a.fullName).join(", ")}
+                    </p>
+                  )}
+
+                  {publisher && (
+                    <p className="text-sm">
+                      <span className="font-medium">{t("Publisher")}:</span>{" "}
+                      {publisher}
+                    </p>
+                  )}
+
+                  {publicationYear && (
+                    <p className="text-sm">
+                      <span className="font-medium">{t("Year")}:</span>{" "}
+                      {publicationYear}
+                    </p>
+                  )}
+
+                  {pageCount && (
+                    <p className="text-sm">
+                      <span className="font-medium">{t("Page count")}:</span>{" "}
+                      {pageCount}
+                    </p>
+                  )}
+                </div>
+
+                {summary && (
+                  <div>
+                    <ParseHtml
+                      className="line-clamp-2 text-sm"
+                      data={summary}
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {expandable ? (
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>{t("View more")}</AccordionTrigger>
+                  <AccordionContent asChild>
+                    <ExpandInformation noBorderTop libraryItem={libraryItem} />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            ) : (
+              <ExpandInformation libraryItem={libraryItem} />
+            )}
+          </CardContent>
+        </div>
+      </Card>
+    </>
   )
 }
 

@@ -1,4 +1,5 @@
 import { useRouter } from "@/i18n/routing"
+import { format } from "date-fns"
 import { Loader2, MoreHorizontal } from "lucide-react"
 
 import { ETransactionStatus, ETransactionType } from "@/lib/types/enums"
@@ -26,17 +27,8 @@ import {
 
 import LibraryTransactionFilter from "./library-transaction-filter"
 
-const formatDate = (date: string | Date | null | undefined) => {
-  if (!date) return "N/A"
-  const parsedDate = new Date(date)
-  if (isNaN(parsedDate.getTime())) return "Invalid Date"
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    // hour: "2-digit",
-    // minute: "2-digit",
-  }).format(parsedDate)
+const formatDate = (date: Date) => {
+  return format(date, "dd/MM/yyyy")
 }
 
 const transactionTypeLabels: Record<ETransactionType, string> = {
@@ -114,7 +106,7 @@ const TransactionTab = () => {
                 </TableCell>
                 <TableCell className="text-nowrap">
                   {transaction.transactionDate
-                    ? formatDate(transaction.transactionDate)
+                    ? format(transaction.transactionDate, "dd/MM/yyyy")
                     : ""}
                 </TableCell>
                 <TableCell className="text-nowrap">

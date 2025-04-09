@@ -46,7 +46,12 @@ const PredictionOcrDetailTab = () => {
     return <Loader2 className="animate-spin" />
   }
 
-  if (!predictResult || !bestMatchedLibraryItemId || !uploadedImage) {
+  if (
+    !predictResult ||
+    !bestMatchedLibraryItemId ||
+    !uploadedImage ||
+    !libraryItem
+  ) {
     router.push("/ai-prediction")
     return
   }
@@ -115,7 +120,7 @@ const PredictionOcrDetailTab = () => {
                   className="max-h-[60vh] overflow-y-auto border-2 bg-card"
                 >
                   <LibraryItemInfo
-                    id={libraryItem.libraryItemId}
+                    id={libraryItem?.libraryItemId}
                     showInstances={false}
                     showResources={false}
                     shownInventory={true}

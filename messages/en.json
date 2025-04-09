@@ -902,6 +902,8 @@
       "law": "Law"
     },
     "borrow tracking": {
+      "view details": "View details",
+      "total request items": "Total request items",
       "pages": "Pages",
       "payment": "Payment",
       "filter": "Filter",
@@ -975,7 +977,13 @@
       "audio book": "Audio book",
       "borrow duration": "Borrow duration",
       "days": "days",
-      "pending resources": "Pending resources"
+      "pending resources": "Pending resources",
+      "Borrow Reservations Not Found": "Borrow Reservations Not Found",
+      "No borrow reservations matching your request were found Please check your information or try searching with different criteria": "No borrow reservations matching your request were found. Please check your information or try searching with different criteria",
+      "Borrow Records Not Found": "Borrow Records Not Found",
+      "No borrow records matching your request were found Please check your information or try searching with different criteria": "No borrow records matching your request were found. Please check your information or try searching with different criteria",
+      "Borrow Requests Not Found": "Borrow Requests Not Found",
+      "No borrow requests matching your request were found Please check your information or try searching with different criteria": "No borrow requests matching your request were found. Please check your information or try searching with different criteria"
     },
     "ratings": "Ratings",
     "number of edition": "Number of edition: {editionNumber}",
