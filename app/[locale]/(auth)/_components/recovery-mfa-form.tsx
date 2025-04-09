@@ -4,9 +4,9 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTransition } from "react"
+import { useAuth } from "@/contexts/auth-provider"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -36,7 +36,8 @@ function RecoveryMfaForm({ email }: Props) {
   const t = useTranslations("RecoveryMfaPage")
   const locale = useLocale()
   const router = useRouter()
-  const queryClient = useQueryClient()
+  // const queryClient = useQueryClient()
+  const { refetchToken } = useAuth()
 
   const [pending, startTransition] = useTransition()
 
@@ -52,9 +53,10 @@ function RecoveryMfaForm({ email }: Props) {
       const res = await validateBackupCode(email, values.backupCode)
 
       if (res.isSuccess) {
-        queryClient.invalidateQueries({
-          queryKey: ["token"],
-        })
+        // queryClient.invalidateQueries({
+        //   queryKey: ["token"],
+        // })
+        refetchToken()
         router.push("/")
         return
       }
