@@ -29,6 +29,8 @@ export const formatDateInput = (dateString: string) => {
 }
 
 export const getClientSideCookie = (name: string): string | undefined => {
+  if (typeof document === "undefined" || typeof document.cookie === undefined)
+    return undefined
   const cookieValue = document.cookie
     .split("; ")
     .find((row) => row.startsWith(`${name}=`))
