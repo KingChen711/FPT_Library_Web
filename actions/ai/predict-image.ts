@@ -9,7 +9,7 @@ export async function predictImage(
 ): Promise<ActionResponse<{ message: string; data: PredictResult }>> {
   try {
     const { data, resultCode, message } = await http.post<PredictResult>(
-      `/api/library-items/ai/predict`,
+      `/api/library-items/ai/predict/v2`,
       formData
     )
 
