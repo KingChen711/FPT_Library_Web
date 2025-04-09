@@ -23,7 +23,7 @@ function usePackages() {
     },
     enabled: !!accessToken,
     placeholderData: keepPreviousData,
-    staleTime: 30,
+    staleTime: 30 * 1000,
     refetchOnWindowFocus: false,
   })
 }

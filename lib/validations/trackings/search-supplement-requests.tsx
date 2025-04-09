@@ -7,7 +7,7 @@ import {
   filterNumRangeSchema,
 } from "@/lib/zod"
 
-export const filterTrackingSchema = z.object({
+export const filterSupplementRequestSchema = z.object({
   status: filterEnumSchema(ETrackingStatus),
 
   totalItemRange: filterNumRangeSchema,
@@ -18,11 +18,14 @@ export const filterTrackingSchema = z.object({
   actualReturnDateRange: filterDateRangeSchema,
   createdAtRange: filterDateRangeSchema,
   updatedAtRange: filterDateRangeSchema,
+  dataFinalizationDateRange: filterDateRangeSchema,
 })
 
-export type TFilterTrackingSchema = z.infer<typeof filterTrackingSchema>
+export type TFilterSupplementRequestSchema = z.infer<
+  typeof filterSupplementRequestSchema
+>
 
-export const searchTrackingsSchema = z
+export const searchSupplementRequestsSchema = z
   .object({
     search: z.string().catch(""),
     pageIndex: z.coerce.number().min(1).catch(1),
@@ -47,10 +50,14 @@ export const searchTrackingsSchema = z
         "-CreatedAt",
         "UpdatedAt",
         "-UpdatedAt",
+        "DataFinalizationDate",
+        "-DataFinalizationDate",
       ])
       .optional()
       .catch(undefined),
   })
-  .and(filterTrackingSchema)
+  .and(filterSupplementRequestSchema)
 
-export type TSearchTrackingsSchema = z.infer<typeof searchTrackingsSchema>
+export type TSearchSupplementRequestsSchema = z.infer<
+  typeof searchSupplementRequestsSchema
+>

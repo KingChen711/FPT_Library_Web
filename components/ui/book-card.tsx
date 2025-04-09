@@ -30,7 +30,7 @@ interface LibraryItemProps {
   }
   modal?: boolean
   className?: string
-
+  showBorrowDuration?: boolean
   expandable?: boolean
 }
 
@@ -39,6 +39,7 @@ export default function LibraryItemCard({
   modal,
   className,
   expandable,
+  showBorrowDuration = false,
 }: LibraryItemProps) {
   const {
     category,
@@ -86,11 +87,20 @@ export default function LibraryItemCard({
                 <div className="mt-2 flex items-center">
                   <h3 className="line-clamp-1 text-lg font-bold">{title}</h3>
                   {category && (
-                    <Badge className="absolute right-2 top-2">
-                      {locale === "vi"
-                        ? category.vietnameseName
-                        : category.englishName}
-                    </Badge>
+                    <div className="absolute right-2 top-2 flex items-center gap-3">
+                      <Badge>
+                        {locale === "vi"
+                          ? category.vietnameseName
+                          : category.englishName}
+                      </Badge>
+                      {showBorrowDuration && category.totalBorrowDays && (
+                        <Badge>
+                          {locale === "vi"
+                            ? category.totalBorrowDays + " ngày"
+                            : category.totalBorrowDays + " days"}
+                        </Badge>
+                      )}
+                    </div>
                   )}
                 </div>
                 {subTitle && (

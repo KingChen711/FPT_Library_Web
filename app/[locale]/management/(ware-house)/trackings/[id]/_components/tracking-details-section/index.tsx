@@ -1,4 +1,5 @@
 import React from "react"
+import Image from "next/image"
 import { Link } from "@/i18n/routing"
 import { type TrackingDetails } from "@/queries/trackings/get-tracking-details"
 import { format } from "date-fns"
@@ -205,9 +206,32 @@ async function TrackingDetailsSection({
                     {trackingDetail.itemName}
                   </TableCell>
                   <TableCell className="text-nowrap">
-                    <div className="flex justify-center">
-                      {trackingDetail.isbn}
-                    </div>
+                    {trackingDetail.libraryItem ? (
+                      <Link
+                        target="_blank"
+                        href={`/management/books/${trackingDetail.libraryItem.libraryItemId}`}
+                        className="group flex items-center gap-2 pr-8"
+                      >
+                        {trackingDetail.libraryItem.coverImage ? (
+                          <Image
+                            alt={trackingDetail.libraryItem.title}
+                            src={trackingDetail.libraryItem.coverImage}
+                            width={40}
+                            height={60}
+                            className="aspect-[2/3] h-12 w-8 rounded-sm border object-cover"
+                          />
+                        ) : (
+                          <div className="h-12 w-8 rounded-sm border"></div>
+                        )}
+                        <p className="font-bold group-hover:underline">
+                          {trackingDetail.libraryItem.title}
+                        </p>
+                      </Link>
+                    ) : (
+                      <div className="flex justify-center">
+                        {trackingDetail.isbn}
+                      </div>
+                    )}
                   </TableCell>
                   <TableCell className="text-nowrap">
                     {locale === "vi"

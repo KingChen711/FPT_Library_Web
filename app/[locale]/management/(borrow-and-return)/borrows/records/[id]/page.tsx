@@ -815,7 +815,7 @@ async function BorrowRecordDetailPage({ params }: Props) {
                                                     <p>
                                                       {format(
                                                         fine.createdAt,
-                                                        "dd MMM yyyy, HH:mm",
+                                                        "HH:mm dd MMM yyyy",
                                                         {
                                                           locale: formatLocale,
                                                         }
@@ -832,7 +832,7 @@ async function BorrowRecordDetailPage({ params }: Props) {
                                                     <p>
                                                       {format(
                                                         fine.expiryAt,
-                                                        "dd MMM yyyy, HH:mm",
+                                                        "HH:mm dd MMM yyyy",
                                                         {
                                                           locale: formatLocale,
                                                         }

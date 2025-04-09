@@ -17,7 +17,7 @@ import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { EBookCopyStatus, EBorrowType } from "@/lib/types/enums"
-import { cn } from "@/lib/utils"
+import { cn, getDateRangeString } from "@/lib/utils"
 import {
   librarianCheckoutSchema,
   type TLibrarianCheckoutSchema,
@@ -609,6 +609,14 @@ function LibrarianCheckoutForm() {
                                           : "border-muted"
                                       )}
                                     >
+                                      {item.category.totalBorrowDays && (
+                                        <div className="absolute bottom-4 right-4">
+                                          {t("Borrow duration")}:{" "}
+                                          {getDateRangeString(
+                                            item.category.totalBorrowDays
+                                          )}
+                                        </div>
+                                      )}
                                       <Button
                                         onClick={() => {
                                           setPatronActivity((prev) =>
@@ -698,6 +706,14 @@ function LibrarianCheckoutForm() {
                                           : "border-muted"
                                       )}
                                     >
+                                      {item.category.totalBorrowDays && (
+                                        <div className="absolute bottom-4 right-4">
+                                          {t("Borrow duration")}:{" "}
+                                          {getDateRangeString(
+                                            item.category.totalBorrowDays
+                                          )}
+                                        </div>
+                                      )}
                                       <CancelRequestItemDialog
                                         cancelling={cancellingRequestItem}
                                         title={item.title}
@@ -768,12 +784,20 @@ function LibrarianCheckoutForm() {
                                   <div
                                     key={item.libraryItemId}
                                     className={cn(
-                                      "flex flex-col gap-2 rounded-md border bg-card p-4 transition-all",
+                                      "relative flex flex-col gap-2 rounded-md border bg-card p-4 transition-all",
                                       item.scanned
                                         ? "border-2 border-primary/50 shadow-sm"
                                         : "border-muted"
                                     )}
                                   >
+                                    {item.category.totalBorrowDays && (
+                                      <div className="absolute bottom-4 right-4">
+                                        {t("Borrow duration")}:{" "}
+                                        {getDateRangeString(
+                                          item.category.totalBorrowDays
+                                        )}
+                                      </div>
+                                    )}
                                     <div className="ml-1 flex items-center gap-2">
                                       <p className="text-sm font-bold">
                                         {t("Valid barcodes")}:

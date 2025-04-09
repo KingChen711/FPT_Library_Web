@@ -1,5 +1,9 @@
 {
   "Dashboard": {
+    "Selected": "Selected",
+    "Select": "Select",
+    "Unselect": "Unselect",
+    "Select top items": "Add top circulation items",
     "Overview": "Overview",
     "Total physical items": "Overview",
     "Total digital items": "Total digital items",
@@ -608,6 +612,7 @@
     "Permissions": "Permissions"
   },
   "Routes": {
+    "Supplement requests": "Supplement requests",
     "Train sessions": "Train sessions",
     "Borrow reservations": "Reservations",
     "Borrow records": "Records",
@@ -1767,6 +1772,34 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Filters supplement requests": "Filters supplement requests",
+    "Supplement requests": "Supplement requests",
+    "Supplement details": "Supplement details",
+    "No selected items": "No selected items",
+    "AI recommended items": "AI recommended items",
+    "Open link": "Open link",
+    "View content": "View content",
+    "Title": "Title",
+    "Authors": "Authors",
+    "Publisher": "Publisher",
+    "Published date": "Published date",
+    "ISBN": "ISBN",
+    "Page count": "Page count",
+    "Dimension": "Dimension",
+    "Estimated price": "Estimated price",
+    "Categories": "Categories",
+    "Average rating": "Average rating",
+    "Ratings count": "Ratings count",
+    "Preview link": "Preview link",
+    "Info link": "Info link",
+    "Language": "Language",
+    "Try again": "Try again",
+    "Selected": "Selected",
+    "Type": "Type",
+    "Add custom item": "Add custom item",
+    "Supplement request reason": "Supplement request reason",
+    "Create supplement request": "Create supplement request",
+    "Data finalization date": "Data finalization date",
     "Trained images": "Trained images",
     "Train items": "Train items",
     "Train information": "Train information",
@@ -1918,9 +1951,15 @@
     "Select library item": "Select library item",
     "Catalog": "Catalog",
     "Base on selected library item": "Base on selected library item",
-    "No item found": "No item found"
+    "No item found": "No item found",
+    "Recommend": "Recommend",
+    "Recommend items": "Recommend items"
   },
   "Badges": {
+    "SupplementRequestItemType": {
+      "0": "Top circulation",
+      "1": "Custom"
+    },
     "FineBorrowStatus": {
       "0": "Pending",
       "1": "Paid",
@@ -1968,7 +2007,12 @@
     "AuditType": { "0": "None", "1": "Added", "2": "Modified", "3": "Deleted" },
     "SupplierType": { "0": "Publisher", "1": "Distributor" },
     "Active": { "Active": "Active", "Inactive": "Inactive" },
-    "TrackingType": { "0": "Stock in", "1": "Stock out", "2": "Transfer" },
+    "TrackingType": {
+      "0": "Stock in",
+      "1": "Request",
+      "2": "Stock check",
+      "4": "Stock out"
+    },
     "TrackingStatus": { "0": "Draft", "1": "Completed", "2": "Cancelled" },
     "Cataloged": { "Cataloged": "Cataloged", "Uncataloged": "Uncataloged" },
     "PatronStatus": { "0": "Active", "1": "Inactive", "2": "Deleted" },
@@ -2107,6 +2151,7 @@
     "Out of shelf": "Out of shelf"
   },
   "BorrowAndReturnManagementPage": {
+    "Borrow duration": "Borrow duration",
     "Extend pickup date": "Extend pickup date",
     "Floor": "Floor",
     "Zone": "Zone",

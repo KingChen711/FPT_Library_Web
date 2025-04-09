@@ -208,7 +208,7 @@ function TopCirculationSection() {
                       </TooltipTrigger>
                       <TooltipContent
                         side="top"
-                        className="max-w-[90vw] bg-card"
+                        className="max-w-[90vw] border bg-card text-card-foreground"
                       >
                         <div className="flex gap-4">
                           <div className="flex flex-wrap">

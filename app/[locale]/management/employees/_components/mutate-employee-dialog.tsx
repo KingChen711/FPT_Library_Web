@@ -102,9 +102,6 @@ function MutateEmployeeDialog({
     },
   })
 
-  if (employeeRoles.length === 0)
-    return <Loader2 className="size-8 animate-spin" />
-
   const onSubmit = async (values: TMutateEmployeeSchema) => {
     startTransition(async () => {
       if (type === "create") {

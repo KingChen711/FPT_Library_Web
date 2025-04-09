@@ -38,7 +38,7 @@ async function TrainSessionDetailPage({ params }: Props) {
 
   const formatLocale = await getFormatLocale()
 
-  const title = ` ${format(session.trainDate, "dd MMM yyyy HH:mm", {
+  const title = ` ${format(session.trainDate, "HH:mm dd MMM yyyy", {
     locale: formatLocale,
   })}`
 
@@ -79,7 +79,7 @@ async function TrainSessionDetailPage({ params }: Props) {
               <div className="flex items-center gap-2">
                 {session.trainDate ? (
                   <p>
-                    {format(session.trainDate, "dd MMM yyyy HH:mm", {
+                    {format(session.trainDate, "HH:mm dd MMM yyyy", {
                       locale: formatLocale,
                     })}
                   </p>

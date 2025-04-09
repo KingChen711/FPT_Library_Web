@@ -37,6 +37,8 @@ function CirculationSection() {
 
   if (isLoading || !data) return
 
+  console.log(data)
+
   return (
     <div className="mb-8 rounded-md border p-4">
       <h2 className="mb-4 text-xl font-semibold">

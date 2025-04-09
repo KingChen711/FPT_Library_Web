@@ -181,6 +181,8 @@ const request = async <TData = undefined>(
       payload: payload,
     })
 
+  console.log(payload)
+
   if (!res.ok || !payload.resultCode.includes("Success")) {
     if (res.ok) {
       throw new HttpError({

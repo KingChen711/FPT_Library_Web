@@ -16,9 +16,11 @@ const getTypeColor = (type: ETrackingType) => {
     case ETrackingType.STOCK_IN:
       return "success"
     case ETrackingType.STOCK_OUT:
+      return "draft"
+    case ETrackingType.STOCK_CHECKING:
+      return "info"
+    case ETrackingType.SUPPLEMENT_REQUEST:
       return "warning"
-    case ETrackingType.TRANSFER:
-      return "progress"
     default:
       return "default"
   }
@@ -28,7 +30,10 @@ function TrackingTypeBadge({ type }: Props) {
   const t = useTranslations("Badges.TrackingType")
 
   return (
-    <Badge variant={getTypeColor(type)} className="flex w-20 justify-center">
+    <Badge
+      variant={getTypeColor(type)}
+      className="flex w-[100px] justify-center"
+    >
       {t(type.toString())}
     </Badge>
   )

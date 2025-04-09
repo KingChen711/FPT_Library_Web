@@ -3,10 +3,12 @@ import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useFieldArray, type UseFormReturn } from "react-hook-form"
 
-import { EStockTransactionType } from "@/lib/types/enums"
 import { type Category } from "@/lib/types/models"
-import { cn } from "@/lib/utils"
-import { type TCreateTrackingManualSchema } from "@/lib/validations/trackings/create-tracking-manual"
+import {
+  ESupplementRequestItemType,
+  type TCreateSupplementRequestSchema,
+} from "@/lib/validations/supplement/create-supplement-request"
+import { type TDashboardTopCirculation } from "@/hooks/dash-board/use-dashboard-top-circulation"
 import { Button } from "@/components/ui/button"
 import {
   FormControl,
@@ -22,29 +24,16 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-import FastInputDialog from "./fast-input-dialog"
+import SelectTopCirculationDialog from "./select-top-circulation-dialog"
 import TrackingDetailRowField from "./tracking-detail-row-field"
 
 type Props = {
-  form: UseFormReturn<TCreateTrackingManualSchema>
+  form: UseFormReturn<TCreateSupplementRequestSchema>
   isPending: boolean
   selectedCategories: (Category | null)[]
   setSelectedCategories: React.Dispatch<
     React.SetStateAction<(Category | null)[]>
   >
-}
-
-const createNewTrackingDetail = (
-  type: EStockTransactionType.ADDITIONAL | EStockTransactionType.NEW
-) => {
-  return {
-    itemName: "",
-    isbn: "",
-    itemTotal: 0,
-    unitPrice: 0,
-    totalAmount: 0,
-    stockTransactionType: type, //only NEW
-  }
 }
 
 function TrackingDetailsField({
@@ -54,7 +43,7 @@ function TrackingDetailsField({
   setSelectedCategories,
 }: Props) {
   const t = useTranslations("TrackingsManagementPage")
-  const { fields, append, remove, replace } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     name: "warehouseTrackingDetails",
     control: form.control,
   })
@@ -63,13 +52,53 @@ function TrackingDetailsField({
 
   const handleGlobalCalculate = () => {
     let totalAmount = 0
+
     watchTrackingDetails.forEach((detail) => {
       totalAmount += (detail.unitPrice || 0) * (detail.itemTotal || 0)
     })
     form.setValue(`totalAmount`, totalAmount)
+    if (totalAmount > 0) form.clearErrors("totalAmount")
   }
 
   const watchGlobalTotalItem = form.watch("totalItem") || 0
+
+  const wItemIds = form
+    .watch("warehouseTrackingDetails")
+    .map((i) => i.libraryItemId)
+    .filter(Boolean) as number[]
+
+  const wSupplementItemIds = form
+    .watch("supplementRequestDetails")
+    .map((i) => i.id)
+
+  const handleSelectTopItem = (
+    item: TDashboardTopCirculation["topBorrowItems"]["sources"][number]
+  ) => {
+    form.setValue("totalItem", watchGlobalTotalItem + 1)
+
+    setSelectedCategories((prev) => [...prev, item.libraryItem.category])
+    append({
+      type: ESupplementRequestItemType.TOP_CIRCULATION,
+      itemName: item.libraryItem.title,
+      availableUnits: item.availableVsNeedChart.availableUnits,
+      needUnits: item.availableVsNeedChart.needUnits,
+      borrowFailedCount: item.borrowFailedCount,
+      borrowFailedRate: item.borrowFailedRate,
+      borrowSuccessCount: item.borrowSuccessCount,
+      categoryId: item.libraryItem.categoryId,
+      libraryItemId: item.libraryItem.libraryItemId,
+      reserveCount: item.reserveCount,
+      unitPrice: item.libraryItem.estimatedPrice || 0,
+      isbn: item.libraryItem.isbn || "",
+      hasInitPrice: !!item.libraryItem.estimatedPrice,
+      conditionId: 1,
+      averageNeedSatisfactionRate:
+        item.availableVsNeedChart.averageNeedSatisfactionRate,
+      itemTotal: 0,
+      totalAmount: 0,
+      supplementRequestReason: "",
+    })
+  }
 
   return (
     <FormField
@@ -79,33 +108,28 @@ function TrackingDetailsField({
         <FormItem>
           <div className="flex items-center justify-between">
             <FormLabel>
-              {t("Tracking details")}{" "}
+              {t("Supplement details")}{" "}
               <span className="ml-1 text-xl font-bold leading-none text-primary">
                 *
               </span>
             </FormLabel>
-            <div className="flex flex-wrap items-center gap-4">
+            {/* <div className="flex flex-wrap items-center gap-4">
               <FastInputDialog append={append} replace={replace} form={form} />
-            </div>
+            </div> */}
           </div>
           <FormControl>
             <div className="mt-4 grid w-full">
               <div className="overflow-x-auto rounded-md">
                 {fields.length > 0 && (
-                  <Table className="overflow-hidden">
+                  <Table className="overflow-hidden border">
                     <TableHeader>
                       <TableRow>
                         <TableHead className="text-nowrap border font-bold">
-                          <div className="flex justify-center">
-                            {t("Stock transaction type")}
-                          </div>
+                          {t("Type")}
                         </TableHead>
                         <TableHead className="text-nowrap border font-bold">
                           {t("Library item")}
                         </TableHead>
-                        {/* <TableHead className="text-nowrap border font-bold">
-                        {t("Item name")}
-                      </TableHead> */}
                         <TableHead className="text-nowrap border font-bold">
                           <div className="flex justify-center">ISBN</div>
                         </TableHead>
@@ -114,11 +138,11 @@ function TrackingDetailsField({
                             {t("Category")}
                           </div>
                         </TableHead>
-                        <TableHead className="text-nowrap border font-bold">
-                          <div className="flex justify-center">
-                            {t("Condition")}
-                          </div>
-                        </TableHead>
+                        {/* <TableHead className="text-nowrap border font-bold">
+                        <div className="flex justify-center">
+                          {t("Condition")}
+                        </div>
+                      </TableHead> */}
                         <TableHead className="text-nowrap border font-bold">
                           <div className="flex justify-center">
                             {t("Item total")}
@@ -134,12 +158,18 @@ function TrackingDetailsField({
                             {t("Total amount auto")}
                           </div>
                         </TableHead>
+                        <TableHead className="text-nowrap border font-bold">
+                          <div className="flex justify-center">
+                            {t("Supplement request reason")}
+                          </div>
+                        </TableHead>
                         <TableHead />
                       </TableRow>
                     </TableHeader>
                     <TableBody>
                       {fields.map((field, index) => (
                         <TrackingDetailRowField
+                          wSupplementItemIds={wSupplementItemIds}
                           key={field.id}
                           field={field}
                           form={form}
@@ -163,48 +193,49 @@ function TrackingDetailsField({
                     </TableBody>
                   </Table>
                 )}
-                <div
-                  className={cn(
-                    "flex flex-wrap items-center justify-start gap-4",
-                    fields.length > 0 && "mt-4"
-                  )}
-                >
+                <div className="my-4 flex flex-wrap items-center justify-start gap-4">
                   <Button
                     onClick={(e) => {
                       e.preventDefault()
                       e.stopPropagation()
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       //@ts-ignore
-                      append(createNewTrackingDetail(EStockTransactionType.NEW))
-                      form.setValue("totalItem", watchGlobalTotalItem + 1)
-                      setSelectedCategories((prev) => [...prev, null])
-                    }}
-                    disabled={isPending}
-                    variant="outline"
-                  >
-                    <Plus />
-                    {t("New item")}
-                  </Button>
-                  <Button
-                    onClick={(e) => {
-                      e.preventDefault()
-                      e.stopPropagation()
-                      append(
+                      append({
+                        type: ESupplementRequestItemType.CUSTOM,
+                        itemName: "",
+                        availableUnits: undefined,
+                        needUnits: undefined,
+                        borrowFailedCount: undefined,
+                        borrowFailedRate: undefined,
+                        borrowSuccessCount: undefined,
+                        reserveCount: undefined,
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         //@ts-ignore
-                        createNewTrackingDetail(
-                          EStockTransactionType.ADDITIONAL
-                        )
-                      )
-                      setSelectedCategories((prev) => [...prev, null])
+                        categoryId: undefined,
+                        libraryItemId: undefined,
+                        unitPrice: 0,
+                        isbn: "",
+                        hasInitPrice: true,
+
+                        conditionId: 1,
+                        averageNeedSatisfactionRate: undefined,
+                        itemTotal: 0,
+                        totalAmount: 0,
+                        supplementRequestReason: "",
+                      })
                       form.setValue("totalItem", watchGlobalTotalItem + 1)
+                      setSelectedCategories((prev) => [...prev, null])
                     }}
                     disabled={isPending}
                     variant="outline"
                   >
                     <Plus />
-                    {t("Additional item")}
+                    {t("Add custom item")}
                   </Button>
+                  <SelectTopCirculationDialog
+                    selectedItemIds={wItemIds}
+                    onSelect={handleSelectTopItem}
+                  />
                 </div>
               </div>
             </div>

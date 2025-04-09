@@ -187,7 +187,7 @@ async function BorrowRequestDetailPage({ params }: Props) {
               <h4 className="font-bold">{t("Cancelled at")}</h4>
               <div className="flex gap-2">
                 {request.cancelledAt ? (
-                  format(new Date(request.cancelledAt), "dd MMM yyyy HH:mm", {
+                  format(new Date(request.cancelledAt), "HH:mm dd MMM yyyy", {
                     locale: formatLocale,
                   })
                 ) : (

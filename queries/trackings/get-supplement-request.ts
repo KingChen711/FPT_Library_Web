@@ -5,28 +5,21 @@ import "server-only"
 import { format } from "date-fns"
 
 import { ETrackingType } from "@/lib/types/enums"
-import {
-  type Supplier,
-  type Tracking,
-  type WarehouseTrackingInventory,
-} from "@/lib/types/models"
+import { type Tracking } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
-import { type TSearchTrackingsSchema } from "@/lib/validations/trackings/search-trackings"
+import { type TSearchSupplementRequestsSchema } from "@/lib/validations/trackings/search-supplement-requests"
 
 import { auth } from "../auth"
 
-export type Trackings = (Tracking & {
-  supplier: Supplier
-  warehouseTrackingInventory: WarehouseTrackingInventory
-})[]
+export type SupplementRequests = Tracking[]
 
-const getTrackings = async (
-  searchParams: TSearchTrackingsSchema
-): Promise<Pagination<Trackings>> => {
+const getSupplementRequests = async (
+  searchParams: TSearchSupplementRequestsSchema
+): Promise<Pagination<SupplementRequests>> => {
   const { getAccessToken } = auth()
   try {
     const formatDate = (d: Date) => format(d, "yyyy-MM-dd")
-    const { data } = await http.get<Pagination<Trackings>>(
+    const { data } = await http.get<Pagination<SupplementRequests>>(
       `/api/management/warehouse-trackings`,
       {
         headers: {
@@ -34,7 +27,7 @@ const getTrackings = async (
         },
         searchParams: {
           ...searchParams,
-          trackingType: ETrackingType.STOCK_IN,
+          trackingType: ETrackingType.SUPPLEMENT_REQUEST,
           totalItemRange:
             JSON.stringify(searchParams.totalItemRange) ===
             JSON.stringify([null, null])
@@ -84,12 +77,22 @@ const getTrackings = async (
               : searchParams.updatedAtRange.map((d) =>
                   d === null ? "" : formatDate(new Date(d))
                 ),
+          dataFinalizationDateRange:
+            JSON.stringify(searchParams.dataFinalizationDateRange) ===
+            JSON.stringify([null, null])
+              ? null
+              : searchParams.dataFinalizationDateRange.map((d) =>
+                  d === null ? "" : formatDate(new Date(d))
+                ),
         },
       }
     )
+    console.log(data)
 
     return data
-  } catch {
+  } catch (error) {
+    console.log("TSearchSupplementRequestsSchema", error)
+
     return {
       sources: [],
       pageIndex: searchParams.pageIndex,
@@ -100,4 +103,4 @@ const getTrackings = async (
   }
 }
 
-export default getTrackings
+export default getSupplementRequests

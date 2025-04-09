@@ -1,15 +1,15 @@
 import React from "react"
 import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
-import getTrackings from "@/queries/trackings/get-trackings"
+import getSupplementRequests from "@/queries/trackings/get-supplement-request"
 import { format } from "date-fns"
-import { Eye, MoreHorizontal } from "lucide-react"
+import { Eye, MoreHorizontal, Plus } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { formatPrice } from "@/lib/utils"
-import { searchTrackingsSchema } from "@/lib/validations/trackings/search-trackings"
+import { searchSupplementRequestsSchema } from "@/lib/validations/trackings/search-supplement-requests"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -32,26 +32,27 @@ import {
 import TrackingStatusBadge from "@/components/badges/tracking-status-badge"
 import TrackingTypeBadge from "@/components/badges/tracking-type-badge"
 
-import CreateTrackingDialog from "./_components/create-tracking-dialog"
-import FiltersTrackingsDialog from "./_components/filters-tracking-dialog"
+import FiltersSupplementRequestsDialog from "./create/_components/filters-supplement-request-dialog"
 
 type Props = {
   searchParams: Record<string, string | string[] | undefined>
 }
 
-async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
+async function WarehouseSupplementRequestsManagementPage({
+  searchParams,
+}: Props) {
   await auth().protect(EFeature.WAREHOUSE_TRACKING_MANAGEMENT)
   const t = await getTranslations("TrackingsManagementPage")
   const formatLocale = await getFormatLocale()
 
   const { search, pageIndex, sort, pageSize, ...rest } =
-    searchTrackingsSchema.parse(searchParams)
+    searchSupplementRequestsSchema.parse(searchParams)
 
   const {
-    sources: trackings,
+    sources: supplementRequests,
     totalActualItem,
     totalPage,
-  } = await getTrackings({
+  } = await getSupplementRequests({
     search,
     pageIndex,
     sort,
@@ -62,7 +63,7 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-        <h3 className="text-2xl font-semibold">{t("Warehouse trackings")}</h3>
+        <h3 className="text-2xl font-semibold">{t("Supplement requests")}</h3>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -72,11 +73,16 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
               className="h-full rounded-r-none border-r-0"
               search={search}
             />
-            <FiltersTrackingsDialog />
+            <FiltersSupplementRequestsDialog />
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
-          <CreateTrackingDialog />
+          <Button asChild>
+            <Link href="/management/supplement-requests/create">
+              <Plus />
+              {t("Create supplement request")}
+            </Link>
+          </Button>
         </div>
       </div>
 
@@ -89,12 +95,6 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
                   currentSort={sort}
                   label={t("Receipt number")}
                   sortKey="ReceiptNumber"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Supplier name")}
-                  sortKey="SupplierName"
                 />
 
                 <SortableTableHead
@@ -128,6 +128,13 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
                   position="center"
                 />
 
+                <SortableTableHead
+                  currentSort={sort}
+                  label={t("Data finalization date")}
+                  sortKey="DataFinalizationDate"
+                  position="center"
+                />
+
                 <TableHead className="text-nowrap font-bold">
                   <div className="flex justify-center">{t("Description")}</div>
                 </TableHead>
@@ -158,14 +165,10 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
               </TableRow>
             </TableHeader>
             <TableBody>
-              {trackings.map((tracking) => (
+              {supplementRequests.map((tracking) => (
                 <TableRow key={tracking.trackingId}>
                   <TableCell className="text-nowrap font-bold">
                     {tracking.receiptNumber}
-                  </TableCell>
-
-                  <TableCell className="text-nowrap">
-                    {tracking?.supplier?.supplierName}
                   </TableCell>
 
                   <TableCell className="text-nowrap">
@@ -199,6 +202,20 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
                       {format(new Date(tracking.entryDate), "dd MMM yyyy", {
                         locale: formatLocale,
                       })}
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
+                      {tracking.dataFinalizationDate
+                        ? format(
+                            new Date(tracking.dataFinalizationDate),
+                            "dd MMM yyyy",
+                            {
+                              locale: formatLocale,
+                            }
+                          )
+                        : "-"}
                     </div>
                   </TableCell>
 
@@ -255,7 +272,7 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
                         <DropdownMenuContent>
                           <DropdownMenuItem>
                             <Link
-                              href={`/management/trackings/${tracking.trackingId}`}
+                              href={`/management/supplement-requests/${tracking.trackingId}`}
                               className="flex items-center gap-2"
                             >
                               <Eye className="size-4" />
@@ -270,7 +287,7 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
               ))}
             </TableBody>
           </Table>
-          {trackings.length === 0 && (
+          {supplementRequests.length === 0 && (
             <div className="flex justify-center p-4">
               <NoData />
             </div>
@@ -289,4 +306,4 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
   )
 }
 
-export default WarehouseTrackingsManagementPage
+export default WarehouseSupplementRequestsManagementPage

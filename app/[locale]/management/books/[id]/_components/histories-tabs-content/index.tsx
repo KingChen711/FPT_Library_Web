@@ -109,7 +109,7 @@ function HistoriesTabsContent({ bookId }: Props) {
                 <TableRow key={audit.auditTrailId}>
                   <TableCell>
                     <div className="flex text-nowrap">
-                      {format(new Date(audit.dateUtc), "dd MMM yyyy HH:mm", {
+                      {format(new Date(audit.dateUtc), "HH:mm dd MMM yyyy", {
                         locale: formatLocale,
                       })}
                     </div>

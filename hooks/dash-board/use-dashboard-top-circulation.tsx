@@ -4,7 +4,7 @@ import { format } from "date-fns"
 
 import { http } from "@/lib/http"
 import { type EDashboardPeriodLabel } from "@/lib/types/enums"
-import { type BookEdition } from "@/lib/types/models"
+import { type BookEdition, type Category } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 
 export type TDashboardTopCirculation = {
@@ -21,8 +21,9 @@ export type TDashboardTopCirculation = {
       digitalBorrowCount: number
       borrowFailedRate: number
       borrowExtensionRate: number
-      libraryItem: BookEdition
+      libraryItem: BookEdition & { category: Category }
       availableVsNeedChart: {
+        averageNeedSatisfactionRate: number
         availableUnits: number
         needUnits: number
       }
