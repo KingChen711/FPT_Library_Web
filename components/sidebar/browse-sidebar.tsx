@@ -1,11 +1,14 @@
 "use client"
 
-import { type ComponentProps } from "react"
+import { useTransition, type ComponentProps } from "react"
 import { useAuth } from "@/contexts/auth-provider"
 import { Link, useRouter } from "@/i18n/routing"
-import { BadgeCheck, ChevronsUpDown, LogOut, User } from "lucide-react"
+import { useQueryClient } from "@tanstack/react-query"
+import { BadgeCheck, ChevronsUpDown, Loader2, LogOut, User } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
+import { logout } from "@/actions/auth/log-out"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -37,11 +40,25 @@ import SidebarLogoItem from "./sidebar-logo-item"
 export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const router = useRouter()
   const locale = useLocale()
+  const queryClient = useQueryClient()
   const t = useTranslations("Me")
   const tRoutes = useTranslations("Routes")
   const { isMobile, open } = useSidebar()
   const { user, isManager } = useAuth()
-  console.log({ user, isManager })
+  const [isPending, startTransition] = useTransition()
+
+  const handleLogout = () => {
+    startTransition(async () => {
+      const res = await logout()
+      if (res.isSuccess) {
+        queryClient.invalidateQueries({ queryKey: ["token"] })
+        router.push("/login")
+        return
+      }
+      handleServerActionError(res, locale)
+    })
+  }
+
   return (
     <Sidebar className="sticky" collapsible="icon" {...props}>
       <SidebarTrigger className="absolute left-full top-8 z-50 -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground max-lg:hidden" />
@@ -135,8 +152,16 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                     )}
                   </DropdownMenuGroup>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="cursor-pointer">
-                    <LogOut />
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    className="cursor-pointer"
+                    disabled={isPending}
+                  >
+                    {isPending ? (
+                      <Loader2 className="size-4 animate-spin" />
+                    ) : (
+                      <LogOut className="size-4" />
+                    )}
                     {t("logout")}
                   </DropdownMenuItem>
                 </DropdownMenuContent>

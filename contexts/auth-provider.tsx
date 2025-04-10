@@ -12,7 +12,6 @@ import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import { ERoleType } from "@/lib/types/enums"
 import { type CurrentUser } from "@/lib/types/models"
-import { getClientSideCookie } from "@/lib/utils"
 
 type Token = {
   accessToken: string
@@ -28,7 +27,6 @@ type AuthContextType = {
   isLoadingAuth: boolean
   user: CurrentUser | null
   isManager: boolean
-  refetchToken: () => void
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null)
@@ -37,58 +35,47 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const queryClient = useQueryClient()
   const [isManager, setIsManager] = useState<boolean>(false)
 
-  // const { data: token, isFetching: isLoadingToken } = useQuery<
-  //   Token | undefined
-  // >({
-  //   queryKey: ["token"],
-  //   queryFn: async () => {
-  //     try {
-  //       const res: Token = await fetch("/api/token").then((res) => res.json())
-  //       return res || undefined
-  //     } catch {
-  //       return undefined
-  //     }
-  //   },
-  // })
-
-  const [token, setToken] = useState<Token | undefined>(() => {
-    const accessToken = getClientSideCookie("accessToken")
-    const refreshToken = getClientSideCookie("refreshToken")
-    if (!accessToken || !refreshToken) return undefined
-    return { accessToken, refreshToken }
+  const { data: token, isFetching: isLoadingToken } = useQuery<
+    Token | undefined
+  >({
+    queryKey: ["token"],
+    queryFn: async () => {
+      try {
+        const res: Token = await fetch("/api/token").then((res) => res.json())
+        return res || undefined
+      } catch {
+        return undefined
+      }
+    },
   })
-
-  const refetchToken = () => {
-    const accessToken = getClientSideCookie("accessToken")
-    const refreshToken = getClientSideCookie("refreshToken")
-    if (!accessToken || !refreshToken) {
-      setToken(undefined)
-      return
-    }
-    setToken({ accessToken, refreshToken })
-  }
 
   const { data: userData, isLoading: isLoadingUser } = useQuery({
     queryKey: ["auth", "who-am-i", token],
-    enabled: token !== undefined,
     queryFn: async () =>
-      http
-        .get<CurrentUser>("/api/auth/current-user", {
-          headers: {
-            Authorization: `Bearer ${token?.accessToken}`,
-          },
-        })
-        .then((res) => res.data),
+      token
+        ? await http
+            .get<CurrentUser>("/api/auth/current-user", {
+              headers: {
+                Authorization: `Bearer ${token.accessToken}`,
+              },
+            })
+            .then((res) => res.data)
+        : undefined,
   })
 
   const user = useMemo(() => {
-    if (!userData) return null
+    if (!userData) {
+      setIsManager(false)
+      return null
+    }
     if (
       userData.role.roleType === ERoleType.EMPLOYEE ||
       (userData.role.roleType === ERoleType.USER &&
         userData.role.englishName === "Administration")
     ) {
       setIsManager(true)
+    } else {
+      setIsManager(false)
     }
     return userData
   }, [userData])
@@ -99,10 +86,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   useEffect(() => {
     const timer = setInterval(
       () => {
-        // queryClient.invalidateQueries({
-        //   queryKey: ["token"],
-        // })
-        refetchToken()
+        queryClient.invalidateQueries({
+          queryKey: ["token"],
+        })
       },
       1000 * 60 * 20
     )
@@ -116,10 +102,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     <AuthContext.Provider
       value={{
         accessToken,
-        isLoadingAuth: isLoadingUser,
+        isLoadingAuth: isLoadingToken || isLoadingUser,
         user,
         isManager,
-        refetchToken,
       }}
     >
       {children}

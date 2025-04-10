@@ -16,9 +16,9 @@ import {
   type TEditBookSchema,
 } from "@/lib/validations/books/edit-book"
 import { updateBook } from "@/actions/books/update-book"
-import { uploadBookImage } from "@/actions/books/upload-medias"
-import { updateBookImage } from "@/actions/resources/update-book-image"
 import useCategories from "@/hooks/categories/use-categories"
+import useUpdateBookImage from "@/hooks/media/use-update-book-image"
+import useUploadImage from "@/hooks/media/use-upload-image"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -74,6 +74,9 @@ function EditBookDialog({ open, setOpen, book }: Props) {
     if (isPending) return
     setOpen(value)
   }
+
+  const { mutateAsync: uploadBookImage } = useUploadImage()
+  const { mutateAsync: updateBookImage } = useUpdateBookImage()
 
   const { data: categoryItems } = useCategories()
 
@@ -135,7 +138,10 @@ function EditBookDialog({ open, setOpen, book }: Props) {
           const url = URL.createObjectURL(values.file)
           console.log(url)
 
-          const res = await updateBookImage(book.coverImage, values.file)
+          const res = await updateBookImage({
+            prevUrl: book.coverImage,
+            file: values.file,
+          })
           if (res !== null && res !== NOT_CLOUDINARY_URL) {
             //set real url to current coverImage (blob url)
             values.coverImage = res.secureUrl

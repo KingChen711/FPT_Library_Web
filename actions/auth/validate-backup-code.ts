@@ -25,9 +25,21 @@ export async function validateBackupCode(
       }
     )
 
+    const isProduction = process.env.NODE_ENV === "production"
+
     const cookiesStore = cookies()
-    cookiesStore.set("accessToken", data.accessToken)
-    cookiesStore.set("refreshToken", data.refreshToken)
+    cookiesStore.set("accessToken", data.accessToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "strict",
+      path: "/",
+    })
+    cookiesStore.set("refreshToken", data.refreshToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "strict",
+      path: "/",
+    })
 
     revalidateTag("who-am-i")
 

@@ -13,8 +13,8 @@ import {
   editCardSchema,
   type TEditCardSchema,
 } from "@/lib/validations/patrons/cards/edit-card"
-import { uploadBookImage } from "@/actions/books/upload-medias"
 import { editCard } from "@/actions/library-card/cards/edit-card"
+import useUploadImage from "@/hooks/media/use-upload-image"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -69,6 +69,7 @@ function EditCardDialog({ card, open, setOpen, userId }: Props) {
   const locale = useLocale()
 
   const [isPending, startTransition] = useTransition()
+  const { mutateAsync: uploadBookImage } = useUploadImage()
 
   const handleOpenChange = (value: boolean) => {
     if (isPending) return

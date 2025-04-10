@@ -25,9 +25,9 @@ import {
   addCardSchema,
   type TAddCardSchema,
 } from "@/lib/validations/patrons/cards/add-card"
-import { uploadBookImage } from "@/actions/books/upload-medias"
 import { addCard } from "@/actions/library-card/cards/add-card"
 import { type PaymentData } from "@/actions/library-card/patrons/create-patron"
+import useUploadImage from "@/hooks/media/use-upload-image"
 import { toast } from "@/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -88,6 +88,7 @@ function AddCardForm({ userId }: Props) {
     navigateTime: 5,
     status: ETransactionStatus.PENDING,
   })
+  const { mutateAsync: uploadBookImage } = useUploadImage()
 
   function onSubmit(values: TAddCardSchema) {
     startTransition(async () => {

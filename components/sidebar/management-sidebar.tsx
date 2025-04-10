@@ -1,7 +1,7 @@
 import { type ComponentProps } from "react"
 import Link from "next/link"
 import { auth } from "@/queries/auth"
-import { BadgeCheck, ChevronsUpDown, LogOut, User } from "lucide-react"
+import { BadgeCheck, ChevronsUpDown, User } from "lucide-react"
 import { getLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
@@ -28,6 +28,7 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 
+import LogOutButton from "../hoc/log-out-button"
 import { Icons } from "../ui/icons"
 import ManagementSidebarContent from "./management-sidebar-content"
 import SidebarLogoItem from "./sidebar-logo-item"
@@ -133,11 +134,7 @@ export async function ManagementSidebar({
                       )}
                     </DropdownMenuGroup>
                     <DropdownMenuSeparator />
-                    {/* TODO:logout */}
-                    <DropdownMenuItem className="cursor-pointer">
-                      <LogOut />
-                      {t("logout")}
-                    </DropdownMenuItem>
+                    <LogOutButton />
                   </DropdownMenuContent>
                 </DropdownMenu>
               </SidebarMenuButton>

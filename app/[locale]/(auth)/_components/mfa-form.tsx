@@ -1,9 +1,9 @@
 "use client"
 
 import { useTransition } from "react"
-import { useAuth } from "@/contexts/auth-provider"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -41,8 +41,7 @@ function MfaForm({
   const [pending, startTransition] = useTransition()
   const router = useRouter()
   const locale = useLocale()
-  // const queryClient = useQueryClient()
-  const { refetchToken } = useAuth()
+  const queryClient = useQueryClient()
 
   const form = useForm<TOtpSchema>({
     resolver: zodResolver(otpSchema),
@@ -56,10 +55,10 @@ function MfaForm({
       const res = await validateMfa(email, values.pin)
 
       if (res.isSuccess) {
-        // queryClient.invalidateQueries({
-        //   queryKey: ["token"],
-        // })
-        refetchToken()
+        queryClient.invalidateQueries({
+          queryKey: ["token"],
+        })
+
         if (!hideBackToLogin) {
           router.push("/")
         }
