@@ -47,16 +47,20 @@ const RecentBookList = () => {
           <CarouselContent>
             {recentlyOpened.items.length > 0 &&
               recentlyOpened.items.map((id) => (
-                <CarouselItem
+                <BookItemCard
                   key={id}
-                  className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 2xl:basis-1/6"
-                >
-                  <BookItemCard libraryItem={id} />
-                </CarouselItem>
+                  id={id}
+                  Wrapper={
+                    <CarouselItem
+                      key={id}
+                      className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 2xl:basis-1/6"
+                    />
+                  }
+                />
               ))}
           </CarouselContent>
-          <CarouselPrevious className="ml-8 size-8" />
-          <CarouselNext className="mr-8 size-8" />
+          <CarouselPrevious className="left-0 size-10 -translate-x-1/2 border" />
+          <CarouselNext className="right-0 size-10 translate-x-1/2" />
         </Carousel>
       </div>
     </div>

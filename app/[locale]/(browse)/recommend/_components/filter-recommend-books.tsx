@@ -4,6 +4,7 @@
 import React, { useEffect, useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { Filter } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -13,7 +14,6 @@ import {
   searchRecommendSchema,
   type TSearchRecommendSchema,
 } from "@/lib/validations/books/search-recommend-schema"
-import { filterBooleanSchema } from "@/lib/zod"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -38,6 +38,7 @@ import { Switch } from "@/components/ui/switch"
 
 function FilterRecommendBooks() {
   const router = useRouter()
+  const queryClient = useQueryClient()
   const [open, setOpen] = useState(false)
   const t = useTranslations("RecommendPage")
 
@@ -46,56 +47,56 @@ function FilterRecommendBooks() {
   const form = useForm<TSearchRecommendSchema>({
     resolver: zodResolver(searchRecommendSchema),
     defaultValues: {
-      includeAuthor: filterBooleanSchema("true").parse(
-        searchParams.get("includeAuthor")
-      ),
-      includeGenres: filterBooleanSchema("true").parse(
-        searchParams.get("includeGenres")
-      ),
-      includeTitle: filterBooleanSchema("true").parse(
-        searchParams.get("includeTitle")
-      ),
-      includeTopicalTerms: filterBooleanSchema("false").parse(
-        searchParams.get("includeTopicalTerms")
-      ),
-      limitWorksOfAuthor: filterBooleanSchema("true").parse(
-        searchParams.get("limitWorksOfAuthor")
-      ),
-      bestRecommend: filterBooleanSchema("true").parse(
-        searchParams.get("bestRecommend")
-      ),
+      includeAuthor:
+        searchParams.get("includeAuthor") === "false" ? "false" : "true",
+      includeGenres:
+        searchParams.get("includeGenres") === "false" ? "false" : "true",
+      includeTitle:
+        searchParams.get("includeTitle") === "false" ? "false" : "true",
+      includeTopicalTerms:
+        searchParams.get("includeTopicalTerms") === "false" ? "false" : "true",
+      limitWorksOfAuthor:
+        searchParams.get("limitWorksOfAuthor") === "true" ? "true" : "false",
+      bestRecommend:
+        searchParams.get("bestRecommend") === "false" ? "false" : "true",
     },
   })
 
-  useEffect(() => {}, [])
+  const wInCludeAuthor = form.watch("includeAuthor")
+  const wInCludeTitle = form.watch("includeTitle")
+  const wInCludeGenres = form.watch("includeGenres")
+  const wInCludeTopicalTerms = form.watch("includeTopicalTerms")
+  const wLimitWorksOfAuthor = form.watch("limitWorksOfAuthor")
+  const wBestRecommend = form.watch("bestRecommend")
 
-  const onSubmit = async (values: TSearchRecommendSchema) => {
+  const onSubmit = async () => {
     setOpen(false)
 
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        pageIndex: "1",
-        includeAuthor: values.includeAuthor ? "true" : "false",
-        bestRecommend: values.bestRecommend ? "true" : "false",
-        includeGenres: values.includeGenres ? "true" : "false",
-        includeTitle: values.includeTitle ? "true" : "false",
-        includeTopicalTerms: values.includeTopicalTerms ? "true" : "false",
-        limitWorksOfAuthor: values.limitWorksOfAuthor ? "true" : "false",
+        includeAuthor: wInCludeAuthor,
+        bestRecommend: wBestRecommend,
+        includeGenres: wInCludeGenres,
+        includeTitle: wInCludeTitle,
+        includeTopicalTerms: wInCludeTopicalTerms,
+        limitWorksOfAuthor: wLimitWorksOfAuthor,
       },
     })
     setOpen(false)
-    router.replace(newUrl, { scroll: false })
+
+    router.push(newUrl)
+    queryClient.invalidateQueries({ queryKey: ["infinite-recommend-books"] })
+    router.refresh()
   }
 
-  const wBestRecommend = form.watch("bestRecommend")
-
   useEffect(() => {
-    form.setValue("includeAuthor", true)
-    form.setValue("includeGenres", true)
-    form.setValue("includeTitle", true)
-    form.setValue("limitWorksOfAuthor", true)
-    form.setValue("includeTopicalTerms", false)
+    if (wBestRecommend === "false") return
+    form.setValue("includeAuthor", "true")
+    form.setValue("includeGenres", "true")
+    form.setValue("includeTitle", "true")
+    form.setValue("limitWorksOfAuthor", "true")
+    form.setValue("includeTopicalTerms", "false")
   }, [wBestRecommend, form])
 
   return (
@@ -121,7 +122,7 @@ function FilterRecommendBooks() {
                   <FormField
                     control={form.control}
                     name="bestRecommend"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                         <div className="space-y-0.5">
                           <FormLabel>{t("Best recommend")}</FormLabel>
@@ -131,8 +132,13 @@ function FilterRecommendBooks() {
                         </div>
                         <FormControl>
                           <Switch
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
+                            defaultChecked={wBestRecommend === "true"}
+                            onCheckedChange={() =>
+                              form.setValue(
+                                "bestRecommend",
+                                wBestRecommend === "true" ? "false" : "true"
+                              )
+                            }
                           />
                         </FormControl>
                       </FormItem>
@@ -146,7 +152,7 @@ function FilterRecommendBooks() {
                   <FormField
                     control={form.control}
                     name="includeTitle"
-                    render={({ field }) => (
+                    render={() => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                         <div className="space-y-0.5">
                           <FormLabel>{t("Include title")}</FormLabel>
@@ -156,9 +162,14 @@ function FilterRecommendBooks() {
                         </div>
                         <FormControl>
                           <Switch
-                            disabled={wBestRecommend}
-                            checked={field.value}
-                            onCheckedChange={field.onChange}
+                            disabled={wBestRecommend === "true"}
+                            defaultChecked={wInCludeTitle === "true"}
+                            onCheckedChange={() =>
+                              form.setValue(
+                                "includeTitle",
+                                wInCludeTitle === "true" ? "false" : "true"
+                              )
+                            }
                           />
                         </FormControl>
                       </FormItem>
@@ -168,7 +179,7 @@ function FilterRecommendBooks() {
                 <FormField
                   control={form.control}
                   name="includeAuthor"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                       <div className="space-y-0.5">
                         <FormLabel>{t("Include author")}</FormLabel>
@@ -178,9 +189,14 @@ function FilterRecommendBooks() {
                       </div>
                       <FormControl>
                         <Switch
-                          disabled={wBestRecommend}
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
+                          disabled={wBestRecommend === "true"}
+                          defaultChecked={wInCludeAuthor === "true"}
+                          onCheckedChange={() =>
+                            form.setValue(
+                              "includeAuthor",
+                              wInCludeAuthor === "true" ? "false" : "true"
+                            )
+                          }
                         />
                       </FormControl>
                     </FormItem>
@@ -189,7 +205,7 @@ function FilterRecommendBooks() {
                 <FormField
                   control={form.control}
                   name="includeGenres"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                       <div className="space-y-0.5">
                         <FormLabel>{t("Include genre")}</FormLabel>
@@ -199,9 +215,14 @@ function FilterRecommendBooks() {
                       </div>
                       <FormControl>
                         <Switch
-                          disabled={wBestRecommend}
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
+                          disabled={wBestRecommend === "true"}
+                          defaultChecked={wInCludeGenres === "true"}
+                          onCheckedChange={() =>
+                            form.setValue(
+                              "includeGenres",
+                              wInCludeGenres === "true" ? "false" : "true"
+                            )
+                          }
                         />
                       </FormControl>
                     </FormItem>
@@ -211,7 +232,7 @@ function FilterRecommendBooks() {
                 <FormField
                   control={form.control}
                   name="includeTopicalTerms"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                       <div className="space-y-0.5">
                         <FormLabel>{t("Include topical term")}</FormLabel>
@@ -221,9 +242,14 @@ function FilterRecommendBooks() {
                       </div>
                       <FormControl>
                         <Switch
-                          disabled={wBestRecommend}
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
+                          defaultChecked={wInCludeTopicalTerms === "true"}
+                          disabled={wBestRecommend === "true"}
+                          onCheckedChange={() =>
+                            form.setValue(
+                              "includeTopicalTerms",
+                              wInCludeTopicalTerms === "true" ? "false" : "true"
+                            )
+                          }
                         />
                       </FormControl>
                     </FormItem>
@@ -233,7 +259,7 @@ function FilterRecommendBooks() {
                 <FormField
                   control={form.control}
                   name="limitWorksOfAuthor"
-                  render={({ field }) => (
+                  render={() => (
                     <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                       <div className="space-y-0.5">
                         <FormLabel>{t("Limit works of author")}</FormLabel>
@@ -243,9 +269,14 @@ function FilterRecommendBooks() {
                       </div>
                       <FormControl>
                         <Switch
-                          disabled={wBestRecommend}
-                          checked={field.value}
-                          onCheckedChange={field.onChange}
+                          disabled={wBestRecommend === "true"}
+                          defaultChecked={wLimitWorksOfAuthor === "true"}
+                          onCheckedChange={() =>
+                            form.setValue(
+                              "limitWorksOfAuthor",
+                              wLimitWorksOfAuthor === "true" ? "false" : "true"
+                            )
+                          }
                         />
                       </FormControl>
                     </FormItem>

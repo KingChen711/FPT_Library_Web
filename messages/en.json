@@ -867,6 +867,9 @@
     "Cancel": "Cancel"
   },
   "BookPage": {
+    "Recommend Books Not Found": "Recommend Items Not Found",
+    "No books were found that matched your needs": "No items were found that matched your needs.",
+    "That your all recommend books": "That your all recommend books",
     "Satisfaction level": "Satisfaction level",
     "Very Poor": "Very Poor",
     "Poor": "Poor",

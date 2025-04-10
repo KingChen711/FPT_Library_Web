@@ -149,7 +149,7 @@ function BrowseNavbar() {
               {autoCompleteData && autoCompleteData.length > 0 && (
                 <div
                   className={cn(
-                    "absolute left-0 top-[calc(100%+4px)] !z-[10000] hidden w-full flex-col overflow-hidden rounded-md border bg-muted peer-focus:flex"
+                    "absolute left-0 top-[calc(100%+4px)] !z-[10000] flex w-full flex-col overflow-hidden rounded-md border bg-muted"
                   )}
                 >
                   {autoCompleteData.map((acd) => (

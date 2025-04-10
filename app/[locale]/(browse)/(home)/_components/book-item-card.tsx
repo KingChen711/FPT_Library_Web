@@ -1,11 +1,13 @@
 "use client"
 
+import React from "react"
 import Image from "next/image"
-import { useRouter } from "@/i18n/routing"
+import Link from "next/link"
 import NoImage from "@/public/assets/images/no-image.png"
 import { User2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { type LibraryItem } from "@/lib/types/models"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import BookTooltip from "@/components/ui/book-tooltip"
 import BrowseBookCardSkeleton from "@/components/ui/browse-book-card"
@@ -19,32 +21,45 @@ import {
 } from "@/components/ui/tooltip"
 
 type Props = {
-  libraryItem: number
-}
+  id?: number
+  item?: LibraryItem
+  Wrapper?: React.ReactElement
+} & (
+  | {
+      id: number
+      item?: undefined
+    }
+  | {
+      item: LibraryItem
+      id?: undefined
+    }
+)
 
-const BookItemCard = ({ libraryItem }: Props) => {
-  const router = useRouter()
+const BookItemCard = ({ item, id, Wrapper }: Props) => {
   const t = useTranslations("HomePage")
-  const { data: item, isLoading } = useLibraryItemDetail(libraryItem)
+
+  const { data: queryItem, isLoading } = useLibraryItemDetail(id)
+
+  const libraryItem = item || queryItem
 
   if (isLoading) {
+    if (Wrapper)
+      return React.cloneElement(Wrapper, {}, <BrowseBookCardSkeleton />)
     return <BrowseBookCardSkeleton />
   }
 
-  if (!item) {
-    return null
-  }
+  if (!libraryItem) return null
 
-  return (
-    <>
-      <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger className="w-full">
-            <Card onClick={() => router.push(`/books/${item.libraryItemId}`)}>
+  const content = (
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger className="w-full">
+          <Card>
+            <Link href={`/books/${libraryItem.libraryItemId}`}>
               <div className="relative flex w-full items-center justify-center overflow-hidden rounded-t-md p-4">
                 <Image
-                  src={item.coverImage || NoImage.src}
-                  alt={item.title}
+                  src={libraryItem.coverImage || NoImage.src}
+                  alt={libraryItem.title}
                   height={540}
                   width={360}
                   className="aspect-[2/3] h-[270px] w-[180px] rounded-md object-fill"
@@ -53,20 +68,20 @@ const BookItemCard = ({ libraryItem }: Props) => {
 
               <div className="p-2 text-left text-sm">
                 <div className="line-clamp-1 text-sm font-semibold group-hover:text-primary">
-                  {item.title}
+                  {libraryItem.title}
                 </div>
                 <div className="flex items-center justify-between">
-                  {item.authors.length > 0 && (
+                  {libraryItem.authors.length > 0 && (
                     <div className="flex flex-1 items-center gap-1 overflow-hidden">
                       <User2 size={16} className="text-primary" />
 
                       <span className="line-clamp-1 text-xs">
-                        {item.authors[0]?.fullName}
+                        {libraryItem.authors[0]?.fullName}
                       </span>
                     </div>
                   )}
                   <p className="line-clamp-1 flex items-center gap-1 text-sm">
-                    {item.publicationYear}
+                    {libraryItem.publicationYear}
                   </p>
                 </div>
                 <div className="flex flex-row-reverse items-center justify-between gap-2">
@@ -77,26 +92,29 @@ const BookItemCard = ({ libraryItem }: Props) => {
                     </div>
                   )}
                   <p className="text-xs">
-                    {item.pageCount} {t("pages")}
+                    {libraryItem.pageCount} {t("pages")}
                   </p>
                 </div>
                 <p className="line-clamp-1 text-xs font-semibold">
-                  {item.publisher}
+                  {libraryItem.publisher}
                 </p>
               </div>
-            </Card>
-          </TooltipTrigger>
-          <TooltipContent
-            align="start"
-            side="right"
-            className="m-0 bg-card p-0 text-card-foreground"
-          >
-            <BookTooltip libraryItem={item} />
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider>
-    </>
+            </Link>
+          </Card>
+        </TooltipTrigger>
+        <TooltipContent
+          align="start"
+          side="right"
+          className="m-0 bg-card p-0 text-card-foreground"
+        >
+          <BookTooltip libraryItem={libraryItem} />
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   )
+
+  if (Wrapper) return React.cloneElement(Wrapper, {}, content)
+  return <>{content}</>
 }
 
 export default BookItemCard
