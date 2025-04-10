@@ -6,7 +6,6 @@ import { useInView } from "react-intersection-observer"
 
 import { cn } from "@/lib/utils"
 import useInfiniteLibraryItemByCategory from "@/hooks/library-items/use-infinite-library-items-by-category"
-import { Card } from "@/components/ui/card"
 import {
   Carousel,
   CarouselContent,
@@ -76,9 +75,7 @@ const BookList = ({ title, categoryId }: Props) => {
                   key={index}
                   className="sm:basis-1/2 md:basis-1/3 lg:basis-1/4 xl:basis-1/5 2xl:basis-1/6"
                 >
-                  <Card>
-                    <BookItemCard libraryItem={item.libraryItemId} />
-                  </Card>
+                  <BookItemCard item={item} />
                 </CarouselItem>
               ))
             )}
@@ -87,8 +84,8 @@ const BookList = ({ title, categoryId }: Props) => {
               <div ref={ref} className="size-1" />
             )}
           </CarouselContent>
-          <CarouselPrevious className="ml-8 size-8" />
-          <CarouselNext className="mr-8 size-8" />
+          <CarouselPrevious className="left-0 size-10 -translate-x-1/2 border" />
+          <CarouselNext className="right-0 size-10 translate-x-1/2" />
         </Carousel>
       </div>
     </div>

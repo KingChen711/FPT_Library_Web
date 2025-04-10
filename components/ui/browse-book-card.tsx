@@ -1,11 +1,22 @@
 import React from "react"
 
+import { cn } from "@/lib/utils"
+
 import { Card } from "./card"
 import { Skeleton } from "./skeleton"
 
-function BrowseBookCardSkeleton() {
+type Props = {
+  className?: string
+}
+
+function BrowseBookCardSkeleton({ className }: Props) {
   return (
-    <Card className="group w-full cursor-pointer overflow-hidden rounded-md transition-all duration-200 hover:shadow-lg">
+    <Card
+      className={cn(
+        "group h-[392px] w-full cursor-pointer overflow-hidden rounded-md transition-all duration-200 hover:shadow-lg",
+        className
+      )}
+    >
       {/* Ảnh bìa */}
       <div className="relative flex w-full items-center justify-center overflow-hidden rounded-t-md p-4">
         <div className="relative h-[240px] w-[160px] overflow-hidden rounded-md">

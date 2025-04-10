@@ -872,6 +872,9 @@
     "Cancel": "Hủy"
   },
   "BookPage": {
+    "Recommend Books Not Found": "Không tìm thấy tài liệu đề xuất",
+    "No books were found that matched your needs": "Không tìm thấy cuốn sách nào phù hợp với bạn",
+    "That your all recommend books": "Đó là tất cả sách được đề xuất cho bạn",
     "Satisfaction level": "Mức độ hài lòng",
     "Very Poor": "Rất kém",
     "Poor": "Kém",
