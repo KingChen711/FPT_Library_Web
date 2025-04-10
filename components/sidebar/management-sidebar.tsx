@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/sidebar"
 
 import { Icons } from "../ui/icons"
+import SidebarSettings from "../ui/sidebar-settings"
 import ManagementSidebarContent from "./management-sidebar-content"
 import SidebarLogoItem from "./sidebar-logo-item"
 
@@ -65,6 +66,8 @@ export async function ManagementSidebar({
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
+
+          <SidebarSettings />
 
           <SidebarMenuItem>
             <SidebarMenuButton tooltip={tRoutes("Help")} asChild>
