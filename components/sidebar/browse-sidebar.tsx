@@ -4,7 +4,14 @@ import { useTransition, type ComponentProps } from "react"
 import { useAuth } from "@/contexts/auth-provider"
 import { Link, useRouter } from "@/i18n/routing"
 import { useQueryClient } from "@tanstack/react-query"
-import { BadgeCheck, ChevronsUpDown, Loader2, LogOut, User } from "lucide-react"
+import {
+  BadgeCheck,
+  ChevronsUpDown,
+  Loader2,
+  LogOut,
+  Settings,
+  User,
+} from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
@@ -34,6 +41,7 @@ import {
 
 import { Button } from "../ui/button"
 import { Icons } from "../ui/icons"
+import SidebarLanguage from "../ui/sidebar-language"
 import BrowseSidebarContent from "./browse-sidebar-content"
 import SidebarLogoItem from "./sidebar-logo-item"
 
@@ -77,14 +85,7 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       {user ? (
         <SidebarFooter>
           <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip={tRoutes("Settings")} asChild>
-                <Link href={"/settings"}>
-                  <Icons.Setting />
-                  <span>{tRoutes("Settings")}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            <SidebarMenuItem></SidebarMenuItem>
 
             <SidebarMenuItem>
               <SidebarMenuButton tooltip={tRoutes("Help")} asChild>
@@ -93,6 +94,34 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                   <span>{tRoutes("Help")}</span>
                 </Link>
               </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Link href={`#`} className="flex items-center gap-2 p-2">
+                    <Settings size={20} />
+                    {open && (
+                      <div className="flex flex-1 justify-between text-left text-sm leading-tight">
+                        <div className="flex flex-col">
+                          <span className="truncate">
+                            {tRoutes("Settings")}
+                          </span>
+                        </div>
+                        <ChevronsUpDown className="ml-auto size-4" />
+                      </div>
+                    )}
+                  </Link>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-md"
+                  side={isMobile ? "bottom" : "right"}
+                  align="end"
+                  sideOffset={4}
+                >
+                  <SidebarLanguage />
+                </DropdownMenuContent>
+              </DropdownMenu>
             </SidebarMenuItem>
 
             <SidebarMenuItem>

@@ -18,10 +18,7 @@ function Actions() {
   const router = useRouter()
   const { user, isLoadingAuth, isManager } = useAuth()
   const [currentDate, setCurrentDate] = useState<string | null>(null)
-  // const locale = useLocale()
-  // const pathname = usePathname()
 
-  // const newLocale = locale === "en" ? "vi" : "en"
   useEffect(() => {
     // Update currentDate only on the client
     const interval = setInterval(() => {
@@ -39,24 +36,8 @@ function Actions() {
 
   if (isLoadingAuth) return null
 
-  // const switchLanguage = () => {
-  //   startTransition(() => {
-  //     router.push(`${pathname}`, { scroll: false, locale: newLocale })
-  //   })
-  // }
-
   return (
     <div className="flex items-center">
-      {/* <Select onValueChange={() => switchLanguage()} defaultValue={locale}>
-        <SelectTrigger className="w-[140px]">
-          <Languages size={20} />
-          <SelectValue placeholder={t("language")} />
-        </SelectTrigger>
-        <SelectContent className="">
-          <SelectItem value="en">{t("english")}</SelectItem>
-          <SelectItem value="vi">{t("vietnamese")}</SelectItem>
-        </SelectContent>
-      </Select> */}
       <section className="flex items-center gap-4 text-nowrap rounded-md p-1 text-muted-foreground max-xl:hidden">
         <div className="flex items-center gap-2 text-muted-foreground">
           <Clock size={16} />
