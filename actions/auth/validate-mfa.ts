@@ -27,13 +27,13 @@ export async function validateMfa(
     cookiesStore.set("accessToken", data.accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "none" : "strict",
+      sameSite: isProduction ? "strict" : "none",
       path: "/",
     })
     cookiesStore.set("refreshToken", data.refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "none" : "strict",
+      sameSite: isProduction ? "strict" : "none",
       path: "/",
     })
 

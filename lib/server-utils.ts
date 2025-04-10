@@ -42,12 +42,18 @@ export function isTokenExpiringSoon(token: string): boolean {
     // Thời gian hiện tại (tính bằng giây)
     const currentTime = Math.floor(Date.now() / 1000)
 
+    console.log({
+      exp: decoded.exp,
+      currentTime,
+    })
+
     // Thời gian còn lại (tính bằng giây)
     const timeLeft = decoded.exp - currentTime
 
     // Kiểm tra nếu thời gian hết hạn còn dưới 1 tiếng (3600 giây)
     return timeLeft <= 3600
-  } catch {
+  } catch (error) {
+    console.log("isTokenExpiringSoon", error)
     //default return true to trigger refresh token
     return true
   }

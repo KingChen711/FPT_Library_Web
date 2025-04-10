@@ -170,7 +170,7 @@ const request = async <TData = undefined>(
 
   const payload = (await res.json()) as OkResponse<TData>
 
-  if (process.env.NEXT_PUBLIC_LOG_FETCH !== "false")
+  if (process.env.NEXT_PUBLIC_LOG_FETCH === "true")
     console.log({
       url: fetchUrl,
       headers: {
