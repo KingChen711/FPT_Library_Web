@@ -500,38 +500,43 @@ function TrackingDetailRowField({
                       <Command>
                         <CommandList>
                           <CommandGroup>
-                            {conditionItems?.map((condition) => (
-                              <CommandItem
-                                value={
-                                  locale === "vi"
+                            {/* TODO: not hard code */}
+                            {conditionItems
+                              ?.filter(
+                                (condition) => condition.conditionId === 1
+                              )
+                              .map((condition) => (
+                                <CommandItem
+                                  value={
+                                    locale === "vi"
+                                      ? condition.vietnameseName
+                                      : condition.englishName
+                                  }
+                                  key={condition.conditionId}
+                                  onSelect={() => {
+                                    form.setValue(
+                                      `warehouseTrackingDetails.${index}.conditionId`,
+                                      condition.conditionId
+                                    )
+                                    form.clearErrors(
+                                      `warehouseTrackingDetails.${index}.conditionId`
+                                    )
+                                    setOpenComboboxCondition(false)
+                                  }}
+                                >
+                                  {locale === "vi"
                                     ? condition.vietnameseName
-                                    : condition.englishName
-                                }
-                                key={condition.conditionId}
-                                onSelect={() => {
-                                  form.setValue(
-                                    `warehouseTrackingDetails.${index}.conditionId`,
-                                    condition.conditionId
-                                  )
-                                  form.clearErrors(
-                                    `warehouseTrackingDetails.${index}.conditionId`
-                                  )
-                                  setOpenComboboxCondition(false)
-                                }}
-                              >
-                                {locale === "vi"
-                                  ? condition.vietnameseName
-                                  : condition.englishName}
-                                <Check
-                                  className={cn(
-                                    "ml-auto",
-                                    condition.conditionId === field.value
-                                      ? "opacity-100"
-                                      : "opacity-0"
-                                  )}
-                                />
-                              </CommandItem>
-                            ))}
+                                    : condition.englishName}
+                                  <Check
+                                    className={cn(
+                                      "ml-auto",
+                                      condition.conditionId === field.value
+                                        ? "opacity-100"
+                                        : "opacity-0"
+                                    )}
+                                  />
+                                </CommandItem>
+                              ))}
                           </CommandGroup>
                         </CommandList>
                       </Command>

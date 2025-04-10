@@ -3,7 +3,13 @@
 import { type ComponentProps } from "react"
 import { useAuth } from "@/contexts/auth-provider"
 import { Link, useRouter } from "@/i18n/routing"
-import { BadgeCheck, ChevronsUpDown, LogOut, User } from "lucide-react"
+import {
+  BadgeCheck,
+  ChevronsUpDown,
+  LogOut,
+  Settings,
+  User,
+} from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import {
@@ -31,6 +37,7 @@ import {
 
 import { Button } from "../ui/button"
 import { Icons } from "../ui/icons"
+import SidebarLanguage from "../ui/sidebar-language"
 import BrowseSidebarContent from "./browse-sidebar-content"
 import SidebarLogoItem from "./sidebar-logo-item"
 
@@ -41,7 +48,7 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const tRoutes = useTranslations("Routes")
   const { isMobile, open } = useSidebar()
   const { user, isManager } = useAuth()
-  console.log({ user, isManager })
+
   return (
     <Sidebar className="sticky" collapsible="icon" {...props}>
       <SidebarTrigger className="absolute left-full top-8 z-50 -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground max-lg:hidden" />
@@ -60,14 +67,7 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       {user ? (
         <SidebarFooter>
           <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip={tRoutes("Settings")} asChild>
-                <Link href={"/settings"}>
-                  <Icons.Setting />
-                  <span>{tRoutes("Settings")}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
+            <SidebarMenuItem></SidebarMenuItem>
 
             <SidebarMenuItem>
               <SidebarMenuButton tooltip={tRoutes("Help")} asChild>
@@ -76,6 +76,34 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
                   <span>{tRoutes("Help")}</span>
                 </Link>
               </SidebarMenuButton>
+            </SidebarMenuItem>
+
+            <SidebarMenuItem>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Link href={`#`} className="flex items-center gap-2 p-2">
+                    <Settings size={20} />
+                    {open && (
+                      <div className="flex flex-1 justify-between text-left text-sm leading-tight">
+                        <div className="flex flex-col">
+                          <span className="truncate">
+                            {tRoutes("Settings")}
+                          </span>
+                        </div>
+                        <ChevronsUpDown className="ml-auto size-4" />
+                      </div>
+                    )}
+                  </Link>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56 rounded-md"
+                  side={isMobile ? "bottom" : "right"}
+                  align="end"
+                  sideOffset={4}
+                >
+                  <SidebarLanguage />
+                </DropdownMenuContent>
+              </DropdownMenu>
             </SidebarMenuItem>
 
             <SidebarMenuItem>
