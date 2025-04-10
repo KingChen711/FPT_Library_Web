@@ -285,13 +285,7 @@ export const browseRoutes = [
           return <Icons.Search {...props} />
         },
       },
-      {
-        route: "/recommend",
-        label: "Recommend for you",
-        Icon: (props: { className?: string }) => {
-          return <Icons.Recommend {...props} />
-        },
-      },
+
       {
         route: "/ai-prediction",
         label: "AI prediction",
@@ -307,6 +301,13 @@ export const browseRoutes = [
         },
       },
     ],
+  },
+  {
+    route: "/recommend",
+    label: "Recommend for you",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Recommend {...props} />
+    },
   },
   {
     route: "/books",

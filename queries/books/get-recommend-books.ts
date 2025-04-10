@@ -23,13 +23,17 @@ const getRecommendBooks = async (
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
-      searchParams,
+      searchParams: {
+        ...searchParams,
+        pageSize: "12",
+      },
     })
 
     if (!data) throw new Error("")
 
     return {
       ...data,
+
       sources: data.sources.map((s) => ({
         ...s,
         authors: s.libraryItemAuthors.map((l) => l.author),
@@ -38,8 +42,8 @@ const getRecommendBooks = async (
   } catch {
     return {
       sources: [],
-      pageIndex: searchParams.pageIndex,
-      pageSize: +searchParams.pageSize,
+      pageIndex: 0,
+      pageSize: 0,
       totalActualItem: 0,
       totalPage: 0,
     }
