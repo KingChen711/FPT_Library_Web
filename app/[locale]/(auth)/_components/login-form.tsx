@@ -4,10 +4,10 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useTransition } from "react"
-import { useAuth } from "@/contexts/auth-provider"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useGoogleLogin } from "@react-oauth/google"
+import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 // import { type ReactFacebookLoginInfo } from "react-facebook-login"
@@ -36,8 +36,7 @@ function LoginForm() {
   const t = useTranslations("LoginPage")
   const locale = useLocale()
   const router = useRouter()
-  // const queryClient = useQueryClient()
-  const { refetchToken } = useAuth()
+  const queryClient = useQueryClient()
 
   const [pending, startTransition] = useTransition()
 
@@ -47,10 +46,10 @@ function LoginForm() {
         const res = await loginGoogle(googleRes.code)
 
         if (res.isSuccess) {
-          // queryClient.invalidateQueries({
-          //   queryKey: ["token"],
-          // })
-          refetchToken()
+          queryClient.invalidateQueries({
+            queryKey: ["token"],
+          })
+
           router.push(`/`)
           return
         }

@@ -30,10 +30,10 @@ import {
 } from "@/lib/signalR/verify-payment-status"
 import { ETransactionStatus } from "@/lib/types/enums"
 import { formatDate } from "@/lib/utils"
-import { uploadBookImage } from "@/actions/books/upload-medias"
 import { type PaymentData } from "@/actions/library-card/patrons/create-patron"
 import { createLibraryCardTransaction } from "@/actions/library-cards/create-library-card-transaction"
 import { registerLibraryCard } from "@/actions/library-cards/register-library-card"
+import useUploadImage from "@/hooks/media/use-upload-image"
 import useGetPackage from "@/hooks/packages/use-get-package"
 import useGetPaymentMethods from "@/hooks/payment-methods/use-get-payment-method"
 import { toast } from "@/hooks/use-toast"
@@ -90,6 +90,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
   )
 
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
+  const { mutateAsync: uploadBookImage } = useUploadImage()
 
   const [paymentStates, setPaymentStates] = useState({
     leftTime: 0,

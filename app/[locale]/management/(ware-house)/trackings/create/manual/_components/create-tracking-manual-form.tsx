@@ -16,9 +16,9 @@ import {
   createTrackingManualSchema,
   type TCreateTrackingManualSchema,
 } from "@/lib/validations/trackings/create-tracking-manual"
-import { uploadBookImage } from "@/actions/books/upload-medias"
 import { createTrackingManual } from "@/actions/trackings/create-tracking-manual"
 import useCategories from "@/hooks/categories/use-categories"
+import useUploadImage from "@/hooks/media/use-upload-image"
 import useSuppliers from "@/hooks/suppliers/use-suppliers"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -72,6 +72,8 @@ function CreateTrackingManualForm() {
       warehouseTrackingDetails: [],
     },
   })
+
+  const { mutateAsync: uploadBookImage } = useUploadImage()
 
   const onSubmit = async (values: TCreateTrackingManualSchema) => {
     startTransition(async () => {

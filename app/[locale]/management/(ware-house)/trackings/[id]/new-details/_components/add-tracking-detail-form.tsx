@@ -16,11 +16,11 @@ import {
   addTrackingDetailSchema,
   type TAddTrackingDetailSchema,
 } from "@/lib/validations/trackings/add-tracking-detail"
-import { uploadBookImage } from "@/actions/books/upload-medias"
 import { addTrackingDetail } from "@/actions/trackings/add-tracking-detail"
 import useSearchLibraryItems from "@/hooks/books/use-search-library-items"
 import useCategories from "@/hooks/categories/use-categories"
 import useConditions from "@/hooks/conditions/use-conditions"
+import useUploadImage from "@/hooks/media/use-upload-image"
 import { toast } from "@/hooks/use-toast"
 import LibraryItemCard from "@/components/ui/book-card"
 import { Button } from "@/components/ui/button"
@@ -91,6 +91,8 @@ function AddTrackingDetailForm({ trackingId }: Props) {
       isCatalog: false,
     },
   })
+
+  const { mutateAsync: uploadBookImage } = useUploadImage()
 
   const watchStockType = form.watch(`stockTransactionType`)
   const [searchTerm, setSearchTerm] = useState("")

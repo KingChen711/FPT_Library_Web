@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
-import { useAuth } from "@/contexts/auth-provider"
 import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
+import { useQueryClient } from "@tanstack/react-query"
 import { EyeClosedIcon, EyeIcon, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -35,8 +35,8 @@ function LoginPasswordForm({ email, type }: Props) {
   const t = useTranslations("LoginPage.PasswordMethodPage")
   const router = useRouter()
   const locale = useLocale()
-  // const queryClient = useQueryClient()
-  const { refetchToken } = useAuth()
+  const queryClient = useQueryClient()
+
   const [showPassword, setShowPassword] = useState(false)
   const [pending, startTransition] = useTransition()
 
@@ -53,10 +53,10 @@ function LoginPasswordForm({ email, type }: Props) {
       const res = await loginByPassword(values, type)
 
       if (res.isSuccess) {
-        // queryClient.invalidateQueries({
-        //   queryKey: ["token"],
-        // })
-        refetchToken()
+        queryClient.invalidateQueries({
+          queryKey: ["token"],
+        })
+
         router.push("/")
         return
       }

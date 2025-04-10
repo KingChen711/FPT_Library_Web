@@ -23,8 +23,21 @@ export async function GET() {
       refreshToken: string
     }>("/api/auth/refresh-token", { accessToken, refreshToken })
 
-    cookieStore.set("accessToken", data.accessToken)
-    cookieStore.set("refreshToken", data.refreshToken)
+    const isProduction = process.env.NODE_ENV === "production"
+
+    const cookiesStore = cookies()
+    cookiesStore.set("accessToken", data.accessToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "strict",
+      path: "/",
+    })
+    cookiesStore.set("refreshToken", data.refreshToken, {
+      httpOnly: true,
+      secure: isProduction,
+      sameSite: isProduction ? "none" : "strict",
+      path: "/",
+    })
 
     return Response.json(data)
   } catch {

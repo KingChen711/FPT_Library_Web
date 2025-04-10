@@ -22,8 +22,8 @@ import {
   type TBookEditionSchema,
 } from "@/lib/validations/books/create-book"
 import { createBook } from "@/actions/books/create-book"
-import { uploadMedias } from "@/actions/books/upload-medias"
 import useSearchIsbn from "@/hooks/books/use-search-isbn"
+import useUploadCatalogMedias from "@/hooks/media/use-upload-catalog-medias"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
@@ -67,6 +67,8 @@ function CreateBookForm({ trackingDetail }: Props) {
 
   const [hasConfirmedChangeStatus, setHasConfirmedChangeStatus] =
     useState(false)
+
+  const { mutateAsync: uploadMedias } = useUploadCatalogMedias()
 
   const form = useForm<TBookEditionSchema>({
     resolver: zodResolver(bookEditionSchema),

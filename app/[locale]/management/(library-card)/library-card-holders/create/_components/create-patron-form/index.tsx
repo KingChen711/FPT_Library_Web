@@ -30,11 +30,11 @@ import {
   createPatronSchema,
   type TCreatePatronSchema,
 } from "@/lib/validations/patrons/create-patron"
-import { uploadBookImage } from "@/actions/books/upload-medias"
 import {
   createPatron,
   type PaymentData,
 } from "@/actions/library-card/patrons/create-patron"
+import useUploadImage from "@/hooks/media/use-upload-image"
 import { toast } from "@/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -89,6 +89,7 @@ function CreatePatronForm() {
   })
 
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
+  const { mutateAsync: uploadBookImage } = useUploadImage()
 
   const [paymentStates, setPaymentStates] = useState({
     leftTime: 0,

@@ -18,8 +18,8 @@ import {
   type TTrainGroupsSchema,
 } from "@/lib/validations/books/train-groups"
 import { trainV2 } from "@/actions/books/train-v2"
-import { uploadBookImage } from "@/actions/books/upload-medias"
 import { type GroupData } from "@/hooks/books/use-groups-data"
+import useUploadImage from "@/hooks/media/use-upload-image"
 import { toast } from "@/hooks/use-toast"
 import {
   Accordion,
@@ -63,6 +63,8 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
     name: "groups",
     control: form.control,
   })
+
+  const { mutateAsync: uploadBookImage } = useUploadImage()
 
   const [currentGroupIndex, setCurrentGroupIndex] = useState(0)
   const [currentBookIndex, setCurrentBookIndex] = useState(0)

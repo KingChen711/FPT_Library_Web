@@ -15,9 +15,9 @@ import {
   type TMutateResourceSchema,
 } from "@/lib/validations/books/book-editions/mutate-resource"
 import { updateResource } from "@/actions/books/editions/update-resource"
-import { updateBookImage } from "@/actions/resources/update-book-image"
-import { updateBookVideo } from "@/actions/resources/update-book-video"
 import { type TCheckCoverImageRes } from "@/hooks/ai/use-check-cover-image"
+import useUpdateBookImage from "@/hooks/media/use-update-book-image"
+import useUpdateBookVideo from "@/hooks/media/use-update-book-video"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -53,12 +53,16 @@ function UpdateResourceDialog({ open, setOpen, resource }: Props) {
 
   const [isPending, startTransition] = useTransition()
 
+  const { mutateAsync: updateBookImage } = useUpdateBookImage()
+
   useState<TCheckCoverImageRes | null>(null)
 
   const handleOpenChange = (value: boolean) => {
     if (isPending) return
     setOpen(value)
   }
+
+  const { mutateAsync: updateBookVideo } = useUpdateBookVideo()
 
   const form = useForm<TMutateResourceSchema>({
     resolver: zodResolver(mutateResourceSchema),
@@ -80,20 +84,20 @@ function UpdateResourceDialog({ open, setOpen, resource }: Props) {
     startTransition(async () => {
       if (!values.resourceUrl) {
         if (values.resourceType === EResourceBookType.AUDIO_BOOK) {
-          const data = await updateBookVideo(
-            resource.resourceUrl,
-            values.fileAudioBook
-          )
+          const data = await updateBookVideo({
+            prevUrl: resource.resourceUrl,
+            file: values.fileAudioBook,
+          })
           if (data && data !== NOT_CLOUDINARY_URL) {
             values.resourceUrl = data.secureUrl
             values.providerPublicId = data.publicId
             values.resourceSize = Math.round(values.fileAudioBook.size)
           }
         } else {
-          const data = await updateBookImage(
-            resource.resourceUrl,
-            values.fileEbook
-          )
+          const data = await updateBookImage({
+            prevUrl: resource.resourceUrl,
+            file: values.fileEbook,
+          })
           if (data && data !== NOT_CLOUDINARY_URL) {
             values.resourceUrl = data.secureUrl
             values.providerPublicId = data.publicId

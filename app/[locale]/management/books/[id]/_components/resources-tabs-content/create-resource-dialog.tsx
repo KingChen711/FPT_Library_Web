@@ -13,8 +13,8 @@ import {
   type TMutateResourceSchema,
 } from "@/lib/validations/books/book-editions/mutate-resource"
 import { createResource } from "@/actions/books/create-resource"
-import { uploadAudioBook, uploadBookImage } from "@/actions/books/upload-medias"
-import { type TCheckCoverImageRes } from "@/hooks/ai/use-check-cover-image"
+import useUploadImage from "@/hooks/media/use-upload-image"
+import useUploadVideo from "@/hooks/media/use-upload-video"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -57,7 +57,7 @@ function CreateResourceDialog({ bookId }: Props) {
   const [isPending, startTransition] = useTransition()
   const [open, setOpen] = useState(false)
 
-  useState<TCheckCoverImageRes | null>(null)
+  const { mutateAsync: uploadBookImage } = useUploadImage()
 
   const handleOpenChange = (value: boolean) => {
     if (isPending) return
@@ -70,6 +70,8 @@ function CreateResourceDialog({ bookId }: Props) {
       resourceSize: 0,
     },
   })
+
+  const { mutateAsync: uploadAudioBook } = useUploadVideo()
 
   const onSubmit = async (values: TMutateResourceSchema) => {
     startTransition(async () => {
