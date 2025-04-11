@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import { CheckCircle2, CircleX, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 

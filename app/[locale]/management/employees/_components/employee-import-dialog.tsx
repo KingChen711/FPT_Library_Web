@@ -130,7 +130,6 @@ const EmployeeImportDialog = () => {
       })
 
       const res = await importEmployee(formData)
-      console.log("🚀 ~ startTransition ~ res:", res)
 
       if (res.isSuccess) {
         toast({
@@ -147,8 +146,6 @@ const EmployeeImportDialog = () => {
       }
     })
   }
-
-  console.log("🚀 ~ EmployeeImportDialog ~ importErrors:", importErrors)
 
   return (
     <div>

@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { getLocale } from "next-intl/server"
 import queryString from "query-string"
+
+import { getLocale } from "@/lib/get-locale"
 
 import { type ServerActionError } from "./types/action-response"
 import { getClientSideCookie } from "./utils"
@@ -170,7 +171,7 @@ const request = async <TData = undefined>(
 
   const payload = (await res.json()) as OkResponse<TData>
 
-  if (process.env.NEXT_PUBLIC_LOG_FETCH !== "false")
+  if (process.env.NEXT_PUBLIC_LOG_FETCH === "true")
     console.log({
       url: fetchUrl,
       headers: {

@@ -24,10 +24,10 @@ import {
 import "react-pdf/dist/Page/AnnotationLayer.css"
 import "react-pdf/dist/Page/TextLayer.css"
 
+import { useRouter } from "next/navigation"
 import { WorkerPdfVersion } from "@/constants/library-version"
 import { useAuth } from "@/contexts/auth-provider"
 import { useLibraryStorage } from "@/contexts/library-provider"
-import { useRouter } from "@/i18n/routing"
 import {
   ArrowLeft,
   Book,
@@ -174,8 +174,6 @@ export default function DigitalResourcePage({ params, searchParams }: Props) {
   if (isLoadingResource) {
     return <Loader2 className="size-6 animate-spin" />
   }
-
-  console.log("🚀 ~ DigitalResourcePage ~ resource:", resource)
 
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages)

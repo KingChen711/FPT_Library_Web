@@ -46,7 +46,7 @@ export const BarcodesContainer = React.forwardRef(
               <div key={l.barcode} className="border border-black p-1">
                 <div className="flex flex-col items-center justify-center border-4 border-black">
                   <div className="flex items-end justify-center gap-2 px-2 py-1 text-sm font-bold">
-                    E-Library System
+                    E-Library
                   </div>
 
                   {(classificationNumber ||

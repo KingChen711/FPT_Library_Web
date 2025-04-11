@@ -1,4 +1,4 @@
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import { format } from "date-fns"
 import { Loader2, MoreHorizontal } from "lucide-react"
 
@@ -56,7 +56,6 @@ const TransactionTab = () => {
 
   if (!allTransactions) return <NoData />
 
-  console.log("🚀 ~ TransactionTab ~ allTransactions:", allTransactions)
   return (
     <Card>
       <CardHeader className="pb-3">

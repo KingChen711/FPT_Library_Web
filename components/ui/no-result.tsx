@@ -21,6 +21,8 @@ function NoResult({ title, description, link, linkTitle }: Props) {
         alt="no result"
         width={305}
         height={264}
+        placeholder="blur"
+        priority
         className="block rounded-md object-contain"
       />
 

@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { useLocale, useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 
@@ -65,7 +65,7 @@ function Marc21Dialog({ form, show, getIsbn }: Props) {
       form.setValue("author", marc21Data.author)
       setOpen(false)
     } catch (error) {
-      console.log(error)
+      console.error(error)
       setShowError(true)
     } finally {
       setMarc21("")

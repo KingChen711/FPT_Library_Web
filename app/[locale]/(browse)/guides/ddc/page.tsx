@@ -19,7 +19,7 @@ async function GuideDdcPage({ params: { locale } }: Props) {
 
   return (
     <div className="flex min-h-screen flex-col">
-      <main className="container mx-auto grow px-4 pb-8">
+      <main className="mx-auto grow pb-8">
         <h1 className="mb-6 text-3xl font-bold">{t("Title")}</h1>
 
         <section className="mb-8">

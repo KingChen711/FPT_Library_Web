@@ -3,6 +3,7 @@ import { http } from "@/lib/http"
 
 import "server-only"
 
+import { getBlurDataURL } from "@/lib/server-utils"
 import {
   type Author,
   type BookEdition,
@@ -19,6 +20,7 @@ export type BookEditions = (BookEdition & {
   category: Category
   libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
   shelf: Shelf | null
+  blurCoverImage: string | null
 })[]
 
 const getBookEditions = async (
@@ -45,6 +47,15 @@ const getBookEditions = async (
         },
         searchParams,
       }
+    )
+
+    data.sources = await Promise.all(
+      data.sources.map(async (s) => ({
+        ...s,
+        blurCoverImage: s.coverImage
+          ? await getBlurDataURL(s.coverImage)
+          : null,
+      }))
     )
 
     return data

@@ -2,9 +2,9 @@ import getCurrentUserReview from "@/queries/library-item/get-current-user-review
 import getReviewsLibraryItem from "@/queries/library-item/get-reviews-library-items"
 import { format } from "date-fns"
 import { User2 } from "lucide-react"
-import { getTranslations } from "next-intl/server"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
+import { getTranslations } from "@/lib/get-translations"
 import { Card } from "@/components/ui/card"
 import NoData from "@/components/ui/no-data"
 import Rating from "@/components/ui/rating"

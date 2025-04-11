@@ -125,10 +125,6 @@ function TrackingDetailRowField({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchUnitPrice, watchItemTotal, form, index])
 
-  useEffect(() => {
-    console.log(watchItemName)
-  }, [watchItemName])
-
   return (
     <>
       <CatalogDialog

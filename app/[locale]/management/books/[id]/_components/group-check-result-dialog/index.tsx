@@ -2,7 +2,7 @@
 
 import React from "react"
 import Image from "next/image"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import { AlertCircle, CheckCircle, XCircle } from "lucide-react"
 import { useTranslations } from "next-intl"
 

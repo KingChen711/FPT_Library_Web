@@ -25,7 +25,6 @@ type Props = {
 }
 
 function AuthorActionDropdown({ author }: Props) {
-  console.log("🚀 ~ AuthorActionDropdown ~ author:", author)
   const t = useTranslations("GeneralManagement")
 
   const locale = useLocale()

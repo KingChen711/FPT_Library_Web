@@ -112,7 +112,6 @@ const AuthorImportDialog = () => {
   }
 
   function onSubmit(values: TAuthorImport) {
-    console.log("🚀 ~ onSubmit ~ values:", values)
     startTransition(async () => {
       const formData = new FormData()
       if (values.file) {
@@ -134,7 +133,6 @@ const AuthorImportDialog = () => {
       })
 
       const res = await importAuthor(formData)
-      console.log("🚀 ~ startTransition ~ res:", res)
 
       if (res.isSuccess) {
         toast({

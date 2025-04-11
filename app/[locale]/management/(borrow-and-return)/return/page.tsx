@@ -8,11 +8,7 @@ import ProcessReturnForm from "./_components/process-return-form"
 async function ReturnsManagementPage() {
   await auth().protect(EFeature.BORROW_MANAGEMENT)
 
-  return (
-    <>
-      <ProcessReturnForm />
-    </>
-  )
+  return <ProcessReturnForm />
 }
 
 export default ReturnsManagementPage

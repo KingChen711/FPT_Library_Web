@@ -60,6 +60,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
               },
             })
             .then((res) => res.data)
+            .catch(() => undefined)
         : undefined,
   })
 

@@ -95,8 +95,6 @@ function CreateBookForm({ trackingDetail }: Props) {
 
       await uploadMedias(values)
 
-      console.log(values)
-
       values.libraryItemInstances = []
 
       const res = await createBook(values)
@@ -186,7 +184,6 @@ function CreateBookForm({ trackingDetail }: Props) {
           setCurrentTab("Resources")
         }
       }
-      console.log(res)
 
       handleServerActionError(res, locale, form)
     })
@@ -296,8 +293,6 @@ function CreateBookForm({ trackingDetail }: Props) {
 
   useEffect(() => {
     if (!scannedBook) return
-
-    console.log({ scannedBook })
 
     setIsbn("")
 

@@ -1,5 +1,5 @@
 import React, { useTransition } from "react"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import { Loader2, Trash2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useFieldArray, type UseFormReturn } from "react-hook-form"

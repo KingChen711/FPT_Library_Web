@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import {
   CheckCircle2,

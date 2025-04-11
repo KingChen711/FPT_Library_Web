@@ -15,6 +15,7 @@ import {
   CommandList,
 } from "@/components/ui/command"
 import { Input } from "@/components/ui/input"
+import NoResult from "@/components/ui/no-result"
 import {
   Popover,
   PopoverContent,
@@ -126,6 +127,16 @@ function CategoryList({ categories }: Props) {
           </PopoverContent>
         </Popover>
       </div>
+      {filteredCategories.length === 0 && (
+        <div className="flex justify-center p-4">
+          <NoResult
+            title={t("Categories Not Found")}
+            description={t(
+              "No categories matching your request were found Please check your information or try searching with different criteria"
+            )}
+          />
+        </div>
+      )}
       <div className="grid grid-cols-12 gap-4">
         {filteredCategories.map((category) => (
           <CategoryCard key={category.categoryId} category={category} />

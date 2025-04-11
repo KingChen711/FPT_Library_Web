@@ -13,12 +13,12 @@ export const connectToSignalR = (hubName: string, token: string) => {
 
   connection
     .start()
-    // .then(() => {
-    //   console.log("SignalR Connected.")
-    // })
+    .then(() => {
+      console.info("SignalR Connected.")
+    })
     .catch((err) => console.error("SignalR Connection Error: ", err))
 
-  connection.onreconnected(() => console.log("SignalR Reconnected."))
+  connection.onreconnected(() => console.info("SignalR Reconnected."))
   connection.onclose(() => console.warn("SignalR Disconnected."))
 
   return connection
@@ -26,6 +26,6 @@ export const connectToSignalR = (hubName: string, token: string) => {
 
 export const disconnectSignalR = (connection: signalR.HubConnection) => {
   if (connection) {
-    connection.stop().then(() => console.log("SignalR Disconnected."))
+    connection.stop().then(() => console.warn("SignalR Disconnected."))
   }
 }

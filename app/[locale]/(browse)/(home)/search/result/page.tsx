@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import NoData from "@/public/assets/images/no-data.png"
 import searchBooksAdvance from "@/queries/books/search-books-advance"
 // import searchBooksAdvance from "@/queries/books/search-books-advance"

@@ -1,8 +1,7 @@
 "use client"
 
 import { useEffect, useRef, useState, useTransition } from "react"
-import { useSearchParams } from "next/navigation"
-import { useRouter } from "@/i18n/routing"
+import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQuery } from "@tanstack/react-query"
 import { Mic, StopCircle, Trash } from "lucide-react"
@@ -100,7 +99,6 @@ const VoiceToText = ({ open, setOpen }: Props) => {
   }
 
   const handleOnChange = (value: boolean) => {
-    console.log("🚀 ~ handleOnChange ~ value:", value)
     setOpen(value)
     setAudioUrl(null)
   }

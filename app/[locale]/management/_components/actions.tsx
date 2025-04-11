@@ -1,30 +1,24 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { useAuth } from "@/contexts/auth-provider"
+import { format } from "date-fns"
 import { Calendar, Clock } from "lucide-react"
 
+import useFormatLocale from "@/hooks/utils/use-format-locale"
 import { NotificationBell } from "@/components/ui/noti-bell"
 import { ThemeToggle } from "@/components/theme-toggle"
 
 function Actions() {
-  const { user } = useAuth()
+  const formatLocale = useFormatLocale()
 
-  const [currentDate, setCurrentDate] = useState<string | null>(null)
-  // const locale = useLocale()
-  // const pathname = usePathname()
+  const [currentDate, setCurrentDate] = useState<string>(
+    format(new Date(Date.now()), "HH:mm")
+  )
 
-  // const newLocale = locale === "en" ? "vi" : "en"
   useEffect(() => {
     // Update currentDate only on the client
     const interval = setInterval(() => {
-      setCurrentDate(
-        new Date().toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        })
-      )
+      setCurrentDate(format(new Date(Date.now()), "HH:mm"))
     }, 1000)
 
     return () => clearInterval(interval)
@@ -32,21 +26,21 @@ function Actions() {
 
   return (
     <div className="flex items-center gap-x-2">
-      <section className="flex items-center gap-4 text-nowrap rounded-md p-1 text-muted-foreground max-lg:hidden">
+      <section className="flex items-center gap-4 text-nowrap rounded-md text-muted-foreground max-lg:hidden">
         <div className="flex items-center gap-2 text-muted-foreground">
           <Clock size={16} />
-          {currentDate || "--:--"}
+          <span className="leading-none">{currentDate || "--:--"}</span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
           <Calendar size={16} />
-          {new Date().toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })}
+          <span className="leading-none">
+            {format(new Date(Date.now()), "dd MMM yyyy", {
+              locale: formatLocale,
+            })}
+          </span>
         </div>
       </section>
-      {user && <NotificationBell />}
+      <NotificationBell />
       <ThemeToggle />
     </div>
   )

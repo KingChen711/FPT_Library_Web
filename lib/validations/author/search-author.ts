@@ -1,11 +1,23 @@
 import { z } from "zod"
 
+import { filterDateRangeSchema } from "@/lib/zod"
+
+export const filterAuthorSchema = z.object({
+  authorCode: z.string().trim().optional(),
+  nationality: z.string().trim().optional(),
+  dobRange: filterDateRangeSchema,
+  dateOfDeathRange: filterDateRangeSchema,
+  createDateRange: filterDateRangeSchema,
+  modifiedDateRange: filterDateRangeSchema,
+})
+
+export type TFilterAuthorSchema = z.infer<typeof filterAuthorSchema>
+
 export const searchAuthorsSchema = z
   .object({
     search: z.string().catch(""),
     pageIndex: z.coerce.number().min(1).catch(1),
     pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("5"),
-
     sort: z
       .enum([
         "fullName",
@@ -27,21 +39,12 @@ export const searchAuthorsSchema = z
       ])
       .optional()
       .catch(undefined),
-    dobRange: z.array(z.string().trim()).optional().catch([]),
-    dateOfDeathRange: z.array(z.string().trim()).optional().catch([]),
-    createDateRange: z.array(z.string().trim()).optional().catch([]),
-    modifiedDateRange: z.array(z.string().trim()).optional().catch([]),
-    authorCode: z.string().optional().catch(""),
-    nationality: z.string().optional().catch(""),
+
     isActive: z.string().optional().catch(""),
     tab: z.enum(["Active", "Deleted"]).catch("Active"),
     isDeleted: z.boolean().optional(),
-    isTrained: z
-      .enum(["true", "false"])
-      .optional()
-      .catch(undefined)
-      .transform((data) => (data === undefined ? undefined : data === "true")),
   })
+  .and(filterAuthorSchema)
   .transform((data) => {
     data.isDeleted = data.tab === "Deleted"
     return data

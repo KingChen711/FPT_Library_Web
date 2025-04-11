@@ -61,7 +61,6 @@ type Props = {
 )
 
 function MutateUserDialog({ type, user, openEdit, setOpenEdit }: Props) {
-  console.log("🚀 ~ MutateUserDialog ~ user:", user)
   const locale = useLocale()
   const [open, setOpen] = useState(false)
   const [isPending, startTransition] = useTransition()

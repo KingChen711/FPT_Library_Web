@@ -44,8 +44,6 @@ function NormalFinesField({ form, isPending, itemIndex, scanned }: Props) {
   const isNeedConfirm = form.watch(`isNeedConfirm`)
 
   useEffect(() => {
-    console.log({ wIsLost, isNeedConfirm })
-
     if (!isNeedConfirm) return
 
     const needConfirmMissing = form
@@ -56,8 +54,6 @@ function NormalFinesField({ form, isPending, itemIndex, scanned }: Props) {
           !record.isLost &&
           !record.scanned
       )
-
-    console.log({ wIsLost, isNeedConfirm, needConfirmMissing })
 
     if (!needConfirmMissing) {
       form.setValue("isNeedConfirm", false)

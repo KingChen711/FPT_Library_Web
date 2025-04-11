@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
-import { useRouter } from "@/i18n/routing"
 import { Eye } from "lucide-react"
 import { useTranslations } from "next-intl"
 
@@ -43,8 +43,6 @@ const BorrowResourceCard = ({
       })
     }
   }, [digitalBorrows, openDigitalBorrow, resource.resourceId])
-
-  console.log("🚀 ~ isBorrowed:", isBorrowed)
 
   return (
     <>

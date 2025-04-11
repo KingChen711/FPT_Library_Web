@@ -2,8 +2,8 @@ import { type ComponentProps } from "react"
 import Link from "next/link"
 import { auth } from "@/queries/auth"
 import { BadgeCheck, ChevronsUpDown, User } from "lucide-react"
-import { getLocale } from "next-intl/server"
 
+import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { ERoleType } from "@/lib/types/enums"
 import {

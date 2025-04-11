@@ -273,6 +273,9 @@
     "management page": "Management page"
   },
   "GeneralManagement": {
+    "Cancel": "Cancel",
+    "Apply": "Apply",
+    "Reset": "Reset",
     "authors selected": "{amount, plural, one {# author selected} other {# authors selected}}",
     "language": "Language",
     "vietnamese": "Vietnamese",
@@ -661,6 +664,10 @@
     "Recommend for you": "Recommend for you"
   },
   "LibraryCardManagementPage": {
+    "Patrons Not Found": "Patrons Not Found",
+    "No patrons matching your request were found Please check your information or try searching with different criteria": "No patrons matching your request were found. Please check your information or try searching with different criteria",
+    "Cards Not Found": "Cards Not Found",
+    "No cards matching your request were found Please check your information or try searching with different criteria": "No cards matching your request were found. Please check your information or try searching with different criteria",
     "Filters cards": "Filters cards",
     "Cards": "Cards",
     "Reset default": "Reset default",
@@ -1157,6 +1164,8 @@
     "the document has been booked by you": "The document has been booked by you"
   },
   "CategoriesManagementPage": {
+    "Categories Not Found": "Categories Not Found",
+    "No categories matching your request were found Please check your information or try searching with different criteria": "No categories matching your request were found. Please check your information or try searching with different criteria",
     "Allowed": "Allowed",
     "Not allowed": "Not allowed",
     "Allow AI training": "Allow AI training",
@@ -1232,6 +1241,8 @@
     "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm"
   },
   "SuppliersManagementPage": {
+    "Suppliers Not Found": "Suppliers Not Found",
+    "No suppliers matching your request were found Please check your information or try searching with different criteria": "No suppliers matching your request were found. Please check your information or try searching with different criteria",
     "Suppliers": "Suppliers",
     "Allowed": "Allowed",
     "Select a supplier": "Select a supplier",
@@ -1281,6 +1292,8 @@
     "Scan supplier name description": "Check if the supplier name already exists in the database"
   },
   "FinesManagementPage": {
+    "Fines Not Found": "Fines Not Found",
+    "No fines matching your request were found Please check your information or try searching with different criteria": "No fines matching your request were found. Please check your information or try searching with different criteria",
     "Selected": "Selected",
     "Not valid": "Not valid",
     "Select": "Select",
@@ -1318,6 +1331,8 @@
     "Skip": "Skip"
   },
   "NotificationsManagementPage": {
+    "Notifications Not Found": "Notifications Not Found",
+    "No notifications matching your request were found Please check your information or try searching with different criteria": "No notifications matching your request were found. Please check your information or try searching with different criteria",
     "Recipient": "Recipient",
     "Sender": "Sender (who creates notification)",
     "Reset": "Reset",
@@ -1829,6 +1844,10 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Supplement requests Not Found": "Supplement requests Not Found",
+    "No supplement requests matching your request were found Please check your information or try searching with different criteria": "No supplement requests matching your request were found. Please check your information or try searching with different criteria",
+    "Trackings Not Found": "Trackings Not Found",
+    "No trackings matching your request were found Please check your information or try searching with different criteria": "No trackings matching your request were found. Please check your information or try searching with different criteria",
     "Filters supplement requests": "Filters supplement requests",
     "Supplement requests": "Supplement requests",
     "Supplement details": "Supplement details",

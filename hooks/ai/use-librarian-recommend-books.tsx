@@ -42,8 +42,6 @@ function useLibrarianRecommendBooks({
         }
       )
 
-      console.log({ normalizedTitles: data.normalizedTitles })
-
       return data.response
     },
     staleTime: Infinity,

@@ -6,6 +6,7 @@ import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
 import { formatPrice } from "@/lib/utils"
 import { searchFinesSchema } from "@/lib/validations/fines/search-fines"
+import NoResult from "@/components/ui/no-result"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -56,10 +57,7 @@ async function FinesManagementPage({ searchParams }: Props) {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-row items-center">
-            <SearchForm
-              // className="h-full rounded-r-none border-r-0"
-              search={search}
-            />
+            <SearchForm className="h-10" search={search} />
             {/* <FiltersFinesDialog /> */}
           </div>
 
@@ -72,73 +70,84 @@ async function FinesManagementPage({ searchParams }: Props) {
         </div>
       </div>
 
-      <div className="mt-4 grid w-full">
-        <div className="overflow-x-auto rounded-md border">
-          <Table className="overflow-hidden">
-            <TableHeader>
-              <TableRow>
-                <TableHead></TableHead>
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Title")}
-                  sortKey="FinePolicyTitle"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Condition type")}
-                  sortKey="ConditionType"
-                  position="center"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Fixed fine amount")}
-                  sortKey="FineAmountPerDay"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Fine amount per day")}
-                  sortKey="FixedFineAmount"
-                />
-                <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
-                  {t("Actions")}
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {fines.map((fine) => (
-                <TableRow key={fine.finePolicyId}>
-                  <TableCell>
-                    <FineCheckbox id={fine.finePolicyId} />
-                  </TableCell>
-                  <TableCell>{fine.finePolicyTitle}</TableCell>
-                  <TableCell>
-                    <div className="flex justify-center">
-                      <FineTypeBadge type={fine.conditionType} />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {fine.fixedFineAmount
-                      ? formatPrice(fine.fixedFineAmount)
-                      : "-"}
-                  </TableCell>
-                  <TableCell>{formatPrice(fine.fineAmountPerDay)}</TableCell>
-                  <TableCell className="flex justify-center">
-                    <FineActionDropdown fine={fine} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+      {fines.length === 0 ? (
+        <div className="flex justify-center p-4">
+          <NoResult
+            title={t("Fines Not Found")}
+            description={t(
+              "No fines matching your request were found Please check your information or try searching with different criteria"
+            )}
+          />
         </div>
+      ) : (
+        <div className="mt-4 grid w-full">
+          <div className="overflow-x-auto rounded-md border">
+            <Table className="overflow-hidden">
+              <TableHeader>
+                <TableRow>
+                  <TableHead></TableHead>
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Title")}
+                    sortKey="FinePolicyTitle"
+                  />
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Condition type")}
+                    sortKey="ConditionType"
+                    position="center"
+                  />
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Fixed fine amount")}
+                    sortKey="FineAmountPerDay"
+                  />
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Fine amount per day")}
+                    sortKey="FixedFineAmount"
+                  />
+                  <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
+                    {t("Actions")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {fines.map((fine) => (
+                  <TableRow key={fine.finePolicyId}>
+                    <TableCell>
+                      <FineCheckbox id={fine.finePolicyId} />
+                    </TableCell>
+                    <TableCell>{fine.finePolicyTitle}</TableCell>
+                    <TableCell>
+                      <div className="flex justify-center">
+                        <FineTypeBadge type={fine.conditionType} />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {fine.fixedFineAmount
+                        ? formatPrice(fine.fixedFineAmount)
+                        : "-"}
+                    </TableCell>
+                    <TableCell>{formatPrice(fine.fineAmountPerDay)}</TableCell>
+                    <TableCell className="flex justify-center">
+                      <FineActionDropdown fine={fine} />
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
 
-        <Paginator
-          pageSize={+pageSize}
-          pageIndex={pageIndex}
-          totalPage={totalPage}
-          totalActualItem={totalActualItem}
-          className="mt-6"
-        />
-      </div>
+          <Paginator
+            pageSize={+pageSize}
+            pageIndex={pageIndex}
+            totalPage={totalPage}
+            totalActualItem={totalActualItem}
+            className="mt-6"
+          />
+        </div>
+      )}
     </div>
   )
 }

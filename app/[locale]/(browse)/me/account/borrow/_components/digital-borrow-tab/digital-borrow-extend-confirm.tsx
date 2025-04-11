@@ -1,6 +1,6 @@
 import { useEffect, useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
-import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { type HubConnection } from "@microsoft/signalr"
 import { Loader2 } from "lucide-react"

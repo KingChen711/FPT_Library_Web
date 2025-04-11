@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import BarcodeCardImg from "@/public/assets/images/barcode-card.png"
 import ScannerImg from "@/public/assets/images/scanner.png"
 import { motion } from "framer-motion"

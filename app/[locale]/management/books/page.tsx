@@ -6,8 +6,8 @@ import { auth } from "@/queries/auth"
 import getBookEditions from "@/queries/books/get-book-editions"
 import { format } from "date-fns"
 import { Check, Eye, Filter, MoreHorizontal, Plus, X } from "lucide-react"
-import { getLocale } from "next-intl/server"
 
+import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EBookEditionStatus, EFeature } from "@/lib/types/enums"
 import { formatPrice } from "@/lib/utils"
@@ -75,6 +75,8 @@ type Props = {
 }
 
 async function BooksManagementPage({ searchParams }: Props) {
+  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
+
   const {
     search,
     pageIndex,
@@ -93,28 +95,25 @@ async function BooksManagementPage({ searchParams }: Props) {
     pageSize: searchParams?.pageSize || "5",
   })
 
-  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
-  const t = await getTranslations("BooksManagementPage")
-  const locale = await getLocale()
-
-  const {
-    sources: books,
-    totalActualItem,
-    totalPage,
-  } = await getBookEditions({
-    search,
-    pageIndex,
-    sort,
-    pageSize,
-    tab,
-    columns,
-    f,
-    o,
-    v,
-    canBorrow,
-    isTrained,
-    ...rest,
-  })
+  const [t, locale, { sources: books, totalActualItem, totalPage }] =
+    await Promise.all([
+      getTranslations("BooksManagementPage"),
+      getLocale(),
+      getBookEditions({
+        search,
+        pageIndex,
+        sort,
+        pageSize,
+        tab,
+        columns,
+        f,
+        o,
+        v,
+        canBorrow,
+        isTrained,
+        ...rest,
+      }),
+    ])
 
   return (
     <div>
@@ -152,6 +151,7 @@ async function BooksManagementPage({ searchParams }: Props) {
           <SelectedIdsIndicator />
         </div>
         <div className="flex items-center gap-4">
+          <ColumnsButton columns={columns} />
           <Button asChild>
             <Link href="/management/books/create">
               <Plus />
@@ -166,7 +166,7 @@ async function BooksManagementPage({ searchParams }: Props) {
           <BookEditionsTabs tab={tab} />
           <div className="flex flex-wrap items-center gap-x-4">
             <BooksActionsDropdown tab={tab} />
-            <ColumnsButton columns={columns} />
+
             <ImportDialog />
             <ExportButton
               searchParams={{
@@ -494,6 +494,8 @@ async function BooksManagementPage({ searchParams }: Props) {
                                 width={48 * 3}
                                 height={72 * 3}
                                 className="aspect-[2/3] h-[72px] w-12 rounded-md border object-cover"
+                                placeholder="blur"
+                                blurDataURL={book.blurCoverImage || ""}
                               />
                             </div>
                           </div>
@@ -823,16 +825,19 @@ async function BooksManagementPage({ searchParams }: Props) {
                 </TableBody>
               </Table>
             </div>
-            <Paginator
-              pageSize={+pageSize}
-              pageIndex={pageIndex}
-              totalPage={totalPage}
-              totalActualItem={totalActualItem}
-              className="mt-6"
-            />
           </div>
         )}
       </div>
+
+      {books.length > 0 && (
+        <Paginator
+          pageSize={+pageSize}
+          pageIndex={pageIndex}
+          totalPage={totalPage}
+          totalActualItem={totalActualItem}
+          className="mt-6"
+        />
+      )}
     </div>
   )
 }

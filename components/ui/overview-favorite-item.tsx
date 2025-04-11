@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { useLibraryStorage } from "@/contexts/library-provider"
-import { Link } from "@/i18n/routing"
 import { BookOpen, Calendar, Trash2 } from "lucide-react"
 
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"

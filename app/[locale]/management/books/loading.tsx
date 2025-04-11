@@ -18,7 +18,7 @@ export default function Loading() {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-        <Skeleton className="h-9 w-[120px]" />
+        <Skeleton className="h-8 w-[120px]" />
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -29,6 +29,7 @@ export default function Loading() {
           </div>
         </div>
         <div className="flex items-center gap-4">
+          <Skeleton className="h-9 w-[80px]" />
           <Skeleton className="h-9 w-[136px]" />
         </div>
       </div>
@@ -37,11 +38,11 @@ export default function Loading() {
         {/* tabs */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-1">
-            <Skeleton className="h-10 w-[120px]" />
-            <Skeleton className="h-10 w-[120px]" />
+            <Skeleton className="h-[42px] w-[120px]" />
+            <Skeleton className="h-[42px] w-[120px]" />
           </div>
           <div className="flex flex-wrap items-center gap-x-4">
-            <Skeleton className="h-9 w-[80px]" />
+            <Skeleton className="h-9 w-[126px]" />
             <Skeleton className="h-9 w-[130px]" />
             <Skeleton className="h-9 w-[134px]" />
           </div>
@@ -103,7 +104,7 @@ export default function Loading() {
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-center">
-                        <Skeleton className="h-16 w-12 rounded"></Skeleton>
+                        <Skeleton className="h-[72px] w-12 rounded"></Skeleton>
                       </div>
                     </TableCell>
                     <TableCell>

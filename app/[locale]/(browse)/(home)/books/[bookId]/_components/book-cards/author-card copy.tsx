@@ -1,10 +1,10 @@
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import NoData from "@/public/assets/images/no-data.png"
 import getRelatedLibraryItemsByAuthor from "@/queries/library-item/get-related-libraryItems-by-author"
 import { Cake, Earth, User } from "lucide-react"
-import { getLocale } from "next-intl/server"
 
+import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { type LibraryItem } from "@/lib/types/models"
 import {
@@ -59,11 +59,6 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
     libraryItem.authors.filter(
       (author) => author.authorId !== libraryItem.authors[0].authorId
     ) || []
-
-  console.log(
-    "🚀 ~ BookAuthorCard ~ libraryItem.authors: ",
-    libraryItem.authors
-  )
 
   return (
     <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto overflow-x-hidden rounded-md border bg-card p-4 px-6 shadow-lg">

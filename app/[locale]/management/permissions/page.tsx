@@ -38,8 +38,6 @@ async function RolesManagementPage({ searchParams }: Props) {
   const t = await getTranslations("RoleManagement")
   const tableData = await getUserPermissions(isRoleVerticalLayout === "true")
 
-  console.log(tableData.dataRows.flatMap((r) => r.cells).map((c) => c?.colId))
-
   return (
     <div>
       <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-4">

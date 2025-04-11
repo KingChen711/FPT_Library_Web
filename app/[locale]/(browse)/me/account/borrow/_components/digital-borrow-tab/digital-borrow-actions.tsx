@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import { Eye, MoreHorizontal, RotateCcw } from "lucide-react"
 
 import { EResourceBookType } from "@/lib/types/enums"

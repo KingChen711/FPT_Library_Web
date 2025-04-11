@@ -1,12 +1,12 @@
 import Image from "next/image"
+import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Link } from "@/i18n/routing"
 import getBorrowRecordPatron from "@/queries/borrows/get-borrow-record-patron"
 import { format } from "date-fns"
 import { Check, X } from "lucide-react"
-import { getLocale } from "next-intl/server"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
+import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import BarcodeGenerator from "@/components/ui/barcode-generator"
 import {

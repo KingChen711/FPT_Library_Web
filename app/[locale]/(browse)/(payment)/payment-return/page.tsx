@@ -1,4 +1,4 @@
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { getPayment } from "@/queries/payments/get-payment"
 import { House } from "lucide-react"
 

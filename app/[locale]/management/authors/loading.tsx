@@ -19,7 +19,7 @@ function ManagementAuthorsLoading() {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-        <Skeleton className="h-9 w-[120px]" />
+        <Skeleton className="h-8 w-[120px]" />
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -30,7 +30,6 @@ function ManagementAuthorsLoading() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <Skeleton className="h-9 w-[104px]" />
           <Skeleton className="h-9 w-[136px]" />
         </div>
       </div>
@@ -39,11 +38,11 @@ function ManagementAuthorsLoading() {
         {/* tabs */}
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-1">
-            <Skeleton className="h-10 w-[120px]" />
-            <Skeleton className="h-10 w-[120px]" />
+            <Skeleton className="h-[42px] w-[120px]" />
+            <Skeleton className="h-[42px] w-[120px]" />
           </div>
           <div className="flex flex-wrap items-center gap-x-4">
-            <Skeleton className="h-9 w-[80px]" />
+            <Skeleton className="h-9 w-[120px]" />
             <Skeleton className="h-9 w-[130px]" />
             <Skeleton className="h-9 w-[134px]" />
           </div>
@@ -105,7 +104,7 @@ function ManagementAuthorsLoading() {
                     </TableCell>
                     <TableCell>
                       <div className="flex justify-center">
-                        <Skeleton className="h-16 w-12 rounded"></Skeleton>
+                        <Skeleton className="h-4 w-9 rounded"></Skeleton>
                       </div>
                     </TableCell>
                     <TableCell>

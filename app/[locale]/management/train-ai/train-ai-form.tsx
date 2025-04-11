@@ -2,8 +2,8 @@
 
 import React, { useEffect, useState, useTransition } from "react"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useTrainAI } from "@/contexts/train-ai-progress-provider"
-import { useRouter } from "@/i18n/routing"
 import { type TrainProgress } from "@/queries/books/get-train-progress"
 import { type UntrainedGroup } from "@/queries/books/get-untrained-group"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -188,8 +188,6 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
         })
       )
 
-      console.log(obj)
-
       const res = await trainV2(formData)
 
       if (res.isSuccess) {
@@ -222,8 +220,6 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
           })
         })
       })
-
-      console.log(res)
 
       handleServerActionError(res, locale)
     })
@@ -298,10 +294,6 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
 
     setPreventChangeCurrentBookIndex(true)
   }, [fields, form.formState.errors.groups])
-
-  useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form.formState.errors])
 
   if (!showForm)
     return (

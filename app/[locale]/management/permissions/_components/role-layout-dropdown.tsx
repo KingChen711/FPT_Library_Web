@@ -1,8 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { useSearchParams } from "next/navigation"
-import { useRouter } from "@/i18n/routing"
+import { useRouter, useSearchParams } from "next/navigation"
 import {
   Check,
   ChevronsUpDown,

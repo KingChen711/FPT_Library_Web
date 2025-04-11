@@ -32,7 +32,7 @@ function TrackingTypeBadge({ type }: Props) {
   return (
     <Badge
       variant={getTypeColor(type)}
-      className="flex w-[100px] justify-center"
+      className="flex w-[112px] justify-center"
     >
       {t(type.toString())}
     </Badge>

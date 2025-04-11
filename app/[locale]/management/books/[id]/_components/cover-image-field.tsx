@@ -57,12 +57,6 @@ function CoverImageField({ form, isPending, isRequireImage, authors }: Props) {
   const watchCoverImage = form.watch(`coverImage`)
 
   useEffect(() => {
-    console.log({ watchCoverImage })
-  }, [watchCoverImage])
-
-  useEffect(() => {
-    console.log(watchAuthorIds, watchTitle, watchPublisher)
-
     if (
       !watchAuthorIds ||
       watchAuthorIds.length === 0 ||
@@ -184,8 +178,6 @@ function CoverImageField({ form, isPending, isRequireImage, authors }: Props) {
 
   useEffect(() => {
     if (!mounted) return
-
-    console.log({ mounted })
 
     form.setValue(`coverImage`, undefined)
     form.setValue("checkedResult", undefined)

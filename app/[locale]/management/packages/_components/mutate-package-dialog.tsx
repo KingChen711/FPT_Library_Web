@@ -101,7 +101,6 @@ function MutatePackageDialog({
   }
 
   const onSubmit = async (values: TMutateLibraryPackageSchema) => {
-    console.log("🚀 ~ onSubmit ~ values:", values)
     startTransition(async () => {
       const res =
         type === "create"

@@ -12,13 +12,11 @@ export async function borrowLibraryItems(body: {
   const { getAccessToken } = auth()
 
   try {
-    console.log("🚀 ~ body:", body)
     const { message } = await http.post(`/api/borrows/requests`, body, {
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
     })
-    console.log("🚀 ~ message:", message)
 
     return {
       isSuccess: true,

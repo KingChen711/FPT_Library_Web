@@ -1,5 +1,7 @@
 import React from "react"
 import Image from "next/image"
+import BookCoverLabel from "@/public/images/book-cover-label.svg"
+import BookSpineLabel from "@/public/images/book-spine-label.svg"
 import { useTranslations } from "next-intl"
 
 import { AlertDialogHeader } from "./alert-dialog"
@@ -31,13 +33,13 @@ function GlueBarcodeInstructionsDialog() {
               <InstructionCard
                 title={t("Individual barcode")}
                 description={t("Individual barcode description")}
-                imageSrc="/images/book-cover-label.svg"
+                imageSrc={BookCoverLabel}
               />
 
               <InstructionCard
                 title={t("Classification barcode")}
                 description={t("Classification barcode description")}
-                imageSrc="/images/book-spine-label.svg"
+                imageSrc={BookSpineLabel}
               />
             </div>
           </DialogDescription>
@@ -72,6 +74,8 @@ function InstructionCard({
             src={imageSrc || "/placeholder.svg"}
             alt={title}
             fill
+            placeholder="blur"
+            priority
             className="object-contain p-4"
           />
         </div>

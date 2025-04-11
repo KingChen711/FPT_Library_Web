@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import getDetailEditions from "@/queries/library-item/get-detail-editions"
 import { Earth, Search } from "lucide-react"
 

@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
-import { useRouter } from "@/i18n/routing"
 import {
   BookOpen,
   Check,
@@ -63,8 +63,6 @@ const MeLibraryCard = () => {
   if (!user) {
     return <NoData />
   }
-
-  console.log("🚀 ~ MeLibraryCard ~ user:", user)
 
   return (
     <div>

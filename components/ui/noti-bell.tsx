@@ -1,8 +1,8 @@
 "use client"
 
 import { useCallback, useEffect, useState } from "react"
+import Link from "next/link"
 import { useAuth } from "@/contexts/auth-provider"
-import { Link } from "@/i18n/routing"
 import { type HubConnection } from "@microsoft/signalr"
 import { useQueryClient } from "@tanstack/react-query"
 import { format } from "date-fns"
