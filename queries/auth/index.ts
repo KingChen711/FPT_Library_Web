@@ -2,8 +2,7 @@ import "server-only"
 
 import { cache } from "react"
 import { cookies } from "next/headers"
-import { redirect } from "@/i18n/routing"
-import { getLocale } from "next-intl/server"
+import { redirect } from "next/navigation"
 
 import { http } from "@/lib/http"
 import { verifyToken } from "@/lib/server-utils"
@@ -39,14 +38,11 @@ const protect = async (feature?: EFeature) => {
     }
   } catch (error) {
     if (error instanceof Error) {
-      console.log(error.message)
+      console.error(error.message)
     } else {
-      console.log("Error: ", error)
+      console.error(error)
     }
-    redirect({
-      href: "/login",
-      locale: await getLocale(),
-    })
+    redirect("/login")
   }
 }
 

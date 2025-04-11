@@ -1,8 +1,9 @@
 "use client"
 
 import { useTransition, type ComponentProps } from "react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
-import { Link, useRouter } from "@/i18n/routing"
 import { useQueryClient } from "@tanstack/react-query"
 import {
   BadgeCheck,

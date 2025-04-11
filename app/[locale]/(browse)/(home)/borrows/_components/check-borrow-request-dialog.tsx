@@ -7,8 +7,8 @@ import {
   type Dispatch,
   type SetStateAction,
 } from "react"
+import { useRouter } from "next/navigation"
 import { useLibraryStorage } from "@/contexts/library-provider"
-import { useRouter } from "@/i18n/routing"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 

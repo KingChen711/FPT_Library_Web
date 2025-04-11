@@ -2,8 +2,8 @@ import React from "react"
 import dynamic from "next/dynamic"
 import { auth } from "@/queries/auth"
 import { Loader2 } from "lucide-react"
-import { getLocale } from "next-intl/server"
 
+import { getLocale } from "@/lib/get-locale"
 import { EFeature } from "@/lib/types/enums"
 
 import AssignableReservationsSection from "./_components/assignable-reservations-section"

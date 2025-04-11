@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState, useTransition } from "react"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import { type BookDetail } from "@/queries/books/get-book"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Loader2 } from "lucide-react"

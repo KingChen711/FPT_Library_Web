@@ -14,16 +14,14 @@ export default function useScript(src: string) {
         setLoaded(true)
       }
       document.body.appendChild(script)
-    } catch (error) {
-      console.log(error)
+    } catch {
       console.error(`An error occurred while loading ${src}`)
     }
 
     return () => {
       try {
         document.body.removeChild(script)
-      } catch (error) {
-        console.log(error)
+      } catch {
         console.error(`An error occurred while cleanup ${src}`)
       }
     }

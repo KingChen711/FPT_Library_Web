@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { auth } from "@/queries/auth"
 import getBorrowRecords from "@/queries/borrows/get-borrow-records"
 import { format } from "date-fns"
@@ -69,7 +69,7 @@ async function BorrowRecordsManagementPage({ searchParams }: Props) {
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-row items-center">
             <SearchForm
-              className="h-full rounded-r-none border-r-0"
+              className="h-10 rounded-r-none border-r-0"
               search={search}
             />
             <FiltersBorrowRecordsDialog />

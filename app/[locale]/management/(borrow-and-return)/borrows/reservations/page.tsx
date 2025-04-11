@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { auth } from "@/queries/auth"
 import getBorrowReservations from "@/queries/borrows/get-reservations"
 import { format } from "date-fns"
@@ -59,8 +59,6 @@ async function BorrowReservationsManagementPage({ searchParams }: Props) {
     ...rest,
   })
 
-  console.log(borrowReservations)
-
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
@@ -71,7 +69,7 @@ async function BorrowReservationsManagementPage({ searchParams }: Props) {
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-row items-center">
             <SearchForm
-              className="h-full rounded-r-none border-r-0"
+              className="h-10 rounded-r-none border-r-0"
               search={search}
             />
             <FiltersBorrowReservationsDialog />

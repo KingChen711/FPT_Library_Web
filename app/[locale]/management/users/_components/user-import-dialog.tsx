@@ -75,7 +75,6 @@ const UserImportDialog = () => {
   }
 
   function onSubmit(values: TUserImport) {
-    console.log(values)
     startTransition(async () => {
       const formData = new FormData()
       if (values.file) {

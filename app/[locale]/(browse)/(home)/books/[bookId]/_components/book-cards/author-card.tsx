@@ -1,10 +1,10 @@
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import NoData from "@/public/assets/images/no-data.png"
 import getRelatedLibraryItemsByAuthor from "@/queries/library-item/get-related-libraryItems-by-author"
 import { Cake, Earth, User } from "lucide-react"
-import { getLocale } from "next-intl/server"
 
+import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { type LibraryItem } from "@/lib/types/models"
 import {

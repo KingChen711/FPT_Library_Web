@@ -1,8 +1,8 @@
 import { Suspense } from "react"
 import { auth } from "@/queries/auth"
 import getCategories from "@/queries/categories/get-public-categories"
-import { getLocale } from "next-intl/server"
 
+import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { getFullName, splitCamelCase } from "@/lib/utils"
 import BrowseBookCardSkeleton from "@/components/ui/browse-book-card"

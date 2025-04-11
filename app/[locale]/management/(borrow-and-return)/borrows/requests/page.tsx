@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { auth } from "@/queries/auth"
 import getBorrowRequests from "@/queries/borrows/get-borrow-requests"
 import { format } from "date-fns"
@@ -58,8 +58,6 @@ async function BorrowRequestsManagementPage({ searchParams }: Props) {
     ...rest,
   })
 
-  console.log(borrowRequests)
-
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
@@ -70,7 +68,7 @@ async function BorrowRequestsManagementPage({ searchParams }: Props) {
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-row items-center">
             <SearchForm
-              className="h-full rounded-r-none border-r-0"
+              className="h-10 rounded-r-none border-r-0"
               search={search}
             />
             <FiltersBorrowRequestsDialog />

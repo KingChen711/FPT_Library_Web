@@ -2,7 +2,7 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { getLocalTimeZone } from "@internationalized/date"
 import { format } from "date-fns"

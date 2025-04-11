@@ -1,8 +1,8 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
-import { useRouter } from "@/i18n/routing"
 import { type HubConnection } from "@microsoft/signalr"
 import { format } from "date-fns"
 import { Loader2 } from "lucide-react"

@@ -200,13 +200,19 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                       <TableCell>{author.authorCode}</TableCell>
                       <TableCell className="ml-0 flex items-center pl-0">
                         <div className="flex items-center gap-2 overflow-hidden">
-                          <AuthorBioDialog bio={author.biography} />
-                          <div
-                            className="line-clamp-1 max-w-[260px] flex-1 text-ellipsis"
-                            dangerouslySetInnerHTML={{
-                              __html: author.biography,
-                            }}
-                          />
+                          {author.biography ? (
+                            <>
+                              <AuthorBioDialog bio={author.biography} />
+                              <div
+                                className="line-clamp-1 max-w-[260px] flex-1 text-ellipsis"
+                                dangerouslySetInnerHTML={{
+                                  __html: author.biography,
+                                }}
+                              />
+                            </>
+                          ) : (
+                            "-"
+                          )}
                         </div>
                       </TableCell>
 
@@ -240,17 +246,19 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                 </TableBody>
               </Table>
             </div>
-
-            <Paginator
-              pageSize={+pageSize}
-              pageIndex={pageIndex}
-              totalActualItem={authorsData.totalActualItem}
-              totalPage={authorsData.totalPage}
-              className="mt-6"
-            />
           </div>
         )}
       </div>
+
+      {authorsData.sources.length > 0 && (
+        <Paginator
+          pageSize={+pageSize}
+          pageIndex={pageIndex}
+          totalActualItem={authorsData.totalActualItem}
+          totalPage={authorsData.totalPage}
+          className="mt-6"
+        />
+      )}
     </div>
   )
 }

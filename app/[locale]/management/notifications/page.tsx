@@ -15,6 +15,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import NoResult from "@/components/ui/no-result"
 import Paginator from "@/components/ui/paginator"
 import ParseHtml from "@/components/ui/parse-html"
 import SearchForm from "@/components/ui/search-form"
@@ -75,7 +76,7 @@ async function NotificationPage({ searchParams }: Props) {
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex flex-row items-center">
             <SearchForm
-              className="h-full rounded-r-none border-r-0"
+              className="h-10 rounded-r-none border-r-0"
               search={search}
             />
             <FiltersNotificationsDialog />
@@ -86,107 +87,118 @@ async function NotificationPage({ searchParams }: Props) {
         </div>
       </div>
 
-      <div className="mt-4 grid w-full">
-        <div className="overflow-x-auto rounded-md border">
-          <Table className="overflow-hidden">
-            <TableHeader>
-              <TableRow>
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Title")}
-                  sortKey="Title"
-                />
-                <TableHead className="text-nowrap font-bold">
-                  {t("Message")}
-                </TableHead>
-                <TableHead className="text-nowrap font-bold">
-                  {t("Recipients")}
-                </TableHead>
-                <TableHead>
-                  <div className="flex justify-center text-nowrap font-bold">
-                    {t("Visibility")}
-                  </div>
-                </TableHead>
-                <TableHead className="text-nowrap font-bold">
-                  <div className="flex justify-center text-nowrap font-bold">
-                    {t("Type")}
-                  </div>
-                </TableHead>
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("Created date")}
-                  sortKey="createDate"
-                />
-                <TableHead className="text-nowrap font-bold">
-                  {t("Created by")}
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {notifications.map((notification) => (
-                <TableRow key={notification.notificationId}>
-                  <TableCell className="text-nowrap font-bold">
-                    {notification.title}
-                  </TableCell>
-                  <TableCell className="text-nowrap">
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button size="sm" variant="secondary">
-                          {t("View content")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
-                        <DialogHeader>
-                          <DialogTitle>{t("Message content")}</DialogTitle>
-                          <DialogDescription>
-                            <ParseHtml data={notification.message} />
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-                  </TableCell>
-                  <TableCell className="text-nowrap">
-                    {notification.isPublic ? (
-                      t("All")
-                    ) : (
-                      <RecipientsDialog
-                        notificationId={notification.notificationId}
-                      />
-                    )}
-                  </TableCell>
-
-                  <TableCell>
-                    <div className="flex justify-center">
-                      <VisibilityBadge isPublic={notification.isPublic} />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex justify-center">
-                      <NotificationTypeBadge
-                        type={notification.notificationType}
-                      />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    {format(new Date(notification.createDate), "dd-MM-yyyy")}
-                  </TableCell>
-                  <TableCell>
-                    {notification.createdByNavigation.email}
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+      {notifications.length === 0 ? (
+        <div className="flex justify-center p-4">
+          <NoResult
+            title={t("Notifications Not Found")}
+            description={t(
+              "No notifications matching your request were found Please check your information or try searching with different criteria"
+            )}
+          />
         </div>
+      ) : (
+        <div className="mt-4 grid w-full">
+          <div className="overflow-x-auto rounded-md border">
+            <Table className="overflow-hidden">
+              <TableHeader>
+                <TableRow>
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Title")}
+                    sortKey="Title"
+                  />
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Message")}
+                  </TableHead>
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Recipients")}
+                  </TableHead>
+                  <TableHead>
+                    <div className="flex justify-center text-nowrap font-bold">
+                      {t("Visibility")}
+                    </div>
+                  </TableHead>
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center text-nowrap font-bold">
+                      {t("Type")}
+                    </div>
+                  </TableHead>
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Created date")}
+                    sortKey="createDate"
+                  />
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Created by")}
+                  </TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {notifications.map((notification) => (
+                  <TableRow key={notification.notificationId}>
+                    <TableCell className="text-nowrap font-bold">
+                      {notification.title}
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <Button size="sm" variant="secondary">
+                            {t("View content")}
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
+                          <DialogHeader>
+                            <DialogTitle>{t("Message content")}</DialogTitle>
+                            <DialogDescription>
+                              <ParseHtml data={notification.message} />
+                            </DialogDescription>
+                          </DialogHeader>
+                        </DialogContent>
+                      </Dialog>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      {notification.isPublic ? (
+                        t("All")
+                      ) : (
+                        <RecipientsDialog
+                          notificationId={notification.notificationId}
+                        />
+                      )}
+                    </TableCell>
 
-        <Paginator
-          pageSize={+pageSize}
-          pageIndex={pageIndex}
-          totalPage={totalPage}
-          totalActualItem={totalActualItem}
-          className="mt-6"
-        />
-      </div>
+                    <TableCell>
+                      <div className="flex justify-center">
+                        <VisibilityBadge isPublic={notification.isPublic} />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex justify-center">
+                        <NotificationTypeBadge
+                          type={notification.notificationType}
+                        />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      {format(new Date(notification.createDate), "dd-MM-yyyy")}
+                    </TableCell>
+                    <TableCell>
+                      {notification.createdByNavigation.email}
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
+
+          <Paginator
+            pageSize={+pageSize}
+            pageIndex={pageIndex}
+            totalPage={totalPage}
+            totalActualItem={totalActualItem}
+            className="mt-6"
+          />
+        </div>
+      )}
     </div>
   )
 }

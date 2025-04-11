@@ -138,8 +138,6 @@ function FiltersPatronsDialog() {
       },
     })
 
-    console.log({ values, newUrl, wIsAllowBorrowMore })
-
     setOpen(false)
     router.replace(newUrl, { scroll: false })
   }
@@ -147,7 +145,7 @@ function FiltersPatronsDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="h-full rounded-l-none" variant="outline">
+        <Button className="h-10 rounded-l-none" variant="outline">
           <Filter />
 
           {t("Filters")}

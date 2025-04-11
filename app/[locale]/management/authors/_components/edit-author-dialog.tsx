@@ -16,7 +16,7 @@ import { useForm } from "react-hook-form"
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { ResourceType } from "@/lib/types/enums"
 import { type Author } from "@/lib/types/models"
-import { cn, formatDate, formatDateInput } from "@/lib/utils"
+import { cn, formatDateInput } from "@/lib/utils"
 import {
   editAuthorSchema,
   type TEditAuthorSchema,
@@ -60,7 +60,6 @@ type TUploadImageData = {
 }
 
 function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
-  console.log("🚀🚀🚀 ~ MutateAuthorDialog ~ author:", author)
   const { accessToken } = useAuth()
   const locale = useLocale()
   const queryClient = useQueryClient()
@@ -83,18 +82,6 @@ function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
         : undefined,
       dob: author.dob ? formatDateInput(author.dob) : undefined,
     },
-  })
-
-  console.log({
-    authorCode: author.authorCode || "",
-    fullName: author.fullName || "",
-    authorImage: author.authorImage ? author.authorImage : undefined,
-    biography: author.biography ? author.biography : undefined,
-    nationality: author.nationality ? author.nationality : undefined,
-    dateOfDeath: author.dateOfDeath
-      ? formatDate(author.dateOfDeath)
-      : undefined,
-    dob: author.dob ? formatDate(author.dob) : undefined,
   })
 
   const handleUploadImage = async (file: File): Promise<TUploadImageData> => {

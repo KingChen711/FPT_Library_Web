@@ -2,7 +2,7 @@
 
 import { useCallback, useState, useTransition } from "react"
 import Image from "next/image"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import AiBookUploadImg from "@/public/assets/images/ai-book-upload.png"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { zodResolver } from "@hookform/resolvers/zod"

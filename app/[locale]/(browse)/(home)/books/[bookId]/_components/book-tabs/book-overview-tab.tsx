@@ -1,6 +1,6 @@
 import getLibraryItem from "@/queries/library-item/get-libraryItem"
-import { getLocale } from "next-intl/server"
 
+import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { splitCamelCase } from "@/lib/utils"
 import NoData from "@/components/ui/no-data"

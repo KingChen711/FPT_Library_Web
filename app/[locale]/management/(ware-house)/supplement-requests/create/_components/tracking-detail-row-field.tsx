@@ -174,10 +174,6 @@ function TrackingDetailRowField({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchUnitPrice, watchItemTotal, form, index])
 
-  useEffect(() => {
-    console.log(wItemName)
-  }, [wItemName])
-
   return (
     <>
       <TableRow key={field.id}>

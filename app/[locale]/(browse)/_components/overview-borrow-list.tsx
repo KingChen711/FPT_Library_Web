@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { useLibraryStorage } from "@/contexts/library-provider"
-import { useRouter } from "@/i18n/routing"
 import { Book, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 

@@ -118,7 +118,6 @@ const AdvancedSearchTab = ({
       },
     })
     setOpen(false)
-    console.log(newUrl)
 
     router.push(newUrl, { scroll: false })
   }

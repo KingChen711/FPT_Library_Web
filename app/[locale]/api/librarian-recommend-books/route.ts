@@ -191,7 +191,7 @@ export async function POST(request: Request) {
               )
             ).filter(Boolean)
           } catch (error) {
-            console.log("Failed to fetch books:", error)
+            console.error("Failed to fetch books:", error)
             return []
           }
         })

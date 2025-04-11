@@ -87,7 +87,7 @@ function FiltersTrainSessionsDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="h-full rounded-l-none" variant="outline">
+        <Button className="h-10 rounded-l-none" variant="outline">
           <Filter />
 
           {t("Filters")}

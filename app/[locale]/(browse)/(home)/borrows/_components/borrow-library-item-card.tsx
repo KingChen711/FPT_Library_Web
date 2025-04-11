@@ -2,7 +2,7 @@
 
 import { useState, type Dispatch, type SetStateAction } from "react"
 import Image from "next/image"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import {
   Book,
   BookOpen,
@@ -64,7 +64,6 @@ const BorrowLibraryItemCard = ({
   const handleToggleSelect = () => {
     const libraryItemIds = [...selectedBorrow.selectedLibraryItemIds]
     if (libraryItemIds.includes(libraryItemId)) {
-      console.log(123)
       libraryItemIds.splice(libraryItemIds.indexOf(libraryItemId), 1)
     } else {
       libraryItemIds.push(libraryItemId)

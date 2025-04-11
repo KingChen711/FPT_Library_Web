@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useEffect, useState, useTransition } from "react"
-import { useRouter } from "@/i18n/routing"
+import React, { useState, useTransition } from "react"
+import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { getLocalTimeZone } from "@internationalized/date"
 import { Loader2 } from "lucide-react"
@@ -61,8 +61,6 @@ function CreateStockRequestForm() {
   >([])
 
   const onSubmit = async (values: TCreateSupplementRequestSchema) => {
-    console.log(values)
-
     startTransition(async () => {
       const res = await createSupplementRequest(values)
       if (res.isSuccess) {
@@ -122,10 +120,6 @@ function CreateStockRequestForm() {
     }
     return flag
   }
-
-  useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form.formState.errors])
 
   return (
     <Form {...form}>

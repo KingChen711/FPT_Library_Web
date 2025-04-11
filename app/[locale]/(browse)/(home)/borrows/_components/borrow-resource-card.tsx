@@ -50,7 +50,6 @@ const BorrowResourceCard = ({
   const handleToggleSelect = () => {
     const resourceIds = [...selectedBorrow.selectedResourceIds]
     if (resourceIds.includes(resourceId)) {
-      console.log(123)
       resourceIds.splice(resourceIds.indexOf(resourceId), 1)
     } else {
       resourceIds.push(resourceId)

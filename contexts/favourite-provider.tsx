@@ -71,10 +71,6 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
     }
   }, [favouriteData])
 
-  useEffect(() => {
-    console.log({ favouriteItemIds })
-  }, [favouriteItemIds])
-
   const { mutate: deleteFavourite } = useMutation({
     mutationFn: async (itemId: number) => {
       await http.delete(`/api/user-favorite/remove/${itemId}`, {
@@ -114,9 +110,8 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
       onSuccess: () => {
         refetch()
       },
-      onError: (error) => {
+      onError: () => {
         // Rollback khi có lỗi
-        console.log("Roll back", error)
 
         setFavouriteItemIds((prev) =>
           isFavourite ? [...prev, itemId] : prev.filter((id) => id !== itemId)

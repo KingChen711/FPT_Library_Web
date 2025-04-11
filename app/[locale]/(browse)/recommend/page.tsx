@@ -16,8 +16,6 @@ async function RecommendPage({ searchParams }: Props) {
 
   const parseSearchParams = searchRecommendSchema.parse(searchParams)
 
-  console.log({ searchParams, parseSearchParams })
-
   const t = await getTranslations("BookPage")
 
   return (

@@ -129,14 +129,10 @@ function EditBookDialog({ open, setOpen, book }: Props) {
       return
     }
 
-    console.log(book.coverImage)
-
     startTransition(async () => {
       if (values.file) {
         if (book.coverImage) {
           //update
-          const url = URL.createObjectURL(values.file)
-          console.log(url)
 
           const res = await updateBookImage({
             prevUrl: book.coverImage,

@@ -25,7 +25,6 @@ const BorrowTrackingPage = async ({ searchParams }: Props) => {
   const t = await getTranslations("BookPage.borrow tracking")
   const data = await getUserPendingActivity()
 
-  console.log("🚀 ~ BorrowTrackingPage ~ searchParams:", searchParams)
   if (!data) {
     return null
   }

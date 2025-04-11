@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react"
 import Image from "next/image"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import Autoplay from "embla-carousel-autoplay"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"

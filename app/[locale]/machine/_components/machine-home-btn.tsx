@@ -1,5 +1,5 @@
 import React from "react"
-import { useRouter } from "@/i18n/routing"
+import { useRouter } from "next/navigation"
 import { Home } from "lucide-react"
 
 import { Button } from "@/components/ui/button"

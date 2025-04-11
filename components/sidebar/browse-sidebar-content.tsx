@@ -1,6 +1,6 @@
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { browseRoutes } from "@/constants"
-import { Link } from "@/i18n/routing"
 import { ChevronRight } from "lucide-react"
 import { useTranslations } from "next-intl"
 

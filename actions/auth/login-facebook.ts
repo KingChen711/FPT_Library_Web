@@ -31,13 +31,13 @@ export async function loginFacebook(
     cookiesStore.set("accessToken", data.accessToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "strict" : "none",
+      sameSite: isProduction ? "none" : "strict",
       path: "/",
     })
     cookiesStore.set("refreshToken", data.refreshToken, {
       httpOnly: true,
       secure: isProduction,
-      sameSite: isProduction ? "strict" : "none",
+      sameSite: isProduction ? "none" : "strict",
       path: "/",
     })
 

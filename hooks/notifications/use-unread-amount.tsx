@@ -13,7 +13,6 @@ function useUnreadAmount() {
       try {
         if (!accessToken || !user || user.role.roleType === ERoleType.EMPLOYEE)
           return 0
-        console.log(accessToken, user)
 
         const { data } = await http
           .get<number>(`/api/privacy/unread-noti`, {

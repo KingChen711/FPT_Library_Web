@@ -192,8 +192,6 @@ function FastInputDialog({ replace, form }: Props) {
     startTransition(async () => {
       const items = await parseInput()
 
-      console.log(items)
-
       const isbns = items.map((i) => i.isbn)
 
       const availableItems = form

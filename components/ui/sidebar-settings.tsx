@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { ChevronsUpDown, Settings } from "lucide-react"
 import { useTranslations } from "next-intl"
 

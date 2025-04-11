@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import {
   ArrowLeft,
   BookOpen,
@@ -42,8 +42,6 @@ const BorrowRequestDetail = ({ params }: Props) => {
   const [openTransaction, setOpenTransaction] = useState(false)
   const t = useTranslations("BookPage.borrow tracking")
 
-  console.log(+params.borrowRequestId)
-
   const { data: borrowRequest, isLoading } = useBorrowRequestDetail(
     +params.borrowRequestId
   )
@@ -70,8 +68,6 @@ const BorrowRequestDetail = ({ params }: Props) => {
       </div>
     )
   }
-
-  console.log("🚀 ~ BorrowRequestDetail ~ borrowRequest:", borrowRequest)
 
   return (
     <div className="container mx-auto">

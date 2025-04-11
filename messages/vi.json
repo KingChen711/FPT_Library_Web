@@ -108,7 +108,7 @@
     "Continue with Google": "Tiếp tục với Google",
     "LoginFailedTitle": "Đăng nhập thất bại",
     "Welcome back!": "Chào mừng trở lại!",
-    "Message": "Đăng nhập để tiếp tục với Intelligent Library",
+    "Message": "Đăng nhập để tiếp tục với E-Library",
     "Google": "Google",
     "Enter your email": "Nhập email",
     "Don’t have an account?": "Chưa có tài khoản?",
@@ -277,6 +277,9 @@
     "management page": "Trang quản lý"
   },
   "GeneralManagement": {
+    "Cancel": "Hủy",
+    "Apply": "Áp dụng",
+    "Reset": "Khôi phục",
     "Authors Not Found": "Không tìm thấy tác giả",
     "No authors matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có tác giả nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "authors selected": "{amount} tác giả được chọn",
@@ -665,6 +668,10 @@
     "Train AI": "Train AI"
   },
   "LibraryCardManagementPage": {
+    "Patrons Not Found": "Không tìm thấy bạn đọc",
+    "No patrons matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có bạn đọc nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
+    "Cards Not Found": "Không tìm thấy thẻ",
+    "No cards matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có thẻ nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Filters cards": "Bộ lọc thẻ",
     "Reset default": "Khôi phục mặc định",
     "Columns": "Cột",
@@ -1160,6 +1167,8 @@
     "the document has been booked by you": "Tài liệu đã được bạn đặt"
   },
   "CategoriesManagementPage": {
+    "Categories Not Found": "Không tìm thấy loại tài liệu",
+    "No categories matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có loại tài liệu nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Allowed": "Cho phép",
     "Not allowed": "Không",
     "Allow AI training": "Cho phép train AI",
@@ -1233,6 +1242,8 @@
     "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận"
   },
   "SuppliersManagementPage": {
+    "Suppliers Not Found": "Không tìm thấy nhà cung cấp",
+    "No suppliers matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có nhà cung cấp nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Select a supplier": "Chọn một nhà cung cấp",
     "Suppliers": "Nhà cung cấp",
     "Supplier": "Nhà cung cấp",
@@ -1280,6 +1291,8 @@
     "Scan supplier name description": "Kiểm tra tên nhà cung cấp đã tồn tại trong cơ sở dữ liệu hay chưa"
   },
   "FinesManagementPage": {
+    "Fines Not Found": "Không tìm thấy phi",
+    "No fines matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có phi nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Not valid": "Không phù hợp",
     "Selected": "Đã chọn",
     "Select": "Chọn",
@@ -1317,6 +1330,8 @@
     "Import errors": "Import errors"
   },
   "NotificationsManagementPage": {
+    "Notifications Not Found": "Không tìm thấy thông báo",
+    "No notifications matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có thông báo nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Recipient": "Người nhận",
     "Sender": "Người gửi (người tạo thông báo)",
     "Reset": "Khôi phục",
@@ -1827,6 +1842,10 @@
     "DDC additional info": "Ngoài ra, nhiều thư viện công cộng và đại học cũng cung cấp hướng dẫn và tài liệu về cách sử dụng DDC. Bạn có thể tham khảo trang web của thư viện địa phương hoặc trường đại học gần nhất để biết thêm thông tin."
   },
   "TrackingsManagementPage": {
+    "Trackings Not Found": "Không tìm thấy nhập kho",
+    "No trackings matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có nhập kho nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
+    "Supplement requests Not Found": "Không tìm thấy yêu cầu bổ sung",
+    "No supplement requests matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có yêu cầu bổ sung nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Filters supplement requests": "Lọc yêu cầu bổ sung",
     "Supplement requests": "Yêu cầu bổ sung",
     "Supplement details": "Chi tiết yêu cầu",
