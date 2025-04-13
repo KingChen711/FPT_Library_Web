@@ -144,13 +144,15 @@ async function BorrowRequestsManagementPage({ searchParams }: Props) {
                     </TableCell>
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
-                        {format(
-                          new Date(request.expirationDate),
-                          "dd MMM yyyy",
-                          {
-                            locale: formatLocale,
-                          }
-                        )}
+                        {request.expirationDate
+                          ? format(
+                              new Date(request.expirationDate),
+                              "dd MMM yyyy",
+                              {
+                                locale: formatLocale,
+                              }
+                            )
+                          : "-"}
                       </div>
                     </TableCell>
                     <TableCell className="text-nowrap">

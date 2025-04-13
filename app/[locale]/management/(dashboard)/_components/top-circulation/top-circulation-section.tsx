@@ -4,6 +4,7 @@ import React, { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
+import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import {
   CartesianGrid,
@@ -18,6 +19,7 @@ import {
 import { parseSearchParamsDateRange } from "@/lib/filters"
 import { EDashboardPeriodLabel } from "@/lib/types/enums"
 import useDashboardTopCirculation from "@/hooks/dash-board/use-dashboard-top-circulation"
+import { Button } from "@/components/ui/button"
 import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
 import {
@@ -76,9 +78,17 @@ function TopCirculationSection() {
 
       <AvailableVsNeedBarChart data={data.availableVsNeedChart} />
 
-      <h3 className="mb-2 text-lg font-medium">
-        {t("Top circulation library items")}
-      </h3>
+      <div className="flex items-center justify-between gap-4">
+        <h3 className="text-lg font-medium">
+          {t("Top circulation library items")}
+        </h3>
+        <Button variant="outline" asChild>
+          <Link href={`/management/supplement-requests/create`}>
+            <Plus />
+            {t("Create supplement request")}
+          </Link>
+        </Button>
+      </div>
       <div className="mt-4 grid w-full">
         <div className="overflow-x-auto rounded-md border">
           {data.topBorrowItems.sources.length > 0 && (
@@ -230,7 +240,7 @@ function TopCirculationSection() {
                                   <Legend />
                                   <Line
                                     type="monotone"
-                                    dataKey="count"
+                                    dataKey="value"
                                     stroke="#8884d8"
                                     name={t("Units")}
                                   />
@@ -256,7 +266,7 @@ function TopCirculationSection() {
                                   <Legend />
                                   <Line
                                     type="monotone"
-                                    dataKey="count"
+                                    dataKey="value"
                                     stroke="#82ca9d"
                                     name={t("Units")}
                                   />

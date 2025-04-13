@@ -1,9 +1,9 @@
 "use client"
 
 import { useTranslations } from "next-intl"
-import Barcode from "react-barcode"
 
 import { type LibraryItem } from "@/lib/types/models"
+import BarcodeGenerator from "@/components/ui/barcode-generator"
 import {
   Table,
   TableBody,
@@ -46,12 +46,13 @@ const BookInstancesTab = ({ libraryItem }: Props) => {
                 </TableCell>
                 <TableCell>
                   <div className="flex w-full justify-center">
-                    <Barcode
+                    <BarcodeGenerator
+                      options={{
+                        width: 2,
+                        height: 26,
+                        fontSize: 16,
+                      }}
                       value={instance.barcode}
-                      width={1.5}
-                      height={50}
-                      fontSize={12}
-                      // displayValue={false}
                     />
                   </div>
                 </TableCell>

@@ -33,6 +33,8 @@ export default function ShelfSelector({
   const [shelfName, setShelfName] = useState(initShelfName)
   const [isMostAppropriate, setIsMostAppropriate] = useState(true)
   const [isChildrenSection, setIsChildrenSection] = useState(false)
+  const [isJournalSection, setIsJournalSection] = useState(false)
+  const [isReferenceSection, setIsReferenceSection] = useState(false)
 
   const [selectedShelf, setSelectedShelf] = useState<number | undefined>(
     undefined
@@ -42,8 +44,8 @@ export default function ShelfSelector({
     libraryItemId,
     isMostAppropriate,
     isChildrenSection,
-    isJournalSection: undefined,
-    isReferenceSection: undefined,
+    isJournalSection,
+    isReferenceSection,
   })
 
   if (!editMode && (open === undefined || !open)) {
@@ -134,6 +136,32 @@ export default function ShelfSelector({
               {t("Children section")}
             </Label>
           </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              checked={isJournalSection}
+              onCheckedChange={(val) => setIsJournalSection(Boolean(val))}
+              id="most-appropriate"
+            />
+            <Label
+              htmlFor="most-appropriate"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {t("Journal section")}
+            </Label>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Checkbox
+              checked={isReferenceSection}
+              onCheckedChange={(val) => setIsReferenceSection(Boolean(val))}
+              id="most-appropriate"
+            />
+            <Label
+              htmlFor="most-appropriate"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              {t("Reference section")}
+            </Label>
+          </div>
         </div>
 
         <div className="flex flex-wrap gap-4">
@@ -145,6 +173,11 @@ export default function ShelfSelector({
               selected={selectedShelf === s.shelfId}
             />
           ))}
+          {shelveData?.libraryShelves.length === 0 && (
+            <div className="flex h-[278px] w-full items-center justify-center">
+              {t("Appropriate shelves not found")}
+            </div>
+          )}
         </div>
 
         {/* <Select onValueChange={(value) => setSelectedShelf(Number(value))}>

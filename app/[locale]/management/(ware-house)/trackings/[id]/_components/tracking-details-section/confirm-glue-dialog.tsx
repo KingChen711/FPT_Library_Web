@@ -3,13 +3,13 @@
 import React, { useRef, useState, useTransition } from "react"
 import { Loader2, Printer } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import Barcode from "react-barcode"
 import { useReactToPrint } from "react-to-print"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { confirmHasGlued } from "@/actions/trackings/confirm-has-glued"
 import useRangeBarcodes from "@/hooks/books/use-range-barcodes"
 import { toast } from "@/hooks/use-toast"
+import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog"
 import GlueBarcodeInstructionsDialog from "@/components/ui/glue-barcode-instructions-dialog"
@@ -70,12 +70,14 @@ function ConfirmGlueDialog({
                     <div key={barcode} className="border border-black p-1">
                       <div className="flex flex-col items-center justify-center border-4 border-black">
                         <div className="flex flex-col">
-                          <Barcode
+                          <BarcodeGenerator
+                            options={{
+                              width: 2,
+                              height: 26,
+                              fontSize: 16,
+                              rounded: false,
+                            }}
                             value={barcode}
-                            width={1.5}
-                            height={24}
-                            fontSize={16}
-                            fontOptions="bold"
                           />
                         </div>
                       </div>

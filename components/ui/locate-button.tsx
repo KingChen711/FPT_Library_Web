@@ -47,7 +47,9 @@ function LocateButton({ shelfId, shelfNumber, children }: Props) {
   return (
     <>
       <Dialog open={openLocate} onOpenChange={setOpenLocate}>
-        <DialogTrigger asChild>{children}</DialogTrigger>
+        <DialogTrigger asChild className="cursor-pointer">
+          {children}
+        </DialogTrigger>
         <DialogContent className="max-h-[80dvh] w-[85vw] overflow-y-auto">
           {fetchingShelfDetail ? (
             <div className="items-center justify-center">

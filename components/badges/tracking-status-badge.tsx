@@ -30,7 +30,7 @@ function TrackingStatusBadge({ status }: Props) {
   return (
     <Badge
       variant={getTypeColor(status)}
-      className="flex w-[92px] justify-center"
+      className="flex w-[112px] justify-center"
     >
       {t(status.toString())}
     </Badge>

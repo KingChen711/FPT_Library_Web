@@ -2,10 +2,12 @@
 
 import React, { useState, useTransition } from "react"
 import { useAuth } from "@/contexts/auth-provider"
+import { type TTrackingDetail } from "@/queries/trackings/get-tracking"
 import {
   Check,
   ChevronDown,
   ChevronUp,
+  FileUp,
   Loader2,
   Pencil,
   Trash2,
@@ -15,8 +17,8 @@ import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { ETrackingStatus } from "@/lib/types/enums"
-import { type Supplier, type Tracking } from "@/lib/types/models"
 import { changeTrackingStatus } from "@/actions/trackings/change-tracking-status"
+import { getExportTrackingDetails } from "@/actions/trackings/get-export-tracking-details"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -29,11 +31,10 @@ import { Icons } from "@/components/ui/icons"
 
 import DeleteTrackingDialog from "./delete-tracking-dialog"
 import EditTrackingDialog from "./edit-tracking-dialog"
+import { generatePDF } from "./generate-pdf/generate-pdf"
 
 type Props = {
-  tracking: Tracking & {
-    supplier: Supplier
-  }
+  tracking: TTrackingDetail
 }
 
 function TrackingActionsDropdown({ tracking }: Props) {
@@ -43,6 +44,7 @@ function TrackingActionsDropdown({ tracking }: Props) {
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [isPending, startTransition] = useTransition()
+  const [exporting, startExport] = useTransition()
   const { user } = useAuth()
 
   const handleChangeStatus = (status: ETrackingStatus) => {
@@ -61,8 +63,34 @@ function TrackingActionsDropdown({ tracking }: Props) {
     })
   }
 
+  const handleExport = () => {
+    startExport(async () => {
+      const res = await getExportTrackingDetails(tracking.trackingId)
+      if (!res) {
+        toast({
+          title: locale === "vi" ? "Lỗi" : "Failed",
+          description: locale === "vi" ? "Lỗi không xác định" : "Unknown error",
+          variant: "danger",
+        })
+        return
+      }
+
+      const {
+        result: { sources: trackingDetails },
+        statistics,
+        statisticSummary,
+      } = res
+      generatePDF({
+        statistics,
+        tracking,
+        trackingDetails,
+        statisticSummary,
+      })
+    })
+  }
+
   const handleOpenChange = (value: boolean) => {
-    if (isPending) return
+    if (isPending || exporting) return
     setOpenDropdown(value)
   }
 
@@ -89,33 +117,49 @@ function TrackingActionsDropdown({ tracking }: Props) {
         </DropdownMenuTrigger>
         <DropdownMenuContent className="overflow-visible">
           {/* ! TODO:hardcode */}
+          {tracking.status === ETrackingStatus.COMPLETED && (
+            <>
+              <DropdownMenuItem
+                disabled={isPending || exporting}
+                className="cursor-pointer"
+                onClick={() => handleExport()}
+              >
+                {exporting ? (
+                  <Loader2 className="size-4 animate-spin" />
+                ) : (
+                  <FileUp className="size-4" />
+                )}
+                {t("Export file")}
+              </DropdownMenuItem>
+            </>
+          )}
           {user?.role.englishName === "HeadLibrarian" && (
             <>
               {tracking.status === ETrackingStatus.PROCESSING && (
                 <>
                   <DropdownMenuItem
-                    disabled={isPending}
+                    disabled={isPending || exporting}
                     className="cursor-pointer"
                     onClick={() =>
                       handleChangeStatus(ETrackingStatus.COMPLETED)
                     }
                   >
                     {isPending ? (
-                      <Loader2 className="size-4" />
+                      <Loader2 className="size-4 animate-spin" />
                     ) : (
                       <Check className="size-4" />
                     )}
                     {t("Completed")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    disabled={isPending}
+                    disabled={isPending || exporting}
                     className="cursor-pointer"
                     onClick={() =>
                       handleChangeStatus(ETrackingStatus.CANCELLED)
                     }
                   >
                     {isPending ? (
-                      <Loader2 className="size-4" />
+                      <Loader2 className="size-4 animate-spin" />
                     ) : (
                       <X className="size-4" />
                     )}
@@ -127,7 +171,7 @@ function TrackingActionsDropdown({ tracking }: Props) {
               {tracking.status === ETrackingStatus.COMPLETED && (
                 <>
                   <DropdownMenuItem
-                    disabled={isPending}
+                    disabled={isPending || exporting}
                     className="cursor-pointer"
                     onClick={() =>
                       handleChangeStatus(ETrackingStatus.PROCESSING)
@@ -141,7 +185,7 @@ function TrackingActionsDropdown({ tracking }: Props) {
             </>
           )}
           <DropdownMenuItem
-            disabled={isPending}
+            disabled={isPending || exporting}
             className="cursor-pointer"
             onClick={() => {
               setOpenDropdown(false)
@@ -152,7 +196,7 @@ function TrackingActionsDropdown({ tracking }: Props) {
             {t("Edit information")}
           </DropdownMenuItem>
           <DropdownMenuItem
-            disabled={isPending}
+            disabled={isPending || exporting}
             className="cursor-pointer"
             onClick={() => {
               setOpenDropdown(false)

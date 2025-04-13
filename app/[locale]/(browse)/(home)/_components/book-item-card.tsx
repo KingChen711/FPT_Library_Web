@@ -62,7 +62,7 @@ const BookItemCard = ({ item, id, Wrapper }: Props) => {
                   alt={libraryItem.title}
                   height={540}
                   width={360}
-                  className="aspect-[2/3] h-[270px] w-[180px] rounded-md object-fill"
+                  className="aspect-[2/3] h-[270px] w-[180px] rounded-md border object-fill"
                 />
               </div>
 

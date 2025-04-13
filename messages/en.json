@@ -1,5 +1,6 @@
 {
   "Dashboard": {
+    "Create supplement request": "Create supplement request",
     "Selected": "Selected",
     "Select": "Select",
     "Unselect": "Unselect",
@@ -617,6 +618,7 @@
     "Permissions": "Permissions"
   },
   "Routes": {
+    "Digital borrows": "Digital borrows",
     "Supplement requests": "Supplement requests",
     "Train sessions": "Train sessions",
     "Borrow reservations": "Reservations",
@@ -874,6 +876,8 @@
     "Cancel": "Cancel"
   },
   "BookPage": {
+    "Reviews Not Found": "Reviews Not Found",
+    "There are currently no reviews for this document Be the first to review": "There are currently no reviews for this item. Be the first to review.",
     "Recommend Books Not Found": "Recommend Items Not Found",
     "No books were found that matched your needs": "No items were found that matched your needs.",
     "That your all recommend books": "That your all recommend books",
@@ -1369,6 +1373,7 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Appropriate shelves not found": "Appropriate shelves not found",
     "min5CoverImagesPerGroup": "At least 5 item image per group",
     "Library Items Not Found": "Library Items Not Found",
     "No library items matching your request were found Please check your information or try searching with different criteria": "No library items matching your request were found. Please check your information or try searching with different criteria",
@@ -1379,6 +1384,8 @@
     "Add": "Add",
     "Search for articles, books, journals, and other content": "Search for articles, books, journals, and other content",
     "Children section": "Children section",
+    "Journal section": "Journal section",
+    "Reference section": "Reference section",
     "Circulated": "Circulated",
     "Library item": "Library item",
     "Group": "Group",
@@ -1386,7 +1393,7 @@
     "Base on tracking detail": "Base on tracking detail",
     "Shelf name": "Shelf name",
     "to": "to",
-    "Most appropriate shelves": "Most appropriate shelves",
+    "Most appropriate shelves": "Most appropriate shelves base on DDC",
     "Year": "Year",
     "Delete catalog information": "Delete catalog information",
     "Item information": "Item information",
@@ -1649,6 +1656,7 @@
     "Request units": "Request units",
     "Borrowed units": "Borrowed units",
     "Reserved units": "Reserved units",
+    "Lost units": "Lost units",
     "Change to draft to delete": "Change to draft to delete",
     "Barcode": "Barcode",
     "Edit barcode": "Edit barcode",
@@ -1844,6 +1852,7 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Export file": "Export file",
     "Supplement requests Not Found": "Supplement requests Not Found",
     "No supplement requests matching your request were found Please check your information or try searching with different criteria": "No supplement requests matching your request were found. Please check your information or try searching with different criteria",
     "Trackings Not Found": "Trackings Not Found",
@@ -2231,6 +2240,40 @@
     "Out of shelf": "Out of shelf"
   },
   "BorrowAndReturnManagementPage": {
+    "Default borrow duration days": "Default borrow duration days",
+    "resourceType": "Resource type",
+    "resourceSize": "Resource size",
+    "defaultBorrowDurationDays": "Default borrow duration days",
+    "borrowPrice": "Borrow price",
+    "Filters borrow digitals": "Filters borrow digitals",
+    "Borrow price": "Borrow price",
+    "days": "days",
+    "Size": "Size",
+    "Resource": "Resource",
+    "Resource type": "Resource type",
+    "Resource item": "Resource item",
+    "Borrow digitals": "Borrow digitals",
+    "Borrow Digitals Not Found": "Borrow Digitals Not Found",
+    "No borrow digitals matching your request were found Please check your information or try searching with different criteria": "No borrow digitals matching your request were found Please check your information or try searching with different criteria",
+    "Progress": "Progress",
+    "Request phase": "Request phase",
+    "Request on": "Request on",
+    "Expires": "Expires",
+    "No pre request for borrowing": "No pre-request for borrowing.",
+    "items requested": "item(s) requested",
+    "Borrowing phase": "Borrowing phase",
+    "Borrowed on": "Borrowed on",
+    "items borrowed": "item(s) borrowed",
+    "Due": "Due",
+    "Borrow details": "Borrow details",
+    "Initial condition": "Initial condition",
+    "Extensions count": "Extensions count",
+    "Return details": "Return details",
+    "Condition check": "Condition check",
+    "Not returned yet": "Not returned yet",
+    "Fine due date": "Fine due date",
+    "Are you sure you want to select barcode to assign": "Are you sure you want to select {barcode} to assign?",
+    "Return items": "Return items",
     "Borrow duration": "Borrow duration",
     "Extend pickup date": "Extend pickup date",
     "Floor": "Floor",

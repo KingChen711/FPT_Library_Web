@@ -105,44 +105,40 @@ function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
 
   const onSubmit = async (values: TEditAuthorSchema) => {
     startTransition(async () => {
-      if (file) {
-        const imageData = await handleUploadImage(file)
-        const payload = {
-          ...values,
-          authorImage: imageData.data.secureUrl,
+      try {
+        if (file && values.authorImage?.startsWith("blob")) {
+          const imageData = await handleUploadImage(file)
+          values.authorImage = imageData.data.secureUrl
         }
-        const res = await updateAuthor(author.authorId, payload)
-        if (res.isSuccess) {
-          form.reset()
-          setOpenEdit(false)
-          toast({
-            title: locale === "vi" ? "Thành công" : "Success",
-            description: res.data,
-            variant: "success",
-          })
-        } else {
-          handleServerActionError(res, locale, form)
-        }
+      } catch {
+        toast({
+          title: locale === "vi" ? "Thất bại" : "Failed",
+          description:
+            locale === "vi"
+              ? "Có lỗi xảy ra khi tải ảnh tác giả. Vui lòng thử lại hoặc dùng ảnh khác"
+              : "There was an error uploading the author image. Please try again or use a different image.",
+          variant: "danger",
+        })
+        return
       }
 
-      if (!file) {
-        const res = await updateAuthor(author.authorId, values)
-        if (res.isSuccess) {
-          form.reset()
-          setOpenEdit(false)
-          toast({
-            title: locale === "vi" ? "Thành công" : "Success",
-            description: res.data,
-            variant: "success",
-          })
-        } else {
-          handleServerActionError(res, locale, form)
-        }
+      const res = await updateAuthor(author.authorId, values)
+      if (res.isSuccess) {
+        form.reset()
+        setOpenEdit(false)
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data,
+          variant: "success",
+        })
+        queryClient.invalidateQueries({
+          queryKey: ["management-authors"],
+        })
+        return
       }
-    })
 
-    queryClient.invalidateQueries({
-      queryKey: ["management-authors"],
+      form.setValue("authorImage", values.authorImage)
+      handleServerActionError(res, locale, form)
     })
   }
 

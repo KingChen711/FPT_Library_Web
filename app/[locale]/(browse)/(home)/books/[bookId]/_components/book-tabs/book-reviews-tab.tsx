@@ -6,7 +6,7 @@ import { User2 } from "lucide-react"
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { Card } from "@/components/ui/card"
-import NoData from "@/components/ui/no-data"
+import NoResult from "@/components/ui/no-result"
 import Rating from "@/components/ui/rating"
 
 import RatingDialog from "./rating-dialog"
@@ -27,9 +27,7 @@ const BookReviewsTab = async ({ libraryItemId, averageRating }: Props) => {
   const currentUserReview = await getCurrentUserReview(libraryItemId)
   const formatLocale = await getFormatLocale()
 
-  if (reviews.sources.length === 0) {
-    return <NoData />
-  }
+  console.log(reviews.sources)
 
   return (
     <div className="space-y-4">
@@ -49,6 +47,14 @@ const BookReviewsTab = async ({ libraryItemId, averageRating }: Props) => {
           reviewText={currentUserReview?.reviewText || undefined}
         />
       </div>
+      {reviews.sources.length === 0 && (
+        <NoResult
+          title={t("Reviews Not Found")}
+          description={t(
+            "There are currently no reviews for this document Be the first to review"
+          )}
+        />
+      )}
       {reviews.sources.map((review) => (
         <Card
           key={review.reviewId}

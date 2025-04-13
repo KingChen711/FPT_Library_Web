@@ -1,17 +1,13 @@
 import React from "react"
-import Image from "next/image"
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import { auth } from "@/queries/auth"
 import getBorrowRecord from "@/queries/borrows/get-borrow-record"
 import { format } from "date-fns"
-import { Check, Eye, MoreHorizontal, Navigation, X } from "lucide-react"
+import { Check, X } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
-import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
-import { formatPrice } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import BarcodeGenerator from "@/components/ui/barcode-generator"
 import {
@@ -32,28 +28,13 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import NoData from "@/components/ui/no-data"
 import ParseHtml from "@/components/ui/parse-html"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import BorrowRecordStatusBadge from "@/components/badges/borrow-record-status-badge"
 import BorrowTypeBadge from "@/components/badges/borrow-type-bade"
 import CardStatusBadge from "@/components/badges/card-status-badge"
-import FineBorrowStatusBadge from "@/components/badges/fine-borrow-status"
-import FineTypeBadge from "@/components/badges/fine-type-badge"
 import IssuanceMethodBadge from "@/components/badges/issuance-method-badge"
+
+import BorrowHistory from "./components/borrow-history"
 
 type Props = {
   params: { id: number }
@@ -69,7 +50,6 @@ async function BorrowRecordDetailPage({ params }: Props) {
 
   if (!record) notFound()
 
-  const locale = await getLocale()
   const formatLocale = await getFormatLocale()
 
   const title = `${record.librarycard.fullName} - ${format(
@@ -473,7 +453,7 @@ async function BorrowRecordDetailPage({ params }: Props) {
           </div>
         )}
 
-        <div className="flex flex-col gap-3">
+        {/* <div className="flex flex-col gap-3">
           <h3 className="text-xl font-semibold">
             {t("Borrow record details")}
           </h3>
@@ -869,7 +849,9 @@ async function BorrowRecordDetailPage({ params }: Props) {
               </Table>
             </div>
           </div>
-        </div>
+        </div> */}
+
+        <BorrowHistory borrowRecord={record} />
       </div>
     </div>
   )

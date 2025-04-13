@@ -309,121 +309,123 @@ export default function AssignReservationsForm({
               />
             )}
           </div>
-          <div className="flex flex-col gap-2">
-            <div className="flex flex-wrap items-center justify-between gap-4">
-              <Label className="text-base">{t("Labels")}</Label>
-              <Button onClick={() => handlePrintBarcodes()}>
-                {t("Print labels")}
-              </Button>
-            </div>
-            <div ref={barcodesPrintRef}>
-              <div className="flex flex-col gap-2 border bg-white p-4 text-black">
-                <div className="flex flex-wrap">
-                  {reservations.map((reservation) => {
-                    const { libraryItemInstance } = reservation
-                    const assignedReservation = assignedReservations.find(
-                      (r) =>
-                        r.reservationQueue.libraryItemInstanceId ===
-                        libraryItemInstance.libraryItemInstanceId
-                    )
+          {mode === "label" && (
+            <div className="flex flex-col gap-2">
+              <div className="flex flex-wrap items-center justify-between gap-4">
+                <Label className="text-base">{t("Labels")}</Label>
+                <Button onClick={() => handlePrintBarcodes()}>
+                  {t("Print labels")}
+                </Button>
+              </div>
+              <div ref={barcodesPrintRef}>
+                <div className="flex flex-col gap-2 border bg-white p-4 text-black">
+                  <div className="flex flex-wrap">
+                    {reservations.map((reservation) => {
+                      const { libraryItemInstance } = reservation
+                      const assignedReservation = assignedReservations.find(
+                        (r) =>
+                          r.reservationQueue.libraryItemInstanceId ===
+                          libraryItemInstance.libraryItemInstanceId
+                      )
 
-                    const isShow = mode === "assign" || !!assignedReservation
+                      const isShow = !!assignedReservation
 
-                    if (!isShow) return null
-                    return (
-                      <div
-                        key={reservation.queueId}
-                        className="w-full max-w-md rounded-md border"
-                      >
-                        <div className="space-y-4 p-4">
-                          <div className="rounded-md bg-warning p-3 text-center">
-                            <p className="font-bold text-danger">
-                              {t("Reservation code")}:{" "}
-                              {assignedReservation?.reservationCode}
-                            </p>
-                          </div>
-
-                          <div className="flex flex-wrap justify-between gap-4">
-                            <div className="space-y-2">
-                              <p className="text-sm text-muted-foreground">
-                                {t("Fullname")}:
+                      if (!isShow) return null
+                      return (
+                        <div
+                          key={reservation.queueId}
+                          className="w-full max-w-md rounded-md border"
+                        >
+                          <div className="space-y-4 p-4">
+                            <div className="rounded-md bg-warning p-3 text-center">
+                              <p className="font-bold text-danger">
+                                {t("Reservation code")}:{" "}
+                                {assignedReservation?.reservationCode}
                               </p>
-                              <p className="font-medium">
-                                {assignedReservation?.fullName}
-                              </p>
+                            </div>
+
+                            <div className="flex flex-wrap justify-between gap-4">
+                              <div className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                  {t("Fullname")}:
+                                </p>
+                                <p className="font-medium">
+                                  {assignedReservation?.fullName}
+                                </p>
+                              </div>
+
+                              <div className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                  {t("Reservation date")}:
+                                </p>
+                                <p className="font-medium">
+                                  {format(
+                                    new Date(
+                                      assignedReservation.reservationQueue.reservationDate
+                                    ),
+                                    "dd MMM yyyy",
+                                    { locale: formatLocale }
+                                  )}
+                                </p>
+                              </div>
+                            </div>
+
+                            <div className="flex flex-wrap justify-between gap-4">
+                              <div className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                  {t("Assigned date")}:
+                                </p>
+                                <p className="font-medium">
+                                  {format(
+                                    new Date(assignedReservation.assignedDate),
+                                    "dd MMM yyyy",
+                                    { locale: formatLocale }
+                                  )}
+                                </p>
+                              </div>
+
+                              <div className="space-y-2">
+                                <p className="text-sm text-muted-foreground">
+                                  {t("Expired date")}:
+                                </p>
+                                <p className="font-medium">
+                                  {format(
+                                    new Date(
+                                      assignedReservation.reservationQueue.expiryDate!
+                                    ),
+                                    "dd MMM yyyy",
+                                    { locale: formatLocale }
+                                  )}
+                                </p>
+                              </div>
                             </div>
 
                             <div className="space-y-2">
                               <p className="text-sm text-muted-foreground">
-                                {t("Reservation date")}:
+                                {t("Patron card code")}:
                               </p>
-                              <p className="font-medium">
-                                {format(
-                                  new Date(
-                                    assignedReservation!.reservationQueue.reservationDate
-                                  ),
-                                  "dd MMM yyyy",
-                                  { locale: formatLocale }
-                                )}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="flex flex-wrap justify-between gap-4">
-                            <div className="space-y-2">
-                              <p className="text-sm text-muted-foreground">
-                                {t("Assigned date")}:
-                              </p>
-                              <p className="font-medium">
-                                {format(
-                                  new Date(assignedReservation!.assignedDate),
-                                  "dd MMM yyyy",
-                                  { locale: formatLocale }
-                                )}
-                              </p>
-                            </div>
-
-                            <div className="space-y-2">
-                              <p className="text-sm text-muted-foreground">
-                                {t("Expired date")}:
-                              </p>
-                              <p className="font-medium">
-                                {format(
-                                  new Date(
-                                    assignedReservation!.reservationQueue.expiryDate!
-                                  ),
-                                  "dd MMM yyyy",
-                                  { locale: formatLocale }
-                                )}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="space-y-2">
-                            <p className="text-sm text-muted-foreground">
-                              {t("Patron card code")}:
-                            </p>
-                            <div className="flex justify-center">
-                              <BarcodeGenerator
-                                value={assignedReservation!.cardBarcode}
-                                options={{
-                                  format: "CODE128",
-                                  displayValue: true,
-                                  fontSize: 12,
-                                  width: 1,
-                                  height: 24,
-                                }}
-                              />
+                              <div className="flex justify-center">
+                                <BarcodeGenerator
+                                  value={assignedReservation.cardBarcode}
+                                  options={{
+                                    format: "CODE128",
+                                    displayValue: true,
+                                    fontSize: 12,
+                                    width: 1,
+                                    height: 24,
+                                  }}
+                                />
+                              </div>
                             </div>
                           </div>
                         </div>
-                      </div>
-                    )
-                  })}
+                      )
+                    })}
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </>

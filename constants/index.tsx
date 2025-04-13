@@ -97,10 +97,10 @@ export const managementRoutes = [
         },
       },
       {
-        route: "/management/return",
-        label: "Returns",
+        route: "/management/borrows/digitals",
+        label: "Digital borrows",
         Icon: (props: { className?: string }) => {
-          return <Icons.Return {...props} />
+          return <Icons.Digital {...props} />
         },
       },
     ],
