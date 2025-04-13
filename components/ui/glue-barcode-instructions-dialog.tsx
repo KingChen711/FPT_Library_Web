@@ -30,17 +30,49 @@ function GlueBarcodeInstructionsDialog() {
           <DialogTitle>{t("Glue barcode instructions")}</DialogTitle>
           <DialogDescription asChild>
             <div className="grid gap-8 md:grid-cols-2">
-              <InstructionCard
-                title={t("Individual barcode")}
-                description={t("Individual barcode description")}
-                imageSrc={BookCoverLabel}
-              />
+              <Card className="h-full rounded-md">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    {t("Individual barcode")}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-muted-foreground">
+                    {t("Individual barcode description")}
+                  </p>
+                  <div className="relative aspect-video overflow-hidden rounded-md bg-muted">
+                    <Image
+                      src={BookCoverLabel}
+                      alt={t("Individual barcode")}
+                      fill
+                      priority
+                      className="object-contain p-4"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
 
-              <InstructionCard
-                title={t("Classification barcode")}
-                description={t("Classification barcode description")}
-                imageSrc={BookSpineLabel}
-              />
+              <Card className="h-full rounded-md">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2">
+                    {t("Classification barcode")}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
+                  <p className="text-muted-foreground">
+                    {t("Classification barcode description")}
+                  </p>
+                  <div className="relative aspect-video overflow-hidden rounded-md bg-muted">
+                    <Image
+                      src={BookSpineLabel}
+                      alt={t("Classification barcode")}
+                      fill
+                      priority
+                      className="object-contain p-4"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
             </div>
           </DialogDescription>
         </AlertDialogHeader>
@@ -50,36 +82,3 @@ function GlueBarcodeInstructionsDialog() {
 }
 
 export default GlueBarcodeInstructionsDialog
-
-interface InstructionCardProps {
-  title: string
-  description: string
-  imageSrc: string
-}
-
-function InstructionCard({
-  title,
-  description,
-  imageSrc,
-}: InstructionCardProps) {
-  return (
-    <Card className="h-full rounded-md">
-      <CardHeader>
-        <CardTitle className="flex items-center gap-2">{title}</CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <p className="text-muted-foreground">{description}</p>
-        <div className="relative aspect-video overflow-hidden rounded-md bg-muted">
-          <Image
-            src={imageSrc || "/placeholder.svg"}
-            alt={title}
-            fill
-            placeholder="blur"
-            priority
-            className="object-contain p-4"
-          />
-        </div>
-      </CardContent>
-    </Card>
-  )
-}

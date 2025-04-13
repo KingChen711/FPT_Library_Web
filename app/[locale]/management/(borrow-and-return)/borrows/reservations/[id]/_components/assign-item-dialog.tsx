@@ -9,7 +9,6 @@ import handleServerActionError from "@/lib/handle-server-action-error"
 import { assignItem } from "@/actions/borrows/assign-item"
 import useAssignableItems from "@/hooks/borrow/use-assignable-items"
 import { toast } from "@/hooks/use-toast"
-import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
@@ -20,6 +19,8 @@ import {
 import NoResult from "@/components/ui/no-result"
 import BookCopyStatusBadge from "@/components/badges/book-copy-status-badge"
 import ShelfBadge from "@/components/badges/shelf-badge"
+
+import ConfirmAssignDialog from "./confirm-assign-dialog"
 
 type Props = {
   open: boolean
@@ -174,16 +175,15 @@ function AssignItemDialog({
                           </div>
                         </div>
 
-                        <Button
-                          disabled={isPending}
-                          onClick={() =>
+                        <ConfirmAssignDialog
+                          barcode={item.libraryItemInstance.barcode}
+                          isPending={isPending}
+                          onAssignItem={() =>
                             handleAssignItem(
                               item.libraryItemInstance.libraryItemInstanceId
                             )
                           }
-                        >
-                          {t("Select")}
-                        </Button>
+                        />
                       </div>
                     ))}
                   </div>

@@ -38,6 +38,8 @@ async function TrackingDetailPage({ params, searchParams }: Props) {
 
   const tracking = await getTracking(+params.id)
 
+  if (!tracking) notFound()
+
   const conditions = await getConditions()
 
   const parsedSearchParams = searchTrackingDetailsSchema.parse(searchParams)
@@ -46,8 +48,6 @@ async function TrackingDetailPage({ params, searchParams }: Props) {
     result: { sources: trackingDetails, totalPage, totalActualItem },
     statisticSummary,
   } = await getTrackingDetails(+params.id, parsedSearchParams)
-
-  if (!tracking) notFound()
 
   return (
     <div className="mt-4 pb-8">

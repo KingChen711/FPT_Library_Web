@@ -65,7 +65,6 @@ function CirculationSection() {
       </div>
 
       {/* Trends */}
-
       <div className="container mx-auto p-4">
         <div className="flex flex-wrap">
           {/* Total Counts Chart */}
@@ -82,7 +81,7 @@ function CirculationSection() {
                 <Legend />
                 <Line
                   type="monotone"
-                  dataKey="count"
+                  dataKey="value"
                   stroke="#8884d8"
                   name={t("Units")}
                 />
@@ -104,7 +103,7 @@ function CirculationSection() {
                 <Legend />
                 <Line
                   type="monotone"
-                  dataKey="count"
+                  dataKey="value"
                   stroke="#82ca9d"
                   name={t("Units")}
                 />

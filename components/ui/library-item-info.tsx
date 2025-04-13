@@ -66,7 +66,7 @@ const LibraryItemInfo = ({
 }: Props): JSX.Element | null => {
   const t = useTranslations("BookPage")
   const locale = useLocale()
-  const { isManager } = useAuth()
+  const { isManager, user } = useAuth()
   const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
   const [openDigitalList, setOpenDigitalList] = useState<boolean>(false)
   const [openAddBorrowConfirm, setOpenAddBorrowConfirm] = useState(false)
@@ -293,7 +293,7 @@ const LibraryItemInfo = ({
         </section>
       }
       <section className="flex items-start justify-start gap-4">
-        {!isManager && (
+        {!isManager && user && (
           <Button
             onClick={() => toggleFavorite(libraryItem.libraryItemId)}
             variant="outline"

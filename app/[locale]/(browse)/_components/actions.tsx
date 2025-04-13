@@ -63,7 +63,7 @@ function Actions() {
       )}
       {!isManager && (
         <div className="flex items-center">
-          <OverviewFavoriteList />
+          {user && <OverviewFavoriteList />}
           <OverviewBorrowList />
         </div>
       )}

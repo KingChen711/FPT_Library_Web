@@ -1,7 +1,6 @@
 "use client"
 
 import { EllipsisVertical } from "lucide-react"
-import Barcode from "react-barcode"
 
 import { EBookCopyStatus } from "@/lib/types/enums"
 import {
@@ -20,6 +19,7 @@ import {
 } from "@/components/ui/table"
 import BookCopyStatusBadge from "@/components/badges/book-copy-status-badge"
 
+import BarcodeGenerator from "./barcode-generator"
 import { Button } from "./button"
 
 const InstanceItem = () => {
@@ -54,12 +54,13 @@ const InstanceItem = () => {
               <TableCell className="text-center">{book.code}</TableCell>
               <TableCell>
                 <div className="flex w-full justify-center">
-                  <Barcode
+                  <BarcodeGenerator
+                    options={{
+                      width: 2,
+                      height: 26,
+                      fontSize: 16,
+                    }}
                     value={book.code}
-                    width={1}
-                    height={50}
-                    fontSize={12}
-                    displayValue={false}
                   />
                 </div>
               </TableCell>

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react"
 import { format } from "date-fns"
 import { CheckSquare, Search, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import Barcode from "react-barcode"
 
 import { EBookCopyStatus } from "@/lib/types/enums"
 import {
@@ -13,6 +12,7 @@ import {
   type LibraryItemInstance,
 } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
+import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
 import NoData from "@/components/ui/no-data"
@@ -202,13 +202,14 @@ function CopiesTabsContent({ copies, bookId, prefix }: Props) {
 
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
-                        <div className="w-fit border">
-                          <Barcode
-                            value={copy.barcode}
-                            height={24}
-                            fontSize={16}
-                          />
-                        </div>
+                        <BarcodeGenerator
+                          options={{
+                            width: 2,
+                            height: 26,
+                            fontSize: 16,
+                          }}
+                          value={copy.barcode}
+                        />
                       </div>
                     </TableCell>
 

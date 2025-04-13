@@ -22,7 +22,9 @@ import {
 import { auth } from "../auth"
 
 export type BorrowRecordDetailItem = BorrowRecord & {
-  borrowRequest: BorrowRequestManagement
+  borrowRequest:
+    | (BorrowRequestManagement & { libraryItems: BookEdition[] })
+    | null
   processedByNavigation: Employee
   librarycard: LibraryCard
   borrowRecordDetails: (BorrowRecordDetail & {

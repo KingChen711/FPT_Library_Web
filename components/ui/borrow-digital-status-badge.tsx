@@ -13,7 +13,7 @@ type Props = {
 const getTypeColor = (type: EBorrowDigitalStatus) => {
   switch (type) {
     case EBorrowDigitalStatus.Active:
-      return "success"
+      return "info"
     case EBorrowDigitalStatus.Expired:
       return "danger"
     case EBorrowDigitalStatus.Cancelled:
@@ -29,7 +29,7 @@ function BorrowDigitalStatusBadge({ status }: Props) {
   return (
     <Badge
       variant={getTypeColor(status)}
-      className="flex w-20 justify-center text-nowrap"
+      className="flex w-[100px] justify-center text-nowrap"
     >
       {t(status.toString())}
     </Badge>

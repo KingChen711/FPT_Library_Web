@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useTransition } from "react"
-import { useRouter } from "next/router"
+import { useRouter } from "next/navigation"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2, LogOut } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"

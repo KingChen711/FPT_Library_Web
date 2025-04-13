@@ -4,7 +4,6 @@ import Image from "next/image"
 import { format } from "date-fns"
 import { BookOpen } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import Barcode from "react-barcode"
 
 import { type LibraryItem, type ReservationQueue } from "@/lib/types/models"
 import { cn, formatDate } from "@/lib/utils"
@@ -15,6 +14,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { Badge } from "@/components/ui/badge"
+import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Card, CardContent } from "@/components/ui/card"
 import { Icons } from "@/components/ui/icons"
 import NoData from "@/components/ui/no-data"
@@ -269,11 +269,13 @@ const BorrowReserveItemPreview = ({
                   <div className="text-sm font-medium">
                     {tBorrowTracking("barcode")}
                   </div>
-                  <Barcode
-                    value={queue.libraryItemInstance?.barcode}
-                    width={1.5}
-                    height={40}
-                    displayValue={false}
+                  <BarcodeGenerator
+                    options={{
+                      width: 2,
+                      height: 26,
+                      fontSize: 16,
+                    }}
+                    value={queue.libraryItemInstance.barcode}
                   />
                 </div>
               )}

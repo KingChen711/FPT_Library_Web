@@ -26,7 +26,7 @@ export type TrackingDetails = (TrackingDetail & {
   category: Category
 })[]
 
-type Response = {
+export type TTrackingDetailItems = {
   result: Pagination<TrackingDetails>
   statisticSummary: WarehouseTrackingInventory
   statistics: {
@@ -39,7 +39,7 @@ type Response = {
   }[]
 }
 
-const defaultResponse: Response = {
+const defaultResponse: TTrackingDetailItems = {
   result: {
     sources: [],
     pageIndex: 1,
@@ -60,7 +60,7 @@ const defaultResponse: Response = {
 const getTrackingDetails = async (
   trackingId: number,
   searchParams: TSearchTrackingDetailsSchema
-): Promise<Response> => {
+): Promise<TTrackingDetailItems> => {
   const { getAccessToken } = auth()
 
   Object.keys(searchParams.v).forEach((k) => {
@@ -74,7 +74,7 @@ const getTrackingDetails = async (
   })
 
   try {
-    const { data } = await http.get<Response>(
+    const { data } = await http.get<TTrackingDetailItems>(
       `/api/management/warehouse-trackings/${trackingId}/details`,
       {
         headers: {

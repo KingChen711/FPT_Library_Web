@@ -29,7 +29,8 @@ function Loading() {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <Skeleton className="h-9 w-[143px]" />
+          <Skeleton className="h-9 w-[123px]" />
+          <Skeleton className="h-9 w-[167px]" />
         </div>
       </div>
 

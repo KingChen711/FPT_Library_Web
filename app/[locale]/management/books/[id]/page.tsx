@@ -21,6 +21,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import LocateButton from "@/components/ui/locate-button"
 import NoData from "@/components/ui/no-data"
 import ParseHtml from "@/components/ui/parse-html"
 import Rating from "@/components/ui/rating"
@@ -189,7 +190,12 @@ async function BookDetailPage({ params }: Props) {
                   <div className="flex gap-2">
                     <div>
                       {book.shelf ? (
-                        <ShelfBadge shelfNumber={book.shelf.shelfNumber} />
+                        <LocateButton
+                          shelfId={book.shelf.shelfId}
+                          shelfNumber={book.shelf.shelfNumber}
+                        >
+                          <ShelfBadge shelfNumber={book.shelf.shelfNumber} />
+                        </LocateButton>
                       ) : (
                         <NoData />
                       )}
@@ -489,11 +495,20 @@ async function BookDetailPage({ params }: Props) {
                   </div>
                 </div>
 
-                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
                   <h4 className="font-bold">{t("Reserved units")}</h4>
                   <div className="flex gap-2">
                     <div>
                       {book.libraryItemInventory.reservedUnits ?? <NoData />}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Lost units")}</h4>
+                  <div className="flex gap-2">
+                    <div>
+                      {book.libraryItemInventory.lostUnits ?? <NoData />}
                     </div>
                   </div>
                 </div>

@@ -1,5 +1,6 @@
 {
   "Dashboard": {
+    "Create supplement request": "Tạo yêu cầu bổ sung",
     "Select": "Chọn",
     "Selected": "Đã chọn",
     "Unselect": "Hủy chọn",
@@ -621,6 +622,7 @@
     "Permissions": "Quyền"
   },
   "Routes": {
+    "Digital borrows": "Lịch sử mượn điện tử",
     "Recommend for you": "Đề xuất cho bạn",
     "Supplement requests": "Yêu cầu bổ sung",
     "Train sessions": "Phiên train AI",
@@ -879,6 +881,8 @@
     "Cancel": "Hủy"
   },
   "BookPage": {
+    "Reviews Not Found": "Không tìm thấy Đánh giá",
+    "There are currently no reviews for this document Be the first to review": "Hiện tại chưa có đánh giá nào cho tài liệu này. Hãy là người đầu tiên đánh giá.",
     "Recommend Books Not Found": "Không tìm thấy tài liệu đề xuất",
     "No books were found that matched your needs": "Không tìm thấy cuốn sách nào phù hợp với bạn",
     "That your all recommend books": "Đó là tất cả sách được đề xuất cho bạn",
@@ -1368,6 +1372,7 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "Appropriate shelves not found": "Không tìm thấy kệ phù hợp",
     "min5CoverImagesPerGroup": "Ít nhất 5 ảnh mỗi nhóm",
     "Library Items Not Found": "Không tìm thấy tài liệu",
     "No library items matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có tài liệu nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
@@ -1378,6 +1383,8 @@
     "Filters": "Bộ lọc",
     "Search for articles, books, journals, and other content": "Tìm kiếm các bài viết, sách, tạp chí và các nội dung khác",
     "Children section": "Khu trẻ em",
+    "Journal section": "Khu báo chí",
+    "Reference section": "Khu tham khảo",
     "Circulated": "Lưu hành",
     "Library item": "Tài liệu",
     "Group": "Nhóm",
@@ -1385,7 +1392,7 @@
     "Base on tracking detail": "Dựa trên chi tiết nhập kho",
     "Shelf name": "Tên kệ tài liệu",
     "to": "đến",
-    "Most appropriate shelves": "Kệ phù hợp nhất",
+    "Most appropriate shelves": "Kệ phù hợp nhất theo DDC",
     "Year": "Năm",
     "Delete catalog information": "Hủy thông tin biên mục",
     "Item information": "Thông tin tài liệu",
@@ -1650,6 +1657,7 @@
     "Request units": "Yêu cầu",
     "Borrowed units": "Đã mượn",
     "Reserved units": "Đã đặt",
+    "Lost units": "Đã mất",
     "Change to draft to delete": "Chuyển sang bản nháp để xóa",
     "Select": "Chọn",
     "Barcode": "ĐKCB",
@@ -1842,6 +1850,7 @@
     "DDC additional info": "Ngoài ra, nhiều thư viện công cộng và đại học cũng cung cấp hướng dẫn và tài liệu về cách sử dụng DDC. Bạn có thể tham khảo trang web của thư viện địa phương hoặc trường đại học gần nhất để biết thêm thông tin."
   },
   "TrackingsManagementPage": {
+    "Export file": "Xuất phiếu nhập kho",
     "Trackings Not Found": "Không tìm thấy nhập kho",
     "No trackings matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có nhập kho nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Supplement requests Not Found": "Không tìm thấy yêu cầu bổ sung",
@@ -2106,11 +2115,15 @@
     "Active": { "Active": "Hoạt động", "Inactive": "Không" },
     "TrackingType": {
       "0": "Nhập kho",
-      "1": "Yêu cầu",
+      "1": "Nhập bổ sung",
       "2": "Kiểm kê",
       "3": "Xuất kho"
     },
-    "TrackingStatus": { "0": "Bản nháp", "1": "Hoàn thành", "2": "Đã Hủy" },
+    "TrackingStatus": {
+      "0": "Đang thực hiện",
+      "1": "Hoàn thành",
+      "2": "Đã Hủy"
+    },
     "Cataloged": { "Cataloged": "Đã biên mục", "Uncataloged": "Chưa biên mục" },
     "PatronStatus": { "0": "Hoạt động", "1": "Bất hoạt", "2": "Đã xóa" },
     "PatronType": { "0": "Tự tạo", "1": "Nhân viên tạo" },
@@ -2243,6 +2256,40 @@
     "Out of shelf": "Đã hết"
   },
   "BorrowAndReturnManagementPage": {
+    "resourceType": "Loại tài nguyên",
+    "resourceSize": "Kích thước tài nguyên",
+    "defaultBorrowDurationDays": "Thời lượng mượn mặc định",
+    "borrowPrice": "Giá mượn",
+    "Default borrow duration days": "Thời lượng mượn mặc định",
+    "Filters borrow digitals": "Lọc lịch sử mượn sách điện tử",
+    "Borrow price": "Giá thuê",
+    "days": "ngày",
+    "Size": "Kích thước",
+    "Resource": "Tài nguyên",
+    "Resource type": "Loại tài nguyên",
+    "Resource item": "Tài nguyên",
+    "Borrow digitals": "Lịch sử mượn điện tử",
+    "Borrow Digitals Not Found": "Không tìm thấy lịch sử mượn điện tử",
+    "No borrow digitals matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có lịch sử mượn điện tử nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
+    "Progress": "Tiến trình",
+    "Request phase": "Giai đoạn Yêu cầu",
+    "Request on": "Yêu cầu lúc",
+    "Expires": "Hết hạn",
+    "No pre request for borrowing": "Không yêu cầu trước khi mượn.",
+    "items requested": "tài liệu được yêu cầu",
+    "Borrowing phase": "Giai đoạn Mượn",
+    "Borrowed on": "Mượn lúc",
+    "items borrowed": "tài liệu được mượn",
+    "Due": "Hạn trả",
+    "Borrow details": "Chi tiết mượn",
+    "Initial condition": "Tình trạng lúc mượn",
+    "Extensions count": "Số lần gia hạn",
+    "Return details": "Chi tiết trả",
+    "Condition check": "Ngày kiểm tra",
+    "Not returned yet": "Chưa trả",
+    "Fine due date": "Hạn trả phạt",
+    "Are you sure you want to select barcode to assign": "Bạn có chắc chắn muốn chọn {barcode} để gán không?",
+    "Return items": "Trả tài liệu",
     "Borrow duration": "Thời gian mượn",
     "Extend pickup date": "Gia hạn ngày lấy",
     "Floor": "Tầng",

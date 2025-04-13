@@ -10,27 +10,24 @@ import {
 
 import { auth } from "../auth"
 
+export type TTrackingDetail = Tracking & {
+  supplier: Supplier
+  warehouseTrackingInventory: WarehouseTrackingInventory
+}
+
 const getTracking = async (
   trackingId: number
-): Promise<
-  | (Tracking & {
-      supplier: Supplier
-      warehouseTrackingInventory: WarehouseTrackingInventory
-    })
-  | null
-> => {
+): Promise<TTrackingDetail | null> => {
   const { getAccessToken } = auth()
   try {
-    const { data } = await http.get<
-      Tracking & {
-        supplier: Supplier
-        warehouseTrackingInventory: WarehouseTrackingInventory
+    const { data } = await http.get<TTrackingDetail>(
+      `/api/management/warehouse-trackings/${trackingId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
       }
-    >(`/api/management/warehouse-trackings/${trackingId}`, {
-      headers: {
-        Authorization: `Bearer ${getAccessToken()}`,
-      },
-    })
+    )
     return data
   } catch {
     return null

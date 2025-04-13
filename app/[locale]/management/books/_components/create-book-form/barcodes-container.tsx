@@ -1,9 +1,9 @@
 import React from "react"
 import { useTranslations } from "next-intl"
-import Barcode from "react-barcode"
 import { type UseFormReturn } from "react-hook-form"
 
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
+import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Label } from "@/components/ui/label"
 
 type Props = {
@@ -26,12 +26,14 @@ export const BarcodesContainer = React.forwardRef(
               <div key={l.barcode} className="border border-black p-1">
                 <div className="flex flex-col items-center justify-center border-4 border-black">
                   <div className="flex flex-col">
-                    <Barcode
+                    <BarcodeGenerator
+                      options={{
+                        width: 2,
+                        height: 26,
+                        fontSize: 16,
+                        rounded: false,
+                      }}
                       value={l.barcode}
-                      width={1.5}
-                      height={24}
-                      fontSize={16}
-                      fontOptions="bold"
                     />
                   </div>
                 </div>

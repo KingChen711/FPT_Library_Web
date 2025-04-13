@@ -1,14 +1,16 @@
 import React from "react"
 import Link from "next/link"
 import { auth } from "@/queries/auth"
-import getBorrowRecords from "@/queries/borrows/get-borrow-records"
+import getBorrowDigitals from "@/queries/borrows/get-borrow-digitals"
 import { format } from "date-fns"
-import { Check, Eye, MoreHorizontal, Plus, X } from "lucide-react"
+import { Eye, MoreHorizontal } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
-import { searchBorrowRecordsSchema } from "@/lib/validations/borrow-records/search-borrow-records"
+import { formatFileSize, formatPrice } from "@/lib/utils"
+import { searchBorrowDigitalsManagementSchema } from "@/lib/validations/borrow-digitals-management/search-borrow-digitals-management"
+import BorrowDigitalStatusBadge from "@/components/ui/borrow-digital-status-badge"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -16,7 +18,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { Icons } from "@/components/ui/icons"
 import NoResult from "@/components/ui/no-result"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
@@ -29,15 +30,15 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import BorrowTypeBadge from "@/components/badges/borrow-type-bade"
+import ResourceBookTypeBadge from "@/components/badges/book-resource-type-badge"
 
-import FiltersBorrowRecordsDialog from "./_components/filters-borrow-records-dialog"
+import FiltersBorrowDigitalsDialog from "./_components/filters-borow-digitals-dialog"
 
 type Props = {
   searchParams: Record<string, string | string[] | undefined>
 }
 
-async function BorrowRecordsManagementPage({ searchParams }: Props) {
+async function BorrowDigitalsManagementPage({ searchParams }: Props) {
   await auth().protect(EFeature.BORROW_MANAGEMENT)
 
   const t = await getTranslations("BorrowAndReturnManagementPage")
@@ -45,13 +46,13 @@ async function BorrowRecordsManagementPage({ searchParams }: Props) {
   const formatLocale = await getFormatLocale()
 
   const { search, pageIndex, sort, pageSize, ...rest } =
-    searchBorrowRecordsSchema.parse(searchParams)
+    searchBorrowDigitalsManagementSchema.parse(searchParams)
 
   const {
-    sources: borrowRecords,
+    sources: borrowDigitals,
     totalActualItem,
     totalPage,
-  } = await getBorrowRecords({
+  } = await getBorrowDigitals({
     search,
     pageIndex,
     sort,
@@ -62,7 +63,7 @@ async function BorrowRecordsManagementPage({ searchParams }: Props) {
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-        <h3 className="text-2xl font-semibold">{t("Borrow records")}</h3>
+        <h3 className="text-2xl font-semibold">{t("Borrow digitals")}</h3>
       </div>
 
       <div className="flex flex-wrap items-center justify-between gap-4">
@@ -72,31 +73,17 @@ async function BorrowRecordsManagementPage({ searchParams }: Props) {
               className="h-10 rounded-r-none border-r-0"
               search={search}
             />
-            <FiltersBorrowRecordsDialog />
+            <FiltersBorrowDigitalsDialog />
           </div>
-        </div>
-        <div className="flex flex-wrap items-center gap-x-4">
-          <Button asChild variant="outline">
-            <Link href="/management/return">
-              <Icons.Return className="size-4" />
-              {t("Return items")}
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href="/management/borrows/records/create">
-              <Plus />
-              {t("Create borrow record")}
-            </Link>
-          </Button>
         </div>
       </div>
 
-      {borrowRecords.length === 0 ? (
+      {borrowDigitals.length === 0 ? (
         <div className="flex justify-center p-4">
           <NoResult
-            title={t("Borrow Records Not Found")}
+            title={t("Borrow Digitals Not Found")}
             description={t(
-              "No borrow records matching your request were found Please check your information or try searching with different criteria"
+              "No borrow digitals matching your request were found Please check your information or try searching with different criteria"
             )}
           />
         </div>
@@ -109,79 +96,130 @@ async function BorrowRecordsManagementPage({ searchParams }: Props) {
                   <TableHead className="text-nowrap font-bold">
                     {t("Patron")}
                   </TableHead>
+
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Resource item")}
+                  </TableHead>
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">
+                      {t("Resource type")}
+                    </div>
+                  </TableHead>
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">{t("Size")}</div>
+                  </TableHead>
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">
+                      {t("Default borrow duration days")}
+                    </div>
+                  </TableHead>
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">
+                      {t("Borrow price")}
+                    </div>
+                  </TableHead>
+
                   <SortableTableHead
                     currentSort={sort}
                     label={t("Borrow date")}
-                    sortKey="BorrowDate"
+                    sortKey="RegisterDate"
                     position="center"
                   />
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Borrow type")}
-                    </div>
-                  </TableHead>
+
                   <SortableTableHead
                     currentSort={sort}
-                    label={t("Total record items")}
-                    sortKey="TotalRecordItem"
+                    label={t("Expiry date")}
+                    sortKey="ExpiryDate"
                     position="center"
                   />
+
                   <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Has fine to payment")}
-                    </div>
+                    <div className="flex justify-center">{t("Status")}</div>
                   </TableHead>
-                  <TableHead className="text-nowrap font-bold">
-                    {t("Process by")}
-                  </TableHead>
+
                   <TableHead className="text-nowrap font-bold">
                     <div className="flex justify-center">{t("Actions")}</div>
                   </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {borrowRecords.map((record) => (
-                  <TableRow key={record.borrowRecordId}>
+                {borrowDigitals.map((digital) => (
+                  <TableRow key={digital.digitalBorrowId}>
                     <TableCell className="text-nowrap">
                       <Link
                         target="_blank"
-                        href={`/management/library-cards/${record.librarycard.libraryCardId}`}
+                        href={`/management/library-cards/${digital?.librarycard?.libraryCardId}`}
                         className="group flex items-center gap-2"
                       >
                         <p className="group-hover:underline">
-                          {record.librarycard?.fullName}
+                          {digital.librarycard?.fullName}
                         </p>
                       </Link>
                     </TableCell>
                     <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {format(new Date(record.borrowDate), "dd MMM yyyy", {
-                          locale: formatLocale,
-                        })}
+                      <div className="flex">
+                        {digital.libraryResource.resourceTitle}
                       </div>
                     </TableCell>
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
-                        <BorrowTypeBadge status={record.borrowType} />
+                        <ResourceBookTypeBadge
+                          status={digital.libraryResource.resourceType}
+                        />
                       </div>
                     </TableCell>
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
-                        {record.totalRecordItem}
+                        {formatFileSize(digital.libraryResource.resourceSize)}
                       </div>
                     </TableCell>
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
-                        {record.hasFineToPayment ? (
-                          <Check className="text-success" />
-                        ) : (
-                          <X className="text-danger" />
+                        {digital.libraryResource.defaultBorrowDurationDays ??
+                          "-"}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {digital.libraryResource.borrowPrice
+                          ? formatPrice(digital.libraryResource.borrowPrice)
+                          : "-"}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {format(
+                          new Date(digital.registerDate),
+                          "HH:mm dd MMM yyyy",
+                          {
+                            locale: formatLocale,
+                          }
                         )}
                       </div>
                     </TableCell>
+
                     <TableCell className="text-nowrap">
-                      {record.processedByNavigation.email}
+                      <div className="flex justify-center">
+                        {format(
+                          new Date(digital.expiryDate),
+                          "HH:mm dd MMM yyyy",
+                          {
+                            locale: formatLocale,
+                          }
+                        )}
+                      </div>
                     </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        <BorrowDigitalStatusBadge status={digital.status} />
+                      </div>
+                    </TableCell>
+
                     <TableCell>
                       <div className="flex items-center justify-center">
                         <DropdownMenu>
@@ -193,19 +231,13 @@ async function BorrowRecordsManagementPage({ searchParams }: Props) {
                           <DropdownMenuContent>
                             <DropdownMenuItem>
                               <Link
-                                href={`/management/borrows/records/${record.borrowRecordId}`}
+                                href={`/management/borrows/digitals/${digital.digitalBorrowId}`}
                                 className="flex items-center gap-2"
                               >
                                 <Eye className="size-4" />
                                 {t("View details")}
                               </Link>
                             </DropdownMenuItem>
-                            {record.hasFineToPayment && (
-                              <DropdownMenuItem>
-                                <Icons.Fine className="size-4" />
-                                {t("Pay fines")}
-                              </DropdownMenuItem>
-                            )}
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
@@ -229,4 +261,4 @@ async function BorrowRecordsManagementPage({ searchParams }: Props) {
   )
 }
 
-export default BorrowRecordsManagementPage
+export default BorrowDigitalsManagementPage

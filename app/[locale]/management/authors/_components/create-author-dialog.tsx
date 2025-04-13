@@ -67,7 +67,6 @@ function CreateAuthorDialog() {
   const form = useForm<TCreateAuthorSchema>({
     resolver: zodResolver(createAuthorSchema),
     defaultValues: {
-      authorCode: "",
       fullName: "",
       authorImage: undefined,
       biography: undefined,
@@ -98,44 +97,40 @@ function CreateAuthorDialog() {
 
   const onSubmit = async (values: TCreateAuthorSchema) => {
     startTransition(async () => {
-      if (file) {
-        const imageData = await handleUploadImage(file)
-        const payload = {
-          ...values,
-          authorImage: imageData.data.secureUrl,
+      try {
+        if (file && values.authorImage?.startsWith("blob")) {
+          const imageData = await handleUploadImage(file)
+          values.authorImage = imageData.data.secureUrl
         }
-        const res = await createAuthor(payload)
-        if (res.isSuccess) {
-          form.reset()
-          setOpen(false)
-          toast({
-            title: locale === "vi" ? "Thành công" : "Success",
-            description: res.data,
-            variant: "success",
-          })
-        } else {
-          handleServerActionError(res, locale, form)
-        }
+      } catch {
+        toast({
+          title: locale === "vi" ? "Thất bại" : "Failed",
+          description:
+            locale === "vi"
+              ? "Có lỗi xảy ra khi tải ảnh tác giả. Vui lòng thử lại hoặc dùng ảnh khác"
+              : "There was an error uploading the author image. Please try again or use a different image.",
+          variant: "danger",
+        })
+        return
       }
 
-      if (!file) {
-        const res = await createAuthor(values)
-        if (res.isSuccess) {
-          form.reset()
-          setOpen(false)
-          toast({
-            title: locale === "vi" ? "Thành công" : "Success",
-            description: res.data,
-            variant: "success",
-          })
-        } else {
-          handleServerActionError(res, locale, form)
-        }
+      const res = await createAuthor(values)
+      if (res.isSuccess) {
+        form.reset()
+        setOpen(false)
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data,
+          variant: "success",
+        })
+        queryClient.invalidateQueries({
+          queryKey: ["management-authors"],
+        })
+        return
       }
-    })
 
-    queryClient.invalidateQueries({
-      queryKey: ["management-authors"],
+      form.setValue("authorImage", values.authorImage)
+      handleServerActionError(res, locale, form)
     })
   }
 
@@ -170,7 +165,7 @@ function CreateAuthorDialog() {
           <div>{tAuthorManagement("create author")}</div>
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{tAuthorManagement("create author")}</DialogTitle>
           <DialogDescription>
@@ -234,24 +229,6 @@ function CreateAuthorDialog() {
                           placeholder="Add profile photo"
                           className="hidden"
                           onChange={(e) => handleImageChange(e, field.onChange)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="authorCode"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("fields.authorCode")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={isPending}
-                          {...field}
-                          placeholder={t("placeholder.code")}
                         />
                       </FormControl>
                       <FormMessage />

@@ -125,10 +125,12 @@ export default async function BorrowRequestTab({ searchParams }: Props) {
                     </TableCell>
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
-                        {format(
-                          new Date(request.expirationDate),
-                          "HH:mm dd/MM/yyyy"
-                        )}
+                        {request.expirationDate
+                          ? format(
+                              new Date(request.expirationDate),
+                              "HH:mm dd/MM/yyyy"
+                            )
+                          : "-"}
                       </div>
                     </TableCell>
                     <TableCell className="text-nowrap">

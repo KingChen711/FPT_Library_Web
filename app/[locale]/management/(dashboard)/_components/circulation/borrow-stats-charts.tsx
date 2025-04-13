@@ -25,18 +25,17 @@ function BorrowStatsCharts({
   const t = useTranslations("Dashboard")
   const locale = useLocale()
   // Combine data for comparison
-  const combinedData = categoryBorrowFailedSummary
-    .map((failedItem, index) => ({
-      name:
-        locale === "vi"
-          ? failedItem.category.vietnameseName
-          : failedItem.category.englishName,
-      borrowFailed: failedItem.totalBorrowFailed,
-      failedRate: failedItem.borrowFailedRates,
-      overdue: categoryOverdueSummary[index].totalOverdue,
-      overdueRate: categoryOverdueSummary[index].overdueRates,
-    }))
-    .filter((item) => item.borrowFailed > 0 || item.overdue > 0)
+  const combinedData = categoryBorrowFailedSummary.map((failedItem, index) => ({
+    name:
+      locale === "vi"
+        ? failedItem.category.vietnameseName
+        : failedItem.category.englishName,
+    borrowFailed: failedItem.totalBorrowFailed,
+    failedRate: failedItem.borrowFailedRates,
+    overdue: categoryOverdueSummary[index].totalOverdue,
+    overdueRate: categoryOverdueSummary[index].overdueRates,
+  }))
+  // .filter((item) => item.borrowFailed > 0 || item.overdue > 0)
 
   return (
     <div className="container mx-auto p-4">

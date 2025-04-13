@@ -3,6 +3,7 @@ import {
   type EBookCopyStatus,
   type EBookEditionStatus,
   type EBookFormat,
+  type EBorrowDigitalStatus,
   type EBorrowRecordStatus,
   type EBorrowRequestStatus,
   type EBorrowType,
@@ -367,6 +368,17 @@ export type Category = {
   totalBorrowDays: number | null
 }
 
+export type BorrowDigital = {
+  digitalBorrowId: number
+  resourceId: number
+  userId: string
+  registerDate: Date
+  expiryDate: Date
+  isExtended: boolean
+  extensionCount: number
+  status: EBorrowDigitalStatus
+}
+
 export type BookEdition = {
   libraryItemId: number
   title: string
@@ -437,6 +449,7 @@ export type LibraryItemInventory = {
   requestUnits: number
   borrowedUnits: number
   reservedUnits: number
+  lostUnits: number
 }
 
 export type LibraryItemInstance = {
@@ -773,7 +786,7 @@ export type BorrowRequest = {
   borrowRequestId: number
   libraryCardId: string
   requestDate: Date
-  expirationDate: Date
+  expirationDate: Date | null
   status: EBorrowRequestStatus
   description: string | null
   cancelledAt: string | null
@@ -826,7 +839,7 @@ export type BorrowRequestManagement = {
   borrowRequestId: number
   libraryCardId: string
   requestDate: Date
-  expirationDate: Date
+  expirationDate: Date | null
   status: EBorrowRequestStatus
   description: string | null
   cancelledAt: string | null
