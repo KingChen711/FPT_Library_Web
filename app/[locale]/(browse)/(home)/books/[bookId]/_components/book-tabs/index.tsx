@@ -12,9 +12,10 @@ import BookReviewsTab from "./book-reviews-tab"
 
 type Props = {
   libraryItemId: number
+  searchParams: Record<string, string | string[]>
 }
 
-const BookTabs = async ({ libraryItemId }: Props) => {
+const BookTabs = async ({ libraryItemId, searchParams }: Props) => {
   const t = await getTranslations("BookPage")
   const libraryItem = await getLibraryItem(libraryItemId)
 
@@ -55,6 +56,7 @@ const BookTabs = async ({ libraryItemId }: Props) => {
       </TabsContent>
       <TabsContent value="review">
         <BookReviewsTab
+          searchParams={searchParams}
           averageRating={libraryItem.avgReviewedRate || 0}
           libraryItemId={libraryItemId}
         />

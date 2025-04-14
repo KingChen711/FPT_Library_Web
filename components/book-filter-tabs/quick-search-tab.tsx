@@ -33,19 +33,17 @@ type Props = {
   setKeywordValue: React.Dispatch<SetStateAction<string>>
   searchWithSpecial: boolean
   setSearchWithSpecial: React.Dispatch<SetStateAction<boolean>>
-  isMatchExact: boolean
-  setIsMatchExact: React.Dispatch<SetStateAction<boolean>>
+
   searchValue: string
   setSearchValue: React.Dispatch<SetStateAction<string>>
   autoComplete?: boolean
 }
 
 const QuickSearchTab = ({
-  isMatchExact,
   keywordValue,
   searchValue,
   searchWithSpecial,
-  setIsMatchExact,
+
   setKeywordValue,
   setSearchValue,
   setSearchWithSpecial,
@@ -64,7 +62,6 @@ const QuickSearchTab = ({
   )
 
   const resetFields = () => {
-    setIsMatchExact(false)
     setKeywordValue("quick")
     setSearchValue("")
     setSearchWithSpecial(true)
@@ -76,7 +73,7 @@ const QuickSearchTab = ({
       updates: {
         pageIndex: "1",
         searchType: ESearchType.QUICK_SEARCH.toString(),
-        isMatchExact: isMatchExact ? "true" : "false",
+        isMatchExact: "true",
         searchWithSpecial: searchWithSpecial ? "true" : "false",
         searchWithKeyword: keywordValue === "quick" ? null : keywordValue,
         search: searchValue || "",
@@ -226,19 +223,6 @@ const QuickSearchTab = ({
               htmlFor="search-no-mark"
             >
               {t("Special character")}
-            </Label>
-          </div>
-          <div className="flex items-center gap-2">
-            <Checkbox
-              checked={isMatchExact}
-              onCheckedChange={(val) => setIsMatchExact(Boolean(val))}
-              id="search-exact"
-            />
-            <Label
-              className="cursor-pointer font-normal"
-              htmlFor="search-exact"
-            >
-              {t("Match exact")}
             </Label>
           </div>
         </div>

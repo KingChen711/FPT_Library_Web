@@ -3,7 +3,12 @@ import { http } from "@/lib/http"
 
 import "server-only"
 
-import { type LibraryItem } from "@/lib/types/models"
+import {
+  type Author,
+  type BookEdition,
+  type Category,
+  type LibraryItemAuthor,
+} from "@/lib/types/models"
 import { type TSearchBooksAdvanceSchema } from "@/lib/validations/books/search-books-advance"
 
 import { auth } from "../auth"
@@ -16,7 +21,11 @@ import { auth } from "../auth"
 
 export type TResponse = {
   // libraryItems: BookEditions
-  libraryItems: LibraryItem[]
+  libraryItems: (BookEdition & {
+    libraryItemAuthors: (LibraryItemAuthor & { author: Author })[]
+    authors: Author[]
+    category: Category
+  })[]
   pageIndex: number
   pageSize: number
   totalPage: number
@@ -43,8 +52,19 @@ const searchBooksAdvance = async (
       headers: {
         Authorization: `Bearer ${getAccessToken()}`,
       },
-      searchParams,
+      searchParams: { ...searchParams, isMatchExact: "true" },
     })
+
+    if (!data)
+      return {
+        libraryItems: [],
+        pageIndex: searchParams.pageIndex,
+        pageSize: +searchParams.pageSize,
+        totalActualResponse: 0,
+        totalPage: 0,
+      }
+
+    console.log(data.libraryItems[0])
 
     return data
   } catch {

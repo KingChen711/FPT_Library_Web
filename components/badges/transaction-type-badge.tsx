@@ -32,7 +32,10 @@ function TransactionTypeBadge({ type }: Props) {
   const t = useTranslations("Badges.TransactionType")
 
   return (
-    <Badge variant={getTypeColor(type)} className="flex w-fit justify-center">
+    <Badge
+      variant={getTypeColor(type)}
+      className="flex w-[120px] justify-center"
+    >
       {t(type.toString())}
     </Badge>
   )

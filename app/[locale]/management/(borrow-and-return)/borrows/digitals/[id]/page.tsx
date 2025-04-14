@@ -4,13 +4,12 @@ import { auth } from "@/queries/auth"
 import getBorrowDigital from "@/queries/borrows/get-borrow-digital"
 import { format } from "date-fns"
 import { Check, X } from "lucide-react"
+import QRCode from "react-qr-code"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
-import { formatFileSize, formatPrice } from "@/lib/utils"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import BarcodeGenerator from "@/components/ui/barcode-generator"
+import { formatFileSize, formatPrice, getFullName } from "@/lib/utils"
 import BorrowDigitalStatusBadge from "@/components/ui/borrow-digital-status-badge"
 import {
   Breadcrumb,
@@ -31,10 +30,10 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog"
 import NoData from "@/components/ui/no-data"
-import ParseHtml from "@/components/ui/parse-html"
 import ResourceBookTypeBadge from "@/components/badges/book-resource-type-badge"
-import CardStatusBadge from "@/components/badges/card-status-badge"
-import IssuanceMethodBadge from "@/components/badges/issuance-method-badge"
+import TransactionMethodBadge from "@/components/badges/transaction-method-badge"
+import TransactionStatusBadge from "@/components/badges/transaction-status-badge"
+import TransactionTypeBadge from "@/components/badges/transaction-type-badge"
 
 type Props = {
   params: { id: number }
@@ -52,7 +51,9 @@ async function BorrowDigitalDetailPage({ params }: Props) {
 
   const formatLocale = await getFormatLocale()
 
-  const title = `${digital?.librarycard?.fullName} - ${format(
+  const transaction = digital.transactions[0]
+
+  const title = `${getFullName(transaction.user.firstName, transaction.user.lastName)} - ${format(
     digital.registerDate,
     "dd MMM yyyy",
     {
@@ -149,320 +150,6 @@ async function BorrowDigitalDetailPage({ params }: Props) {
           </div>
         </div>
 
-        {digital.librarycard && (
-          <div className="flex flex-col gap-4 rounded-md border py-5">
-            <div className="flex items-center justify-between gap-4 px-5">
-              <h3 className="text-lg font-semibold">
-                {t("Patron information")}
-              </h3>
-            </div>
-            <div className="grid grid-cols-12 gap-y-6 text-sm">
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Name on card")}</h4>
-                <div className="flex items-center gap-2">
-                  <Copitor content={digital.librarycard.fullName} />
-                  <p>{digital.librarycard.fullName}</p>
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
-                <h4 className="font-bold">{t("Avatar on card")}</h4>
-                <div className="flex gap-2">
-                  <Avatar className="size-8">
-                    <AvatarImage src={digital.librarycard.avatar || ""} />
-                    <AvatarFallback>
-                      {digital.librarycard.fullName
-                        .split(" ")
-                        .map((i) => i[0].toUpperCase())
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Card barcode")}</h4>
-                <div className="flex items-center gap-2">
-                  <BarcodeGenerator
-                    value={digital.librarycard.barcode}
-                    options={{
-                      format: "CODE128",
-                      displayValue: true,
-                      fontSize: 12,
-                      width: 1,
-                      height: 18,
-                    }}
-                  />
-                  <Copitor content={digital.librarycard.barcode} />
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
-                <h4 className="font-bold">{t("Status")}</h4>
-                <div className="flex gap-2">
-                  <CardStatusBadge status={digital.librarycard.status} />
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Issuance method")}</h4>
-                <div className="flex items-center gap-2">
-                  <IssuanceMethodBadge
-                    status={digital.librarycard.issuanceMethod}
-                  />
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
-                <h4 className="font-bold">{t("Allow borrow more")}</h4>
-                <div className="flex gap-2">
-                  {digital.librarycard.isAllowBorrowMore ? (
-                    <Check className="size-6 text-success" />
-                  ) : (
-                    <X className="size-6 text-danger" />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Max item once time")}</h4>
-                <div className="flex gap-2">
-                  <p>{digital.librarycard.maxItemOnceTime}</p>
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
-                <h4 className="font-bold">{t("Allow borrow more reason")}</h4>
-                <div className="flex items-center gap-2">
-                  {digital.librarycard.allowBorrowMoreReason ? (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          {t("View content")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
-                        <DialogHeader>
-                          <DialogTitle>
-                            {t("Allow borrow more reason")}
-                          </DialogTitle>
-                          <DialogDescription>
-                            <ParseHtml
-                              data={digital.librarycard.allowBorrowMoreReason}
-                            />
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-                  ) : (
-                    <NoData />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Reminder sent")}</h4>
-                <div className="flex items-center gap-2">
-                  {digital.librarycard.isReminderSent ? (
-                    <Check className="size-6 text-success" />
-                  ) : (
-                    <X className="size-6 text-danger" />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
-                <h4 className="font-bold">{t("Extended")}</h4>
-                <div className="flex gap-2">
-                  {digital.librarycard.isExtended ? (
-                    <Check className="size-6 text-success" />
-                  ) : (
-                    <X className="size-6 text-danger" />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Extension count")}</h4>
-                <div className="flex gap-2">
-                  <p>{digital.librarycard.extensionCount}</p>
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
-                <h4 className="font-bold">{t("Total missed pick up")}</h4>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2">
-                    {digital.librarycard.totalMissedPickUp ?? <NoData />}
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Issue date")}</h4>
-                <div className="flex items-center gap-2">
-                  {digital.librarycard.issueDate ? (
-                    <p>
-                      {format(digital.librarycard.issueDate, "dd MMM yyyy", {
-                        locale: formatLocale,
-                      })}
-                    </p>
-                  ) : (
-                    <NoData />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
-                <h4 className="font-bold">{t("Expiry date")}</h4>
-                <div className="flex gap-2">
-                  {digital.librarycard.expiryDate ? (
-                    <p>
-                      {format(digital.librarycard.expiryDate, "dd MMM yyyy", {
-                        locale: formatLocale,
-                      })}
-                    </p>
-                  ) : (
-                    <NoData />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Suspension reason")}</h4>
-                <div className="flex gap-2">
-                  {digital.librarycard.suspensionReason ? (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          {t("View content")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
-                        <DialogHeader>
-                          <DialogTitle>
-                            {t("Allow borrow more reason")}
-                          </DialogTitle>
-                          <DialogDescription>
-                            <ParseHtml
-                              data={digital.librarycard.suspensionReason}
-                            />
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-                  ) : (
-                    <NoData />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
-                <h4 className="font-bold">{t("Reject reason")}</h4>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2">
-                    {digital.librarycard.rejectReason ? (
-                      <Dialog>
-                        <DialogTrigger asChild>
-                          <Button variant="outline" size="sm">
-                            {t("View content")}
-                          </Button>
-                        </DialogTrigger>
-                        <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
-                          <DialogHeader>
-                            <DialogTitle>
-                              {t("Allow borrow more reason")}
-                            </DialogTitle>
-                            <DialogDescription>
-                              <ParseHtml
-                                data={digital.librarycard.rejectReason}
-                              />
-                            </DialogDescription>
-                          </DialogHeader>
-                        </DialogContent>
-                      </Dialog>
-                    ) : (
-                      <NoData />
-                    )}
-                  </div>
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Archived")}</h4>
-                <div className="flex items-center gap-2">
-                  {digital.librarycard.isArchived ? (
-                    <Check className="size-6 text-success" />
-                  ) : (
-                    <X className="size-6 text-danger" />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
-                <h4 className="font-bold">{t("Archive reason")}</h4>
-                <div className="flex gap-2">
-                  {digital.librarycard.archiveReason ? (
-                    <Dialog>
-                      <DialogTrigger asChild>
-                        <Button variant="outline" size="sm">
-                          {t("View content")}
-                        </Button>
-                      </DialogTrigger>
-                      <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
-                        <DialogHeader>
-                          <DialogTitle>
-                            {t("Allow borrow more reason")}
-                          </DialogTitle>
-                          <DialogDescription>
-                            <ParseHtml
-                              data={digital.librarycard.archiveReason}
-                            />
-                          </DialogDescription>
-                        </DialogHeader>
-                      </DialogContent>
-                    </Dialog>
-                  ) : (
-                    <NoData />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
-                <h4 className="font-bold">{t("Transaction code")}</h4>
-                <div className="flex gap-2">
-                  {digital.librarycard.transactionCode ? (
-                    digital.librarycard.transactionCode
-                  ) : (
-                    <NoData />
-                  )}
-                </div>
-              </div>
-
-              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
-                <h4 className="font-bold">{t("Suspension end date")}</h4>
-                <div className="flex items-center gap-2">
-                  <div className="flex items-center gap-2">
-                    {digital.librarycard.suspensionEndDate ? (
-                      <p>
-                        {format(
-                          digital.librarycard.suspensionEndDate,
-                          "dd MMM yyyy",
-                          {
-                            locale: formatLocale,
-                          }
-                        )}
-                      </p>
-                    ) : (
-                      <NoData />
-                    )}
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-
         <div className="flex flex-col gap-4 rounded-md border py-5">
           <div className="flex items-center justify-between gap-4 px-5">
             <h3 className="text-lg font-semibold">{t("Resource")}</h3>
@@ -507,6 +194,157 @@ async function BorrowDigitalDetailPage({ params }: Props) {
               <div className="flex items-center gap-2">
                 {digital.libraryResource.borrowPrice ? (
                   formatPrice(digital.libraryResource.borrowPrice)
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 rounded-md border py-5">
+          <div className="flex items-center justify-between gap-4 px-5">
+            <h3 className="text-lg font-semibold">{t("Transaction")}</h3>
+          </div>
+          <div className="grid grid-cols-12 gap-y-6 text-sm">
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Transaction code")}</h4>
+              <div className="flex items-center gap-2">
+                <Copitor content={transaction.transactionCode} />
+                {transaction.transactionCode || <NoData />}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+              <h4 className="font-bold">{t("Amount")}</h4>
+              <div className="flex gap-2">
+                {transaction.amount ? (
+                  formatPrice(transaction.amount)
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Status")}</h4>
+              <div className="flex gap-2">
+                <TransactionStatusBadge
+                  status={transaction.transactionStatus}
+                />
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Type")}</h4>
+              <div className="flex gap-2">
+                <TransactionTypeBadge type={transaction.transactionType} />
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Transaction date")}</h4>
+              <div className="flex items-center gap-2">
+                {transaction.transactionDate ? (
+                  format(transaction.transactionDate, "HH:mm dd MMM yyyy", {
+                    locale: formatLocale,
+                  })
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+              <h4 className="font-bold">{t("Expired at")}</h4>
+              <div className="flex gap-2">
+                {transaction.expiredAt ? (
+                  format(transaction.expiredAt, "HH:mm dd MMM yyyy", {
+                    locale: formatLocale,
+                  })
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Created at")}</h4>
+              <div className="flex gap-2">
+                {transaction.createdAt ? (
+                  format(transaction.createdAt, "HH:mm dd MMM yyyy", {
+                    locale: formatLocale,
+                  })
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Create by")}</h4>
+              <div className="flex gap-2">
+                {transaction.createdBy || <NoData />}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Cancelled at")}</h4>
+              <div className="flex items-center gap-2">
+                {transaction.cancelledAt ? (
+                  format(transaction.cancelledAt, "HH:mm dd MMM yyyy", {
+                    locale: formatLocale,
+                  })
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+              <h4 className="font-bold">{t("Cancellation reason")}</h4>
+              <div className="flex gap-2">
+                {transaction.cancellationReason || <NoData />}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Method")}</h4>
+              <div className="flex gap-2">
+                <TransactionMethodBadge
+                  method={transaction.transactionMethod}
+                />
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Payment QR code")}</h4>
+              <div className="flex gap-2">
+                {transaction.qrCode ? (
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        {t("View content")}
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="max-h-[80vh] w-fit overflow-y-auto overflow-x-hidden">
+                      <DialogHeader>
+                        <DialogTitle>{t("Payment QR code")}</DialogTitle>
+                        <DialogDescription asChild>
+                          <QRCode
+                            value={transaction.qrCode}
+                            size={200}
+                            style={{
+                              height: "auto",
+                              maxWidth: "100%",
+                              width: "100%",
+                            }}
+                            viewBox={`0 0 256 256`}
+                          />
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 ) : (
                   <NoData />
                 )}

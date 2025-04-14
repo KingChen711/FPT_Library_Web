@@ -768,7 +768,7 @@ export type Transaction = {
   transactionMethod: ETransactionMethod
   description: string | null
   transactionDate: Date | null
-
+  qrCode: string | null
   expiredAt: Date | null
   createdAt: Date
   createdBy: string

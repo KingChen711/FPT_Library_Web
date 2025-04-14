@@ -127,10 +127,10 @@ export default function ShelfSelector({
             <Checkbox
               checked={isChildrenSection}
               onCheckedChange={(val) => setIsChildrenSection(Boolean(val))}
-              id="most-appropriate"
+              id="children-section"
             />
             <Label
-              htmlFor="most-appropriate"
+              htmlFor="children-section"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               {t("Children section")}
@@ -140,10 +140,10 @@ export default function ShelfSelector({
             <Checkbox
               checked={isJournalSection}
               onCheckedChange={(val) => setIsJournalSection(Boolean(val))}
-              id="most-appropriate"
+              id="journal-section"
             />
             <Label
-              htmlFor="most-appropriate"
+              htmlFor="journal-section"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               {t("Journal section")}
@@ -153,10 +153,10 @@ export default function ShelfSelector({
             <Checkbox
               checked={isReferenceSection}
               onCheckedChange={(val) => setIsReferenceSection(Boolean(val))}
-              id="most-appropriate"
+              id="reference-section"
             />
             <Label
-              htmlFor="most-appropriate"
+              htmlFor="reference-section"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               {t("Reference section")}

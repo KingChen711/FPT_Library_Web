@@ -3,10 +3,11 @@
 import { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
-import { useLibraryStorage } from "@/contexts/library-provider"
-import { BookOpen, Calendar, Trash2 } from "lucide-react"
+import { useFavourite } from "@/contexts/favourite-provider"
+import { Trash2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
-import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
+import { type Author, type BookEdition } from "@/lib/types/models"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,52 +18,48 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-
-import NoData from "./no-data"
 
 type Props = {
-  libraryItemId: number
+  item: BookEdition & { authors: Author[] }
 }
 
-const OverviewFavoriteItem = ({ libraryItemId }: Props) => {
-  const { data: item, isLoading } = useLibraryItemDetail(libraryItemId)
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
-  const { favorites } = useLibraryStorage()
+const OverviewFavoriteItem = ({ item }: Props) => {
+  const [openDelete, setOpenDelete] = useState(false)
+  const t = useTranslations("BookPage")
+  const { toggleFavorite, favouriteItemIds } = useFavourite()
 
-  const handleRemoveFavorite = () => {
-    favorites.remove(libraryItemId)
-    setShowDeleteConfirm(false)
-  }
-
-  if (isLoading) {
-    return (
-      <Card className="overflow-hidden">
-        <div className="flex items-center gap-4 p-4">
-          <Skeleton className="h-24 w-16 rounded-md" />
-          <div className="flex-1 space-y-2">
-            <Skeleton className="h-5 w-3/4" />
-            <Skeleton className="h-4 w-1/2" />
-            <div className="flex gap-2 pt-1">
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-4 w-20" />
-            </div>
-          </div>
-          <Skeleton className="size-8 rounded-full" />
-        </div>
-      </Card>
-    )
-  }
-
-  if (!item) {
-    return <NoData />
-  }
+  if (!favouriteItemIds.includes(item.libraryItemId)) return null
 
   return (
     <>
+      <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              {t("remove from favourite list")}
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              {t("are you sure you want to remove")}
+              <span className="mx-2 font-semibold">
+                &quot;{item.title}&quot;
+              </span>
+              {t("from your favorites? This action cannot be undone")}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{t("cancel")}</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={() => toggleFavorite(item.libraryItemId)}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {t("delete")}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       <Card className="group overflow-hidden transition-all duration-200 hover:bg-accent/10">
         <div className="flex items-start gap-4 p-4">
           <div className="relative h-24 w-16 shrink-0 overflow-hidden rounded-md shadow-sm transition-all duration-200 group-hover:shadow-md">
@@ -78,7 +75,7 @@ const OverviewFavoriteItem = ({ libraryItemId }: Props) => {
           <div className="flex-1 space-y-1">
             <Link
               href={`/books/${item.libraryItemId}`}
-              className="line-clamp-2 font-medium text-foreground hover:text-primary hover:underline"
+              className="line-clamp-2 text-sm font-medium text-primary hover:text-primary hover:underline"
             >
               {item.title}
             </Link>
@@ -93,69 +90,19 @@ const OverviewFavoriteItem = ({ libraryItemId }: Props) => {
                 )}
               </p>
             )}
-
-            <div className="flex flex-wrap gap-2 pt-1">
-              {item.publisher && (
-                <Badge variant="default" className="text-xs font-normal">
-                  {item.publisher}
-                </Badge>
-              )}
-
-              {item.publicationYear && (
-                <Badge
-                  variant="default"
-                  className="flex items-center gap-1 text-xs font-normal"
-                >
-                  <Calendar className="size-3" />
-                  {item.publicationYear}
-                </Badge>
-              )}
-
-              {item.pageCount && (
-                <Badge
-                  variant="default"
-                  className="flex items-center gap-1 text-xs font-normal"
-                >
-                  <BookOpen className="size-3" />
-                  {item.pageCount} pages
-                </Badge>
-              )}
-            </div>
           </div>
 
           <Button
             variant="ghost"
             size="icon"
             className="size-8 rounded-full text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-            onClick={() => setShowDeleteConfirm(true)}
+            onClick={() => setOpenDelete(true)}
             aria-label="Remove from favorites"
           >
             <Trash2 size={16} />
           </Button>
         </div>
       </Card>
-
-      <AlertDialog open={showDeleteConfirm} onOpenChange={setShowDeleteConfirm}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Remove from favorites?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to remove
-              <span className="font-semibold">&quot;{item.title}&quot;</span>
-              from your favorites? This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleRemoveFavorite}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              Remove
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   )
 }

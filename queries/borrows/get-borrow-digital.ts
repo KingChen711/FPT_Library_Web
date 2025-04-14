@@ -7,6 +7,8 @@ import {
   type BookResource,
   type BorrowDigital,
   type LibraryCard,
+  type Transaction,
+  type User,
 } from "@/lib/types/models"
 
 import { auth } from "../auth"
@@ -14,6 +16,7 @@ import { auth } from "../auth"
 export type BorrowDigitalDetailItem = BorrowDigital & {
   libraryResource: BookResource
   librarycard: LibraryCard
+  transactions: (Transaction & { user: User })[]
 }
 
 const getBorrowDigital = async (

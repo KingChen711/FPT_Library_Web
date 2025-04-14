@@ -54,7 +54,7 @@ function handleServerActionError(
   keys.forEach((key) =>
     //@ts-ignore
     form.setError(key.replaceAll("[", ".").replaceAll("]", ""), {
-      message: error.fieldErrors[key][0],
+      message: error.fieldErrors[key].join(","),
     })
   )
   //@ts-ignore

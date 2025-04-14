@@ -146,7 +146,11 @@ const Map = ({ notFull = false }: Props) => {
       style={{
         fontFamily: "Arial, Helvetica, sans-serif !important",
       }}
-      className={cn("absolute inset-0", notFull && "pt-[64px]")}
+      className={cn(
+        notFull
+          ? "absolute bottom-0 left-0 h-[calc(100%-64px)] w-full border-t"
+          : "absolute inset-0"
+      )}
     >
       <div
         className={cn(

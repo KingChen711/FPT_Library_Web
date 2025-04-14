@@ -226,8 +226,8 @@ async function TrackingDetailsSection({
                         </p>
                       </Link>
                     ) : (
-                      <div className="flex justify-center">
-                        {trackingDetail.isbn}
+                      <div className="flex font-bold">
+                        {trackingDetail.itemName}
                       </div>
                     )}
                   </TableCell>

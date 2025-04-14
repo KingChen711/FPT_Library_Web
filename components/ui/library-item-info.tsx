@@ -70,7 +70,8 @@ const LibraryItemInfo = ({
   const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
   const [openDigitalList, setOpenDigitalList] = useState<boolean>(false)
   const [openAddBorrowConfirm, setOpenAddBorrowConfirm] = useState(false)
-  const { favouriteItemIds, toggleFavorite } = useFavourite()
+  const { favouriteItemIds, toggleFavorite, isLoadingFavourite } =
+    useFavourite()
   const isFavourite = libraryItem
     ? favouriteItemIds.includes(libraryItem?.libraryItemId)
     : false
@@ -293,7 +294,7 @@ const LibraryItemInfo = ({
         </section>
       }
       <section className="flex items-start justify-start gap-4">
-        {!isManager && user && (
+        {!isManager && user && !isLoadingFavourite && (
           <Button
             onClick={() => toggleFavorite(libraryItem.libraryItemId)}
             variant="outline"
