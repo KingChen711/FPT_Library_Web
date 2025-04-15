@@ -28,6 +28,7 @@ const BookDigitalListDialog = ({
   resources,
   libraryItem,
 }: Props) => {
+  console.log("🚀 ~ libraryItem:", libraryItem)
   const t = useTranslations("BookPage")
 
   const ebookResources =

@@ -3,9 +3,14 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Eye, MoreHorizontal, RotateCcw } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { EResourceBookType } from "@/lib/types/enums"
-import { type BorrowItem } from "@/lib/types/models"
+import {
+  type BookResource,
+  type BorrowDigital,
+  type LibraryCard,
+} from "@/lib/types/models"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -17,24 +22,27 @@ import {
 import DigitalBorrowExtendConfirm from "./digital-borrow-extend-confirm"
 
 type Props = {
-  resourceId: number
-  borrowItem: BorrowItem
+  borrowItem: BorrowDigital & {
+    libraryResource: BookResource
+    librarycard: LibraryCard
+  }
 }
 
-const DigitalBorrowActions = ({ resourceId, borrowItem }: Props) => {
+const DigitalBorrowActions = ({ borrowItem }: Props) => {
   const router = useRouter()
   const [openExtendConfirm, setOpenExtendConfirm] = useState(false)
+  const t = useTranslations("BookPage.borrow tracking")
   const handleViewResource = () => {
     if (
       borrowItem.libraryResource.resourceType === EResourceBookType.AUDIO_BOOK
     ) {
       router.push(
-        `/books/resources/${resourceId}?resourceType=${EResourceBookType.AUDIO_BOOK}`
+        `/books/resources/${borrowItem.resourceId}?resourceType=${EResourceBookType.AUDIO_BOOK}`
       )
     }
     if (borrowItem.libraryResource.resourceType === EResourceBookType.EBOOK) {
       router.push(
-        `/books/resources/${resourceId}?resourceType=${EResourceBookType.EBOOK}`
+        `/books/resources/${borrowItem.resourceId}?resourceType=${EResourceBookType.EBOOK}`
       )
     }
   }
@@ -46,7 +54,7 @@ const DigitalBorrowActions = ({ resourceId, borrowItem }: Props) => {
   return (
     <>
       <DigitalBorrowExtendConfirm
-        resourceId={resourceId}
+        resourceId={borrowItem.resourceId}
         open={openExtendConfirm}
         setOpen={setOpenExtendConfirm}
       />
@@ -64,19 +72,19 @@ const DigitalBorrowActions = ({ resourceId, borrowItem }: Props) => {
             className="cursor-pointer"
             onClick={handleViewDetail}
           >
-            <Eye /> View detail
+            <Eye /> {t("view detail")}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={handleViewResource}
           >
-            <Eye /> View resource
+            <Eye /> {t("view resource")}
           </DropdownMenuItem>
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => setOpenExtendConfirm(true)}
           >
-            <RotateCcw /> Extend
+            <RotateCcw /> {t("extend")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

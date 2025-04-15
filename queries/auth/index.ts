@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 
 import { http } from "@/lib/http"
 import { verifyToken } from "@/lib/server-utils"
-import { EAccessLevel, EFeature } from "@/lib/types/enums"
+import { EAccessLevel, EFeature, ERoleType } from "@/lib/types/enums"
 import { type Employee, type User } from "@/lib/types/models"
 
 let isAuthenticated = false
@@ -64,6 +64,34 @@ const whoAmI = cache(async (): Promise<User | Employee | null> => {
   }
 })
 
+const checkManager = cache(async (): Promise<boolean> => {
+  try {
+    const { data: userData } = await http.get<User | Employee>(
+      "/api/auth/current-user",
+      {
+        headers: {
+          Authorization: `Bearer ${getAccessToken()}`,
+        },
+        next: {
+          revalidate: 0,
+          tags: ["who-am-i"],
+        },
+      }
+    )
+
+    if (
+      userData.role.roleType === ERoleType.EMPLOYEE ||
+      (userData.role.roleType === ERoleType.USER &&
+        userData.role.englishName === "Administration")
+    ) {
+      return true
+    }
+    return false
+  } catch {
+    return false
+  }
+})
+
 const getAccessLevel = async (feature: EFeature): Promise<EAccessLevel> => {
   try {
     const { data } = await http.get<{ permissionLevel: EAccessLevel }>(
@@ -113,5 +141,6 @@ export const auth = () => {
     protect,
     whoAmI,
     getAccessLevel,
+    checkManager,
   }
 }

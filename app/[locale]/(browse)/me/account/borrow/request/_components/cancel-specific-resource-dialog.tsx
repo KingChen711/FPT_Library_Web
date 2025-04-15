@@ -1,4 +1,5 @@
 import { useTransition } from "react"
+import { useRouter } from "@/i18n/routing"
 import { AudioLines, BookOpen, Clock } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -35,8 +36,9 @@ const CancelSpecificResourceDialog = ({
   className,
   resource,
 }: Props) => {
+  const router = useRouter()
   const locale = useLocale()
-  const t = useTranslations("BookPage.borrow tracking")
+  const tBorrow = useTranslations("BookPage.borrow tracking")
   const [isPending, startTransition] = useTransition()
 
   const onSubmit = async () => {
@@ -52,6 +54,7 @@ const CancelSpecificResourceDialog = ({
           variant: "success",
         })
         setOpen(false)
+        router.push("/me/account/borrow")
         return
       }
       handleServerActionError(res, locale)
@@ -62,11 +65,8 @@ const CancelSpecificResourceDialog = ({
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className={`sm:max-w-2xl ${className}`}>
         <DialogHeader>
-          <DialogTitle>Cancel this item in this borrow request</DialogTitle>
-          <DialogDescription>
-            This action cannot be undone. Please check your borrow request
-            details below.
-          </DialogDescription>
+          <DialogTitle>{tBorrow("cancel library item")}</DialogTitle>
+          <DialogDescription>{tBorrow("cancel desc")}</DialogDescription>
         </DialogHeader>
         <Card
           key={resource.borrowRequestResourceId}
@@ -88,12 +88,12 @@ const CancelSpecificResourceDialog = ({
                   EResourceBookType.EBOOK ? (
                     <>
                       <BookOpen className="size-3" />
-                      {t("ebook")}
+                      {tBorrow("ebook")}
                     </>
                   ) : (
                     <>
                       <AudioLines className="size-3" />
-                      {t("audio book")}
+                      {tBorrow("audio book")}
                     </>
                   )}
                 </Badge>
@@ -102,8 +102,9 @@ const CancelSpecificResourceDialog = ({
               {resource.defaultBorrowDurationDays && (
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Clock className="mr-1.5 size-3.5" />
-                  {t("borrow duration")}: {resource.defaultBorrowDurationDays}
-                  {t("days")}
+                  {tBorrow("borrow duration")}:{" "}
+                  {resource.defaultBorrowDurationDays}
+                  {tBorrow("days")}
                 </div>
               )}
             </div>
@@ -113,11 +114,11 @@ const CancelSpecificResourceDialog = ({
           <div className="flex items-center gap-4">
             <DialogClose>
               <Button variant={"outline"} disabled={isPending}>
-                Close
+                {tBorrow("cancel")}
               </Button>
             </DialogClose>
             <Button onClick={() => onSubmit()} disabled={isPending}>
-              Save
+              {tBorrow("submit")}
             </Button>
           </div>
         </DialogFooter>

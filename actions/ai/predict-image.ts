@@ -4,9 +4,13 @@ import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
 import { type PredictResult } from "@/lib/types/models"
 
-export async function predictImage(
-  formData: FormData
-): Promise<ActionResponse<{ message: string; data: PredictResult }>> {
+export async function predictImage(formData: FormData): Promise<
+  ActionResponse<{
+    message: string
+    data: PredictResult
+    messageError?: string
+  }>
+> {
   try {
     const { data, resultCode, message } = await http.post<PredictResult>(
       `/api/library-items/ai/predict/v2`,

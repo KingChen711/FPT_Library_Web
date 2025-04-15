@@ -55,6 +55,8 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
     (item) => item.libraryItemId !== libraryItem.libraryItemId
   )
 
+  console.log("🚀 ~ BookAuthorCard ~ libraryItem:", libraryItem)
+
   return (
     <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto overflow-x-hidden rounded-md border bg-card p-4 px-6 shadow-lg">
       <div className="px-4">
@@ -114,8 +116,12 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
               )
             })}
           </CarouselContent>
-          <CarouselPrevious className="ml-4 size-4" />
-          <CarouselNext className="mr-4 size-4" />
+          {libraryItem.authors.length > 1 && (
+            <CarouselPrevious className="ml-4 size-4" />
+          )}
+          {libraryItem.authors.length > 1 && (
+            <CarouselNext className="mr-4 size-4" />
+          )}
         </Carousel>
       </div>
 

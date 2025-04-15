@@ -29,7 +29,6 @@ import {
 } from "@/components/ui/sidebar"
 
 import LogOutButton from "../hoc/log-out-button"
-import { Icons } from "../ui/icons"
 import SidebarSettings from "../ui/sidebar-settings"
 import ManagementSidebarContent from "./management-sidebar-content"
 import SidebarLogoItem from "./sidebar-logo-item"
@@ -37,7 +36,6 @@ import SidebarLogoItem from "./sidebar-logo-item"
 export async function ManagementSidebar({
   ...props
 }: ComponentProps<typeof Sidebar>) {
-  const tRoutes = await getTranslations("Routes")
   const user = await auth().whoAmI()
   const locale = await getLocale()
   const t = await getTranslations("Me")
@@ -59,25 +57,7 @@ export async function ManagementSidebar({
 
       <SidebarFooter>
         <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip={tRoutes("Settings")} asChild>
-              <Link href={"/settings"}>
-                <Icons.Setting />
-                <span>{tRoutes("Settings")}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-
           <SidebarSettings />
-
-          <SidebarMenuItem>
-            <SidebarMenuButton tooltip={tRoutes("Help")} asChild>
-              <Link href={"/help"}>
-                <Icons.Help />
-                <span>{tRoutes("Help")}</span>
-              </Link>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
 
           {user && (
             <SidebarMenuItem>

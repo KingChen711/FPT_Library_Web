@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/auth-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { type HubConnection } from "@microsoft/signalr"
 import { Loader2 } from "lucide-react"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
@@ -61,6 +61,8 @@ const formSchema = z.object({
 })
 
 const DigitalBorrowExtendConfirm = ({ open, setOpen, resourceId }: Props) => {
+  const t = useTranslations("BookPage.borrow tracking")
+
   const locale = useLocale()
   const router = useRouter()
   const [isPending, startTransition] = useTransition()
@@ -206,10 +208,8 @@ const DigitalBorrowExtendConfirm = ({ open, setOpen, resourceId }: Props) => {
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Are you sure absolutely sure?</DialogTitle>
-            <DialogDescription>
-              You have to pay the fee to extend this digital book.
-            </DialogDescription>
+            <DialogTitle>{t("extend")}</DialogTitle>
+            <DialogDescription>{t("extend desc")}</DialogDescription>
           </DialogHeader>
 
           {paymentData && (
@@ -232,7 +232,7 @@ const DigitalBorrowExtendConfirm = ({ open, setOpen, resourceId }: Props) => {
                     name="paymentMethodId"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Payment Method</FormLabel>
+                        <FormLabel>{t("payment method")}</FormLabel>
                         <FormControl>
                           <Select
                             defaultValue={field.value.toString()}
@@ -263,7 +263,7 @@ const DigitalBorrowExtendConfirm = ({ open, setOpen, resourceId }: Props) => {
                   <div className="mt-6 flex justify-end gap-3">
                     <DialogClose asChild>
                       <Button variant="ghost" disabled={isPending}>
-                        Cancel
+                        {t("cancel")}
                       </Button>
                     </DialogClose>
                     <Button
@@ -272,7 +272,7 @@ const DigitalBorrowExtendConfirm = ({ open, setOpen, resourceId }: Props) => {
                       disabled={isPending}
                       className="flex items-center gap-2"
                     >
-                      Extend
+                      {t("extend")}
                       {isPending && <Loader2 className="animate-spin" />}
                     </Button>
                   </div>

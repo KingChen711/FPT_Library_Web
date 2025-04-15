@@ -2,7 +2,8 @@
 
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { Bell, IdCard, Palette, Shield, User } from "lucide-react"
+import { useAuth } from "@/contexts/auth-provider"
+import { Bell, IdCard, Shield, User } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { ESystemRoutes } from "@/lib/types/enums"
@@ -12,64 +13,62 @@ type AccountHeaderTabProps = {
   locale: string
 }
 
-const accountRoutes = [
-  {
-    label: "profile",
-    route: ESystemRoutes.PROFILE_MANAGEMENT,
-    icon: User,
-  },
-  {
-    label: "library card",
-    route: ESystemRoutes.LIBRARY_CARD_MANAGEMENT,
-    icon: IdCard,
-  },
-  {
-    label: "borrow",
-    route: ESystemRoutes.BORROW_MANAGEMENT,
-    icon: IdCard,
-  },
-  {
-    label: "reservation",
-    route: ESystemRoutes.RESERVATION_MANAGEMENT,
-    icon: IdCard,
-  },
-  // {
-  //   label: "fine",
-  //   route: ESystemRoutes.FINE_MANAGEMENT,
-  //   icon: IdCard,
-  // },
-  {
-    label: "transaction",
-    route: ESystemRoutes.TRANSACTION_MANAGEMENT,
-    icon: IdCard,
-  },
-  {
-    label: "security",
-    route: ESystemRoutes.SECURITY_MANAGEMENT,
-    icon: Shield,
-  },
-  {
-    label: "interface",
-    route: ESystemRoutes.INTERFACE_MANAGEMENT,
-    icon: Palette,
-  },
-  {
-    label: "notifications",
-    route: ESystemRoutes.NOTIFICATION_MANAGEMENT,
-    icon: Bell,
-  },
-]
-
 const AccountHeaderTab = ({ locale }: AccountHeaderTabProps) => {
   const t = useTranslations("Me")
   const pathname = usePathname()
-
+  const { isManager } = useAuth()
   const isActive = (route: string) => pathname.startsWith(`/${locale}${route}`)
+
+  const accountRoutes = [
+    {
+      label: "profile",
+      route: ESystemRoutes.PROFILE_MANAGEMENT,
+      icon: User,
+      isShown: true,
+    },
+    {
+      label: "library card",
+      route: ESystemRoutes.LIBRARY_CARD_MANAGEMENT,
+      icon: IdCard,
+      isShown: true && !isManager,
+    },
+    {
+      label: "borrow",
+      route: ESystemRoutes.BORROW_MANAGEMENT,
+      icon: IdCard,
+      isShown: true && !isManager,
+    },
+    {
+      label: "reservation",
+      route: ESystemRoutes.RESERVATION_MANAGEMENT,
+      icon: IdCard,
+      isShown: true && !isManager,
+    },
+    {
+      label: "transaction",
+      route: ESystemRoutes.TRANSACTION_MANAGEMENT,
+      icon: IdCard,
+      isShown: true && !isManager,
+    },
+    {
+      label: "security",
+      route: ESystemRoutes.SECURITY_MANAGEMENT,
+      icon: Shield,
+      isShown: true,
+    },
+    {
+      label: "notifications",
+      route: ESystemRoutes.NOTIFICATION_MANAGEMENT,
+      icon: Bell,
+      isShown: true,
+    },
+  ]
 
   return (
     <nav className="flex h-full flex-col space-y-1 bg-background p-2">
       {accountRoutes.map((route) => {
         const Icon = route.icon
+        if (route.isShown === false) return null
         return (
           <Link
             key={route.label}

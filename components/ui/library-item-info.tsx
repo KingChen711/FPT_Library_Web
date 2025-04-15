@@ -34,12 +34,7 @@ import { Rating } from "react-simple-star-rating"
 
 import { cn, formatPrice, splitCamelCase } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip"
+import ShelfPreviewButton from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-cards/shelf-preview"
 import BookDigitalListDialog from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-digital-list-dialog"
 import BookInstancesTab from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-tabs/book-instances-tab"
 import BorrowLibraryItemConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/borrow-library-item-confirm"
@@ -74,7 +69,6 @@ const LibraryItemInfo = ({
   const isFavourite = libraryItem
     ? favouriteItemIds.includes(libraryItem?.libraryItemId)
     : false
-
   const { recentlyOpened } = useLibraryStorage()
 
   useEffect(() => {
@@ -212,30 +206,14 @@ const LibraryItemInfo = ({
             value={libraryItem.publisher}
           />
 
-          {libraryItem.shelf && (
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger>
-                  <InfoItem
-                    icon={MapPin}
-                    label={t("fields.shelf")}
-                    value={libraryItem.shelf?.shelfNumber}
-                    className="cursor-pointer font-semibold"
-                  />
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>
-                    {locale === "vi"
-                      ? libraryItem.shelf?.vieShelfName
-                      : libraryItem.shelf?.engShelfName}
-                  </p>
-                  <p>
-                    {libraryItem.shelf.classificationNumberRangeFrom} -{" "}
-                    {libraryItem.shelf.classificationNumberRangeTo}
-                  </p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
+          {libraryItem?.shelf && (
+            <ShelfPreviewButton shelfId={libraryItem.shelf.shelfId}>
+              <div className={cn("flex items-center gap-2")}>
+                <MapPin className="size-4 text-muted-foreground" />
+                <span className="font-medium">{t("fields.shelf")}:</span>{" "}
+                {libraryItem.shelf?.shelfNumber || "N/A"}
+              </div>
+            </ShelfPreviewButton>
           )}
         </div>
       </section>

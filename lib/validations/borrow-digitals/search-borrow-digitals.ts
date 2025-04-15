@@ -1,11 +1,15 @@
 import { z } from "zod"
 
 import { EBorrowDigitalStatus } from "@/lib/types/enums"
-import { filterDateRangeSchema, filterEnumSchema } from "@/lib/zod"
+import {
+  filterBooleanSchema,
+  filterDateRangeSchema,
+  filterEnumSchema,
+} from "@/lib/zod"
 
 export const filterBorrowDigitalSchema = z.object({
+  isExtended: filterBooleanSchema(),
   status: filterEnumSchema(EBorrowDigitalStatus),
-
   registerDateRange: filterDateRangeSchema,
   expiryDateRange: filterDateRangeSchema,
 
@@ -26,17 +30,19 @@ export const filterBorrowDigitalSchema = z.object({
     .catch([]),
 })
 
-export type TFilterBorrowDigitalsSchema = z.infer<
+export type TFilterBorrowDigitalSchema = z.infer<
   typeof filterBorrowDigitalSchema
 >
 
 export const searchBorrowDigitalsSchema = z
   .object({
-    search: z.string().catch(""),
-    isExtended: z.boolean().catch(false),
     pageIndex: z.coerce.number().min(1).catch(1),
-    pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("10"),
-    sort: z.enum(["Demo", "-Demo"]).optional().catch(undefined),
+    pageSize: z.enum(["5", "10", "30", "50", "100"]).catch("5"),
+    searchDigital: z.string().catch(""),
+    sort: z
+      .enum(["RegisterDate", "-RegisterDate", "ExpiryDate", "-ExpiryDate"])
+      .optional()
+      .catch(undefined),
   })
   .and(filterBorrowDigitalSchema)
 

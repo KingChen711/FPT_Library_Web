@@ -55,6 +55,7 @@ const AiPrediction = () => {
 
     startTransition(async () => {
       const res = await predictImage(formData)
+      console.log("🚀 ~ startTransition ~ res:", res)
 
       if (res?.isSuccess) {
         setUploadImage(values?.imageToPredict)
@@ -66,7 +67,10 @@ const AiPrediction = () => {
 
       toast({
         title: t("error"),
-        description: locale === "vi" ? "Không có dữ liệu" : "No data",
+        description:
+          locale === "vi"
+            ? "Không tìm thấy tài liệu dựa trên hình ảnh"
+            : "Data not found from image",
         variant: "danger",
       })
     })
