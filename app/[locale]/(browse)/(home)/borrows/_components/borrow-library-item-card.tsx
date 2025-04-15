@@ -16,7 +16,6 @@ import {
 import { useTranslations } from "next-intl"
 
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
-import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -59,7 +58,7 @@ const BorrowLibraryItemCard = ({
     return <NoData />
   }
 
-  const isAvailable = data.libraryItemInventory?.availableUnits > 0
+  // const isAvailable = data.libraryItemInventory?.availableUnits > 0
 
   const handleToggleSelect = () => {
     const libraryItemIds = [...selectedBorrow.selectedLibraryItemIds]
@@ -149,14 +148,14 @@ const BorrowLibraryItemCard = ({
                   </span>
                 </div>
               )}
-              <Badge
+              {/* <Badge
                 variant={isAvailable ? "success" : "destructive"}
                 className="w-fit font-normal"
               >
                 {isAvailable
                   ? t("fields.availability")
                   : t("fields.unavailability")}
-              </Badge>
+              </Badge> */}
             </CardHeader>
 
             <CardContent className="flex flex-1 flex-col gap-4 pb-2">

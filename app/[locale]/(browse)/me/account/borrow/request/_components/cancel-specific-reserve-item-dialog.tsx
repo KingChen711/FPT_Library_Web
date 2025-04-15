@@ -7,7 +7,7 @@ import { useLocale, useTranslations } from "next-intl"
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { type LibraryItem } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
-import { cancelRequestItemPatron } from "@/actions/borrows/cancel-request-item-patron"
+import { cancelRequestReservationPatron } from "@/actions/borrows/cancel-request-reservation-patron"
 import { toast } from "@/hooks/use-toast"
 import {
   Accordion,
@@ -38,7 +38,7 @@ type Props = {
   expandable?: boolean
 }
 
-const CancelSpecificLibraryItemDialog = ({
+const CancelSpecificReserveItemDialog = ({
   borrowRequestId,
   libraryItem,
   open,
@@ -66,7 +66,7 @@ const CancelSpecificLibraryItemDialog = ({
 
   const onSubmit = async () => {
     startTransition(async () => {
-      const res = await cancelRequestItemPatron(
+      const res = await cancelRequestReservationPatron(
         borrowRequestId,
         libraryItem.libraryItemId
       )
@@ -212,7 +212,7 @@ const CancelSpecificLibraryItemDialog = ({
   )
 }
 
-export default CancelSpecificLibraryItemDialog
+export default CancelSpecificReserveItemDialog
 
 function ExpandInformation({
   libraryItem,

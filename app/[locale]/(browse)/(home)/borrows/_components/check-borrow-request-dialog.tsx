@@ -81,6 +81,7 @@ const CheckBorrowRequestDialog = ({
         reservationItemIds: allowToReserveItems,
         resourceIds: allowToBorrowResources,
       })
+      console.log("🚀 ~ startTransition ~ res:", res)
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
@@ -107,6 +108,7 @@ const CheckBorrowRequestDialog = ({
         setOpen(false)
         return
       }
+      console.log(123)
       handleServerActionError(res, locale)
     })
   }
@@ -241,7 +243,13 @@ const CheckBorrowRequestDialog = ({
           <DialogClose>{t("cancel")}</DialogClose>
           <Button
             onClick={handleSubmit}
-            disabled={!isAllowedBorrowRequest || isPending}
+            disabled={
+              [
+                ...allowToReserveItems,
+                ...allowToBorrowResources,
+                ...(data?.allowToBorrowItems || []),
+              ].length === 0 || isPending
+            }
           >
             {t("continue")}
             {isPending && <Loader2 className="ml-1 size-4 animate-spin" />}

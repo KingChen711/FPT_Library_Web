@@ -29,7 +29,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog"
-import NoData from "@/components/ui/no-data"
 import PaymentCard from "@/components/ui/payment-card"
 
 type Props = {
@@ -134,8 +133,10 @@ const BorrowRequestTransactionDialog = ({
     )
   }
 
+  console.log({ user, borrowRequestResources })
+
   if (!user || !borrowRequestResources) {
-    return <NoData />
+    return null
   }
 
   function onSubmit() {

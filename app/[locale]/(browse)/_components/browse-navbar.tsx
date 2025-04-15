@@ -5,7 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { usePathname } from "@/i18n/routing"
-import { Book, Bot, Filter, Mic, QrCode, Search } from "lucide-react"
+import { Bot, Filter, Mic, QrCode, Search } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useDebounce } from "use-debounce"
 
@@ -36,15 +36,10 @@ import {
 import VoiceToText from "@/components/ui/voice-to-text"
 import BookFilterTabs from "@/components/book-filter-tabs"
 
-// import { BookFilterTabs } from "@/components/book-filter-tabs"
-
-import BookPredictionDialog from "../(home)/_components/book-prediction-dialog"
-import BookRecommendDialog from "../(home)/_components/book-recommend-dialog"
 import Actions from "./actions"
 
 function BrowseNavbar() {
   const t = useTranslations("GeneralManagement")
-
   const router = useRouter()
   const { open } = useSidebar()
   const pathname = usePathname()
@@ -187,14 +182,6 @@ function BrowseNavbar() {
                                 {acd.subTitle}
                               </div>
                             </div>
-                            {/* <Badge
-                              className="flex w-[92px] shrink-0 justify-center"
-                              variant={acd.available ? "success" : "warning"}
-                            >
-                              {tAutocomplete(
-                                acd.available ? "Available" : "Out of shelf"
-                              )}
-                            </Badge> */}
                           </Link>
                         </TooltipTrigger>
                         <TooltipContent
@@ -223,19 +210,14 @@ function BrowseNavbar() {
               <DropdownMenuItem onClick={() => setOpenVoiceToText(true)}>
                 <Mic size={16} /> {t("voice to text")}
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {}}>
+              <DropdownMenuItem onClick={() => router.push("/ai-prediction")}>
                 <Bot size={16} /> {t("ai prediction")}
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => {}}>
-                <Book size={16} /> {t("ai recommendation")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
       </div>
       <VoiceToText open={openVoiceToText} setOpen={setOpenVoiceToText} />
-      <BookPredictionDialog open={false} setOpen={() => {}} />
-      <BookRecommendDialog open={false} setOpen={() => {}} />
 
       <Actions />
     </nav>

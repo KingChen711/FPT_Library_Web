@@ -193,6 +193,20 @@ export type Employee = {
   }
 }
 
+export type BorrowSettings = {
+  pickUpExpirationInDays: number
+  extendPickUpInDays: number
+  borrowAmountOnceTime: number
+  totalMissedPickUpAllow: number
+  endSuspensionInDays: number
+  maxBorrowExtension: number
+  allowToExtendInDays: number
+  totalBorrowExtensionInDays: number
+  overdueOrLostHandleInDays: number
+  fineExpirationInDays: number
+  lostAmountPercentagePerDay: number
+}
+
 export type LibraryCardHolder = {
   libraryCardId: string
   fullName: string

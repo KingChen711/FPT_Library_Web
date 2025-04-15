@@ -2,7 +2,7 @@ import Image from "next/image"
 import Link from "next/link"
 import getBorrowReservationsPatron from "@/queries/borrows/get-reservations-patron"
 import { format } from "date-fns"
-import { Check, Eye, MoreHorizontal, X } from "lucide-react"
+import { Eye, MoreHorizontal } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
@@ -100,16 +100,6 @@ const ReservationPage = async ({ searchParams }: Props) => {
                     <div className="flex justify-center">{t("Status")}</div>
                   </TableHead>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">{t("Assignable")}</div>
-                  </TableHead>
-
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Applied label")}
-                    </div>
-                  </TableHead>
-
                   <SortableTableHead
                     currentSort={sort}
                     label={t("Reservation date")}
@@ -157,24 +147,7 @@ const ReservationPage = async ({ searchParams }: Props) => {
                         />
                       </div>
                     </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {reservation.isAssignable ? (
-                          <Check className="text-success" />
-                        ) : (
-                          <X className="text-danger" />
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {reservation.isAppliedLabel ? (
-                          <Check className="text-success" />
-                        ) : (
-                          <X className="text-danger" />
-                        )}
-                      </div>
-                    </TableCell>
+
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
                         {format(
@@ -203,6 +176,15 @@ const ReservationPage = async ({ searchParams }: Props) => {
                               >
                                 <Eye className="size-4" />
                                 {t("View details")}
+                              </Link>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Link
+                                href={`/books/${reservation.libraryItem.libraryItemId}`}
+                                className="flex items-center gap-2"
+                              >
+                                <Eye className="size-4" />
+                                {t("View book")}
                               </Link>
                             </DropdownMenuItem>
                           </DropdownMenuContent>

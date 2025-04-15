@@ -3,6 +3,7 @@
 import { useState } from "react"
 import { useAuth } from "@/contexts/auth-provider"
 import { useLibraryStorage } from "@/contexts/library-provider"
+import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { toast } from "@/hooks/use-toast"
@@ -31,7 +32,7 @@ const BorrowsPage = () => {
   const { borrowedLibraryItems, borrowedResources } = useLibraryStorage()
 
   if (isLoadingAuth) {
-    return null
+    return <Loader2 className="animate-spin" />
   }
 
   const handleCheckAvailable = () => {
@@ -69,12 +70,12 @@ const BorrowsPage = () => {
                 <Checkbox
                   id="select-all"
                   checked={
-                    selectedBorrow.selectedLibraryItemIds.length ===
-                      borrowedLibraryItems.items.length &&
-                    selectedBorrow.selectedResourceIds.length ===
-                      borrowedResources.items.length &&
-                    borrowedLibraryItems.items.length > 0 &&
-                    borrowedResources.items.length > 0
+                    [
+                      ...selectedBorrow.selectedLibraryItemIds,
+                      ...selectedBorrow.selectedResourceIds,
+                    ].length ===
+                    [...borrowedLibraryItems.items, ...borrowedResources.items]
+                      .length
                   }
                   onCheckedChange={(checked) => {
                     if (checked) {

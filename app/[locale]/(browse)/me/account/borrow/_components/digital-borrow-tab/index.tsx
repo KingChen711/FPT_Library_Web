@@ -1,12 +1,13 @@
 import getBorrowDigitalsPatron from "@/queries/borrows/get-borrow-digitals-patron"
-import { differenceInCalendarDays, format, parseISO } from "date-fns"
+import { differenceInCalendarDays, format } from "date-fns"
 import { Calendar, CheckCircle, XCircle } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
-import { type BorrowItem } from "@/lib/types/models"
 import { formatPrice } from "@/lib/utils"
+import { searchBorrowDigitalsSchema } from "@/lib/validations/borrow-digitals/search-borrow-digitals"
 import BorrowDigitalStatusBadge from "@/components/ui/borrow-digital-status-badge"
 import Paginator from "@/components/ui/paginator"
+import ParamSearchForm from "@/components/ui/param-search-form"
 import { Progress } from "@/components/ui/progress"
 import {
   Table,
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/table"
 
 import DigitalBorrowActions from "./digital-borrow-actions"
+import FiltersBorrowDigitalsDialog from "./filters-borow-digitals-dialog"
 
 type Props = {
   searchParams: Record<string, string | string[] | undefined>
@@ -25,27 +27,37 @@ type Props = {
 
 const DigitalBorrowTab = async ({ searchParams }: Props) => {
   const t = await getTranslations("BookPage.borrow tracking")
-  console.log(searchParams)
+  const { searchDigital, pageIndex, sort, pageSize, ...rest } =
+    searchBorrowDigitalsSchema.parse(searchParams)
+
   const {
     sources: digitalBorrows,
     totalActualItem,
-    pageIndex,
-    pageSize,
     totalPage,
   } = await getBorrowDigitalsPatron({
-    pageIndex: 1,
-    pageSize: "30",
-    search: "",
-    registerDateRange: [],
-    expiryDateRange: [],
-    isExtended: false,
-    f: [],
-    o: [],
-    v: [],
+    search: searchDigital,
+    pageIndex,
+    sort,
+    pageSize,
+    ...rest,
   })
+  console.log("🚀 ~ DigitalBorrowTab ~ digitalBorrows[0]:", digitalBorrows[0])
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex flex-wrap items-center gap-4">
+          <div className="flex flex-row items-center">
+            <ParamSearchForm
+              searchKey="searchDigital"
+              className="h-full rounded-r-none border-r-0"
+              search={searchDigital}
+            />
+            <FiltersBorrowDigitalsDialog />
+          </div>
+        </div>
+      </div>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -62,24 +74,28 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {digitalBorrows.map((borrowedItem: BorrowItem, index) => {
-              const registerDate = parseISO(borrowedItem.registerDate)
-              const expiryDate = parseISO(borrowedItem.expiryDate)
+            {digitalBorrows.map((item, index) => {
               const now = new Date()
 
               // Số ngày còn lại (có thể âm nếu đã quá hạn)
-              const daysUntilDue = differenceInCalendarDays(expiryDate, now)
+              const daysUntilDue = differenceInCalendarDays(
+                item.expiryDate,
+                now
+              )
 
               const isOverdue = daysUntilDue < 0
 
               // Tổng số ngày mượn (ở đây là 14 ngày cố định, hoặc tính động nếu cần)
               const totalDays = differenceInCalendarDays(
-                expiryDate,
-                registerDate
+                item.expiryDate,
+                item?.registerDate
               )
 
               // Số ngày đã trôi qua
-              const daysPassed = differenceInCalendarDays(now, registerDate)
+              const daysPassed = differenceInCalendarDays(
+                now,
+                item?.registerDate
+              )
 
               // Tính phần trăm tiến độ
               const progressPercent = Math.min(
@@ -87,13 +103,13 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
                 (daysPassed / totalDays) * 100
               )
               return (
-                <TableRow key={borrowedItem.digitalBorrowId}>
+                <TableRow key={item.digitalBorrowId}>
                   <TableCell>
                     <div className="flex items-start gap-3">{index + 1}</div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-start gap-3">
-                      {borrowedItem.libraryResource.resourceTitle}
+                      {item.libraryResource.resourceTitle}
                     </div>
                   </TableCell>
                   <TableCell>
@@ -101,7 +117,7 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
                       <Calendar className="mr-1 size-3 text-muted-foreground" />
                       <span>
                         {format(
-                          new Date(borrowedItem.registerDate),
+                          new Date(item?.registerDate),
                           "HH:mm dd/MM/yyyy"
                         )}
                       </span>
@@ -114,7 +130,7 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
                         <Calendar className="mr-1 size-3 text-muted-foreground" />
                         <span>
                           {format(
-                            new Date(borrowedItem.expiryDate),
+                            new Date(item.expiryDate),
                             "HH:mm dd/MM/yyyy"
                           )}
                         </span>
@@ -142,12 +158,12 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
                   </TableCell>
                   <TableCell>
                     <span>
-                      {formatPrice(borrowedItem.libraryResource.borrowPrice!)}
+                      {formatPrice(item.libraryResource.borrowPrice!)}
                     </span>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center">
-                      {borrowedItem.isExtended ? (
+                      {item.isExtended ? (
                         <CheckCircle size={20} color="green" />
                       ) : (
                         <XCircle size={20} color="red" />
@@ -156,19 +172,18 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center">
-                      <span>{borrowedItem.extensionCount}</span>
+                      <span>{item.extensionCount}</span>
                     </div>
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center">
-                      <BorrowDigitalStatusBadge status={borrowedItem.status} />
+                      <BorrowDigitalStatusBadge status={item.status} />
                     </div>
                   </TableCell>
 
                   <TableCell className="text-right">
                     <DigitalBorrowActions
-                      resourceId={borrowedItem.resourceId}
-                      borrowItem={borrowedItem}
+                      borrowItem={item}
 
                       // borrowedItemId={borrowedItem.digitalBorrowId}
                     />
@@ -181,10 +196,11 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
       </div>
 
       <Paginator
+        pageSize={+pageSize}
         pageIndex={pageIndex}
-        totalActualItem={totalActualItem}
         totalPage={totalPage}
-        pageSize={pageSize}
+        totalActualItem={totalActualItem}
+        className="mt-6"
       />
     </div>
   )

@@ -2,6 +2,7 @@
 "use client"
 
 import { useTransition } from "react"
+import { useAuth } from "@/contexts/auth-provider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
@@ -46,6 +47,7 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
   const locale = useLocale()
   const [pending, startTransition] = useTransition()
   const queryClient = useQueryClient()
+  const { isManager } = useAuth()
 
   const form = useForm<TProfileSchema>({
     resolver: zodResolver(profileSchema),
@@ -102,7 +104,7 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                 <FormItem>
                   <FormLabel>{t("firstName")}</FormLabel>
                   <FormControl>
-                    <Input disabled={pending} {...field} />
+                    <Input disabled={isManager || pending} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -115,7 +117,7 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                 <FormItem>
                   <FormLabel>{t("lastName")}</FormLabel>
                   <FormControl>
-                    <Input disabled={pending} {...field} />
+                    <Input disabled={isManager || pending} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -130,7 +132,7 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                   <FormLabel>{t("phoneNumber")}</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={pending}
+                      disabled={isManager || pending}
                       {...field}
                       value={field.value || ""} // Fix
                     />
@@ -148,7 +150,7 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                   <FormLabel>{t("address")}</FormLabel>
                   <FormControl>
                     <Input
-                      disabled={pending}
+                      disabled={isManager || pending}
                       {...field}
                       value={field.value || ""} // Fix
                     />
@@ -167,7 +169,7 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                   <FormControl>
                     <Input
                       type="date"
-                      disabled={pending}
+                      disabled={isManager || pending}
                       {...field}
                       value={field.value || ""} // Fix
                     />
@@ -186,6 +188,7 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
                   <FormControl>
                     <Select
                       {...field}
+                      disabled={isManager || pending}
                       defaultValue={currentUser.gender}
                       onValueChange={field.onChange}
                     >
@@ -203,16 +206,22 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
               )}
             />
           </div>
-          <div className="flex w-full items-center justify-end gap-4">
-            <Button disabled={pending} type="submit">
-              {t("updateBtn")}
-              {pending && <Loader2 className="size-4 animate-spin" />}
-            </Button>
-            <Button disabled={pending} variant={"ghost"} onClick={handleReset}>
-              {t("resetBtn")}
-              {pending && <Loader2 className="size-4 animate-spin" />}
-            </Button>
-          </div>
+          {!isManager && (
+            <div className="flex w-full items-center justify-end gap-4">
+              <Button disabled={isManager || pending} type="submit">
+                {t("updateBtn")}
+                {pending && <Loader2 className="size-4 animate-spin" />}
+              </Button>
+              <Button
+                disabled={isManager || pending}
+                variant={"ghost"}
+                onClick={handleReset}
+              >
+                {t("resetBtn")}
+                {pending && <Loader2 className="size-4 animate-spin" />}
+              </Button>
+            </div>
+          )}
         </form>
       </Form>
     </div>
