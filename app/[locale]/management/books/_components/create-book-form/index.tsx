@@ -40,7 +40,12 @@ import { ProgressTabBar } from "./progress-stage-bar"
 import ResourcesTab from "./resources-tab"
 import { TrackingCard } from "./tracking-card"
 
-type Tab = "Category" | "Catalog" | "Individual registration" | "Resources"
+type Tab =
+  | "Category"
+  | "Catalog"
+  | "Groups"
+  | "Individual registration"
+  | "Resources"
 
 type Props = {
   trackingDetail?: TrackingDetailCatalog | null
@@ -318,6 +323,8 @@ function CreateBookForm({ trackingDetail }: Props) {
     appendScannedBook(scannedBook)
   }, [scannedBook, appendScannedBook, locale, t, setIsbn])
 
+  const isBookSeries = selectedCategory?.englishName === "BookSeries" || false
+
   return (
     <div>
       <div className="mt-4 flex flex-wrap items-start gap-4">
@@ -334,7 +341,7 @@ function CreateBookForm({ trackingDetail }: Props) {
         <ProgressTabBar
           currentTab={currentTab}
           setCurrentTab={setCurrentTab as Dispatch<SetStateAction<string>>}
-          hasTrainAI={selectedCategory?.isAllowAITraining}
+          isBookSeries={isBookSeries}
         />
       </div>
 
@@ -478,8 +485,17 @@ function CreateBookForm({ trackingDetail }: Props) {
 
                   if (currentTab === "Catalog") {
                     if (await triggerCatalogTab()) {
-                      setCurrentTab("Individual registration")
+                      if (isBookSeries) {
+                        setCurrentTab("Groups")
+                      } else {
+                        setCurrentTab("Individual registration")
+                      }
                     }
+                    return
+                  }
+
+                  if (currentTab === "Groups") {
+                    setCurrentTab("Individual registration")
                     return
                   }
 

@@ -1417,6 +1417,7 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Groups": "Groups",
     "Mark as lost": "Mark as lost",
     "Mark as found": "Mark as found",
     "Appropriate shelves not found": "Appropriate shelves not found",
