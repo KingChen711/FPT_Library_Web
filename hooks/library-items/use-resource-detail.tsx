@@ -1,28 +1,20 @@
-import { useAuth } from "@/contexts/auth-provider"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
 import { type BookResource } from "@/lib/types/models"
 
-export type ResourcePreview = Omit<
+export type ResourcePublic = Omit<
   BookResource,
-  "resourceUrl" | "s3OriginalName"
+  "resourceUrl" | "s3OriginalName" | "resourceId"
 >
 
 function useResourceDetail(resourceId: number) {
-  const { accessToken } = useAuth()
   return useQuery({
-    queryKey: [`library-items/resources/${resourceId}`, accessToken],
-    queryFn: async (): Promise<ResourcePreview | null> => {
-      if (!accessToken) return null
+    queryKey: [`library-items/resources/${resourceId}/public`],
+    queryFn: async (): Promise<ResourcePublic | null> => {
       try {
-        const { data } = await http.get<ResourcePreview>(
-          `/api/library-items/resources/${resourceId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${accessToken}`,
-            },
-          }
+        const { data } = await http.get<ResourcePublic>(
+          `/api/library-items/resources/${resourceId}/public`
         )
         return data || null
       } catch {

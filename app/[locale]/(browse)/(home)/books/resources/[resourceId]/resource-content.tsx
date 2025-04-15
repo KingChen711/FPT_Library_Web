@@ -161,6 +161,7 @@ export default function ResourceContent({
 
   useEffect(() => {
     if (isLoadingAuth || resourceType === EResourceBookType.AUDIO_BOOK) return
+
     async function fetchPdf() {
       try {
         const { data } = isPreview
@@ -187,6 +188,7 @@ export default function ResourceContent({
         }
 
         const blobUrl = URL.createObjectURL(data)
+
         setPdfLink(blobUrl)
         setLoadingPdf(false)
 
@@ -227,6 +229,8 @@ export default function ResourceContent({
   if (!isClient || !resource) {
     return <div>No resource</div>
   }
+
+  console.log({ isPreview, bookId })
 
   return (
     <>
@@ -275,11 +279,12 @@ export default function ResourceContent({
           setOpen={setOpenPayment}
           libraryItemId={bookId}
           selectedResource={resource}
+          resourceId={resourceId}
         />
       )}
       <div
         ref={containerRef}
-        className="flex h-full flex-col overflow-hidden bg-secondary"
+        className="flex flex-col overflow-hidden bg-secondary"
       >
         <div className="flex w-full items-center justify-between bg-zinc p-4 text-primary-foreground">
           <div className="flex items-center gap-4">
@@ -322,7 +327,10 @@ export default function ResourceContent({
                     <TooltipTrigger asChild>
                       <Button
                         variant={"ghost"}
-                        onClick={() => setOpenPayment(true)}
+                        onClick={() => {
+                          setOpenPayment(true)
+                          console.log("setOpenPayment")
+                        }}
                         className="text-primary-foreground"
                       >
                         <Coins />
@@ -390,7 +398,7 @@ export default function ResourceContent({
         ) : (
           <div className="relative flex-1 overflow-auto border">
             <div
-              className="flex min-h-full items-center justify-center"
+              className="flex items-center justify-center"
               style={{
                 transform: `scale(${zoomLevel / 100})`,
                 transformOrigin: "center center",
