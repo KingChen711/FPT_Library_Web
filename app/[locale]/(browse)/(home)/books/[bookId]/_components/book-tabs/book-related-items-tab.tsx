@@ -1,31 +1,41 @@
 import Image from "next/image"
 import Link from "next/link"
 import getRelatedLibraryItems from "@/queries/library-item/get-related-library-items"
-import { Earth, Search } from "lucide-react"
+import { Earth } from "lucide-react"
 
+import { getTranslations } from "@/lib/get-translations"
+import { searchLibraryItemsSchema } from "@/lib/validations/library-items/search-library-items"
 import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
 import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
 
 type Props = {
   libraryItemId: number
+  searchParams: Record<string, string | string[] | undefined>
 }
 
-const BookRelatedItemsTab = async ({ libraryItemId }: Props) => {
-  const relatedItems = await getRelatedLibraryItems(Number(libraryItemId), {
+const BookRelatedItemsTab = async ({ libraryItemId, searchParams }: Props) => {
+  const t = await getTranslations("BookPage")
+
+  const { pageIndex, pageSize } = searchLibraryItemsSchema.parse(searchParams)
+
+  const {
+    sources: relatedItems,
+    totalActualItem,
+    totalPage,
+  } = await getRelatedLibraryItems(libraryItemId, {
     search: "",
-    pageIndex: 1,
-    pageSize: "5",
+    pageIndex,
+    pageSize,
   })
 
-  if (relatedItems.sources.length === 0) {
+  if (relatedItems.length === 0) {
     return <NoData />
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="relative w-1/3">
+      {/* <div className="relative w-1/3">
         <Search className="absolute left-2 top-1/2 size-4 -translate-y-1/2" />
         <Input
           type="text"
@@ -33,8 +43,8 @@ const BookRelatedItemsTab = async ({ libraryItemId }: Props) => {
           className="pl-8"
           autoComplete="off"
         />
-      </div>
-      {relatedItems?.sources?.map((item) => (
+      </div> */}
+      {relatedItems?.map((item) => (
         <div
           key={item.libraryItemId}
           className="flex items-start gap-4 rounded-md border p-4 shadow-lg"
@@ -63,17 +73,17 @@ const BookRelatedItemsTab = async ({ libraryItemId }: Props) => {
                 </p>
               </div>
               <Button variant="link" asChild>
-                <Link href={`/books/${item.libraryItemId}`}>Detail</Link>
+                <Link href={`/books/${item.libraryItemId}`}>{t("detail")}</Link>
               </Button>
             </div>
           </div>
         </div>
       ))}
       <Paginator
-        pageSize={5}
-        pageIndex={1}
-        totalActualItem={10}
-        totalPage={2}
+        pageSize={+pageSize}
+        pageIndex={pageIndex}
+        totalActualItem={totalActualItem}
+        totalPage={totalPage}
         className="mt-6"
       />
     </div>

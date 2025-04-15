@@ -1,4 +1,3 @@
-import React from "react"
 import getLibraryItem from "@/queries/library-item/get-libraryItem"
 
 import { getTranslations } from "@/lib/get-translations"
@@ -12,9 +11,10 @@ import BookReviewsTab from "./book-reviews-tab"
 
 type Props = {
   libraryItemId: number
+  searchParams: Record<string, string | string[] | undefined>
 }
 
-const BookTabs = async ({ libraryItemId }: Props) => {
+const BookTabs = async ({ libraryItemId, searchParams }: Props) => {
   const t = await getTranslations("BookPage")
   const libraryItem = await getLibraryItem(libraryItemId)
 
@@ -27,7 +27,7 @@ const BookTabs = async ({ libraryItemId }: Props) => {
       defaultValue="overview"
       className="w-full rounded-md border bg-card p-4 shadow-lg"
     >
-      <TabsList className="grid w-full grid-cols-5">
+      <TabsList className="grid w-full grid-cols-3 md:grid-cols-5">
         <TabsTrigger className="w-full" value="overview">
           {t("overview")}
         </TabsTrigger>
@@ -60,7 +60,10 @@ const BookTabs = async ({ libraryItemId }: Props) => {
         />
       </TabsContent>
       <TabsContent value="related-items">
-        <BookRelatedItemsTab libraryItemId={libraryItemId} />
+        <BookRelatedItemsTab
+          libraryItemId={libraryItemId}
+          searchParams={searchParams}
+        />
       </TabsContent>
     </Tabs>
   )

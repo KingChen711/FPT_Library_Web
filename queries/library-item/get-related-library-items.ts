@@ -5,8 +5,6 @@ import "server-only"
 import { type LibraryItem } from "@/lib/types/models"
 import { type TSearchLibraryItemSchema } from "@/lib/validations/library-items/search-library-items"
 
-import { auth } from "../auth"
-
 export type TGetRelatedLibraryItemsData = {
   sources: LibraryItem[]
   pageIndex: number
@@ -17,16 +15,12 @@ export type TGetRelatedLibraryItemsData = {
 
 const getRelatedLibraryItems = async (
   categoryId: number,
-  searchParams: TSearchLibraryItemSchema
+  searchParams: Omit<TSearchLibraryItemSchema, "authorId">
 ): Promise<TGetRelatedLibraryItemsData> => {
-  const { getAccessToken } = auth()
   try {
     const { data } = await http.get<TGetRelatedLibraryItemsData>(
       `/api/library-items/${categoryId}/related-items`,
       {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
         searchParams,
       }
     )

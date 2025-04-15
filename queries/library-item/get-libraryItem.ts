@@ -4,20 +4,12 @@ import "server-only"
 
 import { type LibraryItem } from "@/lib/types/models"
 
-import { auth } from "../auth"
-
 const getLibraryItem = async (
   libraryItemId: number
 ): Promise<LibraryItem | null> => {
-  const { getAccessToken } = auth()
   try {
     const { data } = await http.get<LibraryItem>(
-      `/api/library-items/${libraryItemId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${getAccessToken()}`,
-        },
-      }
+      `/api/library-items/${libraryItemId}`
     )
     return data
   } catch {

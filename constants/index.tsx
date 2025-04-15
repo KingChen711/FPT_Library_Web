@@ -272,6 +272,13 @@ export const browseRoutes = [
     },
   },
   {
+    route: "/policies",
+    label: "Policy",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Fine {...props} />
+    },
+  },
+  {
     route: "/search",
     label: "Search",
     Icon: (props: { className?: string }) => {
@@ -293,13 +300,13 @@ export const browseRoutes = [
           return <Icons.Robot {...props} />
         },
       },
-      {
-        route: "/ai-recommendation",
-        label: "AI recommendation",
-        Icon: (props: { className?: string }) => {
-          return <Icons.Robot {...props} />
-        },
-      },
+      // {
+      //   route: "/ai-recommendation",
+      //   label: "AI recommendation",
+      //   Icon: (props: { className?: string }) => {
+      //     return <Icons.Robot {...props} />
+      //   },
+      // },
     ],
   },
   {

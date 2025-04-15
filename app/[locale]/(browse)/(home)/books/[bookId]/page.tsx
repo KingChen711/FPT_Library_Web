@@ -21,9 +21,10 @@ type Props = {
   params: {
     bookId: number
   }
+  searchParams: Record<string, string | string[] | undefined>
 }
 
-const BookDetailPage = async ({ params: { bookId } }: Props) => {
+const BookDetailPage = async ({ params: { bookId }, searchParams }: Props) => {
   const t = await getTranslations("BookPage")
   const tRoute = await getTranslations("Routes")
   const libraryItem = await getLibraryItem(bookId)
@@ -33,7 +34,7 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
   }
 
   return (
-    <div className="size-full space-y-4">
+    <div className="size-full">
       <Breadcrumb>
         <BreadcrumbList>
           <BreadcrumbItem>
@@ -67,7 +68,10 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
               </div>
               <BookAuthorCard libraryItem={libraryItem} />
             </div>
-            <BookTabs libraryItemId={libraryItem.libraryItemId} />
+            <BookTabs
+              libraryItemId={libraryItem.libraryItemId}
+              searchParams={searchParams}
+            />
           </section>
         </div>
       ) : (
@@ -90,7 +94,10 @@ const BookDetailPage = async ({ params: { bookId } }: Props) => {
                 </div>
               </div>
             </div>
-            <BookTabs libraryItemId={libraryItem.libraryItemId} />
+            <BookTabs
+              libraryItemId={libraryItem.libraryItemId}
+              searchParams={searchParams}
+            />
           </section>
         </div>
       )}

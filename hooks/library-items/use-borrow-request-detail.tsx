@@ -15,7 +15,7 @@ export type BorrowRequestDetail = BorrowRequest & {
 function useBorrowRequestDetail(borrowRequestId: number) {
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: [`/borrows/requests/${borrowRequestId}`],
+    queryKey: [`/borrows/requests/${borrowRequestId}`, accessToken],
     queryFn: async () => {
       try {
         const { data } = await http.get<BorrowRequestDetail | null>(

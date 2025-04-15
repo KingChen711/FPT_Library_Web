@@ -32,7 +32,6 @@ import {
   SidebarFooter,
   SidebarHeader,
   SidebarMenu,
-  SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
   SidebarSeparator,
@@ -41,7 +40,6 @@ import {
 } from "@/components/ui/sidebar"
 
 import { Button } from "../ui/button"
-import { Icons } from "../ui/icons"
 import SidebarLanguage from "../ui/sidebar-language"
 import BrowseSidebarContent from "./browse-sidebar-content"
 import SidebarLogoItem from "./sidebar-logo-item"
@@ -86,17 +84,6 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       {user ? (
         <SidebarFooter>
           <SidebarMenu>
-            <SidebarMenuItem></SidebarMenuItem>
-
-            <SidebarMenuItem>
-              <SidebarMenuButton tooltip={tRoutes("Help")} asChild>
-                <Link href={"/help"}>
-                  <Icons.Help />
-                  <span>{tRoutes("Help")}</span>
-                </Link>
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-
             <SidebarMenuItem>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

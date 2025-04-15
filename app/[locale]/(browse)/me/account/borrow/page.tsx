@@ -1,7 +1,6 @@
 import getUserPendingActivity from "@/queries/profile/get-user-pending-activity"
 
 import { getTranslations } from "@/lib/get-translations"
-import { formatPrice } from "@/lib/utils"
 import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -54,13 +53,6 @@ const BorrowTrackingPage = async ({ searchParams }: Props) => {
         <div className="flex items-center justify-between gap-2">
           <Label className="font-normal">{t("remain total")}</Label>
           <span className="font-semibold">{data.remainTotal}</span>
-        </div>
-        <Separator orientation="vertical" />
-        <div className="flex items-center justify-between gap-2">
-          <Label className="font-normal">{t("unpaid fees")}</Label>
-          <span className="font-semibold text-yellow-600">
-            {formatPrice(150000)}
-          </span>
         </div>
       </Card>
 
