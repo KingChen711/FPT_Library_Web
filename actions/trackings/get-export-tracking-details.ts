@@ -17,7 +17,7 @@ export async function getExportTrackingDetails(
           Authorization: `Bearer ${getAccessToken()}`,
         },
         searchParams: {
-          pageSize: 100,
+          pageSize: 1000,
         },
       }
     )

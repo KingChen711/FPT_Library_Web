@@ -68,7 +68,7 @@ const OverviewBorrowResource = ({ resourceId }: Props) => {
       <AlertDialog open={openDelete} onOpenChange={setOpenDelete}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>{t("remove from borrow list")}?</AlertDialogTitle>
+            <AlertDialogTitle>{t("remove from borrow list")}</AlertDialogTitle>
             <AlertDialogDescription>
               {t("are you sure you want to remove")}
               <span className="mx-2 font-semibold">

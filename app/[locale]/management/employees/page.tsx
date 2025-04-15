@@ -81,7 +81,7 @@ async function EmployeesManagementPage({ searchParams }: Props) {
               className="h-full rounded-r-none border-r-0"
               search={search}
             />
-            <FilterEmployeesDialog employeeRoles={employeeRoles} />
+            <FilterEmployeesDialog />
           </div>
 
           <SelectedEmployeeIdsIndicator />

@@ -182,7 +182,11 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
                   </TableCell>
 
                   <TableCell className="text-right">
-                    <DigitalBorrowActions borrowItem={item} />
+                    <DigitalBorrowActions
+                      borrowItem={item}
+
+                      // borrowedItemId={borrowedItem.digitalBorrowId}
+                    />
                   </TableCell>
                 </TableRow>
               )

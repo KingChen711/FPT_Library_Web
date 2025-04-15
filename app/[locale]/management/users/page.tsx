@@ -11,6 +11,7 @@ import { formatDate } from "@/lib/utils"
 import { searchUsersSchema } from "@/lib/validations/user/search-user"
 import { Badge } from "@/components/ui/badge"
 import { Icons } from "@/components/ui/icons"
+import NoResult from "@/components/ui/no-result"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -70,171 +71,203 @@ async function UsersManagementPage({ searchParams }: Props) {
   ])
 
   return (
-    <div>
-      <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
-        <h3 className="text-2xl font-semibold">{t("user management")}</h3>
-      </div>
+    <>
+      <div>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+          <h3 className="text-2xl font-semibold">{t("user management")}</h3>
+        </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex flex-wrap items-center gap-4">
-          <div className="flex flex-row items-center">
-            <SearchForm
-              className="h-full rounded-r-none border-r-0"
-              search={search}
-            />
-            <FilterUsersDialog />
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div className="flex flex-wrap items-center gap-4">
+            <div className="flex flex-row items-center">
+              <SearchForm
+                className="h-full rounded-r-none border-r-0"
+                search={search}
+              />
+              <FilterUsersDialog />
+            </div>
+
+            <SelectedUserIdsIndicator />
           </div>
-
-          <SelectedUserIdsIndicator />
+          <div className="flex flex-wrap items-center gap-x-4">
+            <UserExport />
+            <UserImportDialog />
+            <MutateUserDialog type="create" />
+          </div>
         </div>
-        <div className="flex flex-wrap items-center gap-x-4">
-          <UserExport />
-          <UserImportDialog />
-          <MutateUserDialog type="create" />
-        </div>
-      </div>
 
-      <div className="mt-4 grid w-full">
-        <div className="overflow-x-auto rounded-md border">
-          <div className="flex items-center justify-between p-4 pl-0">
+        <div className="mt-4 rounded-md border p-4">
+          <div className="flex flex-wrap items-center justify-between gap-4">
+            {" "}
             <UserHeaderTab />
-            <UserRangeControl />
+            <div className="flex flex-wrap items-center gap-4">
+              <UserRangeControl />
+            </div>
           </div>
-          <Table className="overflow-hidden">
-            <TableHeader>
-              <TableRow>
-                <TableHead></TableHead>
-                <SortableTableHead
-                  currentSort={sort}
-                  label="Email"
-                  sortKey="email"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.firstName")}
-                  sortKey="firstName"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.lastName")}
-                  sortKey="lastName"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.userCode")}
-                  sortKey="userCode"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.phone")}
-                  sortKey="phone"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.dob")}
-                  sortKey="dob"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.gender")}
-                  sortKey="gender"
-                />
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.address")}
-                  sortKey="address"
-                />
 
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.role")}
-                  sortKey="role"
-                />
-
-                <SortableTableHead
-                  currentSort={sort}
-                  label={t("fields.active")}
-                  sortKey="isActive"
-                />
-
-                <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
-                  {t("action")}
-                </TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {usersData?.sources?.map((user) => (
-                <TableRow key={user.userId}>
-                  <TableCell>
-                    <UserCheckbox id={user.userId} />
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2 pr-8">
-                      <Image
-                        src={user.avatar || "https://github.com/shadcn.png"}
-                        alt="avatar"
-                        width={20}
-                        height={20}
-                        className="rounded-full"
+          {usersData?.sources.length === 0 ? (
+            <div className="flex justify-center p-4">
+              <NoResult
+                title={t("Patrons Not Found")}
+                description={t(
+                  "No patrons matching your request were found Please check your information or try searching with different criteria"
+                )}
+              />
+            </div>
+          ) : (
+            <div className="mt-4 grid w-full">
+              <div className="overflow-x-auto rounded-md">
+                <Table className="overflow-hidden">
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead></TableHead>
+                      <SortableTableHead
+                        currentSort={sort}
+                        label="Email"
+                        sortKey="email"
                       />
-                      <p>{user.email}</p>
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-nowrap">
-                    {user.firstName}
-                  </TableCell>
-                  <TableCell className="text-nowrap">{user.lastName}</TableCell>
-                  <TableCell>{user.userCode}</TableCell>
-                  <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user?.dob && formatDate(user?.dob)}</TableCell>
-                  <TableCell className="text-center">
-                    <div className="flex items-center justify-center text-nowrap">
-                      {user.gender === "Male" && <Icons.Male />}
-                      {user.gender === "Female" && <Icons.Female />}
-                      {user.gender === "Other" && <User color="gray" />}
-                    </div>
-                  </TableCell>
-                  <TableCell className="text-nowrap">{user.address}</TableCell>
+                      <SortableTableHead
+                        currentSort={sort}
+                        label={t("fields.firstName")}
+                        sortKey="firstName"
+                      />
+                      <SortableTableHead
+                        currentSort={sort}
+                        label={t("fields.lastName")}
+                        sortKey="lastName"
+                      />
+                      <SortableTableHead
+                        currentSort={sort}
+                        label={t("fields.userCode")}
+                        sortKey="userCode"
+                      />
+                      <SortableTableHead
+                        currentSort={sort}
+                        label={t("fields.phone")}
+                        sortKey="phone"
+                      />
+                      <SortableTableHead
+                        currentSort={sort}
+                        label={t("fields.dob")}
+                        sortKey="dob"
+                      />
+                      <SortableTableHead
+                        currentSort={sort}
+                        label={t("fields.gender")}
+                        sortKey="gender"
+                      />
+                      <SortableTableHead
+                        currentSort={sort}
+                        label={t("fields.address")}
+                        sortKey="address"
+                      />
 
-                  <TableCell className="text-nowrap">
-                    {locale === "en"
-                      ? user.role.englishName
-                      : user.role.vietnameseName}
-                  </TableCell>
+                      <SortableTableHead
+                        currentSort={sort}
+                        label={t("fields.role")}
+                        sortKey="role"
+                      />
 
-                  <TableCell>
-                    {user.isActive ? (
-                      <Badge className="flex h-full w-[100px] justify-center text-nowrap bg-success text-center hover:bg-success">
-                        {t("fields.active")}
-                      </Badge>
-                    ) : (
-                      <Badge
-                        variant="default"
-                        className="flex h-full w-[100px] justify-center text-nowrap text-center"
-                      >
-                        {t("fields.inactive")}
-                      </Badge>
-                    )}
-                  </TableCell>
+                      <SortableTableHead
+                        currentSort={sort}
+                        label={t("fields.active")}
+                        sortKey="isActive"
+                      />
 
-                  <TableCell className="flex justify-center">
-                    <UserActionDropdown user={user} userRoles={userRoles} />
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                      <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
+                        {t("action")}
+                      </TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {usersData?.sources?.map((user) => (
+                      <TableRow key={user.userId}>
+                        <TableCell>
+                          <UserCheckbox id={user.userId} />
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2 pr-8">
+                            <Image
+                              src={
+                                user.avatar || "https://github.com/shadcn.png"
+                              }
+                              alt="avatar"
+                              width={28}
+                              height={28}
+                              className="rounded-full"
+                            />
+                            <p>{user.email}</p>
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-nowrap">
+                          <div className="flex">{user.firstName}</div>
+                        </TableCell>
+                        <TableCell className="text-nowrap">
+                          {user.lastName}
+                        </TableCell>
+                        <TableCell>{user.userCode}</TableCell>
+                        <TableCell>{user.phone}</TableCell>
+                        <TableCell>
+                          {user?.dob && formatDate(user?.dob)}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          <div className="flex items-center justify-center text-nowrap">
+                            {user.gender === "Male" && <Icons.Male />}
+                            {user.gender === "Female" && <Icons.Female />}
+                            {user.gender === "Other" && <User color="gray" />}
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-nowrap">
+                          {user.address}
+                        </TableCell>
+
+                        <TableCell className="text-nowrap">
+                          {locale === "en"
+                            ? user.role.englishName
+                            : user.role.vietnameseName}
+                        </TableCell>
+
+                        <TableCell>
+                          {user.isActive ? (
+                            <Badge className="flex h-full w-[100px] justify-center text-nowrap bg-success text-center hover:bg-success">
+                              {t("fields.active")}
+                            </Badge>
+                          ) : (
+                            <Badge
+                              variant="default"
+                              className="flex h-full w-[100px] justify-center text-nowrap text-center"
+                            >
+                              {t("fields.inactive")}
+                            </Badge>
+                          )}
+                        </TableCell>
+
+                        <TableCell className="flex justify-center">
+                          <UserActionDropdown
+                            user={user}
+                            userRoles={userRoles}
+                          />
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>{" "}
+              </div>
+            </div>
+          )}
         </div>
 
-        <Paginator
-          pageSize={+pageSize}
-          pageIndex={pageIndex}
-          totalActualItem={usersData.totalActualItem}
-          totalPage={usersData.totalPage}
-          className="mt-6"
-        />
+        {usersData?.sources.length > 0 && (
+          <Paginator
+            pageSize={+pageSize}
+            pageIndex={pageIndex}
+            totalActualItem={usersData.totalActualItem}
+            totalPage={usersData.totalPage}
+            className="mt-6"
+          />
+        )}
       </div>
-    </div>
+    </>
   )
 }
 

@@ -1,9 +1,11 @@
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { browseRoutes } from "@/constants"
+import { useAuth } from "@/contexts/auth-provider"
 import { ChevronRight } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { EFeature } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import {
   Collapsible,
@@ -24,12 +26,15 @@ import {
 const BrowseSidebarContent = () => {
   const t = useTranslations("Routes")
   const pathname = usePathname()
+  const { user } = useAuth()
 
   return (
     <SidebarGroup>
       <SidebarGroupLabel>{t("Navigator Bar")}</SidebarGroupLabel>
       <SidebarMenu>
         {browseRoutes.map((route) => {
+          if (route.feature === EFeature.LOGGED_IN && !user) return null
+
           const hasSubRoutes = route.subRoutes && route.subRoutes.length > 0
 
           const normalizedPath = pathname.slice(3) || "/"

@@ -9,6 +9,7 @@ import {
   type BookEdition,
   type Category,
   type LibraryItemAuthor,
+  type Shelf,
 } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
@@ -20,6 +21,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "./accordion"
+import LocateButton from "./locate-button"
 import ParseHtml from "./parse-html"
 
 interface LibraryItemProps {
@@ -27,11 +29,13 @@ interface LibraryItemProps {
     category?: Category
     libraryItemAuthors?: (LibraryItemAuthor & { author: Author })[]
     authors?: Author[]
+    shelf?: Shelf | null
   }
   modal?: boolean
   className?: string
   showBorrowDuration?: boolean
   expandable?: boolean
+  fetchShelf?: boolean
 }
 
 export default function LibraryItemCard({
@@ -40,6 +44,7 @@ export default function LibraryItemCard({
   className,
   expandable,
   showBorrowDuration = false,
+  fetchShelf = false,
 }: LibraryItemProps) {
   const {
     category,
@@ -52,10 +57,13 @@ export default function LibraryItemCard({
     subTitle,
     summary,
     title,
+    shelfId,
   } = libraryItem
 
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
+
+  console.log({ fetchShelf, shelfId })
 
   return (
     <Card
@@ -86,22 +94,27 @@ export default function LibraryItemCard({
               <div>
                 <div className="mt-2 flex items-center">
                   <h3 className="line-clamp-1 text-lg font-bold">{title}</h3>
-                  {category && (
-                    <div className="absolute right-2 top-2 flex items-center gap-3">
-                      <Badge>
-                        {locale === "vi"
-                          ? category.vietnameseName
-                          : category.englishName}
-                      </Badge>
-                      {showBorrowDuration && category.totalBorrowDays && (
+                  <div className="absolute right-2 top-2 z-50 flex items-center gap-3">
+                    {fetchShelf && shelfId && (
+                      <LocateButton shelfId={shelfId} />
+                    )}
+                    {category && (
+                      <>
                         <Badge>
                           {locale === "vi"
-                            ? category.totalBorrowDays + " ngày"
-                            : category.totalBorrowDays + " days"}
+                            ? category.vietnameseName
+                            : category.englishName}
                         </Badge>
-                      )}
-                    </div>
-                  )}
+                        {showBorrowDuration && category.totalBorrowDays && (
+                          <Badge>
+                            {locale === "vi"
+                              ? category.totalBorrowDays + " ngày"
+                              : category.totalBorrowDays + " days"}
+                          </Badge>
+                        )}
+                      </>
+                    )}
+                  </div>
                 </div>
                 {subTitle && (
                   <p className="text-sm text-muted-foreground">{subTitle}</p>

@@ -29,6 +29,8 @@ type Props = {
   onPaginate?: (page: number) => void
   onChangePageSize?: (size: "5" | "10" | "30" | "50" | "100") => void
   scrollOnPaginate?: boolean
+  pageIndexKey?: string
+  pageSizeKey?: string
 }
 
 function Paginator({
@@ -40,6 +42,8 @@ function Paginator({
   onPaginate,
   onChangePageSize,
   scrollOnPaginate: scrollOnChangePage = false,
+  pageIndexKey = "pageIndex",
+  pageSizeKey = "pageSize",
 }: Props) {
   const router = useRouter()
   const t = useTranslations("Paginator")
@@ -55,7 +59,7 @@ function Paginator({
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        pageIndex: (selected + 1).toString(),
+        [pageIndexKey]: (selected + 1).toString(),
       },
     })
 
@@ -72,8 +76,8 @@ function Paginator({
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        pageSize,
-        pageIndex: "1",
+        [pageSizeKey]: pageSize,
+        [pageIndexKey]: "1",
       },
     })
 

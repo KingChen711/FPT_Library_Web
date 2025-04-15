@@ -19,8 +19,9 @@ import { Check, ChevronsUpDown, Plus, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { v4 as uuidv4 } from "uuid"
 
-import { ESearchType, EStockTransactionType } from "@/lib/types/enums"
+import { ESearchType } from "@/lib/types/enums"
 import { cn, formUrlQuery } from "@/lib/utils"
+import { type TSearchTrackingDetailsSchema } from "@/lib/validations/trackings/search-tracking-details"
 import useCategories from "@/hooks/categories/use-categories"
 import useConditions from "@/hooks/conditions/use-conditions"
 import { Button } from "@/components/ui/button"
@@ -59,6 +60,9 @@ type Props = {
   setOpen: (val: boolean) => void
   queries: FOV[]
   setQueries: React.Dispatch<SetStateAction<FOV[]>>
+  setSearchParams?: React.Dispatch<
+    React.SetStateAction<TSearchTrackingDetailsSchema>
+  >
 }
 
 const AdvancedSearchTab = ({
@@ -67,6 +71,7 @@ const AdvancedSearchTab = ({
   setOpen,
   queries,
   setQueries,
+  setSearchParams,
 }: Props) => {
   const t = useTranslations("TrackingsManagementPage")
   const router = useRouter()
@@ -103,6 +108,20 @@ const AdvancedSearchTab = ({
         }
         return { ...f, id: undefined }
       })
+
+    if (setSearchParams) {
+      setSearchParams((prev) => ({
+        ...prev,
+        f: filteredQuery.map((f) => f.f!),
+        o: filteredQuery.map((f) => (f.o === null ? "null" : f.o.toString())),
+        v: filteredQuery.map((f) => f.v?.toString() || ""),
+        search: "",
+        pageIndex: 1,
+        searchType: ESearchType.ADVANCED_SEARCH.toString(),
+      }))
+      setOpen(false)
+      return
+    }
 
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
@@ -188,7 +207,6 @@ export function AdvancedSearchItem({
   const t = useTranslations("TrackingsManagementPage")
   const locale = useLocale()
   const tOperator = useTranslations("Badges.Operator")
-  const tStockTransactionType = useTranslations("Badges.StockTransactionType")
 
   const [openComboboxCondition, setOpenComboboxCondition] = useState(false)
   const [openComboboxCategory, setOpenComboboxCategory] = useState(false)
@@ -354,32 +372,6 @@ export function AdvancedSearchItem({
             />
           </div>
         </div>
-      )}
-
-      {fov.f === EAdvancedFilterTrackingDetailField.STOCK_TRANSACTION_TYPE && (
-        <Select
-          value={fov.v?.toString()}
-          onValueChange={(value) =>
-            onChangeFov({
-              ...fov,
-              v: +value,
-            })
-          }
-        >
-          <SelectTrigger>
-            <SelectValue placeholder={t("Select")} />
-          </SelectTrigger>
-
-          <SelectContent>
-            {Object.values(EStockTransactionType)
-              .filter((e) => typeof e === "number")
-              .map((ope) => (
-                <SelectItem key={ope} value={ope.toString()}>
-                  {tStockTransactionType(ope.toString())}
-                </SelectItem>
-              ))}
-          </SelectContent>
-        </Select>
       )}
 
       {fov.f === EAdvancedFilterTrackingDetailField.CONDITION && (

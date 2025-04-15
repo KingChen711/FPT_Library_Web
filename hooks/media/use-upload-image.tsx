@@ -7,7 +7,7 @@ function useUploadImage() {
   const { accessToken } = useAuth()
 
   return useMutation({
-    mutationFn: async (file: File) => {
+    mutationFn: async (file: File | Blob) => {
       const formData = new FormData()
       formData.append("file", file)
       formData.append("resourceType", "BookImage")

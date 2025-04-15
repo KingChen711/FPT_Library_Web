@@ -382,6 +382,29 @@ export type Category = {
   totalBorrowDays: number | null
 }
 
+export type SupplementRequestDetail = {
+  supplementRequestDetailId: number
+  title: string
+  author: string | null
+  publisher: string | null
+  publishedDate: string | null
+  description: string | null
+  isbn: string | null
+  pageCount: number | null
+  estimatedPrice: number | null
+  dimensions: number | null
+  categories: string | null
+  averageRating: number | null
+  ratingsCount: number | null
+  coverImageLink: string | null
+  language: string | null
+  previewLink: string | null
+  infoLink: string | null
+  supplementRequestReason: string | null
+  relatedLibraryItemId: number
+  trackingId: number
+}
+
 export type BorrowDigital = {
   digitalBorrowId: number
   resourceId: number
@@ -454,6 +477,7 @@ export type BookResource = {
   updatedBy: string | null
   defaultBorrowDurationDays: number | null
   borrowPrice: number | null
+  s3OriginalName: string | null
 }
 
 export type LibraryItemInventory = {
@@ -782,7 +806,7 @@ export type Transaction = {
   transactionMethod: ETransactionMethod
   description: string | null
   transactionDate: Date | null
-
+  qrCode: string | null
   expiredAt: Date | null
   createdAt: Date
   createdBy: string

@@ -8,7 +8,7 @@ import { format } from "date-fns"
 import {
   type BookResource,
   type BorrowDigital,
-  type LibraryCard,
+  type User,
 } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 import { type TSearchBorrowDigitalsManagementSchema } from "@/lib/validations/borrow-digitals-management/search-borrow-digitals-management"
@@ -17,7 +17,7 @@ import { auth } from "../auth"
 
 export type BorrowDigitals = (BorrowDigital & {
   libraryResource: BookResource
-  librarycard: LibraryCard
+  user: User
 })[]
 
 const getBorrowDigitals = async (

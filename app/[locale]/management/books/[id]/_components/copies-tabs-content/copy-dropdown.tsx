@@ -20,6 +20,8 @@ import { EBookCopyStatus } from "@/lib/types/enums"
 import { type LibraryItemInstance } from "@/lib/types/models"
 import { deleteCopy } from "@/actions/books/editions/delete-copy"
 import { editCopy } from "@/actions/books/editions/edit-copy"
+import { markInstanceAsFound } from "@/actions/books/editions/mark-instance-as-found"
+import { markInstanceAsLost } from "@/actions/books/editions/mark-instance-as-lost"
 import { moveToTrashCopy } from "@/actions/books/editions/move-to-trash-copy"
 import { restoreCopy } from "@/actions/books/editions/restore-copy"
 import { toast } from "@/hooks/use-toast"
@@ -30,6 +32,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Icons } from "@/components/ui/icons"
 
 import DeleteDialog from "../../../../_components/delete-dialog"
 import MoveToTrashDialog from "../../../../_components/move-to-trash-dialog"
@@ -216,6 +219,57 @@ function CopyDropdown({ copy, bookId, prefix }: Props) {
     })
   }
 
+  const handleMarkAsLost = () => {
+    if (isPending) return
+
+    startTransition(async () => {
+      const res = await markInstanceAsLost({
+        libraryItemInstanceId: copy.libraryItemInstanceId,
+        bookId,
+      })
+
+      if (res.isSuccess) {
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data,
+          variant: "success",
+        })
+        setOpen(false)
+        return
+      }
+
+      handleServerActionError(res, locale)
+    })
+  }
+
+  const handleMarkAsFound = () => {
+    if (isPending) return
+
+    startTransition(async () => {
+      const res = await markInstanceAsFound({
+        libraryItemInstanceId: copy.libraryItemInstanceId,
+        bookId,
+      })
+
+      if (res.isSuccess) {
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data,
+          variant: "success",
+        })
+        setOpen(false)
+        return
+      }
+
+      handleServerActionError(res, locale)
+    })
+  }
+
+  const handleOpenChange = (value: boolean) => {
+    if (isPending) return
+    setOpen(value)
+  }
+
   return (
     <>
       <ConditionHistoriesDialog
@@ -242,7 +296,7 @@ function CopyDropdown({ copy, bookId, prefix }: Props) {
         open={openDelete}
         setOpen={setOpenDelete}
       />
-      <DropdownMenu open={open} onOpenChange={setOpen}>
+      <DropdownMenu open={open} onOpenChange={handleOpenChange}>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" size="icon">
             <MoreHorizontalIcon />
@@ -289,6 +343,7 @@ function CopyDropdown({ copy, bookId, prefix }: Props) {
               <>
                 {copy.status === EBookCopyStatus.OUT_OF_SHELF && (
                   <DropdownMenuItem
+                    disabled={isPending}
                     onClick={handlePutOnShelf}
                     className="cursor-pointer"
                   >
@@ -298,11 +353,31 @@ function CopyDropdown({ copy, bookId, prefix }: Props) {
                 )}
                 {copy.status === EBookCopyStatus.IN_SHELF && (
                   <DropdownMenuItem
+                    disabled={isPending}
                     onClick={handleRemoveOnShelf}
                     className="cursor-pointer"
                   >
                     <ArrowDown />
                     {t("Remove on shelf")}
+                  </DropdownMenuItem>
+                )}
+                {copy.status === EBookCopyStatus.LOST ? (
+                  <DropdownMenuItem
+                    disabled={isPending}
+                    onClick={handleMarkAsFound}
+                    className="cursor-pointer"
+                  >
+                    <Icons.LostAndFound />
+                    {t("Mark as found")}
+                  </DropdownMenuItem>
+                ) : (
+                  <DropdownMenuItem
+                    disabled={isPending}
+                    onClick={handleMarkAsLost}
+                    className="cursor-pointer"
+                  >
+                    <Icons.LostAndFound />
+                    {t("Mark as lost")}
                   </DropdownMenuItem>
                 )}
                 <DropdownMenuItem

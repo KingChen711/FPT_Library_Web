@@ -12,9 +12,11 @@ import {
   mutateResourceSchema,
   type TMutateResourceSchema,
 } from "@/lib/validations/books/book-editions/mutate-resource"
+import { createAudioResource } from "@/actions/books/create-audio-resource"
 import { createResource } from "@/actions/books/create-resource"
 import useUploadImage from "@/hooks/media/use-upload-image"
-import useUploadVideo from "@/hooks/media/use-upload-video"
+import useUploadMultipart from "@/hooks/media/use-upload-multipat"
+import useUploadSingle from "@/hooks/media/use-upload-single"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -71,45 +73,84 @@ function CreateResourceDialog({ bookId }: Props) {
     },
   })
 
-  const { mutateAsync: uploadAudioBook } = useUploadVideo()
+  const { mutateAsync: uploadSingle } = useUploadSingle()
+  const { mutateAsync: uploadMultipart } = useUploadMultipart()
 
   const onSubmit = async (values: TMutateResourceSchema) => {
     startTransition(async () => {
-      if (values.resourceType === EResourceBookType.AUDIO_BOOK) {
-        const data = await uploadAudioBook(values.fileAudioBook)
-        if (data) {
+      try {
+        if (
+          values.resourceType === EResourceBookType.AUDIO_BOOK &&
+          values.fileAudioBook &&
+          !values.s3OriginalName
+        ) {
+          const s3OriginalName =
+            values.fileAudioBook.size > 25 * 1024 * 1024
+              ? await uploadMultipart(values.fileAudioBook)
+              : await uploadSingle(values.fileAudioBook)
+          if (!s3OriginalName) throw new Error("")
+          values.s3OriginalName = s3OriginalName
+          values.providerPublicId = s3OriginalName
+          values.resourceSize = Math.round(values.fileAudioBook.size / 1000)
+        } else if (
+          values.resourceType === EResourceBookType.EBOOK &&
+          values.fileEbook &&
+          values.fileEbook?.preview?.startsWith("blob")
+        ) {
+          const data = await uploadBookImage(values.fileEbook)
+          if (!data) throw new Error("")
           values.resourceUrl = data.secureUrl
           values.providerPublicId = data.publicId
-          values.resourceSize = Math.round(values.fileAudioBook.size)
+          values.resourceSize = Math.round(values.fileEbook.size / 1000)
         }
-      } else {
-        const data = await uploadBookImage(values.fileEbook)
-        if (data) {
-          values.resourceUrl = data.secureUrl
-          values.providerPublicId = data.publicId
-          values.resourceSize = Math.round(values.fileEbook.size)
+
+        values.fileEbook = undefined
+        values.fileAudioBook = undefined
+
+        const res =
+          values.resourceType === EResourceBookType.AUDIO_BOOK
+            ? await createAudioResource({
+                ...values,
+                bookId,
+              })
+            : await createResource({
+                ...values,
+                bookId,
+              })
+
+        if (res.isSuccess) {
+          toast({
+            title: locale === "vi" ? "Thành công" : "Success",
+            description: res.data,
+            variant: "success",
+          })
+          setOpen(false)
+          return
         }
-      }
 
-      values.fileEbook = undefined
-      values.fileAudioBook = undefined
+        if (values.resourceType === EResourceBookType.AUDIO_BOOK) {
+          form.setValue("s3OriginalName", values.s3OriginalName)
+          form.setValue("providerPublicId", values.providerPublicId)
 
-      const res = await createResource({
-        ...values,
-        bookId,
-      })
+          form.setValue("resourceSize", values.resourceSize)
+        } else {
+          form.setValue("resourceUrl", values.resourceUrl)
+          form.setValue("providerPublicId", values.providerPublicId)
+          form.setValue("resourceSize", values.resourceSize)
+        }
 
-      if (res.isSuccess) {
+        console.log(res)
+
+        handleServerActionError(res, locale, form)
+      } catch (error) {
+        console.log(error)
+
         toast({
-          title: locale === "vi" ? "Thành công" : "Success",
-          description: res.data,
-          variant: "success",
+          title: locale === "vi" ? "Thất bại" : "Failed",
+          description: locale === "vi" ? "Lỗi không xác định" : "Unknown error",
+          variant: "danger",
         })
-        setOpen(false)
-        return
       }
-
-      handleServerActionError(res, locale, form)
     })
   }
 
@@ -124,7 +165,7 @@ function CreateResourceDialog({ bookId }: Props) {
       <DialogContent className="max-h-[80vh] overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>{t("Create resource")}</DialogTitle>
-          <DialogDescription>
+          <DialogDescription asChild>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -284,6 +325,7 @@ function CreateResourceDialog({ bookId }: Props) {
                             </FormLabel>
                             <FormControl>
                               <AudioDropzone
+                                noLimitSize
                                 value={field.value}
                                 onChange={(val) => {
                                   field.onChange(val)

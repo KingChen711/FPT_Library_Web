@@ -237,18 +237,20 @@ function AddTrackingDetailForm({ trackingId }: Props) {
         form.setValue(`libraryItem.coverImage`, values.libraryItem.coverImage)
       }
 
+      console.log(res)
+
       if (res.typeError === "form") {
         const key = Object.keys(res.fieldErrors).find((k) =>
           k.toLowerCase().includes("libraryItem.".toLowerCase())
         )
-        if (!key) return
 
-        if (values.libraryItem) {
+        if (key && values.libraryItem) {
           form.setError(`itemName`, {
             message: "wrongCatalogInformation",
           })
         }
       }
+
       handleServerActionError(res, locale, form)
     })
   }

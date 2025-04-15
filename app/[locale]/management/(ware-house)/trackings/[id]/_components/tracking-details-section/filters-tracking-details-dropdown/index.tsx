@@ -16,6 +16,7 @@ import { useTranslations } from "next-intl"
 import { v4 as uuidv4 } from "uuid"
 import { z } from "zod"
 
+import { type TSearchTrackingDetailsSchema } from "@/lib/validations/trackings/search-tracking-details"
 import { filterEnumSchema } from "@/lib/zod"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
@@ -32,7 +33,12 @@ import BasicSearchTab from "./basic-search-tab"
 
 type Props = {
   trackingId: number
-  hasGlueBarcode: boolean | undefined
+  hasGlueBarcode?: boolean
+  supplementRequest?: boolean
+  searchParams?: TSearchTrackingDetailsSchema
+  setSearchParams?: React.Dispatch<
+    React.SetStateAction<TSearchTrackingDetailsSchema>
+  >
 }
 
 export type TBasicSearch = {
@@ -40,7 +46,6 @@ export type TBasicSearch = {
   itemTotal: string
   unitPrice: string
   totalAmount: string
-  stockTransactionType: string
   isbn: string
 }
 
@@ -54,6 +59,9 @@ export type FOV = {
 export function FiltersTrackingDetailsDropdown({
   trackingId,
   hasGlueBarcode: initHasGlueBarcode,
+  supplementRequest = false,
+  searchParams: searchParamsSupplementRequest,
+  setSearchParams,
 }: Props) {
   const t = useTranslations("BasicSearchTab")
   const [open, setOpen] = useState(false)
@@ -61,12 +69,23 @@ export function FiltersTrackingDetailsDropdown({
   const [hasGlueBarcode, setHasGlueBarcode] = useState(initHasGlueBarcode)
 
   const [basicSearchValues, setBasicSearchValues] = useState<TBasicSearch>({
-    itemName: searchParams.get("itemName") || "",
-    itemTotal: searchParams.get("itemTotal") || "",
-    unitPrice: searchParams.get("unitPrice") || "",
-    totalAmount: searchParams.get("totalAmount") || "",
-    stockTransactionType: searchParams.get("stockTransactionType") || "",
-    isbn: searchParams.get("isbn") || "",
+    itemName:
+      searchParamsSupplementRequest?.itemName ||
+      searchParams.get("itemName") ||
+      "",
+    itemTotal:
+      searchParamsSupplementRequest?.itemTotal?.toString() ||
+      searchParams.get("itemTotal") ||
+      "",
+    unitPrice:
+      searchParamsSupplementRequest?.unitPrice?.toString() ||
+      searchParams.get("unitPrice") ||
+      "",
+    totalAmount:
+      searchParamsSupplementRequest?.totalAmount?.toString() ||
+      searchParams.get("totalAmount") ||
+      "",
+    isbn: searchParamsSupplementRequest?.isbn || searchParams.get("isbn") || "",
   })
 
   const fs = useMemo(
@@ -77,8 +96,8 @@ export function FiltersTrackingDetailsDropdown({
         )
         .transform((data) => (data.some((i) => i === undefined) ? [] : data))
         .catch([])
-        .parse(searchParams.getAll("f")),
-    [searchParams]
+        .parse(searchParamsSupplementRequest?.f || searchParams.getAll("f")),
+    [searchParams, searchParamsSupplementRequest]
   )
 
   const os = useMemo(
@@ -87,11 +106,14 @@ export function FiltersTrackingDetailsDropdown({
         .array(filterEnumSchema(EFilterOperator))
         .transform((data) => (data.some((i) => i === undefined) ? [] : data))
         .catch([])
-        .parse(searchParams.getAll("o")),
-    [searchParams]
+        .parse(searchParamsSupplementRequest?.o || searchParams.getAll("o")),
+    [searchParams, searchParamsSupplementRequest]
   )
 
-  const vs = useMemo(() => searchParams.getAll("v"), [searchParams])
+  const vs = useMemo(
+    () => searchParamsSupplementRequest?.v || searchParams.getAll("v"),
+    [searchParams, searchParamsSupplementRequest]
+  )
 
   const [queries, setQueries] = useState<FOV[]>(() => {
     if (
@@ -113,9 +135,6 @@ export function FiltersTrackingDetailsDropdown({
           value = vs[i] || null
           break
         case EAdvancedFilterType.NUMBER:
-          value = Number(vs[i]) || null
-          break
-        case EAdvancedFilterType.SELECT_STATIC:
           value = Number(vs[i]) || null
           break
         case EAdvancedFilterType.SELECT_DYNAMIC:
@@ -163,37 +182,39 @@ export function FiltersTrackingDetailsDropdown({
         align="start"
         className="mt-2 w-[650px] max-w-[calc(100vw-300px)] space-y-4 p-4"
       >
-        <div className="space-y-3">
-          <Label>{t("Has glue barcode")}</Label>
-          <RadioGroup
-            value={
-              hasGlueBarcode === undefined
-                ? "all"
-                : hasGlueBarcode
-                  ? "glued"
-                  : "unglued"
-            }
-            onValueChange={(value) => {
-              setHasGlueBarcode(
-                value === "all" ? undefined : value === "glued" ? true : false
-              )
-            }}
-            className="flex flex-row gap-4"
-          >
-            <div className="flex items-center space-x-3 space-y-0">
-              <RadioGroupItem value="all" />
-              <Label className="font-normal">{t("All2")}</Label>
-            </div>
-            <div className="flex items-center space-x-3 space-y-0">
-              <RadioGroupItem value="glued" />
-              <Label className="font-normal">{t("Glued")}</Label>
-            </div>
-            <div className="flex items-center space-x-3 space-y-0">
-              <RadioGroupItem value="unglued" />
-              <Label className="font-normal">{t("Unglued")}</Label>
-            </div>
-          </RadioGroup>
-        </div>
+        {!supplementRequest && (
+          <div className="space-y-3">
+            <Label>{t("Has glue barcode")}</Label>
+            <RadioGroup
+              value={
+                hasGlueBarcode === undefined
+                  ? "all"
+                  : hasGlueBarcode
+                    ? "glued"
+                    : "unglued"
+              }
+              onValueChange={(value) => {
+                setHasGlueBarcode(
+                  value === "all" ? undefined : value === "glued" ? true : false
+                )
+              }}
+              className="flex flex-row gap-4"
+            >
+              <div className="flex items-center space-x-3 space-y-0">
+                <RadioGroupItem value="all" />
+                <Label className="font-normal">{t("All2")}</Label>
+              </div>
+              <div className="flex items-center space-x-3 space-y-0">
+                <RadioGroupItem value="glued" />
+                <Label className="font-normal">{t("Glued")}</Label>
+              </div>
+              <div className="flex items-center space-x-3 space-y-0">
+                <RadioGroupItem value="unglued" />
+                <Label className="font-normal">{t("Unglued")}</Label>
+              </div>
+            </RadioGroup>
+          </div>
+        )}
         <Tabs defaultValue="basic-search">
           <TabsList className="w-full">
             {/* <TabsTrigger value="quick-search">{t("Quick search")}</TabsTrigger> */}
@@ -215,6 +236,7 @@ export function FiltersTrackingDetailsDropdown({
               hasGlueBarcode={hasGlueBarcode}
               setHasGlueBarcode={setHasGlueBarcode}
               setOpen={setOpen}
+              setSearchParams={setSearchParams}
             />
           </TabsContent>
           <TabsContent value="advanced-search">
@@ -225,6 +247,7 @@ export function FiltersTrackingDetailsDropdown({
               hasGlueBarcode={hasGlueBarcode}
               setHasGlueBarcode={setHasGlueBarcode}
               setOpen={setOpen}
+              setSearchParams={setSearchParams}
             />
           </TabsContent>
         </Tabs>

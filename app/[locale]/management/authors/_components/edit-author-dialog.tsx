@@ -72,7 +72,6 @@ function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
   const form = useForm<TEditAuthorSchema>({
     resolver: zodResolver(editAuthorSchema),
     defaultValues: {
-      authorCode: author.authorCode || "",
       fullName: author.fullName || "",
       authorImage: author.authorImage ? author.authorImage : undefined,
       biography: author.biography ? author.biography : undefined,
@@ -231,25 +230,6 @@ function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
                           placeholder="Add profile photo"
                           className="hidden"
                           onChange={(e) => handleImageChange(e, field.onChange)}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="authorCode"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("fields.authorCode")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          disabled={isPending}
-                          {...field}
-                          // value={field.value ?? ""}
-                          placeholder={t("placeholder.code")}
                         />
                       </FormControl>
                       <FormMessage />

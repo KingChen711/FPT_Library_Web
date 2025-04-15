@@ -1,23 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import { format } from "date-fns"
-import { Check, X } from "lucide-react"
+import { Eye, Loader2, MoreHorizontal } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { type TSearchBorrowRequestsSchema } from "@/lib/validations/borrow-requests/search-borrow-requests"
 import usePatronBorrowRequests from "@/hooks/patrons/use-patron-borrow-requests"
 import useFormatLocale from "@/hooks/utils/use-format-locale"
 import { Button } from "@/components/ui/button"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import Paginator from "@/components/ui/paginator"
-import ParseHtml from "@/components/ui/parse-html"
+import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
   Table,
   TableBody,
@@ -33,34 +34,39 @@ type Props = {
   userId: string
 }
 
+const initSearchParams: TSearchBorrowRequestsSchema = {
+  pageIndex: 1,
+  pageSize: "5",
+  search: "",
+  cancelledAtRange: [null, null],
+  expirationDateRange: [null, null],
+  requestDateRange: [null, null],
+  f: [],
+  o: [],
+  v: [],
+}
+
 function BorrowRequestsTab({ userId }: Props) {
-  const t = useTranslations("LibraryCardManagementPage")
+  const t = useTranslations("BorrowAndReturnManagementPage")
   const formatLocale = useFormatLocale()
+  const [searchParams, setSearchParams] =
+    useState<TSearchBorrowRequestsSchema>(initSearchParams)
 
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState<"5" | "10" | "30" | "50" | "100">(
-    "5"
-  )
+  const { data } = usePatronBorrowRequests(userId, searchParams)
 
-  const { data, isLoading } = usePatronBorrowRequests(userId, {
-    pageIndex,
-    pageSize,
-    f: [],
-    o: [],
-    v: [],
-    cancelledAtRange: [null, null],
-    expirationDateRange: [null, null],
-    requestDateRange: [null, null],
+  const handleSort = (sortKey: any) =>
+    setSearchParams((prev) => ({
+      ...prev,
+      sort: sortKey,
+      pageIndex: 1,
+    }))
 
-    search: "",
-  })
-
-  const handlePaginate = (selectedPage: number) => {
-    setPageIndex(selectedPage)
-  }
-
-  const handleChangePageSize = (size: "5" | "10" | "30" | "50" | "100") => {
-    setPageSize(size)
+  if (!data) {
+    return (
+      <TabsContent value="tracking-details">
+        <Loader2 className="size-9 animate-ping" />
+      </TabsContent>
+    )
   }
 
   return (
@@ -70,52 +76,51 @@ function BorrowRequestsTab({ userId }: Props) {
           <Table className="overflow-hidden">
             <TableHeader>
               <TableRow>
+                <SortableTableHead
+                  disabled
+                  currentSort={searchParams.sort}
+                  label={t("Request date")}
+                  sortKey="RequestDate"
+                  position="center"
+                  onSort={handleSort}
+                />
+                <SortableTableHead
+                  disabled
+                  currentSort={searchParams.sort}
+                  label={t("Expiration date")}
+                  sortKey="ExpirationDate"
+                  position="center"
+                  onSort={handleSort}
+                />
+                <SortableTableHead
+                  disabled
+                  currentSort={searchParams.sort}
+                  label={t("Total request items")}
+                  sortKey="TotalRequestItem"
+                  position="center"
+                  onSort={handleSort}
+                />
                 <TableHead className="text-nowrap font-bold">
-                  {t("Request date")}
+                  <div className="flex justify-center">{t("Status")}</div>
                 </TableHead>
+
                 <TableHead className="text-nowrap font-bold">
-                  {t("Expiration date")}
-                </TableHead>
-                <TableHead>
-                  <div className="flex justify-center text-nowrap font-bold">
-                    {t("Status")}
-                  </div>
-                </TableHead>
-                <TableHead>
-                  <div className="flex justify-center text-nowrap font-bold">
-                    {t("Total request item")}
-                  </div>
-                </TableHead>
-                <TableHead>
-                  <div className="flex justify-center text-nowrap font-bold">
-                    {t("Reminder sent")}
-                  </div>
-                </TableHead>
-                <TableHead className="text-nowrap font-bold">
-                  <div className="flex justify-center">{t("Description")}</div>
-                </TableHead>
-                <TableHead className="text-nowrap font-bold">
-                  {t("Cancelled at")}
-                </TableHead>
-                <TableHead className="text-nowrap font-bold">
-                  <div className="flex justify-center">
-                    {t("Cancellation reason")}
-                  </div>
+                  <div className="flex justify-center">{t("Actions")}</div>
                 </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {!isLoading &&
-                data?.sources.map((request) => (
-                  <TableRow key={request.borrowRequestId}>
-                    <TableCell className="text-nowrap">
-                      {request.requestDate
-                        ? format(new Date(request.requestDate), "dd MMM yyyy", {
-                            locale: formatLocale,
-                          })
-                        : "-"}
-                    </TableCell>
-                    <TableCell className="text-nowrap">
+              {data?.sources?.map((request) => (
+                <TableRow key={request.borrowRequestId}>
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
+                      {format(new Date(request.requestDate), "dd MMM yyyy", {
+                        locale: formatLocale,
+                      })}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
                       {request.expirationDate
                         ? format(
                             new Date(request.expirationDate),
@@ -125,98 +130,67 @@ function BorrowRequestsTab({ userId }: Props) {
                             }
                           )
                         : "-"}
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        <BorrowRequestStatusBadge status={request.status} />
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {request.totalRequestItem ?? "-"}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {request.isReminderSent ? (
-                          <Check className="size-6 text-success" />
-                        ) : (
-                          <X className="size-6 text-danger" />
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {request.description ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button size="sm" variant="secondary">
-                                {t("View content")}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
-                              <DialogHeader>
-                                <DialogTitle>{t("Description")}</DialogTitle>
-                                <DialogDescription>
-                                  <ParseHtml data={request.description} />
-                                </DialogDescription>
-                              </DialogHeader>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      {request.cancelledAt
-                        ? format(new Date(request.cancelledAt), "dd MMM yyyy", {
-                            locale: formatLocale,
-                          })
-                        : "-"}
-                    </TableCell>
-                    <TableCell className="text-nowrap">
-                      <div className="flex justify-center">
-                        {request.cancellationReason ? (
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <Button size="sm" variant="secondary">
-                                {t("Cancellation reason")}
-                              </Button>
-                            </DialogTrigger>
-                            <DialogContent className="max-h-[80vh] w-full max-w-2xl overflow-y-auto">
-                              <DialogHeader>
-                                <DialogTitle>
-                                  {t("Cancellation reason")}
-                                </DialogTitle>
-                                <DialogDescription>
-                                  <ParseHtml
-                                    data={request.cancellationReason}
-                                  />
-                                </DialogDescription>
-                              </DialogHeader>
-                            </DialogContent>
-                          </Dialog>
-                        ) : (
-                          "-"
-                        )}
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
+                      {request.totalRequestItem}
+                    </div>
+                  </TableCell>
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
+                      <BorrowRequestStatusBadge status={request.status} />
+                    </div>
+                  </TableCell>
+
+                  <TableCell>
+                    <div className="flex items-center justify-center">
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" size="icon">
+                            <MoreHorizontal />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          <DropdownMenuItem>
+                            <Link
+                              target="_blank"
+                              href={`/management/borrows/requests/${request.borrowRequestId}`}
+                              className="flex items-center gap-2"
+                            >
+                              <Eye className="size-4" />
+                              {t("View details")}
+                            </Link>
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
             </TableBody>
           </Table>
         </div>
 
-        {data && (
+        {data && data.sources.length > 0 && (
           <Paginator
-            pageSize={+pageSize}
-            pageIndex={pageIndex}
+            pageSize={+data.pageSize}
+            pageIndex={data.pageIndex}
             totalPage={data.totalPage}
             totalActualItem={data.totalActualItem}
             className="mt-6"
-            onPaginate={handlePaginate}
-            onChangePageSize={handleChangePageSize}
+            onPaginate={(page) =>
+              setSearchParams((prev) => ({
+                ...prev,
+                pageIndex: page,
+              }))
+            }
+            onChangePageSize={(size) =>
+              setSearchParams((prev) => ({
+                ...prev,
+                pageSize: size,
+              }))
+            }
           />
         )}
       </div>

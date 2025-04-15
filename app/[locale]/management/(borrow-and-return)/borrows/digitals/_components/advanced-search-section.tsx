@@ -4,6 +4,7 @@ import { useMemo, useState, type SetStateAction } from "react"
 import {
   defaultO,
   defaultV,
+  EAdvancedFilterType,
   operators,
   type EFilterOperator,
 } from "@/constants/advance-search/common"
@@ -13,11 +14,11 @@ import {
 } from "@/constants/advanced-filter-borrow-digitals"
 import { CommandList } from "cmdk"
 import { Check, ChevronsUpDown, Plus, Trash } from "lucide-react"
-import { useLocale, useTranslations } from "next-intl"
+import { useTranslations } from "next-intl"
 import { v4 as uuidv4 } from "uuid"
 
+import { EResourceBookType } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
-import useCategories from "@/hooks/categories/use-categories"
 import { Button } from "@/components/ui/button"
 import {
   Command,
@@ -26,6 +27,7 @@ import {
   CommandInput,
   CommandItem,
 } from "@/components/ui/command"
+import { Input } from "@/components/ui/input"
 import {
   Popover,
   PopoverContent,
@@ -111,12 +113,8 @@ export function AdvancedSearchItem({
   onChangeFov,
 }: AdvancedSearchItemProps) {
   const t = useTranslations("BorrowAndReturnManagementPage")
-  const locale = useLocale()
+
   const tOperator = useTranslations("Badges.Operator")
-
-  const [openComboboxCategory, setOpenComboboxCategory] = useState(false)
-
-  const { data: categoryItems } = useCategories()
 
   const type = useMemo(
     () =>
@@ -128,6 +126,8 @@ export function AdvancedSearchItem({
   )
 
   const [openSelectF, setOpenSelectF] = useState(false)
+
+  const tResourceType = useTranslations("Badges.ResourceBookType")
 
   return (
     <div className="flex items-center gap-2">
@@ -217,67 +217,37 @@ export function AdvancedSearchItem({
 
       {/* value */}
 
+      {type === EAdvancedFilterType.NUMBER && (
+        <Input
+          value={fov.v?.toString()}
+          className="flex-1"
+          type="number"
+          onChange={(e) => onChangeFov({ ...fov, v: e.target.value })}
+        />
+      )}
+
       {fov.f === EAdvancedFilterBorrowDigitalField.RESOURCE_TYPE && (
-        <Popover
-          open={openComboboxCategory}
-          onOpenChange={setOpenComboboxCategory}
+        <Select
+          value={fov.v?.toString()}
+          onValueChange={(value) =>
+            onChangeFov({
+              ...fov,
+              v: +value,
+            })
+          }
         >
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              className={cn(
-                "w-40 justify-between",
-                !fov.v && "text-muted-foreground"
-              )}
-            >
-              {fov.v
-                ? locale === "vi"
-                  ? categoryItems?.find(
-                      (category) => category.categoryId === fov.v
-                    )?.vietnameseName
-                  : categoryItems?.find(
-                      (category) => category.categoryId === fov.v
-                    )?.englishName
-                : t("Select category")}
-              <ChevronsUpDown className="opacity-50" />
-            </Button>
-          </PopoverTrigger>
-          <PopoverContent side="top" className="p-0">
-            <Command>
-              <CommandList>
-                <CommandGroup>
-                  {categoryItems?.map((category) => (
-                    <CommandItem
-                      value={
-                        locale === "vi"
-                          ? category.vietnameseName
-                          : category.englishName
-                      }
-                      key={category.categoryId}
-                      onSelect={() => {
-                        onChangeFov({ ...fov, v: category.categoryId })
-                        setOpenComboboxCategory(false)
-                      }}
-                    >
-                      {locale === "vi"
-                        ? category.vietnameseName
-                        : category.englishName}
-                      <Check
-                        className={cn(
-                          "ml-auto",
-                          category.categoryId === fov.v
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
+          <SelectTrigger>
+            <SelectValue placeholder={t("Select")} />
+          </SelectTrigger>
+
+          <SelectContent>
+            {Object.values(EResourceBookType).map((ope) => (
+              <SelectItem key={ope} value={ope}>
+                {tResourceType(ope)}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
       )}
 
       <Button

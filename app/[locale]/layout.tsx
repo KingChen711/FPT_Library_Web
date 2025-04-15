@@ -69,8 +69,8 @@ export default async function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <ReactQueryProvider>
-          <NextIntlClientProvider messages={messages}>
+        <NextIntlClientProvider messages={messages}>
+          <ReactQueryProvider>
             <LibraryProvider>
               <AuthProvider>
                 {/* <SocketProvider> */}
@@ -92,8 +92,8 @@ export default async function RootLayout({
                 {/* </SocketProvider> */}
               </AuthProvider>
             </LibraryProvider>
-          </NextIntlClientProvider>
-        </ReactQueryProvider>
+          </ReactQueryProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
   )

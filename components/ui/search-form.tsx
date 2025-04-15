@@ -15,9 +15,16 @@ import { Skeleton } from "./skeleton"
 type Props = {
   search: string
   className?: string
+  onSearch?: (searchValue: string) => void
+  acceptEmptyTerm?: boolean
 }
 
-function SearchForm({ search, className }: Props) {
+function SearchForm({
+  search,
+  className,
+  onSearch: onSearchClient,
+  acceptEmptyTerm = false,
+}: Props) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState(search || "")
   const [debouncedSearchTerm] = useDebounce(searchTerm, 500)
@@ -31,8 +38,17 @@ function SearchForm({ search, className }: Props) {
   }, [search])
 
   useEffect(() => {
+    if (onSearchClient) {
+      if (!acceptEmptyTerm && (searchParams.get("search") || "") === searchTerm)
+        return
+
+      onSearchClient(searchTerm.trim())
+      return
+    }
+
     const handleSearch = () => {
-      if ((searchParams.get("search") || "") === searchTerm) return
+      if (!acceptEmptyTerm && (searchParams.get("search") || "") === searchTerm)
+        return
 
       const newUrl = formUrlQuery({
         params: searchParams.toString(),

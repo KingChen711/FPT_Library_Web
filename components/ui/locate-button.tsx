@@ -8,6 +8,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { formUrlQuery } from "@/lib/utils"
 import useShelfDetail from "@/hooks/shelf/use-shelf-detail"
 
+import ShelfBadge from "../badges/shelf-badge"
 import { Button } from "./button"
 import {
   Dialog,
@@ -16,11 +17,12 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "./dialog"
+import { Skeleton } from "./skeleton"
 
 type Props = {
   shelfId: number
-  shelfNumber: string
-  children: React.ReactNode
+  shelfNumber?: string
+  children?: React.ReactNode
 }
 
 function LocateButton({ shelfId, shelfNumber, children }: Props) {
@@ -47,8 +49,21 @@ function LocateButton({ shelfId, shelfNumber, children }: Props) {
   return (
     <>
       <Dialog open={openLocate} onOpenChange={setOpenLocate}>
-        <DialogTrigger asChild className="cursor-pointer">
-          {children}
+        <DialogTrigger className="cursor-pointer">
+          {children ||
+            (shelfNumber ? (
+              <ShelfBadge shelfNumber={shelfNumber} />
+            ) : (
+              <>
+                {shelfData ? (
+                  <ShelfBadge
+                    shelfNumber={shelfData.libraryShelf.shelfNumber}
+                  />
+                ) : (
+                  <Skeleton className="h-[22px] w-[72px]" />
+                )}
+              </>
+            ))}
         </DialogTrigger>
         <DialogContent className="max-h-[80dvh] w-[85vw] overflow-y-auto">
           {fetchingShelfDetail ? (

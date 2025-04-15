@@ -89,7 +89,7 @@ const BorrowResourceCard = ({
               className="flex-1"
               onClick={() =>
                 router.push(
-                  `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItem.libraryItemId}`
+                  `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItem.libraryItemId}&isPreview=false`
                 )
               }
             >

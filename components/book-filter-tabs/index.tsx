@@ -61,9 +61,7 @@ const BookFilterTabs = ({
   const [searchWithSpecial, setSearchWithSpecial] = useState(
     filterBooleanSchema("true").parse(searchParams.get("searchWithSpecial"))!
   )
-  const [isMatchExact, setIsMatchExact] = useState(
-    filterBooleanSchema("false").parse(searchParams.get("isMatchExact"))!
-  )
+
   const [searchValue, setSearchValue] = useState(
     searchParams.get("search") || ""
   )
@@ -249,11 +247,9 @@ const BookFilterTabs = ({
           {!management && (
             <QuickSearchTab
               autoComplete={autoComplete}
-              isMatchExact={isMatchExact}
               keywordValue={keywordValue}
               searchValue={searchValue}
               searchWithSpecial={searchWithSpecial}
-              setIsMatchExact={setIsMatchExact}
               setKeywordValue={setKeywordValue}
               setSearchValue={setSearchValue}
               setSearchWithSpecial={setSearchWithSpecial}

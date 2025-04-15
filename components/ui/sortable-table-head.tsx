@@ -14,6 +14,7 @@ type Props = {
   currentSort: string | undefined
   position?: "left" | "center" | "right"
   onSort?: (sortKey: string) => void
+  disabled?: boolean
 }
 
 function SortableTableHead({
@@ -22,11 +23,13 @@ function SortableTableHead({
   sortKey,
   position = "left",
   onSort,
+  disabled = false,
 }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
   const handleSort = () => {
+    if (!disabled) return
     if (onSort) {
       onSort(currentSort === sortKey ? `-${sortKey}` : sortKey)
       return
@@ -56,6 +59,7 @@ function SortableTableHead({
   }
 
   const Icon = useCallback(() => {
+    if (disabled) return null
     return currentSort === sortKey ? (
       <ChevronsUp className="ml-1 size-4" />
     ) : currentSort === `-${sortKey}` ? (
@@ -63,7 +67,7 @@ function SortableTableHead({
     ) : (
       <ChevronsUpDown className="ml-1 size-4" />
     )
-  }, [currentSort, sortKey])
+  }, [currentSort, sortKey, disabled])
 
   return (
     <TableHead onClick={handleSort} className="cursor-pointer">

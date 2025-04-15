@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect, useState, useTransition } from "react"
+import React, { useEffect, useMemo, useState, useTransition } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTrainAI } from "@/contexts/train-ai-progress-provider"
@@ -31,7 +31,9 @@ import LibraryItemCard from "@/components/ui/book-card"
 import { Button } from "@/components/ui/button"
 import { Form, FormControl, FormField, FormItem } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
+import Paginator from "@/components/ui/paginator"
 import { Progress } from "@/components/ui/progress"
+import SearchForm from "@/components/ui/search-form"
 
 import GroupCheckResultDialog from "../books/[id]/_components/group-check-result-dialog"
 import GroupField from "./group-field"
@@ -66,6 +68,33 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
 
   const { mutateAsync: uploadBookImage } = useUploadImage()
 
+  const [searchTerm, setSearchTerm] = useState("")
+
+  const [pageIndex, setPageIndex] = useState(1)
+  const [pageSize, setPageSize] = useState<"5" | "10" | "30" | "50" | "100">(
+    "5"
+  )
+
+  const filteredGroups = useMemo(
+    () =>
+      groups.filter((g) =>
+        g.groupName.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase())
+      ),
+    [searchTerm, groups]
+  )
+
+  useEffect(() => {
+    console.log(filteredGroups)
+  }, [filteredGroups])
+
+  const handlePaginate = (selectedPage: number) => {
+    setPageIndex(selectedPage)
+  }
+
+  const handleChangePageSize = (size: "5" | "10" | "30" | "50" | "100") => {
+    setPageSize(size)
+  }
+
   const [currentGroupIndex, setCurrentGroupIndex] = useState(0)
   const [currentBookIndex, setCurrentBookIndex] = useState(0)
   const [preventChangeCurrentBookIndex, setPreventChangeCurrentBookIndex] =
@@ -85,10 +114,6 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
         books: g.items.map((b) => ({
           isbn: b.isbn || "",
           title: b.title,
-          type:
-            b.category.englishName === "BookSeries"
-              ? "Series"
-              : ("Single" as "Single" | "Series"),
           imageList: [],
         })),
         groupName: g.groupName,
@@ -302,7 +327,7 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
           <div className="mb-6 flex-1 space-y-1">
             <div className="flex justify-between gap-4 text-sm">
               <div className="flex items-center gap-1">
-                <p className="font-bold">
+                <p className="text-lg font-bold">
                   {locale === "vi"
                     ? "Tiến trình Train AI: "
                     : "Train AI progress: "}
@@ -335,40 +360,68 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
             />
           </div>
         )}
-        <Label>{t("Untrained groups")}</Label>
+        <Label className="text-lg">{t("Untrained groups")}</Label>
+        <SearchForm
+          className="mb-4 mt-2"
+          acceptEmptyTerm
+          search={searchTerm}
+          onSearch={(val) => {
+            setSearchTerm(val)
+            setPageIndex(1)
+          }}
+        />
         <div className="flex flex-col gap-6">
-          {groups.map((g) => (
-            <div key={g.id} className="flex gap-4">
-              <TrainCheckBox
-                groups={selectedGroups}
-                setGroups={setSelectedGroups}
-                disabled={
-                  trainingPercentage !== null && trainingPercentage !== 100
-                }
-                currentGroup={g}
-              />
-              <Accordion type="single" collapsible>
-                <AccordionItem value="item-1">
-                  <AccordionTrigger className="font-bold">
-                    {t("Group")}: {g.groupName}
-                  </AccordionTrigger>
-                  <AccordionContent asChild>
-                    <div className="flex flex-col gap-4">
-                      <GroupCheckResultDialog results={g.groupCheckResult} />
-                      {g.items.map((item) => (
-                        <LibraryItemCard
-                          key={item.libraryItemId}
-                          libraryItem={item}
-                        />
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-            </div>
-          ))}
+          {filteredGroups
+            .slice(
+              (pageIndex - 1) * +pageSize,
+              (pageIndex - 1) * +pageSize + +pageSize
+            )
+            .map((g) => (
+              <div key={g.id} className="flex gap-4">
+                <TrainCheckBox
+                  groups={selectedGroups}
+                  setGroups={setSelectedGroups}
+                  disabled={
+                    trainingPercentage !== null && trainingPercentage !== 100
+                  }
+                  currentGroup={g}
+                />
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="item-1">
+                    <AccordionTrigger className="font-bold">
+                      {t("Group")}: {g.groupName}
+                    </AccordionTrigger>
+                    <AccordionContent asChild>
+                      <div className="flex flex-col gap-4">
+                        <GroupCheckResultDialog results={g.groupCheckResult} />
+                        {g.items.map((item) => (
+                          <LibraryItemCard
+                            key={item.libraryItemId}
+                            libraryItem={item}
+                          />
+                        ))}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+              </div>
+            ))}
         </div>
-        <div className="flex justify-end">
+        <div className="mt-4">
+          {filteredGroups.length > 0 && (
+            <Paginator
+              pageSize={+pageSize}
+              pageIndex={pageIndex}
+              totalPage={Math.ceil(filteredGroups.length / +pageSize)}
+              totalActualItem={filteredGroups.length}
+              className="mt-6"
+              onPaginate={handlePaginate}
+              onChangePageSize={handleChangePageSize}
+            />
+          )}
+        </div>
+
+        <div className="mt-6 flex justify-end">
           <Button
             disabled={selectedGroups.length === 0}
             onClick={() => {

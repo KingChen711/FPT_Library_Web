@@ -1,4 +1,4 @@
-import { Bell, Brain } from "lucide-react"
+import { Bell, Brain, Map } from "lucide-react"
 
 import { EFeature } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
@@ -310,6 +310,7 @@ export const browseRoutes = [
     ],
   },
   {
+    feature: EFeature.LOGGED_IN,
     route: "/recommend",
     label: "Recommend for you",
     Icon: (props: { className?: string }) => {
@@ -317,35 +318,15 @@ export const browseRoutes = [
     },
   },
   {
-    route: "/books",
-    label: "Books",
+    route: "/map",
+    label: "Map",
     Icon: (props: { className?: string }) => {
-      return <Icons.Book {...props} />
+      return <Map {...props} />
     },
   },
   {
-    route: "/authors",
-    label: "Authors",
-    Icon: (props: { className?: string }) => {
-      return <Icons.Author {...props} />
-    },
-  },
-  {
-    route: "/resources",
-    label: "Resources",
-    Icon: (props: { className?: string }) => {
-      return <Icons.Resource {...props} />
-    },
-  },
-  {
-    route: "/my-shelf",
-    label: "My shelf",
-    Icon: (props: { className?: string }) => {
-      return <Icons.Shelf {...props} />
-    },
-  },
-  {
-    route: "/notifications",
+    feature: EFeature.LOGGED_IN,
+    route: "/me/account/notifications",
     label: "Notifications",
     Icon: (props: { className?: string }) => {
       return <Icons.Bell {...props} />

@@ -5,7 +5,6 @@ export enum EAdvancedFilterTrackingDetailField {
   ISBN = "isbn", //text
   UNIT_PRICE = "unitPrice", //number
   TOTAL_AMOUNT = "totalAmount", //number
-  STOCK_TRANSACTION_TYPE = "stockTransactionType", //select static
   CATEGORY = "categoryId", //select dynamic
   CONDITION = "libraryItemCondition", //select dynamic
   CREATED_AT = "createdAt", //date
@@ -28,10 +27,6 @@ export const trackingDetailAdvancedFilters = [
   {
     field: EAdvancedFilterTrackingDetailField.ISBN,
     type: EAdvancedFilterType.TEXT,
-  },
-  {
-    field: EAdvancedFilterTrackingDetailField.STOCK_TRANSACTION_TYPE,
-    type: EAdvancedFilterType.SELECT_STATIC,
   },
   {
     field: EAdvancedFilterTrackingDetailField.CATEGORY,

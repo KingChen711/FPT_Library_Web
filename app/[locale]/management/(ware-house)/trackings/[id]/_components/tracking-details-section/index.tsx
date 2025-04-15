@@ -51,7 +51,7 @@ type Props = {
 async function TrackingDetailsSection({
   trackingDetails,
   trackingId,
-  trackingType,
+
   conditions,
   searchParams: { search, pageIndex, pageSize, sort, hasGlueBarcode },
   totalPage,
@@ -226,8 +226,8 @@ async function TrackingDetailsSection({
                         </p>
                       </Link>
                     ) : (
-                      <div className="flex justify-center">
-                        {trackingDetail.isbn}
+                      <div className="flex font-bold">
+                        {trackingDetail.itemName}
                       </div>
                     )}
                   </TableCell>
@@ -336,7 +336,6 @@ async function TrackingDetailsSection({
                     <div className="flex justify-center">
                       <TrackingDetailActionsDropdown
                         trackingDetail={trackingDetail}
-                        trackingType={trackingType}
                       />
                     </div>
                   </TableCell>

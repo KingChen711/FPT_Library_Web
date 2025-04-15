@@ -28,6 +28,9 @@ export type BookDetail = BookEdition & {
       condition: Condition
     })[]
   })[]
+  aiTrainingSession?: {
+    trainingSessionId: number
+  }
 }
 
 const getBook = async (id: number): Promise<BookDetail | null> => {

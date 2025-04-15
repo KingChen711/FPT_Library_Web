@@ -8,7 +8,7 @@ type Props = {
 
 function ShelfBadge({ shelfNumber }: Props) {
   return (
-    <Badge variant="draft" className="flex w-fit justify-center">
+    <Badge variant="draft" className="flex w-[72px] justify-center">
       {shelfNumber}
     </Badge>
   )

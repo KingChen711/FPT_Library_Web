@@ -1,5 +1,6 @@
 import React from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { notFound } from "next/navigation"
 import { auth } from "@/queries/auth"
 import getBook from "@/queries/books/get-book"
@@ -9,7 +10,7 @@ import { Check, X } from "lucide-react"
 import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EBookEditionStatus, EFeature } from "@/lib/types/enums"
-import { cn, formatPrice } from "@/lib/utils"
+import { formatPrice } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import Copitor from "@/components/ui/copitor"
@@ -34,6 +35,7 @@ import AuthorsTabsContent from "./_components/authors-tabs-content"
 import BookDetailActionDropdown from "./_components/book-detail-action-dropdown"
 import BookDetailBreadCrumb from "./_components/book-detail-breadcrumb"
 import CopiesTabsContent from "./_components/copies-tabs-content"
+import GroupTabsContent from "./_components/group-tabs-content"
 import HistoriesTabsContent from "./_components/histories-tabs-content"
 import ResourcesTabsContent from "./_components/resources-tabs-content"
 
@@ -520,13 +522,7 @@ async function BookDetailPage({ params }: Props) {
             <div className="flex flex-col gap-4 rounded-md border py-5">
               <h3 className="mx-5 text-lg font-semibold">{t("Status")}</h3>
               <div className="grid grid-cols-12 gap-y-6 text-sm">
-                <div
-                  className={cn(
-                    "col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3",
-                    book?.libraryItemGroup?.aiTrainingCode &&
-                      "lg:col-span-6 lg:border-r"
-                  )}
-                >
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
                   <h4 className="font-bold">{t("AI train code")}</h4>
                   <div className="flex gap-2">
                     <Copitor content={book?.libraryItemGroup?.aiTrainingCode} />
@@ -545,10 +541,27 @@ async function BookDetailPage({ params }: Props) {
                   </div>
                 </div>
 
-                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
                   <h4 className="font-bold">{t("Is trained")}</h4>
                   <div className="flex gap-2">
                     <TrainedBadge trained={book.isTrained} />
+                  </div>
+                </div>
+
+                <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                  <h4 className="font-bold">{t("Details")}</h4>
+                  <div className="flex gap-2">
+                    {book.aiTrainingSession?.trainingSessionId ? (
+                      <Link
+                        target="_blank"
+                        href={`/management/train-sessions/${book.aiTrainingSession?.trainingSessionId}`}
+                        className="text-primary hover:underline"
+                      >
+                        {t("View details")}
+                      </Link>
+                    ) : (
+                      <NoData />
+                    )}
                   </div>
                 </div>
               </div>
@@ -605,6 +618,7 @@ async function BookDetailPage({ params }: Props) {
             <TabsTrigger value="resources">{t("Resources")}</TabsTrigger>
             <TabsTrigger value="copies">{t("Copies")}</TabsTrigger>
             <TabsTrigger value="histories">{t("Histories")}</TabsTrigger>
+            <TabsTrigger value="group">{t("Group")}</TabsTrigger>
           </TabsList>
           <AuthorsTabsContent
             authors={book.authors}
@@ -620,6 +634,7 @@ async function BookDetailPage({ params }: Props) {
             copies={book.libraryItemInstances}
           />
           <HistoriesTabsContent bookId={book.libraryItemId} />
+          <GroupTabsContent bookId={book.libraryItemId} />
         </Tabs>
       </div>
     </div>

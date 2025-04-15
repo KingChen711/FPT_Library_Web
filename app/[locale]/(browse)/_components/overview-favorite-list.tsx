@@ -1,14 +1,14 @@
 "use client"
 
-import { useState } from "react"
-import { Heart } from "lucide-react"
+import { useFavourite } from "@/contexts/favourite-provider"
+import { Heart, Trash2 } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
 import OverviewFavoriteItem from "@/components/ui/overview-favorite-item"
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
@@ -21,27 +21,9 @@ import {
 } from "@/components/ui/tooltip"
 
 const OverviewFavoriteList = () => {
-  const [likedLibraryItem] = useState<number[]>([])
+  const t = useTranslations("BookPage")
 
-  // const updateFavorites = () => {
-  //   setLikedLibraryItem(localStorageHandler.getItem(LocalStorageKeys.FAVORITE))
-  // }
-
-  // useEffect(() => {
-  //   updateFavorites()
-  //   const handleStorageChange = (event: StorageEvent) => {
-  //     if (event.key === LocalStorageKeys.FAVORITE) {
-  //       updateFavorites()
-  //     }
-  //   }
-  //   const handleCustomEvent = () => updateFavorites()
-  //   window.addEventListener("storage", handleStorageChange)
-  //   window.addEventListener(LocalStorageKeys.FAVORITE, handleCustomEvent)
-  //   return () => {
-  //     window.removeEventListener("storage", handleStorageChange)
-  //     window.removeEventListener(LocalStorageKeys.FAVORITE, handleCustomEvent)
-  //   }
-  // }, [])
+  const { favouriteItems, favouriteItemIds } = useFavourite()
 
   return (
     <Sheet>
@@ -55,15 +37,15 @@ const OverviewFavoriteList = () => {
                     size={20}
                     className="transition-transform duration-200 hover:scale-110"
                   />
-                  {likedLibraryItem?.length > 0 && (
+                  {favouriteItemIds.length > 0 && (
                     <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-danger text-xs font-bold text-primary-foreground shadow-md">
-                      {likedLibraryItem.length}
+                      {favouriteItemIds.length || null}
                     </span>
                   )}
                 </Button>
               </TooltipTrigger>
               <TooltipContent>
-                <p>Favorite list</p>
+                <p>{t("Favorite list")}</p>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -73,28 +55,22 @@ const OverviewFavoriteList = () => {
       <SheetContent className="flex flex-col gap-4 p-4">
         <SheetHeader>
           <SheetTitle className="text-lg font-semibold">
-            Your Favorite Library Items
+            {t("Favorite Library Items")}
           </SheetTitle>
-          <SheetDescription>
-            Manage your saved books easily. Click on the trash icon to remove
-            items.
-          </SheetDescription>
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto">
-          {likedLibraryItem.length > 0 &&
-            likedLibraryItem.map((libraryItemId) => (
-              <OverviewFavoriteItem
-                key={libraryItemId}
-                libraryItemId={libraryItemId}
-              />
+          {favouriteItems.length > 0 &&
+            favouriteItems.map((item) => (
+              <OverviewFavoriteItem key={item.libraryItemId} item={item} />
             ))}
         </div>
 
-        {likedLibraryItem.length > 0 && (
+        {favouriteItems.length > 0 && (
           <div className="flex justify-end">
             <Button variant="destructive" className="px-4" onClick={() => {}}>
-              Remove All
+              <Trash2 />
+              {t("remove all")}
             </Button>
           </div>
         )}

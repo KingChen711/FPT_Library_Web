@@ -4,7 +4,6 @@ const emptyToUndefined = (val: unknown) =>
   typeof val === "string" && val.trim() === "" ? undefined : val
 
 export const editAuthorSchema = z.object({
-  authorCode: z.string().trim().min(1, { message: "required" }),
   // Nếu giá trị là chuỗi rỗng thì chuyển thành undefined
   authorImage: z.preprocess(emptyToUndefined, z.string().optional()),
   fullName: z

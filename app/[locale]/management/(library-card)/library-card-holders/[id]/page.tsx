@@ -32,10 +32,14 @@ import PatronHasCardBadge from "@/components/badges/patron-has-card-badge"
 import PatronStatusBadge from "@/components/badges/patron-status-badge"
 import PatronTypeBadge from "@/components/badges/patron-type-badge"
 
+import BorrowDigitalsTab from "./_components/borrow-digitals-tabs"
 import BorrowRequestsTab from "./_components/borrow-requests-tab"
+import BorrowRecordsTab from "./_components/borrrow-records-tabs"
 import LibraryCardActionsDropdown from "./_components/card-actions-dropdown"
+import NotificationsTab from "./_components/notifications-tabs"
 import PatronActionsDropdown from "./_components/patron-actions-dropdown"
 import PatronDetailBreadCrumb from "./_components/patron-detail-bread-crumb"
+import ReservationsTab from "./_components/reservations-tabs"
 import TransactionsTab from "./_components/transactions-tab"
 
 type Props = {
@@ -533,7 +537,7 @@ async function PatronDetailPage({ params }: Props) {
             <TabsTrigger value="borrow-requests">
               {t("Borrow requests")}
             </TabsTrigger>
-            <TabsTrigger value="digital-borrows">
+            <TabsTrigger value="borrow-digitals">
               {t("Digital borrows")}
             </TabsTrigger>
             <TabsTrigger value="reservations">{t("Reservations")}</TabsTrigger>
@@ -542,6 +546,10 @@ async function PatronDetailPage({ params }: Props) {
               {t("Notifications")}
             </TabsTrigger>
           </TabsList>
+          <BorrowRecordsTab userId={params.id} />
+          <NotificationsTab userId={params.id} />
+          <ReservationsTab userId={params.id} />
+          <BorrowDigitalsTab userId={params.id} />
           <BorrowRequestsTab userId={params.id} />
           <TransactionsTab userId={params.id} />
         </Tabs>

@@ -1,10 +1,16 @@
 "use client"
 
-import React, { createContext, useContext, useEffect, useState } from "react"
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
 import { useMutation, useQuery } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
-import { type Author, type LibraryItem } from "@/lib/types/models"
+import { type Author, type BookEdition } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 
 import { useAuth } from "./auth-provider"
@@ -16,6 +22,8 @@ type FavouriteProviderProps = {
 type FavouriteContextType = {
   favouriteItemIds: number[]
   toggleFavorite: (id: number) => void
+  favouriteItems: (BookEdition & { authors: Author[] })[]
+  isLoadingFavourite: boolean
 }
 
 export const FavouriteContext = createContext<FavouriteContextType | null>(null)
@@ -38,7 +46,7 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
             .get<
               Pagination<
                 {
-                  libraryItem: LibraryItem & {
+                  libraryItem: BookEdition & {
                     libraryItemAuthors: { author: Author }[]
                   }
                 }[]
@@ -46,6 +54,9 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
             >("/api/user-favorite", {
               headers: {
                 Authorization: `Bearer ${accessToken}`,
+              },
+              searchParams: {
+                pageSize: 100,
               },
             })
             .then((res) => ({
@@ -59,6 +70,13 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
                   ),
                 },
               })),
+            }))
+            .catch(() => ({
+              sources: [],
+              pageIndex: 0,
+              pageSize: 0,
+              totalPage: 0,
+              totalActualItem: 0,
             }))
         : null,
   })
@@ -96,6 +114,8 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
   })
 
   const toggleFavorite = (itemId: number) => {
+    console.log("toggleFavorite 1")
+
     if (isLoading) return
     const isFavourite = favouriteItemIds.includes(itemId)
 
@@ -103,6 +123,7 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
     setFavouriteItemIds((prev) =>
       isFavourite ? prev.filter((id) => id !== itemId) : [...prev, itemId]
     )
+    console.log("toggleFavorite 2")
 
     const mutation = isFavourite ? deleteFavourite : addFavourite
 
@@ -121,8 +142,20 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
     })
   }
 
+  const favouriteItems = useMemo(
+    () => favouriteData?.sources?.map((s) => s.libraryItem) || [],
+    [favouriteData]
+  )
+
   return (
-    <FavouriteContext.Provider value={{ favouriteItemIds, toggleFavorite }}>
+    <FavouriteContext.Provider
+      value={{
+        favouriteItemIds,
+        toggleFavorite,
+        favouriteItems,
+        isLoadingFavourite: isLoading,
+      }}
+    >
       {children}
     </FavouriteContext.Provider>
   )

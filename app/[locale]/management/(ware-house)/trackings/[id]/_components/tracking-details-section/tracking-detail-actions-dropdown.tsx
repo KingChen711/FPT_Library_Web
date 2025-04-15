@@ -5,7 +5,6 @@ import Link from "next/link"
 import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { type ETrackingType } from "@/lib/types/enums"
 import {
   type Author,
   type BookEdition,
@@ -37,12 +36,12 @@ type Props = {
       | null
     category: Category
   }
-  trackingType: ETrackingType
+  supplementRequest?: boolean
 }
 
 function TrackingDetailActionsDropdown({
   trackingDetail,
-  trackingType,
+  supplementRequest = false,
 }: Props) {
   const t = useTranslations("TrackingsManagementPage")
 
@@ -76,7 +75,6 @@ function TrackingDetailActionsDropdown({
         open={openEdit}
         setOpen={setOpenEdit}
         trackingDetail={trackingDetail}
-        trackingType={trackingType}
       />
 
       <DeleteTrackingDetailDialog
@@ -107,7 +105,7 @@ function TrackingDetailActionsDropdown({
             </DropdownMenuItem>
           )}
 
-          {!trackingDetail.libraryItemId && (
+          {!trackingDetail.libraryItemId && !supplementRequest && (
             <DropdownMenuItem className="cursor-pointer" asChild>
               <Link
                 href={`/management/books/create?trackingDetailId=${trackingDetail.trackingDetailId}`}
@@ -118,18 +116,20 @@ function TrackingDetailActionsDropdown({
             </DropdownMenuItem>
           )}
 
-          {!trackingDetail.hasGlueBarcode && trackingDetail.libraryItemId && (
-            <DropdownMenuItem
-              className="cursor-pointer"
-              onClick={() => {
-                setOpenDropdown(false)
-                setOpenConfirmGlue(true)
-              }}
-            >
-              <Icons.Glue className="size-4" />
-              {t("Glue barcode")}
-            </DropdownMenuItem>
-          )}
+          {!trackingDetail.hasGlueBarcode &&
+            !supplementRequest &&
+            trackingDetail.libraryItemId && (
+              <DropdownMenuItem
+                className="cursor-pointer"
+                onClick={() => {
+                  setOpenDropdown(false)
+                  setOpenConfirmGlue(true)
+                }}
+              >
+                <Icons.Glue className="size-4" />
+                {t("Glue barcode")}
+              </DropdownMenuItem>
+            )}
 
           <DropdownMenuItem
             className="cursor-pointer"

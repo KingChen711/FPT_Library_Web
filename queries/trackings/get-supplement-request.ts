@@ -32,16 +32,12 @@ const getSupplementRequests = async (
             JSON.stringify(searchParams.totalItemRange) ===
             JSON.stringify([null, null])
               ? null
-              : searchParams.totalItemRange.map((a) =>
-                  a === null ? "null" : a
-                ),
+              : searchParams.totalItemRange.map((a) => (a === null ? "" : a)),
           totalAmountRange:
             JSON.stringify(searchParams.totalAmountRange) ===
             JSON.stringify([null, null])
               ? null
-              : searchParams.totalAmountRange.map((a) =>
-                  a === null ? "null" : a
-                ),
+              : searchParams.totalAmountRange.map((a) => (a === null ? "" : a)),
           entryDateRange:
             JSON.stringify(searchParams.entryDateRange) ===
             JSON.stringify([null, null])

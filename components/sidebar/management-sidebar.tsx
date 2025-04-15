@@ -44,7 +44,7 @@ export async function ManagementSidebar({
     <Sidebar className="sticky" collapsible="icon" {...props}>
       <SidebarTrigger className="absolute left-full top-8 z-50 -translate-x-1/2 -translate-y-1/2 bg-primary text-primary-foreground hover:bg-primary hover:text-primary-foreground max-lg:hidden" />
 
-      <SidebarHeader className="flex h-16 justify-center">
+      <SidebarHeader className="flex justify-center pb-0">
         <SidebarMenu>
           <SidebarLogoItem />
         </SidebarMenu>

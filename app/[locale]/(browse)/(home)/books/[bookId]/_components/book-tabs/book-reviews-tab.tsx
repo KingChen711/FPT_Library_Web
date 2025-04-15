@@ -1,3 +1,4 @@
+import { auth } from "@/queries/auth"
 import getCurrentUserReview from "@/queries/library-item/get-current-user-review"
 import getReviewsLibraryItem from "@/queries/library-item/get-reviews-library-items"
 import { format } from "date-fns"
@@ -7,6 +8,7 @@ import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { Card } from "@/components/ui/card"
 import NoResult from "@/components/ui/no-result"
+import Paginator from "@/components/ui/paginator"
 import Rating from "@/components/ui/rating"
 
 import RatingDialog from "./rating-dialog"
@@ -14,38 +16,48 @@ import RatingDialog from "./rating-dialog"
 type Props = {
   libraryItemId: number
   averageRating: number
+  searchParams: Record<string, string | string[]>
 }
 
-const BookReviewsTab = async ({ libraryItemId, averageRating }: Props) => {
+const BookReviewsTab = async ({
+  libraryItemId,
+  averageRating,
+  searchParams,
+}: Props) => {
   const t = await getTranslations("BookPage")
   const reviews = await getReviewsLibraryItem(Number(libraryItemId), {
     search: "",
-    pageIndex: 1,
-    pageSize: "5",
+    pageIndex: Number(searchParams?.["ratingPageIndex"]) || 1,
+    pageSize: Number(searchParams?.["ratingPageSize"])
+      ? (searchParams["pageSize"] as "5" | "10" | "30" | "50" | "100")
+      : "5",
   })
 
   const currentUserReview = await getCurrentUserReview(libraryItemId)
   const formatLocale = await getFormatLocale()
-
-  console.log(reviews.sources)
+  const userType = auth().userType
 
   return (
     <div className="space-y-4">
       <div className="mt-4 flex flex-wrap items-center justify-between gap-4">
         <div className="flex items-center gap-2 font-bold">
           <div className="text-xl font-normal">{t("Review")}:</div>
-          <span className="text-3xl">{averageRating}</span>
-          <span className="text-lg">/{5}</span>
+          <div className="flex items-end">
+            <span className="text-2xl">{averageRating}</span>
+            <span className="text-lg">/{5}</span>
+          </div>
           <Rating size="lg" value={averageRating} />
           <span className="text-xl font-normal">
             ({reviews.totalActualItem})
           </span>
         </div>
-        <RatingDialog
-          libraryItemId={libraryItemId}
-          ratingValue={currentUserReview?.ratingValue || undefined}
-          reviewText={currentUserReview?.reviewText || undefined}
-        />
+        {userType === "user" && (
+          <RatingDialog
+            libraryItemId={libraryItemId}
+            ratingValue={currentUserReview?.ratingValue || undefined}
+            reviewText={currentUserReview?.reviewText || undefined}
+          />
+        )}
       </div>
       {reviews.sources.length === 0 && (
         <NoResult
@@ -85,6 +97,17 @@ const BookReviewsTab = async ({ libraryItemId, averageRating }: Props) => {
           </div>
         </Card>
       ))}
+      {reviews.sources.length > 0 && (
+        <Paginator
+          pageIndexKey="ratingPageIndex"
+          pageSizeKey="ratingPageSize"
+          pageSize={5}
+          pageIndex={1}
+          totalActualItem={reviews.totalActualItem}
+          totalPage={Math.floor(reviews.totalPage)}
+          className="mt-6"
+        />
+      )}
     </div>
   )
 }

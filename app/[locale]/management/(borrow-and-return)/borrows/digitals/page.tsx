@@ -8,7 +8,7 @@ import { Eye, MoreHorizontal } from "lucide-react"
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
-import { formatFileSize, formatPrice } from "@/lib/utils"
+import { formatFileSize, formatPrice, getFullName } from "@/lib/utils"
 import { searchBorrowDigitalsManagementSchema } from "@/lib/validations/borrow-digitals-management/search-borrow-digitals-management"
 import BorrowDigitalStatusBadge from "@/components/ui/borrow-digital-status-badge"
 import { Button } from "@/components/ui/button"
@@ -152,11 +152,14 @@ async function BorrowDigitalsManagementPage({ searchParams }: Props) {
                     <TableCell className="text-nowrap">
                       <Link
                         target="_blank"
-                        href={`/management/library-cards/${digital?.librarycard?.libraryCardId}`}
+                        href={`/management/library-card-holders/${digital?.userId}`}
                         className="group flex items-center gap-2"
                       >
                         <p className="group-hover:underline">
-                          {digital.librarycard?.fullName}
+                          {getFullName(
+                            digital.user.firstName,
+                            digital.user.lastName
+                          )}
                         </p>
                       </Link>
                     </TableCell>
