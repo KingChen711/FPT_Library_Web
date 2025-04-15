@@ -463,6 +463,7 @@ export type BookResource = {
   updatedBy: string | null
   defaultBorrowDurationDays: number | null
   borrowPrice: number | null
+  s3OriginalName: string | null
 }
 
 export type LibraryItemInventory = {

@@ -82,12 +82,9 @@ const ProfileForm = ({ currentUser }: ProfileFormProps) => {
   }
 
   return (
-    <div className="container mt-8 flex flex-col gap-4">
+    <div className="mt-8 flex flex-col gap-4">
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="container space-y-4 px-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 px-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <Label>Email</Label>

@@ -1,4 +1,9 @@
 {
+  "NotFoundPage": {
+    "Not found": "Không tìm thấy",
+    "Back to Home page": "Về Trang chủ",
+    "Not found description": "Rất tiếc, chúng tôi không thể tìm thấy trang bạn đang tìm kiếm. Có thể trang đã bị di chuyển hoặc không tồn tại."
+  },
   "Dashboard": {
     "Create supplement request": "Tạo yêu cầu bổ sung",
     "Select": "Chọn",

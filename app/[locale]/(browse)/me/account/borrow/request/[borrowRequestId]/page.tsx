@@ -70,7 +70,7 @@ const BorrowRequestDetail = ({ params }: Props) => {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="mx-auto">
       <BorrowRequestTransactionDialog
         borrowRequestId={+params.borrowRequestId}
         open={openTransaction}

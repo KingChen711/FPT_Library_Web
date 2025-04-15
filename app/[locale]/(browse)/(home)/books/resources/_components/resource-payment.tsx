@@ -19,9 +19,10 @@ import {
   type SocketVerifyPaymentStatus,
 } from "@/lib/signalR/verify-payment-status"
 import { ETransactionStatus } from "@/lib/types/enums"
-import { type BookResource, type PaymentData } from "@/lib/types/models"
+import { type PaymentData } from "@/lib/types/models"
 import { cn, formatPrice } from "@/lib/utils"
 import { createDigitalBorrowTransaction } from "@/actions/library-item/create-digital-borrow-transaction"
+import { type ResourcePreview } from "@/hooks/library-items/use-resource-detail"
 import useGetPaymentMethods from "@/hooks/payment-methods/use-get-payment-method"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -52,7 +53,7 @@ import {
 type Props = {
   open: boolean
   setOpen: (value: boolean) => void
-  selectedResource: BookResource
+  selectedResource: ResourcePreview
   libraryItemId: number
 }
 

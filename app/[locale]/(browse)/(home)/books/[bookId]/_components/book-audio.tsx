@@ -2,10 +2,13 @@
 
 import { useEffect, useRef, useState } from "react"
 import Image from "next/image"
+import { useRouter } from "next/navigation"
+import { useAuth } from "@/contexts/auth-provider"
 import {
   ArrowLeftToLine,
   ArrowRightToLine,
   Heart,
+  Loader2,
   Pause,
   Play,
   RotateCcw,
@@ -16,6 +19,7 @@ import {
 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { http } from "@/lib/http"
 import { formatTime } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import {
@@ -36,10 +40,12 @@ import {
 import { dummyBooks } from "../../../_components/dummy-books"
 
 type Props = {
-  bookId: string
+  bookId?: number
+  isPreview: boolean
+  resourceId: number
 }
 
-const BookAudio = ({ bookId }: Props) => {
+const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
   const t = useTranslations("BookPage")
 
   const [isPlaying, setIsPlaying] = useState(false)
@@ -49,7 +55,12 @@ const BookAudio = ({ bookId }: Props) => {
   const [volume, setVolume] = useState(1)
   const [isMuted, setIsMuted] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
-  const book = dummyBooks.find((book) => book.id.toString() === bookId)
+  const book = dummyBooks.find((book) => book.id === bookId)
+  const { isLoadingAuth, accessToken } = useAuth()
+  const [audioLink, setAudioLink] = useState<string | null>(null)
+  const [loadingAudio, setLoadingAudio] = useState(true)
+  const router = useRouter()
+  const tGeneralManagement = useTranslations("GeneralManagement")
 
   const handlePlayPause = () => {
     if (audioRef.current) {
@@ -111,10 +122,79 @@ const BookAudio = ({ bookId }: Props) => {
   }
 
   useEffect(() => {
+    console.log("fetchAudio")
+
+    if (isLoadingAuth) return
+    async function fetchAudio() {
+      try {
+        const { data } = isPreview
+          ? await http.get<Blob>(
+              `/api/library-item/resource/${resourceId}/audio/preview`,
+              {
+                responseType: "blob",
+              }
+            )
+          : await http.get<string>(
+              `/api/library-items/resource/${resourceId}/audio`,
+              {
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                },
+              }
+            )
+
+        let blobUrl: string
+        if (data instanceof Blob && data.size === 0) {
+          throw Error("")
+        }
+
+        console.log({ data })
+
+        if (typeof data === "string") {
+          setAudioLink(data)
+        } else if (data instanceof Blob) {
+          blobUrl = URL.createObjectURL(data)
+          setAudioLink(blobUrl)
+        }
+        setLoadingAudio(false)
+
+        return () => URL.revokeObjectURL(blobUrl)
+      } catch {
+        router.push("/not-found")
+        return
+      }
+    }
+
+    fetchAudio()
+  }, [
+    audioLink,
+    isLoadingAuth,
+    accessToken,
+    resourceId,
+    isPreview,
+    tGeneralManagement,
+    router,
+  ])
+
+  useEffect(() => {
+    console.log("volume")
     if (audioRef.current) {
       audioRef.current.volume = volume
     }
   }, [volume])
+
+  if (isLoadingAuth || loadingAudio) {
+    return (
+      <div className="mt-12 flex w-screen max-w-full justify-center">
+        <Loader2 className="size-12 animate-spin" />
+      </div>
+    )
+  }
+
+  if (!audioLink) {
+    router.push("/not-found")
+    return
+  }
 
   return (
     <div className="flex items-center gap-8 space-y-2 bg-zinc p-4">
@@ -279,38 +359,29 @@ const BookAudio = ({ bookId }: Props) => {
               </TooltipContent>
             </Tooltip>
 
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Select
-                  onValueChange={handleSpeedChange}
-                  value={playbackRate.toString()}
-                >
-                  <SelectTrigger className="w-[80px] text-primary-foreground">
-                    <SelectValue placeholder="1x" />
-                  </SelectTrigger>
-                  <SelectContent className="w-[80px]" align="center" side="top">
-                    <SelectItem value="0.5">0.5x</SelectItem>
-                    <SelectItem value="0.75">0.75x</SelectItem>
-                    <SelectItem value="1">1x</SelectItem>
-                    <SelectItem value="1.25">1.25x</SelectItem>
-                    <SelectItem value="1.5">1.5x</SelectItem>
-                    <SelectItem value="2">2x</SelectItem>
-                  </SelectContent>
-                </Select>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{t("playbackSpeed")}</p>
-              </TooltipContent>
-            </Tooltip>
+            <Select
+              onValueChange={handleSpeedChange}
+              value={playbackRate.toString()}
+            >
+              <SelectTrigger className="w-[80px] text-primary-foreground">
+                <SelectValue placeholder="1x" />
+              </SelectTrigger>
+              <SelectContent className="w-[80px]" align="center" side="top">
+                <SelectItem value="0.5">0.5x</SelectItem>
+                <SelectItem value="0.75">0.75x</SelectItem>
+                <SelectItem value="1">1x</SelectItem>
+                <SelectItem value="1.25">1.25x</SelectItem>
+                <SelectItem value="1.5">1.5x</SelectItem>
+                <SelectItem value="2">2x</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </section>
       </TooltipProvider>
 
       <audio
         ref={audioRef}
-        src={
-          "https://ia803008.us.archive.org/3/items/a_day_with_great_poets_1308_librivox/a_day_with_great_poets_01_byron_128kb.mp3"
-        }
+        src={audioLink}
         onTimeUpdate={handleTimeUpdate}
         onLoadedMetadata={handleLoadedMetadata}
       />

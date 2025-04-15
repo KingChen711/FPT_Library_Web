@@ -99,7 +99,7 @@ const BorrowDigitalDetail = ({ params }: Props) => {
   )
 
   return (
-    <div className="container mx-auto py-6">
+    <div className="mx-auto">
       <div className="mb-6 flex items-center gap-2">
         <Button variant="outline" size="icon" asChild>
           <Link href="/me/account/borrow">
