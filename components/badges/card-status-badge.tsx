@@ -36,7 +36,7 @@ function CardStatusBadge({ status }: Props) {
   return (
     <Badge
       variant={getTypeColor(status)}
-      className="flex w-[120px] justify-center"
+      className="flex w-[120px] shrink-0 justify-center"
     >
       {t(status.toString())}
     </Badge>

@@ -30,7 +30,7 @@ function PatronStatusBadge({ status }: Props) {
   return (
     <Badge
       variant={getTypeColor(status)}
-      className="flex w-[84px] justify-center"
+      className="flex w-[84px] shrink-0 justify-center"
     >
       {t(status.toString())}
     </Badge>

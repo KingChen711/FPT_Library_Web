@@ -4,7 +4,7 @@ import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { EResourceBookType } from "@/lib/types/enums"
-import useResourceDetail from "@/hooks/library-items/use-resource-detail"
+import useResourcePublicDetail from "@/hooks/library-items/use-resource-detail"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
@@ -24,7 +24,7 @@ const AvailableBorrowResource = ({
 }: Props) => {
   const t = useTranslations("BookPage")
 
-  const { data: resource, isLoading } = useResourceDetail(resourceId)
+  const { data: resource, isLoading } = useResourcePublicDetail(resourceId)
 
   if (isLoading) {
     return <Loader2 className="size-6 animate-spin" />

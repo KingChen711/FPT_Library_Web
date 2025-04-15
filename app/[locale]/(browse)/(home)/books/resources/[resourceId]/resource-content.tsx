@@ -43,7 +43,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { http } from "@/lib/http"
 import { EResourceBookType } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
-import useResourceDetail from "@/hooks/library-items/use-resource-detail"
+import useResourcePublicDetail from "@/hooks/library-items/use-resource-detail"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 
@@ -84,7 +84,7 @@ export default function ResourceContent({
   const [openPayment, setOpenPayment] = useState<boolean>(false)
   const [openBorrowDigital, setOpenBorrowDigital] = useState<boolean>(false)
   const { data: resource, isLoading: isLoadingResource } =
-    useResourceDetail(resourceId)
+    useResourcePublicDetail(resourceId)
   const { borrowedResources } = useLibraryStorage()
 
   const isAdded = borrowedResources.has(resourceId)
@@ -279,7 +279,6 @@ export default function ResourceContent({
           setOpen={setOpenPayment}
           libraryItemId={bookId}
           selectedResource={resource}
-          resourceId={resourceId}
         />
       )}
       <div

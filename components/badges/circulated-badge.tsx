@@ -23,7 +23,7 @@ function CirculatedBadge({ circulated }: Props) {
   return (
     <Badge
       variant={getTypeColor(circulated)}
-      className="flex w-28 justify-center"
+      className="flex w-28 shrink-0 justify-center"
     >
       {t(circulated ? "Circulated" : "UnCirculated")}
     </Badge>

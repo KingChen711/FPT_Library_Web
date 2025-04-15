@@ -34,7 +34,7 @@ function TransactionTypeBadge({ type }: Props) {
   return (
     <Badge
       variant={getTypeColor(type)}
-      className="flex w-[120px] justify-center"
+      className="flex w-[120px] shrink-0 justify-center"
     >
       {t(type.toString())}
     </Badge>

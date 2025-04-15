@@ -2234,7 +2234,8 @@
     "BorrowDigitalStatus": {
       "0": "Đang mượn",
       "1": "Hết hạn",
-      "2": "Đã hủy"
+      "2": "Đã hủy",
+      "3": "Đang chuẩn bị"
     },
     "Circulated": {
       "Circulated": "Đã lưu hành",
