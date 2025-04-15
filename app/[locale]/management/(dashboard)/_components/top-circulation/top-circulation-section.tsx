@@ -4,7 +4,7 @@ import React, { useState } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Plus } from "lucide-react"
+import { Filter, Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import {
   CartesianGrid,
@@ -17,11 +17,18 @@ import {
 } from "recharts"
 
 import { parseSearchParamsDateRange } from "@/lib/filters"
-import { EDashboardPeriodLabel } from "@/lib/types/enums"
+import { EDashboardPeriodLabel, ESearchType } from "@/lib/types/enums"
+import { type TSearchTopCirculation } from "@/lib/validations/books/search-top-circulation"
 import useDashboardTopCirculation from "@/hooks/dash-board/use-dashboard-top-circulation"
 import { Button } from "@/components/ui/button"
 import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
+import SearchForm from "@/components/ui/search-form"
 import {
   Table,
   TableBody,
@@ -36,37 +43,39 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip"
+import TopCirculationFilterTabs from "@/components/top-circulation-filter-tabs"
 
 import AvailableVsNeedBarChart from "./available-vs-need-chart"
 
+const initSearchParams: TSearchTopCirculation = {
+  pageIndex: 1,
+  pageSize: "5",
+  search: "",
+  f: [],
+  o: [],
+  v: [],
+}
+
 function TopCirculationSection() {
   const t = useTranslations("Dashboard")
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState<"5" | "10" | "30" | "50" | "100">(
-    "5"
-  )
 
-  const searchParams = useSearchParams()
+  const [searchParams, setSearchParams] =
+    useState<TSearchTopCirculation>(initSearchParams)
+
+  const browserSearchParams = useSearchParams()
 
   const period =
-    searchParams.get("period") || EDashboardPeriodLabel.DAILY.toString()
-  const dateRange = parseSearchParamsDateRange(searchParams.getAll("dateRange"))
+    browserSearchParams.get("period") || EDashboardPeriodLabel.DAILY.toString()
+  const dateRange = parseSearchParamsDateRange(
+    browserSearchParams.getAll("dateRange")
+  )
 
   const { data, isLoading } = useDashboardTopCirculation({
+    ...searchParams,
     period: +period,
     startDate: dateRange[0],
     endDate: dateRange[1],
-    pageIndex,
-    pageSize,
   })
-
-  const handlePaginate = (selectedPage: number) => {
-    setPageIndex(selectedPage)
-  }
-
-  const handleChangePageSize = (size: "5" | "10" | "30" | "50" | "100") => {
-    setPageSize(size)
-  }
 
   if (isLoading || !data) return
 
@@ -88,6 +97,35 @@ function TopCirculationSection() {
             {t("Create supplement request")}
           </Link>
         </Button>
+      </div>
+      <div className="flex flex-row items-center">
+        <SearchForm
+          className="h-10 rounded-r-none border-r-0"
+          search={searchParams.search}
+          acceptEmptyTerm
+          onSearch={(val) => {
+            setSearchParams((prev) => ({
+              ...prev,
+              search: val,
+              searchType: ESearchType.QUICK_SEARCH.toString(),
+              pageIndex: 1,
+            }))
+          }}
+        />
+        <Popover>
+          <PopoverTrigger asChild>
+            <Button variant="outline" className="relative h-10 rounded-l-none">
+              <Filter className="size-4 shrink-0" />
+              {t("Filters")}
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent side="bottom" className="w-[650px]">
+            <TopCirculationFilterTabs
+              searchParams={searchParams}
+              setSearchParams={setSearchParams}
+            />
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="mt-4 grid w-full">
         <div className="overflow-x-auto rounded-md border">
@@ -293,13 +331,23 @@ function TopCirculationSection() {
         </div>
 
         <Paginator
-          pageSize={+pageSize}
-          pageIndex={pageIndex}
+          pageSize={+data.topBorrowItems.pageSize}
+          pageIndex={+data.topBorrowItems.pageIndex}
           totalPage={data.topBorrowItems.totalPage}
           totalActualItem={data.topBorrowItems.totalActualItem}
           className="mt-6"
-          onPaginate={handlePaginate}
-          onChangePageSize={handleChangePageSize}
+          onPaginate={(page) =>
+            setSearchParams((prev) => ({
+              ...prev,
+              pageIndex: page,
+            }))
+          }
+          onChangePageSize={(size) =>
+            setSearchParams((prev) => ({
+              ...prev,
+              pageSize: size,
+            }))
+          }
         />
       </div>
     </div>

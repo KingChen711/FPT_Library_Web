@@ -76,6 +76,10 @@ function SelectTopCirculationDialog({
     period: EDashboardPeriodLabel.DAILY,
     startDate: null,
     endDate: null,
+    f: [],
+    o: [],
+    v: [],
+    search: "",
   })
 
   const handlePaginate = (selectedPage: number) => {

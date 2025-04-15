@@ -22,7 +22,7 @@ import { ETransactionStatus } from "@/lib/types/enums"
 import { type PaymentData } from "@/lib/types/models"
 import { cn, formatPrice } from "@/lib/utils"
 import { createDigitalBorrowTransaction } from "@/actions/library-item/create-digital-borrow-transaction"
-import { type ResourcePreview } from "@/hooks/library-items/use-resource-detail"
+import { type ResourcePublic } from "@/hooks/library-items/use-resource-detail"
 import useGetPaymentMethods from "@/hooks/payment-methods/use-get-payment-method"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -53,8 +53,9 @@ import {
 type Props = {
   open: boolean
   setOpen: (value: boolean) => void
-  selectedResource: ResourcePreview
+  selectedResource: ResourcePublic
   libraryItemId: number
+  resourceId: number
 }
 
 const formSchema = z.object({
@@ -70,6 +71,7 @@ const BorrowDigitalConfirm = ({
   setOpen,
   selectedResource,
   libraryItemId,
+  resourceId,
 }: Props) => {
   const t = useTranslations("BookPage")
   const locale = useLocale()
@@ -92,7 +94,7 @@ const BorrowDigitalConfirm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       libraryCardPackageId: null,
-      resourceId: selectedResource.resourceId,
+      resourceId: resourceId,
       description: null,
       transactionType: 1,
       paymentMethodId: 1,
@@ -169,12 +171,20 @@ const BorrowDigitalConfirm = ({
     searchParams,
   ])
 
+  useEffect(() => {
+    console.log(open)
+  }, [open])
+
   if (isLoadingAuth || isLoadingPaymentMethods) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="size-8 animate-spin" />
       </div>
     )
+  }
+
+  if (!user && open) {
+    router.push("/login")
   }
 
   if (!user || !paymentMethods) {

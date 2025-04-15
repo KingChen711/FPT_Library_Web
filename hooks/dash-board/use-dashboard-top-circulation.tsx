@@ -6,6 +6,7 @@ import { http } from "@/lib/http"
 import { type EDashboardPeriodLabel } from "@/lib/types/enums"
 import { type BookEdition, type Category } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
+import { type TSearchTopCirculation } from "@/lib/validations/books/search-top-circulation"
 
 export type TDashboardTopCirculation = {
   availableVsNeedChart: {
@@ -37,16 +38,30 @@ export type TopCirculationSearchParams = {
   period: EDashboardPeriodLabel
   startDate: Date | null
   endDate: Date | null
-  pageSize: string
-  pageIndex: number
 }
 
-function useDashboardTopCirculation(searchParams: TopCirculationSearchParams) {
+const defaultRes: TDashboardTopCirculation = {
+  availableVsNeedChart: {
+    availableUnits: 0,
+    needUnits: 0,
+  },
+  topBorrowItems: {
+    pageIndex: 0,
+    pageSize: 0,
+    sources: [],
+    totalActualItem: 0,
+    totalPage: 0,
+  },
+}
+
+function useDashboardTopCirculation(
+  searchParams: TopCirculationSearchParams & TSearchTopCirculation
+) {
   const { accessToken } = useAuth()
   return useQuery({
     queryKey: ["dashboard/top-circulation", searchParams, accessToken],
-    queryFn: async (): Promise<TDashboardTopCirculation | null> => {
-      if (!accessToken) return null
+    queryFn: async (): Promise<TDashboardTopCirculation> => {
+      if (!accessToken) return defaultRes
       try {
         const { data } = await http.get<TDashboardTopCirculation>(
           `/api/management/dashboard/top-circulation-items`,
@@ -66,9 +81,9 @@ function useDashboardTopCirculation(searchParams: TopCirculationSearchParams) {
           }
         )
 
-        return data || null
+        return data || defaultRes
       } catch {
-        return null
+        return defaultRes
       }
     },
     placeholderData: keepPreviousData,
