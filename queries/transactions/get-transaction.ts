@@ -4,6 +4,8 @@ import "server-only"
 
 import {
   type BookResource,
+  type Fine,
+  type FineBorrow,
   type Package,
   type Transaction,
   type User,
@@ -15,6 +17,7 @@ export type TTransactionDetail = Transaction & {
   user: User
   libraryResource: BookResource | null
   libraryCardPackage: Package | null
+  fine: (FineBorrow & { finePolicy: Fine }) | null
 }
 
 const getTransaction = async (

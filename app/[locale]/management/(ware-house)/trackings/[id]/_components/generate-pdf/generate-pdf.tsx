@@ -5,6 +5,8 @@ import { type TTrackingDetailItems } from "@/queries/trackings/get-tracking-deta
 import { jsPDF } from "jspdf"
 import autoTable from "jspdf-autotable"
 
+import { type TAIRecommends } from "@/hooks/trackings/use-ai-recommends"
+
 import { vfs } from "./vietnamese-fonts"
 
 // Props của component
@@ -13,6 +15,8 @@ interface InventoryReportPDFProps {
   trackingDetails: TTrackingDetailItems["result"]["sources"]
   statistics: TTrackingDetailItems["statistics"]
   statisticSummary: TTrackingDetailItems["statisticSummary"]
+  supplementRequest: boolean
+  recommendItems: TAIRecommends
 }
 
 const formatCurrency = (value: number | null): string => {
@@ -35,7 +39,9 @@ export const generatePDF = ({
   tracking,
   trackingDetails,
   statisticSummary,
-}: InventoryReportPDFProps) => {
+  supplementRequest,
+  recommendItems,
+}: InventoryReportPDFProps): { pdf: Blob; url: string } => {
   // 1. Khởi tạo đối tượng jsPDF
   const doc = new jsPDF({
     unit: "pt", // Dùng pt để tính toán vị trí dễ dàng hơn
@@ -70,7 +76,12 @@ export const generatePDF = ({
   // 4. Tiêu đề chính
   doc.setFontSize(14)
   doc.setFont("Roboto", "bold")
-  doc.text("PHIẾU NHẬP KHO", 300, 90, { align: "center" })
+  doc.text(
+    supplementRequest ? "PHIẾU YÊU CẦU BÔ SUNG" : "PHIẾU NHẬP KHO",
+    300,
+    90,
+    { align: "center" }
+  )
 
   // 5. Ngày tháng
   doc.setFontSize(11)
@@ -92,7 +103,13 @@ export const generatePDF = ({
 
   doc.setFontSize(12)
   doc.setFont("Roboto", "bold")
-  doc.text("Danh sách nhập kho chi tiết", 225, 185)
+  doc.text(
+    supplementRequest
+      ? "Danh sách yêu cầu bô sung chi tiết"
+      : "Danh sách nhập kho chi tiết",
+    supplementRequest ? 205 : 225,
+    185
+  )
   doc.setFont("Roboto", "normal")
 
   const itemRowsByCategory: Record<string, (string | number)[][]> = {}
@@ -225,6 +242,52 @@ export const generatePDF = ({
     headStyles: { fillColor: [22, 160, 133] },
   })
 
+  if (supplementRequest) {
+    finalY = (doc as any).lastAutoTable.finalY + 30
+
+    doc.setFontSize(14)
+    doc.setFont("Roboto", "bold")
+    doc.text("Đề xuất bởi AI", 40, finalY)
+    doc.setFont("Roboto", "normal")
+
+    const recommendRows = recommendItems.sources.map((stat, idx) => {
+      return [
+        idx + 1,
+        stat.title,
+        stat.author,
+        stat.publisher,
+        stat.publishedDate,
+        stat.isbn,
+        stat.pageCount,
+        stat.language,
+        stat.categories,
+        stat.supplementRequestReason,
+      ]
+    })
+
+    autoTable(doc, {
+      head: [
+        [
+          "STT",
+          "Tiêu đề",
+          "Tác giả",
+          "Nhà xuất bản",
+          "Năm xuất bản",
+          "ISBN",
+          "Số trang",
+          "Ngôn ngữ",
+          "Thể loại",
+          "Lý do bổ sung",
+        ],
+      ],
+      body: recommendRows,
+      startY: finalY + 10,
+      margin: { left: 40, right: 40 },
+      styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
+      headStyles: { fillColor: [22, 160, 133] },
+    })
+  }
+
   // 9. Ghi chú
   finalY = (doc as any).lastAutoTable.finalY + 25
   doc.setFontSize(11)
@@ -244,7 +307,8 @@ export const generatePDF = ({
   // doc.text("Thủ trưởng đơn vị", 430, finalY, { align: "center" })
 
   // 11. Xuất PDF và mở tab mới
-  const blobPDF = doc.output("blob")
-  const blobURL = URL.createObjectURL(blobPDF)
-  window.open(blobURL)
+  const pdf = doc.output("blob")
+  const url = URL.createObjectURL(pdf)
+
+  return { pdf, url }
 }

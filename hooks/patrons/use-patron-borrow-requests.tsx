@@ -43,6 +43,7 @@ function usePatronBorrowRequests(
               Authorization: `Bearer ${accessToken}`,
             },
             searchParams: {
+              ...searchParams,
               requestDateRange:
                 JSON.stringify(searchParams.requestDateRange) ===
                 JSON.stringify([null, null])

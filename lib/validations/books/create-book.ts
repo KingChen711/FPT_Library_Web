@@ -22,6 +22,7 @@ export const bookResourceSchema = z
     borrowPrice: z.coerce.number().gt(0, "gt0"),
     //client only, check require on validate only, not on initial, so we use optional
     file: z.any().refine((data) => data, { message: "required" }),
+    s3OriginalName: z.string().optional(),
   })
   .transform((data) => {
     data.fileFormat =

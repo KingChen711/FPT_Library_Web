@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/dialog"
 import NoData from "@/components/ui/no-data"
 import ResourceBookTypeBadge from "@/components/badges/book-resource-type-badge"
+import FineTypeBadge from "@/components/badges/fine-type-badge"
 import GenderBadge from "@/components/badges/gender-badge"
 import TransactionMethodBadge from "@/components/badges/transaction-method-badge"
 import TransactionStatusBadge from "@/components/badges/transaction-status-badge"
@@ -407,6 +408,56 @@ async function TransactionDetailPage({ params }: Props) {
                 <div className="flex items-center gap-2">
                   {transaction.libraryResource.borrowPrice ? (
                     formatPrice(transaction.libraryResource.borrowPrice)
+                  ) : (
+                    <NoData />
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {transaction.fine && (
+          <div className="flex flex-col gap-4 rounded-md border py-5">
+            <div className="flex items-center justify-between gap-4 px-5">
+              <h3 className="text-lg font-semibold">{t("Fine")}</h3>
+            </div>
+            <div className="grid grid-cols-12 gap-y-6 text-sm">
+              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                <h4 className="font-bold">{t("Name")}</h4>
+                <div className="flex items-center gap-2">
+                  {transaction.fine.finePolicy.finePolicyTitle || <NoData />}
+                </div>
+              </div>
+
+              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                <h4 className="font-bold">{t("Description")}</h4>
+                <div className="flex gap-2">
+                  {transaction.fine.finePolicy.description || <NoData />}
+                </div>
+              </div>
+
+              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                <h4 className="font-bold">{t("Note")}</h4>
+                <div className="flex gap-2">
+                  {transaction.fine.fineNote || <NoData />}
+                </div>
+              </div>
+
+              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                <h4 className="font-bold">{t("Type")}</h4>
+                <div className="flex gap-2">
+                  <FineTypeBadge
+                    type={transaction.fine.finePolicy.conditionType}
+                  />
+                </div>
+              </div>
+
+              <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                <h4 className="font-bold">{t("Price")}</h4>
+                <div className="flex items-center gap-2">
+                  {transaction.fine.fineAmount ? (
+                    formatPrice(transaction.fine.fineAmount)
                   ) : (
                     <NoData />
                   )}

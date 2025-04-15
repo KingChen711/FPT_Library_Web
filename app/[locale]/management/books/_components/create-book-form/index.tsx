@@ -16,6 +16,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { EResourceBookType } from "@/lib/types/enums"
 import { type Author, type Category } from "@/lib/types/models"
 import {
   bookEditionSchema,
@@ -97,6 +98,8 @@ function CreateBookForm({ trackingDetail }: Props) {
 
       values.libraryItemInstances = []
 
+      console.log(values)
+
       const res = await createBook(values)
       if (res.isSuccess) {
         toast({
@@ -122,7 +125,14 @@ function CreateBookForm({ trackingDetail }: Props) {
 
       //*Just do this when submit fail
       values.libraryResources.forEach((lr, index) => {
-        form.setValue(`libraryResources.${index}.resourceUrl`, lr.resourceUrl)
+        if (lr.resourceType === EResourceBookType.AUDIO_BOOK) {
+          form.setValue(
+            `libraryResources.${index}.s3OriginalName`,
+            lr.s3OriginalName
+          )
+        } else {
+          form.setValue(`libraryResources.${index}.resourceUrl`, lr.resourceUrl)
+        }
         form.setValue(
           `libraryResources.${index}.providerPublicId`,
           lr.providerPublicId
@@ -184,6 +194,8 @@ function CreateBookForm({ trackingDetail }: Props) {
           setCurrentTab("Resources")
         }
       }
+
+      console.log(res)
 
       handleServerActionError(res, locale, form)
     })

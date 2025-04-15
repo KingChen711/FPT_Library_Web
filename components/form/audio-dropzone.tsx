@@ -16,9 +16,14 @@ import { Label } from "../ui/label"
 type Props = {
   value?: PreviewedFile
   onChange: (value: PreviewedFile | undefined) => void
+  noLimitSize?: boolean
 }
 
-export default function AudioDropzone({ value, onChange }: Props) {
+export default function AudioDropzone({
+  value,
+  onChange,
+  noLimitSize = false,
+}: Props) {
   const locale = useLocale()
   const [isDragActive, setIsDragActive] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
@@ -31,7 +36,7 @@ export default function AudioDropzone({ value, onChange }: Props) {
 
       if (!audioFile || !audioFile.type.startsWith("audio/")) {
         error = locale === "vi" ? "Tệp không hợp lệ" : "Invalid file"
-      } else if (audioFile.size >= 10 * 1024 * 1024) {
+      } else if (!noLimitSize && audioFile.size >= 10 * 1024 * 1024) {
         error = locale === "vi" ? "Ảnh quá lớn" : "Image is too large"
       }
 
@@ -49,7 +54,7 @@ export default function AudioDropzone({ value, onChange }: Props) {
         )
       }
     },
-    [onChange, locale]
+    [onChange, locale, noLimitSize]
   )
 
   const handleDragEnter = useCallback((e: React.DragEvent<HTMLDivElement>) => {

@@ -7,11 +7,7 @@ import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
-import {
-  EBookCopyConditionStatus,
-  // EStockTransactionType,
-  type ETrackingType,
-} from "@/lib/types/enums"
+import { EBookCopyConditionStatus } from "@/lib/types/enums"
 import { type Category, type TrackingDetail } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import {
@@ -65,7 +61,6 @@ type Props = {
   open: boolean
   setOpen: (value: boolean) => void
   trackingDetail: TrackingDetail
-  trackingType: ETrackingType
 }
 
 function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {

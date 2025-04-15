@@ -368,6 +368,29 @@ export type Category = {
   totalBorrowDays: number | null
 }
 
+export type SupplementRequestDetail = {
+  supplementRequestDetailId: number
+  title: string
+  author: string | null
+  publisher: string | null
+  publishedDate: string | null
+  description: string | null
+  isbn: string | null
+  pageCount: number | null
+  estimatedPrice: number | null
+  dimensions: number | null
+  categories: string | null
+  averageRating: number | null
+  ratingsCount: number | null
+  coverImageLink: string | null
+  language: string | null
+  previewLink: string | null
+  infoLink: string | null
+  supplementRequestReason: string | null
+  relatedLibraryItemId: number
+  trackingId: number
+}
+
 export type BorrowDigital = {
   digitalBorrowId: number
   resourceId: number

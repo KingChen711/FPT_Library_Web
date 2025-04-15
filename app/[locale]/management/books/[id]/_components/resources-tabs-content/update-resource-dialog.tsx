@@ -91,7 +91,7 @@ function UpdateResourceDialog({ open, setOpen, resource }: Props) {
           if (data && data !== NOT_CLOUDINARY_URL) {
             values.resourceUrl = data.secureUrl
             values.providerPublicId = data.publicId
-            values.resourceSize = Math.round(values.fileAudioBook.size)
+            values.resourceSize = Math.round(values.fileAudioBook.size / 1000)
           }
         } else {
           const data = await updateBookImage({
@@ -101,10 +101,12 @@ function UpdateResourceDialog({ open, setOpen, resource }: Props) {
           if (data && data !== NOT_CLOUDINARY_URL) {
             values.resourceUrl = data.secureUrl
             values.providerPublicId = data.publicId
-            values.resourceSize = Math.round(values.fileEbook.size)
+            values.resourceSize = Math.round(values.fileEbook.size / 1000)
           }
         }
       }
+
+      console.log(values)
 
       values.fileEbook = undefined
       values.fileAudioBook = undefined

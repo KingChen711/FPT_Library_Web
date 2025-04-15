@@ -1,18 +1,20 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 "use client"
 
-import { useState } from "react"
+import React, { useState } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { format } from "date-fns"
 import { Filter } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
 
+import { parseQueryDateRange, parseSearchParamsDateRange } from "@/lib/filters"
+import { EGender } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
 import {
-  usersFilterSchema,
-  type TUsersFilterSchema,
-} from "@/lib/validations/user/user-filter"
+  filterUserSchema,
+  type TFilterUserSchema,
+} from "@/lib/validations/user/search-user"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -32,60 +34,62 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+import DateRangePickerFilter from "@/components/form/date-range-picker-filter"
+import SelectEnumFilter from "@/components/form/select-enum-filter"
 
-import FilterDateUser from "./filter-date-user"
-
-function FilterUsersDialog() {
-  const t = useTranslations("GeneralManagement")
+function FiltersUsersDialog() {
   const router = useRouter()
-
   const [open, setOpen] = useState(false)
+  const t = useTranslations("GeneralManagement")
+  const tGender = useTranslations("Badges.Gender")
+
   const searchParams = useSearchParams()
 
-  const form = useForm<TUsersFilterSchema>({
-    resolver: zodResolver(usersFilterSchema),
+  const form = useForm<TFilterUserSchema>({
+    resolver: zodResolver(filterUserSchema),
     defaultValues: {
-      firstName: searchParams.get("firstName") || "",
-      lastName: searchParams.get("lastName") || "",
-      gender: "Male",
-      dobRange: ["", ""],
-      modifiedDateRange: ["", ""],
-      createDateRange: ["", ""],
+      dobRange: parseSearchParamsDateRange(searchParams.getAll("dobRange")),
+      createDateRange: parseSearchParamsDateRange(
+        searchParams.getAll("createDateRange")
+      ),
+      modifiedDateRange: parseSearchParamsDateRange(
+        searchParams.getAll("modifiedDateRange")
+      ),
+
+      gender: searchParams.get("gender") || undefined,
+      firstName: searchParams.get("fields.firstName") || undefined,
+      lastName: searchParams.get("lastName") || undefined,
     },
   })
 
   const resetFilters = () => {
-    form.setValue("firstName", "")
-    form.setValue("lastName", "")
-    form.setValue("gender", "Male")
-    form.setValue("dobRange", ["", ""])
-    form.setValue("modifiedDateRange", ["", ""])
-    form.setValue("createDateRange", ["", ""])
+    Object.keys(form.getValues()).forEach((key) => {
+      form.setValue(
+        //@ts-ignore
+        key,
+        //@ts-ignore
+        Array.isArray(form.getValues()[key]) ? [null, null] : undefined
+      )
+    })
+    setOpen(false)
+    router.push("/management/users")
   }
 
-  const onSubmit = async (values: TUsersFilterSchema) => {
+  const wGender = form.watch("gender")
+
+  const onSubmit = async (values: TFilterUserSchema) => {
+    setOpen(false)
+
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        gender: values.gender,
-        dobRange: values.dobRange.map((date) =>
-          date ? format(new Date(date), "dd-MM-yyyy") : ""
-        ),
-        modifiedDateRange: values.modifiedDateRange.map((date) =>
-          date ? format(new Date(date), "dd-MM-yyyy") : ""
-        ),
-        createDateRange: values.createDateRange.map((date) =>
-          date ? format(new Date(date), "dd-MM-yyyy") : ""
-        ),
+        gender: values.gender || null,
+        firstName: values.firstName || null,
+        lastName: values.lastName || null,
+
+        dobRange: parseQueryDateRange(values.dobRange),
+        createDateRange: parseQueryDateRange(values.createDateRange),
+        modifiedDateRange: parseQueryDateRange(values.modifiedDateRange),
       },
     })
     setOpen(false)
@@ -95,16 +99,17 @@ function FilterUsersDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button className="h-full rounded-l-none" variant="outline">
+        <Button className="h-10 rounded-l-none" variant="outline">
           <Filter />
-          {t("filter.title")}
+
+          {t("Filters")}
         </Button>
       </DialogTrigger>
 
       <DialogContent className="max-h-[80vh] w-full overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{t("filter.user")}</DialogTitle>
-          <DialogDescription>
+          <DialogTitle>{t("Filters users")}</DialogTitle>
+          <DialogDescription asChild>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}
@@ -116,13 +121,7 @@ function FilterUsersDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("fields.firstName")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder={t("placeholder.firstName")}
-                        />
-                      </FormControl>
-
+                      <Input {...field} />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -134,13 +133,7 @@ function FilterUsersDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("fields.lastName")}</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder={t("placeholder.lastName")}
-                        />
-                      </FormControl>
-
+                      <Input {...field} />
                       <FormMessage />
                     </FormItem>
                   )}
@@ -152,51 +145,74 @@ function FilterUsersDialog() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>{t("fields.gender")}</FormLabel>
-                      <FormControl>
-                        <Select
-                          value={field.value}
-                          onValueChange={field.onChange}
-                        >
-                          <SelectTrigger>
-                            <SelectValue
-                              placeholder={t("placeholder.gender")}
-                            />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="Male">Male</SelectItem>
-                            <SelectItem value="Female">Female</SelectItem>
-                            <SelectItem value="Other">Other</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      </FormControl>
-
+                      <SelectEnumFilter
+                        //*Bug of react hook form, must use form.watch instead field.value to get the expected behavior
+                        value={wGender}
+                        onChange={field.onChange}
+                        enumObj={EGender}
+                        stringEnum
+                        tEnum={tGender}
+                      />
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <FilterDateUser
-                  form={form}
-                  label="fields.dob"
+                <FormField
+                  control={form.control}
                   name="dobRange"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("fields.dobRange")}</FormLabel>
+                      <FormControl>
+                        <DateRangePickerFilter
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
 
-                <FilterDateUser
-                  form={form}
-                  label="fields.createDate"
+                <FormField
+                  control={form.control}
                   name="createDateRange"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("fields.createDateRange")}</FormLabel>
+                      <FormControl>
+                        <DateRangePickerFilter
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
 
-                <FilterDateUser
-                  form={form}
-                  label="fields.updatedDate"
+                <FormField
+                  control={form.control}
                   name="modifiedDateRange"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t("fields.modifiedDateRange")}</FormLabel>
+                      <FormControl>
+                        <DateRangePickerFilter
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
 
                 <div className="flex justify-end gap-x-4">
                   <DialogClose asChild>
                     <Button variant="secondary" className="float-right mt-4">
-                      Cancel
+                      {t("Cancel")}
                     </Button>
                   </DialogClose>
                   <Button
@@ -208,10 +224,10 @@ function FilterUsersDialog() {
                       resetFilters()
                     }}
                   >
-                    Reset
+                    {t("Reset")}
                   </Button>
                   <Button type="submit" className="float-right mt-4">
-                    Apply
+                    {t("Apply")}
                   </Button>
                 </div>
               </form>
@@ -223,4 +239,4 @@ function FilterUsersDialog() {
   )
 }
 
-export default FilterUsersDialog
+export default FiltersUsersDialog

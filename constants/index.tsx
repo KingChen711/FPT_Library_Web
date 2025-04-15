@@ -303,6 +303,7 @@ export const browseRoutes = [
     ],
   },
   {
+    feature: EFeature.LOGGED_IN,
     route: "/recommend",
     label: "Recommend for you",
     Icon: (props: { className?: string }) => {
@@ -317,6 +318,7 @@ export const browseRoutes = [
     },
   },
   {
+    feature: EFeature.LOGGED_IN,
     route: "/me/account/notifications",
     label: "Notifications",
     Icon: (props: { className?: string }) => {

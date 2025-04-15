@@ -274,6 +274,9 @@
     "management page": "Management page"
   },
   "GeneralManagement": {
+    "Filters users": "Filters users",
+    "Filters employees": "Filters employees",
+    "Filters": "Filters",
     "Cancel": "Cancel",
     "Apply": "Apply",
     "Reset": "Reset",
@@ -281,8 +284,8 @@
     "language": "Language",
     "vietnamese": "Vietnamese",
     "english": "English",
-    "employee management": "Employee management",
-    "user management": "User management",
+    "employee management": "Employees",
+    "user management": "Users",
     "role management": "Role management",
     "author management": "Authors",
     "category management": "Category management",
@@ -1859,7 +1862,13 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
-    "Export file": "Export file",
+    "Filters recommends": "Filters recommends",
+    "Recommended by AI": "Recommended by AI",
+    "Continue": "Continue",
+    "Are you sure you want to export warehouse tracking": "Are you sure you want to export warehouse tracking {receipt}?",
+    "Are you sure you want to export supplement request": "Are you sure you want to export supplement request {receipt}?",
+    "Export file": "Export stock in file",
+    "Export file supplement request": "Export supplement request file",
     "Supplement requests Not Found": "Supplement requests Not Found",
     "No supplement requests matching your request were found Please check your information or try searching with different criteria": "No supplement requests matching your request were found. Please check your information or try searching with different criteria",
     "Trackings Not Found": "Trackings Not Found",
@@ -2073,7 +2082,7 @@
       "2": "Damaged",
       "3": "Lost",
       "4": "Outdated",
-      "5": "Transferred",
+      "5": "Pre-Order",
       "6": "Other"
     },
     "BookConditionStatus": {
@@ -2247,6 +2256,8 @@
     "Out of shelf": "Out of shelf"
   },
   "TransactionsManagementPage": {
+    "Fine": "Fine",
+    "Note": "Note",
     "Resource": "Resource",
     "Resource item": "Resource item",
     "Resource type": "Resource type",
@@ -2526,5 +2537,41 @@
     "Locate": "Locate",
     "Cancel": "Cancel",
     "Go to map": "Go to map"
+  },
+  "SystemConfiguration": {
+    "Ads Script": "Ads Script",
+    "App Settings": "App Settings",
+    "Borrow Settings": "Borrow Settings",
+    "Digital Borrow": "Digital Borrow",
+    "Ads Script Settings": "Ads Script Settings",
+    "Configure the advertisement scripts in different languages": "Configure the advertisement scripts in different languages",
+    "English": "English",
+    "Vietnamese": "Vietnamese",
+    "Save Changes": "Save Changes",
+    "Configure general application settings": "Configure general application settings",
+    "Instance Barcode Number Length": "Instance Barcode Number Length",
+    "Library Card Barcode Prefix": "Library Card Barcode Prefix",
+    "Library Contact": "Library Contact",
+    "Library Location": "Library Location",
+    "Library Name": "Library Name",
+    "Page Size": "Page Size",
+    "Refresh Value": "Refresh Value",
+    "Configure settings related to borrowing functionality": "Configure settings related to borrowing functionality",
+    "Allow To Extend In Days": "Allow To Extend In Days",
+    "Borrow Amount Once Time": "Borrow Amount Once Time",
+    "End Suspension In Days": "End Suspension In Days",
+    "Extend PickUp In Days": "Extend PickUp In Days",
+    "Fine Expiration In Days": "Fine Expiration In Days",
+    "Lost Amount Percentage Per Day": "Lost Amount Percentage Per Day",
+    "Max Borrow Extension": "Max Borrow Extension",
+    "Overdue Or Lost Handle In Days": "Overdue Or Lost Handle In Days",
+    "PickUp Expiration In Days": "PickUp Expiration In Days",
+    "Total Borrow Extension In Days": "Total Borrow Extension In Days",
+    "Total Missed PickUp Allow": "Total Missed PickUp Allow",
+    "Digital Borrow Settings": "Digital Borrow Settings",
+    "Configure settings related to digital borrowing functionality": "Configure settings related to digital borrowing functionality",
+    "Min Minutes To Add Ads": "Min Minutes To Add Ads",
+    "Page Per Load": "Page Per Load",
+    "System configuration": "System configuration"
   }
 }

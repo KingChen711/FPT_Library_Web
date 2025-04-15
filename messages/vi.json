@@ -278,6 +278,9 @@
     "management page": "Trang quản lý"
   },
   "GeneralManagement": {
+    "Filters users": "Lọc người dùng",
+    "Filters employees": "Lọc nhân viên",
+    "Filters": "Bộ lọc",
     "Cancel": "Hủy",
     "Apply": "Áp dụng",
     "Reset": "Khôi phục",
@@ -287,8 +290,8 @@
     "language": "Ngôn ngữ",
     "vietnamese": "Tiếng Việt",
     "english": "Tiếng Anh",
-    "employee management": "Quản lí nhân viên",
-    "user management": "Quản lí người dùng",
+    "employee management": "Nhân viên",
+    "user management": "Người dùng",
     "role management": "Quản lí vai trò",
     "author management": "Tác giả",
     "category management": "Quản lí loại",
@@ -809,7 +812,7 @@
     "Delete card": "Xóa thẻ",
     "Allow borrow more description": "Cho phép bạn đọc mượn nhiều hơn số lượng tối đa có thể mượn cùng một lúc",
     "Borrow requests": "Yêu cầu mượn",
-    "Borrow records": "Mượn",
+    "Borrow records": "Lịch sử mượn",
     "Digital borrows": "Mượn điện tử",
     "Reservations": "Đặt trước",
     "Transactions": "Giao dịch",
@@ -1857,7 +1860,13 @@
     "DDC additional info": "Ngoài ra, nhiều thư viện công cộng và đại học cũng cung cấp hướng dẫn và tài liệu về cách sử dụng DDC. Bạn có thể tham khảo trang web của thư viện địa phương hoặc trường đại học gần nhất để biết thêm thông tin."
   },
   "TrackingsManagementPage": {
+    "Filters recommends": "Lọc đề xuất",
+    "Recommended by AI": "Đề xuất bởi AI",
+    "Continue": "Tiếp tục",
+    "Are you sure you want to export warehouse tracking": "Bạn có chắc chắn muốn xuất phiếu nhập kho {receipt} không?",
+    "Are you sure you want to export supplement request": "Bạn có chắc chắn muốn xuất phiếu yêu cầu bổ sung {receipt} không?",
     "Export file": "Xuất phiếu nhập kho",
+    "Export file supplement request": "Xuất phiếu yêu cầu bổ sung",
     "Trackings Not Found": "Không tìm thấy nhập kho",
     "No trackings matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có nhập kho nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Supplement requests Not Found": "Không tìm thấy yêu cầu bổ sung",
@@ -2073,7 +2082,7 @@
       "2": "Hư hỏng",
       "3": "Thất lạc",
       "4": "Lỗi thời",
-      "5": "Trao đổi",
+      "5": "Đặt trước",
       "6": "Khác"
     },
     "BookConditionStatus": {
@@ -2263,6 +2272,8 @@
     "Out of shelf": "Đã hết"
   },
   "TransactionsManagementPage": {
+    "Fine": "Phạt",
+    "Note": "Ghi chú",
     "Resource": "Tài nguyên",
     "Resource item": "Tài nguyên",
     "Resource type": "Loại tài nguyên",
@@ -2551,5 +2562,41 @@
     "Locate": "Định vị",
     "Cancel": "Hủy",
     "Go to map": "Đi đến bản đồ"
+  },
+  "SystemConfiguration": {
+    "Ads Script": "Mã quảng cáo",
+    "App Settings": "Cài đặt ứng dụng",
+    "Borrow Settings": "Cài đặt mượn sách",
+    "Digital Borrow": "Mượn sách số",
+    "Ads Script Settings": "Cài đặt mã quảng cáo",
+    "Configure the advertisement scripts in different languages": "Cấu hình mã quảng cáo theo ngôn ngữ",
+    "English": "Tiếng Anh",
+    "Vietnamese": "Tiếng Việt",
+    "Save Changes": "Lưu thay đổi",
+    "Configure general application settings": "Cấu hình cài đặt chung của ứng dụng",
+    "Instance Barcode Number Length": "Độ dài mã vạch bản sao",
+    "Library Card Barcode Prefix": "Tiền tố mã thẻ thư viện",
+    "Library Contact": "Liên hệ thư viện",
+    "Library Location": "Vị trí thư viện",
+    "Library Name": "Tên thư viện",
+    "Page Size": "Số dòng mỗi trang",
+    "Refresh Value": "Giá trị làm mới",
+    "Configure settings related to borrowing functionality": "Cấu hình các thiết lập liên quan đến việc mượn sách",
+    "Allow To Extend In Days": "Số ngày được phép gia hạn",
+    "Borrow Amount Once Time": "Số lượng sách mượn một lần",
+    "End Suspension In Days": "Kết thúc đình chỉ sau số ngày",
+    "Extend PickUp In Days": "Gia hạn thời gian lấy sách (ngày)",
+    "Fine Expiration In Days": "Thời gian hết hạn phạt (ngày)",
+    "Lost Amount Percentage Per Day": "Phần trăm phạt mất sách mỗi ngày",
+    "Max Borrow Extension": "Số lần gia hạn mượn tối đa",
+    "Overdue Or Lost Handle In Days": "Xử lý sách quá hạn hoặc mất sau số ngày",
+    "PickUp Expiration In Days": "Hết hạn lấy sách sau số ngày",
+    "Total Borrow Extension In Days": "Tổng số ngày được gia hạn mượn",
+    "Total Missed PickUp Allow": "Tổng số lần không đến lấy sách cho phép",
+    "Digital Borrow Settings": "Cài đặt mượn sách số",
+    "Configure settings related to digital borrowing functionality": "Cấu hình các thiết lập liên quan đến việc mượn sách số",
+    "Min Minutes To Add Ads": "Số phút tối thiểu để chèn quảng cáo",
+    "Page Per Load": "Số trang mỗi lần tải",
+    "System configuration": "Cấu hình hệ thống"
   }
 }

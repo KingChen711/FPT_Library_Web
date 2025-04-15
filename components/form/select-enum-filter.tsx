@@ -18,6 +18,7 @@ type Props = {
   enumObj: Record<string, string | number>
   tEnum: (key: string) => string
   noAll?: boolean
+  stringEnum?: boolean
 }
 
 function SelectEnumFilter({
@@ -26,6 +27,7 @@ function SelectEnumFilter({
   enumObj,
   tEnum,
   noAll = false,
+  stringEnum = false,
 }: Props) {
   const locale = useLocale()
 
@@ -46,7 +48,7 @@ function SelectEnumFilter({
           </SelectItem>
         )}
         {Object.values(enumObj)
-          .filter((value) => typeof value === "number")
+          .filter((value) => (stringEnum ? true : typeof value === "number"))
           .map((option) => (
             <SelectItem key={option} value={option.toString()}>
               {tEnum(option.toString())}

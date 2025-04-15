@@ -33,7 +33,7 @@ const getTransactions = async (
             JSON.stringify(searchParams.amountRange) ===
             JSON.stringify([null, null])
               ? null
-              : searchParams.amountRange.map((a) => (a === null ? "null" : a)),
+              : searchParams.amountRange.map((a) => (a === null ? "" : a)),
 
           transactionDateRange:
             JSON.stringify(searchParams.transactionDateRange) ===

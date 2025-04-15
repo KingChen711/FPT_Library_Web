@@ -1,6 +1,6 @@
 import { z } from "zod"
 
-import { ESearchType, EStockTransactionType } from "@/lib/types/enums"
+import { ESearchType } from "@/lib/types/enums"
 import { filterBooleanSchema, filterEnumSchema } from "@/lib/zod"
 
 export const filterTrackingDetailsSchema = z.object({
@@ -29,7 +29,6 @@ export const filterTrackingDetailsSchema = z.object({
     .optional()
     .catch(undefined)
     .transform((data) => data || undefined),
-  stockTransactionType: filterEnumSchema(EStockTransactionType),
 
   f: z
     .array(z.string())

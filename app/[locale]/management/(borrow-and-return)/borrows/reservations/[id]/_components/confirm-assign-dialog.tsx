@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
@@ -29,9 +30,7 @@ function ConfirmAssignDialog({ isPending, onAssignItem, barcode }: Props) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button disabled={isPending} onClick={() => onAssignItem()}>
-          {t("Select")}
-        </Button>
+        <Button disabled={isPending}>{t("Select")}</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -43,12 +42,24 @@ function ConfirmAssignDialog({ isPending, onAssignItem, barcode }: Props) {
         </DialogHeader>
         <DialogFooter className="flex gap-4">
           <DialogClose asChild>
-            <Button type="button" className="flex-1" variant="outline">
+            <Button
+              disabled={isPending}
+              type="button"
+              className="flex-1"
+              variant="outline"
+            >
               {t("Cancel")}
             </Button>
           </DialogClose>
-          <Button type="button" className="flex-1" variant="outline">
+          <Button
+            disabled={isPending}
+            type="button"
+            className="flex-1"
+            variant="outline"
+            onClick={onAssignItem}
+          >
             {t("Continue")}
+            {isPending && <Loader2 className="size-4 animate-spin" />}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -19,7 +19,7 @@ const getTypeColor = (type: EStockTransactionType) => {
       return "info"
     case EStockTransactionType.DAMAGED:
       return "warning"
-    case EStockTransactionType.TRANSFERRED:
+    case EStockTransactionType.REORDER:
       return "progress"
     case EStockTransactionType.LOST:
       return "danger"

@@ -111,7 +111,7 @@ export function getDateRangeString(days: number): string {
 export function formatFileSize(bytes: number): string {
   if (bytes < 0) return "0 B"
 
-  const units = ["B", "KB", "MB", "GB", "TB", "PB"]
+  const units = ["KB", "MB", "GB", "TB", "PB"]
   let unitIndex = 0
 
   while (bytes >= 1024 && unitIndex < units.length - 1) {

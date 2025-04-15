@@ -192,7 +192,7 @@ const marcTemplate: Marc21Template = {
   cutterNumber: { tag: "082", subfield: "b" },
   author: { tag: "100", subfield: "a" },
   title: { tag: "245", subfield: "a" },
-  subtitle: { tag: "245", subfield: "b" },
+  subTitle: { tag: "245", subfield: "b" },
   responsibility: {
     tag: "245",
     subfield: "c",

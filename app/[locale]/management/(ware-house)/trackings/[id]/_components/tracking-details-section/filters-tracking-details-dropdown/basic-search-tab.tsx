@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl"
 
 import { ESearchType } from "@/lib/types/enums"
 import { formUrlQuery } from "@/lib/utils"
+import { type TSearchTrackingDetailsSchema } from "@/lib/validations/trackings/search-tracking-details"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Input } from "@/components/ui/input"
@@ -17,6 +18,9 @@ type Props = {
   setOpen: (val: boolean) => void
   values: TBasicSearch
   setValues: React.Dispatch<SetStateAction<TBasicSearch>>
+  setSearchParams?: React.Dispatch<
+    React.SetStateAction<TSearchTrackingDetailsSchema>
+  >
 }
 
 const BasicSearchTab = ({
@@ -26,6 +30,7 @@ const BasicSearchTab = ({
   setHasGlueBarcode,
   setValues,
   values,
+  setSearchParams,
 }: Props) => {
   const searchParams = useSearchParams()
   const router = useRouter()
@@ -41,13 +46,29 @@ const BasicSearchTab = ({
       itemTotal: "",
       unitPrice: "",
       totalAmount: "",
-      stockTransactionType: "",
       isbn: "",
     })
     setHasGlueBarcode(undefined)
   }
 
   const handleApply = () => {
+    if (setSearchParams) {
+      setSearchParams((prev) => ({
+        ...prev,
+        isbn: values.isbn,
+        itemName: values.itemName,
+        itemTotal: values.itemTotal ? +values.itemTotal : undefined,
+        totalAmount: values.totalAmount ? +values.totalAmount : undefined,
+        unitPrice: values.unitPrice ? +values.unitPrice : undefined,
+
+        search: "",
+        pageIndex: 1,
+        searchType: ESearchType.BASIC_SEARCH.toString(),
+      }))
+      setOpen(false)
+      return
+    }
+
     const newUrl = formUrlQuery({
       params: searchParams.toString(),
       updates: {

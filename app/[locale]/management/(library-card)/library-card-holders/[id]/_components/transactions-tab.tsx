@@ -1,8 +1,9 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import { format } from "date-fns"
-import { Loader2 } from "lucide-react"
+import { Eye, Loader2, MoreHorizontal } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { formatPrice } from "@/lib/utils"
@@ -17,6 +18,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import Paginator from "@/components/ui/paginator"
 import ParseHtml from "@/components/ui/parse-html"
 import {
@@ -134,6 +141,7 @@ function TransactionsTab({ userId }: Props) {
                     {t("Cancellation reason")}
                   </div>
                 </TableHead>
+                <TableHead>{t("Actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -270,6 +278,29 @@ function TransactionsTab({ userId }: Props) {
                         ) : (
                           "-"
                         )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center justify-center">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon">
+                              <MoreHorizontal />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            <DropdownMenuItem>
+                              <Link
+                                target="_blank"
+                                href={`/management/transactions/${transaction.transactionId}`}
+                                className="flex items-center gap-2"
+                              >
+                                <Eye className="size-4" />
+                                {t("View details")}
+                              </Link>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
                       </div>
                     </TableCell>
                   </TableRow>

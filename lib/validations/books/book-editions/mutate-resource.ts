@@ -16,6 +16,7 @@ export const mutateResourceSchema = z
     //client only, check require on validate only, not on initial, so we use optional
     fileEbook: z.any(),
     fileAudioBook: z.any(),
+    s3OriginalName: z.string().optional(),
   })
   .transform((data) => {
     data.fileFormat =
