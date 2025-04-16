@@ -57,7 +57,7 @@ function CreateBookForm({ trackingDetail }: Props) {
   const fromWarehouseMode = !!trackingDetail
 
   const [isPending, startTransition] = useTransition()
-  const [currentTab, setCurrentTab] = useState<Tab>("Catalog")
+  const [currentTab, setCurrentTab] = useState<Tab>("Category")
 
   // const { isbn, scannedBooks, appendScannedBook, setIsbn } = useScanIsbn()
   // const { data: scannedBook, isFetching: isFetchingSearchIsbn } =
@@ -105,7 +105,7 @@ function CreateBookForm({ trackingDetail }: Props) {
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
-          description: res.data.message,
+          description: res.data,
           variant: "success",
         })
 

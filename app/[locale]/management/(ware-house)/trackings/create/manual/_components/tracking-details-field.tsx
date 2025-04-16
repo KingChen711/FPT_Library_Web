@@ -1,7 +1,13 @@
 import React from "react"
 import { Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
-import { useFieldArray, type UseFormReturn } from "react-hook-form"
+import {
+  type FieldArrayWithId,
+  type UseFieldArrayAppend,
+  type UseFieldArrayRemove,
+  type UseFieldArrayReplace,
+  type UseFormReturn,
+} from "react-hook-form"
 
 import { EStockTransactionType } from "@/lib/types/enums"
 import { type Category } from "@/lib/types/models"
@@ -25,15 +31,6 @@ import {
 import FastInputDialog from "./fast-input-dialog"
 import TrackingDetailRowField from "./tracking-detail-row-field"
 
-type Props = {
-  form: UseFormReturn<TCreateTrackingManualSchema>
-  isPending: boolean
-  selectedCategories: (Category | null)[]
-  setSelectedCategories: React.Dispatch<
-    React.SetStateAction<(Category | null)[]>
-  >
-}
-
 const createNewTrackingDetail = (
   type: EStockTransactionType.ADDITIONAL | EStockTransactionType.NEW
 ) => {
@@ -47,17 +44,40 @@ const createNewTrackingDetail = (
   }
 }
 
+type Props = {
+  form: UseFormReturn<TCreateTrackingManualSchema>
+  isPending: boolean
+  selectedCategories: (Category | null)[]
+  setSelectedCategories: React.Dispatch<
+    React.SetStateAction<(Category | null)[]>
+  >
+  fields: FieldArrayWithId<
+    TCreateTrackingManualSchema,
+    "warehouseTrackingDetails",
+    "id"
+  >[]
+  append: UseFieldArrayAppend<
+    TCreateTrackingManualSchema,
+    "warehouseTrackingDetails"
+  >
+  remove: UseFieldArrayRemove
+  replace: UseFieldArrayReplace<
+    TCreateTrackingManualSchema,
+    "warehouseTrackingDetails"
+  >
+}
+
 function TrackingDetailsField({
   form,
   isPending,
   selectedCategories,
   setSelectedCategories,
+  append,
+  fields,
+  remove,
+  replace,
 }: Props) {
   const t = useTranslations("TrackingsManagementPage")
-  const { fields, append, remove, replace } = useFieldArray({
-    name: "warehouseTrackingDetails",
-    control: form.control,
-  })
 
   const watchTrackingDetails = form.watch("warehouseTrackingDetails") || []
 

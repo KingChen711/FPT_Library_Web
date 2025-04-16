@@ -1,12 +1,12 @@
 "use client"
 
-import React, { useState, useTransition } from "react"
+import React, { useCallback, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { getLocalTimeZone } from "@internationalized/date"
 import { Check, ChevronsUpDown, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import { useForm } from "react-hook-form"
+import { useFieldArray, useForm } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { EStockTransactionType } from "@/lib/types/enums"
@@ -18,8 +18,10 @@ import {
 } from "@/lib/validations/trackings/create-tracking-manual"
 import { createTrackingManual } from "@/actions/trackings/create-tracking-manual"
 import useCategories from "@/hooks/categories/use-categories"
+import useGetItemByISBN from "@/hooks/library-items/use-get-item-by-isbn"
 import useUploadImage from "@/hooks/media/use-upload-image"
 import useSuppliers from "@/hooks/suppliers/use-suppliers"
+import useBarcodeScanner from "@/hooks/use-barcode-scanner"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -73,6 +75,8 @@ function CreateTrackingManualForm() {
     },
   })
 
+  const { mutateAsync: getItemByISBN, isPending: fetchingItem } =
+    useGetItemByISBN()
   const { mutateAsync: uploadBookImage } = useUploadImage()
 
   const onSubmit = async (values: TCreateTrackingManualSchema) => {
@@ -291,6 +295,47 @@ function CreateTrackingManualForm() {
     return flag
   }
 
+  const { fields, append, remove, replace } = useFieldArray({
+    name: "warehouseTrackingDetails",
+    control: form.control,
+  })
+
+  const handleBarcodeData = useCallback(
+    (scannedData: string) => {
+      if (fetchingItem) return
+
+      getItemByISBN(scannedData, {
+        onSuccess: (data) => {
+          if (data) {
+            append({
+              categoryId: data.categoryId,
+              conditionId: 1,
+              itemName: data.title,
+              itemTotal: 0,
+              stockTransactionType: EStockTransactionType.ADDITIONAL,
+              unitPrice: data.estimatedPrice || 0,
+              isbn: data.isbn || "",
+              totalAmount: 0,
+              libraryItemId: data.libraryItemId,
+            })
+          } else {
+            toast({
+              title: locale === "vi" ? "Thất bại" : "Fail",
+              description:
+                locale === "vi"
+                  ? "Tài liệu chưa tồn tại trong hệ thống"
+                  : "Library item does not exist in the system",
+              variant: "warning",
+            })
+          }
+        },
+      })
+    },
+    [append, fetchingItem, getItemByISBN, locale]
+  )
+
+  useBarcodeScanner(handleBarcodeData)
+
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -450,6 +495,10 @@ function CreateTrackingManualForm() {
         />
 
         <TrackingDetailsField
+          append={append}
+          remove={remove}
+          fields={fields}
+          replace={replace}
           form={form}
           isPending={isPending}
           selectedCategories={selectedCategories}
