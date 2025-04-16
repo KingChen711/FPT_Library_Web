@@ -29,8 +29,8 @@ type Props = {
   isPending: boolean
   show: boolean
   selectedCategory: Category | null
-  hasConfirmedChangeStatus: boolean
-  setHasConfirmedChangeStatus: (val: boolean) => void
+  // hasConfirmedChangeStatus: boolean
+  // setHasConfirmedChangeStatus: (val: boolean) => void
 }
 
 export default function CopiesTab({ form, isPending, show }: Props) {

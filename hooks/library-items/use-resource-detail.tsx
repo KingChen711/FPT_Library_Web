@@ -5,10 +5,10 @@ import { type BookResource } from "@/lib/types/models"
 
 export type ResourcePublic = Omit<
   BookResource,
-  "resourceUrl" | "s3OriginalName" | "resourceId"
+  "resourceUrl" | "s3OriginalName"
 >
 
-function useResourceDetail(resourceId: number) {
+function useResourcePublicDetail(resourceId: number) {
   return useQuery({
     queryKey: [`library-items/resources/${resourceId}/public`],
     queryFn: async (): Promise<ResourcePublic | null> => {
@@ -26,4 +26,4 @@ function useResourceDetail(resourceId: number) {
   })
 }
 
-export default useResourceDetail
+export default useResourcePublicDetail

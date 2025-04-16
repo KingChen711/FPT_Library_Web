@@ -55,7 +55,6 @@ type Props = {
   setOpen: (value: boolean) => void
   selectedResource: ResourcePublic
   libraryItemId: number
-  resourceId: number
 }
 
 const formSchema = z.object({
@@ -71,7 +70,6 @@ const BorrowDigitalConfirm = ({
   setOpen,
   selectedResource,
   libraryItemId,
-  resourceId,
 }: Props) => {
   const t = useTranslations("BookPage")
   const locale = useLocale()
@@ -94,7 +92,7 @@ const BorrowDigitalConfirm = ({
     resolver: zodResolver(formSchema),
     defaultValues: {
       libraryCardPackageId: null,
-      resourceId: resourceId,
+      resourceId: selectedResource.resourceId,
       description: null,
       transactionType: 1,
       paymentMethodId: 1,

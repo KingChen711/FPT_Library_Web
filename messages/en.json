@@ -1417,6 +1417,7 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Groups": "Groups",
     "Mark as lost": "Mark as lost",
     "Mark as found": "Mark as found",
     "Appropriate shelves not found": "Appropriate shelves not found",
@@ -2213,7 +2214,8 @@
     "BorrowDigitalStatus": {
       "0": "Active",
       "1": "Expired",
-      "2": "Cancelled"
+      "2": "Cancelled",
+      "3": "Preparing"
     },
     "FineType": {
       "0": "Overdue",

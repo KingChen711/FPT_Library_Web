@@ -23,7 +23,7 @@ function CatalogedBadge({ cataloged }: Props) {
   return (
     <Badge
       variant={getTypeColor(cataloged)}
-      className="flex w-[112px] justify-center"
+      className="flex w-[112px] shrink-0 justify-center"
     >
       {t(cataloged ? "Cataloged" : "Uncataloged")}
     </Badge>

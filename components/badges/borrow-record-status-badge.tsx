@@ -31,7 +31,7 @@ function BorrowRecordStatusBadge({ status }: Props) {
   return (
     <Badge
       variant={getTypeColor(status)}
-      className="flex w-[96px] justify-center"
+      className="flex w-[96px] shrink-0 justify-center"
     >
       {t(status.toString())}
     </Badge>

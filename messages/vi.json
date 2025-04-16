@@ -1416,6 +1416,7 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "Groups": "Nhóm",
     "Mark as lost": "Đánh dấu mất",
     "Mark as found": "Đánh dấu tìm thấy",
     "Appropriate shelves not found": "Không tìm thấy kệ phù hợp",
@@ -2234,7 +2235,8 @@
     "BorrowDigitalStatus": {
       "0": "Đang mượn",
       "1": "Hết hạn",
-      "2": "Đã hủy"
+      "2": "Đã hủy",
+      "3": "Đang chuẩn bị"
     },
     "Circulated": {
       "Circulated": "Đã lưu hành",

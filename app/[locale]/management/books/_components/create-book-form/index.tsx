@@ -1,7 +1,6 @@
 "use client"
 
 import React, {
-  useEffect,
   useState,
   useTransition,
   type Dispatch,
@@ -9,7 +8,6 @@ import React, {
 } from "react"
 import { useRouter } from "next/navigation"
 import { type TrackingDetailCatalog } from "@/queries/trackings/get-tracking-detail"
-import { useScanIsbn } from "@/stores/use-scan-isbn"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { ArrowRight, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -23,24 +21,28 @@ import {
   type TBookEditionSchema,
 } from "@/lib/validations/books/create-book"
 import { createBook } from "@/actions/books/create-book"
-import useSearchIsbn from "@/hooks/books/use-search-isbn"
 import useUploadCatalogMedias from "@/hooks/media/use-upload-catalog-medias"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Form } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
-import ScannedBook from "@/components/ui/scanned-book"
 import TrackingDetailCard from "@/components/ui/tracking-detail-card"
 
 import CatalogTab from "./catalog-tab"
 import CategoryTab from "./category-tab"
 import CopiesTab from "./copies-tab"
+import GroupsTab from "./groups-tab"
 import Marc21Dialog from "./marc21-dialog"
 import { ProgressTabBar } from "./progress-stage-bar"
 import ResourcesTab from "./resources-tab"
 import { TrackingCard } from "./tracking-card"
 
-type Tab = "Category" | "Catalog" | "Individual registration" | "Resources"
+type Tab =
+  | "Category"
+  | "Catalog"
+  | "Groups"
+  | "Individual registration"
+  | "Resources"
 
 type Props = {
   trackingDetail?: TrackingDetailCatalog | null
@@ -55,31 +57,54 @@ function CreateBookForm({ trackingDetail }: Props) {
   const fromWarehouseMode = !!trackingDetail
 
   const [isPending, startTransition] = useTransition()
-  const [currentTab, setCurrentTab] = useState<Tab>("Category")
+  const [currentTab, setCurrentTab] = useState<Tab>("Groups")
 
-  const { isbn, scannedBooks, appendScannedBook, setIsbn } = useScanIsbn()
-  const { data: scannedBook, isFetching: isFetchingSearchIsbn } =
-    useSearchIsbn(isbn)
+  // const { isbn, scannedBooks, appendScannedBook, setIsbn } = useScanIsbn()
+  // const { data: scannedBook, isFetching: isFetchingSearchIsbn } =
+  //   useSearchIsbn(isbn)
 
-  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
-    null
-  )
+  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([
+    {
+      authorCode: "Auth123",
+      authorId: 1,
+      fullName: "Aoyama Gosho",
+      isDeleted: false,
+      authorImage: "",
+      biography: "",
+      createDate: new Date(),
+      dateOfDeath: new Date(),
+      dob: new Date(),
+      nationality: "",
+      updateDate: new Date(),
+    },
+  ])
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>({
+    categoryId: 1,
+    description: "",
+    englishName: "BookSeries",
+    isAllowAITraining: true,
+    prefix: "BS",
+    totalBorrowDays: 30,
+    vietnameseName: "Sách bộ",
+  })
 
-  const [hasConfirmedChangeStatus, setHasConfirmedChangeStatus] =
-    useState(false)
+  // const [hasConfirmedChangeStatus, setHasConfirmedChangeStatus] =
+  //   useState(false)
 
   const { mutateAsync: uploadMedias } = useUploadCatalogMedias()
 
   const form = useForm<TBookEditionSchema>({
     resolver: zodResolver(bookEditionSchema),
     defaultValues: {
-      title: trackingDetail?.itemName || "",
+      title: "Thám tử lừng danh Conan - Tập 25",
+      cutterNumber: "TH104T",
+      classificationNumber: "895.9223",
       isbn: trackingDetail?.isbn || undefined,
       estimatedPrice: trackingDetail?.unitPrice || undefined,
       libraryItemInstances: [],
       categoryId: trackingDetail?.categoryId,
       trackingDetailId: trackingDetail?.trackingDetailId,
+      authorIds: [1],
     },
   })
 
@@ -303,20 +328,22 @@ function CreateBookForm({ trackingDetail }: Props) {
     return trigger
   }
 
-  useEffect(() => {
-    if (!scannedBook) return
+  // useEffect(() => {
+  //   if (!scannedBook) return
 
-    setIsbn("")
+  //   setIsbn("")
 
-    if (scannedBook.notFound) {
-      toast({
-        description: t("not found isbn", { isbn: scannedBook.isbn }),
-      })
-      return
-    }
+  //   if (scannedBook.notFound) {
+  //     toast({
+  //       description: t("not found isbn", { isbn: scannedBook.isbn }),
+  //     })
+  //     return
+  //   }
 
-    appendScannedBook(scannedBook)
-  }, [scannedBook, appendScannedBook, locale, t, setIsbn])
+  //   appendScannedBook(scannedBook)
+  // }, [scannedBook, appendScannedBook, locale, t, setIsbn])
+
+  const isBookSeries = selectedCategory?.englishName === "BookSeries" || false
 
   return (
     <div>
@@ -334,11 +361,11 @@ function CreateBookForm({ trackingDetail }: Props) {
         <ProgressTabBar
           currentTab={currentTab}
           setCurrentTab={setCurrentTab as Dispatch<SetStateAction<string>>}
-          hasTrainAI={selectedCategory?.isAllowAITraining}
+          isBookSeries={isBookSeries}
         />
       </div>
 
-      {isFetchingSearchIsbn && (
+      {/* {isFetchingSearchIsbn && (
         <div className="flex items-center gap-2">
           {t("Loading scanned book")}
           <Loader2 className="size-4 animate-spin" />{" "}
@@ -367,7 +394,7 @@ function CreateBookForm({ trackingDetail }: Props) {
             </div>
           </div>
         </div>
-      )}
+      )} */}
 
       {/* {currentTab !== "Train AI" && ( */}
       <div className="mt-4 flex flex-col gap-4">
@@ -410,12 +437,19 @@ function CreateBookForm({ trackingDetail }: Props) {
               setSelectedAuthors={setSelectedAuthors}
             />
 
+            <GroupsTab
+              form={form}
+              isPending={isPending}
+              show={currentTab === "Groups"}
+              selectedAuthors={selectedAuthors}
+            />
+
             <CopiesTab
               form={form}
               isPending={isPending}
-              hasConfirmedChangeStatus={hasConfirmedChangeStatus}
+              // hasConfirmedChangeStatus={hasConfirmedChangeStatus}
               selectedCategory={selectedCategory}
-              setHasConfirmedChangeStatus={setHasConfirmedChangeStatus}
+              // setHasConfirmedChangeStatus={setHasConfirmedChangeStatus}
               show={currentTab === "Individual registration"}
             />
 
@@ -478,8 +512,17 @@ function CreateBookForm({ trackingDetail }: Props) {
 
                   if (currentTab === "Catalog") {
                     if (await triggerCatalogTab()) {
-                      setCurrentTab("Individual registration")
+                      if (isBookSeries) {
+                        setCurrentTab("Groups")
+                      } else {
+                        setCurrentTab("Individual registration")
+                      }
                     }
+                    return
+                  }
+
+                  if (currentTab === "Groups") {
+                    setCurrentTab("Individual registration")
                     return
                   }
 

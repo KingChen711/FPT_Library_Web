@@ -23,7 +23,7 @@ function ActiveBadge({ active }: Props) {
   return (
     <Badge
       variant={getTypeColor(active)}
-      className="flex w-[84px] justify-center"
+      className="flex w-[84px] shrink-0 justify-center"
     >
       {t(active ? "Active" : "Inactive")}
     </Badge>

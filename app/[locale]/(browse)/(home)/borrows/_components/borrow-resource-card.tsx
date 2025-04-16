@@ -5,7 +5,7 @@ import { Loader2, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { EResourceBookType } from "@/lib/types/enums"
-import useResourceDetail from "@/hooks/library-items/use-resource-detail"
+import useResourcePublicDetail from "@/hooks/library-items/use-resource-detail"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -28,7 +28,7 @@ const BorrowResourceCard = ({
   setSelectedBorrow,
 }: Props) => {
   const t = useTranslations("BookPage")
-  const { data, isLoading } = useResourceDetail(resourceId)
+  const { data, isLoading } = useResourcePublicDetail(resourceId)
   const [openDelete, setOpenDelete] = useState<boolean>(false)
 
   if (isLoading) {

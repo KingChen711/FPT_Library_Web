@@ -263,9 +263,10 @@ export enum EStockTransactionType {
 }
 
 export enum EBorrowDigitalStatus {
-  Active,
-  Expired,
-  Cancelled,
+  ACTIVE,
+  EXPIRED,
+  CANCELLED,
+  PREPARING,
 }
 
 export enum EBorrowType {

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import React, { useState } from "react"
@@ -29,6 +30,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import SearchForm from "@/components/ui/search-form"
+import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
   Table,
   TableBody,
@@ -76,6 +78,13 @@ function TopCirculationSection() {
     startDate: dateRange[0],
     endDate: dateRange[1],
   })
+
+  const handleSort = (sortKey: any) =>
+    setSearchParams((prev) => ({
+      ...prev,
+      sort: sortKey,
+      pageIndex: 1,
+    }))
 
   if (isLoading || !data) return
 
@@ -137,47 +146,61 @@ function TopCirculationSection() {
                     {t("Library item")}
                   </TableHead>
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Borrow success count")}
-                    </div>
-                  </TableHead>
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Borrow success count")}
+                    sortKey="BorrowSuccessCount"
+                    position="center"
+                    onSort={handleSort}
+                  />
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Borrow failed count")}
-                    </div>
-                  </TableHead>
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Borrow failed count")}
+                    sortKey="BorrowFailedCount"
+                    position="center"
+                    onSort={handleSort}
+                  />
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Borrow reserve count")}
-                    </div>
-                  </TableHead>
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Borrow reserve count")}
+                    sortKey="ReserveCount"
+                    position="center"
+                    onSort={handleSort}
+                  />
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Extended borrow count")}
-                    </div>
-                  </TableHead>
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Extended borrow count")}
+                    sortKey="ExtendedBorrowCount"
+                    position="center"
+                    onSort={handleSort}
+                  />
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Digital borrow count")}
-                    </div>
-                  </TableHead>
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Digital borrow count")}
+                    sortKey="DigitalBorrowCount"
+                    position="center"
+                    onSort={handleSort}
+                  />
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Borrow failed rates")}
-                    </div>
-                  </TableHead>
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Borrow failed rates")}
+                    sortKey="BorrowFailedRate"
+                    position="center"
+                    onSort={handleSort}
+                  />
 
-                  <TableHead className="text-nowrap font-bold">
-                    <div className="flex justify-center">
-                      {t("Borrow extension rates")}
-                    </div>
-                  </TableHead>
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Borrow extension rates")}
+                    sortKey="BorrowExtensionRate"
+                    position="center"
+                    onSort={handleSort}
+                  />
                 </TableRow>
               </TableHeader>
               <TableBody>

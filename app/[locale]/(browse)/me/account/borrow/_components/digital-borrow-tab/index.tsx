@@ -1,10 +1,12 @@
 import getBorrowDigitalsPatron from "@/queries/borrows/get-borrow-digitals-patron"
 import { differenceInCalendarDays, format } from "date-fns"
-import { Calendar, CheckCircle, XCircle } from "lucide-react"
+import { AlertOctagonIcon, Calendar, CheckCircle, XCircle } from "lucide-react"
 
+import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { formatPrice } from "@/lib/utils"
 import { searchBorrowDigitalsSchema } from "@/lib/validations/borrow-digitals/search-borrow-digitals"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import BorrowDigitalStatusBadge from "@/components/ui/borrow-digital-status-badge"
 import Paginator from "@/components/ui/paginator"
 import ParamSearchForm from "@/components/ui/param-search-form"
@@ -17,6 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import ResourceBookTypeBadge from "@/components/badges/book-resource-type-badge"
 
 import DigitalBorrowActions from "./digital-borrow-actions"
 import FiltersBorrowDigitalsDialog from "./filters-borow-digitals-dialog"
@@ -29,6 +32,7 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
   const t = await getTranslations("BookPage.borrow tracking")
   const { searchDigital, pageIndex, sort, pageSize, ...rest } =
     searchBorrowDigitalsSchema.parse(searchParams)
+  const locale = await getLocale()
 
   const {
     sources: digitalBorrows,
@@ -58,12 +62,25 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
         </div>
       </div>
 
+      <Alert variant="info">
+        <AlertOctagonIcon className="size-4" />
+        <AlertTitle className="font-bold">
+          {locale === "vi" ? "Sách nói!" : "Audio book!"}
+        </AlertTitle>
+        <AlertDescription>
+          {locale === "vi"
+            ? "Sau khi thuê sách nói, hệ thống cần 5–10 phút để chuẩn bị. Bạn chỉ cần chờ lần đầu, không cần chờ mỗi lần nghe."
+            : "After renting an audiobook, the system needs 5–10 minutes to prepare it. Just wait once — no need to wait every time you listen."}
+        </AlertDescription>
+      </Alert>
+
       <div className="rounded-md border">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>{t("ordinal number")}</TableHead>
               <TableHead>{t("title")}</TableHead>
+              <TableHead>{t("type")}</TableHead>
               <TableHead>{t("register date")}</TableHead>
               <TableHead>{t("expiration date")}</TableHead>
               <TableHead>{t("borrow price")}</TableHead>
@@ -110,6 +127,13 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
                   <TableCell>
                     <div className="flex items-start gap-3">
                       {item.libraryResource.resourceTitle}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex items-start gap-3">
+                      <ResourceBookTypeBadge
+                        status={item.libraryResource.resourceType}
+                      />
                     </div>
                   </TableCell>
                   <TableCell>

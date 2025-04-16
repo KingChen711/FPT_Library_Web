@@ -243,15 +243,14 @@ export type Author = {
   authorId: number
   fullName: string
   authorCode: string
-  authorImage: string
-  biography: string
-  dob: string
-  dateOfDeath: string
-  nationality: string
-  createDate: string
-  updateDate: string
-  isDeleted: false
-  bookEditionAuthors: unknown[]
+  authorImage: string | null
+  biography: string | null
+  dob: Date | null
+  dateOfDeath: Date | null
+  nationality: string | null
+  createDate: Date
+  updateDate: Date
+  isDeleted: boolean
 }
 
 export type PaymentMethod = { paymentMethodId: number; methodName: string }
@@ -300,19 +299,7 @@ export type LibraryItem = {
   shelf: Shelf | null
   libraryItemInventory: LibraryItemInventory
   resources: BookResource[]
-  authors: {
-    authorId: number
-    authorCode: string | null
-    authorImage: string | null
-    fullName: string | null
-    biography: string | null
-    dob: string | null
-    dateOfDeath: string | null
-    nationality: string | null
-    createDate: string | null
-    updateDate: string | null
-    isDeleted: boolean
-  }[]
+  authors: Author[]
   libraryItemInstances: LibraryItemInstance[]
   digitalBorrows: DigitalBorrow[]
 }

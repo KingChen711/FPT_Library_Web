@@ -60,7 +60,6 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
   const [audioLink, setAudioLink] = useState<string | null>(null)
   const [loadingAudio, setLoadingAudio] = useState(true)
   const router = useRouter()
-  const tGeneralManagement = useTranslations("GeneralManagement")
 
   const handlePlayPause = () => {
     if (audioRef.current) {
@@ -124,7 +123,7 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
   useEffect(() => {
     console.log("fetchAudio")
 
-    if (isLoadingAuth) return
+    if (isLoadingAuth || !accessToken || audioLink) return
     async function fetchAudio() {
       try {
         const { data } = isPreview
@@ -166,15 +165,7 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
     }
 
     fetchAudio()
-  }, [
-    audioLink,
-    isLoadingAuth,
-    accessToken,
-    resourceId,
-    isPreview,
-    tGeneralManagement,
-    router,
-  ])
+  }, [isLoadingAuth, isPreview, resourceId, accessToken, audioLink, router])
 
   useEffect(() => {
     console.log("volume")

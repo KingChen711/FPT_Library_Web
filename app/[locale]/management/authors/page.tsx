@@ -4,9 +4,9 @@ import { getAuthors } from "@/queries/authors/get-authors"
 import { format } from "date-fns"
 import { ImageIcon } from "lucide-react"
 
+import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
-import { formatDate, isImageLinkValid } from "@/lib/utils"
 import { searchAuthorsSchema } from "@/lib/validations/author/search-author"
 import NoResult from "@/components/ui/no-result"
 import Paginator from "@/components/ui/paginator"
@@ -48,6 +48,7 @@ async function AuthorsManagementPage({ searchParams }: Props) {
     searchAuthorsSchema.parse(searchParams)
   await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
   const t = await getTranslations("GeneralManagement")
+  const formatLocale = await getFormatLocale()
 
   const authorsData = await getAuthors({
     search,
@@ -181,7 +182,7 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                       </TableCell>
                       <TableCell>
                         <div className="flex items-center justify-center overflow-hidden">
-                          {isImageLinkValid(author.authorImage) ? (
+                          {author.authorImage ? (
                             <Image
                               src={author.authorImage}
                               alt="avatar"
@@ -217,26 +218,42 @@ async function AuthorsManagementPage({ searchParams }: Props) {
                       </TableCell>
 
                       <TableCell>
-                        {author?.dob ? formatDate(author?.dob) : "_"}
+                        {author.dob
+                          ? format(new Date(author.dob), "dd MMM yyyy", {
+                              locale: formatLocale,
+                            })
+                          : "-"}
                       </TableCell>
 
                       <TableCell>
                         {author.dateOfDeath
-                          ? format(new Date(author.dateOfDeath), "dd MMM yyyy")
+                          ? format(
+                              new Date(author.dateOfDeath),
+                              "dd MMM yyyy",
+                              { locale: formatLocale }
+                            )
                           : "-"}
                       </TableCell>
                       <TableCell className="text-nowrap">
                         {author.nationality}
                       </TableCell>
                       <TableCell>
-                        {author?.createDate
-                          ? formatDate(author?.createDate)
-                          : "_"}
+                        {author.createDate
+                          ? format(
+                              new Date(author.createDate),
+                              "HH:mm dd MMM yyyy",
+                              { locale: formatLocale }
+                            )
+                          : "-"}
                       </TableCell>
                       <TableCell>
-                        {author?.updateDate
-                          ? formatDate(author?.updateDate)
-                          : "_"}
+                        {author.updateDate
+                          ? format(
+                              new Date(author.updateDate),
+                              "HH:mm dd MMM yyyy",
+                              { locale: formatLocale }
+                            )
+                          : "-"}
                       </TableCell>
                       <TableCell className="flex justify-center">
                         <AuthorActionDropdown author={author} />
