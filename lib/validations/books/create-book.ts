@@ -236,6 +236,7 @@ export const bookEditionSchema = z
       .optional(),
 
     categoryId: z.coerce.number({ message: "required" }),
+    groupId: z.coerce.number().optional(),
     authorIds: z.array(z.coerce.number()).optional(),
     libraryResources: z.array(bookResourceSchema),
     libraryItemInstances: z.array(bookCopySchema).min(1, "copiesMin1"),

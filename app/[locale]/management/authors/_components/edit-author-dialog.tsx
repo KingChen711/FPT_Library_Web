@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Editor } from "@tinymce/tinymce-react"
 import axios from "axios"
+import { format } from "date-fns"
 import { Loader2, Trash } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
@@ -16,7 +17,7 @@ import { useForm } from "react-hook-form"
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { ResourceType } from "@/lib/types/enums"
 import { type Author } from "@/lib/types/models"
-import { cn, formatDateInput } from "@/lib/utils"
+import { cn } from "@/lib/utils"
 import {
   editAuthorSchema,
   type TEditAuthorSchema,
@@ -77,9 +78,9 @@ function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
       biography: author.biography ? author.biography : undefined,
       nationality: author.nationality ? author.nationality : undefined,
       dateOfDeath: author.dateOfDeath
-        ? formatDateInput(author.dateOfDeath)
+        ? format(new Date(author.dateOfDeath), "yyyy-MM-dd")
         : undefined,
-      dob: author.dob ? formatDateInput(author.dob) : undefined,
+      dob: author.dob ? format(new Date(author.dob), "yyyy-MM-dd") : undefined,
     },
   })
 

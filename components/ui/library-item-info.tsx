@@ -126,7 +126,7 @@ const LibraryItemInfo = ({
           {libraryItem.authors.length > 0 && (
             <div className="flex items-center gap-2 text-sm italic">
               <User2 size={16} />
-              {libraryItem.authors[0].fullName as string}
+              {libraryItem.authors[0].fullName}
             </div>
           )}
           <div className="flex flex-wrap gap-2">
