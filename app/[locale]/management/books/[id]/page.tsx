@@ -31,6 +31,7 @@ import BookEditionStatusBadge from "@/components/badges/book-edition-status-badg
 import ShelfBadge from "@/components/badges/shelf-badge"
 import TrainedBadge from "@/components/badges/trained-badge"
 
+import AssignGroupDialog from "./_components/assign-group-dialog"
 import AuthorsTabsContent from "./_components/authors-tabs-content"
 import BookDetailActionDropdown from "./_components/book-detail-action-dropdown"
 import BookDetailBreadCrumb from "./_components/book-detail-breadcrumb"
@@ -92,6 +93,7 @@ async function BookDetailPage({ params }: Props) {
               {t("Inventory info")}
             </TabsTrigger>
             <TabsTrigger value="trainAI">Train AI</TabsTrigger>
+            <TabsTrigger value="group-info">{t("Group info")}</TabsTrigger>
             <TabsTrigger value="metadata">Metadata</TabsTrigger>
           </TabsList>
           <TabsContent value="basicInfo">
@@ -565,6 +567,100 @@ async function BookDetailPage({ params }: Props) {
                   </div>
                 </div>
               </div>
+            </div>
+          </TabsContent>
+
+          <TabsContent value="group-info">
+            <div className="flex flex-col gap-4 rounded-md border py-5">
+              <h3 className="mx-5 text-lg font-semibold">{t("Group info")}</h3>
+              {book.libraryItemGroup ? (
+                <div className="grid grid-cols-12 gap-y-6 text-sm">
+                  <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                    <h4 className="font-bold">{t("AI train code")}</h4>
+                    <div className="flex gap-2">
+                      <Copitor
+                        content={book?.libraryItemGroup?.aiTrainingCode}
+                      />
+                      {book?.libraryItemGroup?.aiTrainingCode || <NoData />}
+                    </div>
+                  </div>
+
+                  <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                    <h4 className="font-bold">{t("Title")}</h4>
+                    <div className="flex gap-2">
+                      <Copitor content={book?.libraryItemGroup?.title} />
+                      {book?.libraryItemGroup?.title || <NoData />}
+                    </div>
+                  </div>
+
+                  <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                    <h4 className="font-bold">{t("Sub title")}</h4>
+                    <div className="flex gap-2">
+                      <Copitor content={book?.libraryItemGroup?.subTitle} />
+                      {book?.libraryItemGroup?.subTitle || <NoData />}
+                    </div>
+                  </div>
+
+                  <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                    <h4 className="font-bold">{t("Author")}</h4>
+                    <div className="flex gap-2">
+                      <Copitor content={book?.libraryItemGroup?.author} />
+                      {book?.libraryItemGroup?.author || <NoData />}
+                    </div>
+                  </div>
+                  <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                    <h4 className="font-bold">{t("Classification number")}</h4>
+                    <div className="flex gap-2">
+                      <Copitor
+                        content={book?.libraryItemGroup?.classificationNumber}
+                      />
+                      {book?.libraryItemGroup?.classificationNumber || (
+                        <NoData />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+                    <h4 className="font-bold">{t("Cutter number")}</h4>
+                    <div className="flex gap-2">
+                      <Copitor content={book?.libraryItemGroup?.cutterNumber} />
+                      {book?.libraryItemGroup?.cutterNumber || <NoData />}
+                    </div>
+                  </div>
+
+                  <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+                    <h4 className="font-bold">{t("Created at")}</h4>
+                    <div className="flex gap-2">
+                      {book.createdAt ? (
+                        format(new Date(book.createdAt), "HH:mm dd-MM-yyyy")
+                      ) : (
+                        <NoData />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+                    <h4 className="font-bold">{t("Created by")}</h4>
+                    <div className="flex gap-2">
+                      <Copitor content={book?.libraryItemGroup?.createdBy} />
+                      {book?.libraryItemGroup?.createdBy || <NoData />}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="space-y-2 px-5">
+                  <p> {t("No belong to any group yet")}</p>
+                  <AssignGroupDialog
+                    title={book.title}
+                    classificationNumber={book.classificationNumber || ""}
+                    cutterNumber={book.cutterNumber || ""}
+                    libraryItemId={book.libraryItemId}
+                    subTitle={book.subTitle}
+                    topicalTerms={book.topicalTerms}
+                    author={book.authors.map((a) => a.fullName).join(",")}
+                  />
+                </div>
+              )}
             </div>
           </TabsContent>
 

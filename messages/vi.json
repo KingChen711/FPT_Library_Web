@@ -1416,6 +1416,14 @@
     "rows per page": "số hàng mỗi trang"
   },
   "BooksManagementPage": {
+    "Assign group": "Gán nhóm",
+    "No belong to any group yet": "Chưa có nhóm",
+    "Group info": "Thông tin nhóm",
+    "Selected group": "Nhóm được chọn",
+    "A new group will be created based on the cataloged information of this item": "Một nhóm mới sẽ được tạo dựa trên thông tin được biên mục của tài liệu này.",
+    "Create new group": "Tạo nhóm mới",
+    "A new group will be created for this library item": "Nhóm mới sẽ được tạo cho tài liệu",
+    "No matching available groups found": "Không tìm thấy nhóm nào phù hợp",
     "Groups": "Nhóm",
     "Mark as lost": "Đánh dấu mất",
     "Mark as found": "Đánh dấu tìm thấy",

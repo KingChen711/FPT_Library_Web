@@ -1417,6 +1417,14 @@
     "rows per page": "rows per page"
   },
   "BooksManagementPage": {
+    "Assign group": "Assign group",
+    "No belong to any group yet": "No belong to any group yet",
+    "Group info": "Group info",
+    "Selected group": "Selected group",
+    "A new group will be created based on the cataloged information of this item": "A new group will be created based on the cataloged information of this item",
+    "Create new group": "Create new group",
+    "A new group will be created for this library item": "A new group will be created for this library item",
+    "No matching available groups found": "No matching available groups found",
     "Groups": "Groups",
     "Mark as lost": "Mark as lost",
     "Mark as found": "Mark as found",

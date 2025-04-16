@@ -1,44 +1,45 @@
-import React, { useState } from "react"
+"use client"
+
+import React, { useState, useTransition } from "react"
 import { useAuth } from "@/contexts/auth-provider"
-import { DialogDescription } from "@radix-ui/react-dialog"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { ArrowLeft, Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import { type UseFormReturn } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { http } from "@/lib/http"
-import { type Author, type LibraryItemGroup } from "@/lib/types/models"
+import { type LibraryItemGroup } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 import { cn } from "@/lib/utils"
-import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
+import { assignGroup } from "@/actions/books/assign-group"
 import useCreateGroup from "@/hooks/library-items/use-create-group"
+import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import {
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form"
 import GroupCard from "@/components/ui/group-card"
+import { Label } from "@/components/ui/label"
 import Paginator from "@/components/ui/paginator"
-import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
 
+import { ConfirmCreateGroupDialog } from "../../_components/create-book-form/groups-tab"
+
 type Props = {
-  form: UseFormReturn<TBookEditionSchema>
-  isPending: boolean
-  show: boolean
-  selectedAuthors: Author[]
+  title: string
+  subTitle: string | null
+  topicalTerms: string | null
+  cutterNumber: string
+  classificationNumber: string
+  author: string
+  libraryItemId: number
 }
 
 const defaultGetGroupsRes: Pagination<LibraryItemGroup[]> = {
@@ -49,11 +50,26 @@ const defaultGetGroupsRes: Pagination<LibraryItemGroup[]> = {
   totalPage: 0,
 }
 
-function GroupsTab({ form, selectedAuthors, show }: Props) {
+function AssignGroupDialog({
+  author,
+  classificationNumber,
+  cutterNumber,
+  subTitle,
+  title,
+  topicalTerms,
+  libraryItemId,
+}: Props) {
+  const t = useTranslations("BooksManagementPage")
+  const [open, setOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
+  const handleOpenChange = (value: boolean) => {
+    if (isPending) return
+    setOpen(value)
+  }
+
   const { mutateAsync: createGroup, isPending: creatingGroup } =
     useCreateGroup()
 
-  const t = useTranslations("BooksManagementPage")
   const { accessToken } = useAuth()
 
   const locale = useLocale()
@@ -70,31 +86,15 @@ function GroupsTab({ form, selectedAuthors, show }: Props) {
     setPageSize(size)
   }
 
-  const selectedGroup = form.watch("selectedGroup") as
-    | LibraryItemGroup
-    | undefined
-
-  const title = form.watch("title")
-  const subTitle = form.watch("subTitle")
-  const topicalTerms = form.watch("topicalTerms")
-  const cutterNumber = form.watch("cutterNumber")
-  const classificationNumber = form.watch("classificationNumber")
-  const authorIds = form.watch("authorIds") || []
-  const authorName = selectedAuthors
-    .filter((a) => authorIds.includes(a.authorId))
-    .map((a) => a.fullName)
-    .join(",")
+  const [selectedGroup, setSelectedGroup] = useState<LibraryItemGroup | null>(
+    null
+  )
 
   const { data, isLoading } = useQuery({
     queryKey: [
       "potential-groups",
+      libraryItemId,
       {
-        authorName,
-        title,
-        cutterNumber,
-        classificationNumber,
-        subTitle,
-        topicalTerms,
         pageIndex,
         pageSize,
       },
@@ -106,17 +106,11 @@ function GroupsTab({ form, selectedAuthors, show }: Props) {
       try {
         const { data } = await http.get<
           Pagination<{ groupDetail: LibraryItemGroup }[]>
-        >(`/api/management/library-items/groupable-items?`, {
+        >(`/api/management/library-items/${libraryItemId}/groupable-items?`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
           searchParams: {
-            title,
-            authorName,
-            cutterNumber,
-            classificationNumber,
-            subTitle,
-            topicalTerms,
             pageIndex,
             pageSize,
           },
@@ -132,49 +126,64 @@ function GroupsTab({ form, selectedAuthors, show }: Props) {
         return defaultGetGroupsRes
       }
     },
-    enabled: show,
+    enabled: open,
   })
 
-  if (!show) return null
+  const handleAssignGroup = () => {
+    if (!selectedGroup) return
+    startTransition(async () => {
+      const res = await assignGroup(libraryItemId, selectedGroup.groupId)
+
+      if (res.isSuccess) {
+        toast({
+          title: locale === "vi" ? "Thành công" : "Success",
+          description: res.data,
+          variant: "success",
+        })
+        setOpen(false)
+        return
+      }
+
+      handleServerActionError(res, locale)
+    })
+  }
 
   return (
-    <div>
-      <FormField
-        control={form.control}
-        name="groupId"
-        render={({ field }) => (
-          <FormItem className="flex flex-col">
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button disabled={isPending}>
+          <Plus />
+          {t("Assign group")}
+        </Button>
+      </DialogTrigger>
+      <DialogContent className="max-h-[80vh] w-[90vw] max-w-[1620px] overflow-y-auto">
+        <DialogHeader>
+          <DialogTitle>{t("Assign group")}</DialogTitle>
+        </DialogHeader>
+        <DialogDescription asChild>
+          <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-2">
-                <FormLabel>{t("Group")}</FormLabel>
-                <FormMessage />
+                <Label>{t("Group")}</Label>
               </div>
               <ConfirmCreateGroupDialog
                 isPending={creatingGroup}
                 onCreateGroup={async () => {
                   const res = await createGroup({
-                    author: selectedAuthors
-                      .filter((a) => authorIds?.includes(a.authorId))
-                      .map((a) => a.fullName)
-                      .join(", "),
-                    title: title,
-                    classificationNumber: classificationNumber || "",
-                    cutterNumber: cutterNumber || "",
-                    subTitle: subTitle || null,
-                    topicalTerms: topicalTerms || null,
+                    title,
+                    cutterNumber,
+                    classificationNumber,
+                    subTitle,
+                    topicalTerms,
+                    author,
                   })
 
                   if (res.isSuccess) {
                     queryClient.invalidateQueries({
                       queryKey: [
                         "potential-groups",
+                        libraryItemId,
                         {
-                          authorName,
-                          title,
-                          cutterNumber,
-                          classificationNumber,
-                          subTitle,
-                          topicalTerms,
                           pageIndex,
                           pageSize,
                         },
@@ -208,7 +217,7 @@ function GroupsTab({ form, selectedAuthors, show }: Props) {
               )}
             </div>
 
-            <Separator />
+            <div className="h-px w-full bg-muted"></div>
 
             {data && data.sources.length === 0 && (
               <div>{t("No matching available groups found")}</div>
@@ -228,13 +237,13 @@ function GroupsTab({ form, selectedAuthors, show }: Props) {
                 <GroupCard
                   className={cn(
                     "col-span-12 lg:col-span-6 xl:col-span-3",
-                    group.groupId === field.value && "cursor-default opacity-70"
+                    group.groupId === selectedGroup?.groupId &&
+                      "cursor-default opacity-70"
                   )}
                   key={group.groupId}
                   group={group}
                   onClick={() => {
-                    field.onChange(group.groupId)
-                    form.setValue("selectedGroup", group)
+                    setSelectedGroup(group)
                   }}
                 />
               ))}
@@ -258,66 +267,18 @@ function GroupsTab({ form, selectedAuthors, show }: Props) {
                 ]}
               />
             )}
-          </FormItem>
-        )}
-      />
-    </div>
-  )
-}
-
-export default GroupsTab
-
-export function ConfirmCreateGroupDialog({
-  isPending,
-  onCreateGroup,
-}: {
-  isPending: boolean
-  onCreateGroup: () => Promise<void>
-}) {
-  const t = useTranslations("BooksManagementPage")
-  const [open, setOpen] = useState(false)
-
-  const handleOpenChange = (value: boolean) => {
-    if (isPending) return
-    setOpen(value)
-  }
-  return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button disabled={isPending}>
-          <Plus />
-          {t("Create new group")}
-        </Button>
-      </DialogTrigger>
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>{t("Create new group")}</DialogTitle>
-        </DialogHeader>
-        <DialogDescription>
-          {t(
-            "A new group will be created based on the cataloged information of this item"
-          )}
+          </div>
         </DialogDescription>
-        <DialogFooter className="flex gap-4">
+        <DialogFooter className="flex justify-end gap-4">
           <DialogClose asChild>
-            <Button
-              disabled={isPending}
-              type="button"
-              className="flex-1"
-              variant="outline"
-            >
+            <Button disabled={isPending} type="button" variant="outline">
               {t("Cancel")}
             </Button>
           </DialogClose>
           <Button
-            disabled={isPending}
+            disabled={isPending || !selectedGroup}
             type="button"
-            className="flex-1"
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onCreateGroup().finally(() => setOpen(false))
-            }}
+            onClick={handleAssignGroup}
           >
             {t("Continue")}
             {isPending && <Loader2 className="size-4 animate-spin" />}
@@ -327,3 +288,5 @@ export function ConfirmCreateGroupDialog({
     </Dialog>
   )
 }
+
+export default AssignGroupDialog

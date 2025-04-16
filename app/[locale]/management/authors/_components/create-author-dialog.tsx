@@ -200,6 +200,7 @@ function CreateAuthorDialog() {
                                 <Button
                                   onClick={(e) => {
                                     e.preventDefault()
+                                    e.stopPropagation()
                                     field.onChange("")
                                   }}
                                   variant="ghost"

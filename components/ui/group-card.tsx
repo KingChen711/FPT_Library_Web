@@ -21,9 +21,10 @@ import { TooltipProvider } from "@/components/ui/tooltip"
 type Props = {
   group: LibraryItemGroup
   className?: string
+  onClick?: () => void
 }
 
-export default function GroupCard({ group, className }: Props) {
+export default function GroupCard({ group, className, onClick }: Props) {
   const formatLocale = useFormatLocale()
   const t = useTranslations("BooksManagementPage")
 
@@ -32,8 +33,12 @@ export default function GroupCard({ group, className }: Props) {
   return (
     <TooltipProvider>
       <Card
+        onClick={() => {
+          if (onClick) onClick()
+        }}
         className={cn(
           "w-full max-w-md border-2 transition-shadow duration-300 hover:shadow-lg",
+          onClick && "cursor-pointer",
           className
         )}
       >
