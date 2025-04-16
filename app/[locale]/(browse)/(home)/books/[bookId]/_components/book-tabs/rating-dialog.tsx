@@ -163,7 +163,15 @@ function RatingDialog({ libraryItemId, ratingValue, reviewText }: Props) {
 
                 <div className="mt-4 flex justify-end gap-3">
                   <DialogClose>
-                    <Button variant="outline" disabled={isPending}>
+                    <Button
+                      variant="outline"
+                      disabled={isPending}
+                      onClick={(e) => {
+                        e.preventDefault()
+                        e.stopPropagation()
+                        setOpen(false)
+                      }}
+                    >
                       {t("Cancel")}
                     </Button>
                   </DialogClose>

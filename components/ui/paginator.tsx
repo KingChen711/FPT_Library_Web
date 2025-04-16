@@ -12,7 +12,7 @@ import { Command, CommandGroup, CommandItem, CommandList } from "./command"
 import { Popover, PopoverContent, PopoverTrigger } from "./popover"
 import { Skeleton } from "./skeleton"
 
-const rowsPerPageOptions = [
+const defaultRowsPerPageOptions = [
   { label: "5", value: "5" },
   { label: "10", value: "10" },
   { label: "30", value: "30" },
@@ -31,6 +31,7 @@ type Props = {
   scrollOnPaginate?: boolean
   pageIndexKey?: string
   pageSizeKey?: string
+  rowsPerPageOptions?: { label: string; value: string }[]
 }
 
 function Paginator({
@@ -44,6 +45,7 @@ function Paginator({
   scrollOnPaginate: scrollOnChangePage = false,
   pageIndexKey = "pageIndex",
   pageSizeKey = "pageSize",
+  rowsPerPageOptions,
 }: Props) {
   const router = useRouter()
   const t = useTranslations("Paginator")
@@ -125,7 +127,7 @@ function Paginator({
               )}
             >
               {pageSize
-                ? rowsPerPageOptions.find(
+                ? (rowsPerPageOptions || defaultRowsPerPageOptions).find(
                     (language) => language.value === pageSize.toString()
                   )?.label
                 : "Select language"}
@@ -136,24 +138,26 @@ function Paginator({
             <Command>
               <CommandList>
                 <CommandGroup>
-                  {rowsPerPageOptions.map((option) => (
-                    <CommandItem
-                      value={option.label}
-                      key={option.value}
-                      onSelect={() => handleChangeRowsPerPage(option.value)}
-                      className="cursor-pointer"
-                    >
-                      {option.label}
-                      <Check
-                        className={cn(
-                          "ml-auto",
-                          option.value === pageSize.toString()
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                      />
-                    </CommandItem>
-                  ))}
+                  {(rowsPerPageOptions || defaultRowsPerPageOptions).map(
+                    (option) => (
+                      <CommandItem
+                        value={option.label}
+                        key={option.value}
+                        onSelect={() => handleChangeRowsPerPage(option.value)}
+                        className="cursor-pointer"
+                      >
+                        {option.label}
+                        <Check
+                          className={cn(
+                            "ml-auto",
+                            option.value === pageSize.toString()
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                        />
+                      </CommandItem>
+                    )
+                  )}
                 </CommandGroup>
               </CommandList>
             </Command>

@@ -5,16 +5,16 @@ import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 
-export async function createBook(
-  body: TBookEditionSchema
+export async function assignGroup(
+  libraryItemId: number,
+  groupId: number
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
-    const { message } = await http.post<{ libraryItemId: number }>(
-      "/api/management/library-items",
-      body,
+    const { message } = await http.patch(
+      `/api/management/library-items/${libraryItemId}/group/${groupId}`,
+      {},
       {
         headers: {
           Authorization: `Bearer ${getAccessToken()}`,
@@ -23,6 +23,7 @@ export async function createBook(
     )
 
     revalidatePath("/management/books")
+    revalidatePath(`/management/books/${libraryItemId}`)
 
     return {
       isSuccess: true,

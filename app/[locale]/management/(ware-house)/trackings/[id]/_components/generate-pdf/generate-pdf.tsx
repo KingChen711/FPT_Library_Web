@@ -122,8 +122,11 @@ export const generatePDF = ({
       item.itemTotal,
       formatCurrency(item.unitPrice),
       formatCurrency(item.totalAmount),
-      `${item.barcodeRangeFrom}-${item.barcodeRangeTo}`,
     ]
+
+    if (!supplementRequest) {
+      row.push(`${item.barcodeRangeFrom}-${item.barcodeRangeTo}`)
+    }
 
     itemRowsByCategory[item.category.vietnameseName] = itemRowsByCategory[
       item.category.vietnameseName
@@ -133,15 +136,11 @@ export const generatePDF = ({
   })
 
   // Định nghĩa các cột (sử dụng header là mảng string)
-  const itemColumns = [
-    "STT",
-    "Tên sách",
-    "ISBN",
-    "SL",
-    "Đơn giá",
-    "Thành tiền",
-    "Số ĐKCB",
-  ]
+  const itemColumns = ["STT", "Tên sách", "ISBN", "SL", "Đơn giá", "Thành tiền"]
+
+  if (!supplementRequest) {
+    itemColumns.push("Số ĐKCB")
+  }
 
   let finalY = 200 // Ép kiểu vì lastAutoTable không được định nghĩa sẵn trong jsPDF
 
@@ -160,7 +159,7 @@ export const generatePDF = ({
       startY: finalY + 10,
       margin: { left: 40, right: 40 },
       styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
-      headStyles: { fillColor: [22, 160, 133] },
+      headStyles: { fillColor: [242, 242, 242] },
     })
   })
 
@@ -204,7 +203,7 @@ export const generatePDF = ({
     startY: finalY + 10,
     margin: { left: 40, right: 40 },
     styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
-    headStyles: { fillColor: [22, 160, 133] },
+    headStyles: { fillColor: [242, 242, 242] },
   })
 
   finalY = (doc as any).lastAutoTable.finalY + 30
@@ -217,29 +216,37 @@ export const generatePDF = ({
   doc.text("Thống kê chung", 40, finalY)
   doc.setFont("Roboto", "normal")
 
+  const head = supplementRequest
+    ? [["Tổng tài liệu", "Tổng tiền"]]
+    : [
+        [
+          "Tổng tài liệu",
+          "Tổng bản sao",
+          "Tổng tài liệu đã biên mục",
+          "Tổng bản sao đã dán ĐKCB",
+          "Tổng tiền",
+        ],
+      ]
+
+  const body = supplementRequest
+    ? [[statisticSummary.totalItem, formatCurrency(totalMoney)]]
+    : [
+        [
+          statisticSummary.totalItem,
+          statisticSummary.totalInstanceItem,
+          statisticSummary.totalCatalogedItem,
+          statisticSummary.totalCatalogedInstanceItem,
+          formatCurrency(totalMoney),
+        ],
+      ]
+
   autoTable(doc, {
-    head: [
-      [
-        "Tổng tài liệu",
-        "Tổng bản sao",
-        "Tổng tài liệu đã biên mục",
-        "Tổng bản sao đã dán ĐKCB",
-        "Tổng tiền",
-      ],
-    ],
-    body: [
-      [
-        statisticSummary.totalItem,
-        statisticSummary.totalInstanceItem,
-        statisticSummary.totalCatalogedItem,
-        statisticSummary.totalCatalogedInstanceItem,
-        formatCurrency(totalMoney),
-      ],
-    ],
+    head,
+    body,
     startY: finalY + 10,
     margin: { left: 40, right: 40 },
     styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
-    headStyles: { fillColor: [22, 160, 133] },
+    headStyles: { fillColor: [242, 242, 242] },
   })
 
   if (supplementRequest) {
@@ -247,7 +254,7 @@ export const generatePDF = ({
 
     doc.setFontSize(14)
     doc.setFont("Roboto", "bold")
-    doc.text("Đề xuất bởi AI", 40, finalY)
+    doc.text("Đề xuất bổ sung", 40, finalY)
     doc.setFont("Roboto", "normal")
 
     const recommendRows = recommendItems.sources.map((stat, idx) => {
@@ -284,7 +291,7 @@ export const generatePDF = ({
       startY: finalY + 10,
       margin: { left: 40, right: 40 },
       styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
-      headStyles: { fillColor: [22, 160, 133] },
+      headStyles: { fillColor: [242, 242, 242] },
     })
   }
 

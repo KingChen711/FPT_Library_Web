@@ -37,7 +37,7 @@ export default function AudioDropzone({
       if (!audioFile || !audioFile.type.startsWith("audio/")) {
         error = locale === "vi" ? "Tệp không hợp lệ" : "Invalid file"
       } else if (!noLimitSize && audioFile.size >= 10 * 1024 * 1024) {
-        error = locale === "vi" ? "Ảnh quá lớn" : "Image is too large"
+        error = locale === "vi" ? "Tệp quá lớn" : "File is too large"
       }
 
       if (error) {

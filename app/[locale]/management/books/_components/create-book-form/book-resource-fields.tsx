@@ -176,6 +176,7 @@ function BookResourceFields({ form, isPending }: Props) {
                           />
                         ) : (
                           <AudioDropzone
+                            noLimitSize
                             value={field.value}
                             onChange={(val) => {
                               field.onChange(val)

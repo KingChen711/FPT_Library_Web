@@ -57,36 +57,16 @@ function CreateBookForm({ trackingDetail }: Props) {
   const fromWarehouseMode = !!trackingDetail
 
   const [isPending, startTransition] = useTransition()
-  const [currentTab, setCurrentTab] = useState<Tab>("Groups")
+  const [currentTab, setCurrentTab] = useState<Tab>("Category")
 
   // const { isbn, scannedBooks, appendScannedBook, setIsbn } = useScanIsbn()
   // const { data: scannedBook, isFetching: isFetchingSearchIsbn } =
   //   useSearchIsbn(isbn)
 
-  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([
-    {
-      authorCode: "Auth123",
-      authorId: 1,
-      fullName: "Aoyama Gosho",
-      isDeleted: false,
-      authorImage: "",
-      biography: "",
-      createDate: new Date(),
-      dateOfDeath: new Date(),
-      dob: new Date(),
-      nationality: "",
-      updateDate: new Date(),
-    },
-  ])
-  const [selectedCategory, setSelectedCategory] = useState<Category | null>({
-    categoryId: 1,
-    description: "",
-    englishName: "BookSeries",
-    isAllowAITraining: true,
-    prefix: "BS",
-    totalBorrowDays: 30,
-    vietnameseName: "Sách bộ",
-  })
+  const [selectedAuthors, setSelectedAuthors] = useState<Author[]>([])
+  const [selectedCategory, setSelectedCategory] = useState<Category | null>(
+    null
+  )
 
   // const [hasConfirmedChangeStatus, setHasConfirmedChangeStatus] =
   //   useState(false)
@@ -96,15 +76,13 @@ function CreateBookForm({ trackingDetail }: Props) {
   const form = useForm<TBookEditionSchema>({
     resolver: zodResolver(bookEditionSchema),
     defaultValues: {
-      title: "Thám tử lừng danh Conan - Tập 25",
-      cutterNumber: "TH104T",
-      classificationNumber: "895.9223",
+      title: trackingDetail?.itemName,
       isbn: trackingDetail?.isbn || undefined,
       estimatedPrice: trackingDetail?.unitPrice || undefined,
       libraryItemInstances: [],
       categoryId: trackingDetail?.categoryId,
       trackingDetailId: trackingDetail?.trackingDetailId,
-      authorIds: [1],
+      authorIds: [],
     },
   })
 
@@ -117,8 +95,6 @@ function CreateBookForm({ trackingDetail }: Props) {
 
   const onSubmit = async (values: TBookEditionSchema) => {
     startTransition(async () => {
-      // const coverImageFile = values.file
-
       await uploadMedias(values)
 
       values.libraryItemInstances = []
@@ -129,22 +105,12 @@ function CreateBookForm({ trackingDetail }: Props) {
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
-          description: res.data.message,
+          description: res.data,
           variant: "success",
         })
 
         router.push("/management/books")
 
-        // trainForm.setValue("bookCode", res.data.bookCode)
-        // trainForm.setValue("imageList", [
-        //   {
-        //     checkedResult: values.checkedResult,
-        //     coverImage: values.coverImage,
-        //     validImage: values.validImage,
-        //     file: coverImageFile,
-        //   },
-        // ])
-        // setCurrentTab("Train AI")
         return
       }
 
