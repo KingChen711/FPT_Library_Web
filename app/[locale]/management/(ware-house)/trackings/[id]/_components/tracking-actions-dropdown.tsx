@@ -75,7 +75,7 @@ function TrackingActionsDropdown({
     })
   }
 
-  const handleExport = () => {
+  const handleExport = async () => {
     startExport(async () => {
       const [trackingDetailsData, recommendItems] = await Promise.all([
         getExportTrackingDetails(tracking.trackingId),

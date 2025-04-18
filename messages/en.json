@@ -2306,6 +2306,9 @@
     "Out of shelf": "Out of shelf"
   },
   "TransactionsManagementPage": {
+    "Transaction": "Transaction",
+    "Payment QR code": "Payment QR code",
+    "Borrow price": "Borrow price",
     "Fine": "Fine",
     "Note": "Note",
     "Resource": "Resource",

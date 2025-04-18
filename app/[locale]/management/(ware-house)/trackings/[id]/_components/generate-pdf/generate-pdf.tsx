@@ -159,7 +159,7 @@ export const generatePDF = ({
       startY: finalY + 10,
       margin: { left: 40, right: 40 },
       styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
-      headStyles: { fillColor: [242, 242, 242] },
+      headStyles: { fillColor: [242, 242, 242], textColor: [0, 0, 0] },
     })
   })
 
@@ -203,7 +203,7 @@ export const generatePDF = ({
     startY: finalY + 10,
     margin: { left: 40, right: 40 },
     styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
-    headStyles: { fillColor: [242, 242, 242] },
+    headStyles: { fillColor: [242, 242, 242], textColor: [0, 0, 0] },
   })
 
   finalY = (doc as any).lastAutoTable.finalY + 30
@@ -246,7 +246,7 @@ export const generatePDF = ({
     startY: finalY + 10,
     margin: { left: 40, right: 40 },
     styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
-    headStyles: { fillColor: [242, 242, 242] },
+    headStyles: { fillColor: [242, 242, 242], textColor: [0, 0, 0] },
   })
 
   if (supplementRequest) {
@@ -291,7 +291,7 @@ export const generatePDF = ({
       startY: finalY + 10,
       margin: { left: 40, right: 40 },
       styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
-      headStyles: { fillColor: [242, 242, 242] },
+      headStyles: { fillColor: [242, 242, 242], textColor: [0, 0, 0] },
     })
   }
 

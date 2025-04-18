@@ -14,7 +14,7 @@ import {
 
 type Props = {
   isPending: boolean
-  onExportFile: () => void
+  onExportFile: () => Promise<void>
   receipt: string
   open: boolean
   setOpen: (val: boolean) => void
@@ -64,7 +64,9 @@ function ConfirmExportFileDialog({
             disabled={isPending}
             type="button"
             className="flex-1"
-            onClick={onExportFile}
+            onClick={() => {
+              onExportFile().then(() => setOpen(false))
+            }}
           >
             {t("Continue")}
             {isPending && <Loader2 className="size-4 animate-spin" />}
