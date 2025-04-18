@@ -32,6 +32,7 @@ const SearchResult = async ({ searchParams }: Props) => {
         <section className="space-y-6">
           {libraryItems.map((item) => (
             <LibraryItemCard
+              canOpen
               fetchShelf
               key={item.libraryItemId}
               libraryItem={item}

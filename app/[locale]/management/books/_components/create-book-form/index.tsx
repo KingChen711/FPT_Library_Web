@@ -1,6 +1,7 @@
 "use client"
 
 import React, {
+  useEffect,
   useState,
   useTransition,
   type Dispatch,
@@ -28,6 +29,7 @@ import { Form } from "@/components/ui/form"
 import { Label } from "@/components/ui/label"
 import TrackingDetailCard from "@/components/ui/tracking-detail-card"
 
+import CreateAuthorDialog from "../../../authors/_components/create-author-dialog"
 import CatalogTab from "./catalog-tab"
 import CategoryTab from "./category-tab"
 import CopiesTab from "./copies-tab"
@@ -83,6 +85,7 @@ function CreateBookForm({ trackingDetail }: Props) {
       categoryId: trackingDetail?.categoryId,
       trackingDetailId: trackingDetail?.trackingDetailId,
       authorIds: [],
+      libraryResources: [],
     },
   })
 
@@ -311,221 +314,237 @@ function CreateBookForm({ trackingDetail }: Props) {
 
   const isBookSeries = selectedCategory?.englishName === "BookSeries" || false
 
+  const [openCreateAuthor, setOpenCreateAuthor] = useState(false)
+
+  useEffect(() => {
+    console.log(form.formState.errors)
+  }, [form.formState.errors])
+
   return (
-    <div>
-      <div className="mt-4 flex flex-wrap items-start gap-4">
-        <div className="flex items-center gap-2">
-          <h3 className="text-2xl font-semibold">
-            {t(fromWarehouseMode ? "Catalog" : "Create book")}
-          </h3>
-          {/* //TODO:uncomment this */}
-          {/* <SocketProvider>
-            <IsbnScannerDialog />
-          </SocketProvider> */}
-        </div>
-
-        <ProgressTabBar
-          currentTab={currentTab}
-          setCurrentTab={setCurrentTab as Dispatch<SetStateAction<string>>}
-          isBookSeries={isBookSeries}
-        />
-      </div>
-
-      {/* {isFetchingSearchIsbn && (
-        <div className="flex items-center gap-2">
-          {t("Loading scanned book")}
-          <Loader2 className="size-4 animate-spin" />{" "}
-        </div>
-      )}
-
-      {scannedBooks.length > 0 && (
-        <div className="flex flex-col gap-2">
-          <Label>{t("Scanned book")}</Label>
-          <div className="grid">
-            <div className="flex gap-4 overflow-x-auto overflow-y-hidden pb-6">
-              {scannedBooks.map((book) => (
-                <div
-                  key={book.isbn}
-                  className="mt-4 flex h-full flex-col gap-2"
-                >
-                  {book.notFound ? (
-                    <div className="text-sm">
-                      {t("not found isbn", { isbn: book.isbn })}
-                    </div>
-                  ) : (
-                    <ScannedBook book={book} />
-                  )}
-                </div>
-              ))}
-            </div>
+    <>
+      <CreateAuthorDialog
+        noTrigger
+        open={openCreateAuthor}
+        setOpen={setOpenCreateAuthor}
+      />
+      <div>
+        <div className="mt-4 flex flex-wrap items-start gap-4">
+          <div className="flex items-center gap-2">
+            <h3 className="text-2xl font-semibold">
+              {t(fromWarehouseMode ? "Catalog" : "Create book")}
+            </h3>
+            {/* //TODO:uncomment this */}
+            {/* <SocketProvider>
+              <IsbnScannerDialog />
+            </SocketProvider> */}
           </div>
-        </div>
-      )} */}
 
-      {/* {currentTab !== "Train AI" && ( */}
-      <div className="mt-4 flex flex-col gap-4">
-        {fromWarehouseMode && (
-          <div>
-            <Label>{t("Tracking details")}</Label>
-            <div className="flex items-center">
-              <TrackingCard tracking={trackingDetail.warehouseTracking} />
-              <ArrowRight className="size-9" />
-              <TrackingDetailCard
-                trackingDetail={trackingDetail}
-                category={trackingDetail.category}
-              />
-            </div>
+          <ProgressTabBar
+            currentTab={currentTab}
+            setCurrentTab={setCurrentTab as Dispatch<SetStateAction<string>>}
+            isBookSeries={isBookSeries}
+          />
+        </div>
+
+        {/* {isFetchingSearchIsbn && (
+          <div className="flex items-center gap-2">
+            {t("Loading scanned book")}
+            <Loader2 className="size-4 animate-spin" />{" "}
           </div>
         )}
-        <Marc21Dialog
-          form={form}
-          show={currentTab === "Catalog"}
-          getIsbn={!fromWarehouseMode && !form.watch("trackingDetailId")}
-        />
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <CategoryTab
-              fromWarehouseMode={fromWarehouseMode}
-              show={currentTab === "Category"}
-              form={form}
-              isPending={isPending}
-              selectedCategory={selectedCategory}
-              setSelectedCategory={setSelectedCategory}
-            />
-
-            <CatalogTab
-              fromWarehouseMode={fromWarehouseMode}
-              isRequireImage={!!selectedCategory?.isAllowAITraining}
-              form={form}
-              isPending={isPending}
-              show={currentTab === "Catalog"}
-              selectedAuthors={selectedAuthors}
-              setSelectedAuthors={setSelectedAuthors}
-            />
-
-            <GroupsTab
-              form={form}
-              isPending={isPending}
-              show={currentTab === "Groups"}
-              selectedAuthors={selectedAuthors}
-            />
-
-            <CopiesTab
-              form={form}
-              isPending={isPending}
-              // hasConfirmedChangeStatus={hasConfirmedChangeStatus}
-              selectedCategory={selectedCategory}
-              // setHasConfirmedChangeStatus={setHasConfirmedChangeStatus}
-              show={currentTab === "Individual registration"}
-            />
-
-            <ResourcesTab
-              form={form}
-              isPending={isPending}
-              show={currentTab === "Resources"}
-            />
-
-            <div className="flex justify-end gap-x-4">
-              <Button
-                disabled={isPending}
-                variant="secondary"
-                className="float-right mt-4"
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  if (currentTab === "Category") {
-                    router.push("/management/books")
-                    return
-                  }
-
-                  if (currentTab === "Catalog") {
-                    setCurrentTab("Category")
-                    return
-                  }
-
-                  if (currentTab === "Individual registration") {
-                    setCurrentTab("Catalog")
-                    return
-                  }
-                  if (currentTab === "Resources") {
-                    setCurrentTab("Individual registration")
-                    return
-                  }
-                }}
-              >
-                {t(currentTab !== "Catalog" ? "Back" : "Cancel")}
-              </Button>
-
-              <Button
-                disabled={isPending}
-                type="submit"
-                className="float-right mt-4"
-                onClick={async (e) => {
-                  if (currentTab === "Resources") {
-                    //active the default behaviour (submit)
-                    return
-                  }
-
-                  e.preventDefault()
-                  e.stopPropagation()
-
-                  if (currentTab === "Category") {
-                    if (await triggerCategoryTab()) {
-                      setCurrentTab("Catalog")
-                    }
-                    return
-                  }
-
-                  if (currentTab === "Catalog") {
-                    if (await triggerCatalogTab()) {
-                      if (isBookSeries) {
-                        setCurrentTab("Groups")
-                      } else {
-                        setCurrentTab("Individual registration")
-                      }
-                    }
-                    return
-                  }
-
-                  if (currentTab === "Groups") {
-                    setCurrentTab("Individual registration")
-                    return
-                  }
-
-                  if (currentTab === "Individual registration") {
-                    if (await triggerCopiesTab()) {
-                      setCurrentTab("Resources")
-                    }
-                    return
-                  }
-                }}
-              >
-                {t("Continue")}
-                {isPending && <Loader2 className="ml-1 size-4 animate-spin" />}
-              </Button>
+  
+        {scannedBooks.length > 0 && (
+          <div className="flex flex-col gap-2">
+            <Label>{t("Scanned book")}</Label>
+            <div className="grid">
+              <div className="flex gap-4 overflow-x-auto overflow-y-hidden pb-6">
+                {scannedBooks.map((book) => (
+                  <div
+                    key={book.isbn}
+                    className="mt-4 flex h-full flex-col gap-2"
+                  >
+                    {book.notFound ? (
+                      <div className="text-sm">
+                        {t("not found isbn", { isbn: book.isbn })}
+                      </div>
+                    ) : (
+                      <ScannedBook book={book} />
+                    )}
+                  </div>
+                ))}
+              </div>
             </div>
-          </form>
-        </Form>
-      </div>
-      {/* )} */}
+          </div>
+        )} */}
 
-      {/* {currentTab === "Train AI" && (
-        <TrainBookForm
-          form={trainForm}
-          title={form.watch("title")}
-          generalNote={form.watch("generalNote")}
-          publisher={form.watch("publisher") || ""}
-          subTitle={form.watch("subTitle")}
-          authorNames={selectedAuthors
-            .map((author) => {
-              if (form.watch("authorIds")?.includes(author.authorId))
-                return author.fullName
-              return false
-            })
-            .filter((item) => item !== false)}
-        />
-      )} */}
-    </div>
+        {/* {currentTab !== "Train AI" && ( */}
+        <div className="mt-4 flex flex-col gap-4">
+          {fromWarehouseMode && (
+            <div>
+              <Label>{t("Tracking details")}</Label>
+              <div className="flex items-center">
+                <TrackingCard tracking={trackingDetail.warehouseTracking} />
+                <ArrowRight className="size-9" />
+                <TrackingDetailCard
+                  trackingDetail={trackingDetail}
+                  category={trackingDetail.category}
+                />
+              </div>
+            </div>
+          )}
+          <Marc21Dialog
+            form={form}
+            show={currentTab === "Catalog"}
+            getIsbn={!fromWarehouseMode && !form.watch("trackingDetailId")}
+          />
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <CategoryTab
+                fromWarehouseMode={fromWarehouseMode}
+                show={currentTab === "Category"}
+                form={form}
+                isPending={isPending}
+                selectedCategory={selectedCategory}
+                setSelectedCategory={setSelectedCategory}
+              />
+
+              <CatalogTab
+                fromWarehouseMode={fromWarehouseMode}
+                isRequireImage={!!selectedCategory?.isAllowAITraining}
+                form={form}
+                isPending={isPending}
+                show={currentTab === "Catalog"}
+                selectedAuthors={selectedAuthors}
+                setSelectedAuthors={setSelectedAuthors}
+                setOpenCreateAuthor={setOpenCreateAuthor}
+              />
+
+              <GroupsTab
+                form={form}
+                isPending={isPending}
+                show={currentTab === "Groups"}
+                selectedAuthors={selectedAuthors}
+              />
+
+              <CopiesTab
+                form={form}
+                isPending={isPending}
+                // hasConfirmedChangeStatus={hasConfirmedChangeStatus}
+                selectedCategory={selectedCategory}
+                // setHasConfirmedChangeStatus={setHasConfirmedChangeStatus}
+                show={currentTab === "Individual registration"}
+              />
+
+              <ResourcesTab
+                form={form}
+                isPending={isPending}
+                show={currentTab === "Resources"}
+              />
+
+              <div className="flex justify-end gap-x-4">
+                <Button
+                  disabled={isPending}
+                  variant="secondary"
+                  className="float-right mt-4"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    if (currentTab === "Category") {
+                      router.push("/management/books")
+                      return
+                    }
+
+                    if (currentTab === "Catalog") {
+                      setCurrentTab("Category")
+                      return
+                    }
+
+                    if (currentTab === "Individual registration") {
+                      setCurrentTab("Catalog")
+                      return
+                    }
+                    if (currentTab === "Resources") {
+                      setCurrentTab("Individual registration")
+                      return
+                    }
+                  }}
+                >
+                  {t(currentTab !== "Catalog" ? "Back" : "Cancel")}
+                </Button>
+
+                <Button
+                  disabled={isPending}
+                  type="submit"
+                  className="float-right mt-4"
+                  onClick={async (e) => {
+                    if (currentTab === "Resources") {
+                      //active the default behaviour (submit)
+                      return
+                    }
+
+                    e.preventDefault()
+                    e.stopPropagation()
+
+                    if (currentTab === "Category") {
+                      if (await triggerCategoryTab()) {
+                        setCurrentTab("Catalog")
+                      }
+                      return
+                    }
+
+                    if (currentTab === "Catalog") {
+                      if (await triggerCatalogTab()) {
+                        if (isBookSeries) {
+                          setCurrentTab("Groups")
+                        } else {
+                          setCurrentTab("Individual registration")
+                        }
+                      }
+                      return
+                    }
+
+                    if (currentTab === "Groups") {
+                      setCurrentTab("Individual registration")
+                      return
+                    }
+
+                    if (currentTab === "Individual registration") {
+                      if (await triggerCopiesTab()) {
+                        setCurrentTab("Resources")
+                      }
+                      return
+                    }
+                  }}
+                >
+                  {t("Continue")}
+                  {isPending && (
+                    <Loader2 className="ml-1 size-4 animate-spin" />
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </div>
+        {/* )} */}
+
+        {/* {currentTab === "Train AI" && (
+          <TrainBookForm
+            form={trainForm}
+            title={form.watch("title")}
+            generalNote={form.watch("generalNote")}
+            publisher={form.watch("publisher") || ""}
+            subTitle={form.watch("subTitle")}
+            authorNames={selectedAuthors
+              .map((author) => {
+                if (form.watch("authorIds")?.includes(author.authorId))
+                  return author.fullName
+                return false
+              })
+              .filter((item) => item !== false)}
+          />
+        )} */}
+      </div>
+    </>
   )
 }
 

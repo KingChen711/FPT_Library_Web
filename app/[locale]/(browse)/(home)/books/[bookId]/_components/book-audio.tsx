@@ -159,7 +159,7 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
 
         return () => URL.revokeObjectURL(blobUrl)
       } catch {
-        router.push("/not-found")
+        // router.push("/not-found")
         return
       }
     }
@@ -183,7 +183,7 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
   }
 
   if (!audioLink) {
-    router.push("/not-found")
+    // router.push("/not-found")
     return
   }
 

@@ -114,6 +114,8 @@ export const generatePDF = ({
 
   const itemRowsByCategory: Record<string, (string | number)[][]> = {}
 
+  let totalItem = 0
+
   trackingDetails.forEach((item, index) => {
     const row = [
       index + 1,
@@ -170,15 +172,24 @@ export const generatePDF = ({
     .map((stat, idx) => {
       if (stat.totalItem === null || stat.totalItem === undefined) return false
       const categoryName = stat?.category?.vietnameseName || ""
-      return [
-        idx + 1,
-        categoryName,
-        stat.totalItem ?? 0,
-        stat.totalInstanceItem ?? 0,
-        stat.totalCatalogedItem ?? 0,
-        stat.totalCatalogedInstanceItem ?? 0,
-        formatCurrency(stat.totalPrice),
-      ]
+      totalItem += stat.totalItem ?? 0
+      return supplementRequest
+        ? [
+            idx + 1,
+            categoryName,
+            stat.totalItem ?? 0,
+            stat.totalInstanceItem ?? 0,
+            formatCurrency(stat.totalPrice),
+          ]
+        : [
+            idx + 1,
+            categoryName,
+            stat.totalItem ?? 0,
+            stat.totalInstanceItem ?? 0,
+            stat.totalCatalogedItem ?? 0,
+            stat.totalCatalogedInstanceItem ?? 0,
+            formatCurrency(stat.totalPrice),
+          ]
     })
     .filter(Boolean) as (string | number)[][]
 
@@ -187,18 +198,22 @@ export const generatePDF = ({
   doc.text("Thống kê theo loại", 40, finalY)
   doc.setFont("Roboto", "normal")
 
+  const headCategory = supplementRequest
+    ? [["STT", "Loại", "Tổng tài liệu", "Tổng bản sao", "Tổng tiền"]]
+    : [
+        [
+          "STT",
+          "Loại",
+          "Tổng tài liệu",
+          "Tổng bản sao",
+          "Tổng tài liệu đã biên mục",
+          "Tổng bản sao đã dán ĐKCB",
+          "Tổng tiền",
+        ],
+      ]
+
   autoTable(doc, {
-    head: [
-      [
-        "STT",
-        "Loại",
-        "Tổng tài liệu",
-        "Tổng bản sao",
-        "Tổng tài liệu đã biên mục",
-        "Tổng bản sao đã dán ĐKCB",
-        "Tổng tiền",
-      ],
-    ],
+    head: headCategory,
     body: statisticsRows,
     startY: finalY + 10,
     margin: { left: 40, right: 40 },
@@ -229,7 +244,7 @@ export const generatePDF = ({
       ]
 
   const body = supplementRequest
-    ? [[statisticSummary.totalItem, formatCurrency(totalMoney)]]
+    ? [[totalItem, formatCurrency(totalMoney)]]
     : [
         [
           statisticSummary.totalItem,

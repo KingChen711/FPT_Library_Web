@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { BookOpen } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -36,6 +37,7 @@ interface LibraryItemProps {
   showBorrowDuration?: boolean
   expandable?: boolean
   fetchShelf?: boolean
+  canOpen?: boolean
 }
 
 export default function LibraryItemCard({
@@ -45,6 +47,7 @@ export default function LibraryItemCard({
   expandable,
   showBorrowDuration = false,
   fetchShelf = false,
+  canOpen = false,
 }: LibraryItemProps) {
   const {
     category,
@@ -66,124 +69,132 @@ export default function LibraryItemCard({
   console.log({ fetchShelf, shelfId })
 
   return (
-    <Card
-      className={cn(
-        "relative w-full max-w-[calc(95vw-640px)] overflow-hidden rounded-md border-2",
-        modal && "max-w-[95vw]",
-        className
-      )}
+    <Link
+      href={canOpen ? `/books/${libraryItem.libraryItemId}` : "#"}
+      className={cn(!canOpen && "cursor-pointer")}
     >
-      <div className="flex flex-col sm:flex-row">
-        <CardContent className="flex-1 p-4">
-          <div className="flex gap-4">
-            <div className="relative h-[135px] w-[90px] shrink-0 overflow-hidden rounded-md border">
-              {coverImage ? (
-                <Image
-                  src={coverImage}
-                  alt={title}
-                  fill
-                  className="object-cover"
-                />
-              ) : (
-                <div className="absolute inset-0 flex items-center justify-center bg-muted">
-                  <BookOpen className="size-16 text-muted-foreground" />
-                </div>
-              )}
-            </div>
-            <div className="space-y-3">
-              <div>
-                <div className="mt-2 flex items-center">
-                  <h3 className="line-clamp-1 text-lg font-bold">{title}</h3>
-                  <div className="absolute right-2 top-2 z-50 flex items-center gap-3">
-                    {fetchShelf && shelfId && (
-                      <LocateButton shelfId={shelfId} />
-                    )}
-                    {category && (
-                      <>
-                        <Badge>
-                          {locale === "vi"
-                            ? category.vietnameseName
-                            : category.englishName}
-                        </Badge>
-                        {showBorrowDuration && category.totalBorrowDays && (
+      <Card
+        className={cn(
+          "relative w-full max-w-[calc(95vw-640px)] overflow-hidden rounded-md border-2",
+          modal && "max-w-[95vw]",
+          className
+        )}
+      >
+        <div className="flex flex-col sm:flex-row">
+          <CardContent className="flex-1 p-4">
+            <div className="flex gap-4">
+              <div className="relative h-[135px] w-[90px] shrink-0 overflow-hidden rounded-md border">
+                {coverImage ? (
+                  <Image
+                    src={coverImage}
+                    alt={title}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center bg-muted">
+                    <BookOpen className="size-16 text-muted-foreground" />
+                  </div>
+                )}
+              </div>
+              <div className="space-y-3">
+                <div>
+                  <div className="mt-2 flex items-center">
+                    <h3 className="line-clamp-1 text-lg font-bold">{title}</h3>
+                    <div className="absolute right-2 top-2 z-50 flex items-center gap-3">
+                      {fetchShelf && shelfId && (
+                        <LocateButton shelfId={shelfId} />
+                      )}
+                      {category && (
+                        <>
                           <Badge>
                             {locale === "vi"
-                              ? category.totalBorrowDays + " ngày"
-                              : category.totalBorrowDays + " days"}
+                              ? category.vietnameseName
+                              : category.englishName}
                           </Badge>
-                        )}
-                      </>
-                    )}
+                          {showBorrowDuration && category.totalBorrowDays && (
+                            <Badge>
+                              {locale === "vi"
+                                ? category.totalBorrowDays + " ngày"
+                                : category.totalBorrowDays + " days"}
+                            </Badge>
+                          )}
+                        </>
+                      )}
+                    </div>
                   </div>
+                  {subTitle && (
+                    <p className="text-sm text-muted-foreground">{subTitle}</p>
+                  )}
                 </div>
-                {subTitle && (
-                  <p className="text-sm text-muted-foreground">{subTitle}</p>
+
+                <div className="flex flex-wrap gap-x-6 gap-y-2">
+                  {libraryItemAuthors && libraryItemAuthors.length > 0 && (
+                    <p className="text-sm">
+                      <span className="font-medium">{t("Authors")}:</span>{" "}
+                      {libraryItemAuthors
+                        .map((a) => a.author.fullName)
+                        .join(", ")}
+                    </p>
+                  )}
+
+                  {authors && authors.length > 0 && (
+                    <p className="text-sm">
+                      <span className="font-medium">{t("Authors")}:</span>{" "}
+                      {authors.map((a) => a.fullName).join(", ")}
+                    </p>
+                  )}
+
+                  {publisher && (
+                    <p className="text-sm">
+                      <span className="font-medium">{t("Publisher")}:</span>{" "}
+                      {publisher}
+                    </p>
+                  )}
+
+                  {publicationYear && (
+                    <p className="text-sm">
+                      <span className="font-medium">{t("Year")}:</span>{" "}
+                      {publicationYear}
+                    </p>
+                  )}
+
+                  {pageCount && (
+                    <p className="text-sm">
+                      <span className="font-medium">{t("Page count")}:</span>{" "}
+                      {pageCount}
+                    </p>
+                  )}
+                </div>
+
+                {summary && (
+                  <div>
+                    <p className="text-sm font-medium">{t("Summary")}:</p>
+                    <ParseHtml
+                      className="line-clamp-2 text-sm"
+                      data={summary}
+                    />
+                  </div>
                 )}
               </div>
-
-              <div className="flex flex-wrap gap-x-6 gap-y-2">
-                {libraryItemAuthors && libraryItemAuthors.length > 0 && (
-                  <p className="text-sm">
-                    <span className="font-medium">{t("Authors")}:</span>{" "}
-                    {libraryItemAuthors
-                      .map((a) => a.author.fullName)
-                      .join(", ")}
-                  </p>
-                )}
-
-                {authors && authors.length > 0 && (
-                  <p className="text-sm">
-                    <span className="font-medium">{t("Authors")}:</span>{" "}
-                    {authors.map((a) => a.fullName).join(", ")}
-                  </p>
-                )}
-
-                {publisher && (
-                  <p className="text-sm">
-                    <span className="font-medium">{t("Publisher")}:</span>{" "}
-                    {publisher}
-                  </p>
-                )}
-
-                {publicationYear && (
-                  <p className="text-sm">
-                    <span className="font-medium">{t("Year")}:</span>{" "}
-                    {publicationYear}
-                  </p>
-                )}
-
-                {pageCount && (
-                  <p className="text-sm">
-                    <span className="font-medium">{t("Page count")}:</span>{" "}
-                    {pageCount}
-                  </p>
-                )}
-              </div>
-
-              {summary && (
-                <div>
-                  <p className="text-sm font-medium">{t("Summary")}:</p>
-                  <ParseHtml className="line-clamp-2 text-sm" data={summary} />
-                </div>
-              )}
             </div>
-          </div>
 
-          {expandable ? (
-            <Accordion type="single" collapsible className="w-full">
-              <AccordionItem value="item-1">
-                <AccordionTrigger>{t("View more")}</AccordionTrigger>
-                <AccordionContent asChild>
-                  <ExpandInformation noBorderTop libraryItem={libraryItem} />
-                </AccordionContent>
-              </AccordionItem>
-            </Accordion>
-          ) : (
-            <ExpandInformation libraryItem={libraryItem} />
-          )}
-        </CardContent>
-      </div>
-    </Card>
+            {expandable ? (
+              <Accordion type="single" collapsible className="w-full">
+                <AccordionItem value="item-1">
+                  <AccordionTrigger>{t("View more")}</AccordionTrigger>
+                  <AccordionContent asChild>
+                    <ExpandInformation noBorderTop libraryItem={libraryItem} />
+                  </AccordionContent>
+                </AccordionItem>
+              </Accordion>
+            ) : (
+              <ExpandInformation libraryItem={libraryItem} />
+            )}
+          </CardContent>
+        </div>
+      </Card>
+    </Link>
   )
 }
 

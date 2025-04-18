@@ -53,7 +53,17 @@ type TUploadImageData = {
   }
 }
 
-function CreateAuthorDialog() {
+type Props = {
+  open?: boolean
+  setOpen?: (val: boolean) => void
+  noTrigger?: boolean
+}
+
+function CreateAuthorDialog({
+  open: customOpen,
+  setOpen: customSetOpen,
+  noTrigger = false,
+}: Props) {
   const { accessToken } = useAuth()
   const locale = useLocale()
   const queryClient = useQueryClient()
@@ -117,7 +127,11 @@ function CreateAuthorDialog() {
       const res = await createAuthor(values)
       if (res.isSuccess) {
         form.reset()
-        setOpen(false)
+        if (customSetOpen) {
+          customSetOpen(false)
+        } else {
+          setOpen(false)
+        }
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
           description: res.data,
@@ -158,13 +172,18 @@ function CreateAuthorDialog() {
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button>
-          <Plus />
-          <div>{tAuthorManagement("create author")}</div>
-        </Button>
-      </DialogTrigger>
+    <Dialog
+      open={customOpen === undefined ? open : customOpen}
+      onOpenChange={customSetOpen === undefined ? setOpen : customSetOpen}
+    >
+      {!noTrigger && (
+        <DialogTrigger asChild>
+          <Button>
+            <Plus />
+            <div>{tAuthorManagement("create author")}</div>
+          </Button>
+        </DialogTrigger>
+      )}
       <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{tAuthorManagement("create author")}</DialogTitle>
@@ -263,7 +282,6 @@ function CreateAuthorDialog() {
                       <FormLabel>{t("fields.biography")}</FormLabel>
                       <FormControl>
                         <Editor
-                          disabled={isPending}
                           value={field.value}
                           apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                           onEditorChange={field.onChange}
@@ -342,7 +360,11 @@ function CreateAuthorDialog() {
                       onClick={() => {
                         form.reset()
                         form.clearErrors()
-                        setOpen(false)
+                        if (customSetOpen) {
+                          customSetOpen(false)
+                        } else {
+                          setOpen(false)
+                        }
                       }}
                     >
                       {t("btn.cancel")}

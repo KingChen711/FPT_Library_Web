@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import Image from "next/image"
 import BookCoverLabel from "@/public/images/book-cover-label.svg"
 import BookSpineLabel from "@/public/images/book-spine-label.svg"
@@ -17,11 +17,20 @@ import {
 
 function GlueBarcodeInstructionsDialog() {
   const t = useTranslations("TrackingsManagementPage")
+  const [open, setOpen] = useState(false)
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="link" className="h-auto min-h-0 w-fit p-0">
+        <Button
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            setOpen(true)
+          }}
+          variant="link"
+          className="h-auto min-h-0 w-fit p-0"
+        >
           {t("Glue barcode instructions")}
         </Button>
       </DialogTrigger>

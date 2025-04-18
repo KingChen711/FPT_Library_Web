@@ -36,6 +36,10 @@ function ConditionField({ form, itemIndex, isPending }: Props) {
   const t = useTranslations("BorrowAndReturnManagementPage")
   const [openComboboxCondition, setOpenComboboxCondition] = useState(false)
   const { data: conditionItems } = useConditions()
+
+  const filteredCondition =
+    conditionItems?.filter((c) => c.englishName !== "Lost") || []
+
   const locale = useLocale()
 
   return (
@@ -66,10 +70,10 @@ function ConditionField({ form, itemIndex, isPending }: Props) {
                 >
                   {field.value
                     ? locale === "vi"
-                      ? conditionItems?.find(
+                      ? filteredCondition?.find(
                           (condition) => condition.conditionId === field.value
                         )?.vietnameseName
-                      : conditionItems?.find(
+                      : filteredCondition?.find(
                           (condition) => condition.conditionId === field.value
                         )?.englishName
                     : t("Select condition")}
@@ -81,7 +85,7 @@ function ConditionField({ form, itemIndex, isPending }: Props) {
               <Command>
                 <CommandList>
                   <CommandGroup>
-                    {conditionItems?.map((condition) => (
+                    {filteredCondition?.map((condition) => (
                       <CommandItem
                         value={
                           locale === "vi"
