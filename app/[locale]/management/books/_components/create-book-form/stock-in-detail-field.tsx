@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 import { useDebounce } from "use-debounce"
 
+import { ETrackingType } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
 import useSearchTrackings from "@/hooks/trackings/use-search-trackings"
@@ -57,10 +58,18 @@ function StockInDetailField({ form, isPending }: Props) {
   const [debouncedSearchTermDetail] = useDebounce(searchTermDetail, 300)
 
   const selectedTracking = form.watch("tracking")
+  const trackingDetailId = form.watch("trackingDetailId")
   const trackingDetail = form.watch("trackingDetail")
 
   const { data: trackingItems, isFetching } =
     useSearchTrackings(debouncedSearchTerm)
+
+  const filteredTrackingItems = useMemo(
+    () =>
+      trackingItems?.filter((t) => t.trackingType === ETrackingType.STOCK_IN) ||
+      [],
+    [trackingItems]
+  )
 
   const { data: trackingDetailItems, isFetching: isFetchingDetails } =
     useTrackingDetailsNoItem(
@@ -104,6 +113,10 @@ function StockInDetailField({ form, isPending }: Props) {
     form.setValue("estimatedPrice", trackingDetail.unitPrice as number)
   }, [trackingDetail, form])
 
+  useEffect(() => {
+    console.log({ trackingDetailId, trackingDetail })
+  }, [trackingDetailId, trackingDetail])
+
   return (
     <FormField
       control={form.control}
@@ -146,7 +159,7 @@ function StockInDetailField({ form, isPending }: Props) {
                       {searchTermDetail !== "" &&
                         searchTermDetail === debouncedSearchTermDetail &&
                         !isFetching &&
-                        trackingItems?.length === 0 && (
+                        filteredTrackingItems?.length === 0 && (
                           <CommandEmpty>{t("No tracking found")}</CommandEmpty>
                         )}
                       <CommandGroup>
@@ -159,7 +172,7 @@ function StockInDetailField({ form, isPending }: Props) {
                     </CommandList>
 
                     <div className="flex max-h-[400px] w-full flex-col overflow-y-auto overflow-x-hidden">
-                      {trackingItems?.map((tracking) => (
+                      {filteredTrackingItems?.map((tracking) => (
                         <TrackingCard
                           key={tracking.trackingId}
                           className="rounded-none"
@@ -234,20 +247,21 @@ function StockInDetailField({ form, isPending }: Props) {
                           <TooltipProvider key={detail.trackingDetailId}>
                             <Tooltip delayDuration={0}>
                               <TooltipTrigger asChild>
-                                <div className="cursor-pointer px-4 py-2 text-sm hover:bg-muted">
-                                  {detail.itemName}
-                                </div>
-                              </TooltipTrigger>
-                              <TooltipContent asChild side="right">
-                                <TrackingDetailCard
+                                <div
                                   onClick={() => {
+                                    console.log("Clicked")
                                     field.onChange(detail.trackingDetailId)
                                     form.setValue("trackingDetail", detail)
                                     form.clearErrors("trackingDetailId")
                                     setOpenDetail(false)
                                   }}
-                                  trackingDetail={detail}
-                                />
+                                  className="cursor-pointer px-4 py-2 text-sm hover:bg-muted"
+                                >
+                                  {detail.itemName}
+                                </div>
+                              </TooltipTrigger>
+                              <TooltipContent asChild side="right">
+                                <TrackingDetailCard trackingDetail={detail} />
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>

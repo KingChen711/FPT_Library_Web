@@ -1215,6 +1215,7 @@
     "the document has been booked by you": "The document has been booked by you"
   },
   "CategoriesManagementPage": {
+    "Category": "Category",
     "Categories Not Found": "Categories Not Found",
     "No categories matching your request were found Please check your information or try searching with different criteria": "No categories matching your request were found. Please check your information or try searching with different criteria",
     "Allowed": "Allowed",
@@ -2355,7 +2356,7 @@
     "Transaction date": "Transaction date",
     "Expired at": "Expired at",
     "Create by": "Create by",
-    "Method": "EMethod",
+    "Method": "Method",
     "Payment QR code": "Payment QR code",
     "Transaction": "Transaction",
     "BorrowSettings": "Borrow settings",
