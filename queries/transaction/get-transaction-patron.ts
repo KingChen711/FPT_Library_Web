@@ -1,11 +1,12 @@
 import { http } from "@/lib/http"
 import {
   type BookResource,
-  type CurrentUser,
   type Fine,
+  type FineBorrow,
   type Package,
   type PaymentMethod,
   type Transaction,
+  type User,
 } from "@/lib/types/models"
 
 import { auth } from "../auth"
@@ -14,19 +15,20 @@ export type Fines = Fine[]
 
 export type TGetTransactionData = Transaction & {
   qrCode: string
-  user: CurrentUser | null
-  fine: Fine | null
-  libraryResource: BookResource | null
   libraryCardPackage: Package | null
   paymentMethod: PaymentMethod | null
   borrowRequestResources: []
+
+  user: User
+  libraryResource: BookResource | null
+  fine: (FineBorrow & { finePolicy: Fine }) | null
 }
 
 type Props = {
   transactionId: number
 }
 
-const getTransactionDetail = async ({
+const getTransactionPatron = async ({
   transactionId,
 }: Props): Promise<TGetTransactionData | null> => {
   const { getAccessToken } = auth()
@@ -46,4 +48,4 @@ const getTransactionDetail = async ({
   }
 }
 
-export default getTransactionDetail
+export default getTransactionPatron

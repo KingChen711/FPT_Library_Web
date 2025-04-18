@@ -236,6 +236,7 @@ const BorrowRequestDetail = ({ params }: Props) => {
                   {borrowRequest.libraryItems.map((libraryItem) => (
                     <BorrowBookPreview
                       expandable={true}
+                      showTrash={true}
                       libraryItem={libraryItem}
                       key={`/borrow/library-items/${libraryItem.libraryItemId}`}
                     />

@@ -16,7 +16,7 @@ import { auth } from "../auth"
 
 export type Fines = Fine[]
 
-export type TGetAllTransactionData = Transaction & {
+export type TGetTransactionsPatron = Transaction & {
   qrCode: string
   user: CurrentUser | null
   fine: Fine | null
@@ -26,15 +26,15 @@ export type TGetAllTransactionData = Transaction & {
   borrowRequestResources: []
 }
 
-const getAllOwnTransactions = async (
+const getTransactionsPatron = async (
   searchParams: TSearchTransactionsSchema
-): Promise<Pagination<TGetAllTransactionData[]>> => {
+): Promise<Pagination<TGetTransactionsPatron[]>> => {
   const { getAccessToken } = auth()
 
   const formatDate = (d: Date) => format(d, "yyyy-MM-dd")
 
   try {
-    const { data } = await http.get<Pagination<TGetAllTransactionData[]>>(
+    const { data } = await http.get<Pagination<TGetTransactionsPatron[]>>(
       `/api/users/transactions`,
       {
         headers: {
@@ -93,4 +93,4 @@ const getAllOwnTransactions = async (
   }
 }
 
-export default getAllOwnTransactions
+export default getTransactionsPatron

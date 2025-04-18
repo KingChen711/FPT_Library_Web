@@ -1,5 +1,5 @@
 import Link from "next/link"
-import getAllOwnTransactions from "@/queries/transaction/get-all-own-transactions"
+import getTransactionsPatron from "@/queries/transaction/get-transactions-patron"
 import { format } from "date-fns"
 import { Eye, MoreHorizontal } from "lucide-react"
 
@@ -47,7 +47,7 @@ const TransactionPage = async ({ searchParams }: Props) => {
     sources: transactions,
     totalActualItem,
     totalPage,
-  } = await getAllOwnTransactions({
+  } = await getTransactionsPatron({
     searchTransaction,
     pageIndex,
     sort,

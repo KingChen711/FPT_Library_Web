@@ -150,7 +150,7 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
                               src={item.coverImage || ""}
                               alt="Logo"
                               fill
-                              className="object-contain duration-150 ease-in-out hover:scale-105"
+                              className="object-fill duration-150 ease-in-out hover:scale-105"
                             />
                           </div>
                         </Link>
