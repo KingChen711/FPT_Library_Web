@@ -1,296 +1,444 @@
-import Image from "next/image"
 import Link from "next/link"
-import getTransactionDetail from "@/queries/transaction/get-transaction-detail"
+import { notFound } from "next/navigation"
+import getTransactionPatron from "@/queries/transaction/get-transaction-patron"
 import { format } from "date-fns"
-import { ArrowLeft, Book, CreditCard, Info, User } from "lucide-react"
+import { ArrowLeft } from "lucide-react"
+import QRCode from "react-qr-code"
 
-import { ETransactionStatus, ETransactionType } from "@/lib/types/enums"
-import { Badge } from "@/components/ui/badge"
+import { getFormatLocale } from "@/lib/get-format-locale"
+import { getTranslations } from "@/lib/get-translations"
+import { type EGender } from "@/lib/types/enums"
+import { formatFileSize, formatPrice, getFullName } from "@/lib/utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
+import Copitor from "@/components/ui/copitor"
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card"
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import NoData from "@/components/ui/no-data"
-import { Separator } from "@/components/ui/separator"
+import ResourceBookTypeBadge from "@/components/badges/book-resource-type-badge"
+import FineTypeBadge from "@/components/badges/fine-type-badge"
+import GenderBadge from "@/components/badges/gender-badge"
+import TransactionMethodBadge from "@/components/badges/transaction-method-badge"
+import TransactionStatusBadge from "@/components/badges/transaction-status-badge"
+import TransactionTypeBadge from "@/components/badges/transaction-type-badge"
 
 type Props = {
   params: {
-    transactionId: number
-  }
-}
-
-const formatDate = (date: string | Date | null | undefined) => {
-  if (!date) return "N/A"
-  const parsedDate = new Date(date)
-  if (isNaN(parsedDate.getTime())) return "Invalid Date"
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(parsedDate)
-}
-
-const transactionTypeLabels: Record<ETransactionType, string> = {
-  [ETransactionType.FINE]: "Phí phạt",
-  [ETransactionType.DIGITAL_BORROW]: "Mượn tài liệu điện tử",
-  [ETransactionType.LIBRARY_CARD_REGISTER]: "Đăng ký thẻ thư viện",
-  [ETransactionType.LIBRARY_CARD_EXTENSION]: "Gia hạn thẻ thư viện",
-  [ETransactionType.DIGITAL_EXTENSION]: "Gia hạn tài liệu điện tử",
-}
-
-const transactionStatusLabels: Record<ETransactionStatus, string> = {
-  [ETransactionStatus.PENDING]: "Chờ xử lý",
-  [ETransactionStatus.EXPIRED]: "Hết hạn",
-  [ETransactionStatus.PAID]: "Đã thanh toán",
-  [ETransactionStatus.CANCELLED]: "Đã hủy",
-}
-
-const getTransactionMethodInfo = (method: number) => {
-  switch (method) {
-    case 1:
-      return "Online"
-    case 2:
-      return "Cash"
-    default:
-      return "Other"
+    transactionId: string
   }
 }
 
 const TransactionDetailPage = async ({ params }: Props) => {
-  const transaction = await getTransactionDetail({
-    transactionId: params.transactionId,
+  const id = Number(params.transactionId)
+  if (!id) notFound()
+
+  const transaction = await getTransactionPatron({
+    transactionId: +id,
   })
 
-  if (!transaction) {
-    return <NoData />
-  }
+  if (!transaction) notFound()
+  const formatLocale = await getFormatLocale()
 
-  // const statusInfo = getStatusInfo(transaction.transactionStatus)
-  // const transactionType = getTransactionTypeInfo(transaction.transactionType)
-  const transactionMethod = getTransactionMethodInfo(
-    transaction.transactionMethod
-  )
+  const t = await getTranslations("TransactionsManagementPage")
+  const tBorrow = await getTranslations("BookPage.borrow tracking")
 
   return (
-    <div className="size-full">
-      <div className="mb-6">
-        <Link
-          href="/me/account/transaction"
-          className="flex items-center text-sm text-muted-foreground hover:text-primary"
-        >
-          <ArrowLeft className="mr-2 size-4" />
-          Back to Transactions
-        </Link>
+    <div className="mx-auto space-y-4">
+      <div className="flex items-center gap-2">
+        <Button variant="outline" size="icon" asChild>
+          <Link href="/me/account/transaction">
+            <ArrowLeft className="size-4" />
+          </Link>
+        </Button>
+        <h1 className="text-2xl font-bold">{tBorrow("transaction detail")}</h1>
       </div>
 
-      <div className="flex flex-col gap-6">
-        {/* Header */}
-        <div className="flex flex-col justify-between gap-4 md:flex-row md:items-center">
-          <div>
-            <h1 className="text-2xl font-bold">
-              Transaction #{transaction.transactionCode}
-            </h1>
-            <p className="text-muted-foreground">
-              {formatDate(transaction.transactionDate)}
-            </p>
-          </div>
-          <Badge variant="default" className="text-nowrap capitalize">
-            {transactionStatusLabels[transaction.transactionStatus] ||
-              "Không xác định"}
-          </Badge>
+      <section className="flex flex-col gap-4 rounded-md border py-5">
+        <div className="flex items-center justify-between gap-4 px-5">
+          <h3 className="text-lg font-semibold">{t("Transaction")}</h3>
         </div>
+        <div className="grid grid-cols-12 gap-y-6 text-sm">
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <h4 className="font-bold">{t("Transaction code")}</h4>
+            <div className="flex items-center gap-2">
+              <Copitor content={transaction.transactionCode} />
+              {transaction.transactionCode || <NoData />}
+            </div>
+          </div>
 
-        <Separator />
-
-        {/* Transaction Details */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Info className="size-5" />
-              Transaction Details
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-6">
-            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Amount</p>
-                <p className="text-lg font-medium">
-                  {transaction.amount.toLocaleString()} VND
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">
-                  Transaction Type
-                </p>
-                <Badge variant="success" className="text-nowrap capitalize">
-                  {transactionTypeLabels[transaction.transactionType] ||
-                    "Không xác định"}
-                </Badge>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">
-                  Transaction Method
-                </p>
-                <p className="font-medium">{transactionMethod}</p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Payment Method</p>
-                <p className="font-medium">
-                  {transaction.paymentMethod?.methodName || "N/A"}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Created At</p>
-                <p className="font-medium">
-                  {format(new Date(transaction.createdAt), "PPP 'at' p")}
-                </p>
-              </div>
-              <div className="space-y-1">
-                <p className="text-sm text-muted-foreground">Expires At</p>
-                <p className="font-medium">
-                  {transaction.expiredAt
-                    ? format(new Date(transaction.expiredAt), "PPP 'at' p")
-                    : "N/A"}
-                </p>
-              </div>
-              {transaction.description && (
-                <div className="space-y-1 md:col-span-2">
-                  <p className="text-sm text-muted-foreground">Description</p>
-                  <p className="font-medium">{transaction.description}</p>
-                </div>
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+            <h4 className="font-bold">{t("Amount")}</h4>
+            <div className="flex gap-2">
+              {transaction.amount ? (
+                formatPrice(transaction.amount)
+              ) : (
+                <NoData />
               )}
             </div>
-          </CardContent>
-        </Card>
+          </div>
 
-        {/* User Information */}
-        {transaction.user && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <User className="size-5" />
-                User Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Name</p>
-                  <p className="font-medium">
-                    {transaction.user.firstName} {transaction.user.lastName}
-                  </p>
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <h4 className="font-bold">{t("Status")}</h4>
+            <div className="flex gap-2">
+              <TransactionStatusBadge status={transaction.transactionStatus} />
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+            <h4 className="font-bold">{t("Type")}</h4>
+            <div className="flex gap-2">
+              <TransactionTypeBadge type={transaction.transactionType} />
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <h4 className="font-bold">{t("Transaction date")}</h4>
+            <div className="flex items-center gap-2">
+              {transaction.transactionDate ? (
+                format(transaction.transactionDate, "HH:mm dd MMM yyyy", {
+                  locale: formatLocale,
+                })
+              ) : (
+                <NoData />
+              )}
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+            <h4 className="font-bold">{t("Expired at")}</h4>
+            <div className="flex gap-2">
+              {transaction.expiredAt ? (
+                format(transaction.expiredAt, "HH:mm dd MMM yyyy", {
+                  locale: formatLocale,
+                })
+              ) : (
+                <NoData />
+              )}
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <h4 className="font-bold">{t("Created at")}</h4>
+            <div className="flex gap-2">
+              {transaction.createdAt ? (
+                format(transaction.createdAt, "HH:mm dd MMM yyyy", {
+                  locale: formatLocale,
+                })
+              ) : (
+                <NoData />
+              )}
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+            <h4 className="font-bold">{t("Create by")}</h4>
+            <div className="flex gap-2">
+              {transaction.createdBy || <NoData />}
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <h4 className="font-bold">{t("Cancelled at")}</h4>
+            <div className="flex items-center gap-2">
+              {transaction.cancelledAt ? (
+                format(transaction.cancelledAt, "HH:mm dd MMM yyyy", {
+                  locale: formatLocale,
+                })
+              ) : (
+                <NoData />
+              )}
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+            <h4 className="font-bold">{t("Cancellation reason")}</h4>
+            <div className="flex gap-2">
+              {transaction.cancellationReason || <NoData />}
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <h4 className="font-bold">{t("Method")}</h4>
+            <div className="flex gap-2">
+              {transaction.transactionMethod === null ||
+              transaction.transactionMethod === undefined ? (
+                <NoData />
+              ) : (
+                <TransactionMethodBadge
+                  method={transaction.transactionMethod}
+                />
+              )}
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+            <h4 className="font-bold">{t("Payment QR code")}</h4>
+            <div className="flex gap-2">
+              {transaction.qrCode ? (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" size="sm">
+                      {t("View content")}
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-h-[80vh] w-fit overflow-y-auto overflow-x-hidden">
+                    <DialogHeader>
+                      <DialogTitle>{t("Payment QR code")}</DialogTitle>
+                      <DialogDescription asChild>
+                        <QRCode
+                          value={transaction.qrCode}
+                          size={200}
+                          style={{
+                            height: "auto",
+                            maxWidth: "100%",
+                            width: "100%",
+                          }}
+                          viewBox={`0 0 256 256`}
+                        />
+                      </DialogDescription>
+                    </DialogHeader>
+                  </DialogContent>
+                </Dialog>
+              ) : (
+                <NoData />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="flex flex-col gap-4 rounded-md border py-5">
+        <div className="flex items-center justify-between gap-4 px-5">
+          <h3 className="text-lg font-semibold">{t("Patron")}</h3>
+        </div>
+        <div className="grid grid-cols-12 gap-y-6 text-sm">
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <h4 className="font-bold">{t("Full name")}</h4>
+            <div className="flex items-center gap-2 py-1">
+              <Link
+                target="_blank"
+                href={`/management/library-card-holders/${transaction.user.userId}`}
+                className="group flex items-center gap-2"
+              >
+                {transaction.user.avatar && (
+                  <Avatar className="size-8">
+                    <AvatarImage src={transaction.user.avatar || ""} />
+                    <AvatarFallback>
+                      {getFullName(
+                        transaction.user.firstName,
+                        transaction.user.lastName
+                      )
+                        .split(" ")
+                        .map((i) => i[0].toUpperCase())
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                )}
+                <div className="group-hover:underline">
+                  {getFullName(
+                    transaction.user.firstName,
+                    transaction.user.lastName
+                  )}
                 </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Email</p>
-                  <p className="font-medium">{transaction.user.email}</p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Phone</p>
-                  <p className="font-medium">
-                    {transaction.user.phone || "N/A"}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">
-                    Library Card ID
-                  </p>
-                  <p className="font-medium">
-                    {transaction.user.libraryCardId}
-                  </p>
-                </div>
+              </Link>
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+            <h4 className="font-bold">{t("Email")}</h4>
+            <div className="flex gap-2">
+              {transaction.user.email || <NoData />}
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <h4 className="font-bold">{t("Phone")}</h4>
+            <div className="flex gap-2">
+              {transaction.user.phone || <NoData />}
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+            <h4 className="font-bold">{t("Gender")}</h4>
+            <div className="flex gap-2">
+              <GenderBadge gender={transaction.user.gender as EGender} />
+            </div>
+          </div>
+
+          <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+            <h4 className="font-bold">{t("Date of birth")}</h4>
+            <div className="flex gap-2">
+              {transaction.user.dob ? (
+                // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                // @ts-ignore
+                format(transaction.user.dob, "dd MMM yyyy", {
+                  locale: formatLocale,
+                })
+              ) : (
+                <NoData />
+              )}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {transaction.libraryCardPackage && (
+        <section className="flex flex-col gap-4 rounded-md border py-5">
+          <div className="flex items-center justify-between gap-4 px-5">
+            <h3 className="text-lg font-semibold">{t("Registered package")}</h3>
+          </div>
+          <div className="grid grid-cols-12 gap-y-6 text-sm">
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Name")}</h4>
+              <div className="flex items-center gap-2 py-1">
+                {transaction.libraryCardPackage.packageName}
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
 
-        {/* Resource Information */}
-        {transaction.libraryResource && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Book className="size-5" />
-                Resource Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="grid gap-6">
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Title</p>
-                  <p className="font-medium">
-                    {transaction.libraryResource.resourceTitle}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Type</p>
-                  <p className="font-medium">
-                    {transaction.libraryResource.resourceType}
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">Price</p>
-                  <p className="font-medium">
-                    {(
-                      transaction.libraryResource.borrowPrice ?? 0
-                    ).toLocaleString()}{" "}
-                    VND
-                  </p>
-                </div>
-                <div className="space-y-1">
-                  <p className="text-sm text-muted-foreground">
-                    Borrow Duration
-                  </p>
-                  <p className="font-medium">
-                    {transaction.libraryResource.defaultBorrowDurationDays} days
-                  </p>
-                </div>
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+              <h4 className="font-bold">{t("Price")}</h4>
+              <div className="flex gap-2">
+                {transaction.libraryCardPackage.price ? (
+                  formatPrice(transaction.libraryCardPackage.price)
+                ) : (
+                  <NoData />
+                )}
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
 
-        {/* QR Code */}
-        {transaction.qrCode && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <CreditCard className="size-5" />
-                Payment QR Code
-              </CardTitle>
-              <CardDescription>
-                Scan this QR code to complete your payment
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="flex justify-center">
-              <div className="rounded-md bg-white p-4">
-                <Image
-                  src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(transaction.qrCode)}`}
-                  alt="Payment QR Code"
-                  width={200}
-                  height={200}
-                  className="mx-auto"
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Duration")}</h4>
+              <div className="flex gap-2">
+                {transaction.libraryCardPackage.durationInMonths ? (
+                  t("duration months", {
+                    months: transaction.libraryCardPackage.durationInMonths,
+                  })
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Description")}</h4>
+              <div className="flex gap-2">
+                {transaction.libraryCardPackage.description}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {transaction.libraryResource && (
+        <section className="flex flex-col gap-4 rounded-md border py-5">
+          <div className="flex items-center justify-between gap-4 px-5">
+            <h3 className="text-lg font-semibold">{t("Resource")}</h3>
+          </div>
+          <div className="grid grid-cols-12 gap-y-6 text-sm">
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Resource item")}</h4>
+              <div className="flex items-center gap-2">
+                {transaction.libraryResource.resourceTitle || <NoData />}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+              <h4 className="font-bold">{t("Resource type")}</h4>
+              <div className="flex gap-2">
+                <ResourceBookTypeBadge
+                  status={transaction.libraryResource.resourceType}
                 />
               </div>
-            </CardContent>
-          </Card>
-        )}
+            </div>
 
-        {/* Actions */}
-        <div className="mt-2 flex flex-col gap-3 sm:flex-row">
-          <Button variant="outline" asChild>
-            <Link href="/transactions">Back to Transactions</Link>
-          </Button>
-          {transaction.transactionStatus === ETransactionStatus.EXPIRED && (
-            <Button variant="destructive">Cancel Transaction</Button>
-          )}
-          <Button>Download Receipt</Button>
-        </div>
-      </div>
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Size")}</h4>
+              <div className="flex gap-2">
+                {transaction.libraryResource.resourceSize ? (
+                  formatFileSize(transaction.libraryResource.resourceSize)
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Borrow duration")}</h4>
+              <div className="flex gap-2">
+                {transaction.libraryResource.defaultBorrowDurationDays}{" "}
+                {t("days")}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Borrow price")}</h4>
+              <div className="flex items-center gap-2">
+                {transaction.libraryResource.borrowPrice ? (
+                  formatPrice(transaction.libraryResource.borrowPrice)
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {transaction.fine && (
+        <section className="flex flex-col gap-4 rounded-md border py-5">
+          <div className="flex items-center justify-between gap-4 px-5">
+            <h3 className="text-lg font-semibold">{t("Fine")}</h3>
+          </div>
+          <div className="grid grid-cols-12 gap-y-6 text-sm">
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Name")}</h4>
+              <div className="flex items-center gap-2">
+                {transaction.fine.finePolicy.finePolicyTitle || <NoData />}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
+              <h4 className="font-bold">{t("Description")}</h4>
+              <div className="flex gap-2">
+                {transaction.fine.finePolicy.description || <NoData />}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+              <h4 className="font-bold">{t("Note")}</h4>
+              <div className="flex gap-2">
+                {transaction.fine.fineNote || <NoData />}
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Type")}</h4>
+              <div className="flex gap-2">
+                <FineTypeBadge
+                  type={transaction.fine.finePolicy.conditionType}
+                />
+              </div>
+            </div>
+
+            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
+              <h4 className="font-bold">{t("Price")}</h4>
+              <div className="flex items-center gap-2">
+                {transaction.fine.fineAmount ? (
+                  formatPrice(transaction.fine.fineAmount)
+                ) : (
+                  <NoData />
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
     </div>
   )
 }

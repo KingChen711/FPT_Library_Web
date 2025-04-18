@@ -44,8 +44,8 @@ type Props = {
   libraryItem: LibraryItem
   className?: string
   reservationQueue: ReservationQueue & {
-    assignedDate?: string | null
-    collectedDate?: string | null
+    assignedDate?: Date | null
+    collectedDate?: Date | null
     totalExtendPickup?: number
   }
   expandable?: boolean
@@ -272,14 +272,26 @@ const BorrowReserveItemPreview = ({
                   <div className="text-sm font-medium">
                     {tBorrow("collectedDate")}
                   </div>
-                  <div>{queue.collectedDate || <NoData />}</div>
+                  {queue.collectedDate ? (
+                    <div>
+                      {format(new Date(queue.collectedDate), "dd/MM/yyyy")}
+                    </div>
+                  ) : (
+                    <NoData />
+                  )}
                 </div>
 
                 <div className="flex flex-col">
                   <div className="text-sm font-medium">
                     {tBorrow("assignedDate")}
                   </div>
-                  <div>{queue.assignedDate || <NoData />}</div>
+                  {queue.assignedDate ? (
+                    <div>
+                      {format(new Date(queue.assignedDate), "dd/MM/yyyy")}
+                    </div>
+                  ) : (
+                    <NoData />
+                  )}
                 </div>
 
                 <div className="flex flex-col">

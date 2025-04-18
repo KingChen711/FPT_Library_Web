@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import PredictionOcrDetailTab from "../_components/prediction-ocr-detail-tab"
-import PredictionOcrDetectTab from "../_components/prediction-ocr-detect-tab"
 import PredictionOtherMatchesTab from "../_components/prediction-other-matches-tab"
 import PredictionResultTab from "../_components/prediction-result-tab"
 
@@ -37,12 +36,12 @@ const AiPredictionResult = () => {
             >
               {t("ocr detail")}
             </TabsTrigger>
-            <TabsTrigger
+            {/* <TabsTrigger
               className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               value={EPredictionTab.OCR_DETECTS}
             >
               {t("ocr detects")}
-            </TabsTrigger>
+            </TabsTrigger> */}
             <TabsTrigger
               className="flex-1 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
               value={EPredictionTab.OCR_MATCHES}
@@ -65,9 +64,9 @@ const AiPredictionResult = () => {
         <TabsContent value={EPredictionTab.OCR_DETAIL}>
           <PredictionOcrDetailTab />
         </TabsContent>
-        <TabsContent value={EPredictionTab.OCR_DETECTS}>
+        {/* <TabsContent value={EPredictionTab.OCR_DETECTS}>
           <PredictionOcrDetectTab />
-        </TabsContent>
+        </TabsContent> */}
         <TabsContent value={EPredictionTab.OCR_MATCHES}>
           <PredictionOtherMatchesTab />
         </TabsContent>

@@ -25,9 +25,15 @@ type Props = {
   libraryItem: LibraryItem
   className?: string
   expandable?: boolean
+  showTrash?: boolean
 }
 
-const BorrowBookPreview = ({ libraryItem, className, expandable }: Props) => {
+const BorrowBookPreview = ({
+  libraryItem,
+  className,
+  expandable,
+  showTrash = false,
+}: Props) => {
   const {
     category,
     coverImage,
@@ -82,12 +88,14 @@ const BorrowBookPreview = ({ libraryItem, className, expandable }: Props) => {
                   <div className="mt-2 flex items-center justify-between">
                     <h3 className="line-clamp-1 text-lg font-bold">{title}</h3>
                     <div className="flex items-center gap-2">
-                      <Button
-                        variant={"destructive"}
-                        onClick={() => setOpenCancel(true)}
-                      >
-                        <Trash2 />
-                      </Button>
+                      {showTrash && (
+                        <Button
+                          variant={"destructive"}
+                          onClick={() => setOpenCancel(true)}
+                        >
+                          <Trash2 />
+                        </Button>
+                      )}
                       <Button variant={"outline"}>
                         <MapPin />
                       </Button>

@@ -837,23 +837,29 @@ export type BorrowRequestResource = {
 export type ReservationQueue = {
   queueId: number
   libraryItemId: number
-  libraryItemInstanceId: null | number
+  libraryItemInstanceId: number | null
   libraryCardId: string
-  queueStatus: number
-  borrowRequestId: number
+  queueStatus: EReservationQueueStatus
+  borrowRequestId: number | null
   isReservedAfterRequestFailed: boolean
-  expectedAvailableDateMin: null | string
-  expectedAvailableDateMax: null | string
-  reservationDate: string
-  expiryDate: null | string
-  reservationCode: null | string
-  isAppliedLabel: false
-  collectedDate: null | string
-  isNotified: false
-  cancelledBy: null | string
-  cancellationReason: null | string
+  expectedAvailableDateMin: Date | null
+  expectedAvailableDateMax: Date | null
+  reservationDate: Date
+  assignedDate: Date | null
+  expiryDate: Date | null
+  collectedDate: Date | null
+  isNotified: boolean
+  cancelledBy: string | null
+  cancellationReason: string | null
+  totalExtendPickup: number
+  reservationCode: string | null
+  isAppliedLabel: boolean
+  isAssignable: boolean
+
   libraryItem: LibraryItem
   libraryItemInstance: null | LibraryItemInstance
+  libraryCard: LibraryCard
+  borrowRequest: BorrowRequest
 }
 
 export type DigitalTransaction = Transaction & {

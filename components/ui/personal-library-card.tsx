@@ -86,7 +86,10 @@ const PersonalLibraryCard = ({
                 {
                   label: "Expiry Date",
                   value: patron.libraryCard.expiryDate ? (
-                    formatDate(patron.libraryCard.expiryDate.toString())
+                    format(
+                      new Date(patron.libraryCard.expiryDate),
+                      "dd/MM/yyyy"
+                    )
                   ) : (
                     <NoData />
                   ),

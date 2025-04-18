@@ -21,7 +21,7 @@ const BookPreviewCard = async ({ libraryItem }: Props) => {
           src={libraryItem?.coverImage || NoImage}
           alt="Logo"
           fill
-          className="object-contain p-4"
+          className="object-fill p-4"
         />
       </div>
       <div className="flex flex-col border-t-2">
@@ -30,7 +30,7 @@ const BookPreviewCard = async ({ libraryItem }: Props) => {
             shelfId={libraryItem.shelf.shelfId}
             shelfNumber={libraryItem.shelf.shelfNumber}
           >
-            <Button className="flex items-center rounded-none">
+            <Button className="flex w-full items-center rounded-none">
               <MapPin /> {t("locate")}
             </Button>
           </LocateButton>

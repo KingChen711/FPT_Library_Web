@@ -16,7 +16,7 @@ export type DigitalBorrowDetail = DigitalBorrow & {
 function useBorrowDigitalDetail(digitalBorrow: number) {
   const { accessToken } = useAuth()
   return useQuery({
-    queryKey: [`digital-borrows/${digitalBorrow}`],
+    queryKey: [`digital-borrows/${digitalBorrow}`, accessToken],
     queryFn: async () => {
       try {
         const { data } = await http.get<DigitalBorrowDetail | null>(
