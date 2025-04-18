@@ -82,36 +82,38 @@ function Marc21Dialog({ form, show, getIsbn }: Props) {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>{t("Copy catalog")}</DialogTitle>
-          <DialogDescription>
-            <Label>Marc21</Label>
-            <Textarea
-              value={marc21}
-              onChange={(e) => {
-                setMarc21(e.target.value)
-                setShowError(false)
-              }}
-              rows={8}
-              className="mt-2"
-              placeholder={t("Enter marc21")}
-            />
-            <Button asChild variant="link" className="px-0">
-              <Link target="_blank" href="/guides/marc21">
-                {t("Copy cataloging guide")}
-              </Link>
-            </Button>
-            {showError && (
-              <p className="text-sm leading-none text-danger">
-                {locale === "vi" ? "Marc21 không hợp lệ" : "Invalid Marc21"}
-              </p>
-            )}
-            <div className="mt-4 flex justify-end gap-4">
-              <DialogClose>
-                <Button variant="outline">{t("Cancel")}</Button>
-              </DialogClose>
-
-              <Button disabled={!marc21} onClick={handleParseMarc21}>
-                {t("Continue")}
+          <DialogDescription asChild>
+            <div>
+              <Label>Marc21</Label>
+              <Textarea
+                value={marc21}
+                onChange={(e) => {
+                  setMarc21(e.target.value)
+                  setShowError(false)
+                }}
+                rows={8}
+                className="mt-2"
+                placeholder={t("Enter marc21")}
+              />
+              <Button asChild variant="link" className="px-0">
+                <Link target="_blank" href="/guides/marc21">
+                  {t("Copy cataloging guide")}
+                </Link>
               </Button>
+              {showError && (
+                <p className="text-sm leading-none text-danger">
+                  {locale === "vi" ? "Marc21 không hợp lệ" : "Invalid Marc21"}
+                </p>
+              )}
+              <div className="mt-4 flex justify-end gap-4">
+                <DialogClose>
+                  <Button variant="outline">{t("Cancel")}</Button>
+                </DialogClose>
+
+                <Button disabled={!marc21} onClick={handleParseMarc21}>
+                  {t("Continue")}
+                </Button>
+              </div>
             </div>
           </DialogDescription>
         </DialogHeader>

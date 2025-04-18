@@ -1,18 +1,15 @@
-import React from "react"
+import React, { useCallback } from "react"
 import { Plus } from "lucide-react"
-import { useTranslations } from "next-intl"
-import {
-  type FieldArrayWithId,
-  type UseFieldArrayAppend,
-  type UseFieldArrayRemove,
-  type UseFieldArrayReplace,
-  type UseFormReturn,
-} from "react-hook-form"
+import { useLocale, useTranslations } from "next-intl"
+import { useFieldArray, type UseFormReturn } from "react-hook-form"
 
 import { EStockTransactionType } from "@/lib/types/enums"
 import { type Category } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { type TCreateTrackingManualSchema } from "@/lib/validations/trackings/create-tracking-manual"
+import useGetItemByISBN from "@/hooks/library-items/use-get-item-by-isbn"
+import useBarcodeScanner from "@/hooks/use-barcode-scanner"
+import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
   FormControl,
@@ -51,20 +48,6 @@ type Props = {
   setSelectedCategories: React.Dispatch<
     React.SetStateAction<(Category | null)[]>
   >
-  fields: FieldArrayWithId<
-    TCreateTrackingManualSchema,
-    "warehouseTrackingDetails",
-    "id"
-  >[]
-  append: UseFieldArrayAppend<
-    TCreateTrackingManualSchema,
-    "warehouseTrackingDetails"
-  >
-  remove: UseFieldArrayRemove
-  replace: UseFieldArrayReplace<
-    TCreateTrackingManualSchema,
-    "warehouseTrackingDetails"
-  >
 }
 
 function TrackingDetailsField({
@@ -72,11 +55,66 @@ function TrackingDetailsField({
   isPending,
   selectedCategories,
   setSelectedCategories,
-  append,
-  fields,
-  remove,
-  replace,
 }: Props) {
+  const locale = useLocale()
+  const { mutateAsync: getItemByISBN, isPending: fetchingItem } =
+    useGetItemByISBN()
+  const { fields, append, remove, replace } = useFieldArray({
+    name: "warehouseTrackingDetails",
+    control: form.control,
+  })
+
+  const totalItem = form.watch("totalItem")
+
+  const handleBarcodeData = useCallback(
+    (scannedData: string) => {
+      if (fetchingItem) return
+
+      const isExist = fields.some((f) => f.isbn === scannedData)
+      if (isExist) {
+        toast({
+          title: locale === "vi" ? "Thất bại" : "Fail",
+          description:
+            locale === "vi"
+              ? "Tài liệu này đã được quét"
+              : "Library item is already scanned",
+          variant: "warning",
+        })
+      }
+
+      getItemByISBN(scannedData, {
+        onSuccess: (data) => {
+          if (data) {
+            append({
+              categoryId: data.categoryId,
+              conditionId: 1,
+              itemName: data.title,
+              itemTotal: 0,
+              stockTransactionType: EStockTransactionType.ADDITIONAL,
+              unitPrice: data.estimatedPrice || 0,
+              isbn: data.isbn || "",
+              totalAmount: 0,
+              libraryItemId: data.libraryItemId,
+            })
+            form.setValue("totalItem", totalItem)
+          } else {
+            toast({
+              title: locale === "vi" ? "Thất bại" : "Fail",
+              description:
+                locale === "vi"
+                  ? "Tài liệu chưa tồn tại trong hệ thống"
+                  : "Library item does not exist in the system",
+              variant: "warning",
+            })
+          }
+        },
+      })
+    },
+    [append, fetchingItem, getItemByISBN, locale, fields, form, totalItem]
+  )
+
+  useBarcodeScanner(handleBarcodeData)
+
   const t = useTranslations("TrackingsManagementPage")
 
   const watchTrackingDetails = form.watch("warehouseTrackingDetails") || []

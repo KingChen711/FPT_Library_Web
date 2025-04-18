@@ -175,7 +175,6 @@ function CreateNotificationDialog() {
                       <FormLabel>{t("Message")}</FormLabel>
                       <FormControl>
                         <Editor
-                          disabled={isPending}
                           apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                           init={{
                             ...editorPlugin,

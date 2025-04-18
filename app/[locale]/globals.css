@@ -139,14 +139,6 @@ svg.star-svg {
   display: inline;
 }
 
-/* hidden tiny editor water mark  */
-.tox-notifications-container {
-  display: none !important;
-  width: 0px !important;
-  height: 0px !important;
-  overflow: hidden !important;
-}
-
 @layer utilities {
   .markdown {
     @apply my-0 max-w-full;

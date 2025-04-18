@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from "react"
-import { Loader2 } from "lucide-react"
+import { Loader2, Plus } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
 import { useDebounce } from "use-debounce"
@@ -33,7 +33,6 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 
-import CreateAuthorDialog from "../../../authors/_components/create-author-dialog"
 import AuthorCard from "./author-card"
 
 type Props = {
@@ -41,6 +40,7 @@ type Props = {
   isPending: boolean
   selectedAuthors: Author[]
   setSelectedAuthors: React.Dispatch<React.SetStateAction<Author[]>>
+  setOpenCreateAuthor: (val: boolean) => void
 }
 
 function AuthorsField({
@@ -48,8 +48,10 @@ function AuthorsField({
   isPending,
   selectedAuthors,
   setSelectedAuthors,
+  setOpenCreateAuthor,
 }: Props) {
   const t = useTranslations("BooksManagementPage")
+  const tAuthorManagement = useTranslations("AuthorManagement")
 
   const [open, setOpen] = useState(false)
 
@@ -164,7 +166,10 @@ function AuthorsField({
                   </CommandList>
 
                   {/* <MutateAuthorDialog type="create" /> */}
-                  <CreateAuthorDialog />
+                  <Button onClick={() => setOpenCreateAuthor(true)}>
+                    <Plus />
+                    <div>{tAuthorManagement("create author")}</div>
+                  </Button>
 
                   <div className="flex max-h-[90%] w-full flex-col overflow-y-auto overflow-x-hidden">
                     {authorItems?.map((author) => (

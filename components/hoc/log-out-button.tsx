@@ -22,8 +22,8 @@ function LogOutButton() {
     startTransition(async () => {
       const res = await logout()
       if (res.isSuccess) {
-        router.push("/login")
         queryClient.invalidateQueries({ queryKey: ["token"] })
+        router.push("/login")
         return
       }
       handleServerActionError(res, locale)

@@ -32,6 +32,7 @@ type Props = {
   setSelectedAuthors: React.Dispatch<SetStateAction<Author[]>>
   isRequireImage: boolean
   fromWarehouseMode?: boolean
+  setOpenCreateAuthor: (val: boolean) => void
 }
 
 function CatalogTab({
@@ -42,6 +43,7 @@ function CatalogTab({
   setSelectedAuthors,
   isRequireImage,
   fromWarehouseMode = false,
+  setOpenCreateAuthor,
 }: Props) {
   const t = useTranslations("BooksManagementPage")
 
@@ -600,6 +602,7 @@ function CatalogTab({
         setSelectedAuthors={setSelectedAuthors}
         form={form}
         isPending={isPending}
+        setOpenCreateAuthor={setOpenCreateAuthor}
       />
 
       <CoverImageField

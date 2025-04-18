@@ -12,7 +12,7 @@ import { useDropzone } from "react-dropzone"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { predictImage } from "@/actions/ai/predict-image"
+import usePredictImage from "@/hooks/media/use-predict-image"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
@@ -36,6 +36,8 @@ const AiPrediction = () => {
     usePrediction()
   const [previewImage, setPreviewImage] = useState<string | null>(null)
   const [isPending, startTransition] = useTransition()
+
+  const { mutateAsync: predictImage } = usePredictImage()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

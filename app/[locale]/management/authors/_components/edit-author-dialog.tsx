@@ -264,7 +264,6 @@ function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
                       <FormLabel>{t("fields.biography")}</FormLabel>
                       <FormControl>
                         <Editor
-                          disabled={isPending}
                           value={field.value}
                           apiKey={process.env.NEXT_PUBLIC_TINY_EDITOR_API_KEY}
                           onEditorChange={field.onChange}
