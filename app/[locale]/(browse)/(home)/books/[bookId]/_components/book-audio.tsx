@@ -183,8 +183,7 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
   }
 
   if (!audioLink) {
-    // router.push("/not-found")
-    return
+    return <div>{t("Error while loading audiobook")}</div>
   }
 
   return (

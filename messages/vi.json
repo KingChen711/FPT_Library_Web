@@ -914,6 +914,7 @@
     "Cancel": "Hủy"
   },
   "BookPage": {
+    "Error while loading audiobook": "Có lỗi xảy ra khi đang tải audiobook. Vui lòng thử lại.",
     "Favorite list": "Danh sách yêu thích",
     "Search results": "Kết quả tìm kiếm",
     "Favorite Library Items": "Danh sách yêu thích",
