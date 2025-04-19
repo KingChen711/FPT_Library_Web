@@ -1,7 +1,9 @@
 import React from "react"
+import Link from "next/link"
 import { auth } from "@/queries/auth"
 import getNotifications from "@/queries/notifications/get-notifications"
 import { format } from "date-fns"
+import { Plus } from "lucide-react"
 
 import { getTranslations } from "@/lib/get-translations"
 import { EFeature } from "@/lib/types/enums"
@@ -31,7 +33,6 @@ import {
 import NotificationTypeBadge from "@/components/badges/notification-type-badge"
 import VisibilityBadge from "@/components/badges/visibility-badge"
 
-import CreateNotificationDialog from "./_components/create-notification-dialog"
 import FiltersNotificationsDialog from "./_components/filters-notifications-dialog"
 import RecipientsDialog from "./_components/recipients-dialog"
 
@@ -83,7 +84,15 @@ async function NotificationPage({ searchParams }: Props) {
           </div>
         </div>
         <div className="flex flex-wrap items-center gap-x-4">
-          <CreateNotificationDialog />
+          <Button asChild>
+            <Link
+              href="/management/notifications/create"
+              className="flex items-center gap-2"
+            >
+              <Plus />
+              {t("Create notification")}
+            </Link>
+          </Button>
         </div>
       </div>
 
