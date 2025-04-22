@@ -77,13 +77,25 @@ export function isTokenExpiringSoon(token: string): boolean {
 
 export function verifyToken(token: string): DecodedToken | null {
   try {
+    console.log("START verifyToken")
+
+    console.log({
+      token,
+      jwt_key: process.env.JWT_SECRET_KEY,
+    })
+
     const verified = jwt.verify(
       token,
       process.env.JWT_SECRET_KEY!
     ) as DecodedToken
 
     return verified
-  } catch {
+  } catch (error) {
+    console.log("Something wrong went verifyToken")
+    console.error(error)
+
     return null
+  } finally {
+    console.log("END verifyToken")
   }
 }
