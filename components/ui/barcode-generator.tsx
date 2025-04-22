@@ -39,7 +39,6 @@ const BarcodeGenerator = ({ value, options }: Props) => {
   }, [value, options])
 
   const rounded = options?.rounded === undefined ? true : options.rounded
-  console.log(rounded)
 
   return (
     <div

@@ -30,8 +30,6 @@ export async function addFinalizedStockInFile(
       data: message,
     }
   } catch (error) {
-    console.log({ error })
-
     return handleHttpError(error)
   }
 }

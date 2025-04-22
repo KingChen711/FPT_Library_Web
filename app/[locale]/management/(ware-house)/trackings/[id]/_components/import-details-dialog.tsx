@@ -65,7 +65,6 @@ const ImportDetailsDialog = ({ trackingId }: Props) => {
   })
 
   const handleCancel = () => {
-    form.reset()
     form.clearErrors()
     setOpen(false)
   }

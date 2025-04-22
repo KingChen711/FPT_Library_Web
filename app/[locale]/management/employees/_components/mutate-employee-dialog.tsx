@@ -107,7 +107,6 @@ function MutateEmployeeDialog({
       if (type === "create") {
         const res = await createEmployee(values)
         if (res.isSuccess) {
-          form.reset()
           setOpen(false)
           toast({
             title: "Create employee successfully",
@@ -123,7 +122,6 @@ function MutateEmployeeDialog({
         const { email, roleId, ...rest } = values
         const res = await updateEmployee(employee.employeeId, rest)
         if (res.isSuccess) {
-          form.reset()
           setOpenEdit(false)
           toast({
             title: "Update employee successfully",

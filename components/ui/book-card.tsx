@@ -66,8 +66,6 @@ export default function LibraryItemCard({
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
 
-  console.log({ fetchShelf, shelfId })
-
   return (
     <Link
       href={canOpen ? `/books/${libraryItem.libraryItemId}` : "#"}

@@ -831,7 +831,6 @@ export type BorrowRequestResource = {
   defaultBorrowDurationDays: number
   transactionId: number | null
   libraryResource: BookResource
-  transaction: null
 }
 
 export type ReservationQueue = {

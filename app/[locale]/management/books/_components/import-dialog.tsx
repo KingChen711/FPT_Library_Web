@@ -97,7 +97,6 @@ function ImportDialog() {
   }
 
   const handleCancel = () => {
-    form.reset()
     form.clearErrors()
     setOpen(false)
   }
@@ -128,7 +127,6 @@ function ImportDialog() {
 
       const res = await importLibraryItems(formData)
       if (res?.isSuccess) {
-        form.reset()
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
           description: res.data.message,

@@ -14,7 +14,6 @@ function handleServerActionError(
   locale: string,
   form?: UseFormReturn<any, any, any>
 ) {
-  console.log({ error, locale })
   if (error.typeError === "error" || error.typeError === "warning") {
     toast({
       title: locale === "vi" ? "Lỗi" : "Error",

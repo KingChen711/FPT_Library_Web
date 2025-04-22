@@ -221,49 +221,6 @@ export const generatePDF = ({
     headStyles: { fillColor: [242, 242, 242], textColor: [0, 0, 0] },
   })
 
-  finalY = (doc as any).lastAutoTable.finalY + 30
-  let totalMoney = 0
-  statistics.forEach((s) => {
-    totalMoney += Number(s.totalPrice) || 0
-  })
-  doc.setFontSize(14)
-  doc.setFont("Roboto", "bold")
-  doc.text("Thống kê chung", 40, finalY)
-  doc.setFont("Roboto", "normal")
-
-  const head = supplementRequest
-    ? [["Tổng tài liệu", "Tổng tiền"]]
-    : [
-        [
-          "Tổng tài liệu",
-          "Tổng bản sao",
-          "Tổng tài liệu đã biên mục",
-          "Tổng bản sao đã dán ĐKCB",
-          "Tổng tiền",
-        ],
-      ]
-
-  const body = supplementRequest
-    ? [[totalItem, formatCurrency(totalMoney)]]
-    : [
-        [
-          statisticSummary.totalItem,
-          statisticSummary.totalInstanceItem,
-          statisticSummary.totalCatalogedItem,
-          statisticSummary.totalCatalogedInstanceItem,
-          formatCurrency(totalMoney),
-        ],
-      ]
-
-  autoTable(doc, {
-    head,
-    body,
-    startY: finalY + 10,
-    margin: { left: 40, right: 40 },
-    styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
-    headStyles: { fillColor: [242, 242, 242], textColor: [0, 0, 0] },
-  })
-
   if (supplementRequest) {
     finalY = (doc as any).lastAutoTable.finalY + 30
 
@@ -309,6 +266,49 @@ export const generatePDF = ({
       headStyles: { fillColor: [242, 242, 242], textColor: [0, 0, 0] },
     })
   }
+
+  finalY = (doc as any).lastAutoTable.finalY + 30
+  let totalMoney = 0
+  statistics.forEach((s) => {
+    totalMoney += Number(s.totalPrice) || 0
+  })
+  doc.setFontSize(14)
+  doc.setFont("Roboto", "bold")
+  doc.text("Thống kê chung", 40, finalY)
+  doc.setFont("Roboto", "normal")
+
+  const head = supplementRequest
+    ? [["Tổng tài liệu", "Tổng tiền"]]
+    : [
+        [
+          "Tổng tài liệu",
+          "Tổng bản sao",
+          "Tổng tài liệu đã biên mục",
+          "Tổng bản sao đã dán ĐKCB",
+          "Tổng tiền",
+        ],
+      ]
+
+  const body = supplementRequest
+    ? [[totalItem, formatCurrency(totalMoney)]]
+    : [
+        [
+          statisticSummary.totalItem,
+          statisticSummary.totalInstanceItem,
+          statisticSummary.totalCatalogedItem,
+          statisticSummary.totalCatalogedInstanceItem,
+          formatCurrency(totalMoney),
+        ],
+      ]
+
+  autoTable(doc, {
+    head,
+    body,
+    startY: finalY + 10,
+    margin: { left: 40, right: 40 },
+    styles: { fontSize: 10, cellPadding: 4, font: "Roboto" },
+    headStyles: { fillColor: [242, 242, 242], textColor: [0, 0, 0] },
+  })
 
   // 9. Ghi chú
   finalY = (doc as any).lastAutoTable.finalY + 25

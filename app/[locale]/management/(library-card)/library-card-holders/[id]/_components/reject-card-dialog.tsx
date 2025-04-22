@@ -66,7 +66,7 @@ function RejectCardDialog({ open, setOpen, libraryCardId, userId }: Props) {
           variant: "success",
         })
         setOpen(false)
-        form.reset()
+
         return
       }
 

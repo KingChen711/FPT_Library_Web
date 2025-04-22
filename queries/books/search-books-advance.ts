@@ -64,8 +64,6 @@ const searchBooksAdvance = async (
         totalPage: 0,
       }
 
-    console.log(data.libraryItems[0])
-
     return data
   } catch {
     return {

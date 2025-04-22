@@ -12,6 +12,7 @@ import {
 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { ETransactionStatus } from "@/lib/types/enums"
 import { formatDate } from "@/lib/utils"
 import useBorrowRequestDetail from "@/hooks/library-items/use-borrow-request-detail"
 import { Badge } from "@/components/ui/badge"
@@ -26,6 +27,7 @@ import {
 import NoData from "@/components/ui/no-data"
 import NoResult from "@/components/ui/no-result"
 import BorrowRequestStatusBadge from "@/components/badges/borrow-request-status-badge"
+import TransactionStatusBadge from "@/components/badges/transaction-status-badge"
 
 import BorrowRequestTransactionDialog from "../_components/borrow-request-transaction-dialog"
 import BorrowBookPreview from "../../_components/borrow-book-preview"
@@ -45,6 +47,9 @@ const BorrowRequestDetail = ({ params }: Props) => {
   const { data: borrowRequest, isLoading } = useBorrowRequestDetail(
     +params.borrowRequestId
   )
+
+  const transaction = borrowRequest?.borrowRequestResources[0]?.transaction
+  const transactionStatus = transaction?.transactionStatus
 
   if (isLoading) {
     return (
@@ -71,11 +76,16 @@ const BorrowRequestDetail = ({ params }: Props) => {
 
   return (
     <div className="mx-auto">
-      <BorrowRequestTransactionDialog
-        borrowRequestId={+params.borrowRequestId}
-        open={openTransaction}
-        setOpen={setOpenTransaction}
-      />
+      {(borrowRequest.isExistPendingResources ||
+        transaction?.transactionStatus === ETransactionStatus.PENDING) && (
+        <BorrowRequestTransactionDialog
+          transaction={transaction || undefined}
+          borrowRequestId={+params.borrowRequestId}
+          open={openTransaction}
+          setOpen={setOpenTransaction}
+        />
+      )}
+
       <section className="mb-4 flex items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <Button
@@ -287,11 +297,19 @@ const BorrowRequestDetail = ({ params }: Props) => {
                   {t("borrow request resource description")}
                 </CardDescription>
               </div>
-              {borrowRequest.isExistPendingResources && (
-                <Button onClick={() => setOpenTransaction(true)}>
-                  {t("payment")}
-                </Button>
-              )}
+
+              <div className="flex items-center gap-4">
+                {transactionStatus ? (
+                  <TransactionStatusBadge status={transactionStatus} />
+                ) : null}
+
+                {(borrowRequest.isExistPendingResources ||
+                  transactionStatus === ETransactionStatus.PENDING) && (
+                  <Button onClick={() => setOpenTransaction(true)}>
+                    {t("payment")}
+                  </Button>
+                )}
+              </div>
             </CardHeader>
             <CardContent className="p-4">
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">

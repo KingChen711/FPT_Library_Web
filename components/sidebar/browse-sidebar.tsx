@@ -1,6 +1,6 @@
 "use client"
 
-import { useTransition, type ComponentProps } from "react"
+import { useState, useTransition, type ComponentProps } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
@@ -53,6 +53,7 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
   const { isMobile, open } = useSidebar()
   const { user, isManager } = useAuth()
   const [isPending, startTransition] = useTransition()
+  const [openDropdown, setOpenDropdown] = useState(false)
 
   const handleLogout = () => {
     startTransition(async () => {
@@ -64,6 +65,11 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
       }
       handleServerActionError(res, locale)
     })
+  }
+
+  const handleOpenChange = (value: boolean) => {
+    if (isPending) return
+    setOpenDropdown(value)
   }
 
   return (
@@ -113,7 +119,7 @@ export function BrowseSidebar({ ...props }: ComponentProps<typeof Sidebar>) {
             </SidebarMenuItem>
 
             <SidebarMenuItem>
-              <DropdownMenu>
+              <DropdownMenu open={openDropdown} onOpenChange={handleOpenChange}>
                 <DropdownMenuTrigger asChild>
                   <Link href={`#`} className="flex items-center gap-2 p-2">
                     <User size={20} />

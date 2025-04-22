@@ -77,7 +77,7 @@ const VoiceToText = ({ open, setOpen }: Props) => {
 
   useEffect(() => {
     setAudioUrl(null)
-    form.reset()
+
     return () => {
       if (mediaRecorderRef.current) {
         mediaRecorderRef.current.stop()
@@ -215,7 +215,7 @@ const VoiceToText = ({ open, setOpen }: Props) => {
 
       if (res?.isSuccess) {
         setOpen(false)
-        form.reset()
+
         const newUrl = formUrlQuery({
           url: `/search/result`,
           params: searchParams.toString(),

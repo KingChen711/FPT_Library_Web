@@ -91,7 +91,9 @@ const PaymentCard = ({
                   src={
                     paymentStates.status === ETransactionStatus.PAID
                       ? "/assets/images/payment-success.png"
-                      : "/assets/images/payment-fail.png"
+                      : paymentStates.status !== ETransactionStatus.PENDING
+                        ? "/assets/images/payment-fail.png"
+                        : ""
                   }
                   width={236}
                   height={236}

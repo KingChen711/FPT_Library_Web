@@ -58,7 +58,6 @@ const UserImportDialog = () => {
   })
 
   const handleCancel = () => {
-    form.reset()
     form.clearErrors()
     setOpen(false)
   }

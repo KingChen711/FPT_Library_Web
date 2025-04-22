@@ -11,6 +11,7 @@ export async function cancelPayment(
   body: TCancelPaymentSchema
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
+  console.log({ body })
 
   try {
     const { message } = await http.post(
@@ -30,6 +31,8 @@ export async function cancelPayment(
       data: message,
     }
   } catch (error) {
+    console.log({ error })
+
     return handleHttpError(error)
   }
 }

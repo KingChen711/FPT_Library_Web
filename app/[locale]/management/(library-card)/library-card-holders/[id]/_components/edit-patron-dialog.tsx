@@ -85,7 +85,7 @@ function EditPatronDialog({ patron, open, setOpen }: Props) {
           variant: "success",
         })
         setOpen(false)
-        form.reset()
+
         return
       }
 

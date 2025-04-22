@@ -106,8 +106,6 @@ function UpdateResourceDialog({ open, setOpen, resource }: Props) {
         }
       }
 
-      console.log(values)
-
       values.fileEbook = undefined
       values.fileAudioBook = undefined
 

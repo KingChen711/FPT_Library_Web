@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useTransition } from "react"
+import { useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2, Plus } from "lucide-react"
@@ -82,15 +82,6 @@ function MutateConditionDialog({
       vietnameseName: type === "update" ? condition.vietnameseName : "",
     },
   })
-
-  useEffect(() => {
-    if (type === "update" && condition) {
-      form.reset({
-        englishName: condition.englishName,
-        vietnameseName: condition.vietnameseName,
-      })
-    }
-  }, [condition, type, form])
 
   const onSubmit = async (values: TMutateConditionSchema) => {
     startTransition(async () => {

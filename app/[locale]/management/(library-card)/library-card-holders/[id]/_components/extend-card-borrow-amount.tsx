@@ -72,7 +72,7 @@ function ExtendCardBorrowAmountDialog({
           variant: "success",
         })
         setOpen(false)
-        form.reset()
+
         return
       }
 
