@@ -31,12 +31,14 @@ export async function GET() {
       secure: isProduction,
       sameSite: isProduction ? "none" : "strict",
       path: "/",
+      maxAge: 60 * 60 * 24 * 2,
     })
     cookiesStore.set("refreshToken", data.refreshToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "strict",
       path: "/",
+      maxAge: 60 * 60 * 24 * 2,
     })
 
     return Response.json(data)
