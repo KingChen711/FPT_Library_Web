@@ -54,12 +54,16 @@ function TrackingActionsDropdown({
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [openExport, setOpenExport] = useState(false)
-  const [isPending, startTransition] = useTransition()
+  const [completing, startComplete] = useTransition()
+  const [cancelling, startCancel] = useTransition()
   const [exporting, startExport] = useTransition()
   const { user } = useAuth()
   const { mutateAsync: uploadBookImage } = useUploadImage()
 
   const handleChangeStatus = (status: ETrackingStatus) => {
+    const startTransition =
+      status === ETrackingStatus.COMPLETED ? startComplete : startCancel
+
     startTransition(async () => {
       const res = await changeTrackingStatus(tracking.trackingId, status)
       if (res.isSuccess) {
@@ -133,6 +137,8 @@ function TrackingActionsDropdown({
             variant: "success",
           })
           window.open(url)
+          setOpenExport(false)
+          setOpenDropdown(false)
           return
         }
 
@@ -148,7 +154,7 @@ function TrackingActionsDropdown({
   }
 
   const handleOpenChange = (value: boolean) => {
-    if (isPending || exporting) return
+    if (cancelling || completing || exporting) return
     setOpenDropdown(value)
   }
 
@@ -189,13 +195,13 @@ function TrackingActionsDropdown({
               {tracking.status === ETrackingStatus.PROCESSING && (
                 <>
                   <DropdownMenuItem
-                    disabled={isPending || exporting}
+                    disabled={cancelling || completing || exporting}
                     className="cursor-pointer"
                     onClick={() =>
                       handleChangeStatus(ETrackingStatus.COMPLETED)
                     }
                   >
-                    {isPending ? (
+                    {completing ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
                       <Check className="size-4" />
@@ -203,13 +209,13 @@ function TrackingActionsDropdown({
                     {t("Completed")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    disabled={isPending || exporting}
+                    disabled={cancelling || completing || exporting}
                     className="cursor-pointer"
                     onClick={() =>
                       handleChangeStatus(ETrackingStatus.CANCELLED)
                     }
                   >
-                    {isPending ? (
+                    {cancelling ? (
                       <Loader2 className="size-4 animate-spin" />
                     ) : (
                       <X className="size-4" />
@@ -222,7 +228,7 @@ function TrackingActionsDropdown({
               {tracking.status === ETrackingStatus.COMPLETED && (
                 <>
                   <DropdownMenuItem
-                    disabled={isPending || exporting}
+                    disabled={cancelling || completing || exporting}
                     className="cursor-pointer"
                     onClick={() =>
                       handleChangeStatus(ETrackingStatus.PROCESSING)
@@ -232,7 +238,7 @@ function TrackingActionsDropdown({
                     {t("Change to draft")}
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    disabled={isPending || exporting}
+                    disabled={cancelling || completing || exporting}
                     className="cursor-pointer"
                     onClick={() => setOpenExport(true)}
                   >
@@ -251,7 +257,7 @@ function TrackingActionsDropdown({
           )}
 
           <DropdownMenuItem
-            disabled={isPending || exporting}
+            disabled={cancelling || completing || exporting}
             className="cursor-pointer"
             onClick={() => {
               setOpenDropdown(false)
@@ -262,7 +268,7 @@ function TrackingActionsDropdown({
             {t("Edit information")}
           </DropdownMenuItem>
           <DropdownMenuItem
-            disabled={isPending || exporting}
+            disabled={cancelling || completing || exporting}
             className="cursor-pointer"
             onClick={() => {
               setOpenDropdown(false)

@@ -121,8 +121,6 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
   }
 
   useEffect(() => {
-    console.log("fetchAudio")
-
     if (isLoadingAuth || !accessToken || audioLink) return
     async function fetchAudio() {
       try {
@@ -147,8 +145,6 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
           throw Error("")
         }
 
-        console.log({ data })
-
         if (typeof data === "string") {
           setAudioLink(data)
         } else if (data instanceof Blob) {
@@ -168,7 +164,6 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
   }, [isLoadingAuth, isPreview, resourceId, accessToken, audioLink, router])
 
   useEffect(() => {
-    console.log("volume")
     if (audioRef.current) {
       audioRef.current.volume = volume
     }

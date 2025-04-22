@@ -126,7 +126,6 @@ function CreateAuthorDialog({
 
       const res = await createAuthor(values)
       if (res.isSuccess) {
-        form.reset()
         if (customSetOpen) {
           customSetOpen(false)
         } else {
@@ -154,20 +153,14 @@ function CreateAuthorDialog({
   ) => {
     e.preventDefault()
 
-    const fileReader = new FileReader()
-
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0]
       setFile(file)
 
       if (!file.type.includes("image")) return
 
-      fileReader.onload = async (event) => {
-        const imageDataUrl = event.target?.result?.toString() || ""
-        fieldChange(imageDataUrl)
-      }
-
-      fileReader.readAsDataURL(file)
+      const url = URL.createObjectURL(file)
+      fieldChange(url)
     }
   }
 
@@ -358,7 +351,6 @@ function CreateAuthorDialog({
                       variant="secondary"
                       className="float-right mt-4"
                       onClick={() => {
-                        form.reset()
                         form.clearErrors()
                         if (customSetOpen) {
                           customSetOpen(false)

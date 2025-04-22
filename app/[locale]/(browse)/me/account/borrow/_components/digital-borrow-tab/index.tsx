@@ -45,7 +45,6 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
     pageSize,
     ...rest,
   })
-  console.log("🚀 ~ DigitalBorrowTab ~ digitalBorrows[0]:", digitalBorrows[0])
 
   return (
     <div className="space-y-4">

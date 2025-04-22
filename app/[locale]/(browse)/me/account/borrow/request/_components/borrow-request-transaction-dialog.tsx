@@ -13,7 +13,7 @@ import {
   type SocketVerifyPaymentStatus,
 } from "@/lib/signalR/verify-payment-status"
 import { EResourceBookType, ETransactionStatus } from "@/lib/types/enums"
-import { type PaymentData } from "@/lib/types/models"
+import { type PaymentData, type Transaction } from "@/lib/types/models"
 import { createBorrowRequestTransaction } from "@/actions/borrows/create-borrow-request-transaction"
 import useConfirmTransactionBorrowRequest from "@/hooks/borrow/use-confirm-transaction-borrow-request"
 import { toast } from "@/hooks/use-toast"
@@ -35,12 +35,14 @@ type Props = {
   open: boolean
   setOpen: (open: boolean) => void
   borrowRequestId: number
+  transaction?: Transaction
 }
 
 const BorrowRequestTransactionDialog = ({
   borrowRequestId,
   open,
   setOpen,
+  transaction,
 }: Props) => {
   const { data: borrowRequestResources, isLoading } =
     useConfirmTransactionBorrowRequest(borrowRequestId)
@@ -53,6 +55,8 @@ const BorrowRequestTransactionDialog = ({
   const [connection, setConnection] = useState<HubConnection | null>(null)
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
   const [isPending, startTransition] = useTransition()
+  const isExpireBefore =
+    transaction?.transactionStatus === ETransactionStatus.EXPIRED
 
   const [paymentStates, setPaymentStates] = useState({
     leftTime: 0,
@@ -92,12 +96,20 @@ const BorrowRequestTransactionDialog = ({
   // Reduce left time
   useEffect(() => {
     const timer = setInterval(() => {
+      if (isExpireBefore) return
+
       const leftTime = paymentData?.expiredAt
         ? paymentData.expiredAt.getTime() - Date.now()
         : 0
 
       setPaymentStates((prev) => ({ ...prev, leftTime }))
-      if (leftTime > 0 || !paymentData?.expiredAt) return
+      if (
+        leftTime > 0 ||
+        !paymentData?.expiredAt ||
+        paymentStates.status !== ETransactionStatus.PENDING
+      )
+        return
+
       setPaymentStates((prev) => ({
         ...prev,
         leftTime: 0,
@@ -109,7 +121,7 @@ const BorrowRequestTransactionDialog = ({
     return () => {
       clearInterval(timer)
     }
-  }, [paymentData?.expiredAt])
+  }, [paymentData?.expiredAt, paymentStates?.status, isExpireBefore])
 
   // Reduce navigate time
   useEffect(() => {
@@ -125,6 +137,23 @@ const BorrowRequestTransactionDialog = ({
     return () => clearInterval(timer)
   }, [paymentStates.canNavigate, paymentStates.navigateTime, router])
 
+  useEffect(() => {
+    if (!transaction) return
+    setPaymentData({
+      description: transaction.description || "",
+      expiredAt: transaction.expiredAt ? new Date(transaction.expiredAt) : null,
+      orderCode: transaction.transactionCode,
+      qrCode: transaction.qrCode || "",
+      paymentLinkId: "",
+    })
+    setPaymentStates({
+      canNavigate: false,
+      status: ETransactionStatus.PENDING,
+      navigateTime: 5,
+      leftTime: 0,
+    })
+  }, [transaction])
+
   if (isLoadingAuth || isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -133,9 +162,7 @@ const BorrowRequestTransactionDialog = ({
     )
   }
 
-  console.log({ user, borrowRequestResources })
-
-  if (!user || !borrowRequestResources) {
+  if (!user || (!borrowRequestResources && !transaction)) {
     return null
   }
 
@@ -145,7 +172,12 @@ const BorrowRequestTransactionDialog = ({
 
       if (transaction.isSuccess) {
         if (transaction.data.paymentData) {
-          setPaymentData(transaction.data.paymentData)
+          setPaymentData({
+            ...transaction.data.paymentData,
+            expiredAt: transaction.data.paymentData.expiredAt
+              ? new Date(transaction.data.paymentData.expiredAt)
+              : null,
+          })
           return
         }
         toast({
@@ -171,7 +203,7 @@ const BorrowRequestTransactionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {!paymentData && (
+      {!paymentData && !transaction && (
         <DialogContent className="sm:max-w-3xl">
           <DialogHeader>
             <DialogTitle>{t("create borrow request transaction")}</DialogTitle>
@@ -180,7 +212,7 @@ const BorrowRequestTransactionDialog = ({
             </DialogDescription>
           </DialogHeader>
           <div className="grid grid-cols-2 gap-4">
-            {borrowRequestResources.map((resource) => (
+            {borrowRequestResources!.map((resource) => (
               <Card
                 key={resource.borrowRequestResourceId}
                 className="overflow-hidden border border-muted/50 transition-all hover:border-primary/20 hover:shadow-md"

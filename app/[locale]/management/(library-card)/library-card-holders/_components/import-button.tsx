@@ -93,7 +93,6 @@ function ImportButton() {
   }
 
   const handleCancel = () => {
-    form.reset()
     form.clearErrors()
     setOpen(false)
   }
@@ -118,7 +117,6 @@ function ImportButton() {
 
       const res = await importPatrons(formData)
       if (res?.isSuccess) {
-        form.reset()
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
           description: res.data.message,

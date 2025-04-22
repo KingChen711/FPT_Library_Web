@@ -83,10 +83,6 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
     [searchTerm, groups]
   )
 
-  useEffect(() => {
-    console.log(filteredGroups)
-  }, [filteredGroups])
-
   const handlePaginate = (selectedPage: number) => {
     setPageIndex(selectedPage)
   }

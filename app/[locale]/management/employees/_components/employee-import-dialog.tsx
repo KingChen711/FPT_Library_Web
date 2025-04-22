@@ -67,7 +67,6 @@ const EmployeeImportDialog = () => {
   })
 
   const handleCancel = () => {
-    form.reset()
     form.clearErrors()
     setImportErrors([])
     setOpen(false)

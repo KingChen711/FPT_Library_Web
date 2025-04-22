@@ -36,7 +36,7 @@ const BorrowDigitalConfirm = ({ open, setOpen, selectedResource }: Props) => {
     borrowedResources.toggle(selectedResource.resourceId)
     toast({
       title: isAdded ? t("deleted to borrow list") : t("added to borrow list"),
-      variant: "default",
+      variant: "info",
     })
     setOpen(false)
   }

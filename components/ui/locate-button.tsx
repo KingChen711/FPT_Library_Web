@@ -49,7 +49,10 @@ function LocateButton({ shelfId, shelfNumber, children }: Props) {
   return (
     <>
       <Dialog open={openLocate} onOpenChange={setOpenLocate}>
-        <DialogTrigger className="cursor-pointer">
+        <DialogTrigger
+          className="cursor-pointer"
+          asChild={children ? true : undefined}
+        >
           {children ||
             (shelfNumber ? (
               <ShelfBadge shelfNumber={shelfNumber} />

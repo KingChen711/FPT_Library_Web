@@ -139,12 +139,8 @@ function CreateResourceDialog({ bookId }: Props) {
           form.setValue("resourceSize", values.resourceSize)
         }
 
-        console.log(res)
-
         handleServerActionError(res, locale, form)
-      } catch (error) {
-        console.log(error)
-
+      } catch {
         toast({
           title: locale === "vi" ? "Thất bại" : "Failed",
           description: locale === "vi" ? "Lỗi không xác định" : "Unknown error",

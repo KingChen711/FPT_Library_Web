@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState, useTransition } from "react"
+import { useState, useTransition } from "react"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2, Plus } from "lucide-react"
@@ -75,22 +75,6 @@ function MutatePackageDialog({
     },
   })
 
-  useEffect(() => {
-    form.reset()
-    form.clearErrors()
-  }, [form, openEdit, open])
-
-  useEffect(() => {
-    if (type === "update" && libraryPackage) {
-      form.reset({
-        packageName: libraryPackage.packageName,
-        price: libraryPackage.price,
-        durationInMonths: libraryPackage.durationInMonths,
-        description: libraryPackage.description ?? "",
-      })
-    }
-  }, [libraryPackage, type, form])
-
   const handleOpenChange = (value: boolean) => {
     if (isPending) return
     if (type === "create") {
@@ -121,7 +105,7 @@ function MutatePackageDialog({
           setOpenEdit(false)
         }
         queryClient.invalidateQueries({ queryKey: ["packages"] })
-        form.reset()
+
         form.clearErrors()
         return
       }

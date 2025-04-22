@@ -10,8 +10,10 @@ function useConfirmTransactionBorrowRequest(borrowRequestId: number) {
     queryKey: [
       `/borrow/requests/${borrowRequestId}/confirm-transaction`,
       borrowRequestId,
+      accessToken,
     ],
     queryFn: async () => {
+      if (!accessToken) return null
       try {
         const { data } = await http.get<BorrowRequestResource[] | null>(
           `/api/borrows/requests/${borrowRequestId}/confirm-transaction`,

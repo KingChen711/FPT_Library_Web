@@ -159,11 +159,8 @@ export async function GET(request: NextRequest) {
         }
     )
 
-    console.log({ results })
-
     return Response.json(results)
-  } catch (error) {
-    console.log(error)
+  } catch {
     return Response.json([])
   }
 }

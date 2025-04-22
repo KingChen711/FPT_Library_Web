@@ -65,8 +65,6 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
         }))
       const res = await editConfiguration(fields)
 
-      console.log(res)
-
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",

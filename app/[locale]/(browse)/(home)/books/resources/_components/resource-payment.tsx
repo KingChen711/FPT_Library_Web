@@ -169,10 +169,6 @@ const BorrowDigitalConfirm = ({
     searchParams,
   ])
 
-  useEffect(() => {
-    console.log(open)
-  }, [open])
-
   if (isLoadingAuth || isLoadingPaymentMethods) {
     return (
       <div className="flex h-screen items-center justify-center">

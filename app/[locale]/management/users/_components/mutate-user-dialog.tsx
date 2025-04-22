@@ -94,7 +94,6 @@ function MutateUserDialog({ type, user, openEdit, setOpenEdit }: Props) {
       if (type === "create") {
         const res = await createUser(values)
         if (res.isSuccess) {
-          form.reset()
           setOpen(false)
           toast({
             title: locale === "vi" ? "Thành công" : "Success",
@@ -108,7 +107,6 @@ function MutateUserDialog({ type, user, openEdit, setOpenEdit }: Props) {
       if (type === "update") {
         const res = await updateUser(user.userId, values)
         if (res.isSuccess) {
-          form.reset()
           setOpenEdit(false)
           toast({
             title: locale === "vi" ? "Thành công" : "Success",

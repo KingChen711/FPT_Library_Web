@@ -73,9 +73,7 @@ const getBorrowDigitals = async (
         totalPage: 0,
       }
     )
-  } catch (error) {
-    console.log(error)
-
+  } catch {
     return {
       pageIndex: 0,
       pageSize: 0,

@@ -64,9 +64,7 @@ function ConfirmExportFileDialog({
             disabled={isPending}
             type="button"
             className="flex-1"
-            onClick={() => {
-              onExportFile().then(() => setOpen(false))
-            }}
+            onClick={onExportFile}
           >
             {t("Continue")}
             {isPending && <Loader2 className="size-4 animate-spin" />}

@@ -114,8 +114,6 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
   })
 
   const toggleFavorite = (itemId: number) => {
-    console.log("toggleFavorite 1")
-
     if (isLoading) return
     const isFavourite = favouriteItemIds.includes(itemId)
 
@@ -123,7 +121,6 @@ const FavouriteProvider = ({ children }: FavouriteProviderProps) => {
     setFavouriteItemIds((prev) =>
       isFavourite ? prev.filter((id) => id !== itemId) : [...prev, itemId]
     )
-    console.log("toggleFavorite 2")
 
     const mutation = isFavourite ? deleteFavourite : addFavourite
 

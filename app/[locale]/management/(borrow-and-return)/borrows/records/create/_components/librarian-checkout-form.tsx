@@ -98,7 +98,7 @@ function LibrarianCheckoutForm() {
 
       if (scanCard) {
         if (fetchingPatron) return
-        form.setValue("libraryCardBarcode", scannedData)
+
         getPatronByBarcode(scannedData, {
           onSuccess: (data) => {
             if (!data) {
@@ -112,6 +112,7 @@ function LibrarianCheckoutForm() {
               })
               return
             }
+            form.setValue("libraryCardBarcode", scannedData)
             form.setValue("libraryCardId", data.libraryCardId)
             setScannedPatron(data)
           },

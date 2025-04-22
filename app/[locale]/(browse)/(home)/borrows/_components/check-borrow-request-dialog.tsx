@@ -81,7 +81,7 @@ const CheckBorrowRequestDialog = ({
         reservationItemIds: allowToReserveItems,
         resourceIds: allowToBorrowResources,
       })
-      console.log("🚀 ~ startTransition ~ res:", res)
+
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
@@ -108,7 +108,7 @@ const CheckBorrowRequestDialog = ({
         setOpen(false)
         return
       }
-      console.log(123)
+
       handleServerActionError(res, locale)
     })
   }

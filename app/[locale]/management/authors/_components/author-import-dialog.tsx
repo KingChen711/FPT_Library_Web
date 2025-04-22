@@ -70,7 +70,6 @@ const AuthorImportDialog = () => {
   }, [open])
 
   const handleCancel = () => {
-    form.reset()
     form.clearErrors()
     setImportErrors([])
     setOpen(false)

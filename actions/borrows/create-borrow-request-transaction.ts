@@ -35,8 +35,6 @@ export async function createBorrowRequestTransaction(
     revalidatePath(`/me/account/borrow/request/${borrowRequestId}`)
     revalidatePath(`/me/account/borrow`)
 
-    console.log(data.payOsResponse.data.paymentLinkId)
-
     return {
       isSuccess: true,
       data: {

@@ -124,7 +124,6 @@ function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
 
       const res = await updateAuthor(author.authorId, values)
       if (res.isSuccess) {
-        form.reset()
         setOpenEdit(false)
         toast({
           title: locale === "vi" ? "Thành công" : "Success",
@@ -148,20 +147,14 @@ function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
   ) => {
     e.preventDefault()
 
-    const fileReader = new FileReader()
-
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0]
       setFile(file)
 
       if (!file.type.includes("image")) return
 
-      fileReader.onload = async (event) => {
-        const imageDataUrl = event.target?.result?.toString() || ""
-        fieldChange(imageDataUrl)
-      }
-
-      fileReader.readAsDataURL(file)
+      const url = URL.createObjectURL(file)
+      fieldChange(url)
     }
   }
 
@@ -335,7 +328,6 @@ function EditAuthorDialog({ author, openEdit, setOpenEdit }: Props) {
                       variant="secondary"
                       className="float-right mt-4"
                       onClick={() => {
-                        form.reset()
                         form.clearErrors()
                         setOpenEdit(false)
                       }}

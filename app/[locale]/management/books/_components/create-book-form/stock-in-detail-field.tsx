@@ -58,7 +58,7 @@ function StockInDetailField({ form, isPending }: Props) {
   const [debouncedSearchTermDetail] = useDebounce(searchTermDetail, 300)
 
   const selectedTracking = form.watch("tracking")
-  const trackingDetailId = form.watch("trackingDetailId")
+
   const trackingDetail = form.watch("trackingDetail")
 
   const { data: trackingItems, isFetching } =
@@ -112,10 +112,6 @@ function StockInDetailField({ form, isPending }: Props) {
     if (!trackingDetail?.unitPrice) return
     form.setValue("estimatedPrice", trackingDetail.unitPrice as number)
   }, [trackingDetail, form])
-
-  useEffect(() => {
-    console.log({ trackingDetailId, trackingDetail })
-  }, [trackingDetailId, trackingDetail])
 
   return (
     <FormField
@@ -249,7 +245,6 @@ function StockInDetailField({ form, isPending }: Props) {
                               <TooltipTrigger asChild>
                                 <div
                                   onClick={() => {
-                                    console.log("Clicked")
                                     field.onChange(detail.trackingDetailId)
                                     form.setValue("trackingDetail", detail)
                                     form.clearErrors("trackingDetailId")

@@ -121,6 +121,8 @@ function CreatePatronForm() {
       const res = await createPatron(values)
       if (res.isSuccess) {
         if (res.data.paymentData) {
+          console.log(res.data.paymentData)
+
           setPaymentData(res.data.paymentData)
           return
         }

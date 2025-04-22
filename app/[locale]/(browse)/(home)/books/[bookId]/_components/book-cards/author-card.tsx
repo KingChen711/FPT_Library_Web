@@ -55,8 +55,6 @@ const BookAuthorCard = async ({ libraryItem }: Props) => {
     (item) => item.libraryItemId !== libraryItem.libraryItemId
   )
 
-  console.log("🚀 ~ BookAuthorCard ~ libraryItem:", libraryItem)
-
   return (
     <section className="flex h-full flex-1 flex-col justify-between overflow-y-auto overflow-x-hidden rounded-md border bg-card p-4 px-6 shadow-lg">
       <div className="px-4">

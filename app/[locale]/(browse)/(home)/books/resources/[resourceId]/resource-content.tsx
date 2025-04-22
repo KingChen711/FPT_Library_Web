@@ -230,8 +230,6 @@ export default function ResourceContent({
     return <div>No resource</div>
   }
 
-  console.log({ isPreview, bookId })
-
   return (
     <>
       {/* Open warning */}
@@ -328,7 +326,6 @@ export default function ResourceContent({
                         variant={"ghost"}
                         onClick={() => {
                           setOpenPayment(true)
-                          console.log("setOpenPayment")
                         }}
                         className="text-primary-foreground"
                       >

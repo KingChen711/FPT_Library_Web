@@ -5,11 +5,14 @@ import { http } from "@/lib/http"
 import {
   type BorrowRequest,
   type BorrowRequestResource,
+  type Transaction,
 } from "@/lib/types/models"
 
 export type BorrowRequestDetail = BorrowRequest & {
   isExistPendingResources: boolean
-  borrowRequestResources: BorrowRequestResource[]
+  borrowRequestResources: (BorrowRequestResource & {
+    transaction?: Transaction | null
+  })[]
 }
 
 function useBorrowRequestDetail(borrowRequestId: number) {
@@ -17,6 +20,7 @@ function useBorrowRequestDetail(borrowRequestId: number) {
   return useQuery({
     queryKey: [`/borrows/requests/${borrowRequestId}`, accessToken],
     queryFn: async () => {
+      if (!accessToken) return null
       try {
         const { data } = await http.get<BorrowRequestDetail | null>(
           `/api/users/borrows/requests/${borrowRequestId}`,
@@ -32,6 +36,7 @@ function useBorrowRequestDetail(borrowRequestId: number) {
         return null
       }
     },
+
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
   })

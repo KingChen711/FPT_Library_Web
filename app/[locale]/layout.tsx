@@ -78,8 +78,7 @@ export default async function RootLayout({
                   <TrainAIProvider>
                     <ThemeProvider
                       attribute="class"
-                      defaultTheme="system"
-                      enableSystem
+                      defaultTheme="light"
                       disableTransitionOnChange
                     >
                       {children}

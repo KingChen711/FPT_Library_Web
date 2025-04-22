@@ -67,8 +67,7 @@ function useUploadMultipart() {
         })
 
         return s3PathKey
-      } catch (err) {
-        console.log(err)
+      } catch {
         return null
       }
     },

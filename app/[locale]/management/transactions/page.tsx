@@ -60,8 +60,6 @@ async function TransactionsManagementPage({ searchParams }: Props) {
     ...rest,
   })
 
-  console.log(transactions[0])
-
   return (
     <div>
       <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">

@@ -1,7 +1,6 @@
 "use client"
 
 import React, {
-  useEffect,
   useState,
   useTransition,
   type Dispatch,
@@ -102,8 +101,6 @@ function CreateBookForm({ trackingDetail }: Props) {
 
       values.libraryItemInstances = []
 
-      console.log(values)
-
       const res = await createBook(values)
       if (res.isSuccess) {
         toast({
@@ -188,8 +185,6 @@ function CreateBookForm({ trackingDetail }: Props) {
           setCurrentTab("Resources")
         }
       }
-
-      console.log(res)
 
       handleServerActionError(res, locale, form)
     })
@@ -315,10 +310,6 @@ function CreateBookForm({ trackingDetail }: Props) {
   const isBookSeries = selectedCategory?.englishName === "BookSeries" || false
 
   const [openCreateAuthor, setOpenCreateAuthor] = useState(false)
-
-  useEffect(() => {
-    console.log(form.formState.errors)
-  }, [form.formState.errors])
 
   return (
     <>
