@@ -23,7 +23,10 @@ function useAutoCompleteBooks(term = "", enabled = true) {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_ELASTICSEARCH_URL}/library_items/_search`,
           {
-            headers: { "Content-Type": "application/json" },
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: "Basic " + btoa("quanghuy:Strongpassword1@"),
+            },
             params: {
               source: JSON.stringify({
                 size: 8,
