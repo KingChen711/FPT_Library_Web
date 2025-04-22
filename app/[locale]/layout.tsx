@@ -10,7 +10,6 @@ import AuthProvider from "@/contexts/auth-provider"
 import FavouriteProvider from "@/contexts/favourite-provider"
 import { LibraryProvider } from "@/contexts/library-provider"
 import { ReactQueryProvider } from "@/contexts/react-query-provider"
-// import SocketProvider from "@/contexts/socket-provider"
 import { ThemeProvider } from "@/contexts/theme-provider"
 import TrainAIProvider from "@/contexts/train-ai-progress-provider"
 import TrainAIToast from "@/contexts/train-ai-toast"
@@ -73,7 +72,6 @@ export default async function RootLayout({
           <ReactQueryProvider>
             <LibraryProvider>
               <AuthProvider>
-                {/* <SocketProvider> */}
                 <FavouriteProvider>
                   <TrainAIProvider>
                     <ThemeProvider
@@ -87,8 +85,6 @@ export default async function RootLayout({
                     </ThemeProvider>
                   </TrainAIProvider>
                 </FavouriteProvider>
-
-                {/* </SocketProvider> */}
               </AuthProvider>
             </LibraryProvider>
           </ReactQueryProvider>

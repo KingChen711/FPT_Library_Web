@@ -324,10 +324,6 @@ function CreateBookForm({ trackingDetail }: Props) {
             <h3 className="text-2xl font-semibold">
               {t(fromWarehouseMode ? "Catalog" : "Create book")}
             </h3>
-            {/* //TODO:uncomment this */}
-            {/* <SocketProvider>
-              <IsbnScannerDialog />
-            </SocketProvider> */}
           </div>
 
           <ProgressTabBar
