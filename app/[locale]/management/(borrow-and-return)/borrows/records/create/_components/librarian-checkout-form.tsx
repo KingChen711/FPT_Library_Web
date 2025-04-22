@@ -186,7 +186,7 @@ function LibrarianCheckoutForm() {
               description:
                 locale === "vi"
                   ? "Đúng tài liệu nhưng sai bản vật lý đã gán"
-                  : "Correct library item but wrong physical copy",
+                  : "Correct library item but wrong instance",
               variant: "warning",
             })
             return
