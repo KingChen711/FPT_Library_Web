@@ -65,7 +65,7 @@ const BorrowsPage = () => {
 
         <Card className="border-none shadow-none">
           <CardContent className="p-0">
-            <div className="flex items-center justify-between p-4">
+            <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <Checkbox
                   id="select-all"
@@ -118,7 +118,7 @@ const BorrowsPage = () => {
             </div>
 
             {/* Get data from Local storage */}
-            <div className="flex flex-col gap-4 p-4">
+            <div className="flex flex-col gap-4">
               {borrowedLibraryItems.items &&
                 borrowedLibraryItems.items.length > 0 && (
                   <div className="space-y-4">

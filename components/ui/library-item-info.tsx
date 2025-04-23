@@ -80,12 +80,14 @@ const LibraryItemInfo = ({
     useFavourite()
   const isFavourite = favouriteItemIds.includes(id)
 
-  const { recentlyOpened } = useLibraryStorage()
+  const { recentlyOpened, addRecentlyOpened } = useLibraryStorage()
 
   useEffect(() => {
-    if (recentlyOpened.items.includes(id)) return
-    recentlyOpened.add(id)
-  }, [id, recentlyOpened])
+    console.log({ id, recentlyOpened })
+
+    if (recentlyOpened.includes(id)) return
+    addRecentlyOpened(id)
+  }, [id, recentlyOpened, addRecentlyOpened])
 
   if (isLoading) {
     return <LibraryItemInfoLoading />
