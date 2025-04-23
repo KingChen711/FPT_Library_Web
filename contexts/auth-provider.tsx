@@ -35,16 +35,14 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const queryClient = useQueryClient()
   const [isManager, setIsManager] = useState<boolean>(false)
 
-  const { data: token, isFetching: isLoadingToken } = useQuery<
-    Token | undefined
-  >({
+  const { data: token, isFetching: isLoadingToken } = useQuery<Token | null>({
     queryKey: ["token"],
     queryFn: async () => {
       try {
         const res: Token = await fetch("/api/token").then((res) => res.json())
-        return res || undefined
+        return res || null
       } catch {
-        return undefined
+        return null
       }
     },
   })
@@ -60,8 +58,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
               },
             })
             .then((res) => res.data)
-            .catch(() => undefined)
-        : undefined,
+            .catch(() => null)
+        : null,
+    enabled: !!token,
   })
 
   const user = useMemo(() => {

@@ -73,29 +73,31 @@ const BookDetailPage = async ({ params: { bookId }, searchParams }: Props) => {
           </section>
         </div>
       ) : (
-        <div className="container flex h-full justify-center gap-4">
-          <section className="h-full w-3/4 space-y-4">
-            <div className="flex h-[70vh] gap-4">
-              <div
-                className={cn(
-                  "flex w-full justify-between gap-4 rounded-md border bg-card p-4 shadow-lg"
-                )}
-              >
-                <section className="h-full w-1/3 bg-card">
-                  <BookPreviewCard libraryItem={libraryItem} />
-                </section>
-                <div className="overflow-y-auto">
-                  <LibraryItemInfo
-                    id={libraryItem.libraryItemId}
-                    showInstances={false}
-                    libraryItem={libraryItem}
-                  />
+        <>
+          <div className="container flex h-full justify-center gap-4">
+            <section className="h-full w-3/4 space-y-4">
+              <div className="flex h-[70vh] gap-4">
+                <div
+                  className={cn(
+                    "flex w-full justify-between gap-4 rounded-md border bg-card p-4 shadow-lg"
+                  )}
+                >
+                  <section className="h-full w-1/3 bg-card">
+                    <BookPreviewCard libraryItem={libraryItem} />
+                  </section>
+                  <div className="overflow-y-auto">
+                    <LibraryItemInfo
+                      id={libraryItem.libraryItemId}
+                      showInstances={false}
+                      libraryItem={libraryItem}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-            <BookTabs searchParams={searchParams} libraryItem={libraryItem} />
-          </section>
-        </div>
+              <BookTabs searchParams={searchParams} libraryItem={libraryItem} />
+            </section>
+          </div>
+        </>
       )}
     </div>
   )

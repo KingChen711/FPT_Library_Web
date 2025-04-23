@@ -72,6 +72,7 @@ const LibraryItemInfo = ({
     id,
     !propLibraryItem
   )
+  const libraryItem = propLibraryItem || fetchedLibraryItem
 
   const [openDigitalList, setOpenDigitalList] = useState<boolean>(false)
   const [openAddBorrowConfirm, setOpenAddBorrowConfirm] = useState(false)
@@ -81,14 +82,8 @@ const LibraryItemInfo = ({
 
   const { recentlyOpened } = useLibraryStorage()
 
-  const libraryItem = propLibraryItem || fetchedLibraryItem
-
   useEffect(() => {
-    if (recentlyOpened.items.includes(id)) {
-      recentlyOpened.remove(id)
-      recentlyOpened.add(id)
-      return
-    }
+    if (recentlyOpened.items.includes(id)) return
     recentlyOpened.add(id)
   }, [id, recentlyOpened])
 
