@@ -9,14 +9,7 @@ function AuthLoading() {
     <div className="flex w-[420px] max-w-full flex-col items-center justify-center gap-6 overflow-hidden rounded-md bg-background shadow-lg">
       <div className="container space-y-4 rounded-md border-2 p-8 shadow-2xl">
         <div className="flex flex-col items-center justify-center">
-          <Image
-            src={systemLogo}
-            placeholder="blur"
-            priority
-            alt="Logo"
-            width={48}
-            height={48}
-          />
+          <Image src={systemLogo} priority alt="Logo" width={48} height={48} />
           <div className="text-sm font-bold">Intelligent Library</div>
         </div>
         <div className="flex flex-col gap-y-1">
