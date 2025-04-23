@@ -1,24 +1,9 @@
 import React from "react"
 import Link from "next/link"
-import { routing } from "@/i18n/routing"
-import { setRequestLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
 
-export const dynamic = "force-dynamic"
-export const fetchCache = "force-no-store"
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
-}
-
-type Props = {
-  params: { locale: string }
-}
-
-async function GuideDdcPage({ params }: Props) {
-  setRequestLocale(params.locale)
-
+async function GuideDdcPage() {
   const t = await getTranslations("GuideDdc")
 
   return (
