@@ -5,6 +5,9 @@ import { setRequestLocale } from "next-intl/server"
 
 import { getTranslations } from "@/lib/get-translations"
 
+export const dynamic = "force-dynamic"
+export const fetchCache = "force-no-store"
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }))
 }
