@@ -1,18 +1,6 @@
-import { routing } from "@/i18n/routing"
-import { setRequestLocale } from "next-intl/server"
-
 import { getTranslations } from "@/lib/get-translations"
 
-type Props = {
-  params: { locale: string }
-}
-
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }))
-}
-
-export default async function CutterNumberPage({ params: { locale } }: Props) {
-  setRequestLocale(locale)
+export default async function CutterNumberPage() {
   const t = await getTranslations("CutterNumber")
 
   return (

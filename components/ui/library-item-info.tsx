@@ -32,6 +32,7 @@ import {
 import { useLocale, useTranslations } from "next-intl"
 import { Rating } from "react-simple-star-rating"
 
+import { type LibraryItem } from "@/lib/types/models"
 import { cn, formatPrice, splitCamelCase } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
 import ShelfPreviewButton from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-cards/shelf-preview"
@@ -51,6 +52,8 @@ type Props = {
   showResources?: boolean
   showInstances?: boolean
   showImage?: boolean
+  className?: string
+  libraryItem?: LibraryItem
 }
 
 const LibraryItemInfo = ({
@@ -58,31 +61,36 @@ const LibraryItemInfo = ({
   showResources = true,
   showInstances = true,
   showImage = false,
+  className,
+  libraryItem: propLibraryItem,
 }: Props): JSX.Element | null => {
   const t = useTranslations("BookPage")
   const locale = useLocale()
   const { isManager, user } = useAuth()
-  const { data: libraryItem, isLoading } = useLibraryItemDetail(id)
+
+  const { data: fetchedLibraryItem, isLoading } = useLibraryItemDetail(
+    id,
+    !propLibraryItem
+  )
+
   const [openDigitalList, setOpenDigitalList] = useState<boolean>(false)
   const [openAddBorrowConfirm, setOpenAddBorrowConfirm] = useState(false)
   const { favouriteItemIds, toggleFavorite, isLoadingFavourite } =
     useFavourite()
-  const isFavourite = libraryItem
-    ? favouriteItemIds.includes(libraryItem?.libraryItemId)
-    : false
+  const isFavourite = favouriteItemIds.includes(id)
+
   const { recentlyOpened } = useLibraryStorage()
 
+  const libraryItem = propLibraryItem || fetchedLibraryItem
+
   useEffect(() => {
-    if (libraryItem) {
-      if (recentlyOpened.items.includes(libraryItem.libraryItemId)) {
-        recentlyOpened.remove(libraryItem.libraryItemId)
-        recentlyOpened.add(libraryItem.libraryItemId)
-        return
-      }
-      recentlyOpened.add(libraryItem.libraryItemId)
+    if (recentlyOpened.items.includes(id)) {
+      recentlyOpened.remove(id)
+      recentlyOpened.add(id)
+      return
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [libraryItem])
+    recentlyOpened.add(id)
+  }, [id, recentlyOpened])
 
   if (isLoading) {
     return <LibraryItemInfoLoading />
@@ -91,7 +99,7 @@ const LibraryItemInfo = ({
   if (!libraryItem) return null
 
   return (
-    <div className="space-y-4 text-foreground">
+    <div className={cn("space-y-4 text-foreground", className)}>
       <BookDigitalListDialog
         libraryItem={libraryItem}
         resources={libraryItem.resources}

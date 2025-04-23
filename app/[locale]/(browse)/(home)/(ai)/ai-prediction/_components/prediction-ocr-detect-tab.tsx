@@ -110,6 +110,7 @@ const PredictionOcrDetectTab = () => {
                   >
                     <LibraryItemInfo
                       id={libraryItem?.libraryItemId}
+                      libraryItem={libraryItem}
                       showInstances={false}
                       showResources={false}
                       shownInventory={true}
@@ -181,6 +182,7 @@ const PredictionOcrDetectTab = () => {
                 >
                   <LibraryItemInfo
                     id={libraryItem?.libraryItemId}
+                    libraryItem={libraryItem}
                     showInstances={false}
                     showResources={false}
                     shownInventory={true}

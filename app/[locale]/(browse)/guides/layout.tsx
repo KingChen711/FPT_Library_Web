@@ -4,8 +4,8 @@ type Props = {
   children: React.ReactNode
 }
 
-function GuidesLayout({ children }: Props) {
-  return <>{children}</>
+function GuideLayout({ children }: Props) {
+  return <> {children}</>
 }
 
-export default GuidesLayout
+export default GuideLayout

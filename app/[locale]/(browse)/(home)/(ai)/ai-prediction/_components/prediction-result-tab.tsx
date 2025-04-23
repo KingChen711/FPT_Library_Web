@@ -58,6 +58,7 @@ const PredictionResultTab = () => {
       <section className="flex h-[60vh] flex-1 flex-col justify-between overflow-y-auto rounded-md bg-card p-4">
         <LibraryItemInfo
           id={libraryItem?.libraryItemId}
+          libraryItem={libraryItem}
           showInstances={true}
           shownInventory={true}
           showResources={false}

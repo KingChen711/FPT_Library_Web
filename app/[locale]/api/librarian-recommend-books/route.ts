@@ -58,7 +58,7 @@ export async function POST(request: Request) {
 
     if (relatedTitle) {
       newMessage.parts.push({
-        text: `Based on the title '${relatedTitle}', which is a user's last read book, suggest a maximum of 5 book titles that this user may like, excluding any of the user's last read books. If the book title provided is in Vietnamese, then Vietnamese books should be recommended. Return the suggestions in the following JSON array format: [{"title": "The White Tiger"}, {"title": "A House For Mr. Biswas"}]. Provide only the JSON array as the response, with no additional text.`,
+        text: `Based on the title '${relatedTitle}', which is a user's last read book, suggest a maximum of 5 book titles that this user may like, excluding any of the user's last read books. If the book title provided is in Vietnamese, then Vietnamese books should be recommended. Do not suggest specific episode numbers in the results if the title I provide includes episode numbers. Since your output will be used for further searching via the Google API, you should adjust the result titles to improve search effectiveness. Return the suggestions in the following JSON array format: [{"title": "The White Tiger"}, {"title": "A House For Mr. Biswas"}]. Provide only the JSON array as the response, with no additional text.`,
       })
     }
 

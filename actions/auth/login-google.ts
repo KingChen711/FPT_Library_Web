@@ -29,12 +29,14 @@ export async function loginGoogle(code: string): Promise<ActionResponse> {
       secure: isProduction,
       sameSite: isProduction ? "none" : "strict",
       path: "/",
+      maxAge: 60 * 60 * 24 * 2,
     })
     cookiesStore.set("refreshToken", data.refreshToken, {
       httpOnly: true,
       secure: isProduction,
       sameSite: isProduction ? "none" : "strict",
       path: "/",
+      maxAge: 60 * 60 * 24 * 2,
     })
 
     revalidateTag("who-am-i")

@@ -1,6 +1,7 @@
 "use client"
 
 import Image from "next/image"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { Loader2 } from "lucide-react"
@@ -106,21 +107,27 @@ const PredictionOcrDetailTab = () => {
             <TooltipProvider delayDuration={0}>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <Image
-                    src={libraryItem?.coverImage as string}
-                    alt={t("detected book")}
-                    width={180}
-                    height={240}
-                    className="rounded-md object-contain shadow-lg"
-                  />
+                  <Link
+                    target="_blank"
+                    href={`/books/${libraryItem.libraryItemId}`}
+                  >
+                    <Image
+                      src={libraryItem?.coverImage as string}
+                      alt={t("detected book")}
+                      width={180}
+                      height={240}
+                      className="rounded-md object-contain shadow-lg"
+                    />
+                  </Link>
                 </TooltipTrigger>
                 <TooltipContent
                   align="start"
                   side="left"
-                  className="max-h-[60vh] overflow-y-auto border-2 bg-card"
+                  className="max-h-[80vh] max-w-[calc(100vw-480px)] overflow-y-auto border-2 bg-card p-4"
                 >
                   <LibraryItemInfo
                     id={libraryItem?.libraryItemId}
+                    libraryItem={libraryItem}
                     showInstances={false}
                     showResources={false}
                     shownInventory={true}

@@ -64,14 +64,12 @@ const BookDetailPage = async ({ params: { bookId }, searchParams }: Props) => {
                 <LibraryItemInfo
                   id={libraryItem.libraryItemId}
                   showInstances={false}
+                  libraryItem={libraryItem}
                 />
               </div>
               <BookAuthorCard libraryItem={libraryItem} />
             </div>
-            <BookTabs
-              searchParams={searchParams}
-              libraryItemId={libraryItem.libraryItemId}
-            />
+            <BookTabs searchParams={searchParams} libraryItem={libraryItem} />
           </section>
         </div>
       ) : (
@@ -90,14 +88,12 @@ const BookDetailPage = async ({ params: { bookId }, searchParams }: Props) => {
                   <LibraryItemInfo
                     id={libraryItem.libraryItemId}
                     showInstances={false}
+                    libraryItem={libraryItem}
                   />
                 </div>
               </div>
             </div>
-            <BookTabs
-              searchParams={searchParams}
-              libraryItemId={libraryItem.libraryItemId}
-            />
+            <BookTabs searchParams={searchParams} libraryItem={libraryItem} />
           </section>
         </div>
       )}

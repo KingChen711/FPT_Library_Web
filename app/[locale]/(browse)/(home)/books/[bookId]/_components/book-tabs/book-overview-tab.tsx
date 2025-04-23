@@ -1,24 +1,17 @@
-import getLibraryItem from "@/queries/library-item/get-libraryItem"
-
 import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
+import { type LibraryItem } from "@/lib/types/models"
 import { splitCamelCase } from "@/lib/utils"
-import NoData from "@/components/ui/no-data"
 import { StyledReadMore } from "@/components/ui/read-more"
 import { Separator } from "@/components/ui/separator"
 
 type Props = {
-  libraryItemId: number
+  libraryItem: LibraryItem
 }
 
-const BookOverviewTab = async ({ libraryItemId }: Props) => {
+const BookOverviewTab = async ({ libraryItem }: Props) => {
   const t = await getTranslations("BookPage")
   const locale = await getLocale()
-  const libraryItem = await getLibraryItem(libraryItemId)
-
-  if (!libraryItem) {
-    return <NoData />
-  }
 
   return (
     <div>
