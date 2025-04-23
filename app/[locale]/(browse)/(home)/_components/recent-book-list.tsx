@@ -21,11 +21,11 @@ const RecentBookList = () => {
   const { state } = useSidebar()
   const { recentlyOpened } = useLibraryStorage()
 
-  if (recentlyOpened.items.length === 0) return null
+  if (recentlyOpened.length === 0) return null
 
   return (
     <div>
-      {recentlyOpened.items && recentlyOpened.items.length > 0 && (
+      {recentlyOpened && recentlyOpened.length > 0 && (
         <div className="flex items-center justify-between">
           <Label className="text-2xl font-bold text-foreground">
             {t("recent read")} &nbsp;
@@ -45,8 +45,8 @@ const RecentBookList = () => {
           )}
         >
           <CarouselContent>
-            {recentlyOpened.items.length > 0 &&
-              recentlyOpened.items.map((id) => (
+            {recentlyOpened.length > 0 &&
+              recentlyOpened.map((id) => (
                 <BookItemCard
                   key={id}
                   id={id}

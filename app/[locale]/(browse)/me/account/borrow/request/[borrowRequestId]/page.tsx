@@ -304,11 +304,12 @@ const BorrowRequestDetail = ({ params }: Props) => {
                 ) : null}
 
                 {(borrowRequest.isExistPendingResources ||
-                  transactionStatus === ETransactionStatus.PENDING) && (
-                  <Button onClick={() => setOpenTransaction(true)}>
-                    {t("payment")}
-                  </Button>
-                )}
+                  transactionStatus === ETransactionStatus.PENDING) &&
+                  transactionStatus !== ETransactionStatus.EXPIRED && (
+                    <Button onClick={() => setOpenTransaction(true)}>
+                      {t("payment")}
+                    </Button>
+                  )}
               </div>
             </CardHeader>
             <CardContent className="p-4">

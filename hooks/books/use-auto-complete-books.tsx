@@ -25,7 +25,7 @@ function useAutoCompleteBooks(term = "", enabled = true) {
           {
             headers: {
               "Content-Type": "application/json",
-              Authorization: "Basic " + btoa("quanghuy:Strongpassword1@"),
+              Authorization: "Basic " + btoa("elastic:Strongpassword1@"),
             },
             params: {
               source: JSON.stringify({
