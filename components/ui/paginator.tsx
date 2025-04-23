@@ -72,6 +72,10 @@ function Paginator({
     if (onChangePageSize) {
       setOpen(false)
       onChangePageSize(pageSize as "5" | "10" | "30" | "50" | "100")
+      if (onPaginate) {
+        onPaginate(1)
+        return
+      }
       return
     }
 

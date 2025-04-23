@@ -1,6 +1,5 @@
-import getLibraryItem from "@/queries/library-item/get-libraryItem"
-
 import { getTranslations } from "@/lib/get-translations"
+import { type LibraryItem } from "@/lib/types/models"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 import BookEditionTab from "./book-edition-tab"
@@ -10,17 +9,12 @@ import BookRelatedItemsTab from "./book-related-items-tab"
 import BookReviewsTab from "./book-reviews-tab"
 
 type Props = {
-  libraryItemId: number
+  libraryItem: LibraryItem
   searchParams: Record<string, string | string[]>
 }
 
-const BookTabs = async ({ libraryItemId, searchParams }: Props) => {
+const BookTabs = async ({ libraryItem, searchParams }: Props) => {
   const t = await getTranslations("BookPage")
-  const libraryItem = await getLibraryItem(libraryItemId)
-
-  if (!libraryItem) {
-    return <div>{t("Book not found")}</div>
-  }
 
   return (
     <Tabs
@@ -45,10 +39,10 @@ const BookTabs = async ({ libraryItemId, searchParams }: Props) => {
         </TabsTrigger>
       </TabsList>
       <TabsContent value="overview">
-        <BookOverviewTab libraryItemId={libraryItemId} />
+        <BookOverviewTab libraryItem={libraryItem} />
       </TabsContent>
       <TabsContent value="view-edition">
-        <BookEditionTab libraryItemId={libraryItemId} />
+        <BookEditionTab libraryItemId={libraryItem.libraryItemId} />
       </TabsContent>
       <TabsContent value="instances">
         <BookInstancesTab libraryItem={libraryItem} />
@@ -57,12 +51,12 @@ const BookTabs = async ({ libraryItemId, searchParams }: Props) => {
         <BookReviewsTab
           searchParams={searchParams}
           averageRating={libraryItem.avgReviewedRate || 0}
-          libraryItemId={libraryItemId}
+          libraryItemId={libraryItem.libraryItemId}
         />
       </TabsContent>
       <TabsContent value="related-items">
         <BookRelatedItemsTab
-          libraryItemId={libraryItemId}
+          libraryItemId={libraryItem.libraryItemId}
           searchParams={searchParams}
         />
       </TabsContent>

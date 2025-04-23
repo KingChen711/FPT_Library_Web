@@ -4,7 +4,10 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { http } from "@/lib/http"
 import { type LibraryItem } from "@/lib/types/models"
 
-function useLibraryItemDetail(libraryItemId: number | undefined) {
+function useLibraryItemDetail(
+  libraryItemId: number | undefined,
+  enabled = true
+) {
   const { user } = useAuth()
   return useQuery({
     queryKey: [`library-items/${libraryItemId}`, user?.email],
@@ -25,6 +28,7 @@ function useLibraryItemDetail(libraryItemId: number | undefined) {
         return null
       }
     },
+    enabled,
     placeholderData: keepPreviousData,
     refetchOnWindowFocus: false,
   })

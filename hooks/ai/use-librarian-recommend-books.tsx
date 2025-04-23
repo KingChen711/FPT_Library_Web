@@ -10,12 +10,14 @@ type Props = {
   relatedLibraryItemId: number | undefined
   relatedTitle: string | undefined
   enabled: boolean
+  onSuccess: () => void
 }
 
 function useLibrarianRecommendBooks({
   enabled,
   relatedLibraryItemId,
   relatedTitle,
+  onSuccess,
 }: Props) {
   const { accessToken } = useAuth()
   return useQuery({
@@ -41,6 +43,8 @@ function useLibrarianRecommendBooks({
           },
         }
       )
+
+      onSuccess()
 
       return data.response
     },

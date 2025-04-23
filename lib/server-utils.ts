@@ -68,34 +68,20 @@ export function isTokenExpiringSoon(token: string): boolean {
 
     // Kiểm tra nếu thời gian hết hạn còn dưới 1 tiếng (3600 giây)
     return timeLeft <= 3600
-  } catch (error) {
-    console.error("isTokenExpiringSoon", error)
-    //default return true to trigger refresh token
+  } catch {
     return true
   }
 }
 
 export function verifyToken(token: string): DecodedToken | null {
   try {
-    console.log("START verifyToken")
-
-    console.log({
-      token,
-      jwt_key: process.env.JWT_SECRET_KEY,
-    })
-
     const verified = jwt.verify(
       token,
       process.env.JWT_SECRET_KEY!
     ) as DecodedToken
 
     return verified
-  } catch (error) {
-    console.log("Something wrong went verifyToken")
-    console.error(error)
-
+  } catch {
     return null
-  } finally {
-    console.log("END verifyToken")
   }
 }

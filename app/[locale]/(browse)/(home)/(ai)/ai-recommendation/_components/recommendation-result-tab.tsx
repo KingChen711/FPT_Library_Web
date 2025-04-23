@@ -133,6 +133,7 @@ const RecommendationResultTab = () => {
                 >
                   <LibraryItemInfo
                     id={detectedLibraryItem?.libraryItemId}
+                    libraryItem={detectedLibraryItem}
                     showInstances={false}
                     showResources={false}
                     shownInventory={true}

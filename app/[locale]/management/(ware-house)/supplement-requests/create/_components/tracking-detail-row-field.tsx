@@ -584,14 +584,6 @@ function ItemRowDropdown({
   const t = useTranslations("TrackingsManagementPage")
   const [openRecommend, setOpenRecommend] = useState(false)
 
-  const { data, isLoading, refetch, isRefetching } = useLibrarianRecommendBooks(
-    {
-      enabled: openRecommend,
-      relatedLibraryItemId: libraryItemId,
-      relatedTitle: title,
-    }
-  )
-
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState<"5" | "10" | "30" | "50" | "100">(
     "5"
@@ -600,6 +592,17 @@ function ItemRowDropdown({
   const handlePaginate = (selectedPage: number) => {
     setPageIndex(selectedPage)
   }
+
+  const { data, isLoading, refetch, isRefetching } = useLibrarianRecommendBooks(
+    {
+      enabled: openRecommend,
+      relatedLibraryItemId: libraryItemId,
+      relatedTitle: title,
+      onSuccess: () => {
+        setPageIndex(1)
+      },
+    }
+  )
 
   const handleChangePageSize = (size: "5" | "10" | "30" | "50" | "100") => {
     setPageSize(size)
