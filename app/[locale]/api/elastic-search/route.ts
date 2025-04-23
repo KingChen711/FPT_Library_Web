@@ -20,7 +20,10 @@ export async function GET(request: NextRequest) {
     const response = await axios.get(
       `${process.env.NEXT_PUBLIC_ELASTICSEARCH_URL}/library_items/_search`,
       {
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Basic " + btoa("elastic:Strongpassword1@"),
+        },
         params: {
           source: JSON.stringify({
             size: 8,
@@ -160,7 +163,9 @@ export async function GET(request: NextRequest) {
     )
 
     return Response.json(results)
-  } catch {
+  } catch (error) {
+    console.log(error)
+
     return Response.json([])
   }
 }
