@@ -64,7 +64,7 @@ function TrackingDetailsField({
     control: form.control,
   })
 
-  const totalItem = form.watch("totalItem")
+  const totalItem = form.watch("totalItem") || 0
 
   const handleBarcodeData = useCallback(
     (scannedData: string) => {
@@ -96,7 +96,7 @@ function TrackingDetailsField({
               totalAmount: 0,
               libraryItemId: data.libraryItemId,
             })
-            form.setValue("totalItem", totalItem)
+            form.setValue("totalItem", totalItem + 1)
           } else {
             toast({
               title: locale === "vi" ? "Thất bại" : "Fail",
@@ -126,8 +126,6 @@ function TrackingDetailsField({
     })
     form.setValue(`totalAmount`, totalAmount)
   }
-
-  const watchGlobalTotalItem = form.watch("totalItem") || 0
 
   return (
     <FormField
@@ -234,7 +232,7 @@ function TrackingDetailsField({
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       //@ts-ignore
                       append(createNewTrackingDetail(EStockTransactionType.NEW))
-                      form.setValue("totalItem", watchGlobalTotalItem + 1)
+                      form.setValue("totalItem", totalItem + 1)
                       setSelectedCategories((prev) => [...prev, null])
                     }}
                     disabled={isPending}
@@ -255,7 +253,7 @@ function TrackingDetailsField({
                         )
                       )
                       setSelectedCategories((prev) => [...prev, null])
-                      form.setValue("totalItem", watchGlobalTotalItem + 1)
+                      form.setValue("totalItem", totalItem + 1)
                     }}
                     disabled={isPending}
                     variant="outline"
