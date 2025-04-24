@@ -21,7 +21,7 @@ function useAutoCompleteBooks(term = "", enabled = true) {
 
       try {
         const response = await axios.get(
-          `https://zqj9zmgd69.execute-api.ap-southeast-1.amazonaws.com/library_items/_search`,
+          `${process.env.NEXT_PUBLIC_ELASTICSEARCH_URL}/library_items/_search`,
           {
             headers: {
               "Content-Type": "application/json",
