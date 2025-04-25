@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
+import { format } from "date-fns"
 import { Calendar, Clock } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import useFormatLocale from "@/hooks/utils/use-format-locale"
 import { Button } from "@/components/ui/button"
 import { NotificationBell } from "@/components/ui/noti-bell"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -15,6 +17,7 @@ import OverviewFavoriteList from "./overview-favorite-list"
 
 function Actions() {
   const t = useTranslations("GeneralManagement")
+  const formatLocale = useFormatLocale()
   const router = useRouter()
   const { user, isLoadingAuth, isManager } = useAuth()
   const [currentDate, setCurrentDate] = useState<string | null>(null)
@@ -22,13 +25,7 @@ function Actions() {
   useEffect(() => {
     // Update currentDate only on the client
     const interval = setInterval(() => {
-      setCurrentDate(
-        new Date().toLocaleTimeString([], {
-          hour: "numeric",
-          minute: "numeric",
-          hour12: true,
-        })
-      )
+      setCurrentDate(format(new Date(Date.now()), "HH:mm"))
     }, 1000)
 
     return () => clearInterval(interval)
@@ -38,18 +35,18 @@ function Actions() {
 
   return (
     <div className="flex items-center">
-      <section className="flex items-center gap-4 text-nowrap rounded-md p-1 text-muted-foreground max-xl:hidden">
+      <section className="flex items-center gap-4 text-nowrap rounded-md text-muted-foreground max-lg:hidden">
         <div className="flex items-center gap-2 text-muted-foreground">
           <Clock size={16} />
-          {currentDate || "--:--"}
+          <span className="leading-none">{currentDate || "--:--"}</span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
           <Calendar size={16} />
-          {new Date().toLocaleDateString("en-GB", {
-            day: "numeric",
-            month: "short",
-            year: "numeric",
-          })}
+          <span className="leading-none">
+            {format(new Date(Date.now()), "dd MMM yyyy", {
+              locale: formatLocale,
+            })}
+          </span>
         </div>
       </section>
       {!isManager && user && !user.libraryCard && (

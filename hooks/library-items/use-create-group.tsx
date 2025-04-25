@@ -3,21 +3,15 @@ import { useMutation } from "@tanstack/react-query"
 
 import { handleHttpError, http } from "@/lib/http"
 import { type ActionResponse } from "@/lib/types/action-response"
-
-type Params = {
-  classificationNumber: string
-  cutterNumber: string
-  title: string
-  subTitle: string | null
-  author: string
-  topicalTerms: string | null
-}
+import { type TCreateGroupSchema } from "@/lib/validations/books/create-group"
 
 function useCreateGroup() {
   const { accessToken } = useAuth()
 
   return useMutation({
-    mutationFn: async (body: Params): Promise<ActionResponse<string>> => {
+    mutationFn: async (
+      body: TCreateGroupSchema
+    ): Promise<ActionResponse<string>> => {
       try {
         const { message } = await http.post(
           `/api/management/library-items/group`,

@@ -1,10 +1,11 @@
 import React, { useState } from "react"
 import { useAuth } from "@/contexts/auth-provider"
+import { zodResolver } from "@hookform/resolvers/zod"
 import { DialogDescription } from "@radix-ui/react-dialog"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { ArrowLeft, Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
-import { type UseFormReturn } from "react-hook-form"
+import { useForm, type UseFormReturn } from "react-hook-form"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { http } from "@/lib/http"
@@ -12,24 +13,30 @@ import { type Author, type LibraryItemGroup } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 import { cn } from "@/lib/utils"
 import { type TBookEditionSchema } from "@/lib/validations/books/create-book"
+import {
+  createGroupSchema,
+  type TCreateGroupSchema,
+} from "@/lib/validations/books/create-group"
 import useCreateGroup from "@/hooks/library-items/use-create-group"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogClose,
   DialogContent,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
 import {
+  Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
 import GroupCard from "@/components/ui/group-card"
+import { Input } from "@/components/ui/input"
 import Paginator from "@/components/ui/paginator"
 import { Separator } from "@/components/ui/separator"
 import { Skeleton } from "@/components/ui/skeleton"
@@ -50,14 +57,8 @@ const defaultGetGroupsRes: Pagination<LibraryItemGroup[]> = {
 }
 
 function GroupsTab({ form, selectedAuthors, show }: Props) {
-  const { mutateAsync: createGroup, isPending: creatingGroup } =
-    useCreateGroup()
-
   const t = useTranslations("BooksManagementPage")
   const { accessToken } = useAuth()
-
-  const locale = useLocale()
-  const queryClient = useQueryClient()
 
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState<"8" | "24" | "60" | "100">("8")
@@ -150,41 +151,12 @@ function GroupsTab({ form, selectedAuthors, show }: Props) {
                 <FormMessage />
               </div>
               <ConfirmCreateGroupDialog
-                isPending={creatingGroup}
-                onCreateGroup={async () => {
-                  const res = await createGroup({
-                    author: selectedAuthors
-                      .filter((a) => authorIds?.includes(a.authorId))
-                      .map((a) => a.fullName)
-                      .join(", "),
-                    title: title,
-                    classificationNumber: classificationNumber || "",
-                    cutterNumber: cutterNumber || "",
-                    subTitle: subTitle || null,
-                    topicalTerms: topicalTerms || null,
-                  })
-
-                  if (res.isSuccess) {
-                    queryClient.invalidateQueries({
-                      queryKey: [
-                        "potential-groups",
-                        {
-                          authorName,
-                          title,
-                          cutterNumber,
-                          classificationNumber,
-                          subTitle,
-                          topicalTerms,
-                          pageIndex,
-                          pageSize,
-                        },
-                        accessToken,
-                      ],
-                    })
-                    return
-                  }
-                  handleServerActionError(res, locale)
-                }}
+                title={title}
+                author={authorName}
+                classificationNumber={classificationNumber || ""}
+                cutterNumber={cutterNumber || ""}
+                subTitle={subTitle}
+                topicalTerms={topicalTerms || ""}
               />
             </div>
 
@@ -268,23 +240,62 @@ function GroupsTab({ form, selectedAuthors, show }: Props) {
 export default GroupsTab
 
 export function ConfirmCreateGroupDialog({
-  isPending,
-  onCreateGroup,
+  title,
+  author,
+  classificationNumber,
+  cutterNumber,
+  topicalTerms,
+  subTitle,
 }: {
-  isPending: boolean
-  onCreateGroup: () => Promise<void>
+  title: string
+  subTitle?: string
+  cutterNumber: string
+  author: string
+  classificationNumber: string
+  topicalTerms: string
 }) {
   const t = useTranslations("BooksManagementPage")
   const [open, setOpen] = useState(false)
 
+  const locale = useLocale()
+  const queryClient = useQueryClient()
+
+  const { mutateAsync: createGroup, isPending: creatingGroup } =
+    useCreateGroup()
+
   const handleOpenChange = (value: boolean) => {
-    if (isPending) return
+    if (creatingGroup) return
     setOpen(value)
   }
+
+  const form = useForm<TCreateGroupSchema>({
+    resolver: zodResolver(createGroupSchema),
+    defaultValues: {
+      title,
+      author,
+      classificationNumber,
+      cutterNumber,
+      subTitle,
+      topicalTerms,
+    },
+  })
+
+  const onSubmit = async (values: TCreateGroupSchema) => {
+    const res = await createGroup(values)
+    if (res.isSuccess) {
+      queryClient.invalidateQueries({
+        queryKey: ["potential-groups"],
+      })
+      setOpen(false)
+      return
+    }
+    handleServerActionError(res, locale)
+  }
+
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button disabled={isPending}>
+        <Button disabled={creatingGroup}>
           <Plus />
           {t("Create new group")}
         </Button>
@@ -293,36 +304,166 @@ export function ConfirmCreateGroupDialog({
         <DialogHeader>
           <DialogTitle>{t("Create new group")}</DialogTitle>
         </DialogHeader>
-        <DialogDescription>
-          {t(
-            "A new group will be created based on the cataloged information of this item"
-          )}
+        <DialogDescription asChild>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="title"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="flex items-center">
+                      {t("Title")}
+                      <span className="ml-1 text-xl font-bold leading-none text-primary">
+                        *
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={creatingGroup}
+                        {...field}
+                        className="min-w-96 max-w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="subTitle"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="flex items-center">
+                      {t("Sub title")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={creatingGroup}
+                        {...field}
+                        className="min-w-96 max-w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="topicalTerms"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="flex items-center">
+                      {t("Topical terms")}
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled={creatingGroup}
+                        {...field}
+                        className="min-w-96 max-w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="author"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="flex items-center">
+                      {t("Author")}
+                      <span className="ml-1 text-xl font-bold leading-none text-primary">
+                        *
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled
+                        {...field}
+                        className="min-w-96 max-w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="classificationNumber"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="flex items-center">
+                      {t("Classification number")}
+                      <span className="ml-1 text-xl font-bold leading-none text-primary">
+                        *
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled
+                        {...field}
+                        className="min-w-96 max-w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="cutterNumber"
+                render={({ field }) => (
+                  <FormItem className="flex flex-col items-start">
+                    <FormLabel className="flex items-center">
+                      {t("Cutter number")}
+                      <span className="ml-1 text-xl font-bold leading-none text-primary">
+                        *
+                      </span>
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        disabled
+                        {...field}
+                        className="min-w-96 max-w-full"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex justify-end gap-x-4">
+                <DialogClose asChild>
+                  <Button
+                    disabled={creatingGroup}
+                    variant="secondary"
+                    className="float-right mt-4"
+                  >
+                    {t("Cancel")}
+                  </Button>
+                </DialogClose>
+
+                <Button
+                  disabled={creatingGroup}
+                  type="submit"
+                  className="float-right mt-4"
+                >
+                  {t("Save")}
+                  {creatingGroup && (
+                    <Loader2 className="ml-1 size-4 animate-spin" />
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
         </DialogDescription>
-        <DialogFooter className="flex gap-4">
-          <DialogClose asChild>
-            <Button
-              disabled={isPending}
-              type="button"
-              className="flex-1"
-              variant="outline"
-            >
-              {t("Cancel")}
-            </Button>
-          </DialogClose>
-          <Button
-            disabled={isPending}
-            type="button"
-            className="flex-1"
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-              onCreateGroup().finally(() => setOpen(false))
-            }}
-          >
-            {t("Continue")}
-            {isPending && <Loader2 className="size-4 animate-spin" />}
-          </Button>
-        </DialogFooter>
       </DialogContent>
     </Dialog>
   )
