@@ -93,7 +93,9 @@ async function BookDetailPage({ params }: Props) {
               {t("Inventory info")}
             </TabsTrigger>
             <TabsTrigger value="trainAI">Train AI</TabsTrigger>
-            <TabsTrigger value="group-info">{t("Group info")}</TabsTrigger>
+            {book.category.englishName === "BookSeries" && (
+              <TabsTrigger value="group-info">{t("Group info")}</TabsTrigger>
+            )}
             <TabsTrigger value="metadata">Metadata</TabsTrigger>
           </TabsList>
           <TabsContent value="basicInfo">

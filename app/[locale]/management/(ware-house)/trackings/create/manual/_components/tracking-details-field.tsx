@@ -8,7 +8,6 @@ import { type Category } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { type TCreateTrackingManualSchema } from "@/lib/validations/trackings/create-tracking-manual"
 import useGetItemByISBN from "@/hooks/library-items/use-get-item-by-isbn"
-import useBarcodeScanner from "@/hooks/use-barcode-scanner"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import BarcodeScannerListener from "./barcode-scanner-listener"
 import FastInputDialog from "./fast-input-dialog"
 import TrackingDetailRowField from "./tracking-detail-row-field"
 
@@ -70,6 +70,8 @@ function TrackingDetailsField({
     (scannedData: string) => {
       if (fetchingItem) return
 
+      console.log({ isbns: fields.map((f) => f.isbn), scannedData })
+
       const isExist = fields.some((f) => f.isbn === scannedData)
       if (isExist) {
         toast({
@@ -80,6 +82,7 @@ function TrackingDetailsField({
               : "Library item is already scanned",
           variant: "warning",
         })
+        return
       }
 
       getItemByISBN(scannedData, {
@@ -113,8 +116,6 @@ function TrackingDetailsField({
     [append, fetchingItem, getItemByISBN, locale, fields, form, totalItem]
   )
 
-  useBarcodeScanner(handleBarcodeData)
-
   const t = useTranslations("TrackingsManagementPage")
 
   const watchTrackingDetails = form.watch("warehouseTrackingDetails") || []
@@ -141,6 +142,7 @@ function TrackingDetailsField({
               </span>
             </FormLabel>
             <div className="flex flex-wrap items-center gap-4">
+              <BarcodeScannerListener onScan={handleBarcodeData} />
               <FastInputDialog append={append} replace={replace} form={form} />
             </div>
           </div>

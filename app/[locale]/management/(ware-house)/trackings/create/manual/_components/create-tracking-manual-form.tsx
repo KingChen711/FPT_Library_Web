@@ -197,9 +197,12 @@ function CreateTrackingManualForm() {
 
       if (
         row.stockTransactionType === EStockTransactionType.ADDITIONAL ||
-        row.libraryItem === undefined
-      )
+        row.libraryItem === undefined ||
+        row.libraryItem.categoryId === undefined
+      ) {
+        form.setValue(`warehouseTrackingDetails.${i}.libraryItem`, undefined)
         continue
+      }
 
       const trigger = await form.trigger(
         [

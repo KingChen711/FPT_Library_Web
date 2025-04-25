@@ -228,7 +228,7 @@ function TrackingDetailRowField({
                             <div className="line-clamp-1 flex w-full flex-col text-nowrap">
                               {isFetching && (
                                 <div className="flex justify-center px-2 py-1">
-                                  <Loader2 className="size-9" />
+                                  <Loader2 className="size-9 animate-spin" />
                                 </div>
                               )}
                               {libraryItems?.map((item) => (

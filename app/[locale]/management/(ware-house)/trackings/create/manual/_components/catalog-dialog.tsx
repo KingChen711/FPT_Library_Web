@@ -92,40 +92,44 @@ function CatalogDialog({
     `warehouseTrackingDetails.${index}.libraryItem.title`
   )
 
+  const libraryItem = form.watch(
+    `warehouseTrackingDetails.${index}.libraryItem`
+  )
+
   useEffect(() => {
-    if (!form.watch(`warehouseTrackingDetails.${index}.libraryItem`)) return
+    if (!libraryItem || !libraryItem.categoryId) return
 
     form.setValue(
       `warehouseTrackingDetails.${index}.itemName`,
       watchTitle || ""
     )
     form.clearErrors(`warehouseTrackingDetails.${index}.itemName`)
-  }, [watchTitle, form, index])
+  }, [watchTitle, form, index, libraryItem])
 
   const watchIsbn = form.watch(
     `warehouseTrackingDetails.${index}.libraryItem.isbn`
   )
 
   useEffect(() => {
-    if (!form.watch(`warehouseTrackingDetails.${index}.libraryItem`)) return
+    if (!libraryItem || !libraryItem.categoryId) return
 
     form.setValue(`warehouseTrackingDetails.${index}.isbn`, watchIsbn || "")
     form.clearErrors(`warehouseTrackingDetails.${index}.isbn`)
-  }, [watchIsbn, form, index])
+  }, [watchIsbn, form, index, libraryItem])
 
   const watchEstimatedPrice = form.watch(
     `warehouseTrackingDetails.${index}.libraryItem.estimatedPrice`
   )
 
   useEffect(() => {
-    if (!form.watch(`warehouseTrackingDetails.${index}.libraryItem`)) return
+    if (!libraryItem || !libraryItem.categoryId) return
 
     form.setValue(
       `warehouseTrackingDetails.${index}.unitPrice`,
       watchEstimatedPrice || 0
     )
     form.clearErrors(`warehouseTrackingDetails.${index}.unitPrice`)
-  }, [watchEstimatedPrice, form, index])
+  }, [watchEstimatedPrice, form, index, libraryItem])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -209,6 +213,7 @@ function CatalogDialog({
                                     form.clearErrors(
                                       `warehouseTrackingDetails.${index}.libraryItem.categoryId`
                                     )
+
                                     setCategory(category)
                                     setOpenComboboxCategory(false)
                                   }}

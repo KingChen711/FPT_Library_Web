@@ -196,6 +196,7 @@ function FastInputDialog({ replace, form }: Props) {
 
       const availableItems = form
         .watch("warehouseTrackingDetails")
+        //Lọc ra các item có sẵn mà trùng isbn với các item mới -> để thay thế bằng các item mới
         .filter((d) => !d.isbn || !isbns.includes(d.isbn))
 
       replace([...availableItems, ...items])

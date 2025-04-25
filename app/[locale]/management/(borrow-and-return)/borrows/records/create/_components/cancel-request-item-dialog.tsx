@@ -83,7 +83,7 @@ function CancelRequestItemDialog({ title, cancelling, onCancel }: Props) {
             className="flex-1"
           >
             {t("Continue")}
-            {cancelling && <Loader2 className="ml-2 size-4" />}
+            {cancelling && <Loader2 className="ml-2 size-4 animate-spin" />}
           </Button>
         </div>
       </DialogContent>

@@ -51,7 +51,7 @@ function UpdateTrackingStatusDropdownItem({ status, trackingId }: Props) {
                 onClick={() => handleChangeStatus(ETrackingStatus.COMPLETED)}
               >
                 {isPending ? (
-                  <Loader2 className="size-4" />
+                  <Loader2 className="size-4 animate-spin" />
                 ) : (
                   <Check className="size-4" />
                 )}
@@ -63,7 +63,7 @@ function UpdateTrackingStatusDropdownItem({ status, trackingId }: Props) {
                 onClick={() => handleChangeStatus(ETrackingStatus.CANCELLED)}
               >
                 {isPending ? (
-                  <Loader2 className="size-4" />
+                  <Loader2 className="size-4 animate-spin" />
                 ) : (
                   <X className="size-4" />
                 )}

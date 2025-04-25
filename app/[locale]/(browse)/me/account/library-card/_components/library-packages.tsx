@@ -16,7 +16,7 @@ const LibraryPackages = () => {
   if (isLoadingPackages) {
     return (
       <div className="flex h-full items-center justify-center">
-        <Loader2 className="size-10 text-primary-foreground" />
+        <Loader2 className="size-10 animate-spin text-primary-foreground" />
       </div>
     )
   }

@@ -47,6 +47,8 @@ function useBarcodeScanner(
       setLastKeyTime(currentTime)
 
       if (event.key === "Enter" && buffer.length > 0) {
+        event.preventDefault()
+        event.stopPropagation()
         onScan(buffer)
         setBuffer("")
       }

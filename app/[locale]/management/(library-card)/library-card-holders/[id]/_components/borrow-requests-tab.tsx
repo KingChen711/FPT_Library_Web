@@ -64,7 +64,7 @@ function BorrowRequestsTab({ userId }: Props) {
   if (!data) {
     return (
       <TabsContent value="tracking-details">
-        <Loader2 className="size-9 animate-ping" />
+        <Loader2 className="size-9 animate-spin" />
       </TabsContent>
     )
   }
