@@ -89,7 +89,11 @@ const OverviewBorrowList = () => {
                       0 && (
                       <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-danger text-xs font-bold text-primary-foreground shadow-md">
                         {borrowedLibraryItems.items.length +
-                          borrowedResources.items.length}
+                          borrowedResources.items.length >
+                        9
+                          ? "9+"
+                          : borrowedLibraryItems.items.length +
+                            borrowedResources.items.length}
                       </span>
                     )}
                   </Button>

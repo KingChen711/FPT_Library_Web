@@ -276,7 +276,7 @@ export const bookEditionSchema = z.object({
     .trim()
     .max(255, "max255")
     .optional()
-    .transform((data) => data || undefined),
+    .transform((data) => (data ? data.replace("=", "").trim() : undefined)),
   //245c
   responsibility: z
     .string()

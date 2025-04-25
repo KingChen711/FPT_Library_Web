@@ -23,7 +23,7 @@ import {
 const OverviewFavoriteList = () => {
   const t = useTranslations("BookPage")
 
-  const { favouriteItems, favouriteItemIds } = useFavourite()
+  const { favouriteItems } = useFavourite()
 
   return (
     <Sheet>
@@ -37,11 +37,11 @@ const OverviewFavoriteList = () => {
                     size={20}
                     className="transition-transform duration-200 hover:scale-110"
                   />
-                  {favouriteItemIds.length > 0 && (
+                  {/* {favouriteItemIds.length > 0 && (
                     <span className="absolute -right-2 -top-2 flex size-5 items-center justify-center rounded-full bg-danger text-xs font-bold text-primary-foreground shadow-md">
                       {favouriteItemIds.length || null}
                     </span>
-                  )}
+                  )} */}
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

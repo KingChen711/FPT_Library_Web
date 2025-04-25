@@ -125,6 +125,10 @@ function TrackingDetailRowField({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [watchUnitPrice, watchItemTotal, form, index])
 
+  const libraryItem = form.watch(
+    `warehouseTrackingDetails.${index}.libraryItem`
+  )
+
   return (
     <>
       <CatalogDialog
@@ -187,7 +191,7 @@ function TrackingDetailRowField({
                             <div className="line-clamp-1 flex w-full flex-col text-nowrap">
                               {isFetching && (
                                 <div className="flex justify-center px-2 py-1">
-                                  <Loader2 className="size-9" />
+                                  <Loader2 className="size-9 animate-spin" />
                                 </div>
                               )}
                               {libraryItems?.map((item) => (
@@ -273,11 +277,7 @@ function TrackingDetailRowField({
                           className="w-96 !border-none px-0 !shadow-none !outline-none !ring-0"
                           onChange={(e) => {
                             field.onChange(e)
-                            if (
-                              form.watch(
-                                `warehouseTrackingDetails.${index}.libraryItem`
-                              )
-                            ) {
+                            if (libraryItem) {
                               form.setValue(
                                 `warehouseTrackingDetails.${index}.libraryItem.title`,
                                 e.target.value
@@ -326,11 +326,7 @@ function TrackingDetailRowField({
                       className="w-36 !border-none px-0 text-center !shadow-none !outline-none !ring-0"
                       onChange={(e) => {
                         field.onChange(e)
-                        if (
-                          form.watch(
-                            `warehouseTrackingDetails.${index}.libraryItem`
-                          )
-                        ) {
+                        if (libraryItem) {
                           form.setValue(
                             `warehouseTrackingDetails.${index}.libraryItem.isbn`,
                             e.target.value
@@ -414,11 +410,7 @@ function TrackingDetailRowField({
                                     `warehouseTrackingDetails.${index}.categoryId`
                                   )
 
-                                  if (
-                                    form.watch(
-                                      `warehouseTrackingDetails.${index}.libraryItem`
-                                    )
-                                  ) {
+                                  if (libraryItem) {
                                     form.setValue(
                                       `warehouseTrackingDetails.${index}.libraryItem.categoryId`,
                                       category.categoryId
@@ -581,11 +573,7 @@ function TrackingDetailRowField({
                       className="w-28 !border-none px-0 text-center !shadow-none !outline-none !ring-0"
                       onChange={(num) => {
                         field.onChange(num)
-                        if (
-                          form.watch(
-                            `warehouseTrackingDetails.${index}.libraryItem`
-                          )
-                        ) {
+                        if (libraryItem) {
                           form.setValue(
                             `warehouseTrackingDetails.${index}.libraryItem.estimatedPrice`,
                             num
@@ -627,7 +615,9 @@ function TrackingDetailRowField({
         <TableCell className="border">
           <div className="flex justify-center">
             <Button
-              onClick={() => {
+              onClick={(e) => {
+                e.preventDefault()
+                e.stopPropagation()
                 onRemove()
                 form.setValue("totalItem", watchGlobalTotalItem - 1)
               }}

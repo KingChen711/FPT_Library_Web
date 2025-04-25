@@ -3,6 +3,7 @@
 import Image from "next/image"
 import { format } from "date-fns"
 import { BookOpen, Calendar, MapPin, User } from "lucide-react"
+import { useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 
 import {
@@ -11,12 +12,12 @@ import {
   type Patron,
 } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 
 import NoData from "./no-data"
 
 const formatDate = (dateString: string): string => {
-  return format(new Date(dateString), "MMM dd, yyyy")
+  return format(new Date(dateString), "dd/MM/yyyy")
 }
 
 type Props = {
@@ -30,19 +31,21 @@ const PersonalLibraryCard = ({
   cardOnly = false,
   cardClassName,
 }: Props) => {
+  const t = useTranslations("MeLibraryCard")
+
   if (cardOnly) return <PatronCard className={cardClassName} patron={patron} />
 
   return (
     <div className="flex w-full gap-4">
       <section className="flex-1">
         <h2 className="mb-4 border-b pb-2 text-lg font-semibold">
-          Library card
+          {t("Library card")}
         </h2>
         <PatronCard patron={patron} className={cardClassName} />
       </section>
       <section className="flex-1">
         <h2 className="mb-4 border-b pb-2 text-lg font-semibold">
-          Card Information
+          {t("Card Information")}
         </h2>
         <Card className="border-2 p-4 shadow-md">
           <table className="w-full border-collapse">
@@ -122,6 +125,10 @@ function PatronCard({
   patron: (Patron & { libraryCard: LibraryCard }) | CurrentUser
   className?: string
 }) {
+  const t = useTranslations("MeLibraryCard")
+
+  if (!patron?.libraryCard) return null
+
   return (
     <Card className={cn("overflow-hidden border-2", className)}>
       <CardHeader className="bg-primary p-4 text-primary-foreground">
@@ -131,7 +138,7 @@ function PatronCard({
             <h3 className="text-xl font-bold">ELibrary</h3>
           </div>
           <div className="text-sm">
-            <p>Member Card</p>
+            <p>{t("Member Card")}</p>
           </div>
         </div>
       </CardHeader>
@@ -168,17 +175,19 @@ function PatronCard({
 
         <div className="space-y-2">
           <div className="flex justify-between text-sm">
-            <span>Issue Date:</span>
-            <span>{formatDate(new Date().toISOString())}</span>
+            <span>{t("Issue Date")}:</span>
+            <span>
+              {patron.libraryCard?.issueDate
+                ? formatDate(patron.libraryCard?.issueDate as string)
+                : "-"}
+            </span>
           </div>
           <div className="flex justify-between text-sm">
-            <span>Expiry Date:</span>
+            <span>{t("Expiry Date")}:</span>
             <span>
-              {formatDate(
-                new Date(
-                  new Date().setFullYear(new Date().getFullYear() + 1)
-                ).toISOString()
-              )}
+              {patron.libraryCard?.expiryDate
+                ? formatDate(patron.libraryCard?.expiryDate as string)
+                : "-"}
             </span>
           </div>
         </div>
@@ -194,12 +203,6 @@ function PatronCard({
           />
         </div>
       </CardContent>
-      <CardFooter className="p-3 text-center text-xs">
-        <p className="w-full">
-          This card remains the property of ELibrary. If found, please return to
-          any ELibrary branch.
-        </p>
-      </CardFooter>
     </Card>
   )
 }

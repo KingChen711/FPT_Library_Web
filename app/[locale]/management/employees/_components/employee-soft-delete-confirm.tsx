@@ -81,7 +81,7 @@ const EmployeeSoftDeleteConfirm = ({
             disabled={value !== message || pending}
           >
             {t("btn.delete")}
-            {pending && <Loader2 className="ml-2 size-4" />}
+            {pending && <Loader2 className="ml-2 size-4 animate-spin" />}
           </Button>
           <Button
             className="flex-1"

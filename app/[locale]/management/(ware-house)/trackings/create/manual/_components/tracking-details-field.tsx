@@ -8,7 +8,6 @@ import { type Category } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import { type TCreateTrackingManualSchema } from "@/lib/validations/trackings/create-tracking-manual"
 import useGetItemByISBN from "@/hooks/library-items/use-get-item-by-isbn"
-import useBarcodeScanner from "@/hooks/use-barcode-scanner"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,6 +24,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import BarcodeScannerListener from "./barcode-scanner-listener"
 import FastInputDialog from "./fast-input-dialog"
 import TrackingDetailRowField from "./tracking-detail-row-field"
 
@@ -64,11 +64,13 @@ function TrackingDetailsField({
     control: form.control,
   })
 
-  const totalItem = form.watch("totalItem")
+  const totalItem = form.watch("totalItem") || 0
 
   const handleBarcodeData = useCallback(
     (scannedData: string) => {
       if (fetchingItem) return
+
+      console.log({ isbns: fields.map((f) => f.isbn), scannedData })
 
       const isExist = fields.some((f) => f.isbn === scannedData)
       if (isExist) {
@@ -80,6 +82,7 @@ function TrackingDetailsField({
               : "Library item is already scanned",
           variant: "warning",
         })
+        return
       }
 
       getItemByISBN(scannedData, {
@@ -96,7 +99,7 @@ function TrackingDetailsField({
               totalAmount: 0,
               libraryItemId: data.libraryItemId,
             })
-            form.setValue("totalItem", totalItem)
+            form.setValue("totalItem", totalItem + 1)
           } else {
             toast({
               title: locale === "vi" ? "Thất bại" : "Fail",
@@ -113,8 +116,6 @@ function TrackingDetailsField({
     [append, fetchingItem, getItemByISBN, locale, fields, form, totalItem]
   )
 
-  useBarcodeScanner(handleBarcodeData)
-
   const t = useTranslations("TrackingsManagementPage")
 
   const watchTrackingDetails = form.watch("warehouseTrackingDetails") || []
@@ -126,8 +127,6 @@ function TrackingDetailsField({
     })
     form.setValue(`totalAmount`, totalAmount)
   }
-
-  const watchGlobalTotalItem = form.watch("totalItem") || 0
 
   return (
     <FormField
@@ -143,6 +142,7 @@ function TrackingDetailsField({
               </span>
             </FormLabel>
             <div className="flex flex-wrap items-center gap-4">
+              <BarcodeScannerListener onScan={handleBarcodeData} />
               <FastInputDialog append={append} replace={replace} form={form} />
             </div>
           </div>
@@ -234,7 +234,7 @@ function TrackingDetailsField({
                       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                       //@ts-ignore
                       append(createNewTrackingDetail(EStockTransactionType.NEW))
-                      form.setValue("totalItem", watchGlobalTotalItem + 1)
+                      form.setValue("totalItem", totalItem + 1)
                       setSelectedCategories((prev) => [...prev, null])
                     }}
                     disabled={isPending}
@@ -255,7 +255,7 @@ function TrackingDetailsField({
                         )
                       )
                       setSelectedCategories((prev) => [...prev, null])
-                      form.setValue("totalItem", watchGlobalTotalItem + 1)
+                      form.setValue("totalItem", totalItem + 1)
                     }}
                     disabled={isPending}
                     variant="outline"

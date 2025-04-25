@@ -88,7 +88,7 @@ const EmployeeUndoDeleteRangeConfirm = ({ selectedIds }: Props) => {
             disabled={value !== message || pending}
           >
             {t("btn.undo delete")}
-            {pending && <Loader2 className="ml-2 size-4" />}
+            {pending && <Loader2 className="ml-2 size-4 animate-spin" />}
           </Button>
           <Button
             variant="secondary"

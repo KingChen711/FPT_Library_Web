@@ -169,7 +169,7 @@ export function NotificationBell() {
       >
         {status === "pending" ? (
           <DropdownMenuItem>
-            <Loader2 className="mr-2" />
+            <Loader2 className="mr-2 animate-spin" />
             Loading notifications...
           </DropdownMenuItem>
         ) : status === "error" ? (
@@ -216,7 +216,7 @@ export function NotificationBell() {
             {hasNextPage ? (
               <DropdownMenuItem ref={ref} className="text-center">
                 {isFetchingNextPage ? (
-                  <Loader2 className="mx-auto" />
+                  <Loader2 className="mx-auto animate-spin" />
                 ) : (
                   "Load more"
                 )}

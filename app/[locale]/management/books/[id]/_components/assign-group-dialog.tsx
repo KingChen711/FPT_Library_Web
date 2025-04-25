@@ -2,7 +2,7 @@
 
 import React, { useState, useTransition } from "react"
 import { useAuth } from "@/contexts/auth-provider"
-import { useQuery, useQueryClient } from "@tanstack/react-query"
+import { useQuery } from "@tanstack/react-query"
 import { ArrowLeft, Loader2, Plus } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
@@ -12,7 +12,6 @@ import { type LibraryItemGroup } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 import { cn } from "@/lib/utils"
 import { assignGroup } from "@/actions/books/assign-group"
-import useCreateGroup from "@/hooks/library-items/use-create-group"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -67,13 +66,9 @@ function AssignGroupDialog({
     setOpen(value)
   }
 
-  const { mutateAsync: createGroup, isPending: creatingGroup } =
-    useCreateGroup()
-
   const { accessToken } = useAuth()
 
   const locale = useLocale()
-  const queryClient = useQueryClient()
 
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState<"8" | "24" | "60" | "100">("8")
@@ -167,33 +162,12 @@ function AssignGroupDialog({
                 <Label>{t("Group")}</Label>
               </div>
               <ConfirmCreateGroupDialog
-                isPending={creatingGroup}
-                onCreateGroup={async () => {
-                  const res = await createGroup({
-                    title,
-                    cutterNumber,
-                    classificationNumber,
-                    subTitle,
-                    topicalTerms,
-                    author,
-                  })
-
-                  if (res.isSuccess) {
-                    queryClient.invalidateQueries({
-                      queryKey: [
-                        "potential-groups",
-                        libraryItemId,
-                        {
-                          pageIndex,
-                          pageSize,
-                        },
-                        accessToken,
-                      ],
-                    })
-                    return
-                  }
-                  handleServerActionError(res, locale)
-                }}
+                title={title}
+                author={author}
+                classificationNumber={classificationNumber || ""}
+                cutterNumber={cutterNumber || ""}
+                subTitle={subTitle || ""}
+                topicalTerms={topicalTerms || ""}
               />
             </div>
 

@@ -68,7 +68,7 @@ function CancelRequestItemDialog({
           className="flex-1"
         >
           {t("Continue")}
-          {isPending && <Loader2 className="ml-2 size-4" />}
+          {isPending && <Loader2 className="ml-2 size-4 animate-spin" />}
         </Button>
       </div>
     </DialogContent>

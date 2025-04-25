@@ -153,17 +153,6 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
             </CardHeader>
             <CardContent className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
-                <Label htmlFor="aesiv">AESIV</Label>
-                <Input
-                  required
-                  id="aesiv"
-                  value={config.AppSettings.AESIV}
-                  onChange={(e) =>
-                    handleChange("AppSettings", "AESIV", e.target.value)
-                  }
-                />
-              </div>
-              <div className="space-y-2">
                 <Label htmlFor="barcode-length">
                   {t("Instance Barcode Number Length")}
                 </Label>

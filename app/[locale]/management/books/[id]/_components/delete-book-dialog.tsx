@@ -74,7 +74,7 @@ function DeleteBookDialog({ open, setOpen, bookId, title }: Props) {
             className="flex-1"
           >
             {t("Delete")}
-            {pending && <Loader2 className="ml-2 size-4" />}
+            {pending && <Loader2 className="ml-2 size-4 animate-spin" />}
           </Button>
           <Button
             disabled={pending}

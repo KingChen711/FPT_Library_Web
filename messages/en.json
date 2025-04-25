@@ -189,6 +189,9 @@
     "welcome user": "Welcome back! {userName}"
   },
   "TransactionPage": {
+    "Transactions Not Found": "Transactions Not Found",
+    "No transaction matching your request were found Please check your information or try searching with different criteria": "No transaction matching your request were found Please check your information or try searching with different criteria",
+    "Filters transactions": "Filters transactions",
     "ordinal number": "No",
     "transaction": "Transaction",
     "transaction desc": "Show the list of patron's transaction",
@@ -1912,6 +1915,7 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Scan item": "Scan item",
     "Filters recommends": "Filters recommends",
     "Recommended by AI": "Supplement recommended",
     "Continue": "Continue",
@@ -2336,8 +2340,8 @@
     "View details": "View details",
     "Transactions": "Transactions",
     "Filters": "Filters",
-    "Transaction Not Found": "Transaction Not Found",
-    "No transaction matching your request were found Please check your information or try searching with different criteria": "No transaction matching your request were found Please check your information or try searching with different criteria",
+    "Transactions Not Found": "Transactions Not Found",
+    "No transactions matching your request were found Please check your information or try searching with different criteria": "No transactions matching your request were found Please check your information or try searching with different criteria",
     "Filters transactions": "Filters transactions",
     "Status": "Status",
     "Type": "Type",
@@ -2642,5 +2646,44 @@
     "Min Minutes To Add Ads": "Min Minutes To Add Ads",
     "Page Per Load": "Page Per Load",
     "System configuration": "System configuration"
+  },
+  "MeLibraryCard": {
+    "Library Card Introduction": "Library Card Introduction",
+    "What is a Library Card": "What is a Library Card?",
+    "library card defi": "A library card is your key to accessing our extensive collection of books, digital resources, and exclusive services. It is a personal identification that grants you borrowing privileges and access to our facilities.",
+    "Who is it for": "Who is it for?",
+    "Who is it for desc": "Our library card is perfect for students, researchers, professionals, and anyone with a passion for knowledge and learning. Available to all residents aged 12 and above.",
+    "Benefits": "Benefits",
+    "Borrow up to 3 books at once": "Borrow up to 3 books at once",
+    "Borrow ebooks and audiobooks": "Borrow ebooks and audiobooks",
+    "Reserve library items": "Reserve library items",
+    "Policies": "Policies",
+    "No benefits if library card is expire": "No benefits if library card is expire",
+    "Participate in exclusive events": "Participate in exclusive events",
+    "Lost items incur a penalty fee": "Lost items incur a penalty fee",
+    "Late returns incur a penalty fee": "Late returns incur a penalty fee",
+    "Must re-register to continue receiving benefits if card is lost": "Must re-register to continue receiving benefits if card is lost",
+    "Important Information": "Important Information",
+    "Important Information desc": " By registering for a library card, you agree to follow our library rules and policies. You are responsible for all materials borrowed with your card and any fees incurred. Please notify us immediately if your card is lost or stolen.",
+    "Please select a package that best suits your needs": "Please select a package that best suits your needs",
+    "I understand and want to continue": "I understand and want to continue",
+
+    "Back": "Back",
+    "Library Card Registration": "Library Card Registration",
+    "Personal Information": "Personal Information",
+    "Profile Photo": "Profile Photo",
+    "Required": "Required",
+    "Clear avatar": "Clear avatar",
+    "Payment Method": "Payment Method",
+    "Register Library Card": "Register Library Card",
+    "Card Preview": "Card Preview",
+    "Member Card": "Member Card",
+    "Issue Date": "Issue Date",
+    "Expiry Date": "Expiry Date",
+
+    "Full Name": "Full Name",
+
+    "Library card": "Library card",
+    "Card Information": "Card Information"
   }
 }

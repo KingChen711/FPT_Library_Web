@@ -18,7 +18,7 @@ const getAccessToken = () => {
   return token
 }
 
-const protect = async (feature?: EFeature) => {
+const protect = async (feature?: EFeature, redirectPage = "/login") => {
   try {
     if (!isAuthenticated) {
       throw new Error("User is not authenticated")
@@ -42,7 +42,8 @@ const protect = async (feature?: EFeature) => {
     } else {
       console.error(error)
     }
-    redirect("/login")
+
+    redirect(redirectPage)
   }
 }
 

@@ -11,26 +11,22 @@ function usePredictImage() {
     ): Promise<
       ActionResponse<{
         message: string
-        data: PredictResult
-        messageError?: string
+        predictResult: PredictResult
       }>
     > => {
       try {
-        const { data, resultCode, message } = await http.post<PredictResult>(
+        const { data, message } = await http.post<PredictResult>(
           `/api/library-items/ai/predict/v2`,
           formData
         )
 
-        if (resultCode === "SYS.Fail0008" && Array.isArray(data)) {
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          return data as any
-        }
+        if (!data) throw new Error("")
 
         return {
           isSuccess: true,
           data: {
             message: message,
-            data,
+            predictResult: data,
           },
         }
       } catch (error) {

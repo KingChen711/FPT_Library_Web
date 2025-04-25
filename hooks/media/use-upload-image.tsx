@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query"
 
 import { http } from "@/lib/http"
 
-function useUploadImage() {
+function useUploadImage(isPublic = false) {
   const { accessToken } = useAuth()
 
   return useMutation({
@@ -16,11 +16,17 @@ function useUploadImage() {
         const { data } = await http.post<{
           secureUrl: string
           publicId: string
-        }>(`/api/management/resources/images/upload`, formData, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        })
+        }>(
+          isPublic
+            ? `/api/resources/images/upload`
+            : `/api/management/resources/images/upload`,
+          formData,
+          {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          }
+        )
         return data
       } catch {
         return null

@@ -12,8 +12,8 @@ import { useDropzone } from "react-dropzone"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
 import usePredictImage from "@/hooks/media/use-predict-image"
-import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -58,22 +58,17 @@ const AiPrediction = () => {
     startTransition(async () => {
       const res = await predictImage(formData)
 
-      if (res?.isSuccess) {
+      if (res.isSuccess) {
         setUploadImage(values?.imageToPredict)
-        setBestMatchedLibraryItemId(res?.data?.data?.bestItem?.libraryItemId)
-        setPredictResult(res?.data?.data)
+        setBestMatchedLibraryItemId(
+          res.data.predictResult.bestItem.libraryItemId
+        )
+        setPredictResult(res.data.predictResult)
         router.push(`/ai-prediction/result`)
         return
       }
 
-      toast({
-        title: t("error"),
-        description:
-          locale === "vi"
-            ? "Không tìm thấy tài liệu dựa trên hình ảnh"
-            : "Data not found from image",
-        variant: "danger",
-      })
+      handleServerActionError(res, locale, form)
     })
   }
 
@@ -172,8 +167,7 @@ const AiPrediction = () => {
                           <h1>{t("or drag and drop file here")}</h1>
 
                           <p className="text-sm">
-                            ({t("support documents")} - .jpg, .jpeg, .png,
-                            .webp)
+                            ({t("support documents")} - .jpg, .jpeg, .png)
                           </p>
                           <p className="text-sm text-danger">
                             {t("no file chosen")}
@@ -192,8 +186,7 @@ const AiPrediction = () => {
                           </div>
 
                           <p className="text-sm">
-                            ({t("support documents")} - .jpg, .jpeg, .png,
-                            .webp)
+                            ({t("support documents")} - .jpg, .jpeg, .png)
                           </p>
                         </div>
                       )}

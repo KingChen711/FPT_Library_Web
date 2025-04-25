@@ -58,7 +58,11 @@ function LoginPasswordForm({ email, type }: Props) {
           queryKey: ["token"],
         })
 
-        router.push("/")
+        if (type === "employee") {
+          router.push("/management")
+        } else {
+          router.push("/")
+        }
         return
       }
 

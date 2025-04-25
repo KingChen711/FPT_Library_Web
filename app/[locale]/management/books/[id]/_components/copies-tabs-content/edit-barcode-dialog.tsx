@@ -68,7 +68,9 @@ function EditBarcodeDialog({
                 <div className="flex items-center gap-4">
                   <Button type="submit" disabled={isPending} className="flex-1">
                     {t("Save")}
-                    {isPending && <Loader2 className="ml-2 size-4" />}
+                    {isPending && (
+                      <Loader2 className="ml-2 size-4 animate-spin" />
+                    )}
                   </Button>
                   <Button
                     className="flex-1"

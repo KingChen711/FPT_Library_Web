@@ -39,7 +39,10 @@ const FinancialSection = dynamic(
 )
 
 async function Dashboard() {
-  await auth().protect(EFeature.LIBRARY_ITEM_MANAGEMENT)
+  await auth().protect(
+    EFeature.LIBRARY_ITEM_MANAGEMENT,
+    "/management/system-configuration"
+  )
   const locale = await getLocale()
 
   return (

@@ -165,8 +165,7 @@ const AiRecommendationPage = () => {
                           <h1>{t("or drag and drop file here")}</h1>
 
                           <p className="text-sm">
-                            ({t("support documents")} - .jpg, .jpeg, .png,
-                            .webp)
+                            ({t("support documents")} - .jpg, .jpeg, .png)
                           </p>
                           <p className="text-sm text-danger">
                             {t("no file chosen")}
@@ -185,8 +184,7 @@ const AiRecommendationPage = () => {
                           </div>
 
                           <p className="text-sm">
-                            ({t("support documents")} - .jpg, .jpeg, .png,
-                            .webp)
+                            ({t("support documents")} - .jpg, .jpeg, .png)
                           </p>
                         </div>
                       )}
