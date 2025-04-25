@@ -2,10 +2,9 @@ import { useAuth } from "@/contexts/auth-provider"
 import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { useLocale } from "next-intl"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
 import { handleHttpError, http } from "@/lib/http"
 import { type LibraryItem } from "@/lib/types/models"
-
-import { toast } from "../use-toast"
 
 type TData = {
   alreadyRequestedItems: LibraryItem[] | []
@@ -26,6 +25,7 @@ const defaultValue: TData = {
 function useCheckAvailableBorrowRequest(
   libraryItemIds: number[],
   enabled = true
+  // onFail = () => {}
 ) {
   const { accessToken } = useAuth()
   const locale = useLocale()
@@ -50,17 +50,9 @@ function useCheckAvailableBorrowRequest(
         return data || defaultValue
       } catch (error) {
         const handledError = handleHttpError(error)
-        if (
-          !handledError.isSuccess &&
-          handledError.typeError === "warning" &&
-          handledError.resultCode === "LibraryCard.Warning0002"
-        ) {
-          toast({
-            title: locale === "vi" ? "Thất bại" : "Failed",
-            description: handledError.messageError,
-            variant: "warning",
-          })
-        }
+
+        // onFail()
+        handleServerActionError(handledError, locale)
         return defaultValue
       }
     },

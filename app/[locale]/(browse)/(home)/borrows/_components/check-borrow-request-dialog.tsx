@@ -52,9 +52,11 @@ const CheckBorrowRequestDialog = ({
     number[]
   >([])
   const { borrowedLibraryItems, borrowedResources } = useLibraryStorage()
+
   const { data, isLoading } = useCheckAvailableBorrowRequest(
     selectedBorrow.selectedLibraryItemIds,
     open
+    // () => setOpen(false)
   )
 
   const isAllowedBorrowRequest: boolean =

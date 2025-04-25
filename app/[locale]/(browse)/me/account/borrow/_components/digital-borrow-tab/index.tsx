@@ -61,7 +61,7 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
         </div>
       </div>
 
-      <Alert variant="info">
+      <Alert variant="info" className="bg-muted">
         <AlertOctagonIcon className="size-4" />
         <AlertTitle className="font-bold">
           {locale === "vi" ? "Sách nói!" : "Audio book!"}

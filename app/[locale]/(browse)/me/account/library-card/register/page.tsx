@@ -16,7 +16,7 @@ import {
   User,
   X,
 } from "lucide-react"
-import { useLocale } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
@@ -38,7 +38,7 @@ import useGetPackage from "@/hooks/packages/use-get-package"
 import useGetPaymentMethods from "@/hooks/payment-methods/use-get-payment-method"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
+import { Card, CardContent, CardHeader } from "@/components/ui/card"
 import {
   Form,
   FormControl,
@@ -51,13 +51,6 @@ import { Input } from "@/components/ui/input"
 import NoData from "@/components/ui/no-data"
 import PackageCard from "@/components/ui/package-card"
 import PaymentCard from "@/components/ui/payment-card"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 
 const formSchema = z.object({
   avatar: z.custom<File | null>(
@@ -75,6 +68,7 @@ const formSchema = z.object({
 type Props = { searchParams: { libraryCardId: string } }
 
 const LibraryCardRegister = ({ searchParams }: Props) => {
+  const t = useTranslations("MeLibraryCard")
   const locale = useLocale()
   const router = useRouter()
   const { user, isLoadingAuth, accessToken } = useAuth()
@@ -90,7 +84,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
   )
 
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
-  const { mutateAsync: uploadBookImage } = useUploadImage()
+  const { mutateAsync: uploadBookImage } = useUploadImage(true)
 
   const [paymentStates, setPaymentStates] = useState({
     leftTime: 0,
@@ -180,10 +174,14 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
 
   if (isLoadingAuth || isLoadingPaymentMethods || isLoadingPackage) {
     return (
-      <div className="flex h-screen items-center justify-center">
+      <div className="flex items-center justify-center">
         <Loader2 className="size-8 animate-spin" />
       </div>
     )
+  }
+
+  if (!searchParams.libraryCardId) {
+    router.push("/not-found")
   }
 
   if (!user || !paymentMethods || !packageData) {
@@ -278,18 +276,22 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
   }
 
   return (
-    <div className="mx-auto max-w-4xl px-4">
+    <div>
       {!paymentData && (
         <>
-          <Button variant={"link"} onClick={() => router.back()}>
-            <ArrowLeftCircle className="mr-2 size-4" /> Back
+          <Button
+            variant={"link"}
+            onClick={() => router.back()}
+            className="mx-0 min-w-0 px-0"
+          >
+            <ArrowLeftCircle className="mr-2 size-4" /> {t("Back")}
           </Button>
           <PackageCard package={packageData} />
         </>
       )}
 
-      <h1 className="mb-6 mt-4 text-center text-2xl font-bold text-primary">
-        Library Card Registration
+      <h1 className="mb-6 mt-4 text-center text-2xl font-bold">
+        {t("Library Card Registration")}
       </h1>
 
       {!paymentData && (
@@ -298,7 +300,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
             <div className="grid gap-8 md:grid-cols-2">
               <section className="space-y-6">
                 <h2 className="border-b pb-2 text-lg font-semibold">
-                  Personal Information
+                  {t("Personal Information")}
                 </h2>
 
                 {/* Avatar upload section */}
@@ -309,12 +311,12 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                     render={({ field: { value: _, ...field } }) => (
                       <FormItem className="w-full">
                         <FormLabel className="flex items-center">
-                          Profile Photo
+                          {t("Profile Photo")}
                           <span className="ml-1 text-danger">*</span>
                         </FormLabel>
                         <div className="relative">
                           <div
-                            className="mx-auto flex size-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-[hsl(178,71%,27%)] bg-gray-200"
+                            className="mx-auto flex size-32 shrink-0 cursor-pointer items-center justify-center overflow-hidden rounded-full border-2 border-primary bg-muted"
                             onClick={() => fileInputRef.current?.click()}
                           >
                             {previewImage ? (
@@ -328,7 +330,9 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                             ) : (
                               <div className="flex flex-col items-center">
                                 <User className="size-16" />
-                                <span className="mt-1 text-xs">Required</span>
+                                <span className="mt-1 text-xs">
+                                  {t("Required")}
+                                </span>
                               </div>
                             )}
                           </div>
@@ -341,7 +345,9 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                               onClick={clearAvatar}
                             >
                               <X className="size-4" />
-                              <span className="sr-only">Clear avatar</span>
+                              <span className="sr-only">
+                                {t("Clear avatar")}
+                              </span>
                             </Button>
                           )}
                           <FormControl>
@@ -372,26 +378,21 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                   name="fullName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Full Name</FormLabel>
+                      <FormLabel>{t("Full Name")}</FormLabel>
                       <FormControl>
-                        <Input
-                          type="text"
-                          {...field}
-                          placeholder="Enter your full name"
-                          disabled={isPending}
-                        />
+                        <Input type="text" {...field} disabled={isPending} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
 
-                <FormField
+                {/* <FormField
                   control={form.control}
                   name="paymentMethodId"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Payment Method</FormLabel>
+                      <FormLabel>{t("Payment Method")}</FormLabel>
                       <FormControl>
                         <Select
                           defaultValue={field.value.toString()}
@@ -418,14 +419,17 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                       <FormMessage />
                     </FormItem>
                   )}
-                />
-                <Button type="submit">Register Library Card</Button>
+                /> */}
+                <Button disabled={isPending} type="submit">
+                  {t("Register Library Card")}
+                  {isPending && <Loader2 className="size-4 animate-spin" />}
+                </Button>
               </section>
 
               {/* Library Card Preview */}
               <section>
                 <h2 className="mb-4 border-b pb-2 text-lg font-semibold">
-                  Card Preview
+                  {t("Card Preview")}
                 </h2>
                 <Card className="overflow-hidden border-2">
                   <CardHeader className="bg-primary p-4 text-primary-foreground">
@@ -435,7 +439,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                         <h3 className="text-xl font-bold">ELibrary</h3>
                       </div>
                       <div className="text-sm">
-                        <p>Member Card</p>
+                        <p>{t("Member Card")}</p>
                       </div>
                     </div>
                   </CardHeader>
@@ -456,7 +460,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                       </div>
                       <div className="flex-1 space-y-2">
                         <p className="text-lg font-semibold">
-                          {form.watch("fullName") || "Your Name"}
+                          {form.watch("fullName") || t("Full Name")}
                         </p>
                         <p className="text-sm">
                           {user?.email || "user@example.com"}
@@ -476,17 +480,21 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
 
                     <div className="space-y-2">
                       <div className="flex justify-between text-sm">
-                        <span>Issue Date:</span>
+                        <span>{t("Issue Date")}:</span>
                         <span>{formatDate(new Date().toISOString())}</span>
                       </div>
                       <div className="flex justify-between text-sm">
-                        <span>Expiry Date:</span>
+                        <span>{t("Expiry Date")}:</span>
                         <span>
                           {formatDate(
                             new Date(
-                              new Date().setFullYear(
-                                new Date().getFullYear() + 1
-                              )
+                              new Date().getTime() +
+                                1000 *
+                                  60 *
+                                  60 *
+                                  24 *
+                                  30 *
+                                  packageData.durationInMonths
                             ).toISOString()
                           )}
                         </span>
@@ -504,12 +512,6 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                       />
                     </div>
                   </CardContent>
-                  <CardFooter className="bg-gray-50 p-3 text-center text-xs">
-                    <p className="w-full">
-                      This card remains the property of ELibrary. If found,
-                      please return to any ELibrary branch.
-                    </p>
-                  </CardFooter>
                 </Card>
               </section>
             </div>

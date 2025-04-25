@@ -1,5 +1,6 @@
 "use client"
 
+import { useEffect, useState } from "react"
 import { useLibraryStorage } from "@/contexts/library-provider"
 import { useTranslations } from "next-intl"
 
@@ -19,7 +20,14 @@ import BookItemCard from "./book-item-card"
 const RecentBookList = () => {
   const t = useTranslations("HomePage")
   const { state } = useSidebar()
+  const [mounted, setMounted] = useState(false)
   const { recentlyOpened } = useLibraryStorage()
+
+  useEffect(() => {
+    setMounted(true)
+  }, [])
+
+  if (!mounted) return null
 
   if (recentlyOpened.length === 0) return null
 

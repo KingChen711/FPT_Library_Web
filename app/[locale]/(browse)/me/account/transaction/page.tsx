@@ -75,9 +75,9 @@ const TransactionPage = async ({ searchParams }: Props) => {
         {transactions.length === 0 ? (
           <div className="flex justify-center p-4">
             <NoResult
-              title={t("Borrow Requests Not Found")}
+              title={t("Transactions Not Found")}
               description={t(
-                "No borrow requests matching your request were found Please check your information or try searching with different criteria"
+                "No transactions matching your request were found Please check your information or try searching with different criteria"
               )}
             />
           </div>

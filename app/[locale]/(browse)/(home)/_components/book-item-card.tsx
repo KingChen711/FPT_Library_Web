@@ -38,7 +38,11 @@ type Props = {
 const BookItemCard = ({ item, id, Wrapper }: Props) => {
   const t = useTranslations("HomePage")
 
-  const { data: queryItem, isLoading } = useLibraryItemDetail(id)
+  const { data: queryItem, isLoading } = useLibraryItemDetail(
+    id,
+    undefined,
+    false
+  )
 
   const libraryItem = item || queryItem
 

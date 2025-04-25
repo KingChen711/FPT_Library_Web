@@ -1,6 +1,9 @@
 import getUserPendingActivity from "@/queries/profile/get-user-pending-activity"
+import { AlertOctagonIcon } from "lucide-react"
 
+import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
@@ -23,6 +26,7 @@ type Props = {
 const BorrowTrackingPage = async ({ searchParams }: Props) => {
   const t = await getTranslations("BookPage.borrow tracking")
   const data = await getUserPendingActivity()
+  const locale = await getLocale()
 
   if (!data) {
     return null
@@ -55,6 +59,18 @@ const BorrowTrackingPage = async ({ searchParams }: Props) => {
           <span className="font-semibold">{data.remainTotal}</span>
         </div>
       </Card>
+
+      <Alert variant="info" className="bg-muted">
+        <AlertOctagonIcon className="size-4" />
+        <AlertTitle className="font-bold">
+          {locale === "vi" ? "Thời hạn!" : "Deadlines!"}
+        </AlertTitle>
+        <AlertDescription>
+          {locale === "vi"
+            ? "Tất cả thời hạn của các hoạt động cần phải tới trực tiếp thư viện (hạn lấy sách, hạn trả sách,...) đã được tính trừ các ngày nghỉ của thư viện, bao gồm ngày lễ, ngày nghỉ định kỳ và các ngày nghỉ phát sinh."
+            : "All deadlines for activities requiring direct access to the library (book pick-up deadlines, book return deadlines, etc.) are calculated excluding library days off, including holidays, regular days off and extra days off."}
+        </AlertDescription>
+      </Alert>
 
       <div className="flex-1">
         <Tabs defaultValue={EBorrowTab.REQUEST_BORROW} className="w-full">
