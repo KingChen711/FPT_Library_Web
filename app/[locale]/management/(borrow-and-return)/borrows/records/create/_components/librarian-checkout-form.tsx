@@ -471,7 +471,7 @@ function LibrarianCheckoutForm() {
                   <PersonalLibraryCard
                     cardOnly
                     patron={scannedPatron}
-                    cardClassName="max-w-lg"
+                    cardClassName="w-[512px] max-w-full"
                   />
                   <PatronActivityCard patronActivity={patronActivity} />
                 </div>

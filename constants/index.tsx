@@ -61,14 +61,6 @@ export const managementRoutes = [
     },
   },
   {
-    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
-    route: "/management/resources",
-    label: "Resources",
-    Icon: (props: { className?: string }) => {
-      return <Icons.Resource {...props} />
-    },
-  },
-  {
     feature: EFeature.BORROW_MANAGEMENT,
     label: "Borrow and Return",
     Icon: (props: { className?: string }) => {
