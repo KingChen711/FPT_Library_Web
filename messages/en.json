@@ -1102,7 +1102,7 @@
     "edition": "Edition",
     "resources": "Resources",
     "payment": "Payment",
-    "added to borrow list": "Added to borrow list",
+    "added to borrow list": "Already added to borrow list",
     "deleted to borrow list": "Deleted to borrow list",
     "error toast": "Error",
     "borrow list": "Borrow list",
