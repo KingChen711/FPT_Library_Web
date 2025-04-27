@@ -200,7 +200,17 @@ const BorrowDigitalConfirm = ({
 
       if (transaction.isSuccess) {
         if (transaction.data.paymentData) {
-          setPaymentData(transaction.data.paymentData)
+          setPaymentData({
+            ...transaction.data.paymentData,
+            expiredAt: transaction.data.paymentData.expiredAt
+              ? (() => {
+                  const date = new Date(transaction.data.paymentData.expiredAt)
+                  //TODO: This can be cleaner, not using hard code
+                  date.setHours(date.getHours() - 7)
+                  return date
+                })()
+              : null,
+          })
           return
         }
         toast({

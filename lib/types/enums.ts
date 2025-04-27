@@ -50,6 +50,11 @@ export enum EGender {
   FEMALE = "Female",
 }
 
+export const eGenderToEIdxGender = (g: EGender) => {
+  if (g === EGender.MALE) return EIdxGender.MALE
+  return EIdxGender.FEMALE
+}
+
 export enum EIdxGender {
   MALE,
   FEMALE,

@@ -54,6 +54,10 @@ function ReturnItemFields({ form, isPending, borrowingItems }: Props) {
     <div className="flex flex-col space-y-4">
       {fields.map((field, index) => {
         const item = borrowingItems[index]
+        const isLost = form.watch(`borrowRecordDetails.${index}.isLost`)
+        const conditionId = form.getValues(
+          `borrowRecordDetails.${index}.returnConditionId`
+        )
         return (
           <div
             key={field.id}
@@ -127,10 +131,9 @@ function ReturnItemFields({ form, isPending, borrowingItems }: Props) {
                 )}
               </div>
             </div>
-            {(item.scanned ||
-              form.watch(`borrowRecordDetails.${index}.isLost`)) && (
+            {(item.scanned || isLost) && (
               <>
-                {!form.watch(`borrowRecordDetails.${index}.isLost`) && (
+                {!isLost && (
                   <ConditionField
                     form={form}
                     isPending={isPending}
@@ -138,12 +141,14 @@ function ReturnItemFields({ form, isPending, borrowingItems }: Props) {
                   />
                 )}
 
-                <NormalFinesField
-                  scanned={item.scanned}
-                  form={form}
-                  isPending={isPending}
-                  itemIndex={index}
-                />
+                {(conditionId !== 1 || isLost) && (
+                  <NormalFinesField
+                    scanned={item.scanned}
+                    form={form}
+                    isPending={isPending}
+                    itemIndex={index}
+                  />
+                )}
               </>
             )}
           </div>

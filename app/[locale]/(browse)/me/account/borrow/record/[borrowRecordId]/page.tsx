@@ -1,14 +1,10 @@
-import Image from "next/image"
-import Link from "next/link"
 import { notFound } from "next/navigation"
 import getBorrowRecordPatron from "@/queries/borrows/get-borrow-record-patron"
 import { format } from "date-fns"
 import { Check, X } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
-import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
-import BarcodeGenerator from "@/components/ui/barcode-generator"
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -18,18 +14,10 @@ import {
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb"
 import NoData from "@/components/ui/no-data"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import BorrowRecordStatusBadge from "@/components/badges/borrow-record-status-badge"
 import BorrowTypeBadge from "@/components/badges/borrow-type-bade"
+import BorrowHistory from "@/app/[locale]/management/(borrow-and-return)/borrows/records/[id]/components/borrow-history"
 
-import BorrowRecordActionDropdown from "./_components/borrow-record-action-dropdown"
+import BorrowRecordFineDialog from "./_components/borrow-record-fine-dialog"
 
 type Props = {
   params: { borrowRecordId: number }
@@ -43,7 +31,6 @@ async function BorrowRecordDetailPage({ params }: Props) {
 
   if (!record) notFound()
 
-  const locale = await getLocale()
   const formatLocale = await getFormatLocale()
 
   const title = `${record.librarycard.fullName} - ${format(
@@ -133,209 +120,25 @@ async function BorrowRecordDetailPage({ params }: Props) {
           </div>
         </div>
 
-        <div className="flex flex-col gap-3">
-          <h3 className="text-xl font-semibold">
-            {t("Borrow record details")}
-          </h3>
-
-          <div className="flex items-center justify-between gap-4">
-            <div className="flex flex-wrap items-center gap-4">
-              <div className="flex flex-row items-center"></div>
-            </div>
-            <div className="flex flex-wrap items-center gap-4"></div>
-          </div>
-
-          <div className="grid w-full">
-            <div className="overflow-x-auto rounded-md border">
-              <Table className="overflow-hidden">
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="text-nowrap font-bold">
-                      {t("Library item")}
-                    </TableHead>
-
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">{t("Barcode")}</div>
-                    </TableHead>
-
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">{t("Due date")}</div>
-                    </TableHead>
-
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">
-                        {t("Return date")}
-                      </div>
-                    </TableHead>
-
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">{t("Status")}</div>
-                    </TableHead>
-
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">
-                        {t("Total extension")}
-                      </div>
-                    </TableHead>
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">
-                        {t("Condition")}
-                      </div>
-                    </TableHead>
-
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">
-                        {t("Return condition")}
-                      </div>
-                    </TableHead>
-
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">
-                        {t("Is reminder sent")}
-                      </div>
-                    </TableHead>
-
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">
-                        {t("Has fines")}
-                      </div>
-                    </TableHead>
-
-                    <TableHead className="text-nowrap font-bold">
-                      <div className="flex justify-center">{t("Actions")}</div>
-                    </TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {record.borrowRecordDetails.map((detail) => (
-                    <TableRow key={detail.borrowRecordId}>
-                      <TableCell className="text-nowrap font-bold">
-                        <Link
-                          target="_blank"
-                          href={`/books/${detail.libraryItem.libraryItemId}`}
-                          className="group flex items-center gap-2 pr-8"
-                        >
-                          {detail.libraryItem.coverImage ? (
-                            <Image
-                              alt={detail.libraryItem.title}
-                              src={detail.libraryItem.coverImage}
-                              width={40}
-                              height={60}
-                              className="aspect-[2/3] h-12 w-8 rounded-sm border object-cover"
-                            />
-                          ) : (
-                            <div className="h-12 w-8 rounded-sm border"></div>
-                          )}
-                          <p className="font-bold group-hover:underline">
-                            {detail.libraryItem.title}
-                          </p>
-                        </Link>
-                      </TableCell>
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center">
-                          <BarcodeGenerator
-                            value={
-                              detail.libraryItem.libraryItemInstances[0].barcode
-                            }
-                            options={{
-                              containerHeight: 64,
-                              containerWidth: 230,
-                              format: "CODE128",
-                              displayValue: true,
-                              fontSize: 16,
-                              width: 2,
-                              height: 24,
-                            }}
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center">
-                          {detail.dueDate ? (
-                            <p>
-                              {format(detail.dueDate, "dd MMM yyyy", {
-                                locale: formatLocale,
-                              })}
-                            </p>
-                          ) : (
-                            "-"
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center">
-                          {detail.returnDate ? (
-                            <p>
-                              {format(detail.returnDate, "dd MMM yyyy", {
-                                locale: formatLocale,
-                              })}
-                            </p>
-                          ) : (
-                            "-"
-                          )}
-                        </div>
-                      </TableCell>
-
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center">
-                          <BorrowRecordStatusBadge status={detail.status} />
-                        </div>
-                      </TableCell>
-
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center">
-                          {detail.totalExtension ?? "-"}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center">
-                          {detail.condition
-                            ? locale === "vi"
-                              ? detail.condition.vietnameseName
-                              : detail.condition.englishName
-                            : "-"}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center">
-                          {detail.returnCondition
-                            ? locale === "vi"
-                              ? detail.returnCondition.vietnameseName
-                              : detail.returnCondition.englishName
-                            : "-"}
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center">
-                          {detail.isReminderSent ? (
-                            <Check className="text-success" />
-                          ) : (
-                            <X className="text-danger" />
-                          )}
-                        </div>
-                      </TableCell>
-
-                      <TableCell className="text-nowrap">
-                        <div className="flex justify-center">
-                          {detail.fines.length > 0 ? (
-                            <Check className="text-success" />
-                          ) : (
-                            <X className="text-danger" />
-                          )}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center justify-center">
-                          <BorrowRecordActionDropdown detail={detail} />
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </div>
-          </div>
-        </div>
+        <BorrowHistory
+          borrowRecord={record}
+          actions={
+            <BorrowRecordFineDialog
+              borrowRecordId={record.borrowRecordId}
+              fines={record.borrowRecordDetails
+                .map((d) =>
+                  d.fines.map((f) => ({
+                    ...f,
+                    itemName: d.libraryItem.title,
+                    image: d.libraryItem.coverImage,
+                  }))
+                )
+                .flat()}
+              single={false}
+              hasFineToPayment={record.hasFineToPayment}
+            />
+          }
+        />
       </div>
     </div>
   )

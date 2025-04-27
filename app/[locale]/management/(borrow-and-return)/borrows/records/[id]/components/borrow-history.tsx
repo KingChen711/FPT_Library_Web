@@ -25,15 +25,20 @@ const formatDate = (dateString: string | Date | null) => {
 
 export default async function BorrowHistory({
   borrowRecord,
+  actions,
 }: {
   borrowRecord: BorrowRecordDetailItem
+  actions?: React.ReactNode
 }) {
   const locale = await getLocale()
   const t = await getTranslations("BorrowAndReturnManagementPage")
 
   return (
     <div className="flex flex-col gap-4">
-      <h3 className="text-xl font-semibold">{t("Progress")}</h3>
+      <div className="flex flex-wrap items-center justify-between gap-4">
+        <h3 className="text-xl font-semibold">{t("Progress")}</h3>
+        {actions}
+      </div>
 
       <div className="space-y-6">
         <div className="rounded-lg border p-4">
