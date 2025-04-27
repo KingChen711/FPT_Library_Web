@@ -8,7 +8,7 @@ import QRCode from "react-qr-code"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
-import { EFeature, type EGender } from "@/lib/types/enums"
+import { EFeature } from "@/lib/types/enums"
 import { formatFileSize, formatPrice, getFullName } from "@/lib/utils"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import {
@@ -292,7 +292,7 @@ async function TransactionDetailPage({ params }: Props) {
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
               <h4 className="font-bold">{t("Gender")}</h4>
               <div className="flex gap-2">
-                <GenderBadge gender={transaction.user.gender as EGender} />
+                <GenderBadge gender={transaction.user.gender} />
               </div>
             </div>
 
