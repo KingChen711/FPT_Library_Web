@@ -2,11 +2,10 @@ import Image from "next/image"
 import { auth } from "@/queries/auth"
 import getUserRoles from "@/queries/users/get-user-roles"
 import getUsers from "@/queries/users/get-users"
-import { User } from "lucide-react"
 
 import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
-import { EFeature } from "@/lib/types/enums"
+import { EFeature, EGender } from "@/lib/types/enums"
 import { formatDate } from "@/lib/utils"
 import { searchUsersSchema } from "@/lib/validations/user/search-user"
 import { Badge } from "@/components/ui/badge"
@@ -212,9 +211,8 @@ async function UsersManagementPage({ searchParams }: Props) {
                         </TableCell>
                         <TableCell className="text-center">
                           <div className="flex items-center justify-center text-nowrap">
-                            {user.gender === "Male" && <Icons.Male />}
-                            {user.gender === "Female" && <Icons.Female />}
-                            {user.gender === "Other" && <User color="gray" />}
+                            {user.gender === EGender.MALE && <Icons.Male />}
+                            {user.gender === EGender.FEMALE && <Icons.Female />}
                           </div>
                         </TableCell>
                         <TableCell className="text-nowrap">

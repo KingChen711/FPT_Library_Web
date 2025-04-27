@@ -65,7 +65,7 @@ export type User = {
   phone: string
   avatar: string
   address: string
-  gender: "Male" | "Female" | "Other"
+  gender: EGender
   isActive: boolean
   isDeleted: boolean
   createDate: string
@@ -167,7 +167,7 @@ export type Employee = {
   phone: string
   avatar: string
   address: string
-  gender: "Male" | "Female"
+  gender: EGender
   hireDate: string
   terminationDate: string
   isActive: boolean | null
@@ -312,7 +312,7 @@ export type DigitalBorrow = {
   expiryDate: string
   isExtended: boolean
   extensionCount: number
-  status: number
+  status: EBorrowDigitalStatus
   user: null
   digitalBorrowExtensionHistories: unknown[]
 }

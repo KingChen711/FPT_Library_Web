@@ -220,7 +220,7 @@ export default function ResourceContent({
     (loadingPdf && resourceType === EResourceBookType.EBOOK)
   ) {
     return (
-      <div className="mt-12 flex w-screen max-w-full justify-center">
+      <div className="mt-12 flex w-full max-w-full justify-center">
         <Loader2 className="size-12 animate-spin" />
       </div>
     )
@@ -386,11 +386,7 @@ export default function ResourceContent({
         </div>
 
         {resourceType === EResourceBookType.AUDIO_BOOK ? (
-          <BookAudio
-            isPreview={isPreview}
-            resourceId={resourceId}
-            bookId={bookId}
-          />
+          <BookAudio isPreview={isPreview} resourceId={resourceId} />
         ) : (
           <div className="relative flex-1 overflow-auto border">
             <div

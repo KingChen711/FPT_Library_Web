@@ -199,9 +199,11 @@ function ProcessReturnForm() {
             return false
           }
           if (!record.scanned) return false
+
+          if (record.returnConditionId === 1) record.fines = []
           return record
         })
-        // .filter(Boolean) //cái này gọn hơn, nhưng ts lint nó ko chịu :((
+        // .filter(Boolean) //cách này gọn hơn, nhưng ts lint không hiểu
         .filter((record) => !!record)
 
       const res = await processReturn(values)

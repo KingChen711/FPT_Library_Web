@@ -35,10 +35,10 @@ import { Rating } from "react-simple-star-rating"
 import { type LibraryItem } from "@/lib/types/models"
 import { cn, formatPrice, splitCamelCase } from "@/lib/utils"
 import useLibraryItemDetail from "@/hooks/library-items/use-library-item-detail"
+import { toast } from "@/hooks/use-toast"
 import ShelfPreviewButton from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-cards/shelf-preview"
 import BookDigitalListDialog from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-digital-list-dialog"
 import BookInstancesTab from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/book-tabs/book-instances-tab"
-import BorrowLibraryItemConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/borrow-library-item-confirm"
 
 import { Badge } from "./badge"
 import { Button } from "./button"
@@ -75,12 +75,13 @@ const LibraryItemInfo = ({
   const libraryItem = propLibraryItem || fetchedLibraryItem
 
   const [openDigitalList, setOpenDigitalList] = useState<boolean>(false)
-  const [openAddBorrowConfirm, setOpenAddBorrowConfirm] = useState(false)
+
   const { favouriteItemIds, toggleFavorite, isLoadingFavourite } =
     useFavourite()
   const isFavourite = favouriteItemIds.includes(id)
 
-  const { recentlyOpened, addRecentlyOpened } = useLibraryStorage()
+  const { recentlyOpened, addRecentlyOpened, borrowedLibraryItems } =
+    useLibraryStorage()
 
   useEffect(() => {
     console.log({ id, recentlyOpened })
@@ -88,6 +89,24 @@ const LibraryItemInfo = ({
     if (recentlyOpened.includes(id)) return
     addRecentlyOpened(id)
   }, [id, recentlyOpened, addRecentlyOpened])
+
+  const handleAddToBorrowList = () => {
+    if (!libraryItem) return
+    if (borrowedLibraryItems.has(libraryItem.libraryItemId)) {
+      toast({
+        title: locale === "vi" ? "Thất bại" : "Failed",
+        description: t("added to borrow list"),
+        variant: "warning",
+      })
+    } else {
+      borrowedLibraryItems.add(libraryItem.libraryItemId)
+      toast({
+        title: locale === "vi" ? "Thành công" : "Success",
+        description: t("add borrow list"),
+        variant: "info",
+      })
+    }
+  }
 
   if (isLoading) {
     return <LibraryItemInfoLoading />
@@ -104,11 +123,11 @@ const LibraryItemInfo = ({
         setOpen={setOpenDigitalList}
       />
 
-      <BorrowLibraryItemConfirm
+      {/* <BorrowLibraryItemConfirm
         libraryItem={libraryItem}
         open={openAddBorrowConfirm}
         setOpen={setOpenAddBorrowConfirm}
-      />
+      /> */}
 
       <div className="flex items-start gap-4">
         {showImage && (
@@ -307,7 +326,7 @@ const LibraryItemInfo = ({
             )}
 
             {!isManager && (
-              <Button onClick={() => setOpenAddBorrowConfirm(true)}>
+              <Button onClick={handleAddToBorrowList}>
                 <Book />
                 <span>{t("add borrow list")}</span>
               </Button>

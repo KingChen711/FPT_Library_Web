@@ -38,7 +38,8 @@ function ConditionField({ form, itemIndex, isPending }: Props) {
   const { data: conditionItems } = useConditions()
 
   const filteredCondition =
-    conditionItems?.filter((c) => c.englishName !== "Lost") || []
+    conditionItems?.filter((c) => c.conditionId !== 3 && c.conditionId !== 4) ||
+    []
 
   const locale = useLocale()
 

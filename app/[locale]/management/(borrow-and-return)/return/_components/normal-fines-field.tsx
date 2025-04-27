@@ -71,11 +71,9 @@ function NormalFinesField({ form, isPending, itemIndex, scanned }: Props) {
           <div className="flex items-center justify-between gap-4">
             <FormLabel>
               {t("Fines")}
-              {wIsLost && (
-                <span className="ml-1 text-xl font-bold leading-none text-primary">
-                  *
-                </span>
-              )}
+              <span className="ml-1 text-xl font-bold leading-none text-primary">
+                *
+              </span>
             </FormLabel>
           </div>
           <FormControl>

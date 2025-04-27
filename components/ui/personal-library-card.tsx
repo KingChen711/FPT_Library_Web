@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import { format } from "date-fns"
-import { BookOpen, Calendar, MapPin, User } from "lucide-react"
+import { BookOpen, Calendar, Check, MapPin, User, X } from "lucide-react"
 import { useTranslations } from "next-intl"
 import Barcode from "react-barcode"
 
@@ -58,7 +58,11 @@ const PersonalLibraryCard = ({
                 },
                 {
                   label: "Allow Borrow More",
-                  value: patron.libraryCard.isAllowBorrowMore ? "Yes" : "No",
+                  value: patron.libraryCard.isAllowBorrowMore ? (
+                    <Check className="text-success" />
+                  ) : (
+                    <X className="text-danger" />
+                  ),
                   icon: <User className="size-4 text-success" />,
                 },
                 {
@@ -73,12 +77,20 @@ const PersonalLibraryCard = ({
                 },
                 {
                   label: "Reminder Sent",
-                  value: patron.libraryCard.isReminderSent ? "Yes" : "No",
+                  value: patron.libraryCard.isReminderSent ? (
+                    <Check className="text-success" />
+                  ) : (
+                    <X className="text-danger" />
+                  ),
                   icon: <Calendar className="size-4 text-progress" />,
                 },
                 {
                   label: "Extended",
-                  value: patron.libraryCard.isExtended ? "Yes" : "No",
+                  value: patron.libraryCard.isExtended ? (
+                    <Check className="text-success" />
+                  ) : (
+                    <X className="text-danger" />
+                  ),
                   icon: <BookOpen className="size-4 text-warning" />,
                 },
                 {
@@ -99,11 +111,14 @@ const PersonalLibraryCard = ({
                   icon: <Calendar className="size-4 text-info" />,
                 },
               ].map((item, index) => (
-                <tr key={index} className="border-b last:border-none">
+                <tr
+                  key={index}
+                  className="flex items-center justify-between border-b last:border-none"
+                >
                   <td className="flex items-center gap-2 px-4 py-2 font-medium">
-                    {item.icon} {item.label}
+                    {item.icon} {t(item.label)}
                   </td>
-                  <td className="px-4 py-2 text-right text-muted-foreground">
+                  <td className="flex w-28 justify-center text-right text-muted-foreground">
                     {item.value}
                   </td>
                 </tr>

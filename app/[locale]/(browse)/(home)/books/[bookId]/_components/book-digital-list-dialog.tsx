@@ -3,7 +3,7 @@
 import { Book, BookOpen, Headphones } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { EResourceBookType } from "@/lib/types/enums"
+import { EBorrowDigitalStatus, EResourceBookType } from "@/lib/types/enums"
 import type { BookResource, LibraryItem } from "@/lib/types/models"
 import BorrowResourceCard from "@/components/ui/borrow-resource-card"
 import {
@@ -64,7 +64,21 @@ const BookDigitalListDialog = ({
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {ebookResources.map((resource) => (
                     <BorrowResourceCard
-                      libraryItem={libraryItem}
+                      canExtend={libraryItem.digitalBorrows?.some(
+                        (b) => b.resourceId === resource.resourceId
+                      )}
+                      status={
+                        libraryItem.digitalBorrows?.find(
+                          (b) => b.resourceId === resource.resourceId
+                        )?.status
+                      }
+                      libraryItemId={libraryItem.libraryItemId}
+                      isBorrowed={libraryItem.digitalBorrows?.some(
+                        (b) =>
+                          b.resourceId === resource.resourceId &&
+                          (b.status === EBorrowDigitalStatus.ACTIVE ||
+                            b.status === EBorrowDigitalStatus.PREPARING)
+                      )}
                       key={resource.resourceId}
                       resource={resource}
                       type={EResourceBookType.EBOOK}
@@ -86,7 +100,21 @@ const BookDigitalListDialog = ({
                 <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   {audioBookResources.map((resource) => (
                     <BorrowResourceCard
-                      libraryItem={libraryItem}
+                      canExtend={libraryItem.digitalBorrows?.some(
+                        (b) => b.resourceId === resource.resourceId
+                      )}
+                      status={
+                        libraryItem.digitalBorrows?.find(
+                          (b) => b.resourceId === resource.resourceId
+                        )?.status
+                      }
+                      libraryItemId={libraryItem.libraryItemId}
+                      isBorrowed={libraryItem.digitalBorrows?.some(
+                        (b) =>
+                          b.resourceId === resource.resourceId &&
+                          (b.status === EBorrowDigitalStatus.ACTIVE ||
+                            b.status === EBorrowDigitalStatus.PREPARING)
+                      )}
                       key={resource.resourceId}
                       resource={resource}
                       type={EResourceBookType.AUDIO_BOOK}
