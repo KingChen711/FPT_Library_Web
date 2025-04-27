@@ -141,14 +141,13 @@ function ReturnItemFields({ form, isPending, borrowingItems }: Props) {
                   />
                 )}
 
-                {(conditionId !== 1 || isLost) && (
-                  <NormalFinesField
-                    scanned={item.scanned}
-                    form={form}
-                    isPending={isPending}
-                    itemIndex={index}
-                  />
-                )}
+                <NormalFinesField
+                  notShow={conditionId === 1 && !isLost}
+                  scanned={item.scanned}
+                  form={form}
+                  isPending={isPending}
+                  itemIndex={index}
+                />
               </>
             )}
           </div>

@@ -22,9 +22,16 @@ type Props = {
   isPending: boolean
   itemIndex: number
   scanned: boolean
+  notShow: boolean
 }
 
-function NormalFinesField({ form, isPending, itemIndex, scanned }: Props) {
+function NormalFinesField({
+  form,
+  isPending,
+  itemIndex,
+  scanned,
+  notShow,
+}: Props) {
   const t = useTranslations("BorrowAndReturnManagementPage")
   const { fields, append, remove } = useFieldArray({
     name: `borrowRecordDetails.${itemIndex}.fines`,
@@ -32,6 +39,8 @@ function NormalFinesField({ form, isPending, itemIndex, scanned }: Props) {
   })
 
   useEffect(() => {
+    console.log({ scanned })
+
     if (scanned) {
       form.setValue(`borrowRecordDetails.${itemIndex}.isLost`, false)
       form.setValue(`borrowRecordDetails.${itemIndex}.scanned`, true)
@@ -61,6 +70,8 @@ function NormalFinesField({ form, isPending, itemIndex, scanned }: Props) {
       form.clearErrors("isConfirmMissing")
     }
   }, [wIsLost, wScanned, isNeedConfirm, form])
+
+  if (notShow) return null
 
   return (
     <FormField
