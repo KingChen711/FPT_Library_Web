@@ -1,62 +1,66 @@
-import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
+import { useLibraryStorage } from "@/contexts/library-provider"
 import { Eye } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { EResourceBookType } from "@/lib/types/enums"
-import { type BookResource, type LibraryItem } from "@/lib/types/models"
+import { EResourceBookType, type EBorrowDigitalStatus } from "@/lib/types/enums"
+import { type BookResource } from "@/lib/types/models"
 import { formatPrice } from "@/lib/utils"
+import { toast } from "@/hooks/use-toast"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
-import BorrowDigitalConfirm from "@/app/[locale]/(browse)/(home)/books/[bookId]/_components/borrow-digital-confirm"
+
+import BorrowDigitalStatusBadge from "./borrow-digital-status-badge"
+import { Icons } from "./icons"
 
 type ResourceCardProps = {
-  libraryItem: LibraryItem
+  libraryItemId: number
+  isBorrowed: boolean
   resource: BookResource
   type: EResourceBookType
+  status: EBorrowDigitalStatus | null | undefined
+  canExtend: boolean
 }
 
 const BorrowResourceCard = ({
+  libraryItemId,
   resource,
   type,
-  libraryItem,
+  status,
+  canExtend,
+  isBorrowed,
 }: ResourceCardProps) => {
   const { isManager } = useAuth()
   const router = useRouter()
   const t = useTranslations("BookPage")
-  const [openDigitalBorrow, setOpenDigitalBorrow] = useState<boolean>(false)
-  const [isBorrowed, setIsBorrowed] = useState<boolean>(false)
-  const { digitalBorrows } = libraryItem
 
-  useEffect(() => {
-    if (digitalBorrows && digitalBorrows.length > 0) {
-      digitalBorrows.forEach((digitalBorrow) => {
-        if (
-          digitalBorrow.resourceId === resource.resourceId &&
-          digitalBorrow.status === 0
-        ) {
-          setIsBorrowed(true)
-          return
-        }
-      })
-    }
-  }, [digitalBorrows, openDigitalBorrow, resource.resourceId])
+  const { borrowedResources } = useLibraryStorage()
+
+  const isAdded = borrowedResources.has(resource.resourceId)
+
+  const handleBorrowDigital = () => {
+    borrowedResources.toggle(resource.resourceId)
+    toast({
+      title: isAdded ? t("deleted to borrow list") : t("added to borrow list"),
+      variant: "info",
+    })
+  }
 
   return (
     <>
-      <BorrowDigitalConfirm
+      {/* <BorrowDigitalConfirm
         selectedResource={resource}
         open={openDigitalBorrow}
         setOpen={setOpenDigitalBorrow}
-      />
+      /> */}
       <Card className="overflow-hidden border-muted">
         <CardContent className="p-4">
           <div className="flex items-start justify-between">
             <div className="space-y-1">
               <h3 className="line-clamp-1 text-lg font-medium">
-                {resource.resourceTitle} _ {isBorrowed && "Borrowed"}
+                {resource.resourceTitle}
               </h3>
               <div className="flex items-center gap-2">
                 <Badge variant={"draft"} className="text-xs">
@@ -64,6 +68,7 @@ const BorrowResourceCard = ({
                     ? t("ebook")
                     : t("audio book")}
                 </Badge>
+                {status && <BorrowDigitalStatusBadge status={status} />}
               </div>
             </div>
             {resource.borrowPrice && resource.borrowPrice > 0 && (
@@ -81,57 +86,59 @@ const BorrowResourceCard = ({
           )}
         </CardContent>
 
-        {isBorrowed ? (
-          <CardFooter className="flex justify-between gap-2 p-4 pt-0">
+        <CardFooter className="flex justify-between gap-2 p-4 pt-0">
+          {isBorrowed ? (
             <Button
               variant="outline"
               size="sm"
               className="flex-1"
               onClick={() =>
                 router.push(
-                  `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItem.libraryItemId}&isPreview=false`
+                  `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItemId}&isPreview=false`
                 )
               }
             >
               <Eye className="mr-2 size-4" />
               {t("view")}
             </Button>
-            {/* TODO: add extend */}
-            <Button
-              variant="outline"
-              size="sm"
-              className="flex-1"
-              disabled={isManager}
-            >
-              {t("extend")}
-            </Button>
-          </CardFooter>
-        ) : (
-          <CardFooter className="flex justify-between gap-2 p-4 pt-0">
+          ) : (
             <Button
               variant="outline"
               size="sm"
               className="flex-1"
               onClick={() =>
                 router.push(
-                  `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItem.libraryItemId}&isPreview=true`
+                  `/books/resources/${resource.resourceId}?resourceType=${type}&libraryItemId=${libraryItemId}&isPreview=true`
                 )
               }
             >
-              <Eye className="mr-2 size-4" />
+              <Eye className="size-4" />
               {t("preview")}
             </Button>
+          )}
+          {canExtend ? (
             <Button
               variant="outline"
               size="sm"
               className="flex-1"
               disabled={isManager}
-              onClick={() => setOpenDigitalBorrow(true)}
             >
-              {t("borrow")}
+              <Icons.Upgrade className="size-4" />
+              {t("extend")}
             </Button>
-          </CardFooter>
-        )}
+          ) : (
+            <Button
+              variant="outline"
+              size="sm"
+              className="flex-1"
+              disabled={isManager}
+              onClick={handleBorrowDigital}
+            >
+              <Icons.BorrowRequest className="size-4" />
+              {isAdded ? t("remove borrow") : t("borrow")}
+            </Button>
+          )}
+        </CardFooter>
       </Card>
     </>
   )

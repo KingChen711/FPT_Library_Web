@@ -912,6 +912,7 @@
     "Cancel": "Cancel"
   },
   "BookPage": {
+    "remove borrow": "Remove borrow",
     "Error while loading audiobook": "Error while loading audiobook. Please try again.",
     "Favorite list": "Favorite list",
     "Search results": "Search results",
@@ -2648,6 +2649,14 @@
     "System configuration": "System configuration"
   },
   "MeLibraryCard": {
+    "Issuance Method": "Issuance Method",
+    "Allow Borrow More": "Allow Borrow More",
+    "Max Items at Once": "Max Items at Once",
+    "Total Missed Pickups": "Total Missed Pickups",
+    "Reminder Sent": "Reminder Sent",
+    "Extended": "Extended",
+    "Extension Count": "Extension Count",
+
     "Library Card Introduction": "Library Card Introduction",
     "What is a Library Card": "What is a Library Card?",
     "library card defi": "A library card is your key to accessing our extensive collection of books, digital resources, and exclusive services. It is a personal identification that grants you borrowing privileges and access to our facilities.",

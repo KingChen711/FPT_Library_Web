@@ -916,6 +916,7 @@
     "Cancel": "Hủy"
   },
   "BookPage": {
+    "remove borrow": "Hủy mượn",
     "Error while loading audiobook": "Có lỗi xảy ra khi đang tải audiobook. Vui lòng thử lại.",
     "Favorite list": "Danh sách yêu thích",
     "Search results": "Kết quả tìm kiếm",
@@ -2668,6 +2669,13 @@
     "System configuration": "Cấu hình hệ thống"
   },
   "MeLibraryCard": {
+    "Issuance Method": "Phương thức phát hành",
+    "Allow Borrow More": "Cho phép mượn thêm",
+    "Max Items at Once": "Số lượng mượn tối đa",
+    "Total Missed Pickups": "Số lần không lấy",
+    "Reminder Sent": "Đã gửi nhắc nhở",
+    "Extended": "Đã mở rộng",
+    "Extension Count": "Số lượng mở rộng",
     "Library Card Introduction": "Giới thiệu Thẻ Thư Viện",
     "What is a Library Card": "Thẻ Thư Viện là gì?",
     "library card defi": "Thẻ thư viện là chìa khóa giúp bạn tiếp cận kho sách phong phú, tài nguyên số và các dịch vụ độc quyền của chúng tôi. Đây là giấy tờ định danh cá nhân cho phép bạn mượn sách và sử dụng các tiện ích tại thư viện.",

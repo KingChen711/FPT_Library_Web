@@ -312,7 +312,7 @@ export type DigitalBorrow = {
   expiryDate: string
   isExtended: boolean
   extensionCount: number
-  status: number
+  status: EBorrowDigitalStatus
   user: null
   digitalBorrowExtensionHistories: unknown[]
 }

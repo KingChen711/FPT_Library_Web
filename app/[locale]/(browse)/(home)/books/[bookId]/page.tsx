@@ -1,3 +1,4 @@
+import { auth } from "@/queries/auth"
 import getLibraryItem from "@/queries/library-item/get-libraryItem"
 import { ChevronRight } from "lucide-react"
 
@@ -27,7 +28,8 @@ type Props = {
 const BookDetailPage = async ({ params: { bookId }, searchParams }: Props) => {
   const t = await getTranslations("BookPage")
   const tRoute = await getTranslations("Routes")
-  const libraryItem = await getLibraryItem(bookId)
+  const user = await auth().whoAmI()
+  const libraryItem = await getLibraryItem(bookId, user?.email || null)
 
   if (!libraryItem) {
     return <div>{t("Library item not found")}</div>

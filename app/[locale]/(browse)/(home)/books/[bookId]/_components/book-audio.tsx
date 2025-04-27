@@ -171,7 +171,7 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
 
   if (isLoadingAuth || loadingAudio) {
     return (
-      <div className="mt-12 flex w-screen max-w-full justify-center">
+      <div className="mt-12 flex w-full max-w-full justify-center">
         <Loader2 className="size-12 animate-spin" />
       </div>
     )
