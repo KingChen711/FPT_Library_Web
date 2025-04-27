@@ -83,7 +83,7 @@ function ProcessReturnForm() {
 
       if (scanCard) {
         if (fetchingPatron) return
-        form.setValue("libraryCardBarcode", scannedData)
+
         getPatronByBarcode(scannedData, {
           onSuccess: (data) => {
             if (!data) {
@@ -97,6 +97,7 @@ function ProcessReturnForm() {
               })
               return
             }
+            form.setValue("libraryCardBarcode", scannedData)
             form.setValue("libraryCardId", data.libraryCardId)
             setScannedPatron(data)
           },
@@ -172,6 +173,10 @@ function ProcessReturnForm() {
       },
     })
   }, [wLibraryCardId, getPatronActivity, form])
+
+  useEffect(() => {
+    console.log(form.formState.errors)
+  }, [form.formState.errors])
 
   const onSubmit = async (values: TProcessReturnSchema) => {
     startTransition(async () => {
