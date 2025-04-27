@@ -5,7 +5,7 @@ import getEmployeeRoles from "@/queries/roles/get-employee-roles"
 
 import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
-import { EFeature } from "@/lib/types/enums"
+import { EFeature, EGender } from "@/lib/types/enums"
 import { formatDate } from "@/lib/utils"
 import { searchEmployeesSchema } from "@/lib/validations/employee/search-employee"
 import { Badge } from "@/components/ui/badge"
@@ -203,7 +203,7 @@ async function EmployeesManagementPage({ searchParams }: Props) {
                   </TableCell>
                   <TableCell className="text-center">
                     <div className="flex items-center justify-center text-nowrap">
-                      {employee.gender === "Male" ? (
+                      {employee.gender === EGender.MALE ? (
                         <Icons.Male />
                       ) : (
                         <Icons.Female />
