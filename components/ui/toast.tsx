@@ -54,6 +54,12 @@ const Toast = React.forwardRef<
     <ToastPrimitives.Root
       ref={ref}
       className={cn(toastVariants({ variant }), className)}
+      // Add these 3 handlers to achieve auto-closing every time. Even you click on it.
+      onPause={() => {}}
+      onResume={() => {}}
+      onFocus={(e) => e.currentTarget.blur()}
+      // Add this to globally set toast duration. Default is 5000 (5 seconds)
+      duration={4000}
       {...props}
     />
   )
