@@ -1,6 +1,7 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
 import { type HubConnection } from "@microsoft/signalr"
@@ -17,17 +18,10 @@ import {
 } from "@/lib/signalR/verify-payment-status"
 import { ETransactionStatus } from "@/lib/types/enums"
 import {
-  type Author,
-  type BookEdition,
-  type BorrowRecordDetail,
-  type Category,
-  type Condition,
   type Employee,
   type Fine,
   type FineBorrow,
-  type LibraryItemInstance,
   type PaymentData,
-  type Shelf,
 } from "@/lib/types/models"
 import { formatPrice } from "@/lib/utils"
 import { createBorrowRecordFineTransaction } from "@/actions/borrows/create-borrow-record-fine-transaction"
@@ -59,22 +53,29 @@ import FineBorrowStatusBadge from "@/components/badges/fine-borrow-status"
 import FineTypeBadge from "@/components/badges/fine-type-badge"
 
 type Props = {
-  open: boolean
-  setOpen: (value: boolean) => void
-  detail: BorrowRecordDetail & {
-    libraryItem: BookEdition & {
-      shelf: Shelf | null
-      category: Category
-      authors: Author[]
-      libraryItemInstances: LibraryItemInstance[]
-    }
-    condition: Condition
-    returnCondition: Condition | null
-    fines: (FineBorrow & { finePolicy: Fine; createByNavigation: Employee })[]
-  }
+  open?: boolean
+  setOpen?: (value: boolean) => void
+
+  borrowRecordId: number
+  fines: (FineBorrow & {
+    finePolicy: Fine
+    createByNavigation: Employee
+    itemName: string
+    image: string | null
+  })[]
+
+  single?: boolean
+  hasFineToPayment?: boolean
 }
 
-const BorrowRecordFineDialog = ({ detail, open, setOpen }: Props) => {
+const BorrowRecordFineDialog = ({
+  borrowRecordId,
+  fines,
+  open,
+  setOpen,
+  single = true,
+  hasFineToPayment,
+}: Props) => {
   const t = useTranslations("BorrowAndReturnManagementPage")
   const router = useRouter()
   const locale = useLocale()
@@ -129,7 +130,12 @@ const BorrowRecordFineDialog = ({ detail, open, setOpen }: Props) => {
         : 0
 
       setPaymentStates((prev) => ({ ...prev, leftTime }))
-      if (leftTime > 0 || !paymentData?.expiredAt) return
+      if (
+        leftTime > 0 ||
+        !paymentData?.expiredAt ||
+        paymentStates.status !== ETransactionStatus.PENDING
+      )
+        return
       setPaymentStates((prev) => ({
         ...prev,
         leftTime: 0,
@@ -141,7 +147,7 @@ const BorrowRecordFineDialog = ({ detail, open, setOpen }: Props) => {
     return () => {
       clearInterval(timer)
     }
-  }, [paymentData?.expiredAt])
+  }, [paymentData?.expiredAt, paymentStates?.status])
 
   // Reduce navigate time
   useEffect(() => {
@@ -156,18 +162,14 @@ const BorrowRecordFineDialog = ({ detail, open, setOpen }: Props) => {
     }, 1000)
     return () => clearInterval(timer)
   }, [
-    detail.borrowRecordId,
+    borrowRecordId,
     paymentStates.canNavigate,
     paymentStates.navigateTime,
     router,
   ])
 
   if (isLoadingAuth) {
-    return (
-      <div className="flex items-center justify-center">
-        <Loader2 className="size-8 animate-spin" />
-      </div>
-    )
+    return null
   }
 
   if (!user) {
@@ -176,13 +178,22 @@ const BorrowRecordFineDialog = ({ detail, open, setOpen }: Props) => {
 
   function onSubmit() {
     startTransition(async () => {
-      const transaction = await createBorrowRecordFineTransaction(
-        detail.borrowRecordId
-      )
+      const transaction =
+        await createBorrowRecordFineTransaction(borrowRecordId)
 
       if (transaction.isSuccess) {
         if (transaction.data.paymentData) {
-          setPaymentData(transaction.data.paymentData)
+          setPaymentData({
+            ...transaction.data.paymentData,
+            expiredAt: transaction.data.paymentData.expiredAt
+              ? (() => {
+                  const date = new Date(transaction.data.paymentData.expiredAt)
+                  //TODO: This can be cleaner, not using hard code
+                  date.setHours(date.getHours() - 7)
+                  return date
+                })()
+              : null,
+          })
           return
         }
         toast({
@@ -208,8 +219,13 @@ const BorrowRecordFineDialog = ({ detail, open, setOpen }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
+      {!single && hasFineToPayment && (
+        <DialogTrigger asChild>
+          <Button>{t("Payment fines")}</Button>
+        </DialogTrigger>
+      )}
       {!paymentData && (
-        <DialogContent className="max-h-[80vh] max-w-6xl overflow-y-auto">
+        <DialogContent className="max-h-[80vh] max-w-7xl overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t("Fines")}</DialogTitle>
             <DialogDescription asChild>
@@ -218,8 +234,14 @@ const BorrowRecordFineDialog = ({ detail, open, setOpen }: Props) => {
                   <Table className="overflow-hidden">
                     <TableHeader>
                       <TableRow>
+                        {!single && (
+                          <TableHead className="text-nowrap font-bold">
+                            {t("Library item")}
+                          </TableHead>
+                        )}
+
                         <TableHead className="text-nowrap font-bold">
-                          {t("Title")}
+                          {t("Fine title")}
                         </TableHead>
 
                         <TableHead className="text-nowrap font-bold">
@@ -260,8 +282,27 @@ const BorrowRecordFineDialog = ({ detail, open, setOpen }: Props) => {
                       </TableRow>
                     </TableHeader>
                     <TableBody>
-                      {detail.fines.map((fine) => (
+                      {fines.map((fine) => (
                         <TableRow key={fine.fineId}>
+                          {!single && (
+                            <TableCell className="flex items-center gap-2 whitespace-nowrap text-nowrap">
+                              {fine.image ? (
+                                <Image
+                                  alt={fine.itemName}
+                                  src={fine.image}
+                                  width={40}
+                                  height={60}
+                                  className="aspect-[2/3] h-12 w-8 rounded-sm border object-cover"
+                                />
+                              ) : (
+                                <div className="h-12 w-8 rounded-sm border"></div>
+                              )}
+                              <p className="font-semibold group-hover:underline">
+                                {fine.itemName}
+                              </p>
+                            </TableCell>
+                          )}
+
                           <TableCell className="text-nowrap">
                             {fine.finePolicy.finePolicyTitle}
                           </TableCell>
@@ -350,14 +391,17 @@ const BorrowRecordFineDialog = ({ detail, open, setOpen }: Props) => {
               </div>
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex items-center gap-2">
-            <DialogClose>
-              <Button variant={"ghost"}>Đóng</Button>
-            </DialogClose>
-            <Button onClick={() => onSubmit()} disabled={isPending}>
-              Thanh toán
-            </Button>
-          </DialogFooter>
+          {!single && (
+            <DialogFooter className="flex items-center gap-2">
+              <DialogClose>
+                <Button variant={"ghost"}>{t("Close")}</Button>
+              </DialogClose>
+              <Button onClick={() => onSubmit()} disabled={isPending}>
+                {t("Payment")}{" "}
+                {isPending && <Loader2 className="size-4 animate-spin" />}
+              </Button>
+            </DialogFooter>
+          )}
         </DialogContent>
       )}
       {paymentData && (

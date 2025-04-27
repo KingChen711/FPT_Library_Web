@@ -265,6 +265,7 @@
     "mustScannedAllItems": "Must scan all items",
     "atLeast1ScannedOrLost": "Must at least one scanned or lost item",
     "undefined": "",
+    "addFineDamage": "Must add 'Damage' fine",
     "addFineLost": "Must add 'Lost' fine",
     "addFineOverdue": "Must add 'Overdue' fine"
   },
@@ -2360,6 +2361,10 @@
     "Actions": "Actions"
   },
   "BorrowAndReturnManagementPage": {
+    "Close": "Close",
+    "Payment": "Payment",
+    "Payment fines": "Payment fines",
+    "Fine title": "Fine title",
     "Amount": "Amount",
     "Type": "Type",
     "Transaction date": "Transaction date",

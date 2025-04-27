@@ -644,7 +644,7 @@ function LibrarianCheckoutForm() {
                                       <LibraryItemCard
                                         libraryItem={item}
                                         expandable
-                                        className="max-w-full"
+                                        className="w-full max-w-full flex-1"
                                       />
 
                                       <div className="ml-auto flex w-[370px] shrink-0 items-center justify-between gap-6">
@@ -729,7 +729,7 @@ function LibrarianCheckoutForm() {
                                       <LibraryItemCard
                                         libraryItem={item}
                                         expandable
-                                        className="max-w-full"
+                                        className="w-full max-w-full flex-1"
                                       />
 
                                       <div className="ml-auto flex w-[370px] shrink-0 items-center justify-between gap-6">
@@ -813,7 +813,7 @@ function LibrarianCheckoutForm() {
                                       <LibraryItemCard
                                         libraryItem={item}
                                         expandable
-                                        className="max-w-full"
+                                        className="w-full max-w-full flex-1"
                                       />
 
                                       <div className="ml-auto flex w-[370px] shrink-0 items-center justify-between gap-6">

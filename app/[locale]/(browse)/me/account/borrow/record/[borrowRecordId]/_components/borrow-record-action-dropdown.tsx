@@ -48,7 +48,12 @@ function BorrowRecordActionDropdown({ detail }: Props) {
   return (
     <>
       <BorrowRecordFineDialog
-        detail={detail}
+        borrowRecordId={detail.borrowRecordId}
+        fines={detail.fines.map((f) => ({
+          ...f,
+          itemName: detail.libraryItem.title,
+          image: detail.libraryItem.coverImage,
+        }))}
         open={openFine}
         setOpen={setOpenFine}
       />

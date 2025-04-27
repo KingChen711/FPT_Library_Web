@@ -40,6 +40,18 @@ export const processReturnSchema = z
         })
         .refine(
           (data) =>
+            !data.scanned ||
+            data.returnConditionId !== 2 ||
+            data.fines.some(
+              (f) => (f.fine as Fine).conditionType === EFineType.DAMAGE
+            ),
+          {
+            message: "addFineDamage",
+            path: ["fines"],
+          }
+        )
+        .refine(
+          (data) =>
             !data.isLost ||
             data.fines.some(
               (f) => (f.fine as Fine).conditionType === EFineType.LOST

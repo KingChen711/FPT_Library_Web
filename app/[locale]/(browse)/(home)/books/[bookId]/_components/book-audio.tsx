@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useRef, useState } from "react"
-import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
 import {
@@ -37,15 +36,12 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip"
 
-import { dummyBooks } from "../../../_components/dummy-books"
-
 type Props = {
-  bookId?: number
   isPreview: boolean
   resourceId: number
 }
 
-const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
+const BookAudio = ({ isPreview, resourceId }: Props) => {
   const t = useTranslations("BookPage")
 
   const [isPlaying, setIsPlaying] = useState(false)
@@ -55,7 +51,7 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
   const [volume, setVolume] = useState(1)
   const [isMuted, setIsMuted] = useState(false)
   const audioRef = useRef<HTMLAudioElement>(null)
-  const book = dummyBooks.find((book) => book.id === bookId)
+
   const { isLoadingAuth, accessToken } = useAuth()
   const [audioLink, setAudioLink] = useState<string | null>(null)
   const [loadingAudio, setLoadingAudio] = useState(true)
@@ -183,22 +179,6 @@ const BookAudio = ({ bookId, isPreview, resourceId }: Props) => {
 
   return (
     <div className="flex items-center gap-8 space-y-2 bg-zinc p-4">
-      <section className="flex items-center gap-4">
-        <Image
-          width={50}
-          height={80}
-          src={dummyBooks[0].image || "/placeholder.svg"}
-          alt="Book thumbnail"
-          className="rounded-md"
-        />
-        <div className="flex-1">
-          <h3 className="text-sm font-medium text-primary-foreground">
-            {book?.title}
-          </h3>
-          <p className="text-xs text-zinc-400">by {book?.author}</p>
-        </div>
-      </section>
-
       <div className="flex flex-1 flex-col">
         <section className="flex items-center justify-between">
           <span className="text-xs text-zinc-400">

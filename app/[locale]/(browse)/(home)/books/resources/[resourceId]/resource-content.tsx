@@ -386,11 +386,7 @@ export default function ResourceContent({
         </div>
 
         {resourceType === EResourceBookType.AUDIO_BOOK ? (
-          <BookAudio
-            isPreview={isPreview}
-            resourceId={resourceId}
-            bookId={bookId}
-          />
+          <BookAudio isPreview={isPreview} resourceId={resourceId} />
         ) : (
           <div className="relative flex-1 overflow-auto border">
             <div

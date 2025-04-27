@@ -13,7 +13,7 @@ import { useForm } from "react-hook-form"
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { eGenderToEIdxGender, EIdxGender } from "@/lib/types/enums"
 import { type Employee, type User } from "@/lib/types/models"
-import { formatDateInput, formatPrice } from "@/lib/utils"
+import { formatDateInput } from "@/lib/utils"
 import {
   profileSchema,
   type TProfileSchema,
@@ -164,12 +164,6 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
             <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-4">
               <h4 className="font-bold">{tBookTracking("remain total")}</h4>
               <div className="flex items-center gap-2">{data.remainTotal}</div>
-            </div>
-            <div className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-4">
-              <h4 className="font-bold">{tBookTracking("unpaid fees")}</h4>
-              <div className="flex items-center gap-2">
-                {formatPrice(15000)}
-              </div>
             </div>
           </Card>
         )}
