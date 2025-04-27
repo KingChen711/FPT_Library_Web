@@ -2,9 +2,8 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
-import { usePathname } from "@/i18n/routing"
+import { Link, usePathname } from "@/i18n/routing"
 import { Bot, Filter, Mic, QrCode, Search } from "lucide-react"
 import { useTranslations } from "next-intl"
 import { useDebounce } from "use-debounce"

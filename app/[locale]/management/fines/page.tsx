@@ -97,15 +97,18 @@ async function FinesManagementPage({ searchParams }: Props) {
                     sortKey="ConditionType"
                     position="center"
                   />
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Description")}
+                  </TableHead>
                   <SortableTableHead
                     currentSort={sort}
-                    label={t("Fixed fine amount")}
-                    sortKey="FineAmountPerDay"
+                    label={t("Charge pct")}
+                    sortKey="ChargePct"
                   />
                   <SortableTableHead
                     currentSort={sort}
-                    label={t("Fine amount per day")}
-                    sortKey="FixedFineAmount"
+                    label={t("Processing fee")}
+                    sortKey="ProcessingFee"
                   />
                   <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
                     {t("Actions")}
@@ -115,21 +118,30 @@ async function FinesManagementPage({ searchParams }: Props) {
               <TableBody>
                 {fines.map((fine) => (
                   <TableRow key={fine.finePolicyId}>
-                    <TableCell>
+                    <TableCell className="text-nowrap">
                       <FineCheckbox id={fine.finePolicyId} />
                     </TableCell>
-                    <TableCell>{fine.finePolicyTitle}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-nowrap">
+                      {fine.finePolicyTitle}
+                    </TableCell>
+                    <TableCell className="text-nowrap">
                       <div className="flex justify-center">
                         <FineTypeBadge type={fine.conditionType} />
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {fine.fixedFineAmount
-                        ? formatPrice(fine.fixedFineAmount)
+                    <TableCell className="text-nowrap">
+                      {fine.description}
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      {fine.chargePct
+                        ? Math.floor(fine.chargePct * 100) + "%"
                         : "-"}
                     </TableCell>
-                    <TableCell>{formatPrice(fine.fineAmountPerDay)}</TableCell>
+                    <TableCell className="text-nowrap">
+                      {fine.processingFee
+                        ? formatPrice(fine.processingFee)
+                        : "-"}
+                    </TableCell>
                     <TableCell className="flex justify-center">
                       <FineActionDropdown fine={fine} />
                     </TableCell>

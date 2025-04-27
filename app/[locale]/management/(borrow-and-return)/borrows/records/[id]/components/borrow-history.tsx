@@ -1,11 +1,12 @@
 import Image from "next/image"
-import Link from "next/link"
+import { Link } from "@/i18n/routing"
 import { type BorrowRecordDetailItem } from "@/queries/borrows/get-borrow-record"
 import { format } from "date-fns"
 import { BookOpen, Clock } from "lucide-react"
 
 import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
+import { formatPrice } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Card } from "@/components/ui/card"
@@ -272,19 +273,17 @@ export default async function BorrowHistory({
                                       />
                                     </div>
                                     <div className="font-medium text-red-600">
-                                      {fine.finePolicy.fixedFineAmount
-                                        ? new Intl.NumberFormat("vi-VN", {
-                                            style: "currency",
-                                            currency: "VND",
-                                          }).format(
-                                            fine.finePolicy.fixedFineAmount
+                                      {fine.finePolicy.chargePct
+                                        ? formatPrice(
+                                            fine.finePolicy.chargePct *
+                                              (detail.libraryItem
+                                                .estimatedPrice || 0) +
+                                              (fine.finePolicy.processingFee ||
+                                                0)
                                           )
-                                        : new Intl.NumberFormat("vi-VN", {
-                                            style: "currency",
-                                            currency: "VND",
-                                          }).format(
-                                            fine.finePolicy.fineAmountPerDay
-                                          ) + "/day"}
+                                        : formatPrice(
+                                            fine.finePolicy.dailyRate || 0
+                                          ) + `/${t("day")}`}
                                     </div>
                                     <div className="flex items-center justify-end gap-1 text-sm">
                                       <p>{`${t("Fine due date")}:`}</p>

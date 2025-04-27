@@ -103,10 +103,17 @@ function SelectFinesDialog({
                             </div>
                           </TableHead>
                           <TableHead className="text-nowrap font-bold">
-                            {t("Fixed fine amount")}
+                            {t("Description")}
                           </TableHead>
                           <TableHead className="text-nowrap font-bold">
-                            {t("Fine amount per day")}
+                            <div className="flex justify-center">
+                              {t("Charge pct")}
+                            </div>
+                          </TableHead>
+                          <TableHead className="text-nowrap font-bold">
+                            <div className="flex justify-center">
+                              {t("Processing fee")}
+                            </div>
                           </TableHead>
                           <TableHead className="text-nowrap font-bold"></TableHead>
                         </TableRow>
@@ -120,13 +127,18 @@ function SelectFinesDialog({
                                 <FineTypeBadge type={fine.conditionType} />
                               </div>
                             </TableCell>
-                            <TableCell>
-                              {fine.fixedFineAmount
-                                ? formatPrice(fine.fixedFineAmount)
+                            <TableCell className="text-nowrap">
+                              {fine.description}
+                            </TableCell>
+                            <TableCell className="text-nowrap">
+                              {fine.chargePct
+                                ? Math.floor(fine.chargePct * 100) + "%"
                                 : "-"}
                             </TableCell>
-                            <TableCell>
-                              {formatPrice(fine.fineAmountPerDay)}
+                            <TableCell className="text-nowrap">
+                              {fine.processingFee
+                                ? formatPrice(fine.processingFee)
+                                : "-"}
                             </TableCell>
                             <TableCell>
                               <div className="flex justify-center">

@@ -12,13 +12,13 @@ export const searchFinesSchema = z.object({
       "-FinePolicyTitle",
       "ConditionType",
       "-ConditionType",
-      "FineAmountPerDay",
-      "-FineAmountPerDay",
-      "FixedFineAmount",
-      "-FixedFineAmount",
+      "ChargePct",
+      "-ChargePct",
+      "ProcessingFee",
+      "-ProcessingFee",
     ])
-    .optional()
-    .catch(undefined),
+
+    .catch("-ConditionType"),
 })
 
 export type TSearchFinesSchema = z.infer<typeof searchFinesSchema>

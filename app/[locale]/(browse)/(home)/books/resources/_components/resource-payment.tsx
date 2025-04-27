@@ -1,9 +1,9 @@
 "use client"
 
 import { useEffect, useState, useTransition } from "react"
-import Link from "next/link"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
+import { Link } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { type HubConnection } from "@microsoft/signalr"
 import { BookOpen, Clock, DollarSign, Loader2 } from "lucide-react"

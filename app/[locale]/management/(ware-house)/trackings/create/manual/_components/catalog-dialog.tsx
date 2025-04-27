@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import Link from "next/link"
+import { Link } from "@/i18n/routing"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"

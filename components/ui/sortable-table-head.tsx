@@ -29,7 +29,7 @@ function SortableTableHead({
   const searchParams = useSearchParams()
 
   const handleSort = () => {
-    if (!disabled) return
+    if (disabled) return
     if (onSort) {
       onSort(currentSort === sortKey ? `-${sortKey}` : sortKey)
       return

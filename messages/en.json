@@ -240,8 +240,11 @@
     "imagesMin5PerGroup": "Need at least 5 images per group",
     "copiesMin1": "Need at least 1 copy code",
     "gt0": "Must larger than 0",
-    "gte3": "Must larger than 3",
+    "gte0": "Must larger than or equal 0",
+    "gte3": "Must larger than or equal 3",
     "gte1000": "Must larger or equal than 1000",
+    "gte2000": "Must larger or equal than 2000",
+    "lte100": "Must less or equal than 100",
     "lte9999999999": "Must less or equal than 9999999999",
     "lte2147483647": "Must less or equal than 2147483647",
     "publicationYear": "Invalid publication year",
@@ -1350,6 +1353,11 @@
     "Scan supplier name description": "Check if the supplier name already exists in the database"
   },
   "FinesManagementPage": {
+    "Min damage pct": "Min damage pct",
+    "Max damage pct": "Max damage pct",
+    "Daily rate": "Daily rate",
+    "Charge pct": "Charge pct",
+    "Processing fee": "Processing fee",
     "Fines Not Found": "Fines Not Found",
     "No fines matching your request were found Please check your information or try searching with different criteria": "No fines matching your request were found. Please check your information or try searching with different criteria",
     "Selected": "Selected",
@@ -2361,6 +2369,7 @@
     "Actions": "Actions"
   },
   "BorrowAndReturnManagementPage": {
+    "day": "day",
     "Close": "Close",
     "Payment": "Payment",
     "Payment fines": "Payment fines",

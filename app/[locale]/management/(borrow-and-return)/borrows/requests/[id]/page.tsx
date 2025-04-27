@@ -1,7 +1,7 @@
 import React from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { notFound } from "next/navigation"
+import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
 import getBorrowRequest from "@/queries/borrows/get-borrow-request"
 import { format } from "date-fns"

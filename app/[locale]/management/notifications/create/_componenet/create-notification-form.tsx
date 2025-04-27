@@ -1,10 +1,9 @@
 "use client"
 
 import { useTransition } from "react"
-import Link from "next/link"
 import { editorPlugin } from "@/constants"
 import { useAuth } from "@/contexts/auth-provider"
-import { useRouter } from "@/i18n/routing"
+import { Link, useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Editor } from "@tinymce/tinymce-react"
 import { Loader2, X } from "lucide-react"

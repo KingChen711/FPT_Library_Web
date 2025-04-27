@@ -1,8 +1,8 @@
 "use client"
 
 import { useRef, useState, useTransition } from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { Link } from "@/i18n/routing"
 import { type ReservationQueues } from "@/queries/reservations/check-assignable"
 import { format } from "date-fns"
 import { ArrowRight, Loader2 } from "lucide-react"

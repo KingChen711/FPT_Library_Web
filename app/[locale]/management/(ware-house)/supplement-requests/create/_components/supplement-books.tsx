@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import Link from "next/link"
+import { Link } from "@/i18n/routing"
 import NoImage from "@/public/assets/images/no-image.png"
 import { Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"

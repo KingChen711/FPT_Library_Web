@@ -1,4 +1,4 @@
-import Link from "next/link"
+import { Link } from "@/i18n/routing"
 import getTransactionsPatron from "@/queries/transaction/get-transactions-patron"
 import { format } from "date-fns"
 import { Eye, MoreHorizontal } from "lucide-react"

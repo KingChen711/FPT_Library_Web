@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState } from "react"
-import Link from "next/link"
+import { Link } from "@/i18n/routing"
 import { Eye, MoreHorizontal, Pencil, Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 

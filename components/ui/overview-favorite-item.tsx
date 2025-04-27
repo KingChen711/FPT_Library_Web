@@ -2,8 +2,8 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { useFavourite } from "@/contexts/favourite-provider"
+import { Link } from "@/i18n/routing"
 import { Trash2 } from "lucide-react"
 import { useTranslations } from "next-intl"
 

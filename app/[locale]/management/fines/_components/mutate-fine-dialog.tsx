@@ -43,6 +43,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
+import { CurrencyInput } from "@/components/form/currency-input"
 
 type Props = {
   type: "create" | "update"
@@ -80,16 +81,58 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
   const form = useForm<TMutateFineSchema>({
     resolver: zodResolver(mutateFineSchema),
     defaultValues: {
-      conditionType:
-        type === "update" ? fine.conditionType : EFineType.OVER_DUE,
-      description: type === "update" ? fine.description || "" : "",
-      fineAmountPerDay: type === "update" ? fine.fineAmountPerDay : 0,
-      fixedFineAmount: type === "update" ? (fine.fixedFineAmount ?? 0) : 0,
       finePolicyTitle: type === "update" ? fine.finePolicyTitle : "",
+      conditionType:
+        type === "update"
+          ? (fine.conditionType ?? EFineType.DAMAGE)
+          : EFineType.DAMAGE,
+      description: type === "update" ? fine.description || "" : "",
+      minDamagePct:
+        type === "update"
+          ? fine.minDamagePct === null
+            ? undefined
+            : fine.minDamagePct * 100
+          : undefined,
+      maxDamagePct:
+        type === "update"
+          ? fine.maxDamagePct === null
+            ? undefined
+            : fine.maxDamagePct * 100
+          : undefined,
+      processingFee:
+        type === "update" ? (fine.processingFee ?? undefined) : undefined,
+      dailyRate: type === "update" ? (fine.dailyRate ?? undefined) : undefined,
+      chargePct:
+        type === "update"
+          ? fine.chargePct === null
+            ? undefined
+            : fine.chargePct * 100
+          : undefined,
     },
   })
 
   const onSubmit = async (values: TMutateFineSchema) => {
+    switch (values.conditionType) {
+      case EFineType.DAMAGE:
+        values.dailyRate = undefined
+        break
+      case EFineType.LOST:
+        values.minDamagePct = undefined
+        values.maxDamagePct = undefined
+        values.dailyRate = undefined
+        break
+      case EFineType.DAMAGE:
+        values.minDamagePct = undefined
+        values.maxDamagePct = undefined
+        values.processingFee = undefined
+        values.chargePct = undefined
+        break
+    }
+
+    if (values.minDamagePct) values.minDamagePct /= 100
+    if (values.maxDamagePct) values.maxDamagePct /= 100
+    if (values.chargePct) values.chargePct /= 100
+
     startTransition(async () => {
       const res =
         type === "create"
@@ -113,6 +156,8 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
     })
   }
 
+  const fineType = form.watch("conditionType")
+
   return (
     <Dialog
       open={type === "create" ? open : openEdit}
@@ -126,7 +171,7 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
           </Button>
         </DialogTrigger>
       )}
-      <DialogContent>
+      <DialogContent className="max-h-[80vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {t(type === "create" ? "Create fine" : "Edit fine")}
@@ -155,13 +200,9 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
                   name="conditionType"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>
-                        {t("Condition type")}
-                        <span className="ml-1 text-xl font-bold leading-none text-primary">
-                          *
-                        </span>
-                      </FormLabel>
+                      <FormLabel>{t("Condition type")}</FormLabel>
                       <Select
+                        disabled
                         value={field.value.toString()}
                         onValueChange={(val) => field.onChange(+val)}
                         defaultValue={field.value.toString()}
@@ -192,34 +233,6 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
 
                 <FormField
                   control={form.control}
-                  name="fixedFineAmount"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("Fixed fine amount")}</FormLabel>
-                      <FormControl>
-                        <Input type="number" disabled={isPending} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name="fineAmountPerDay"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col items-start">
-                      <FormLabel>{t("Fine amount per day")}</FormLabel>
-                      <FormControl>
-                        <Input type="number" disabled={isPending} {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
                   name="description"
                   render={({ field }) => (
                     <FormItem className="flex flex-col items-start">
@@ -231,6 +244,96 @@ function MutateFineDialog({ type, fine, openEdit, setOpenEdit }: Props) {
                     </FormItem>
                   )}
                 />
+
+                {fineType === EFineType.DAMAGE && (
+                  <>
+                    <FormField
+                      control={form.control}
+                      name="minDamagePct"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col items-start">
+                          <FormLabel>{t("Min damage pct")}</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              disabled={isPending}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={form.control}
+                      name="maxDamagePct"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col items-start">
+                          <FormLabel>{t("Max damage pct")}</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              disabled={isPending}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
+
+                {fineType === EFineType.OVER_DUE ? (
+                  <FormField
+                    control={form.control}
+                    name="dailyRate"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col items-start">
+                        <FormLabel>{t("Daily rate")}</FormLabel>
+                        <FormControl>
+                          <CurrencyInput disabled={isPending} {...field} />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                ) : (
+                  <>
+                    {" "}
+                    <FormField
+                      control={form.control}
+                      name="chargePct"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col items-start">
+                          <FormLabel>{t("Charge pct")}</FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              disabled={isPending}
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={form.control}
+                      name="processingFee"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-col items-start">
+                          <FormLabel>{t("Processing fee")}</FormLabel>
+                          <FormControl>
+                            <CurrencyInput disabled={isPending} {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </>
+                )}
 
                 <div className="flex justify-end gap-x-4">
                   <DialogClose asChild>
