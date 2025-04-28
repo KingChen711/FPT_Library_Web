@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { Link } from "@/i18n/routing"
 import { format } from "date-fns"
 import { ArrowLeft, Calendar, Clock, Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"

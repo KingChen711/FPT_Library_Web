@@ -1,8 +1,8 @@
 "use client"
 
 import Image from "next/image"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { Link } from "@/i18n/routing"
 import { usePrediction } from "@/stores/ai/use-prediction"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"

@@ -1,6 +1,6 @@
 import React from "react"
-import Link from "next/link"
 import { notFound } from "next/navigation"
+import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
 import getTransaction from "@/queries/transactions/get-transaction"
 import { format } from "date-fns"

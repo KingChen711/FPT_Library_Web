@@ -1,7 +1,9 @@
 "use client"
 
+import { useTransition } from "react"
+import { useParams } from "next/navigation"
 import { usePathname, useRouter } from "@/i18n/routing"
-import { Languages } from "lucide-react"
+import { Languages, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
@@ -19,19 +21,29 @@ const SidebarLanguage = () => {
   const router = useRouter()
 
   const locale = useLocale()
+  const [isPending, startTransition] = useTransition()
 
   const pathname = usePathname()
+  const params = useParams()
 
   const newLocale = locale === "en" ? "vi" : "en"
   const switchLanguage = () => {
-    router.push(`${pathname}`, { scroll: false, locale: newLocale })
+    startTransition(() =>
+      router.replace(
+        // @ts-expect-error -- TypeScript will validate that only known `params`
+        // are used in combination with a given `pathname`. Since the two will
+        // always match for the current route, we can skip runtime checks.
+        { pathname, params },
+        { scroll: false, locale: newLocale }
+      )
+    )
   }
 
   return (
     <Select onValueChange={() => switchLanguage()} defaultValue={locale}>
       <DropdownMenuItem asChild className="cursor-pointer">
         <SelectTrigger>
-          <Languages size={20} />
+          {isPending ? <Loader2 size={20} /> : <Languages size={20} />}
           <SelectValue placeholder={t("language")} />
         </SelectTrigger>
       </DropdownMenuItem>

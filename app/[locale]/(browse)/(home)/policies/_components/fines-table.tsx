@@ -61,44 +61,51 @@ const FinesTable = async ({ searchParams }: Props) => {
                     label={t("Title")}
                     sortKey="FinePolicyTitle"
                   />
-                  <TableHead className="text-nowrap font-bold">
-                    {t("Description")}
-                  </TableHead>
-
                   <SortableTableHead
                     currentSort={sort}
                     label={t("Condition type")}
                     sortKey="ConditionType"
                     position="center"
                   />
+                  <TableHead className="text-nowrap font-bold">
+                    {t("Description")}
+                  </TableHead>
                   <SortableTableHead
                     currentSort={sort}
-                    label={t("Fixed fine amount")}
-                    sortKey="FineAmountPerDay"
+                    label={t("Charge pct")}
+                    sortKey="ChargePct"
                   />
                   <SortableTableHead
                     currentSort={sort}
-                    label={t("Fine amount per day")}
-                    sortKey="FixedFineAmount"
+                    label={t("Processing fee")}
+                    sortKey="ProcessingFee"
                   />
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {fines.map((fine) => (
                   <TableRow key={fine.finePolicyId}>
-                    <TableCell>{fine.finePolicyTitle}</TableCell>
-                    <TableCell>{fine.description || "-"}</TableCell>
-                    <TableCell>
+                    <TableCell className="text-nowrap">
+                      {fine.finePolicyTitle}
+                    </TableCell>
+                    <TableCell className="text-nowrap">
                       <div className="flex justify-center">
                         <FineTypeBadge type={fine.conditionType} />
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {fine.fixedFineAmount
-                        ? formatPrice(fine.fixedFineAmount)
+                    <TableCell className="text-nowrap">
+                      {fine.description}
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      {fine.chargePct
+                        ? Math.floor(fine.chargePct * 100) + "%"
                         : "-"}
                     </TableCell>
-                    <TableCell>{formatPrice(fine.fineAmountPerDay)}</TableCell>
+                    <TableCell className="text-nowrap">
+                      {fine.processingFee
+                        ? formatPrice(fine.processingFee)
+                        : "-"}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

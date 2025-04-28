@@ -2,7 +2,7 @@
 "use client"
 
 import React, { useState } from "react"
-import Link from "next/link"
+import { Link } from "@/i18n/routing"
 import { format } from "date-fns"
 import { Check, Eye, Loader2, MoreHorizontal, X } from "lucide-react"
 import { useTranslations } from "next-intl"

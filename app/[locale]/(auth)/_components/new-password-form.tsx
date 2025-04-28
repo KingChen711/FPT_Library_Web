@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useTransition } from "react"
-import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { Link } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { EyeClosedIcon, EyeIcon, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"

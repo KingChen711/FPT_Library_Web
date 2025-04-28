@@ -243,8 +243,11 @@
     "imagesMin5PerGroup": "Cần ít nhất 5 ảnh mỗi nhóm",
     "copiesMin1": "Cần ít nhất 1 mã bản sao",
     "gt0": "Phải lớn hơn 0",
-    "gte3": "Phải lớn hơn 3",
+    "gte0": "Phải lớn hơn hoặc bằng 0",
+    "gte3": "Phải lớn hơn hoặc bằng 3",
     "gte1000": "Phải lớn hơn hoặc bằng 1000",
+    "gte2000": "Phải lớn hơn hoặc bằng 2000",
+    "lte100": "Phải nhỏ hơn hoặc bằng 100",
     "lte9999999999": "Phải nhỏ hơn hoặc bằng 9999999999",
     "lte2147483647": "Phải nhỏ hơn hoặc bằng 2147483647",
     "publicationYear": "Năm xuất bản không hợp lệ",
@@ -1347,6 +1350,11 @@
     "Scan supplier name description": "Kiểm tra tên nhà cung cấp đã tồn tại trong cơ sở dữ liệu hay chưa"
   },
   "FinesManagementPage": {
+    "Min damage pct": "Phần trăm giá bìa thấp nhất",
+    "Max damage pct": "Phần trăm giá bìa lớn nhất",
+    "Daily rate": "Giá theo ngày",
+    "Charge pct": "Phần trăm giá bìa",
+    "Processing fee": "Phí xử lý",
     "Fines Not Found": "Không tìm thấy phi",
     "No fines matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có phi nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Not valid": "Không phù hợp",
@@ -2381,6 +2389,7 @@
     "Actions": "Hành động"
   },
   "BorrowAndReturnManagementPage": {
+    "day": "ngày",
     "Close": "Đóng",
     "Payment": "Thanh toán",
     "Payment fines": "Thanh toán phí phạt",

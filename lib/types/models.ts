@@ -338,14 +338,40 @@ export type Notification = {
   notificationType: ENotificationType
 }
 
-export type Fine = {
-  finePolicyId: number
-  finePolicyTitle: string
-  conditionType: EFineType
-  fineAmountPerDay: number
-  fixedFineAmount: number | null
-  description: string | null
-}
+export type Fine =
+  | {
+      finePolicyId: number
+      finePolicyTitle: string
+      conditionType: EFineType.DAMAGE
+      description: string
+      minDamagePct: number
+      maxDamagePct: number
+      processingFee: number
+      dailyRate: null
+      chargePct: number
+    }
+  | {
+      finePolicyId: number
+      finePolicyTitle: string
+      conditionType: EFineType.LOST
+      description: string
+      minDamagePct: null
+      maxDamagePct: null
+      processingFee: number
+      dailyRate: null
+      chargePct: number
+    }
+  | {
+      finePolicyId: number
+      finePolicyTitle: string
+      conditionType: EFineType.OVER_DUE
+      description: string
+      minDamagePct: null
+      maxDamagePct: null
+      processingFee: null
+      dailyRate: number
+      chargePct: null
+    }
 
 export type FineBorrow = {
   fineId: number

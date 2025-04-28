@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import Link from "next/link"
+import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
 import getBorrowReservations from "@/queries/borrows/get-reservations"
 import { format } from "date-fns"

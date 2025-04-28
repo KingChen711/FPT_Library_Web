@@ -26,7 +26,10 @@ function useFines(searchParams: { pageSize: string; pageIndex: number }) {
             headers: {
               Authorization: `Bearer ${accessToken}`,
             },
-            searchParams,
+            searchParams: {
+              ...searchParams,
+              sort: "-ConditionType",
+            },
           }
         )
 

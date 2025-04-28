@@ -1,5 +1,5 @@
 import React from "react"
-import Link from "next/link"
+import { Link } from "@/i18n/routing"
 import { auth } from "@/queries/auth"
 import getBorrowDigitals from "@/queries/borrows/get-borrow-digitals"
 import { format } from "date-fns"
