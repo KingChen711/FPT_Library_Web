@@ -308,6 +308,11 @@ function CreateBookForm({ trackingDetail }: Props) {
   // }, [scannedBook, appendScannedBook, locale, t, setIsbn])
 
   const isBookSeries = selectedCategory?.englishName === "BookSeries" || false
+  // const isNotBook =
+  //   selectedCategory?.englishName === "Magazine" ||
+  //   selectedCategory?.englishName === "Newspaper" ||
+  //   selectedCategory?.englishName === "Other" ||
+  //   false
 
   const [openCreateAuthor, setOpenCreateAuthor] = useState(false)
 

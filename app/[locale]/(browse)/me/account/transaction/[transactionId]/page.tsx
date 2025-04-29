@@ -1,5 +1,5 @@
+import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Link } from "@/i18n/routing"
 import getTransactionPatron from "@/queries/transaction/get-transaction-patron"
 import { format } from "date-fns"
 import { ArrowLeft } from "lucide-react"

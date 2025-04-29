@@ -1,7 +1,7 @@
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { browseRoutes } from "@/constants"
 import { useAuth } from "@/contexts/auth-provider"
-import { Link } from "@/i18n/routing"
 import { ChevronRight } from "lucide-react"
 import { useTranslations } from "next-intl"
 

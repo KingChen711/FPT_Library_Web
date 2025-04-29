@@ -21,7 +21,6 @@ export async function deleteBook(
     )
 
     revalidatePath("/management/books")
-    revalidatePath(`/management/books/${bookId}`)
 
     return {
       isSuccess: true,

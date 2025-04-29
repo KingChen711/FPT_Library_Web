@@ -1,5 +1,5 @@
 import React from "react"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import getTrainSessions from "@/queries/ai/get-train-sessions"
 import { auth } from "@/queries/auth"
 import { format } from "date-fns"

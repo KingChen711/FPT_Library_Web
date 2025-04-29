@@ -75,6 +75,7 @@ async function CardDetailPage({ params }: Props) {
               libraryCard={card}
               canExtendCard={false}
               userId=""
+              cardPage
             />
           </div>
           <div className="grid grid-cols-12 gap-y-6 text-sm">

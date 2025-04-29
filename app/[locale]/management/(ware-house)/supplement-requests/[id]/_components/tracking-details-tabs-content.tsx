@@ -3,7 +3,7 @@
 
 import React, { useState } from "react"
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { format } from "date-fns"
 import { useLocale, useTranslations } from "next-intl"
 

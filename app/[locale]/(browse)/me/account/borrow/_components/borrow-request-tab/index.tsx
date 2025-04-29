@@ -1,4 +1,4 @@
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import getBorrowRequestsPatron from "@/queries/borrows/get-borrow-requests-patron"
 import { format } from "date-fns"
 import { Eye, MoreHorizontal } from "lucide-react"

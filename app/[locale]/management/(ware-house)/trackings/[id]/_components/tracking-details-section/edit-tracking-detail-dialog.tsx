@@ -182,6 +182,7 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
+                              disabled
                               variant="outline"
                               role="combobox"
                               className={cn(

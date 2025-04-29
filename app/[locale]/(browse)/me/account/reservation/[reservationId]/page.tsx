@@ -1,6 +1,6 @@
 import Image from "next/image"
+import Link from "next/link"
 import { notFound } from "next/navigation"
-import { Link } from "@/i18n/routing"
 import getBorrowReservationPatron from "@/queries/borrows/get-reservation-patron"
 import { format } from "date-fns"
 import { ArrowLeft, ArrowRight, BookOpen, Check, X } from "lucide-react"

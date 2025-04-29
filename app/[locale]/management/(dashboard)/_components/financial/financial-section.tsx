@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useState } from "react"
+import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Link } from "@/i18n/routing"
 import { format } from "date-fns"
 import { useTranslations } from "next-intl"
 import {
@@ -67,10 +67,10 @@ function FinancialSection() {
 
   if (isLoading || !data) return
 
-  const chartData = data.lastYear.map((item, index) => ({
+  const chartData = data.details[0].lastYear.map((item, index) => ({
     period: item.periodLabel,
     lastYear: item.value,
-    thisYear: data.thisYear[index].value,
+    thisYear: data.details[0].thisYear[index].value,
   }))
 
   return (

@@ -1,7 +1,8 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
+import { useRouter } from "@/i18n/routing"
 import {
   ChevronDown,
   ChevronUp,
@@ -40,15 +41,18 @@ type Props = {
   libraryCard: LibraryCard
   userId: string
   canExtendCard: boolean
+  cardPage: boolean
 }
 
 function LibraryCardActionsDropdown({
   libraryCard,
   userId,
   canExtendCard,
+  cardPage = false,
 }: Props) {
   const t = useTranslations("LibraryCardManagementPage")
   const locale = useLocale()
+  const router = useRouter()
   const [openDropdown, setOpenDropdown] = useState(false)
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
@@ -90,6 +94,7 @@ function LibraryCardActionsDropdown({
           variant: "success",
         })
         setOpenDropdown(false)
+        if (cardPage) router.push("/management/library-cards")
         return
       }
       handleServerActionError(res, locale)

@@ -1,8 +1,8 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
-import { Link } from "@/i18n/routing"
 import { useQueryClient } from "@tanstack/react-query"
 import { BadgeCheck, ChevronsUpDown, Loader2, LogOut, User } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"

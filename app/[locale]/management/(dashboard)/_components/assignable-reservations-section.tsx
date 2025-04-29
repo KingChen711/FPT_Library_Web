@@ -2,8 +2,8 @@
 
 import React, { useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Link } from "@/i18n/routing"
 import { format } from "date-fns"
 import { useTranslations } from "next-intl"
 

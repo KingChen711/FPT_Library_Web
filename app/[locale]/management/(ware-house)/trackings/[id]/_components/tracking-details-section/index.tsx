@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { type TrackingDetails } from "@/queries/trackings/get-tracking-details"
 import { format } from "date-fns"
 import { Check, Plus, Search, X } from "lucide-react"

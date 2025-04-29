@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { type BorrowRecordDetailItem } from "@/queries/borrows/get-borrow-record"
 import { format } from "date-fns"
 import { BookOpen, Clock } from "lucide-react"

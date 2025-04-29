@@ -1,8 +1,8 @@
 "use client"
 
 import { useState } from "react"
+import Link from "next/link"
 import { useAuth } from "@/contexts/auth-provider"
-import { Link } from "@/i18n/routing"
 import {
   BookOpen,
   Check,
