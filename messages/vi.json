@@ -242,11 +242,15 @@
     "imagesMin5": "Cần ít nhất 5 ảnh",
     "imagesMin5PerGroup": "Cần ít nhất 5 ảnh mỗi nhóm",
     "copiesMin1": "Cần ít nhất 1 mã bản sao",
+    "inValidDay": "Ngày không hợp lệ",
     "gt0": "Phải lớn hơn 0",
     "gte0": "Phải lớn hơn hoặc bằng 0",
+    "gte1": "Phải lớn hơn hoặc bằng 1",
     "gte3": "Phải lớn hơn hoặc bằng 3",
     "gte1000": "Phải lớn hơn hoặc bằng 1000",
     "gte2000": "Phải lớn hơn hoặc bằng 2000",
+    "lte12": "Phải nhỏ hơn hoặc bằng 12",
+    "lte31": "Phải nhỏ hơn hoặc bằng 31",
     "lte100": "Phải nhỏ hơn hoặc bằng 100",
     "lte9999999999": "Phải nhỏ hơn hoặc bằng 9999999999",
     "lte2147483647": "Phải nhỏ hơn hoặc bằng 2147483647",
@@ -688,6 +692,7 @@
     "Roles": "Vai trò",
     "System Health": "Tình trạng hệ thống",
     "System Configuration": "Cấu hình hệ thống",
+    "Closure days": "Ngày nghỉ",
     "Authors": "Tác giả",
     "Categories": "Loại tài liệu",
     "Resources": "Tài nguyên",
@@ -1226,6 +1231,7 @@
     "the document has been booked by you": "Tài liệu đã được bạn đặt"
   },
   "CategoriesManagementPage": {
+    "Total borrow days": "Tổng số ngày mượn",
     "Categories Not Found": "Không tìm thấy loại tài liệu",
     "No categories matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có loại tài liệu nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
     "Allowed": "Cho phép",
@@ -2283,7 +2289,34 @@
       "0": "Ngày",
       "1": "Tháng",
       "2": "Năm"
+    },
+    "ClosureType": {
+      "0": "Hàng năm",
+      "1": "Cố định"
     }
+  },
+  "ClosureDaysManagementPage": {
+    "type to confirm": "Nhập &quot;<message>{message}</message>&quot; để xác nhận",
+    "Delete closureDay": "Xóa ngày nghỉ",
+    "Edit closure day": "Chỉnh sửa ngày nghỉ",
+    "Edit": "Chỉnh sửa",
+    "Delete": "Xóa",
+    "Save": "Lưu",
+    "Create closure day": "Thêm ngày nghỉ",
+    "Closure day type": "Loại ngày nghỉ",
+    "Day": "Ngày",
+    "Month": "Tháng",
+    "English name": "Tên tiếng Anh",
+    "Vietnamese name": "Tên tiếng Việt",
+    "Cancel": "Hủy",
+    "Create": "Tạo",
+    "Year": "Năm",
+    "per year": "hàng năm",
+    "Annual": "Hàng năm",
+    "Fixed": "Cố định",
+    "Closure days": "Ngày nghỉ",
+    "Closure days Not Found": "Không tìm thấy ngày nghỉ",
+    "No closure days matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có ngày nghỉ nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác."
   },
   "IsbnScanner": {
     "ISBN scanner": "Quét ISBN",

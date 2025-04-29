@@ -9,10 +9,17 @@ import { getTranslations } from "@/lib/get-translations"
 import { formatPrice } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import BarcodeGenerator from "@/components/ui/barcode-generator"
+import LibraryItemCard from "@/components/ui/book-card"
 import { Card } from "@/components/ui/card"
 import { Label } from "@/components/ui/label"
 import NoData from "@/components/ui/no-data"
 import { Separator } from "@/components/ui/separator"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import BorrowRecordStatusBadge from "@/components/badges/borrow-record-status-badge"
 import FineBorrowStatusBadge from "@/components/badges/fine-borrow-status"
 import FineTypeBadge from "@/components/badges/fine-type-badge"
@@ -73,24 +80,40 @@ export default async function BorrowHistory({
               </p>
               <div className="grid grid-cols-1 gap-3">
                 {borrowRecord.borrowRequest.libraryItems.map((item) => (
-                  <Link
-                    target="_blank"
-                    href={`/management/books/${item.libraryItemId}`}
+                  <div
                     key={item.libraryItemId}
                     className="group flex items-center gap-3 rounded-md border p-2"
                   >
-                    <Image
-                      src={item.coverImage || "/placeholder.svg"}
-                      alt={item.title}
-                      width={144}
-                      height={192}
-                      className="aspect-[2/3] h-[72px] w-12 rounded-sm border object-cover"
-                    />
+                    <TooltipProvider delayDuration={0}>
+                      <Tooltip>
+                        <TooltipTrigger>
+                          <Link
+                            target="_blank"
+                            href={`/management/books/${item.libraryItemId}`}
+                          >
+                            <Image
+                              src={item.coverImage || "/placeholder.svg"}
+                              alt={item.title}
+                              width={144}
+                              height={192}
+                              className="aspect-[2/3] h-[72px] w-12 rounded-sm border object-cover"
+                            />
+                          </Link>
+                        </TooltipTrigger>
+                        <TooltipContent
+                          align="start"
+                          side="left"
+                          className="max-h-[80vh] max-w-[calc(100vw-416)] overflow-y-auto bg-card p-0"
+                        >
+                          <LibraryItemCard libraryItem={item} />
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
 
                     <div className="truncate text-sm font-bold group-hover:underline">
                       {item.title}
                     </div>
-                  </Link>
+                  </div>
                 ))}
               </div>
             </div>
@@ -129,17 +152,36 @@ export default async function BorrowHistory({
                   key={detail.libraryItemInstanceId}
                   className="overflow-hidden"
                 >
-                  <div className="flex cursor-pointer items-center gap-3 p-3">
+                  <div className="flex items-center gap-3 p-3">
                     <div className="flex flex-1 items-center gap-3">
-                      <Image
-                        src={
-                          detail.libraryItem.coverImage || "/placeholder.svg"
-                        }
-                        alt={detail.libraryItem.title}
-                        width={144}
-                        height={192}
-                        className="aspect-[2/3] h-[72px] w-12 rounded-sm border object-cover"
-                      />
+                      <TooltipProvider delayDuration={0}>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Link
+                              target="_blank"
+                              href={`/management/books/${detail.libraryItem.libraryItemId}`}
+                            >
+                              <Image
+                                src={
+                                  detail.libraryItem.coverImage ||
+                                  "/placeholder.svg"
+                                }
+                                alt={detail.libraryItem.title}
+                                width={144}
+                                height={192}
+                                className="aspect-[2/3] h-[72px] w-12 rounded-sm border object-cover"
+                              />
+                            </Link>
+                          </TooltipTrigger>
+                          <TooltipContent
+                            align="start"
+                            side="left"
+                            className="max-h-[80vh] max-w-[calc(100vw-416)] overflow-y-auto bg-card p-0"
+                          >
+                            <LibraryItemCard libraryItem={detail.libraryItem} />
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
 
                       <div className="min-w-0 flex-1">
                         <h4 className="truncate font-bold">
@@ -272,7 +314,7 @@ export default async function BorrowHistory({
                                         status={fine.status}
                                       />
                                     </div>
-                                    <div className="font-medium text-red-600">
+                                    <div className="font-medium text-danger">
                                       {fine.finePolicy.chargePct
                                         ? formatPrice(
                                             fine.finePolicy.chargePct *

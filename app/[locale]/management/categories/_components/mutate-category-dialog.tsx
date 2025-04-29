@@ -84,6 +84,8 @@ function MutateCategoryDialog({
       vietnameseName: type === "update" ? category.vietnameseName : "",
       description: type === "update" ? category.description || "" : "",
       prefix: type === "update" ? category.prefix || "" : "",
+      totalBorrowDays:
+        type === "update" ? (category.totalBorrowDays ?? undefined) : undefined,
       isAllowAITraining: type === "update" ? category.isAllowAITraining : false,
     },
   })
@@ -175,6 +177,20 @@ function MutateCategoryDialog({
                       <FormLabel>{t("Vietnamese name")}</FormLabel>
                       <FormControl>
                         <Input disabled={isPending} {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="totalBorrowDays"
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormLabel>{t("Total borrow days")}</FormLabel>
+                      <FormControl>
+                        <Input {...field} disabled={isPending} type="number" />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

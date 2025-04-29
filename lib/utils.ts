@@ -1,5 +1,5 @@
 import { clsx, type ClassValue } from "clsx"
-import { addDays, format } from "date-fns"
+import { addDays, format, isValid } from "date-fns"
 import { jwtDecode } from "jwt-decode"
 import queryString from "query-string"
 import { twMerge } from "tailwind-merge"
@@ -233,4 +233,32 @@ export const hashFile = async (file: File) => {
   return Array.from(new Uint8Array(hashBuffer))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("")
+}
+
+/**
+ * Kiểm tra ngày hợp lệ với input là day, month, year.
+ * Nếu year là undefined, thì chấp nhận ngày hợp lệ trong mọi năm.
+ */
+export function isValidDate(
+  day: number,
+  month: number,
+  year?: number
+): boolean {
+  // Kiểm tra phạm vi hợp lệ của day và month
+  if (day < 1 || month < 1 || month > 12) return false
+
+  // Nếu year được cung cấp, sử dụng date-fns để kiểm tra
+  if (year !== undefined) {
+    const date = new Date(year, month - 1, day)
+    return (
+      isValid(date) &&
+      date.getFullYear() === year &&
+      date.getMonth() === month - 1 &&
+      date.getDate() === day
+    )
+  }
+
+  // Nếu year không được cung cấp, kiểm tra thủ công với năm nhuận giả định
+  const daysInMonth = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+  return day <= daysInMonth[month - 1]
 }

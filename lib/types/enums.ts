@@ -10,6 +10,11 @@ export enum EAuditType {
   DELETED,
 }
 
+export enum EClosureType {
+  ANNUAL,
+  FIXED,
+}
+
 export enum EPatronType {
   SELF_MADE,
   EMPLOYEE_MADE,

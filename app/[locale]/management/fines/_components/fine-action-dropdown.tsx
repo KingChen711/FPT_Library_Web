@@ -4,6 +4,7 @@ import { useState } from "react"
 import { MoreHorizontalIcon, PencilIcon, Trash2Icon } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { EFineType } from "@/lib/types/enums"
 import { type Fine } from "@/lib/types/models"
 import { Button } from "@/components/ui/button"
 import {
@@ -56,15 +57,17 @@ function FineActionDropdown({ fine }: Props) {
             </div>
           </DropdownMenuItem>
 
-          <DropdownMenuItem className="cursor-pointer" asChild>
-            <div
-              onClick={() => setOpenDelete(true)}
-              className="flex cursor-pointer items-center gap-x-2 rounded-sm px-2 py-[6px] text-sm leading-5 hover:bg-muted"
-            >
-              <Trash2Icon className="size-4" />
-              {t("Delete")}
-            </div>
-          </DropdownMenuItem>
+          {fine.conditionType === EFineType.DAMAGE && (
+            <DropdownMenuItem className="cursor-pointer" asChild>
+              <div
+                onClick={() => setOpenDelete(true)}
+                className="flex cursor-pointer items-center gap-x-2 rounded-sm px-2 py-[6px] text-sm leading-5 hover:bg-muted"
+              >
+                <Trash2Icon className="size-4" />
+                {t("Delete")}
+              </div>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
