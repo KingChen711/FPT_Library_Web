@@ -3,16 +3,19 @@
 
 import React, { useState } from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Link } from "@/i18n/routing"
 import { Filter, Plus } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { useLocale, useTranslations } from "next-intl"
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
   Legend,
   Line,
   LineChart,
   ResponsiveContainer,
+  Tooltip as TooltipChart,
   XAxis,
   YAxis,
 } from "recharts"
@@ -60,6 +63,7 @@ const initSearchParams: TSearchTopCirculation = {
 
 function TopCirculationSection() {
   const t = useTranslations("Dashboard")
+  const locale = useLocale()
 
   const [searchParams, setSearchParams] =
     useState<TSearchTopCirculation>(initSearchParams)
@@ -86,6 +90,16 @@ function TopCirculationSection() {
       pageIndex: 1,
     }))
 
+  const combinedData =
+    data?.availableVsNeedChartCategories.map((item) => ({
+      name:
+        locale === "vi"
+          ? item.category.vietnameseName
+          : item.category.englishName,
+      availableUnits: item.availableUnits,
+      needUnits: item.needUnits,
+    })) || []
+
   if (isLoading || !data) return
 
   return (
@@ -94,7 +108,26 @@ function TopCirculationSection() {
         {t("Available vs Need Units Analysis")}
       </h2>
 
-      <AvailableVsNeedBarChart data={data.availableVsNeedChart} />
+      <div className="mx-auto p-4">
+        <h2 className="mb-4 text-center text-lg font-semibold">
+          {t("Available vs Need Units")}
+        </h2>
+        <ResponsiveContainer width="100%" height={300}>
+          <BarChart data={combinedData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="name" />
+            <YAxis />
+            <TooltipChart />
+            <Legend />
+            <Bar
+              dataKey="availableUnits"
+              fill="#8884d8"
+              name={t("Available Units")}
+            />
+            <Bar dataKey="needUnits" fill="#82ca9d" name={t("Need Units")} />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
 
       <div className="flex items-center justify-between gap-4">
         <h3 className="text-lg font-medium">
@@ -297,7 +330,7 @@ function TopCirculationSection() {
                                   <CartesianGrid strokeDasharray="3 3" />
                                   <XAxis dataKey="periodLabel" />
                                   <YAxis />
-                                  <Tooltip />
+                                  <TooltipChart />
                                   <Legend />
                                   <Line
                                     type="monotone"
@@ -323,7 +356,7 @@ function TopCirculationSection() {
                                   <CartesianGrid strokeDasharray="3 3" />
                                   <XAxis dataKey="periodLabel" />
                                   <YAxis />
-                                  <Tooltip />
+                                  <TooltipChart />
                                   <Legend />
                                   <Line
                                     type="monotone"

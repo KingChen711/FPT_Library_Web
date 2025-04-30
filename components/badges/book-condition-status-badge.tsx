@@ -27,7 +27,10 @@ const getTypeColor = (type: EBookCopyConditionStatus) => {
 function BookConditionStatusBadge({ status }: Props) {
   const t = useTranslations("Badges.BookConditionStatus")
   return (
-    <Badge variant={getTypeColor(status)} className="flex w-16 justify-center">
+    <Badge
+      variant={getTypeColor(status)}
+      className="flex w-16 shrink-0 justify-center"
+    >
       {t(status)}
     </Badge>
   )

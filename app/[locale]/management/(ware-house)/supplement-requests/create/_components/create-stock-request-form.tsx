@@ -15,7 +15,7 @@ import {
   type TCreateSupplementRequestSchema,
 } from "@/lib/validations/supplement/create-supplement-request"
 import { createSupplementRequest } from "@/actions/trackings/create-supplement-request"
-import useCategories from "@/hooks/categories/use-categories"
+// import useCategories from "@/hooks/categories/use-categories"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import {
@@ -45,7 +45,7 @@ function CreateStockRequestForm() {
   const locale = useLocale()
   const [isPending, startTransition] = useTransition()
 
-  const { data: categoryItems } = useCategories()
+  // const { data: categoryItems } = useCategories()
   const form = useForm<TCreateSupplementRequestSchema>({
     resolver: zodResolver(createSupplementRequestSchema),
     defaultValues: {
@@ -89,7 +89,7 @@ function CreateStockRequestForm() {
   const triggerCatalogs = async () => {
     let flag = true
 
-    const rows = form.watch("warehouseTrackingDetails")
+    // const rows = form.watch("warehouseTrackingDetails")
 
     const triggerGlobal = await form.trigger([
       "description",
@@ -101,23 +101,24 @@ function CreateStockRequestForm() {
 
     flag = triggerGlobal
 
-    for (let i = 0; i < rows.length; ++i) {
-      const row = rows[i]
+    //TODO(isNotBook)
+    // for (let i = 0; i < rows.length; ++i) {
+    //   const row = rows[i]
 
-      const selectedCategory =
-        selectedCategories[i] ||
-        (row.categoryId
-          ? categoryItems?.find((c) => c.categoryId === row.categoryId)
-          : null)
+    //   const selectedCategory =
+    //     selectedCategories[i] ||
+    //     (row.categoryId
+    //       ? categoryItems?.find((c) => c.categoryId === row.categoryId)
+    //       : null)
 
-      if (
-        selectedCategory?.isAllowAITraining &&
-        !form.watch(`warehouseTrackingDetails.${i}.isbn`)
-      ) {
-        form.setError(`warehouseTrackingDetails.${i}.isbn`, { message: "min1" })
-        flag = false
-      }
-    }
+    //   if (
+    //     selectedCategory?.isAllowAITraining &&
+    //     !form.watch(`warehouseTrackingDetails.${i}.isbn`)
+    //   ) {
+    //     form.setError(`warehouseTrackingDetails.${i}.isbn`, { message: "min1" })
+    //     flag = false
+    //   }
+    // }
     return flag
   }
 

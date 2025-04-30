@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { Check, ChevronsUpDown } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { type UseFormReturn } from "react-hook-form"
@@ -77,7 +77,13 @@ function CatalogDialog({
     form.setValue(`libraryItem.cutterNumber`, generateCutter(text))
   }
 
-  const isRequireImage = !!category?.isAllowAITraining
+  //TODO(isNotBook)
+  const isRequireImage = !(
+    category?.englishName === "Magazine" ||
+    category?.englishName === "Newspaper" ||
+    category?.englishName === "Other" ||
+    false
+  )
 
   const watchCategoryId = form.watch(`libraryItem.categoryId`)
 
@@ -473,11 +479,9 @@ function CatalogDialog({
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
                             {t("Classification number")} (082a)
-                            {isRequireImage && (
-                              <span className="ml-1 text-xl font-bold leading-none text-primary">
-                                *
-                              </span>
-                            )}
+                            <span className="ml-1 text-xl font-bold leading-none text-primary">
+                              *
+                            </span>
                           </FormLabel>
 
                           <FormControl>
@@ -509,11 +513,9 @@ function CatalogDialog({
                         <FormItem className="flex flex-1 flex-col items-start">
                           <FormLabel className="flex items-center">
                             {t("Cutter number")} (082b)
-                            {isRequireImage && (
-                              <span className="ml-1 text-xl font-bold leading-none text-primary">
-                                *
-                              </span>
-                            )}
+                            <span className="ml-1 text-xl font-bold leading-none text-primary">
+                              *
+                            </span>
                           </FormLabel>
 
                           <FormControl>

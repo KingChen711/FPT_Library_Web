@@ -373,6 +373,15 @@ export type Fine =
       chargePct: null
     }
 
+export type ClosureDay = {
+  closureDayId: number
+  day: number
+  month: number
+  year: number | null
+  vieDescription: string
+  engDescription: string
+}
+
 export type FineBorrow = {
   fineId: number
   borrowRecordDetailId: number

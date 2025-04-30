@@ -28,7 +28,7 @@ const SidebarLanguage = () => {
 
   const newLocale = locale === "en" ? "vi" : "en"
   const switchLanguage = () => {
-    startTransition(() =>
+    startTransition(() => {
       router.replace(
         // @ts-expect-error -- TypeScript will validate that only known `params`
         // are used in combination with a given `pathname`. Since the two will
@@ -36,7 +36,8 @@ const SidebarLanguage = () => {
         { pathname, params },
         { scroll: false, locale: newLocale }
       )
-    )
+      // window?.location?.reload()
+    })
   }
 
   return (

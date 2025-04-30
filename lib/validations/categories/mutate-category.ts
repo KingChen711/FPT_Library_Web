@@ -6,6 +6,7 @@ export const mutateCategorySchema = z.object({
   description: z.string().trim(),
   prefix: z.string(),
   isAllowAITraining: z.boolean(),
+  totalBorrowDays: z.coerce.number({ message: "min1" }).gt(0, "gt0"),
 })
 
 export type TMutateCategorySchema = z.infer<typeof mutateCategorySchema>

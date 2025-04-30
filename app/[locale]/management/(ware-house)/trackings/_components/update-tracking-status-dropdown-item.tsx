@@ -15,9 +15,14 @@ import { Icons } from "@/components/ui/icons"
 type Props = {
   status: ETrackingStatus
   trackingId: number
+  supplementRequest: boolean
 }
 
-function UpdateTrackingStatusDropdownItem({ status, trackingId }: Props) {
+function UpdateTrackingStatusDropdownItem({
+  status,
+  trackingId,
+  supplementRequest,
+}: Props) {
   const [isPending, startTransition] = useTransition()
   const { user } = useAuth()
   const locale = useLocale()
@@ -25,7 +30,11 @@ function UpdateTrackingStatusDropdownItem({ status, trackingId }: Props) {
 
   const handleChangeStatus = (status: ETrackingStatus) => {
     startTransition(async () => {
-      const res = await changeTrackingStatus(trackingId, status)
+      const res = await changeTrackingStatus(
+        trackingId,
+        status,
+        supplementRequest
+      )
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",

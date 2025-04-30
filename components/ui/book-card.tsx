@@ -1,7 +1,7 @@
 "use client"
 
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import { BookOpen } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 

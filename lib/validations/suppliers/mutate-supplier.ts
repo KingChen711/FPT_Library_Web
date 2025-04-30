@@ -18,7 +18,7 @@ export const mutateSupplierSchema = z.object({
   contactEmail: z
     .string()
     .trim()
-    .email()
+    .email("email")
     .optional()
     .transform((data) => (data === "" ? undefined : data))
     .refine((data) => data === undefined || data.length <= 255, {

@@ -228,21 +228,12 @@ export const managementRoutes = [
       },
     ],
   },
-
-  {
-    feature: EFeature.SYSTEM_HEALTH_MANAGEMENT,
-    route: "/management/system-health",
-    label: "System Health",
-    Icon: (props: { className?: string }) => {
-      return <Icons.SystemHealth {...props} />
-    },
-  },
   {
     feature: EFeature.SYSTEM_CONFIGURATION_MANAGEMENT,
-    route: "/management/system-message",
-    label: "System Messages",
+    route: "/management/closure-days",
+    label: "Closure days",
     Icon: (props: { className?: string }) => {
-      return <Icons.SystemConfiguration {...props} />
+      return <Icons.Closure {...props} />
     },
   },
   {

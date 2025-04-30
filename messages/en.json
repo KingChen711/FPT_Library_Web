@@ -5,6 +5,10 @@
     "Not found description": "Sorry, we couldn't find the page you're looking for. It may have moved or it may not exist."
   },
   "Dashboard": {
+    "Pending percentage": "Pending percentage",
+    "Paid percentage": "Paid percentage",
+    "Expired percentage": "Expired percentage",
+    "Cancelled percentage": "Cancelled percentage",
     "Create supplement request": "Create supplement request",
     "Selected": "Selected",
     "Select": "Select",
@@ -190,7 +194,7 @@
   },
   "TransactionPage": {
     "Transactions Not Found": "Transactions Not Found",
-    "No transaction matching your request were found Please check your information or try searching with different criteria": "No transaction matching your request were found Please check your information or try searching with different criteria",
+    "No transactions matching your request were found Please check your information or try searching with different criteria": "No transactions matching your request were found Please check your information or try searching with different criteria",
     "Filters transactions": "Filters transactions",
     "ordinal number": "No",
     "transaction": "Transaction",
@@ -241,9 +245,13 @@
     "copiesMin1": "Need at least 1 copy code",
     "gt0": "Must larger than 0",
     "gte0": "Must larger than or equal 0",
+    "gte1": "Must larger than or equal 1",
     "gte3": "Must larger than or equal 3",
     "gte1000": "Must larger or equal than 1000",
     "gte2000": "Must larger or equal than 2000",
+    "inValidDay": "Invalid day",
+    "lte12": "Must less or equal than 12",
+    "lte31": "Must less or equal than 31",
     "lte100": "Must less or equal than 100",
     "lte9999999999": "Must less or equal than 9999999999",
     "lte2147483647": "Must less or equal than 2147483647",
@@ -684,6 +692,7 @@
     "Roles": "Roles",
     "System Health": "System health",
     "System Configuration": "System configuration",
+    "Closure days": "Closure days",
     "Authors": "Authors",
     "Categories": "Categories",
     "Resources": "Resources",
@@ -1224,6 +1233,7 @@
     "the document has been booked by you": "The document has been booked by you"
   },
   "CategoriesManagementPage": {
+    "Total borrow days": "Total borrow days",
     "Category": "Category",
     "Categories Not Found": "Categories Not Found",
     "No categories matching your request were found Please check your information or try searching with different criteria": "No categories matching your request were found. Please check your information or try searching with different criteria",
@@ -1589,6 +1599,7 @@
     "Available status": "Status",
     "Condition status": "Condition status",
     "You need to enter title, publisher, authors before uploading cover image": "You need to enter title, publisher, authors before uploading cover image.",
+    "You need to enter title, publisher before uploading cover image": "You need to enter title, publisher before uploading cover image.",
     "Check cover image result": "Check cover image result",
     "No image uploaded yet": "No image uploaded yet",
     "Checking": "Checking",
@@ -2269,7 +2280,34 @@
       "0": "Daily",
       "1": "Weekly",
       "2": "Monthly"
+    },
+    "ClosureType": {
+      "0": "Annual",
+      "1": "Fixed"
     }
+  },
+  "ClosureDaysManagementPage": {
+    "type to confirm": "Type &quot;<message>{message}</message>&quot; to confirm",
+    "Delete closureDay": "Delete closure day",
+    "Edit closure day": "Edit closure day",
+    "Edit": "Edit",
+    "Delete": "Delete",
+    "Save": "Save",
+    "Create closure day": "Create closure day",
+    "Closure day type": "Closure day type",
+    "Day": "Day",
+    "Month": "Month",
+    "English name": "English name",
+    "Vietnamese name": "Vietnamese name",
+    "Cancel": "Cancel",
+    "Create": "Create",
+    "Year": "Year",
+    "per year": "per year",
+    "Annual": "Annual",
+    "Fixed": "Fixed",
+    "Closure days": "Closure days",
+    "Closure days Not Found": "Closure days Not Found",
+    "No closure days matching your request were found Please check your information or try searching with different criteria": "No closure days matching your request were found Please check your information or try searching with different criteria"
   },
   "IsbnScanner": {
     "ISBN scanner": "ISBN scanner",

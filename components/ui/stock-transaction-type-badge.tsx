@@ -36,7 +36,10 @@ function StockTransactionTypeBadge({ type }: Props) {
   const t = useTranslations("Badges.StockTransactionType")
 
   return (
-    <Badge variant={getTypeColor(type)} className="flex w-24 justify-center">
+    <Badge
+      variant={getTypeColor(type)}
+      className="flex w-24 shrink-0 justify-center"
+    >
       {t(type.toString())}
     </Badge>
   )

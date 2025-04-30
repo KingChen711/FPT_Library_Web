@@ -1,7 +1,7 @@
 // "use client"
 
 // import React from "react"
-// import { Link } from "@/i18n/routing"
+// import Link from "next/link"
 // import { usePathname } from "next/navigation"
 // import { browseRoutes } from "@/constants"
 // import { useManagementSideBar } from "@/stores/use-management-sidebar"

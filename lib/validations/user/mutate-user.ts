@@ -5,7 +5,7 @@ export const mutateUserSchema = z.object({
   email: z
     .string()
     .trim()
-    .email({ message: "email" })
+    .email("email")
     .toLowerCase()
     .min(2, { message: "min2" })
     .max(50, { message: "max50" }),

@@ -74,6 +74,14 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
   const [selectedCategory, setSelectedCategory] = useState<Category | null>(
     null
   )
+
+  //TODO(isNotBook)
+  const isNotBook =
+    selectedCategory?.englishName === "Magazine" ||
+    selectedCategory?.englishName === "Newspaper" ||
+    selectedCategory?.englishName === "Other" ||
+    false
+
   const [openComboboxCategory, setOpenComboboxCategory] = useState(false)
 
   const handleOpenChange = (value: boolean) => {
@@ -96,7 +104,7 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
   })
 
   const onSubmit = async (values: TEditTrackingDetailSchema) => {
-    if (selectedCategory?.isAllowAITraining && !values.isbn) {
+    if (!isNotBook && !values.isbn) {
       form.setError("isbn", { message: "required" })
       return
     }
@@ -182,6 +190,7 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
+                              disabled
                               variant="outline"
                               role="combobox"
                               className={cn(
@@ -294,7 +303,7 @@ function EditTrackingDetailDialog({ open, setOpen, trackingDetail }: Props) {
                   )}
                 />
 
-                {selectedCategory?.isAllowAITraining && (
+                {!isNotBook && (
                   <FormField
                     control={form.control}
                     name="isbn"

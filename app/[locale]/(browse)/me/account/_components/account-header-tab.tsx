@@ -1,8 +1,8 @@
 "use client"
 
+import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useAuth } from "@/contexts/auth-provider"
-import { Link } from "@/i18n/routing"
 import { Bell, IdCard, Shield, User } from "lucide-react"
 import { useTranslations } from "next-intl"
 
@@ -72,7 +72,7 @@ const AccountHeaderTab = ({ locale }: AccountHeaderTabProps) => {
         return (
           <Link
             key={route.label}
-            href={`/${locale}${route.route}`}
+            href={`${route.route}`}
             className={cn(
               "flex items-center space-x-3 rounded-md px-3 py-2 text-sm font-medium transition-all hover:bg-muted",
               isActive(route.route)

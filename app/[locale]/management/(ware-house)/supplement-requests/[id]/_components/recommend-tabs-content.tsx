@@ -3,7 +3,7 @@
 
 import React, { useState } from "react"
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import NoImage from "@/public/assets/images/no-image.png"
 import { Loader2 } from "lucide-react"
 import { useTranslations } from "next-intl"

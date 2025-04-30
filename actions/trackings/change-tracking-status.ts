@@ -9,12 +9,15 @@ import { type ETrackingStatus } from "@/lib/types/enums"
 
 export async function changeTrackingStatus(
   trackingId: number,
-  status: ETrackingStatus
+  status: ETrackingStatus,
+  supplementRequest: boolean
 ): Promise<ActionResponse<string>> {
   const { getAccessToken } = auth()
   try {
     const { message } = await http.patch(
-      `/api/management/warehouse-trackings/${trackingId}/status?status=${status}`,
+      supplementRequest
+        ? `/api/management/warehouse-trackings/${trackingId}/supplement-status?status=${status}`
+        : `/api/management/warehouse-trackings/${trackingId}/status?status=${status}`,
       {},
       {
         headers: {

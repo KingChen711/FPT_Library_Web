@@ -84,12 +84,18 @@ function CategoryCard({
                 </div>
 
                 <div className="flex items-center">
+                  <Icons.BorrowBook className="mr-2 size-4 text-muted-foreground" />
+                  <span className="font-medium">{t("Total borrow days")}:</span>
+                  <span className="ml-2 font-bold">
+                    {category.totalBorrowDays}
+                  </span>
+                </div>
+
+                <div className="flex items-center">
                   <Brain className="mr-2 size-4 text-muted-foreground" />
                   <span className="font-medium">AI Training:</span>
                   <Badge
-                    variant={
-                      category.isAllowAITraining ? "success" : "destructive"
-                    }
+                    variant={category.isAllowAITraining ? "success" : "danger"}
                     className="ml-2 shrink-0 rounded-md"
                   >
                     {category.isAllowAITraining

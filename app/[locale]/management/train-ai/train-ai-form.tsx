@@ -1,9 +1,9 @@
 "use client"
 
 import React, { useEffect, useMemo, useState, useTransition } from "react"
+import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useTrainAI } from "@/contexts/train-ai-progress-provider"
-import { Link } from "@/i18n/routing"
 import { type TrainProgress } from "@/queries/books/get-train-progress"
 import { type UntrainedGroup } from "@/queries/books/get-untrained-group"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -248,7 +248,7 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
 
   const groupsData: GroupData[] = selectedGroups.map((g) => ({
     booksData: g.items.map((b) => ({
-      authors: b.libraryItemAuthors.map((a) => a.author.fullName),
+      authors: b?.libraryItemAuthors?.map((a) => a.author.fullName) || [],
       generalNote: b.generalNote,
       publisher: b.publisher || "",
       subTitle: b.subTitle,

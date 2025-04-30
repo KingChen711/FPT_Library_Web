@@ -1,5 +1,5 @@
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import getBorrowReservationsPatron from "@/queries/borrows/get-reservations-patron"
 import { format } from "date-fns"
 import { Eye, MoreHorizontal } from "lucide-react"

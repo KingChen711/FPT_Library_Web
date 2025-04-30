@@ -3,26 +3,35 @@ import { keepPreviousData, useQuery } from "@tanstack/react-query"
 import { format } from "date-fns"
 
 import { http } from "@/lib/http"
-import { type EDashboardPeriodLabel } from "@/lib/types/enums"
+import {
+  type EDashboardPeriodLabel,
+  type ETransactionType,
+} from "@/lib/types/enums"
 import { type Transaction, type User } from "@/lib/types/models"
 import { type Pagination } from "@/lib/types/pagination"
 
 export type TDashboardFinancial = {
+  details: {
+    transactionType: ETransactionType
+    pendingPercentage: number
+    paidPercentage: number
+    expiredPercentage: number
+    cancelledPercentage: number
+    totalRevenueLastYear: number
+    totalRevenueThisYear: number
+    lastYear: {
+      periodLabel: string
+      value: number
+    }[]
+
+    thisYear: {
+      periodLabel: string
+      value: number
+    }[]
+  }[]
+
   totalRevenueLastYear: number
   totalRevenueThisYear: number
-
-  lastYear: {
-    periodLabel: string
-    value: number
-  }[]
-
-  thisYear: {
-    periodLabel: string
-    value: number
-  }[]
-
-  extensionRatePercentage: number
-  averageExtensionsPerBorrow: number
   latestTransactions: Pagination<(Transaction & { user: User })[]>
 }
 

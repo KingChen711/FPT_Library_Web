@@ -616,6 +616,8 @@ function LibrarianCheckoutForm() {
                                           {getDateRangeString(
                                             item.category.totalBorrowDays
                                           )}
+                                          ({item.category.totalBorrowDays}{" "}
+                                          {t("days")})
                                         </div>
                                       )}
                                       <Button

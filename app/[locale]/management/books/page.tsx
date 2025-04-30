@@ -1,6 +1,6 @@
 import React from "react"
 import Image from "next/image"
-import { Link } from "@/i18n/routing"
+import Link from "next/link"
 import defaultBookCover from "@/public/assets/images/default-book-cover.jpg"
 import { auth } from "@/queries/auth"
 import getBookEditions from "@/queries/books/get-book-editions"

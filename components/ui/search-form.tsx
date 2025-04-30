@@ -23,7 +23,7 @@ function SearchForm({
   search,
   className,
   onSearch: onSearchClient,
-  acceptEmptyTerm = false,
+  acceptEmptyTerm = true,
 }: Props) {
   const router = useRouter()
   const [searchTerm, setSearchTerm] = useState(search || "")

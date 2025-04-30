@@ -1,9 +1,10 @@
 "use client"
 
 import { useTransition } from "react"
+import Link from "next/link"
 import { editorPlugin } from "@/constants"
 import { useAuth } from "@/contexts/auth-provider"
-import { Link, useRouter } from "@/i18n/routing"
+import { useRouter } from "@/i18n/routing"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Editor } from "@tinymce/tinymce-react"
 import { Loader2, X } from "lucide-react"
@@ -75,7 +76,7 @@ function CreateNotificationForm() {
       const tagInput = e.target as HTMLInputElement
       const tagValue = tagInput.value.trim()
 
-      const emailSchema = z.string().trim().email().catch("")
+      const emailSchema = z.string().trim().email("email").catch("")
 
       if (tagValue !== "") {
         const emails = tagValue

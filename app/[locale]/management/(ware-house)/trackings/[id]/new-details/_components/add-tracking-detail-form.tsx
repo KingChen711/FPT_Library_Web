@@ -77,6 +77,13 @@ function AddTrackingDetailForm({ trackingId }: Props) {
     null
   )
 
+  //TODO(isNotBook)
+  const isNotBook =
+    selectedCategory?.englishName === "Magazine" ||
+    selectedCategory?.englishName === "Newspaper" ||
+    selectedCategory?.englishName === "Other" ||
+    false
+
   const [isPending, startTransition] = useTransition()
 
   const { data: categoryItems } = useCategories()
@@ -105,8 +112,8 @@ function AddTrackingDetailForm({ trackingId }: Props) {
   const triggerCatalogs = async () => {
     let flag = true
 
-    if (selectedCategory?.isAllowAITraining && !form.watch(`isbn`)) {
-      form.setError(`isbn`, { message: "min1" })
+    if (!isNotBook && !form.watch(`isbn`)) {
+      form.setError(`isbn`, { message: "min1" }, { shouldFocus: true })
       flag = false
     }
 
@@ -150,34 +157,45 @@ function AddTrackingDetailForm({ trackingId }: Props) {
       !form.watch(`libraryItem.file`) || form.watch(`libraryItem.validImage`)
 
     if (!triggerValidImage) {
-      form.setError(`libraryItem.coverImage`, {
-        message: "validImageAI",
-      })
+      form.setError(
+        `libraryItem.coverImage`,
+        {
+          message: "validImageAI",
+        },
+        { shouldFocus: true }
+      )
     }
 
-    const triggerRequireImage =
-      !selectedCategory?.isAllowAITraining || form.watch(`libraryItem.file`)
+    const triggerRequireImage = isNotBook || form.watch(`libraryItem.file`)
 
     if (!triggerRequireImage) {
-      form.setError(`libraryItem.coverImage`, {
-        message: "required",
-      })
+      form.setError(
+        `libraryItem.coverImage`,
+        {
+          message: "required",
+        },
+        { shouldFocus: true }
+      )
     }
 
-    const triggerRequireDdc =
-      !selectedCategory?.isAllowAITraining ||
-      form.watch(`libraryItem.classificationNumber`)
+    const triggerRequireDdc = form.watch(`libraryItem.classificationNumber`)
 
     if (!triggerRequireDdc) {
-      form.setError(`libraryItem.classificationNumber`, { message: "required" })
+      form.setError(
+        `libraryItem.classificationNumber`,
+        { message: "required" },
+        { shouldFocus: true }
+      )
     }
 
-    const triggerRequireCutter =
-      !selectedCategory?.isAllowAITraining ||
-      form.watch(`libraryItem.cutterNumber`)
+    const triggerRequireCutter = form.watch(`libraryItem.cutterNumber`)
 
     if (!triggerRequireCutter) {
-      form.setError(`libraryItem.cutterNumber`, { message: "required" })
+      form.setError(
+        `libraryItem.cutterNumber`,
+        { message: "required" },
+        { shouldFocus: true }
+      )
     }
 
     if (
@@ -187,9 +205,13 @@ function AddTrackingDetailForm({ trackingId }: Props) {
       !triggerRequireDdc ||
       !triggerRequireCutter
     ) {
-      form.setError(`itemName`, {
-        message: "wrongCatalogInformation",
-      })
+      form.setError(
+        `itemName`,
+        {
+          message: "wrongCatalogInformation",
+        },
+        { shouldFocus: true }
+      )
       flag = false
     }
 
@@ -243,9 +265,13 @@ function AddTrackingDetailForm({ trackingId }: Props) {
         )
 
         if (key && values.libraryItem) {
-          form.setError(`itemName`, {
-            message: "wrongCatalogInformation",
-          })
+          form.setError(
+            `itemName`,
+            {
+              message: "wrongCatalogInformation",
+            },
+            { shouldFocus: true }
+          )
         }
       }
 

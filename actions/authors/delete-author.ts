@@ -1,6 +1,6 @@
 "use server"
 
-import { revalidateTag } from "next/cache"
+import { revalidatePath } from "next/cache"
 import { auth } from "@/queries/auth"
 
 import { handleHttpError, http } from "@/lib/http"
@@ -21,7 +21,7 @@ export async function deleteAuthor(
       }
     )
 
-    revalidateTag("authors")
+    revalidatePath("/management/authors")
 
     return {
       isSuccess: true,

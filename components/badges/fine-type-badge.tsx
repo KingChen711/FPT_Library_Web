@@ -28,7 +28,10 @@ function FineTypeBadge({ type }: Props) {
   const t = useTranslations("Badges.FineType")
 
   return (
-    <Badge variant={getTypeColor(type)} className="flex w-20 justify-center">
+    <Badge
+      variant={getTypeColor(type)}
+      className="flex w-20 shrink-0 justify-center"
+    >
       {t(type.toString())}
     </Badge>
   )

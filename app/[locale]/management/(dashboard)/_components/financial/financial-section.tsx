@@ -1,8 +1,8 @@
 "use client"
 
-import React, { useState } from "react"
+import React, { useMemo, useState } from "react"
+import Link from "next/link"
 import { useSearchParams } from "next/navigation"
-import { Link } from "@/i18n/routing"
 import { format } from "date-fns"
 import { useTranslations } from "next-intl"
 import {
@@ -17,10 +17,13 @@ import {
 } from "recharts"
 
 import { parseSearchParamsDateRange } from "@/lib/filters"
-import { EDashboardPeriodLabel } from "@/lib/types/enums"
-import { formatPrice, getFullName } from "@/lib/utils"
-import useDashboardFinancial from "@/hooks/dash-board/use-dashboard-financial"
+import { EDashboardPeriodLabel, ETransactionType } from "@/lib/types/enums"
+import { cn, formatPrice, getFullName } from "@/lib/utils"
+import useDashboardFinancial, {
+  type TDashboardFinancial,
+} from "@/hooks/dash-board/use-dashboard-financial"
 import useFormatLocale from "@/hooks/utils/use-format-locale"
+import { Button } from "@/components/ui/button"
 import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
 import {
@@ -36,11 +39,16 @@ import StatCard from "../stat-card"
 
 function FinancialSection() {
   const t = useTranslations("Dashboard")
+  const tTransactionType = useTranslations("Badges.TransactionType")
   const formatLocale = useFormatLocale()
 
   const [pageIndex, setPageIndex] = useState(1)
   const [pageSize, setPageSize] = useState<"5" | "10" | "30" | "50" | "100">(
     "5"
+  )
+
+  const [transactionType, setTransactionType] = useState<ETransactionType>(
+    ETransactionType.LIBRARY_CARD_REGISTER
   )
 
   const searchParams = useSearchParams()
@@ -65,12 +73,19 @@ function FinancialSection() {
     setPageSize(size)
   }
 
-  if (isLoading || !data) return
+  const transactionData = useMemo(() => {
+    if (!data) return null
+    const res: TDashboardFinancial["details"][number] | null =
+      data.details.find((d) => d.transactionType === transactionType) || null
+    return res
+  }, [transactionType, data])
 
-  const chartData = data.lastYear.map((item, index) => ({
+  if (isLoading || !transactionData || !data) return
+
+  const chartData = transactionData.lastYear.map((item, index) => ({
     period: item.periodLabel,
     lastYear: item.value,
-    thisYear: data.thisYear[index].value,
+    thisYear: transactionData.thisYear[index].value,
   }))
 
   return (
@@ -78,6 +93,33 @@ function FinancialSection() {
       <h2 className="mb-4 text-xl font-semibold">
         {t("Financial and Transaction Analysis")}
       </h2>
+
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <StatCard
+          title={t("Pending percentage")}
+          value={Math.round(transactionData.pendingPercentage || 0) + "%"}
+        />
+        <StatCard
+          title={t("Paid percentage")}
+          value={Math.round(transactionData.paidPercentage || 0) + "%"}
+        />
+        <StatCard
+          title={t("Expired percentage")}
+          value={Math.round(transactionData.expiredPercentage || 0) + "%"}
+        />
+        <StatCard
+          title={t("Cancelled percentage")}
+          value={Math.round(transactionData.cancelledPercentage || 0) + "%"}
+        />
+        <StatCard
+          title={t("Last year revenue")}
+          value={formatPrice(transactionData.totalRevenueLastYear)}
+        />
+        <StatCard
+          title={t("This year revenue")}
+          value={formatPrice(transactionData.totalRevenueThisYear)}
+        />
+      </div>
 
       <div className="mb-6">
         <h3 className="mb-2 text-lg font-medium">{t("Revenue trends")}</h3>
@@ -116,15 +158,20 @@ function FinancialSection() {
         </ResponsiveContainer>
       </div>
 
-      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
-        <StatCard
-          title={t("Last year revenue")}
-          value={formatPrice(data.totalRevenueLastYear)}
-        />
-        <StatCard
-          title={t("This year revenue")}
-          value={formatPrice(data.totalRevenueThisYear)}
-        />
+      <div className="flex flex-wrap justify-center gap-4">
+        {Object.values(ETransactionType)
+          .filter((e) => typeof e === "number")
+          .map((type) => (
+            <Button
+              key={type}
+              onClick={() => setTransactionType(type)}
+              size="sm"
+              className={cn(type === transactionType && "border-primary")}
+              variant={type === transactionType ? "outline" : "secondary"}
+            >
+              {tTransactionType(type.toString())}
+            </Button>
+          ))}
       </div>
 
       <h3 className="mb-2 text-lg font-medium">{t("Latest transactions")}</h3>

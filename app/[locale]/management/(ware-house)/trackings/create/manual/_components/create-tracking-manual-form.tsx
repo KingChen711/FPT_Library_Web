@@ -111,6 +111,8 @@ function CreateTrackingManualForm() {
         }
       })
 
+      console.log(values)
+
       const res = await createTrackingManual(values)
       if (res.isSuccess) {
         toast({
@@ -149,9 +151,13 @@ function CreateTrackingManualForm() {
             Number(index) &&
             values.warehouseTrackingDetails[index].libraryItem
           ) {
-            form.setError(`warehouseTrackingDetails.${index}.itemName`, {
-              message: "wrongCatalogInformation",
-            })
+            form.setError(
+              `warehouseTrackingDetails.${index}.itemName`,
+              {
+                message: "wrongCatalogInformation",
+              },
+              { shouldFocus: true }
+            )
           }
         }
       }
@@ -187,11 +193,19 @@ function CreateTrackingManualForm() {
           ? categoryItems?.find((c) => c.categoryId === row.categoryId)
           : null)
 
-      if (
-        selectedCategory?.isAllowAITraining &&
-        !form.watch(`warehouseTrackingDetails.${i}.isbn`)
-      ) {
-        form.setError(`warehouseTrackingDetails.${i}.isbn`, { message: "min1" })
+      //TODO(isNotBook)
+      const isNotBook =
+        selectedCategory?.englishName === "Magazine" ||
+        selectedCategory?.englishName === "Newspaper" ||
+        selectedCategory?.englishName === "Other" ||
+        false
+
+      if (!isNotBook && !form.watch(`warehouseTrackingDetails.${i}.isbn`)) {
+        form.setError(
+          `warehouseTrackingDetails.${i}.isbn`,
+          { message: "min1" },
+          { shouldFocus: true }
+        )
         flag = false
       }
 
@@ -239,42 +253,50 @@ function CreateTrackingManualForm() {
         form.watch(`warehouseTrackingDetails.${i}.libraryItem.validImage`)
 
       if (!triggerValidImage) {
-        form.setError(`warehouseTrackingDetails.${i}.libraryItem.coverImage`, {
-          message: "validImageAI",
-        })
+        form.setError(
+          `warehouseTrackingDetails.${i}.libraryItem.coverImage`,
+          {
+            message: "validImageAI",
+          },
+          { shouldFocus: true }
+        )
       }
 
       const triggerRequireImage =
-        !selectedCategory?.isAllowAITraining ||
+        isNotBook ||
         form.watch(`warehouseTrackingDetails.${i}.libraryItem.file`)
 
       if (!triggerRequireImage) {
-        form.setError(`warehouseTrackingDetails.${i}.libraryItem.coverImage`, {
-          message: "required",
-        })
+        form.setError(
+          `warehouseTrackingDetails.${i}.libraryItem.coverImage`,
+          {
+            message: "required",
+          },
+          { shouldFocus: true }
+        )
       }
 
-      const triggerRequireDdc =
-        !selectedCategory?.isAllowAITraining ||
-        form.watch(
-          `warehouseTrackingDetails.${i}.libraryItem.classificationNumber`
-        )
+      const triggerRequireDdc = form.watch(
+        `warehouseTrackingDetails.${i}.libraryItem.classificationNumber`
+      )
 
       if (!triggerRequireDdc) {
         form.setError(
           `warehouseTrackingDetails.${i}.libraryItem.classificationNumber`,
-          { message: "required" }
+          { message: "required" },
+          { shouldFocus: true }
         )
       }
 
-      const triggerRequireCutter =
-        !selectedCategory?.isAllowAITraining ||
-        form.watch(`warehouseTrackingDetails.${i}.libraryItem.cutterNumber`)
+      const triggerRequireCutter = form.watch(
+        `warehouseTrackingDetails.${i}.libraryItem.cutterNumber`
+      )
 
       if (!triggerRequireCutter) {
         form.setError(
           `warehouseTrackingDetails.${i}.libraryItem.cutterNumber`,
-          { message: "required" }
+          { message: "required" },
+          { shouldFocus: true }
         )
       }
 
@@ -285,9 +307,13 @@ function CreateTrackingManualForm() {
         !triggerRequireDdc ||
         !triggerRequireCutter
       ) {
-        form.setError(`warehouseTrackingDetails.${i}.itemName`, {
-          message: "wrongCatalogInformation",
-        })
+        form.setError(
+          `warehouseTrackingDetails.${i}.itemName`,
+          {
+            message: "wrongCatalogInformation",
+          },
+          { shouldFocus: true }
+        )
         flag = false
       }
     }

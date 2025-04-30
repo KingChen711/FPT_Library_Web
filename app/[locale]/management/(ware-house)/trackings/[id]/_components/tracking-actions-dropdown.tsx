@@ -65,7 +65,11 @@ function TrackingActionsDropdown({
       status === ETrackingStatus.COMPLETED ? startComplete : startCancel
 
     startTransition(async () => {
-      const res = await changeTrackingStatus(tracking.trackingId, status)
+      const res = await changeTrackingStatus(
+        tracking.trackingId,
+        status,
+        supplementRequest
+      )
       if (res.isSuccess) {
         toast({
           title: locale === "vi" ? "Thành công" : "Success",

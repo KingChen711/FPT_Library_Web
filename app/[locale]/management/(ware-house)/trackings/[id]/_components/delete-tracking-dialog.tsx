@@ -1,4 +1,5 @@
 import React, { useState, useTransition } from "react"
+import { useRouter } from "@/i18n/routing"
 import { Dialog } from "@radix-ui/react-dialog"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
@@ -25,6 +26,7 @@ type Props = {
 function DeleteTrackingDialog({ open, setOpen, trackingId, title }: Props) {
   const t = useTranslations("TrackingsManagementPage")
   const locale = useLocale()
+  const router = useRouter()
   const message = `${locale === "vi" ? "xóa" : "delete"} ${title}`
 
   const [value, setValue] = useState("")
@@ -41,6 +43,7 @@ function DeleteTrackingDialog({ open, setOpen, trackingId, title }: Props) {
           variant: "success",
         })
         setOpen(false)
+        router.push("/management/trackings")
         return
       }
       handleServerActionError(res, locale)
