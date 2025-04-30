@@ -7,7 +7,7 @@ import { Eye, MoreHorizontal } from "lucide-react"
 
 import { getFormatLocale } from "@/lib/get-format-locale"
 import { getTranslations } from "@/lib/get-translations"
-import { EFeature } from "@/lib/types/enums"
+import { EFeature, ETrackingType } from "@/lib/types/enums"
 import { formatPrice } from "@/lib/utils"
 import { searchTrackingsSchema } from "@/lib/validations/trackings/search-trackings"
 import { Button } from "@/components/ui/button"
@@ -279,6 +279,10 @@ async function WarehouseTrackingsManagementPage({ searchParams }: Props) {
                             <UpdateTrackingStatusDropdownItem
                               status={tracking.status}
                               trackingId={tracking.trackingId}
+                              supplementRequest={
+                                tracking.trackingType ===
+                                ETrackingType.SUPPLEMENT_REQUEST
+                              }
                             />
                           </DropdownMenuContent>
                         </DropdownMenu>

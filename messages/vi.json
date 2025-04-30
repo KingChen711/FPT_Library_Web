@@ -5,6 +5,10 @@
     "Not found description": "Rất tiếc, chúng tôi không thể tìm thấy trang bạn đang tìm kiếm. Có thể trang đã bị di chuyển hoặc không tồn tại."
   },
   "Dashboard": {
+    "Pending percentage": "Đang chờ",
+    "Paid percentage": "Đã thanh toán",
+    "Expired percentage": "Đã quá hạn",
+    "Cancelled percentage": "Đã hủy",
     "Create supplement request": "Tạo yêu cầu bổ sung",
     "Select": "Chọn",
     "Selected": "Đã chọn",
@@ -1595,6 +1599,7 @@
     "Available status": "Trạng thái",
     "Condition status": "Tình trạng hư hại",
     "You need to enter title, publisher, authors before uploading cover image": "Bạn cần nhập tiêu đề, nhà xuất bản, tác giả trước khi tải ảnh bìa",
+    "You need to enter title, publisher before uploading cover image": "Bạn cần nhập tiêu đề, nhà xuất bản trước khi tải ảnh bìa",
     "Check cover image result": "Kết quả kiểm tra ảnh bìa",
     "No image uploaded yet": "Chưa có ảnh được tải lên",
     "Checking": "Đang kiểm tra",

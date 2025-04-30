@@ -26,7 +26,10 @@ function TransactionMethodBadge({ method }: Props) {
   const t = useTranslations("Badges.TransactionMethod")
 
   return (
-    <Badge variant={getTypeColor(method)} className="flex w-20 justify-center">
+    <Badge
+      variant={getTypeColor(method)}
+      className="flex w-20 shrink-0 justify-center"
+    >
       {t(method.toString())}
     </Badge>
   )

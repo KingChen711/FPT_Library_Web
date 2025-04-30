@@ -28,7 +28,10 @@ function AuditTypeBadge({ status }: Props) {
   const t = useTranslations("Badges.AuditType")
 
   return (
-    <Badge variant={getTypeColor(status)} className="flex w-20 justify-center">
+    <Badge
+      variant={getTypeColor(status)}
+      className="flex w-20 shrink-0 justify-center"
+    >
       {t(status.toString())}
     </Badge>
   )

@@ -95,6 +95,13 @@ function CreateBookForm({ trackingDetail }: Props) {
   //   },
   // })
 
+  //TODO(isNotBook)
+  const isNotBook =
+    selectedCategory?.englishName === "Magazine" ||
+    selectedCategory?.englishName === "Newspaper" ||
+    selectedCategory?.englishName === "Other" ||
+    false
+
   const onSubmit = async (values: TBookEditionSchema) => {
     startTransition(async () => {
       await uploadMedias(values)
@@ -180,7 +187,11 @@ function CreateBookForm({ trackingDetail }: Props) {
             .filter((key) => key.startsWith("libraryItemInstances"))
             .map((key) => res.fieldErrors[key][0])
             .join(", ")
-          form.setError("libraryItemInstances", { message })
+          form.setError(
+            "libraryItemInstances",
+            { message },
+            { shouldFocus: true }
+          )
         } else {
           setCurrentTab("Resources")
         }
@@ -225,28 +236,41 @@ function CreateBookForm({ trackingDetail }: Props) {
     const triggerValidImage = !form.watch("file") || form.watch("validImage")
 
     if (!triggerValidImage) {
-      form.setError("coverImage", { message: "validImageAI" })
+      form.setError(
+        "coverImage",
+        { message: "validImageAI" },
+        { shouldFocus: true }
+      )
     }
 
-    const triggerRequireImage =
-      !selectedCategory?.isAllowAITraining || form.watch("file")
+    const triggerRequireImage = isNotBook || form.watch("file")
 
     if (!triggerRequireImage) {
-      form.setError("coverImage", { message: "required" })
+      form.setError(
+        "coverImage",
+        { message: "required" },
+        { shouldFocus: true }
+      )
     }
 
-    const triggerRequireDdc =
-      !selectedCategory?.isAllowAITraining || form.watch("classificationNumber")
+    const triggerRequireDdc = form.watch("classificationNumber")
 
     if (!triggerRequireDdc) {
-      form.setError("classificationNumber", { message: "required" })
+      form.setError(
+        "classificationNumber",
+        { message: "required" },
+        { shouldFocus: true }
+      )
     }
 
-    const triggerRequireCutter =
-      !selectedCategory?.isAllowAITraining || form.watch("cutterNumber")
+    const triggerRequireCutter = form.watch("cutterNumber")
 
     if (!triggerRequireCutter) {
-      form.setError("cutterNumber", { message: "required" })
+      form.setError(
+        "cutterNumber",
+        { message: "required" },
+        { shouldFocus: true }
+      )
     }
 
     if (
@@ -402,7 +426,7 @@ function CreateBookForm({ trackingDetail }: Props) {
 
               <CatalogTab
                 fromWarehouseMode={fromWarehouseMode}
-                isRequireImage={!!selectedCategory?.isAllowAITraining}
+                isRequireImage={!isNotBook}
                 form={form}
                 isPending={isPending}
                 show={currentTab === "Catalog"}

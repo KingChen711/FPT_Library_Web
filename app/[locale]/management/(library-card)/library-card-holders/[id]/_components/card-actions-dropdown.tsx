@@ -41,7 +41,7 @@ type Props = {
   libraryCard: LibraryCard
   userId: string
   canExtendCard: boolean
-  cardPage: boolean
+  cardPage?: boolean
 }
 
 function LibraryCardActionsDropdown({

@@ -293,11 +293,9 @@ function CatalogTab({
           <FormItem className="flex flex-1 flex-col items-start">
             <FormLabel className="flex items-center">
               {t("Classification number")} (082a)
-              {isRequireImage && (
-                <span className="ml-1 text-xl font-bold leading-none text-primary">
-                  *
-                </span>
-              )}
+              <span className="ml-1 text-xl font-bold leading-none text-primary">
+                *
+              </span>
             </FormLabel>
 
             <FormControl>
@@ -325,11 +323,9 @@ function CatalogTab({
           <FormItem className="flex flex-1 flex-col items-start">
             <FormLabel className="flex items-center">
               {t("Cutter number")} (082b)
-              {isRequireImage && (
-                <span className="ml-1 text-xl font-bold leading-none text-primary">
-                  *
-                </span>
-              )}
+              <span className="ml-1 text-xl font-bold leading-none text-primary">
+                *
+              </span>
             </FormLabel>
 
             <FormControl>

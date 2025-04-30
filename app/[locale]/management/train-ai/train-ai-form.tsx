@@ -248,7 +248,7 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
 
   const groupsData: GroupData[] = selectedGroups.map((g) => ({
     booksData: g.items.map((b) => ({
-      authors: b.libraryItemAuthors.map((a) => a.author.fullName),
+      authors: b?.libraryItemAuthors?.map((a) => a.author.fullName) || [],
       generalNote: b.generalNote,
       publisher: b.publisher || "",
       subTitle: b.subTitle,

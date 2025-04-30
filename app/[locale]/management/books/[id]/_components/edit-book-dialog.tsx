@@ -116,15 +116,121 @@ function EditBookDialog({ open, setOpen, book }: Props) {
     },
   })
 
+  //TODO(isNotBook)
+  const isNotBook =
+    book.category.englishName === "Magazine" ||
+    book.category.englishName === "Newspaper" ||
+    book.category.englishName === "Other" ||
+    false
+
+  const triggerCatalogs = async () => {
+    let flag = true
+
+    if (!isNotBook && !form.watch(`isbn`)) {
+      form.setError(`isbn`, { message: "min1" }, { shouldFocus: true })
+      flag = false
+    }
+
+    const trigger = await form.trigger(
+      [
+        `title`,
+        `subTitle`,
+        `responsibility`,
+        `edition`,
+        `language`,
+        `originLanguage`,
+        `summary`,
+        `publicationPlace`,
+        `publisher`,
+        `publicationYear`,
+        `classificationNumber`,
+        `cutterNumber`,
+        `isbn`,
+        `ean`,
+        `estimatedPrice`,
+        `pageCount`,
+        `physicalDetails`,
+        `dimensions`,
+        `accompanyingMaterial`,
+        `genres`,
+        `generalNote`,
+        `bibliographicalNote`,
+        `topicalTerms`,
+        `additionalAuthors`,
+      ],
+      { shouldFocus: true }
+    )
+
+    const triggerValidImage = !form.watch(`file`) || form.watch(`validImage`)
+
+    if (!triggerValidImage) {
+      form.setError(
+        `coverImage`,
+        {
+          message: "validImageAI",
+        },
+        { shouldFocus: true }
+      )
+    }
+
+    const triggerRequireImage = isNotBook || form.watch(`file`)
+
+    if (!triggerRequireImage) {
+      form.setError(
+        `coverImage`,
+        {
+          message: "required",
+        },
+        { shouldFocus: true }
+      )
+    }
+
+    const triggerRequireDdc = form.watch(`classificationNumber`)
+
+    if (!triggerRequireDdc) {
+      form.setError(
+        `classificationNumber`,
+        { message: "required" },
+        { shouldFocus: true }
+      )
+    }
+
+    const triggerRequireCutter = form.watch(`cutterNumber`)
+
+    if (!triggerRequireCutter) {
+      form.setError(
+        `cutterNumber`,
+        { message: "required" },
+        { shouldFocus: true }
+      )
+    }
+
+    if (
+      !trigger ||
+      !triggerValidImage ||
+      !triggerRequireImage ||
+      !triggerRequireDdc ||
+      !triggerRequireCutter
+    ) {
+      flag = false
+    }
+
+    return flag
+  }
+
   const onSubmit = async (values: TEditBookSchema) => {
     const triggerRequireImage = !!(
-      !book.category?.isAllowAITraining ||
+      isNotBook ||
       values.file ||
       values.coverImage
     )
 
     if (!triggerRequireImage) {
-      form.setError("coverImage", { message: "required" })
+      form.setError(
+        "coverImage",
+        { message: "required" },
+        { shouldFocus: true }
+      )
       form.setFocus("coverImage")
       return
     }
@@ -417,6 +523,9 @@ function EditBookDialog({ open, setOpen, book }: Props) {
                     <FormItem className="flex flex-1 flex-col items-start">
                       <FormLabel className="flex items-center">
                         {t("Classification number")} (082a)
+                        <span className="ml-1 text-xl font-bold leading-none text-primary">
+                          *
+                        </span>
                       </FormLabel>
 
                       <FormControl>
@@ -437,6 +546,9 @@ function EditBookDialog({ open, setOpen, book }: Props) {
                     <FormItem className="flex flex-1 flex-col items-start">
                       <FormLabel className="flex items-center">
                         {t("Cutter number")} (082b)
+                        <span className="ml-1 text-xl font-bold leading-none text-primary">
+                          *
+                        </span>
                       </FormLabel>
 
                       <FormControl>
@@ -790,7 +902,7 @@ function EditBookDialog({ open, setOpen, book }: Props) {
                   authors={book.authors.map((a) => a.fullName)}
                   form={form}
                   isPending={isPending}
-                  isRequireImage={!!book.category.isAllowAITraining}
+                  isRequireImage={!isNotBook}
                   initCoverImage={book.coverImage}
                 />
 
@@ -809,6 +921,12 @@ function EditBookDialog({ open, setOpen, book }: Props) {
                     disabled={isPending}
                     type="submit"
                     className="float-right mt-4"
+                    onClick={async (e) => {
+                      if (!(await triggerCatalogs())) {
+                        e.preventDefault()
+                        e.stopPropagation()
+                      }
+                    }}
                   >
                     {t("Save")}{" "}
                     {isPending && (

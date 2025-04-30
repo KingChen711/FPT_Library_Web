@@ -28,6 +28,7 @@ type Props = {
   index: number
 }
 
+//*CATALOG
 function CoverImageField({
   form,
   isPending,
@@ -69,9 +70,9 @@ function CoverImageField({
 
   const [mounted, setMounted] = useState(false)
 
+  //isRequireImage ~ !isNotBook => author is not require to check OCR
   const canCheck = !!(
-    watchAuthorIds &&
-    watchAuthorIds.length > 0 &&
+    (!isRequireImage || (watchAuthorIds && watchAuthorIds.length > 0)) &&
     watchTitle &&
     watchPublisher &&
     watchFile &&
@@ -80,8 +81,7 @@ function CoverImageField({
 
   useEffect(() => {
     if (
-      !watchAuthorIds ||
-      watchAuthorIds.length === 0 ||
+      (isRequireImage && (!watchAuthorIds || watchAuthorIds.length === 0)) ||
       !watchTitle ||
       !watchPublisher
     ) {
@@ -89,7 +89,7 @@ function CoverImageField({
     } else {
       setDisableImageField(false)
     }
-  }, [form, watchAuthorIds, watchTitle, watchPublisher])
+  }, [form, watchAuthorIds, watchTitle, watchPublisher, isRequireImage])
 
   const onDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
@@ -311,7 +311,9 @@ function CoverImageField({
 
             <FormDescription>
               {t(
-                "You need to enter title, publisher, authors before uploading cover image"
+                isRequireImage
+                  ? "You need to enter title, publisher, authors before uploading cover image"
+                  : "You need to enter title, publisher before uploading cover image"
               )}
             </FormDescription>
             <FormMessage />

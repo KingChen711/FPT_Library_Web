@@ -12,8 +12,7 @@ import DigitalResourcesSection from "./_components/digital/digital-section"
 import LatestBorrowsSection from "./_components/latest-borrows/latest-borrows-section"
 import OverdueBorrowsSection from "./_components/overdue/overdue-borrow-section"
 import { OverviewSectionSkeleton } from "./_components/overview/overview-section"
-
-// import TopCirculationSection from "./_components/top-circulation/top-circulation-section"
+import TopCirculationSection from "./_components/top-circulation/top-circulation-section"
 
 const CirculationSection = dynamic(
   () => import("./_components/circulation/circulation-section"),
@@ -63,7 +62,7 @@ async function Dashboard() {
       <OverdueBorrowsSection />
       <AssignableReservationsSection />
       <LatestBorrowsSection />
-      {/* <TopCirculationSection /> */}
+      <TopCirculationSection />
     </div>
   )
 }

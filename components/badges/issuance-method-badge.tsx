@@ -26,7 +26,10 @@ function IssuanceMethodBadge({ status }: Props) {
   const t = useTranslations("Badges.IssuanceMethod")
 
   return (
-    <Badge variant={getTypeColor(status)} className="flex w-24 justify-center">
+    <Badge
+      variant={getTypeColor(status)}
+      className="flex w-24 shrink-0 justify-center"
+    >
       {t(status.toString())}
     </Badge>
   )

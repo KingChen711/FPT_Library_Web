@@ -15,7 +15,7 @@ function VisibilityBadge({ isPublic }: Props) {
   return (
     <Badge
       variant={isPublic ? "info" : "progress"}
-      className="flex w-24 justify-center"
+      className="flex w-24 shrink-0 justify-center"
     >
       {content}
     </Badge>

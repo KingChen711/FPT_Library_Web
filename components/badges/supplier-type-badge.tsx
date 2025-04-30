@@ -26,7 +26,10 @@ function SupplierTypeBadge({ status }: Props) {
   const t = useTranslations("Badges.SupplierType")
 
   return (
-    <Badge variant={getTypeColor(status)} className="flex w-28 justify-center">
+    <Badge
+      variant={getTypeColor(status)}
+      className="flex w-28 shrink-0 justify-center"
+    >
       {t(status.toString())}
     </Badge>
   )

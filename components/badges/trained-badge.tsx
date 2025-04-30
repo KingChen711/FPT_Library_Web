@@ -21,7 +21,10 @@ const getTypeColor = (type: boolean) => {
 function TrainedBadge({ trained }: Props) {
   const t = useTranslations("Badges.Trained")
   return (
-    <Badge variant={getTypeColor(trained)} className="flex justify-center">
+    <Badge
+      variant={getTypeColor(trained)}
+      className="flex w-fit shrink-0 justify-center"
+    >
       {t(trained ? "Trained" : "NotYet")}
     </Badge>
   )

@@ -27,7 +27,10 @@ const getTypeColor = (type: ENotificationType) => {
 function NotificationTypeBadge({ type: status }: Props) {
   const t = useTranslations("Badges.NotificationType")
   return (
-    <Badge variant={getTypeColor(status)} className="flex w-24 justify-center">
+    <Badge
+      variant={getTypeColor(status)}
+      className="flex w-24 shrink-0 justify-center"
+    >
       {t(status.toString())}
     </Badge>
   )
