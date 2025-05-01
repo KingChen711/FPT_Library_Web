@@ -160,6 +160,10 @@ const BorrowRequestTransactionDialog = ({
     })
   }, [transaction])
 
+  useEffect(() => {
+    console.log(paymentData?.expiredAt)
+  }, [paymentData?.expiredAt])
+
   if (isLoadingAuth || isLoading) {
     return (
       <div className="flex items-center justify-center">
