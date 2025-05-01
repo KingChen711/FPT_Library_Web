@@ -12,9 +12,10 @@ import CancelSpecificResourceDialog from "../request/_components/cancel-specific
 
 type Props = {
   resource: BorrowRequestResource
+  notCancelItem: boolean
 }
 
-const BorrowResourcePreview = ({ resource }: Props) => {
+const BorrowResourcePreview = ({ resource, notCancelItem }: Props) => {
   const t = useTranslations("BookPage.borrow tracking")
   const [openCancel, setOpenCancel] = useState(false)
   return (
@@ -34,9 +35,14 @@ const BorrowResourcePreview = ({ resource }: Props) => {
             <CardTitle className="line-clamp-1 text-base">
               {resource?.resourceTitle}
             </CardTitle>
-            <Button variant={"destructive"} onClick={() => setOpenCancel(true)}>
-              <Trash2 />
-            </Button>
+            {!notCancelItem && (
+              <Button
+                variant={"destructive"}
+                onClick={() => setOpenCancel(true)}
+              >
+                <Trash2 />
+              </Button>
+            )}
           </div>
         </CardHeader>
         <CardContent className="p-4">

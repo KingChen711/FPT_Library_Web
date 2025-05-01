@@ -100,7 +100,7 @@ function RecommendTabsContent({ trackingId }: Props) {
           </div>
         </div>
 
-        {data?.sources.length > 0 ? (
+        {data?.sources?.length > 0 ? (
           <div className="grid w-full">
             <div className="overflow-x-auto rounded-md border">
               <Table className="overflow-hidden">
@@ -400,7 +400,7 @@ function RecommendTabsContent({ trackingId }: Props) {
           </div>
         )}
 
-        {data?.sources.length > 0 && (
+        {data?.sources?.length > 0 && (
           <Paginator
             pageSize={+data?.pageSize}
             pageIndex={data?.pageIndex}

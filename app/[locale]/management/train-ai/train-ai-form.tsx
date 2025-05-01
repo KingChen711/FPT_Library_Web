@@ -130,6 +130,7 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
   const watchSelectedGroup = form.getValues("groups")
 
   const onSubmit = (values: TTrainGroupsSchema) => {
+    console.log({ values })
     startTransition(async () => {
       const formData = new FormData()
       const obj: Record<string, string | File[] | string[]> = {}
@@ -209,6 +210,8 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
         })
       )
 
+      console.log({ values })
+
       const res = await trainV2(formData)
 
       if (res.isSuccess) {
@@ -242,9 +245,15 @@ function TrainAIForm({ groups, trainProgress, maxItemToTrainAtOnce }: Props) {
         })
       })
 
+      console.log({ values, res })
+
       handleServerActionError(res, locale)
     })
   }
+
+  useEffect(() => {
+    console.log(form.formState.errors)
+  }, [form.formState.errors])
 
   const groupsData: GroupData[] = selectedGroups.map((g) => ({
     booksData: g.items.map((b) => ({

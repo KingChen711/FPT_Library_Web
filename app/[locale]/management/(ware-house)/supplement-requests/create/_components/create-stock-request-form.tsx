@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useTransition } from "react"
+import React, { useEffect, useState, useTransition } from "react"
 import { useRouter } from "next/navigation"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { getLocalTimeZone } from "@internationalized/date"
@@ -61,6 +61,12 @@ function CreateStockRequestForm() {
   >([])
 
   const onSubmit = async (values: TCreateSupplementRequestSchema) => {
+    values.supplementRequestDetails = values.supplementRequestDetails.map(
+      (d) => ({
+        ...d,
+        description: d.description ? d.description.slice(0, 3000) : undefined,
+      })
+    )
     startTransition(async () => {
       const res = await createSupplementRequest(values)
       if (res.isSuccess) {
@@ -72,6 +78,7 @@ function CreateStockRequestForm() {
         router.push("/management/supplement-requests")
         return
       }
+      console.log(res)
 
       handleServerActionError(res, locale, form)
     })
@@ -121,6 +128,10 @@ function CreateStockRequestForm() {
     // }
     return flag
   }
+
+  useEffect(() => {
+    console.log(form.formState.errors)
+  }, [form.formState.errors])
 
   return (
     <Form {...form}>

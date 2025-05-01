@@ -10,7 +10,7 @@ type PaymentData = {
   description: string
   orderCode: string
   qrCode: string
-  expiredAt: Date | null
+  expiredAt: number
   paymentLinkId: string
 }
 
@@ -44,9 +44,7 @@ export async function createBorrowRequestTransaction(
           orderCode: data.payOsResponse.data.orderCode,
           paymentLinkId: data.payOsResponse.data.paymentLinkId,
           qrCode: data.payOsResponse.data.qrCode,
-          expiredAt: data.expiredAtOffsetUnixSeconds
-            ? new Date(data.expiredAtOffsetUnixSeconds * 1000)
-            : null,
+          expiredAt: data.expiredAtOffsetUnixSeconds * 1000,
         },
       },
     }

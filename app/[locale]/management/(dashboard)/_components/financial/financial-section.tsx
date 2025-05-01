@@ -34,6 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import TransactionTypeBadge from "@/components/badges/transaction-type-badge"
 
 import StatCard from "../stat-card"
 
@@ -63,6 +64,7 @@ function FinancialSection() {
     endDate: dateRange[1],
     pageIndex,
     pageSize,
+    transactionType,
   })
 
   const handlePaginate = (selectedPage: number) => {
@@ -193,6 +195,10 @@ function FinancialSection() {
                 </TableHead>
 
                 <TableHead className="text-nowrap font-bold">
+                  <div className="flex justify-center">{t("Type")}</div>
+                </TableHead>
+
+                <TableHead className="text-nowrap font-bold">
                   <div className="flex justify-center">
                     {t("Transaction at")}
                   </div>
@@ -225,6 +231,12 @@ function FinancialSection() {
                   <TableCell className="text-nowrap">
                     <div className="flex justify-center">
                       {formatPrice(source.amount)}
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
+                      <TransactionTypeBadge type={source.transactionType} />
                     </div>
                   </TableCell>
 

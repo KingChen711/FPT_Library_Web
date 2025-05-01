@@ -41,6 +41,7 @@ export type FinancialSearchParams = {
   endDate: Date | null
   pageSize: string
   pageIndex: number
+  transactionType: ETransactionType
 }
 
 function useDashboardFinancial(searchParams: FinancialSearchParams) {
