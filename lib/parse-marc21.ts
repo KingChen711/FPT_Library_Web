@@ -1,85 +1,5 @@
 import { z } from "zod"
 
-// const languageMapping: { [key: string]: string } = {
-//   af: "Afrikaans",
-//   am: "አማርኛ",
-//   ar: "العربية",
-//   az: "Azərbaycanca",
-//   bg: "Български",
-//   bn: "বাংলা",
-//   bs: "Bosanski",
-//   ca: "Català",
-//   cs: "Čeština",
-//   cy: "Cymraeg",
-//   da: "Dansk",
-//   de: "Deutsch",
-//   el: "Ελληνικά",
-//   en: "English",
-//   es: "Español",
-//   et: "Eesti",
-//   fa: "فارسی",
-//   fi: "Suomi",
-//   fil: "Filipino",
-//   fr: "Français",
-//   ga: "Gaeilge",
-//   gl: "Galego",
-//   gu: "ગુજરાતી",
-//   he: "עברית",
-//   hi: "हिन्दी",
-//   hr: "Hrvatski",
-//   hu: "Magyar",
-//   hy: "Հայերեն",
-//   id: "Bahasa Indonesia",
-//   is: "Íslenska",
-//   it: "Italiano",
-//   ja: "日本語",
-//   ka: "ქართული",
-//   kk: "Қазақ",
-//   km: "ភាសាខ្មែរ",
-//   kn: "ಕನ್ನಡ",
-//   ko: "한국어",
-//   ky: "Кыргызча",
-//   lo: "ພາສາລາວ",
-//   lt: "Lietuvių",
-//   lv: "Latviešu",
-//   mk: "Македонски",
-//   ml: "മലയാളം",
-//   mn: "Монгол",
-//   mr: "मराठी",
-//   ms: "Bahasa Melayu",
-//   my: "ဗမာစာ",
-//   ne: "नेपाली",
-//   nl: "Nederlands",
-//   no: "Norsk",
-//   pa: "ਪੰਜਾਬੀ",
-//   pl: "Polski",
-//   ps: "پښتو",
-//   pt: "Português",
-//   ro: "Română",
-//   ru: "Русский",
-//   si: "සිංහල",
-//   sk: "Slovenčina",
-//   sl: "Slovenščina",
-//   so: "Soomaali",
-//   sq: "Shqip",
-//   sr: "Српски",
-//   sv: "Svenska",
-//   sw: "Kiswahili",
-//   ta: "தமிழ்",
-//   te: "తెలుగు",
-//   th: "ไทย",
-//   tr: "Türkçe",
-//   uk: "Українська",
-//   ur: "اردو",
-//   uz: "Oʻzbek (Uzbek)",
-//   vi: "Tiếng Việt",
-//   vie: "Tiếng Việt",
-//   xh: "isiXhosa",
-//   yi: "ייִדיש",
-//   zh: "中文",
-//   zu: "isiZulu",
-// }
-
 type Marc21Template = {
   [outputKey: string]: {
     tag: string
@@ -103,6 +23,11 @@ function parseMarc21WithTemplate(
     .split("\n")
     .filter((line) => line.trim() !== "")
     .map((line) => {
+      line = line
+        .split("\t")
+        .map((t) => (t === "" ? "#" : t))
+        .join("\t")
+
       if (line.split("\t")[0].length !== 3) {
         return lastTag + "$" + line
       } else {
@@ -246,7 +171,10 @@ export const parsedMarc21 = (marc21Data: string) => {
     additionalAuthors: jsonData.additionalAuthors
       ? jsonData.additionalAuthors
           .map((a: string, i: number) => {
-            if (jsonData.additionalAuthorContributions[i] === "not mentioned") {
+            if (
+              !jsonData?.additionalAuthorContributions?.[i] ||
+              jsonData.additionalAuthorContributions[i] === "not mentioned"
+            ) {
               return jsonData.additionalAuthors[i]
             }
             return (

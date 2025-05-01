@@ -71,7 +71,7 @@ function SelectFinesDialog({
           {t("Add fine")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[80vh] max-w-3xl">
+      <DialogContent className="max-h-[80vh] max-w-6xl">
         <DialogHeader>
           <DialogTitle>{t("Fines")}</DialogTitle>
           <DialogDescription asChild>
@@ -121,7 +121,9 @@ function SelectFinesDialog({
                       <TableBody>
                         {data?.sources.map((fine) => (
                           <TableRow key={fine.finePolicyId}>
-                            <TableCell>{fine.finePolicyTitle}</TableCell>
+                            <TableCell className="text-nowrap">
+                              {fine.finePolicyTitle}
+                            </TableCell>
                             <TableCell>
                               <div className="flex justify-center">
                                 <FineTypeBadge type={fine.conditionType} />

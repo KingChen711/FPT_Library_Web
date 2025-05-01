@@ -55,8 +55,6 @@ const BorrowRequestTransactionDialog = ({
   const [connection, setConnection] = useState<HubConnection | null>(null)
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
   const [isPending, startTransition] = useTransition()
-  const isExpireBefore =
-    transaction?.transactionStatus === ETransactionStatus.EXPIRED
 
   const [paymentStates, setPaymentStates] = useState({
     leftTime: 0,
@@ -96,8 +94,6 @@ const BorrowRequestTransactionDialog = ({
   // Reduce left time
   useEffect(() => {
     const timer = setInterval(() => {
-      if (isExpireBefore) return
-
       const leftTime = paymentData?.expiredAt
         ? paymentData.expiredAt.getTime() - Date.now()
         : 0
@@ -110,6 +106,12 @@ const BorrowRequestTransactionDialog = ({
       )
         return
 
+      console.log({
+        leftTime,
+        expiredAt: paymentData?.expiredAt,
+        paymentStatesStatus: paymentStates.status,
+      })
+
       setPaymentStates((prev) => ({
         ...prev,
         leftTime: 0,
@@ -121,7 +123,7 @@ const BorrowRequestTransactionDialog = ({
     return () => {
       clearInterval(timer)
     }
-  }, [paymentData?.expiredAt, paymentStates?.status, isExpireBefore])
+  }, [paymentData?.expiredAt, paymentStates?.status])
 
   // Reduce navigate time
   useEffect(() => {
@@ -138,13 +140,17 @@ const BorrowRequestTransactionDialog = ({
   }, [paymentStates.canNavigate, paymentStates.navigateTime, router])
 
   useEffect(() => {
-    if (!transaction) return
+    if (
+      !transaction ||
+      transaction.transactionStatus !== ETransactionStatus.PENDING
+    )
+      return
     setPaymentData({
       description: transaction.description || "",
       expiredAt: transaction.expiredAt ? new Date(transaction.expiredAt) : null,
       orderCode: transaction.transactionCode,
       qrCode: transaction.qrCode || "",
-      paymentLinkId: "",
+      paymentLinkId: transaction.paymentLinkId || "",
     })
     setPaymentStates({
       canNavigate: false,
@@ -177,8 +183,6 @@ const BorrowRequestTransactionDialog = ({
             expiredAt: transaction.data.paymentData.expiredAt
               ? (() => {
                   const date = new Date(transaction.data.paymentData.expiredAt)
-                  //TODO: This can be cleaner, not using hard code
-                  date.setHours(date.getHours() - 7)
                   return date
                 })()
               : null,
@@ -208,68 +212,72 @@ const BorrowRequestTransactionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      {!paymentData && !transaction && (
-        <DialogContent className="sm:max-w-3xl">
-          <DialogHeader>
-            <DialogTitle>{t("create borrow request transaction")}</DialogTitle>
-            <DialogDescription>
-              {t("borrow request transaction desc")}
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid grid-cols-2 gap-4">
-            {borrowRequestResources!.map((resource) => (
-              <Card
-                key={resource.borrowRequestResourceId}
-                className="overflow-hidden border border-muted/50 transition-all hover:border-primary/20 hover:shadow-md"
-              >
-                <CardHeader className="bg-muted/10 pb-2 pt-3">
-                  <CardTitle className="line-clamp-1 text-base">
-                    {resource?.resourceTitle}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-4">
-                  <div className="flex flex-col gap-3">
-                    <div className="flex items-center gap-2">
-                      <Badge
-                        variant="progress"
-                        className="flex items-center gap-1 border-primary/20 bg-primary/5 text-xs font-normal text-primary"
-                      >
-                        {resource.libraryResource.resourceType ===
-                        EResourceBookType.EBOOK ? (
-                          <>
-                            <BookOpen className="size-3" />
-                            {t("ebook")}
-                          </>
-                        ) : (
-                          <>
-                            <AudioLines className="size-3" />
-                            {t("audio book")}
-                          </>
-                        )}
-                      </Badge>
-                    </div>
-
-                    {resource.defaultBorrowDurationDays && (
-                      <div className="flex items-center text-sm text-muted-foreground">
-                        <Clock className="mr-1.5 size-3.5" />
-                        {t("borrow duration")}:&nbsp;
-                        {resource.defaultBorrowDurationDays} &nbsp;
-                        {t("days")}
+      {!paymentData &&
+        (!transaction ||
+          transaction.transactionStatus === ETransactionStatus.EXPIRED) && (
+          <DialogContent className="sm:max-w-3xl">
+            <DialogHeader>
+              <DialogTitle>
+                {t("create borrow request transaction")}
+              </DialogTitle>
+              <DialogDescription>
+                {t("borrow request transaction desc")}
+              </DialogDescription>
+            </DialogHeader>
+            <div className="grid grid-cols-2 gap-4">
+              {borrowRequestResources!.map((resource) => (
+                <Card
+                  key={resource.borrowRequestResourceId}
+                  className="overflow-hidden border border-muted/50 transition-all hover:border-primary/20 hover:shadow-md"
+                >
+                  <CardHeader className="bg-muted/10 pb-2 pt-3">
+                    <CardTitle className="line-clamp-1 text-base">
+                      {resource?.resourceTitle}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-4">
+                    <div className="flex flex-col gap-3">
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="progress"
+                          className="flex items-center gap-1 border-primary/20 bg-primary/5 text-xs font-normal text-primary"
+                        >
+                          {resource.libraryResource.resourceType ===
+                          EResourceBookType.EBOOK ? (
+                            <>
+                              <BookOpen className="size-3" />
+                              {t("ebook")}
+                            </>
+                          ) : (
+                            <>
+                              <AudioLines className="size-3" />
+                              {t("audio book")}
+                            </>
+                          )}
+                        </Badge>
                       </div>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-          <DialogFooter className="flex items-center justify-end gap-4">
-            <DialogClose>{t("cancel")}</DialogClose>
-            <Button onClick={() => onSubmit()} disabled={isPending}>
-              {t("submit")}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      )}
+
+                      {resource.defaultBorrowDurationDays && (
+                        <div className="flex items-center text-sm text-muted-foreground">
+                          <Clock className="mr-1.5 size-3.5" />
+                          {t("borrow duration")}:&nbsp;
+                          {resource.defaultBorrowDurationDays} &nbsp;
+                          {t("days")}
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+            <DialogFooter className="flex items-center justify-end gap-4">
+              <DialogClose>{t("cancel")}</DialogClose>
+              <Button onClick={() => onSubmit()} disabled={isPending}>
+                {t("submit")} {isPending && <Loader2 className="size-4" />}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        )}
       {paymentData && (
         <DialogContent className="flex max-h-[80vh] max-w-6xl items-center justify-center overflow-y-auto">
           <PaymentCard

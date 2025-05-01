@@ -834,7 +834,7 @@ export type Transaction = {
   createdBy: string
   cancelledAt: Date | null
   cancellationReason: string | null
-
+  paymentLinkId: string | null
   fineId: number | null
   resourceId: number | null
   libraryCardPackageId: number | null

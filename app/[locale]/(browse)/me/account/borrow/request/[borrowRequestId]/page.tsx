@@ -299,13 +299,14 @@ const BorrowRequestDetail = ({ params }: Props) => {
               </div>
 
               <div className="flex items-center gap-4">
-                {transactionStatus ? (
+                {transactionStatus === ETransactionStatus.CANCELLED ||
+                transactionStatus === ETransactionStatus.PAID ? (
                   <TransactionStatusBadge status={transactionStatus} />
                 ) : null}
 
                 {(borrowRequest.isExistPendingResources ||
                   transactionStatus === ETransactionStatus.PENDING) &&
-                  transactionStatus !== ETransactionStatus.EXPIRED && (
+                  transactionStatus !== ETransactionStatus.CANCELLED && (
                     <Button onClick={() => setOpenTransaction(true)}>
                       {t("payment")}
                     </Button>
@@ -316,6 +317,10 @@ const BorrowRequestDetail = ({ params }: Props) => {
               <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {borrowRequest.borrowRequestResources.map((resource) => (
                   <BorrowResourcePreview
+                    notCancelItem={
+                      transactionStatus === ETransactionStatus.CANCELLED ||
+                      transactionStatus === ETransactionStatus.PAID
+                    }
                     resource={resource}
                     key={`/borrow/borrow-request-resources/${resource.resourceId}`}
                   />

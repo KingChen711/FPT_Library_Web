@@ -12,7 +12,7 @@ import useAutoTranslate from "@/hooks/use-auto-translate"
 const conf: woosmap.map.IndoorRendererOptions = {
   defaultFloor: 1, //Render map with default floor
   centerMap: true,
-  venue: "intelligent_library_v2",
+  venue: "intelligent_library",
   responsive: "desktop",
 }
 
@@ -42,7 +42,7 @@ const Map = ({ notFull = false }: Props) => {
   const [mapLoaded, setHideLoader] = useState(false)
   const mapContainerRef = useRef(null)
   const scriptStatus = useScript(
-    "https://sdk.woosmap.com/map/map.js?key=woos-2861ec1d-05d1-3d4b-a4dd-1dfefe85769e&callback=initMap&libraries=widgets"
+    "https://sdk.woosmap.com/map/map.js?key=woos-f4d3c661-48b2-32b5-9575-3484beee2d00&callback=initMap&libraries=widgets"
   )
 
   const [isIndoorWidgetReady, setIsIndoorWidgetReady] = useState(false)

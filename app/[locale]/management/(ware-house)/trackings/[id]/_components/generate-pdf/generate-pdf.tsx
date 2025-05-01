@@ -77,7 +77,7 @@ export const generatePDF = ({
   doc.setFontSize(14)
   doc.setFont("Roboto", "bold")
   doc.text(
-    supplementRequest ? "PHIẾU YÊU CẦU BÔ SUNG" : "PHIẾU NHẬP KHO",
+    supplementRequest ? "PHIẾU YÊU CẦU BỔ SUNG" : "PHIẾU NHẬP KHO",
     300,
     90,
     { align: "center" }
@@ -88,24 +88,46 @@ export const generatePDF = ({
   doc.setFont("Roboto", "normal")
 
   // 6. Thông tin chung (supplier, số phiếu, etc.)
-  const { receiptNumber, entryDate, supplier } = tracking
+  const { receiptNumber, entryDate, supplier, createdBy } = tracking
   const supplierName = supplier?.supplierName || ""
   const supplierContact = supplier?.contactPerson || ""
+  const supplierPhone = supplier?.contactPhone || ""
   const entryDateStr = formatDate(entryDate)
+  // doc.text(`Nhà cung cấp: ${supplierName}`, 40, 140)
+  // doc.text(`Người liên hệ: ${supplierContact}`, 40, 155)
 
-  doc.text(`Số phiếu nhập: ${receiptNumber || ""}`, 40, 125)
-  doc.text(`Nhà cung cấp: ${supplierName}`, 40, 140)
-  doc.text(`Người liên hệ: ${supplierContact}`, 40, 155)
-  doc.text(`Ngày nhập: ${entryDateStr}`, 40, 170)
+  doc.text(
+    `${supplementRequest ? "Số phiếu yêu cầu bổ sung" : "Số phiếu nhập"}: ${receiptNumber || ""}`,
+    40,
+    125
+  )
+  doc.text(`Thủ thư trưởng: ${createdBy || ""}`, 40, 140)
+  doc.text(
+    `${supplementRequest ? "Ngày yêu cầu bổ sung" : "Ngày nhập"}: ${entryDateStr}`,
+    40,
+    155
+  )
 
-  // 7. Bảng thống kê các item trong phiếu
-  // Tạo mảng data cho autoTable
+  if (!supplementRequest) {
+    const pageWidth = doc.internal.pageSize.getWidth()
+    const supplierNameText = `Nhà cung cấp: ${supplierName}`
+    const supplierContactText = `Người liên hệ: ${supplierContact}`
+    const supplierPhoneText = `Số điện thoại: ${supplierPhone}`
+    const x = Math.min(
+      pageWidth - doc.getTextWidth(supplierNameText) - 40,
+      pageWidth - doc.getTextWidth(supplierContactText) - 40,
+      pageWidth - doc.getTextWidth(supplierPhoneText) - 40
+    )
+    doc.text(supplierNameText, x, 125)
+    doc.text(supplierContactText, x, 140)
+    doc.text(supplierPhoneText, x, 155)
+  }
 
   doc.setFontSize(12)
   doc.setFont("Roboto", "bold")
   doc.text(
     supplementRequest
-      ? "Danh sách yêu cầu bô sung chi tiết"
+      ? "Danh sách yêu cầu bổ sung chi tiết"
       : "Danh sách nhập kho chi tiết",
     supplementRequest ? 205 : 225,
     185
@@ -144,7 +166,7 @@ export const generatePDF = ({
     itemColumns.push("Số ĐKCB")
   }
 
-  let finalY = 200 // Ép kiểu vì lastAutoTable không được định nghĩa sẵn trong jsPDF
+  let finalY = 205 // Ép kiểu vì lastAutoTable không được định nghĩa sẵn trong jsPDF
 
   Object.entries(itemRowsByCategory).forEach(([key, value], i) => {
     // Sử dụng autoTable
