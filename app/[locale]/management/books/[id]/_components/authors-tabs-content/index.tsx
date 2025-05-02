@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useTransition } from "react"
-import defaultAuthor from "@/public/assets/images/default-author.png"
+import defaultAuthor from "@/public/assets/images/default-author.jpg"
 import { format } from "date-fns"
 import { CheckSquare, Loader2, Trash2, X } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"

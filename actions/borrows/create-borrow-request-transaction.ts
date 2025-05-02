@@ -10,7 +10,7 @@ type PaymentData = {
   description: string
   orderCode: string
   qrCode: string
-  expiredAt: number
+  expiredAt: Date
   paymentLinkId: string
 }
 
@@ -19,6 +19,7 @@ export async function createBorrowRequestTransaction(
 ): Promise<
   ActionResponse<{ message: string; paymentData: PaymentData | null }>
 > {
+  const isProduction = process.env.NODE_ENV === "production"
   const { getAccessToken } = auth()
   try {
     const { data, message } = await http.post<{
@@ -44,7 +45,11 @@ export async function createBorrowRequestTransaction(
           orderCode: data.payOsResponse.data.orderCode,
           paymentLinkId: data.payOsResponse.data.paymentLinkId,
           qrCode: data.payOsResponse.data.qrCode,
-          expiredAt: data.expiredAtOffsetUnixSeconds * 1000,
+          expiredAt: isProduction
+            ? new Date(
+                data.expiredAtOffsetUnixSeconds * 1000 - 1000 * 60 * 60 * 7
+              )
+            : new Date(data.expiredAtOffsetUnixSeconds * 1000),
         },
       },
     }

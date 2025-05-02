@@ -173,17 +173,17 @@ function EditBookDialog({ open, setOpen, book }: Props) {
       )
     }
 
-    const triggerRequireImage = isNotBook || form.watch(`file`)
+    // const triggerRequireImage = isNotBook || form.watch(`file`)
 
-    if (!triggerRequireImage) {
-      form.setError(
-        `coverImage`,
-        {
-          message: "required",
-        },
-        { shouldFocus: true }
-      )
-    }
+    // if (!triggerRequireImage) {
+    //   form.setError(
+    //     `coverImage`,
+    //     {
+    //       message: "required",
+    //     },
+    //     { shouldFocus: true }
+    //   )
+    // }
 
     const triggerRequireDdc = form.watch(`classificationNumber`)
 
@@ -208,7 +208,7 @@ function EditBookDialog({ open, setOpen, book }: Props) {
     if (
       !trigger ||
       !triggerValidImage ||
-      !triggerRequireImage ||
+      // !triggerRequireImage ||
       !triggerRequireDdc ||
       !triggerRequireCutter
     ) {

@@ -188,19 +188,18 @@ const BorrowRecordFineDialog = ({
             expiredAt: transaction.data.paymentData.expiredAt
               ? (() => {
                   const date = new Date(transaction.data.paymentData.expiredAt)
-                  //TODO: This can be cleaner, not using hard code
-                  date.setHours(date.getHours() - 7)
                   return date
                 })()
               : null,
           })
           return
         }
-        toast({
-          title: locale === "vi" ? "Thành công" : "Success",
-          description: transaction.data.message,
-          variant: "success",
-        })
+        if (transaction.data.message)
+          toast({
+            title: locale === "vi" ? "Thành công" : "Success",
+            description: transaction.data.message,
+            variant: "success",
+          })
       }
 
       if (!transaction.isSuccess) {
