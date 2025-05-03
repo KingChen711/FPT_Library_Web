@@ -715,6 +715,8 @@ function LibrarianCheckoutForm() {
                                           {getDateRangeString(
                                             item.category.totalBorrowDays
                                           )}
+                                          ({item.category.totalBorrowDays}{" "}
+                                          {t("days")})
                                         </div>
                                       )}
                                       <CancelRequestItemDialog
@@ -799,6 +801,8 @@ function LibrarianCheckoutForm() {
                                         {getDateRangeString(
                                           item.category.totalBorrowDays
                                         )}
+                                        ({item.category.totalBorrowDays}{" "}
+                                        {t("days")})
                                       </div>
                                     )}
                                     <div className="ml-1 flex items-center gap-2">

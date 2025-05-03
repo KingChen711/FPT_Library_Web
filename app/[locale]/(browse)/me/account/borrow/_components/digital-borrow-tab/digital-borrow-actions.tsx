@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation"
 import { Eye, MoreHorizontal, RotateCcw } from "lucide-react"
 import { useTranslations } from "next-intl"
 
-import { EResourceBookType } from "@/lib/types/enums"
+import { EBorrowDigitalStatus, EResourceBookType } from "@/lib/types/enums"
 import {
   type BookResource,
   type BorrowDigital,
@@ -74,12 +74,14 @@ const DigitalBorrowActions = ({ borrowItem }: Props) => {
           >
             <Eye /> {t("view detail")}
           </DropdownMenuItem>
-          <DropdownMenuItem
-            className="cursor-pointer"
-            onClick={handleViewResource}
-          >
-            <Eye /> {t("view resource")}
-          </DropdownMenuItem>
+          {borrowItem.status === EBorrowDigitalStatus.ACTIVE && (
+            <DropdownMenuItem
+              className="cursor-pointer"
+              onClick={handleViewResource}
+            >
+              <Eye /> {t("view resource")}
+            </DropdownMenuItem>
+          )}
           <DropdownMenuItem
             className="cursor-pointer"
             onClick={() => setOpenExtendConfirm(true)}

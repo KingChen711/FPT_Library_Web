@@ -76,8 +76,7 @@ const BookDigitalListDialog = ({
                       isBorrowed={libraryItem.digitalBorrows?.some(
                         (b) =>
                           b.resourceId === resource.resourceId &&
-                          (b.status === EBorrowDigitalStatus.ACTIVE ||
-                            b.status === EBorrowDigitalStatus.PREPARING)
+                          b.status === EBorrowDigitalStatus.ACTIVE
                       )}
                       key={resource.resourceId}
                       resource={resource}
@@ -112,8 +111,7 @@ const BookDigitalListDialog = ({
                       isBorrowed={libraryItem.digitalBorrows?.some(
                         (b) =>
                           b.resourceId === resource.resourceId &&
-                          (b.status === EBorrowDigitalStatus.ACTIVE ||
-                            b.status === EBorrowDigitalStatus.PREPARING)
+                          b.status === EBorrowDigitalStatus.ACTIVE
                       )}
                       key={resource.resourceId}
                       resource={resource}
