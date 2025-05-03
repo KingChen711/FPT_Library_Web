@@ -18,7 +18,12 @@ import {
   Tooltip as TooltipChart,
   XAxis,
   YAxis,
+  type TooltipProps,
 } from "recharts"
+import {
+  type NameType,
+  type ValueType,
+} from "recharts/types/component/DefaultTooltipContent"
 
 import { parseSearchParamsDateRange } from "@/lib/filters"
 import { EDashboardPeriodLabel, ESearchType } from "@/lib/types/enums"
@@ -83,6 +88,43 @@ function TopCirculationSection() {
     endDate: dateRange[1],
   })
 
+  const CustomTooltip: React.FC<TooltipProps<ValueType, NameType>> = ({
+    active,
+    payload,
+    label,
+  }) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload // Access the full data object for the hovered bar
+
+      return (
+        <div className="rounded-lg border bg-card p-4 text-card-foreground shadow-lg">
+          <p className="mb-2 font-semibold">{label}</p>
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="text-[#8884d8]">{t("Available units")}:</div>
+            <div className="font-medium">{data.availableUnits}</div>
+            <div className="text-[#82ca9d]">{t("Need units")}:</div>
+            <div className="font-medium">{data.needUnits}</div>
+            <div className="text-muted-foreground">{t("Total requests")}:</div>
+            <div className="font-medium">{data.totalRequest}</div>
+            <div className="text-muted-foreground">{t("Failed requests")}:</div>
+            <div className="font-medium">{data.totalRequestFailed}</div>
+            <div className="text-muted-foreground">{t("Total borrowed")}:</div>
+            <div className="font-medium">{data.totalBorrowed}</div>
+            <div className="text-muted-foreground">{t("Total reserved")}:</div>
+            <div className="font-medium">{data.totalReserved}</div>
+            <div className="text-muted-foreground">
+              {t("Satisfaction rate")}:
+            </div>
+            <div className="font-medium">
+              {(data.averageNeedSatisfactionRate * 100).toFixed(1)}%
+            </div>
+          </div>
+        </div>
+      )
+    }
+    return null
+  }
+
   const handleSort = (sortKey: any) =>
     setSearchParams((prev) => ({
       ...prev,
@@ -92,12 +134,11 @@ function TopCirculationSection() {
 
   const combinedData =
     data?.availableVsNeedChartCategories.map((item) => ({
+      ...item,
       name:
         locale === "vi"
           ? item.category.vietnameseName
           : item.category.englishName,
-      availableUnits: item.availableUnits,
-      needUnits: item.needUnits,
     })) || []
 
   if (isLoading || !data) return
@@ -117,7 +158,7 @@ function TopCirculationSection() {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
             <YAxis />
-            <TooltipChart />
+            <TooltipChart content={<CustomTooltip />} />
             <Legend />
             <Bar
               dataKey="availableUnits"

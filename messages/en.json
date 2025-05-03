@@ -5,6 +5,11 @@
     "Not found description": "Sorry, we couldn't find the page you're looking for. It may have moved or it may not exist."
   },
   "Dashboard": {
+    "Available units": "Available units",
+    "Need units": "Need units",
+    "Failed requests": "Total requests",
+    "Total reserved": "Total reserved",
+    "Satisfaction rate": "Satisfaction rate",
     "Pending percentage": "Pending percentage",
     "Paid percentage": "Paid percentage",
     "Expired percentage": "Expired percentage",
