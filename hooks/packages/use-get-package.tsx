@@ -7,6 +7,7 @@ function useGetPackage(libraryPackageId: string) {
   return useQuery({
     queryKey: [`/packages/${libraryPackageId}`],
     queryFn: async () => {
+      if (!libraryPackageId) return null
       const res = await http.get<Package>(
         `/api/packages/${libraryPackageId}`,
         {}

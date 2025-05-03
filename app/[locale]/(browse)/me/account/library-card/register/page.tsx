@@ -28,7 +28,7 @@ import {
   onReceiveVerifyPaymentStatus,
   type SocketVerifyPaymentStatus,
 } from "@/lib/signalR/verify-payment-status"
-import { ETransactionStatus } from "@/lib/types/enums"
+import { ETransactionStatus, ETransactionType } from "@/lib/types/enums"
 import { formatDate } from "@/lib/utils"
 import { type PaymentData } from "@/actions/library-card/patrons/create-patron"
 import { createLibraryCardTransaction } from "@/actions/library-cards/create-library-card-transaction"
@@ -36,6 +36,7 @@ import { registerLibraryCard } from "@/actions/library-cards/register-library-ca
 import useUploadImage from "@/hooks/media/use-upload-image"
 import useGetPackage from "@/hooks/packages/use-get-package"
 import useGetPaymentMethods from "@/hooks/payment-methods/use-get-payment-method"
+import useCreateTransactionRegisterCard from "@/hooks/transactions/use-create-transaction-register-card"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader } from "@/components/ui/card"
@@ -65,9 +66,12 @@ const formSchema = z.object({
   transactionType: z.number().int().positive(),
 })
 
-type Props = { searchParams: { libraryCardId: string } }
+type Props = {
+  searchParams: { libraryCardId: string; continuePayment?: string }
+}
 
 const LibraryCardRegister = ({ searchParams }: Props) => {
+  const continuePayment = searchParams?.continuePayment === "true"
   const t = useTranslations("MeLibraryCard")
   const locale = useLocale()
   const router = useRouter()
@@ -82,6 +86,8 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
   const { data: packageData, isLoading: isLoadingPackage } = useGetPackage(
     searchParams.libraryCardId
   )
+  const { mutateAsync: createLibraryCardTransactionClient } =
+    useCreateTransactionRegisterCard()
 
   const [paymentData, setPaymentData] = useState<PaymentData | null>(null)
   const { mutateAsync: uploadBookImage } = useUploadImage(true)
@@ -102,7 +108,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
       resourceId: null,
       description: null,
       paymentMethodId: 1,
-      transactionType: 2,
+      transactionType: ETransactionType.LIBRARY_CARD_REGISTER,
     },
   })
 
@@ -172,6 +178,41 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
     return () => clearInterval(timer)
   }, [paymentStates.canNavigate, paymentStates.navigateTime, router])
 
+  useEffect(() => {
+    if (!continuePayment && !isLoadingAuth) return
+
+    createLibraryCardTransactionClient().then((transaction) => {
+      if (transaction.isSuccess) {
+        if (transaction.data.paymentData) {
+          setPaymentData({
+            ...transaction.data.paymentData,
+            expiredAt: transaction.data.paymentData.expiredAt
+              ? (() => {
+                  const date = new Date(transaction.data.paymentData.expiredAt)
+                  return date
+                })()
+              : null,
+          })
+          return
+        }
+        if (transaction.data.message)
+          toast({
+            title: locale === "vi" ? "Thành công" : "Success",
+            description: transaction.data.message,
+            variant: "success",
+          })
+      }
+
+      return
+    })
+  }, [
+    continuePayment,
+    createLibraryCardTransactionClient,
+    form,
+    locale,
+    isLoadingAuth,
+  ])
+
   if (isLoadingAuth || isLoadingPaymentMethods || isLoadingPackage) {
     return (
       <div className="flex items-center justify-center">
@@ -180,11 +221,11 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
     )
   }
 
-  if (!searchParams.libraryCardId) {
+  if (!searchParams.libraryCardId && !continuePayment) {
     router.push("/not-found")
   }
 
-  if (!user || !paymentMethods || !packageData) {
+  if ((!user || !paymentMethods || !packageData) && !continuePayment) {
     return <NoData />
   }
 
@@ -216,6 +257,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
       }
 
       const data = await uploadBookImage(values.avatar)
+
       if (!data) {
         toast({
           title: locale === "vi" ? "Thất bại" : "Fail",
@@ -226,12 +268,14 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
       }
 
       if (data) {
-        const res = await registerLibraryCard({
-          avatar: data.secureUrl,
-          fullName: values.fullName,
-        })
+        const res = data
+          ? await registerLibraryCard({
+              avatar: data.secureUrl,
+              fullName: values.fullName,
+            })
+          : null
 
-        if (!res.isSuccess) {
+        if (res && !res.isSuccess) {
           toast({
             title: locale === "vi" ? "Đăng kí thất bại" : "Fail to register",
             variant: "danger",
@@ -257,19 +301,18 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
                     const date = new Date(
                       transaction.data.paymentData.expiredAt
                     )
-                    //TODO: This can be cleaner, not using hard code
-                    date.setHours(date.getHours() - 7)
                     return date
                   })()
                 : null,
             })
             return
           }
-          toast({
-            title: locale === "vi" ? "Thành công" : "Success",
-            description: transaction.data.message,
-            variant: "success",
-          })
+          if (transaction.data.message)
+            toast({
+              title: locale === "vi" ? "Thành công" : "Success",
+              description: transaction.data.message,
+              variant: "success",
+            })
         }
 
         if (!transaction.isSuccess) {
@@ -289,7 +332,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
 
   return (
     <div>
-      {!paymentData && (
+      {!paymentData && packageData && (
         <>
           <Button
             variant={"link"}
@@ -306,7 +349,7 @@ const LibraryCardRegister = ({ searchParams }: Props) => {
         {t("Library Card Registration")}
       </h1>
 
-      {!paymentData && (
+      {!paymentData && packageData && (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
             <div className="grid gap-8 md:grid-cols-2">

@@ -275,7 +275,7 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
                     <FormControl>
                       <Select
                         disabled={isManager || pending}
-                        defaultValue={currentUser.gender.toString()}
+                        defaultValue={currentUser?.gender?.toString()}
                         onValueChange={(val) => field.onChange(+val)}
                       >
                         <SelectTrigger>

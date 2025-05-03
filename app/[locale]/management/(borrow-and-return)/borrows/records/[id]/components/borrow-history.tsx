@@ -45,7 +45,7 @@ export default async function BorrowHistory({
     <div className="flex flex-col gap-4">
       <div className="flex flex-wrap items-center justify-between gap-4">
         <h3 className="text-xl font-semibold">{t("Progress")}</h3>
-        {actions}
+        {borrowRecord.hasFineToPayment ? actions : null}
       </div>
 
       <div className="space-y-6">

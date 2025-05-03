@@ -23,6 +23,7 @@ export async function createLibraryCardTransaction(body: {
 }): Promise<
   ActionResponse<{ message: string; paymentData: PaymentData | null }>
 > {
+  const isProduction = process.env.NODE_ENV === "production"
   const { getAccessToken } = auth()
 
   try {
@@ -47,13 +48,42 @@ export async function createLibraryCardTransaction(body: {
           orderCode: data.payOsResponse.data.orderCode,
           paymentLinkId: data.payOsResponse.data.paymentLinkId,
           qrCode: data.payOsResponse.data.qrCode,
-          expiredAt: data.expiredAtOffsetUnixSeconds
-            ? new Date(data.expiredAtOffsetUnixSeconds * 1000)
-            : null,
+          expiredAt: isProduction
+            ? new Date(
+                data.expiredAtOffsetUnixSeconds * 1000 - 1000 * 60 * 60 * 7
+              )
+            : new Date(data.expiredAtOffsetUnixSeconds * 1000),
         },
       },
     }
   } catch (error) {
-    return handleHttpError(error)
+    const res = handleHttpError(error)
+    if (
+      res.typeError === "warning" &&
+      res.resultCode === "Transaction.Warning0003"
+    ) {
+      const data = res.data as {
+        payOsResponse: { data: PaymentData }
+        expiredAtOffsetUnixSeconds: number
+      }
+      return {
+        isSuccess: true,
+        data: {
+          message: "",
+          paymentData: {
+            description: data.payOsResponse.data.description,
+            orderCode: data.payOsResponse.data.orderCode,
+            paymentLinkId: data.payOsResponse.data.paymentLinkId,
+            qrCode: data.payOsResponse.data.qrCode,
+            expiredAt: isProduction
+              ? new Date(
+                  data.expiredAtOffsetUnixSeconds * 1000 - 1000 * 60 * 60 * 7
+                )
+              : new Date(data.expiredAtOffsetUnixSeconds * 1000),
+          },
+        },
+      }
+    }
+    return res
   }
 }

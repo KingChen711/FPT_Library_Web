@@ -3,6 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { useAuth } from "@/contexts/auth-provider"
+import { useRouter } from "@/i18n/routing"
 import {
   BookOpen,
   Check,
@@ -13,6 +14,7 @@ import {
 } from "lucide-react"
 import { useTranslations } from "next-intl"
 
+import { ECardStatus } from "@/lib/types/enums"
 import { type Package } from "@/lib/types/models"
 import { cn } from "@/lib/utils"
 import useGetPackages from "@/hooks/packages/use-get-packages"
@@ -25,6 +27,7 @@ import RegisteredLibraryCard from "./_components/registered-library-card"
 
 const MeLibraryCard = () => {
   const t = useTranslations("MeLibraryCard")
+  const router = useRouter()
 
   const { user, isLoadingAuth } = useAuth()
   const [selectedPackageId, setSelectedPackageId] = useState<number | null>(
@@ -58,6 +61,13 @@ const MeLibraryCard = () => {
 
   if (!user) {
     return <NoData />
+  }
+
+  if (
+    user?.libraryCard?.status === ECardStatus.UNPAID ||
+    user?.libraryCard?.status === ECardStatus.PENDING
+  ) {
+    router.push(`/me/account/library-card/register?continuePayment=true`)
   }
 
   return (
@@ -193,6 +203,9 @@ const MeLibraryCard = () => {
                   asChild
                 >
                   <Link
+                    className={cn(
+                      !selectedPackageId && "pointer-events-none opacity-70"
+                    )}
                     href={`/me/account/library-card/register?libraryCardId=${selectedPackageId}`}
                   >
                     {t("I understand and want to continue")}
