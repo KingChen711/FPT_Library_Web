@@ -195,7 +195,6 @@ export const managementRoutes = [
       return <Icons.Employees {...props} />
     },
   },
-
   {
     feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
     route: "/management/train-sessions",
@@ -204,7 +203,14 @@ export const managementRoutes = [
       return <Brain {...props} />
     },
   },
-
+  {
+    feature: EFeature.LIBRARY_ITEM_MANAGEMENT,
+    route: "/management/shelves",
+    label: "Shelves",
+    Icon: (props: { className?: string }) => {
+      return <Icons.Shelf {...props} />
+    },
+  },
   {
     feature: EFeature.ROLE_MANAGEMENT,
     label: "Identity and Access",

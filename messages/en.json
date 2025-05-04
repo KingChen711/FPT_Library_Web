@@ -669,6 +669,7 @@
     "Permissions": "Permissions"
   },
   "Routes": {
+    "Shelves": "Shelves",
     "Map": "Map",
     "Policy": "Policy",
     "Digital borrows": "Digital borrows",
@@ -930,6 +931,7 @@
     "Cancel": "Cancel"
   },
   "BookPage": {
+    "Library items": "Library items",
     "remove borrow": "Remove borrow",
     "Error while loading audiobook": "Error while loading audiobook. Please try again.",
     "Favorite list": "Favorite list",
@@ -2751,5 +2753,26 @@
 
     "Library card": "Library card",
     "Card Information": "Card Information"
+  },
+  "ShelvesManagementPage": {
+    "Shelves": "Shelves",
+    "Shelf number": "Shelf number",
+    "Classification number range": "Classification number range",
+    "Shelf name": "Shelf name",
+    "Section": "Section",
+    "Zone": "Zone",
+    "Floor": "Floor",
+    "Actions": "Actions",
+    "View details": "View details",
+    "Shelf": "Shelf",
+    "Total units": "Total units",
+    "Total available units": "Total available units",
+    "Total request units": "Total request units",
+    "Total borrowed units": "Total borrowed units",
+    "Total reserved units": "Total reserved units",
+    "Total overdue units": "Total overdue units",
+    "Total can borrow": "Total can borrow",
+    "Total damage units": "Total damage units",
+    "Total lost units": "Total lost units"
   }
 }

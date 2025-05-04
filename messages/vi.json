@@ -672,6 +672,7 @@
     "Permissions": "Quyền"
   },
   "Routes": {
+    "Shelves": "Kệ sách",
     "Map": "Bản đồ",
     "Policy": "Chính sách",
     "Digital borrows": "Lịch sử mượn điện tử",
@@ -934,6 +935,7 @@
     "Cancel": "Hủy"
   },
   "BookPage": {
+    "Library items": "Tài liệu",
     "remove borrow": "Hủy mượn",
     "Error while loading audiobook": "Có lỗi xảy ra khi đang tải audiobook. Vui lòng thử lại.",
     "Favorite list": "Danh sách yêu thích",
@@ -2769,5 +2771,26 @@
     "Full Name": "Họ và Tên",
     "Library card": "Thẻ thư viện",
     "Card Information": "Thông tin thẻ"
+  },
+  "ShelvesManagementPage": {
+    "Shelves": "Kệ sách",
+    "Shelf number": "Kệ sách",
+    "Classification number range": "Vùng DDC",
+    "Shelf name": "Tên kệ",
+    "Section": "Khu vực",
+    "Zone": "Vùng",
+    "Floor": "Tầng",
+    "Actions": "Hành động",
+    "View details": "Xem chi tiết",
+    "Shelf": "Kệ sách",
+    "Total units": "Tổng tài liệu",
+    "Total available units": "Tổng có sẵn",
+    "Total request units": "Tổng yêu cầu",
+    "Total borrowed units": "Tổng đang mượn",
+    "Total reserved units": "Tổng đặt trước",
+    "Total overdue units": "Tổng quá hạn",
+    "Total can borrow": "Tổng có thể mượn",
+    "Total damage units": "Tổng bản sao hư hỏng",
+    "Total lost units": "Tổng bản sao đã mất"
   }
 }
