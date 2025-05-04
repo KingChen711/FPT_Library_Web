@@ -27,6 +27,16 @@ export function ShelfCard({
   const t = useTranslations("BooksManagementPage")
   const locale = useLocale()
 
+  const from =
+    Array(Math.max(3 - classificationNumberRangeFrom.toString().length, 0))
+      .fill("0")
+      .join("") + classificationNumberRangeFrom
+
+  const to =
+    Array(Math.max(3 - classificationNumberRangeTo.toString().length, 0))
+      .fill("0")
+      .join("") + classificationNumberRangeTo
+
   return (
     <Card
       onClick={() => {
@@ -63,11 +73,11 @@ export function ShelfCard({
             </div>
             <div className="flex items-center gap-2 text-sm">
               <span className="rounded-md bg-primary/10 px-3 py-1 font-mono font-medium text-primary">
-                {classificationNumberRangeFrom}
+                {from}
               </span>
               <span className="text-muted-foreground">{t("to")}</span>
               <span className="rounded-md bg-primary/10 px-3 py-1 font-mono font-medium text-primary">
-                {classificationNumberRangeTo}
+                {to}
               </span>
             </div>
           </div>
@@ -78,7 +88,7 @@ export function ShelfCard({
                 Dewey Decimal Classification
               </div>
               <div className="rounded bg-primary/10 px-2 py-1 text-sm font-medium text-primary">
-                {classificationNumberRangeFrom} - {classificationNumberRangeTo}
+                {from} - {to}
               </div>
             </div>
           </div>
