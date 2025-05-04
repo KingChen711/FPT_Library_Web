@@ -59,7 +59,7 @@ const Toast = React.forwardRef<
       onResume={() => {}}
       onFocus={(e) => e.currentTarget.blur()}
       // Add this to globally set toast duration. Default is 5000 (5 seconds)
-      duration={4000}
+      duration={3000}
       {...props}
     />
   )

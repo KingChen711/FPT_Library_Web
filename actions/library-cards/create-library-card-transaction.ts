@@ -50,7 +50,7 @@ export async function createLibraryCardTransaction(body: {
           qrCode: data.payOsResponse.data.qrCode,
           expiredAt: isProduction
             ? new Date(
-                data.expiredAtOffsetUnixSeconds * 1000 - 1000 * 60 * 60 * 7
+                data.expiredAtOffsetUnixSeconds * 1000 - 1000 * 60 * 60 * 0
               )
             : new Date(data.expiredAtOffsetUnixSeconds * 1000),
         },
@@ -77,7 +77,7 @@ export async function createLibraryCardTransaction(body: {
             qrCode: data.payOsResponse.data.qrCode,
             expiredAt: isProduction
               ? new Date(
-                  data.expiredAtOffsetUnixSeconds * 1000 - 1000 * 60 * 60 * 7
+                  data.expiredAtOffsetUnixSeconds * 1000 - 1000 * 60 * 60 * 0
                 )
               : new Date(data.expiredAtOffsetUnixSeconds * 1000),
           },
