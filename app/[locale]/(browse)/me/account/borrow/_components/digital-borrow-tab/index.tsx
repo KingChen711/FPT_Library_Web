@@ -77,15 +77,23 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>{t("ordinal number")}</TableHead>
-              <TableHead>{t("title")}</TableHead>
-              <TableHead>{t("type")}</TableHead>
-              <TableHead>{t("register date")}</TableHead>
-              <TableHead>{t("expiration date")}</TableHead>
-              <TableHead>{t("borrow price")}</TableHead>
-              <TableHead>{t("is extended")}</TableHead>
-              <TableHead>{t("extension count")}</TableHead>
-              <TableHead>{t("status")}</TableHead>
+              <TableHead className="text-nowrap">
+                {t("ordinal number")}
+              </TableHead>
+              <TableHead className="text-nowrap">{t("title")}</TableHead>
+              <TableHead className="text-nowrap">{t("type")}</TableHead>
+              <TableHead className="text-nowrap">
+                {t("register date")}
+              </TableHead>
+              <TableHead className="text-nowrap">
+                {t("expiration date")}
+              </TableHead>
+              <TableHead className="text-nowrap">{t("borrow price")}</TableHead>
+              <TableHead className="text-nowrap">{t("is extended")}</TableHead>
+              <TableHead className="text-nowrap">
+                {t("extension count")}
+              </TableHead>
+              <TableHead className="text-nowrap">{t("status")}</TableHead>
               <TableHead className="text-right">{t("actions")}</TableHead>
             </TableRow>
           </TableHeader>
@@ -205,11 +213,7 @@ const DigitalBorrowTab = async ({ searchParams }: Props) => {
                   </TableCell>
 
                   <TableCell className="text-right">
-                    <DigitalBorrowActions
-                      borrowItem={item}
-
-                      // borrowedItemId={borrowedItem.digitalBorrowId}
-                    />
+                    <DigitalBorrowActions borrowItem={item} />
                   </TableCell>
                 </TableRow>
               )

@@ -141,12 +141,12 @@ const PredictionOcrDetailTab = () => {
       {/* Book comparison */}
       <div className="flex w-full gap-4">
         <section className="flex flex-1 justify-center">
-          <div className="w-3/4 overflow-hidden rounded-md border-2">
+          <div className="w-3/4 overflow-hidden rounded-md">
             <h1 className="bg-draft p-2 font-semibold text-primary-foreground">
               {t("ocr text")}
             </h1>
 
-            <div className="w-full overflow-y-auto">
+            <div className="w-full overflow-y-auto border-2">
               {ocrDetail &&
                 ocrDetail?.lineStatisticDtos?.map((item, index) => (
                   <TooltipProvider key={index} delayDuration={0}>
@@ -191,11 +191,11 @@ const PredictionOcrDetailTab = () => {
           </div>
         </section>
 
-        <section className="flex-1 overflow-hidden rounded-md border-2">
+        <section className="flex-1 overflow-hidden rounded-md">
           <h1 className="bg-draft p-2 font-semibold text-primary-foreground">
             {t("comparison")}
           </h1>
-          <div className="w-full overflow-x-auto">
+          <div className="w-full overflow-x-auto border-2">
             <Table className="w-full table-fixed">
               <TableHeader>
                 <TableRow className="border">

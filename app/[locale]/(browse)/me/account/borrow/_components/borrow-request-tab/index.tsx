@@ -87,18 +87,21 @@ export default async function BorrowRequestTab({ searchParams }: Props) {
                     label={t("request date")}
                     sortKey="RequestDate"
                     position="center"
+                    classname="text-nowrap"
                   />
                   <SortableTableHead
                     currentSort={sort}
                     label={t("expiration date")}
                     sortKey="ExpirationDate"
                     position="center"
+                    classname="text-nowrap"
                   />
                   <SortableTableHead
                     currentSort={sort}
                     label={t("total request items")}
                     sortKey="TotalRequestItem"
                     position="center"
+                    classname="text-nowrap"
                   />
                   <TableHead className="text-nowrap font-bold">
                     <div className="flex justify-center">{t("status")}</div>

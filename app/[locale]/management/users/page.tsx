@@ -1,4 +1,4 @@
-import Image from "next/image"
+import defaultAvatar from "@/public/assets/images/default-avatar.jpg"
 import { auth } from "@/queries/auth"
 import getUserRoles from "@/queries/users/get-user-roles"
 import getUsers from "@/queries/users/get-users"
@@ -10,6 +10,7 @@ import { formatDate } from "@/lib/utils"
 import { searchUsersSchema } from "@/lib/validations/user/search-user"
 import { Badge } from "@/components/ui/badge"
 import { Icons } from "@/components/ui/icons"
+import ImageWithFallback from "@/components/ui/image-with-fallback"
 import NoResult from "@/components/ui/no-result"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
@@ -185,17 +186,18 @@ async function UsersManagementPage({ searchParams }: Props) {
                           <UserCheckbox id={user.userId} />
                         </TableCell>
                         <TableCell>
-                          <div className="flex items-center gap-2">
-                            <Image
-                              src={
-                                user.avatar || "https://github.com/shadcn.png"
-                              }
-                              alt="avatar"
-                              width={32}
-                              height={32}
-                              className="aspect-square shrink-0 rounded-full border object-cover object-center"
+                          <div className="flex min-w-[240px] items-center">
+                            <ImageWithFallback
+                              src={user.avatar || defaultAvatar}
+                              alt={`${user.lastName} ${user.firstName}`}
+                              width={36}
+                              height={36}
+                              fallbackSrc={defaultAvatar}
+                              className="mr-2 aspect-square size-9 shrink-0 rounded-full border object-cover object-center"
                             />
-                            <p>{user.email}</p>
+                            <p className="truncate" title={user.email}>
+                              {user.email}
+                            </p>
                           </div>
                         </TableCell>
                         <TableCell className="text-nowrap">

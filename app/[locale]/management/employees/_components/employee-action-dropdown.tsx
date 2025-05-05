@@ -26,6 +26,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 
 import EmployeeDeleteConfirm from "./employee-delete-confirm"
+import EmployeeRoleChange from "./employee-role-change"
 import EmployeeSoftDeleteConfirm from "./employee-soft-delete-confirm"
 import MutateEmployeeDialog from "./mutate-employee-dialog"
 
@@ -41,6 +42,7 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [openSoftDelete, setOpenSoftDelete] = useState(false)
+  const [openRoleChange, setOpenRoleChange] = useState(false)
 
   const [pendingChangeStatus, startChangeStatus] = useTransition()
   const [pendingUndoDelete, startUndoDelete] = useTransition()
@@ -94,6 +96,11 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
         employee={employee}
         employeeRoles={employeeRoles}
       />
+      <EmployeeRoleChange
+        open={openRoleChange}
+        setOpen={setOpenRoleChange}
+        employee={employee}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -115,7 +122,10 @@ function EmployeeActionDropdown({ employee, employeeRoles }: Props) {
                   {t("btn.update")}
                 </DropdownMenuItem>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem
+                onClick={() => setOpenRoleChange(true)}
+                className="cursor-pointer"
+              >
                 <User2 /> {t("change role")}
               </DropdownMenuItem>
               <DropdownMenuItem

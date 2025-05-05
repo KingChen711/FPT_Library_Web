@@ -1,4 +1,4 @@
-import Image from "next/image"
+import defaultAvatar from "@/public/assets/images/default-avatar.jpg"
 import { auth } from "@/queries/auth"
 import getEmployees from "@/queries/employees/get-employees"
 import getEmployeeRoles from "@/queries/roles/get-employee-roles"
@@ -10,6 +10,7 @@ import { formatDate } from "@/lib/utils"
 import { searchEmployeesSchema } from "@/lib/validations/employee/search-employee"
 import { Badge } from "@/components/ui/badge"
 import { Icons } from "@/components/ui/icons"
+import ImageWithFallback from "@/components/ui/image-with-fallback"
 import Paginator from "@/components/ui/paginator"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
@@ -107,6 +108,7 @@ async function EmployeesManagementPage({ searchParams }: Props) {
                   currentSort={sort}
                   label="Email"
                   sortKey="email"
+                  classname="text-nowrap w-[400px]"
                 />
                 <SortableTableHead
                   currentSort={sort}
@@ -178,16 +180,19 @@ async function EmployeesManagementPage({ searchParams }: Props) {
                   <TableCell>
                     <EmployeeCheckbox id={employee.employeeId} />
                   </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2 pr-8">
-                      <Image
-                        src={employee.avatar || "https://github.com/shadcn.png"}
-                        alt="avatar"
-                        width={20}
-                        height={20}
-                        className="rounded-full"
+                  <TableCell className="">
+                    <div className="flex min-w-[240px] items-center">
+                      <ImageWithFallback
+                        src={employee.avatar || defaultAvatar}
+                        alt={`${employee.lastName} ${employee.firstName}`}
+                        width={36}
+                        height={36}
+                        fallbackSrc={defaultAvatar}
+                        className="mr-2 size-9 shrink-0 rounded-full"
                       />
-                      <p>{employee.email}</p>
+                      <p className="truncate" title={employee.email}>
+                        {employee.email}
+                      </p>
                     </div>
                   </TableCell>
                   <TableCell className="text-nowrap">
