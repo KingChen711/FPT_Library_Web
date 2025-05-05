@@ -119,6 +119,7 @@ function EditBookDialog({ open, setOpen, book }: Props) {
   //TODO(isNotBook)
   const isNotBook =
     book.category.englishName === "Magazine" ||
+    book.category.englishName === "ChildrenBook" ||
     book.category.englishName === "Newspaper" ||
     book.category.englishName === "Other" ||
     false

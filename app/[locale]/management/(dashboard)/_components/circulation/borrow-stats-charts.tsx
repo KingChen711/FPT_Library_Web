@@ -48,10 +48,15 @@ function BorrowStatsCharts({
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={combinedData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis
+                dataKey="name"
+                textAnchor="end"
+                tick={{ fontSize: 12 }}
+                angle={-28}
+              />
               <YAxis />
               <Tooltip />
-              <Legend />
+              <Legend wrapperStyle={{ position: "relative" }} />
               <Bar dataKey="borrowFailed" fill="#8884d8" name={t("Failed")} />
               <Bar dataKey="overdue" fill="#82ca9d" name={t("Overdue")} />
             </BarChart>
@@ -66,10 +71,15 @@ function BorrowStatsCharts({
           <ResponsiveContainer width="100%" height={300}>
             <BarChart data={combinedData}>
               <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
+              <XAxis
+                dataKey="name"
+                textAnchor="end"
+                tick={{ fontSize: 12 }}
+                angle={-28}
+              />
               <YAxis />
               <Tooltip />
-              <Legend />
+              <Legend wrapperStyle={{ position: "relative" }} />
               <Bar
                 dataKey="failedRate"
                 fill="#8884d8"

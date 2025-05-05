@@ -227,6 +227,7 @@
     "apply": "Áp dụng"
   },
   "Zod": {
+    "toGreaterThanFromDDC": "Phải lớn hơn DDC bắt đầu",
     "min1": "Bắt buộc",
     "min2": "Phải có ít nhất 2 kí tự",
     "min5": "Phải có ít nhất 5 kí tự",
@@ -643,6 +644,15 @@
     "authors selected": "Đang chọn ({amount})"
   },
   "RoleManagement": {
+    "Change permission header": "Thay đổi [Vai trò - Chức năng]: Quyền cũ -> Quyền mới",
+    "Permission histories": "Lịch sử quyền",
+    "Change": "Thay đổi",
+    "Role histories": "Lịch sử vai trò",
+    "Changes history": "Lịch sử chỉnh sửa",
+    "When": "Lúc",
+    "Who": "Bởi",
+    "Details": "Chi tiết",
+    "Type": "Loại",
     "Search": "Tìm kiếm...",
     "Sort by": "Sắp xếp theo",
     "Roles": "Vai trò",
@@ -676,6 +686,8 @@
     "Permissions": "Quyền"
   },
   "Routes": {
+    "Role histories": "Lịch sử vai trò",
+    "Permission histories": "Lịch sử quyền",
     "Shelves": "Kệ sách",
     "Map": "Bản đồ",
     "Policy": "Chính sách",
@@ -2697,6 +2709,14 @@
     "Go to map": "Đi đến bản đồ"
   },
   "SystemConfiguration": {
+    "AI Settings": "Cài đặt AI",
+    "Configure settings related to training AI functionality": "Cấu hình các cài đặt liên quan đến chức năng huấn luyện AI",
+    "Title percentage": "Tỷ lệ tiêu đề",
+    "Author percentage": "Tỷ lệ tác giả",
+    "Publisher percentage": "Tỷ lệ nhà xuất bản",
+    "Confidence threshold": "Ngưỡng độ tin cậy",
+    "Min field threshold": "Ngưỡng trường tối thiểu",
+    "AISettingsCoverImageFieldsDescription": "Tổng tỷ lệ của tiêu đề, tác giả và nhà xuất bản phải bằng 100%, và mỗi giá trị phải là một số nguyên dương.",
     "Ads Script": "Mã quảng cáo",
     "App Settings": "Cài đặt ứng dụng",
     "Borrow Settings": "Cài đặt lưu hành",
@@ -2778,6 +2798,11 @@
     "Card Information": "Thông tin thẻ"
   },
   "ShelvesManagementPage": {
+    "Edit shelf": "Chỉnh sửa kệ tài liệu",
+    "Eng shelf name": "Tên tiếng Anh",
+    "Vie shelf name": "Tên tiếng Việt",
+    "Cancel": "Hủy",
+    "Save": "Lưu",
     "Shelves": "Kệ sách",
     "Shelf number": "Kệ sách",
     "Classification number range": "Vùng DDC",

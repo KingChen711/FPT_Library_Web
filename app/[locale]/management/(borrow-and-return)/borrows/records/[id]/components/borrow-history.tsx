@@ -103,7 +103,7 @@ export default async function BorrowHistory({
                         <TooltipContent
                           align="start"
                           side="left"
-                          className="max-h-[80vh] max-w-[calc(100vw-416)] overflow-y-auto bg-card p-0"
+                          className="max-w-[calc(100vw-416px] max-h-[80vh] overflow-y-auto bg-card p-0"
                         >
                           <LibraryItemCard libraryItem={item} />
                         </TooltipContent>
@@ -176,7 +176,7 @@ export default async function BorrowHistory({
                           <TooltipContent
                             align="start"
                             side="left"
-                            className="max-h-[80vh] max-w-[calc(100vw-416)] overflow-y-auto bg-card p-0"
+                            className="max-h-[80vh] max-w-[calc(100vw-416px)] overflow-y-auto bg-card p-0"
                           >
                             <LibraryItemCard libraryItem={detail.libraryItem} />
                           </TooltipContent>

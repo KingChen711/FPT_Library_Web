@@ -104,9 +104,8 @@ const PredictionOcrDetectTab = () => {
                     />
                   </TooltipTrigger>
                   <TooltipContent
-                    align="start"
-                    side="left"
-                    className="max-h-[60vh] overflow-y-auto border-2 bg-card"
+                    side="right"
+                    className="max-h-[80vh] max-w-[calc(50vw-120px)] overflow-y-auto border-2 bg-card"
                   >
                     <LibraryItemInfo
                       id={libraryItem?.libraryItemId}
@@ -176,9 +175,8 @@ const PredictionOcrDetectTab = () => {
                   />
                 </TooltipTrigger>
                 <TooltipContent
-                  align="start"
-                  side="left"
-                  className="max-h-[60vh] overflow-y-auto border-2 bg-card"
+                  side="right"
+                  className="max-h-[80vh] max-w-[calc(50vw-120px)] overflow-y-auto border-2 bg-card"
                 >
                   <LibraryItemInfo
                     id={libraryItem?.libraryItemId}

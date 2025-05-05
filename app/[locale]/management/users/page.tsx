@@ -193,7 +193,7 @@ async function UsersManagementPage({ searchParams }: Props) {
                               width={36}
                               height={36}
                               fallbackSrc={defaultAvatar}
-                              className="mr-2 size-9 shrink-0 rounded-full"
+                              className="mr-2 aspect-square size-9 shrink-0 rounded-full border object-cover object-center"
                             />
                             <p className="truncate" title={user.email}>
                               {user.email}

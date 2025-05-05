@@ -98,6 +98,7 @@ function CreateBookForm({ trackingDetail }: Props) {
   //TODO(isNotBook)
   const isNotBook =
     selectedCategory?.englishName === "Magazine" ||
+    selectedCategory?.englishName === "ChildrenBook" ||
     selectedCategory?.englishName === "Newspaper" ||
     selectedCategory?.englishName === "Other" ||
     false

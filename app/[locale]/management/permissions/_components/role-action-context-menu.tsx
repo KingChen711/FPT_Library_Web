@@ -1,7 +1,7 @@
 "use client"
 
 import React from "react"
-import { PencilIcon, Trash2Icon } from "lucide-react"
+import { HistoryIcon } from "lucide-react"
 import { useTranslations } from "next-intl"
 
 import { Button } from "@/components/ui/button"
@@ -12,22 +12,23 @@ import {
   ContextMenuTrigger,
 } from "@/components/ui/context-menu"
 
-import EditRoleDialog from "../../roles/_components/edit-role-dialog"
-import DeleteRoleDialog from "./delete-role-dialog"
+// import PermissionHistoryDialog from "./history-permission-dialog"
 
 type Props = {
   roleId: number
+  // rolePermissionId: number
   roleName: string
 }
 
-function RoleActionContextMenu({ roleId, roleName }: Props) {
+function RoleActionContextMenu({ roleName }: Props) {
   const t = useTranslations("RoleManagement")
-  const [openDelete, setOpenDelete] = React.useState(false)
-  const [openEdit, setOpenEdit] = React.useState(false)
+  // const [openDelete, setOpenDelete] = React.useState(false)
+  // const [openEdit, setOpenEdit] = React.useState(false)
+  // const [openHistory, setOpenHistory] = React.useState(false)
 
   return (
     <>
-      <EditRoleDialog
+      {/* <EditRoleDialog
         openEdit={openEdit}
         setOpenEdit={setOpenEdit}
         roleId={roleId}
@@ -37,12 +38,14 @@ function RoleActionContextMenu({ roleId, roleName }: Props) {
         roleName={roleName}
         openDelete={openDelete}
         setOpenDelete={setOpenDelete}
-      />
+      /> */}
+      {/* <PermissionHistoryDialog
+        open={openHistory}
+        setOpen={setOpenHistory}
+        rolePermissionId={rolePermissionId}
+      /> */}
       <ContextMenu>
-        <ContextMenuTrigger
-          asChild
-          disabled //!disable because the requirement has changed
-        >
+        <ContextMenuTrigger asChild disabled>
           <div className="min-w-[180px] cursor-default">
             <Button
               variant="ghost"
@@ -53,7 +56,7 @@ function RoleActionContextMenu({ roleId, roleName }: Props) {
           </div>
         </ContextMenuTrigger>
         <ContextMenuContent>
-          <ContextMenuItem
+          {/* <ContextMenuItem
             onSelect={() => setOpenEdit(true)}
             className="flex cursor-pointer items-center gap-x-2"
           >
@@ -66,6 +69,13 @@ function RoleActionContextMenu({ roleId, roleName }: Props) {
           >
             <Trash2Icon className="size-4" />
             {t("Delete")}
+          </ContextMenuItem> */}
+          <ContextMenuItem
+            // onSelect={() => setOpenHistory(true)}
+            className="flex cursor-pointer items-center gap-x-2"
+          >
+            <HistoryIcon className="size-4" />
+            {t("Changes history")}
           </ContextMenuItem>
         </ContextMenuContent>
       </ContextMenu>

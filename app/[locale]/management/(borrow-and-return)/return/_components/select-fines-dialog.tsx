@@ -115,6 +115,11 @@ function SelectFinesDialog({
                               {t("Processing fee")}
                             </div>
                           </TableHead>
+                          <TableHead className="text-nowrap font-bold">
+                            <div className="flex justify-center">
+                              {t("Daily rate")}
+                            </div>
+                          </TableHead>
                           <TableHead className="text-nowrap font-bold"></TableHead>
                         </TableRow>
                       </TableHeader>
@@ -140,6 +145,11 @@ function SelectFinesDialog({
                             <TableCell className="text-nowrap">
                               {fine.processingFee
                                 ? formatPrice(fine.processingFee)
+                                : "-"}
+                            </TableCell>
+                            <TableCell className="text-nowrap">
+                              {fine.dailyRate
+                                ? formatPrice(fine.dailyRate)
                                 : "-"}
                             </TableCell>
                             <TableCell>

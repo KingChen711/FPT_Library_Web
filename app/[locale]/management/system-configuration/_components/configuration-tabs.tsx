@@ -7,6 +7,7 @@ import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
+import { cn } from "@/lib/utils"
 import { editConfiguration } from "@/actions/system/edit-configurration"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
@@ -36,6 +37,55 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
   const t = useTranslations("SystemConfiguration")
   const [isPending, startTransition] = useTransition()
   const locale = useLocale()
+  const [showAIError, setShowAIError] = useState(false)
+  const [tab, setTab] = useState("ads")
+
+  const checkAIValidate = () => {
+    const fields = Object.keys(config["AISettings"]).map((key) => ({
+      name: "AISettings" + ":" + key,
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      value: config["AISettings"][key],
+    }))
+    try {
+      console.log("start")
+
+      const tPct = Number(
+        fields.find((f) => f.name === "AISettings:TitlePercentage")?.value
+      )
+      console.log({ tPct })
+      if (!tPct || !Number.isInteger(tPct) || tPct < 0 || tPct > 100) {
+        throw Error("tPct")
+      }
+      const aPct = Number(
+        fields.find((f) => f.name === "AISettings:AuthorNamePercentage")?.value
+      )
+      if (!aPct || !Number.isInteger(aPct) || aPct < 0 || aPct > 100) {
+        throw Error("aPct")
+      }
+      const pPct = Number(
+        fields.find((f) => f.name === "AISettings:PublisherPercentage")?.value
+      )
+      if (!pPct || !Number.isInteger(pPct) || pPct < 0 || pPct > 100) {
+        throw Error("pPct")
+      }
+
+      console.log({
+        tPct,
+        aPct,
+        pPct,
+      })
+
+      if (tPct + aPct + pPct !== 100) {
+        throw Error("sum")
+      }
+      setShowAIError(false)
+      return true
+    } catch {
+      setShowAIError(true)
+      return false
+    }
+  }
 
   const handleChange = (section: string, key: string, value: string) => {
     setConfig((prevConfig) => ({
@@ -45,24 +95,26 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
         [key]: value,
       },
     }))
+    if (showAIError && tab === "ai") checkAIValidate()
   }
 
   const handleSave = (section: keyof typeof config) => {
+    const fields = Object.keys(config[section])
+      .filter((key) =>
+        key === "RefreshValue"
+          ? false
+          : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+            // @ts-ignore
+            config[section][key] !== systemConfiguration[section][key]
+      )
+      .map((key) => ({
+        name: section + ":" + key,
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        value: config[section][key],
+      }))
+    if (section === "AISettings" && !checkAIValidate()) return
     startTransition(async () => {
-      const fields = Object.keys(config[section])
-        .filter((key) =>
-          key === "RefreshValue"
-            ? false
-            : // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-              // @ts-ignore
-              config[section][key] !== systemConfiguration[section][key]
-        )
-        .map((key) => ({
-          name: section + ":" + key,
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-ignore
-          value: config[section][key],
-        }))
       const res = await editConfiguration(fields)
 
       if (res.isSuccess) {
@@ -81,12 +133,13 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
 
   return (
     <div className="space-y-6">
-      <Tabs defaultValue="ads" className="w-full">
-        <TabsList className="mb-6 grid grid-cols-4">
+      <Tabs value={tab} onValueChange={setTab} className="w-full">
+        <TabsList className="mb-6 grid grid-cols-5">
           <TabsTrigger value="ads">{t("Ads Script")}</TabsTrigger>
           <TabsTrigger value="app">{t("App Settings")}</TabsTrigger>
           <TabsTrigger value="borrow">{t("Borrow Settings")}</TabsTrigger>
           <TabsTrigger value="digital">{t("Digital Borrow")}</TabsTrigger>
+          <TabsTrigger value="ai">{t("AI Settings")}</TabsTrigger>
         </TabsList>
 
         {/* Ads Script Settings */}
@@ -538,6 +591,148 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
                     JSON.stringify(prevConfig.DigitalBorrowSettings)
                 }
                 onClick={() => handleSave("DigitalBorrowSettings")}
+              >
+                {t("Save Changes")}
+                {isPending && <Loader2 className="size-4 animate-spin" />}
+              </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+
+        {/* Ai Settings */}
+        <TabsContent value="ai">
+          <Card>
+            <CardHeader>
+              <CardTitle>{t("AI Settings")}</CardTitle>
+              <CardDescription>
+                {t("Configure settings related to training AI functionality")}
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-2">
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+                    <div className="">
+                      <Label htmlFor="title-percentage">
+                        {t("Title percentage")}
+                      </Label>
+                      <Input
+                        required
+                        id="title-percentage"
+                        type="number"
+                        step="1"
+                        min="0"
+                        max="100"
+                        value={config.AISettings.TitlePercentage}
+                        onChange={(e) =>
+                          handleChange(
+                            "AISettings",
+                            "TitlePercentage",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="author-percentage">
+                        {t("Author percentage")}
+                      </Label>
+                      <Input
+                        required
+                        type="number"
+                        step="1"
+                        min="0"
+                        max="100"
+                        id="author-percentage"
+                        value={config.AISettings.AuthorNamePercentage}
+                        onChange={(e) =>
+                          handleChange(
+                            "AISettings",
+                            "AuthorNamePercentage",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                    <div className="">
+                      <Label htmlFor="publisher-percentage">
+                        {t("Publisher percentage")}
+                      </Label>
+                      <Input
+                        required
+                        id="publisher-percentage"
+                        type="number"
+                        step="1"
+                        min="0"
+                        max="100"
+                        value={config.AISettings.PublisherPercentage}
+                        onChange={(e) =>
+                          handleChange(
+                            "AISettings",
+                            "PublisherPercentage",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div
+                    className={cn(
+                      "text-sm text-muted-foreground",
+                      showAIError && "text-danger"
+                    )}
+                  >
+                    {t("AISettingsCoverImageFieldsDescription")}
+                  </div>
+                </div>
+                <div className="grid gap-4 md:grid-cols-2">
+                  <div className="">
+                    <Label htmlFor="confidence-threshold">
+                      {t("Confidence threshold")}
+                    </Label>
+                    <Input
+                      required
+                      id="confidence-threshold"
+                      type="number"
+                      value={config.AISettings.ConfidenceThreshold}
+                      onChange={(e) =>
+                        handleChange(
+                          "AISettings",
+                          "ConfidenceThreshold",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                  <div className="">
+                    <Label htmlFor="min-threshold">
+                      {t("Min field threshold")}
+                    </Label>
+                    <Input
+                      required
+                      id="min-threshold"
+                      type="number"
+                      value={config.AISettings.MinFieldThreshold}
+                      onChange={(e) =>
+                        handleChange(
+                          "AISettings",
+                          "MinFieldThreshold",
+                          e.target.value
+                        )
+                      }
+                    />
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button
+                disabled={
+                  isPending ||
+                  JSON.stringify(config.AISettings) ===
+                    JSON.stringify(prevConfig.AISettings)
+                }
+                onClick={() => handleSave("AISettings")}
               >
                 {t("Save Changes")}
                 {isPending && <Loader2 className="size-4 animate-spin" />}

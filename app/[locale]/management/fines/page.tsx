@@ -110,6 +110,11 @@ async function FinesManagementPage({ searchParams }: Props) {
                     label={t("Processing fee")}
                     sortKey="ProcessingFee"
                   />
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Daily rate")}
+                    sortKey="DailyRate"
+                  />
                   <TableHead className="flex select-none items-center justify-center text-nowrap font-bold">
                     {t("Actions")}
                   </TableHead>
@@ -141,6 +146,9 @@ async function FinesManagementPage({ searchParams }: Props) {
                       {fine.processingFee
                         ? formatPrice(fine.processingFee)
                         : "-"}
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      {fine.dailyRate ? formatPrice(fine.dailyRate) : "-"}
                     </TableCell>
                     <TableCell className="flex justify-center">
                       <FineActionDropdown fine={fine} />

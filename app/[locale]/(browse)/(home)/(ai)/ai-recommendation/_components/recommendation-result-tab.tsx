@@ -127,9 +127,8 @@ const RecommendationResultTab = () => {
                   />
                 </TooltipTrigger>
                 <TooltipContent
-                  align="start"
-                  side="left"
-                  className="border-2 bg-card"
+                  side="right"
+                  className="max-h-[80vh] max-w-[calc(50vw-120px)] overflow-y-auto border-2 bg-card"
                 >
                   <LibraryItemInfo
                     id={detectedLibraryItem?.libraryItemId}

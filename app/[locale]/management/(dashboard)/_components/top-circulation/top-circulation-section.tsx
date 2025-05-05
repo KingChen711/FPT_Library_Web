@@ -112,12 +112,6 @@ function TopCirculationSection() {
             <div className="font-medium">{data.totalBorrowed}</div>
             <div className="text-muted-foreground">{t("Total reserved")}:</div>
             <div className="font-medium">{data.totalReserved}</div>
-            <div className="text-muted-foreground">
-              {t("Satisfaction rate")}:
-            </div>
-            <div className="font-medium">
-              {(data.averageNeedSatisfactionRate * 100).toFixed(1)}%
-            </div>
           </div>
         </div>
       )
@@ -280,7 +274,7 @@ function TopCirculationSection() {
               <TableBody>
                 {data.topBorrowItems.sources.map((source) => (
                   <TooltipProvider
-                    delayDuration={0}
+                    delayDuration={500}
                     key={source.libraryItem.libraryItemId}
                   >
                     <Tooltip>

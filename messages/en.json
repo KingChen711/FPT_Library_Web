@@ -7,7 +7,7 @@
   "Dashboard": {
     "Available units": "Available units",
     "Need units": "Need units",
-    "Failed requests": "Total requests",
+    "Failed requests": "Failed requests",
     "Total reserved": "Total reserved",
     "Satisfaction rate": "Satisfaction rate",
     "Pending percentage": "Pending percentage",
@@ -20,7 +20,7 @@
     "Unselect": "Unselect",
     "Select top items": "Add top circulation items",
     "Overview": "Overview",
-    "Total physical items": "Overview",
+    "Total physical items": "Total physical items",
     "Total digital items": "Total digital items",
     "Total borrowing items": "Total borrowing items",
     "Total overdue items": "Total overdue items",
@@ -224,6 +224,7 @@
     "apply": "Apply"
   },
   "Zod": {
+    "toGreaterThanFromDDC": "Must greater than from",
     "min1": "Required",
     "min2": "Must contain at least 2 characters",
     "min5": "Must contain at least 5 characters",
@@ -638,6 +639,14 @@
     "authors selected": "{amount, plural, one {# author selected} other {# authors selected}}"
   },
   "RoleManagement": {
+    "Change permission header": "Change [Role - Feature]: Old permission -> New permission",
+    "Permission histories": "Permission histories",
+    "Change": "Change",
+    "Role histories": "Role histories",
+    "Changes history": "Changes's histories",
+    "When": "When",
+    "Who": "Who",
+    "Details": "Details",
     "Search": "Search...",
     "Sort by": "Sort by",
     "Roles": "Roles",
@@ -673,6 +682,8 @@
     "Permissions": "Permissions"
   },
   "Routes": {
+    "Role histories": "Role histories",
+    "Permission histories": "Permission histories",
     "Shelves": "Shelves",
     "Map": "Map",
     "Policy": "Policy",
@@ -2677,6 +2688,15 @@
     "Go to map": "Go to map"
   },
   "SystemConfiguration": {
+    "AI Settings": "AI Settings",
+    "Configure settings related to training AI functionality": "Configure settings related to training AI functionality",
+    "Title percentage": "Title percentage",
+    "Author percentage": "Author percentage",
+    "Publisher percentage": "Publisher percentage",
+    "Confidence threshold": "Confidence threshold",
+    "Min field threshold": ".Min field threshold",
+    "AISettingsCoverImageFieldsDescription": "The total percentages of title, author, and publisher must add up to 100%, and each of them should be a positive integer.",
+
     "Ads Script": "Ads Script",
     "App Settings": "App Settings",
     "Borrow Settings": "Circulation Settings",
@@ -2760,6 +2780,11 @@
     "Card Information": "Card Information"
   },
   "ShelvesManagementPage": {
+    "Edit shelf": "Edit shelf",
+    "Eng shelf name": "Eng shelf name",
+    "Vie shelf name": "Vie shelf name",
+    "Cancel": "Cancel",
+    "Save": "Save",
     "Shelves": "Shelves",
     "Shelf number": "Shelf number",
     "Classification number range": "Classification number range",

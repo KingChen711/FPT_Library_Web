@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl"
 
 import { type BookEdition } from "@/lib/types/models"
 import LibraryItemCard from "@/components/ui/book-card"
+import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
 
 type Props = {
@@ -35,6 +36,7 @@ function LibraryItemSection({ libraryItems }: Props) {
       <h3 className="text-xl font-semibold">{t("Library items")}</h3>
 
       <div className="space-y-6">
+        {libraryItems.length === 0 && <NoData />}
         {libraryItems.slice(start, end).map((item) => (
           <LibraryItemCard
             key={item.libraryItemId}

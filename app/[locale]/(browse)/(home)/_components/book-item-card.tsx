@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react"
+import React, { useRef } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import NoImage from "@/public/assets/images/no-image.png"
@@ -37,6 +37,7 @@ type Props = {
 
 const BookItemCard = ({ item, id, Wrapper }: Props) => {
   const t = useTranslations("HomePage")
+  const refCard = useRef<HTMLDivElement>(null)
 
   const { data: queryItem, isLoading } = useLibraryItemDetail(
     id,
@@ -58,7 +59,7 @@ const BookItemCard = ({ item, id, Wrapper }: Props) => {
     <TooltipProvider>
       <Tooltip>
         <TooltipTrigger className="w-full">
-          <Card>
+          <Card ref={refCard}>
             <Link href={`/books/${libraryItem.libraryItemId}`}>
               <div className="relative flex w-full items-center justify-center overflow-hidden rounded-t-md p-4">
                 <Image
@@ -107,9 +108,11 @@ const BookItemCard = ({ item, id, Wrapper }: Props) => {
           </Card>
         </TooltipTrigger>
         <TooltipContent
-          align="start"
           side="right"
-          className="m-0 bg-card p-0 text-card-foreground"
+          style={{
+            maxWidth: `calc(50vw - ${refCard?.current?.offsetWidth || 0}px)`,
+          }}
+          className="m-0 max-h-[80vh] overflow-y-auto bg-card p-0 text-card-foreground"
         >
           <BookTooltip libraryItem={libraryItem} />
         </TooltipContent>

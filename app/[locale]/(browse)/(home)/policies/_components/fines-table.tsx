@@ -80,6 +80,11 @@ const FinesTable = async ({ searchParams }: Props) => {
                     label={t("Processing fee")}
                     sortKey="ProcessingFee"
                   />
+                  <SortableTableHead
+                    currentSort={sort}
+                    label={t("Daily rate")}
+                    sortKey="DailyRate"
+                  />
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -105,6 +110,9 @@ const FinesTable = async ({ searchParams }: Props) => {
                       {fine.processingFee
                         ? formatPrice(fine.processingFee)
                         : "-"}
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      {fine.dailyRate ? formatPrice(fine.dailyRate) : "-"}
                     </TableCell>
                   </TableRow>
                 ))}
