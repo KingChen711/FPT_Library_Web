@@ -15,6 +15,7 @@ type Props = {
   position?: "left" | "center" | "right"
   onSort?: (sortKey: string) => void
   disabled?: boolean
+  classname?: string
 }
 
 function SortableTableHead({
@@ -24,6 +25,7 @@ function SortableTableHead({
   position = "left",
   onSort,
   disabled = false,
+  classname = "",
 }: Props) {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -70,7 +72,7 @@ function SortableTableHead({
   }, [currentSort, sortKey, disabled])
 
   return (
-    <TableHead onClick={handleSort} className="cursor-pointer">
+    <TableHead onClick={handleSort} className={cn("cursor-pointer", classname)}>
       <div
         className={cn(
           "flex items-center",

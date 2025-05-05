@@ -17,6 +17,7 @@ import {
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import LocateButton from "@/components/ui/locate-button"
 import ParseHtml from "@/components/ui/parse-html"
 
 import CancelSpecificLibraryItemDialog from "../request/_components/cancel-specific-library-item-dialog"
@@ -96,9 +97,16 @@ const BorrowBookPreview = ({
                           <Trash2 />
                         </Button>
                       )}
-                      <Button variant={"outline"}>
-                        <MapPin />
-                      </Button>
+                      {libraryItem.shelf && (
+                        <LocateButton
+                          shelfId={libraryItem.shelf.shelfId}
+                          shelfNumber={libraryItem.shelf.shelfNumber}
+                        >
+                          <Button className="flex w-full items-center">
+                            <MapPin />
+                          </Button>
+                        </LocateButton>
+                      )}
                     </div>
                   </div>
                   {subTitle && (

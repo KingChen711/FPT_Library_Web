@@ -20,6 +20,7 @@ import BarcodeGenerator from "@/components/ui/barcode-generator"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Icons } from "@/components/ui/icons"
+import LocateButton from "@/components/ui/locate-button"
 import NoData from "@/components/ui/no-data"
 import ParseHtml from "@/components/ui/parse-html"
 import {
@@ -118,9 +119,17 @@ const BorrowReserveItemPreview = ({
                       >
                         <Trash2 />
                       </Button>
-                      <Button variant={"outline"}>
-                        <MapPin />
-                      </Button>
+
+                      {libraryItem.shelf && (
+                        <LocateButton
+                          shelfId={libraryItem.shelf.shelfId}
+                          shelfNumber={libraryItem.shelf.shelfNumber}
+                        >
+                          <Button className="flex w-full items-center">
+                            <MapPin />
+                          </Button>
+                        </LocateButton>
+                      )}
                     </div>
                   </div>
                   {subTitle && (

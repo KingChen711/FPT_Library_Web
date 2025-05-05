@@ -27,6 +27,7 @@ import {
 
 import MutateUserDialog from "./mutate-user-dialog"
 import UserDeleteConfirm from "./user-delete-confirm"
+import UserRoleChange from "./user-role-change"
 import UserSoftDeleteConfirm from "./user-soft-delete-confirm"
 
 type Props = {
@@ -41,6 +42,7 @@ function UserActionDropdown({ user }: Props) {
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [openSoftDelete, setOpenSoftDelete] = useState(false)
+  const [openRoleChange, setOpenRoleChange] = useState(false)
 
   const [pendingChangeStatus, startChangeStatus] = useTransition()
   const [pendingUndoDelete, startUndoDelete] = useTransition()
@@ -93,6 +95,11 @@ function UserActionDropdown({ user }: Props) {
         type="update"
         user={user}
       />
+      <UserRoleChange
+        open={openRoleChange}
+        setOpen={setOpenRoleChange}
+        user={user}
+      />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button
@@ -118,7 +125,10 @@ function UserActionDropdown({ user }: Props) {
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem
+                onClick={() => setOpenRoleChange(true)}
+                className="cursor-pointer"
+              >
                 <User2 /> {t("change role")}
               </DropdownMenuItem>
               <DropdownMenuItem

@@ -86,6 +86,7 @@ const BorrowRecordTab = async ({ searchParams }: Props) => {
                     label={t("Borrow date")}
                     sortKey="BorrowDate"
                     position="center"
+                    classname="text-nowrap"
                   />
                   <TableHead className="text-nowrap font-bold">
                     <div className="flex justify-center">
@@ -97,6 +98,7 @@ const BorrowRecordTab = async ({ searchParams }: Props) => {
                     label={t("Total record items")}
                     sortKey="TotalRecordItem"
                     position="center"
+                    classname="text-nowrap"
                   />
                   <TableHead className="text-nowrap font-bold">
                     <div className="flex justify-center">

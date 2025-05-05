@@ -3,12 +3,14 @@
 
 import { useState, useTransition } from "react"
 import { useAuth } from "@/contexts/auth-provider"
+import defaultAvatar from "@/public/assets/images/default-avatar.jpg"
 import { type TGetUserPendingActivity } from "@/queries/profile/get-user-pending-activity"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 import { useForm } from "react-hook-form"
+import { type z } from "zod"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
 import { eGenderToEIdxGender, EIdxGender } from "@/lib/types/enums"
@@ -21,7 +23,6 @@ import {
 import { updateProfile } from "@/actions/auth/update-profile"
 import useUploadImage from "@/hooks/media/use-upload-image"
 import { toast } from "@/hooks/use-toast"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import {
@@ -32,6 +33,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form"
+import ImageWithFallback from "@/components/ui/image-with-fallback"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import {
@@ -57,19 +59,16 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
   const queryClient = useQueryClient()
   const { isManager } = useAuth()
   const [file, setFile] = useState<File | null>(null)
-  const [avatar, setAvatar] = useState<string>(
-    currentUser.avatar ||
-      "https://scontent.fsgn2-3.fna.fbcdn.net/v/t39.30808-6/326718942_3475973552726762_6277150844361274430_n.jpg?_nc_cat=107&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=wmYkbExk8jIQ7kNvgF8EzyQ&_nc_oc=Adg-pzYMe6L9EgjRz1k5r0zregSMw3kefA5StmXPcm3FLj9jfp56ZUaObChMFbdSAZI&_nc_zt=23&_nc_ht=scontent.fsgn2-3.fna&_nc_gid=AgDh-DyXOhgstwKStf_NcX3&oh=00_AYBVZ7cSGoWNgrCSUhx0kFpeEgh7u9g7olQ8r-70NhDQxw&oe=67B7752C"
-  )
+  const [avatar, setAvatar] = useState<string>(currentUser.avatar || "")
   const { mutateAsync: uploadImage } = useUploadImage(true)
 
-  const form = useForm<TProfileSchema>({
+  const form = useForm<z.infer<typeof profileSchema>>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       firstName: currentUser.firstName || "",
       lastName: currentUser.lastName || "",
-      dob: formatDateInput(currentUser.dob),
       phone: currentUser.phone || "",
+      dob: formatDateInput(currentUser.dob),
       address: currentUser.address || "",
       gender: currentUser.gender
         ? eGenderToEIdxGender(currentUser.gender)
@@ -79,6 +78,7 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
   })
 
   function onSubmit(values: TProfileSchema) {
+    console.log("🚀 ~ onSubmit ~ values:", values)
     startTransition(async () => {
       try {
         if (file && avatar.startsWith("blob")) {
@@ -123,13 +123,14 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
       <div className="flex w-full items-center gap-8 overflow-hidden rounded-md">
         {isManager ? (
           <div>
-            <Avatar className="mx-auto size-24 object-cover">
-              <AvatarImage
-                src={currentUser.avatar || undefined}
-                className="object-cover"
-              />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
+            <ImageWithFallback
+              src={currentUser.avatar || defaultAvatar}
+              alt={`${currentUser.lastName} ${currentUser.firstName}`}
+              width={96}
+              height={96}
+              fallbackSrc={defaultAvatar}
+              className="mr-2 size-24 shrink-0 rounded-full"
+            />
           </div>
         ) : (
           <ProfileAvatar
@@ -168,13 +169,14 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
           </Card>
         )}
       </div>
+
       <div className="mt-8 flex flex-col gap-4">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
             className="space-y-4 px-4"
           >
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <Label>Email</Label>
                 <Input
@@ -183,7 +185,6 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
                   className="mt-2 cursor-not-allowed"
                 />
               </div>
-
               <FormField
                 control={form.control}
                 name="firstName"
@@ -191,12 +192,13 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
                   <FormItem>
                     <FormLabel>{t("firstName")}</FormLabel>
                     <FormControl>
-                      <Input disabled={isManager || pending} {...field} />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="lastName"
@@ -204,7 +206,7 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
                   <FormItem>
                     <FormLabel>{t("lastName")}</FormLabel>
                     <FormControl>
-                      <Input disabled={isManager || pending} {...field} />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -218,11 +220,7 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
                   <FormItem>
                     <FormLabel>{t("phoneNumber")}</FormLabel>
                     <FormControl>
-                      <Input
-                        disabled={isManager || pending}
-                        {...field}
-                        value={field.value || ""} // Fix
-                      />
+                      <Input {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -237,7 +235,7 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
                     <FormLabel>{t("address")}</FormLabel>
                     <FormControl>
                       <Input
-                        disabled={isManager || pending}
+                        disabled={pending}
                         {...field}
                         value={field.value || ""} // Fix
                       />
@@ -256,7 +254,7 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
                     <FormControl>
                       <Input
                         type="date"
-                        disabled={isManager || pending}
+                        disabled={pending}
                         {...field}
                         value={field.value || ""} // Fix
                       />
@@ -274,8 +272,10 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
                     <FormLabel>{t("gender")}</FormLabel>
                     <FormControl>
                       <Select
-                        disabled={isManager || pending}
-                        defaultValue={currentUser?.gender?.toString()}
+                        disabled={pending}
+                        defaultValue={eGenderToEIdxGender(
+                          currentUser.gender
+                        ).toString()}
                         onValueChange={(val) => field.onChange(+val)}
                       >
                         <SelectTrigger>
@@ -296,21 +296,21 @@ const ProfileForm = ({ currentUser, data }: ProfileFormProps) => {
                 )}
               />
             </div>
-            {!isManager && (
-              <div className="flex w-full items-center justify-end gap-4">
-                <Button disabled={isManager || pending} type="submit">
-                  {t("updateBtn")}
-                  {pending && <Loader2 className="size-4 animate-spin" />}
-                </Button>
-                <Button
-                  disabled={isManager || pending}
-                  variant={"outline"}
-                  onClick={handleReset}
-                >
-                  {t("resetBtn")}
-                </Button>
-              </div>
-            )}
+
+            <div className="flex w-full items-center justify-end gap-4">
+              <Button
+                type="button"
+                disabled={pending}
+                variant={"outline"}
+                onClick={handleReset}
+              >
+                {t("resetBtn")}
+              </Button>
+              <Button disabled={pending} type="submit">
+                {t("updateBtn")}
+                {pending && <Loader2 className="size-4 animate-spin" />}
+              </Button>
+            </div>
           </form>
         </Form>
       </div>

@@ -591,6 +591,8 @@
     "preview": "Preview"
   },
   "UserManagement": {
+    "choose user role": "Choose user role",
+    "update user role": "Update user role",
     "create user": "Create user",
     "update user": "Edit user",
     "delete user": "Delete user",
@@ -600,6 +602,8 @@
     "users selected": "{amount, plural, one {# user selected} other {# users selected}}"
   },
   "EmployeeManagement": {
+    "choose employee role": "Choose employee role",
+    "update employee role": "Update employee role",
     "create employee": "Create employee",
     "update employee": "Edit employee",
     "delete employee": "Delete employee",
@@ -1053,6 +1057,7 @@
       "borrow digital": "Borrow digital",
       "borrow library items tracking": "Borrow library items tracking",
       "borrow tracking desc": "Track your borrowed items and view your borrowing history",
+      "pickup expiration date": "Pickup expiration date",
       "total borrow": "Total borrow",
       "total request": "Total request",
       "total borrow in once": "Total borrow in once",
