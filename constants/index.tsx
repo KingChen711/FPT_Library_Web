@@ -1,4 +1,4 @@
-import { Bell, Brain, Map } from "lucide-react"
+import { Bell, Brain, HistoryIcon, Map } from "lucide-react"
 
 import { EFeature } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
@@ -230,6 +230,20 @@ export const managementRoutes = [
         label: "Permissions",
         Icon: (props: { className?: string }) => {
           return <Icons.Key {...props} />
+        },
+      },
+      {
+        route: "/management/role-histories",
+        label: "Role histories",
+        Icon: (props: { className?: string }) => {
+          return <HistoryIcon {...props} />
+        },
+      },
+      {
+        route: "/management/permission-histories",
+        label: "Permission histories",
+        Icon: (props: { className?: string }) => {
+          return <HistoryIcon {...props} />
         },
       },
     ],

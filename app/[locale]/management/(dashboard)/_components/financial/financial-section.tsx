@@ -34,6 +34,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import TransactionStatusBadge from "@/components/badges/transaction-status-badge"
 import TransactionTypeBadge from "@/components/badges/transaction-type-badge"
 
 import StatCard from "../stat-card"
@@ -199,6 +200,10 @@ function FinancialSection() {
                 </TableHead>
 
                 <TableHead className="text-nowrap font-bold">
+                  <div className="flex justify-center">{t("Status")}</div>
+                </TableHead>
+
+                <TableHead className="text-nowrap font-bold">
                   <div className="flex justify-center">
                     {t("Transaction at")}
                   </div>
@@ -237,6 +242,14 @@ function FinancialSection() {
                   <TableCell className="text-nowrap">
                     <div className="flex justify-center">
                       <TransactionTypeBadge type={source.transactionType} />
+                    </div>
+                  </TableCell>
+
+                  <TableCell className="text-nowrap">
+                    <div className="flex justify-center">
+                      <TransactionStatusBadge
+                        status={source.transactionStatus}
+                      />
                     </div>
                   </TableCell>
 

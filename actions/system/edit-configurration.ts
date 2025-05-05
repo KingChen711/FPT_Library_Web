@@ -13,11 +13,24 @@ export async function editConfiguration(
   try {
     const [{ message }] = await Promise.all(
       fields.map((f) =>
-        http.patch(`/api/admin-configuration`, f, {
-          headers: {
-            Authorization: `Bearer ${getAccessToken()}`,
+        http.patch(
+          `/api/admin-configuration`,
+          {
+            ...f,
+            value: [
+              "AISettings:TitlePercentage",
+              "AISettings:AuthorNamePercentage",
+              "AISettings:PublisherPercentage",
+            ].includes(f.name)
+              ? (+f.value / 100).toString()
+              : f.value.toString(),
           },
-        })
+          {
+            headers: {
+              Authorization: `Bearer ${getAccessToken()}`,
+            },
+          }
+        )
       )
     )
 

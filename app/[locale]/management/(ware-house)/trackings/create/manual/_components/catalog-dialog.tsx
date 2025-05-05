@@ -85,6 +85,7 @@ function CatalogDialog({
   //TODO(isNotBook)
   const isRequireImage = !(
     category?.englishName === "Magazine" ||
+    category?.englishName === "ChildrenBook" ||
     category?.englishName === "Newspaper" ||
     category?.englishName === "Other" ||
     false

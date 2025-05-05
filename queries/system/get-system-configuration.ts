@@ -9,6 +9,14 @@ export type TSystemConfiguration = {
     En: string
     Vi: string
   }
+  AISettings: {
+    AuthorNamePercentage: string
+    PublisherPercentage: string
+    TitlePercentage: string
+
+    ConfidenceThreshold: string
+    MinFieldThreshold: string
+  }
   AppSettings: {
     AESIV: string
     InstanceBarcodeNumLength: number
@@ -50,7 +58,23 @@ const getSystemConfiguration =
           },
         }
       )
-      return data || null
+      return data
+        ? {
+            ...data,
+            AISettings: {
+              ...data.AISettings,
+              PublisherPercentage: Math.round(
+                +data.AISettings.PublisherPercentage * 100
+              ).toString(),
+              AuthorNamePercentage: Math.round(
+                +data.AISettings.AuthorNamePercentage * 100
+              ).toString(),
+              TitlePercentage: Math.round(
+                +data.AISettings.TitlePercentage * 100
+              ).toString(),
+            },
+          }
+        : null
     } catch {
       return null
     }
