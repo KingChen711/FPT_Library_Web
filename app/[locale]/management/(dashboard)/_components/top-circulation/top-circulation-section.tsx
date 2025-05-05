@@ -280,7 +280,7 @@ function TopCirculationSection() {
               <TableBody>
                 {data.topBorrowItems.sources.map((source) => (
                   <TooltipProvider
-                    delayDuration={0}
+                    delayDuration={500}
                     key={source.libraryItem.libraryItemId}
                   >
                     <Tooltip>

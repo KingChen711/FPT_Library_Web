@@ -33,7 +33,7 @@ function NormalFinesField({
   notShow,
 }: Props) {
   const t = useTranslations("BorrowAndReturnManagementPage")
-  const { fields, append, remove } = useFieldArray({
+  const { fields, replace, remove } = useFieldArray({
     name: `borrowRecordDetails.${itemIndex}.fines`,
     control: form.control,
   })
@@ -150,10 +150,13 @@ function NormalFinesField({
             disabled={isPending}
             disableFineIds={fields.map((f) => f.finePolicyId)}
             onSelect={(fine) => {
-              append({
-                fine: fine,
-                finePolicyId: fine.finePolicyId,
-              })
+              // The business rule is changed, 0 or 1 fine can be attach for each return item
+              replace([
+                {
+                  fine: fine,
+                  finePolicyId: fine.finePolicyId,
+                },
+              ])
             }}
           />
         </FormItem>

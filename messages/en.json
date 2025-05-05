@@ -224,6 +224,7 @@
     "apply": "Apply"
   },
   "Zod": {
+    "toGreaterThanFromDDC": "Must greater than from",
     "min1": "Required",
     "min2": "Must contain at least 2 characters",
     "min5": "Must contain at least 5 characters",
@@ -634,6 +635,10 @@
     "authors selected": "{amount, plural, one {# author selected} other {# authors selected}}"
   },
   "RoleManagement": {
+    "Changes history": "Changes's histories",
+    "When": "When",
+    "Who": "Who",
+    "Details": "Details",
     "Search": "Search...",
     "Sort by": "Sort by",
     "Roles": "Roles",
@@ -2755,6 +2760,11 @@
     "Card Information": "Card Information"
   },
   "ShelvesManagementPage": {
+    "Edit shelf": "Edit shelf",
+    "Eng shelf name": "Eng shelf name",
+    "Vie shelf name": "Vie shelf name",
+    "Cancel": "Cancel",
+    "Save": "Save",
     "Shelves": "Shelves",
     "Shelf number": "Shelf number",
     "Classification number range": "Classification number range",

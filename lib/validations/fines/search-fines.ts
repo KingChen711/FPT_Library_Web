@@ -16,6 +16,8 @@ export const searchFinesSchema = z.object({
       "-ChargePct",
       "ProcessingFee",
       "-ProcessingFee",
+      "DailyRate",
+      "-DailyRate",
     ])
 
     .catch("-ConditionType"),

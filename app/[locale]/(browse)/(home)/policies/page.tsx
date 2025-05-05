@@ -44,21 +44,21 @@ const PolicyPage = async ({ searchParams }: Props) => {
   return (
     <div className="space-y-4">
       <div>
-        <div className="mb-4 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-x-6 gap-y-4">
           <h3 className="text-2xl font-semibold">
             {tBorrow("BorrowSettings")}
           </h3>
         </div>
 
         {borrowSettings && (
-          <div className="grid grid-cols-12 gap-y-6 text-sm">
+          <div className="grid grid-cols-12 gap-y-6 rounded-md border py-6 text-sm">
             <section className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
               <h4 className="font-bold">{tBorrow("pickUpExpirationInDays")}</h4>
               <div className="flex items-center gap-2">
                 {borrowSettings.pickUpExpirationInDays} {tBorrow("days")}
               </div>
             </section>
-            <section className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <section className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
               <h4 className="font-bold">{tBorrow("extendPickUpInDays")}</h4>
               <div className="flex items-center gap-2">
                 {borrowSettings.extendPickUpInDays} {tBorrow("days")}
@@ -70,7 +70,7 @@ const PolicyPage = async ({ searchParams }: Props) => {
                 {borrowSettings.borrowAmountOnceTime} {tBorrow("resources")}
               </div>
             </section>
-            <section className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <section className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
               <h4 className="font-bold">{tBorrow("totalMissedPickUpAllow")}</h4>
               <div className="flex items-center gap-2">
                 {borrowSettings.totalMissedPickUpAllow} {tBorrow("times")}
@@ -82,7 +82,7 @@ const PolicyPage = async ({ searchParams }: Props) => {
                 {borrowSettings.maxBorrowExtension} {tBorrow("times")}
               </div>
             </section>
-            <section className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <section className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3 lg:border-r">
               <h4 className="font-bold">{tBorrow("allowToExtendInDays")}</h4>
               <div className="flex items-center gap-2">
                 {borrowSettings.allowToExtendInDays} {tBorrow("days")}
@@ -94,7 +94,7 @@ const PolicyPage = async ({ searchParams }: Props) => {
                 {borrowSettings.fineExpirationInDays} {tBorrow("days")}
               </div>
             </section>
-            <section className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 md:border-r lg:col-span-3">
+            <section className="col-span-12 flex flex-col gap-1 border-0 px-5 md:col-span-6 lg:col-span-3">
               <h4 className="font-bold">
                 {tBorrow("lostAmountPercentagePerDay")}
               </h4>
@@ -150,6 +150,11 @@ const PolicyPage = async ({ searchParams }: Props) => {
                       label={t("Processing fee")}
                       sortKey="ProcessingFee"
                     />
+                    <SortableTableHead
+                      currentSort={sort}
+                      label={t("Daily rate")}
+                      sortKey="DailyRate"
+                    />
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -175,6 +180,9 @@ const PolicyPage = async ({ searchParams }: Props) => {
                         {fine.processingFee
                           ? formatPrice(fine.processingFee)
                           : "-"}
+                      </TableCell>
+                      <TableCell className="text-nowrap">
+                        {fine.dailyRate ? formatPrice(fine.dailyRate) : "-"}
                       </TableCell>
                     </TableRow>
                   ))}

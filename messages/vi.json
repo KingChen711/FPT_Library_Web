@@ -227,6 +227,7 @@
     "apply": "Áp dụng"
   },
   "Zod": {
+    "toGreaterThanFromDDC": "Phải lớn hơn DDC bắt đầu",
     "min1": "Bắt buộc",
     "min2": "Phải có ít nhất 2 kí tự",
     "min5": "Phải có ít nhất 5 kí tự",
@@ -639,6 +640,11 @@
     "authors selected": "Đang chọn ({amount})"
   },
   "RoleManagement": {
+    "Changes history": "Lịch sử chỉnh sửa",
+    "When": "Lúc",
+    "Who": "Bởi",
+    "Details": "Chi tiết",
+    "Type": "Loại",
     "Search": "Tìm kiếm...",
     "Sort by": "Sắp xếp theo",
     "Roles": "Vai trò",
@@ -2773,6 +2779,11 @@
     "Card Information": "Thông tin thẻ"
   },
   "ShelvesManagementPage": {
+    "Edit shelf": "Chỉnh sửa kệ tài liệu",
+    "Eng shelf name": "Tên tiếng Anh",
+    "Vie shelf name": "Tên tiếng Việt",
+    "Cancel": "Hủy",
+    "Save": "Lưu",
     "Shelves": "Kệ sách",
     "Shelf number": "Kệ sách",
     "Classification number range": "Vùng DDC",

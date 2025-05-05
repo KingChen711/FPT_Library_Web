@@ -150,13 +150,13 @@ function AccessLevelContextMenu({
                     role: () =>
                       `<strong class="text-primary">${roleName}</strong>`,
                     permission: () =>
-                      `<strong class="text-primary">${
+                      `<strong class="text-primary">${t(
                         selectedPermissionId
                           ? levelList.find(
                               (item) => +item.value === selectedPermissionId
                             )?.label
                           : null
-                      }</strong>`,
+                      )}</strong>`,
                     feature: () =>
                       `<strong class="text-primary">${featureName}</strong>`,
                   }),

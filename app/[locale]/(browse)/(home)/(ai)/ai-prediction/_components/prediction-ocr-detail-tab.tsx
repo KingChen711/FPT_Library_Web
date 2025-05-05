@@ -121,9 +121,8 @@ const PredictionOcrDetailTab = () => {
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent
-                  align="start"
-                  side="left"
-                  className="max-h-[80vh] max-w-[calc(100vw-480px)] overflow-y-auto border-2 bg-card p-4"
+                  side="right"
+                  className="max-h-[80vh] max-w-[calc(50vw-110px)] overflow-y-auto border-2 bg-card p-4"
                 >
                   <LibraryItemInfo
                     id={libraryItem?.libraryItemId}

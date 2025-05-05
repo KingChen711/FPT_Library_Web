@@ -110,6 +110,7 @@ async function RolesManagementPage({ searchParams }: Props) {
                               roleId={
                                 tableData?.dataRows[rowIdx].cells[1].rowId
                               }
+                              // rolePermissionId={}
                               roleName={cell.cellContent}
                             />
                           ) : (

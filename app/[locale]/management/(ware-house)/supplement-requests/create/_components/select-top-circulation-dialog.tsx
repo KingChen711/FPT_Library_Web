@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 
 import React, { useState } from "react"
@@ -16,6 +17,7 @@ import {
 } from "recharts"
 
 import { EDashboardPeriodLabel } from "@/lib/types/enums"
+import { type TSearchTopCirculation } from "@/lib/validations/books/search-top-circulation"
 import useDashboardTopCirculation, {
   type TDashboardTopCirculation,
 } from "@/hooks/dash-board/use-dashboard-top-circulation"
@@ -30,6 +32,7 @@ import {
 } from "@/components/ui/dialog"
 import NoData from "@/components/ui/no-data"
 import Paginator from "@/components/ui/paginator"
+import SortableTableHead from "@/components/ui/sortable-table-head"
 import {
   Table,
   TableBody,
@@ -57,6 +60,15 @@ type Props = {
   isOverdue?: boolean
 }
 
+const initSearchParams: TSearchTopCirculation = {
+  pageIndex: 1,
+  pageSize: "5",
+  search: "",
+  f: [],
+  o: [],
+  v: [],
+}
+
 function SelectTopCirculationDialog({
   onSelect,
   disabled = false,
@@ -65,14 +77,13 @@ function SelectTopCirculationDialog({
 }: Props) {
   const t = useTranslations("Dashboard")
   const [open, setOpen] = useState(false)
-  const [pageIndex, setPageIndex] = useState(1)
-  const [pageSize, setPageSize] = useState<"5" | "10" | "30" | "50" | "100">(
-    "5"
-  )
+
+  const [searchParams, setSearchParams] =
+    useState<TSearchTopCirculation>(initSearchParams)
 
   const { data, isLoading } = useDashboardTopCirculation({
-    pageIndex,
-    pageSize,
+    pageIndex: searchParams.pageIndex,
+    pageSize: searchParams.pageSize,
     period: EDashboardPeriodLabel.DAILY,
     startDate: null,
     endDate: null,
@@ -80,15 +91,15 @@ function SelectTopCirculationDialog({
     o: [],
     v: [],
     search: "",
+    sort: searchParams.sort,
   })
 
-  const handlePaginate = (selectedPage: number) => {
-    setPageIndex(selectedPage)
-  }
-
-  const handleChangePageSize = (size: "5" | "10" | "30" | "50" | "100") => {
-    setPageSize(size)
-  }
+  const handleSort = (sortKey: any) =>
+    setSearchParams((prev) => ({
+      ...prev,
+      sort: sortKey,
+      pageIndex: 1,
+    }))
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -98,7 +109,7 @@ function SelectTopCirculationDialog({
           {t("Select top items")}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-h-[80vh] max-w-7xl">
+      <DialogContent className="max-h-[80vh] max-w-7xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t("Top circulation library items")}</DialogTitle>
           <DialogDescription asChild>
@@ -119,54 +130,68 @@ function SelectTopCirculationDialog({
                             {t("Library item")}
                           </TableHead>
 
-                          <TableHead className="text-nowrap font-bold">
-                            <div className="flex justify-center">
-                              {t("Borrow success count")}
-                            </div>
-                          </TableHead>
+                          <SortableTableHead
+                            currentSort={searchParams.sort}
+                            label={t("Borrow success count")}
+                            sortKey="BorrowSuccessCount"
+                            position="center"
+                            onSort={handleSort}
+                          />
 
-                          <TableHead className="text-nowrap font-bold">
-                            <div className="flex justify-center">
-                              {t("Borrow failed count")}
-                            </div>
-                          </TableHead>
+                          <SortableTableHead
+                            currentSort={searchParams.sort}
+                            label={t("Borrow failed count")}
+                            sortKey="BorrowFailedCount"
+                            position="center"
+                            onSort={handleSort}
+                          />
 
-                          <TableHead className="text-nowrap font-bold">
-                            <div className="flex justify-center">
-                              {t("Borrow reserve count")}
-                            </div>
-                          </TableHead>
+                          <SortableTableHead
+                            currentSort={searchParams.sort}
+                            label={t("Borrow reserve count")}
+                            sortKey="ReserveCount"
+                            position="center"
+                            onSort={handleSort}
+                          />
 
-                          <TableHead className="text-nowrap font-bold">
-                            <div className="flex justify-center">
-                              {t("Extended borrow count")}
-                            </div>
-                          </TableHead>
+                          <SortableTableHead
+                            currentSort={searchParams.sort}
+                            label={t("Extended borrow count")}
+                            sortKey="ExtendedBorrowCount"
+                            position="center"
+                            onSort={handleSort}
+                          />
 
-                          <TableHead className="text-nowrap font-bold">
-                            <div className="flex justify-center">
-                              {t("Digital borrow count")}
-                            </div>
-                          </TableHead>
+                          <SortableTableHead
+                            currentSort={searchParams.sort}
+                            label={t("Digital borrow count")}
+                            sortKey="DigitalBorrowCount"
+                            position="center"
+                            onSort={handleSort}
+                          />
 
-                          <TableHead className="text-nowrap font-bold">
-                            <div className="flex justify-center">
-                              {t("Borrow failed rates")}
-                            </div>
-                          </TableHead>
+                          <SortableTableHead
+                            currentSort={searchParams.sort}
+                            label={t("Borrow failed rates")}
+                            sortKey="BorrowFailedRate"
+                            position="center"
+                            onSort={handleSort}
+                          />
 
-                          <TableHead className="text-nowrap font-bold">
-                            <div className="flex justify-center">
-                              {t("Borrow extension rates")}
-                            </div>
-                          </TableHead>
+                          <SortableTableHead
+                            currentSort={searchParams.sort}
+                            label={t("Borrow extension rates")}
+                            sortKey="BorrowExtensionRate"
+                            position="center"
+                            onSort={handleSort}
+                          />
                           <TableHead></TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {data?.topBorrowItems.sources.map((source) => (
                           <TooltipProvider
-                            delayDuration={0}
+                            delayDuration={500}
                             key={source.libraryItem.libraryItemId}
                           >
                             <Tooltip>
@@ -334,13 +359,23 @@ function SelectTopCirculationDialog({
 
                 {data && (
                   <Paginator
-                    pageSize={+pageSize}
-                    pageIndex={pageIndex}
+                    pageSize={+searchParams.pageSize}
+                    pageIndex={searchParams.pageIndex}
                     totalPage={data.topBorrowItems.totalPage}
                     totalActualItem={data.topBorrowItems.totalActualItem}
                     className="mt-6"
-                    onPaginate={handlePaginate}
-                    onChangePageSize={handleChangePageSize}
+                    onPaginate={(page) =>
+                      setSearchParams((prev) => ({
+                        ...prev,
+                        pageIndex: page,
+                      }))
+                    }
+                    onChangePageSize={(size) =>
+                      setSearchParams((prev) => ({
+                        ...prev,
+                        pageSize: size,
+                      }))
+                    }
                   />
                 )}
               </div>

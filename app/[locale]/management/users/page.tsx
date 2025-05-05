@@ -185,15 +185,15 @@ async function UsersManagementPage({ searchParams }: Props) {
                           <UserCheckbox id={user.userId} />
                         </TableCell>
                         <TableCell>
-                          <div className="flex gap-2 pr-8">
+                          <div className="flex items-center gap-2">
                             <Image
                               src={
                                 user.avatar || "https://github.com/shadcn.png"
                               }
                               alt="avatar"
-                              width={28}
-                              height={28}
-                              className="rounded-full"
+                              width={32}
+                              height={32}
+                              className="aspect-square shrink-0 rounded-full border object-cover object-center"
                             />
                             <p>{user.email}</p>
                           </div>
