@@ -127,7 +127,7 @@ const BorrowRequestDetail = ({ params }: Props) => {
 
               <div className="flex flex-col">
                 <span className="text-xs text-muted-foreground">
-                  {t("expiration date")}
+                  {t("pickup expiration date")}
                 </span>
                 <span className="flex items-center font-medium">
                   <Clock className="mr-1.5 size-3.5 text-primary" />

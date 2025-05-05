@@ -1,8 +1,9 @@
 "use client"
 
+import defaultAvatar from "@/public/assets/images/default-avatar.jpg"
 import { useTranslations } from "next-intl"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import ImageWithFallback from "@/components/ui/image-with-fallback"
 import { Input } from "@/components/ui/input"
 
 type Props = {
@@ -30,10 +31,15 @@ const ProfileAvatar = ({ avatar, setAvatar, setFile }: Props) => {
       <p className="text-center font-semibold text-primary">
         {t("yourProfilePicture")}
       </p>
-      <Avatar className="mx-auto size-24 object-cover">
-        <AvatarImage src={avatar || undefined} className="object-cover" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
+
+      <ImageWithFallback
+        src={avatar || defaultAvatar}
+        alt={`avatar`}
+        width={96}
+        height={96}
+        fallbackSrc={defaultAvatar}
+        className="mx-auto size-24 shrink-0 rounded-full"
+      />
       <label
         htmlFor="picture"
         className="block cursor-pointer text-center text-secondary-foreground underline"

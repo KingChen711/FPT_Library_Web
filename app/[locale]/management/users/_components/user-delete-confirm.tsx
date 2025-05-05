@@ -60,7 +60,7 @@ const UserDeleteConfirm = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="mb-1">
-            {tUserManagement("delete employee")}
+            {tUserManagement("delete user")}
           </DialogTitle>
           <DialogDescription>
             <div

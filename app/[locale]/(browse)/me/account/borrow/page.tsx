@@ -67,7 +67,7 @@ const BorrowTrackingPage = async ({ searchParams }: Props) => {
         </AlertTitle>
         <AlertDescription>
           {locale === "vi"
-            ? "Tất cả thời hạn của các hoạt động cần phải tới trực tiếp thư viện (hạn lấy sách, hạn trả sách,...) đã được tính trừ các ngày nghỉ của thư viện, bao gồm ngày lễ, ngày nghỉ định kỳ và các ngày nghỉ phát sinh."
+            ? "Tất cả thời hạn của các hoạt động cần phải tới trực tiếp thư viện (hạn lấy tài liệu, hạn trả tài liệu,...) đã được tính trừ các ngày nghỉ của thư viện, bao gồm ngày lễ, ngày nghỉ định kỳ và các ngày nghỉ phát sinh."
             : "All deadlines for activities requiring direct access to the library (book pick-up deadlines, book return deadlines, etc.) are calculated excluding library days off, including holidays, regular days off and extra days off."}
         </AlertDescription>
       </Alert>

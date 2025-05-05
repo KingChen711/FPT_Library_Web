@@ -577,7 +577,7 @@
     "locate": "Vị trí",
     "AI-predict": "AI dự đoán",
     "threshold value": "Ngưỡng tin cậy",
-    "match overall": "Độ khớp tổng quan",
+    "match overall": "Từ khóa dự đoán",
     "status": "Trạng thái",
     "passed": "Đạt",
     "not passed": "Không đạt",
@@ -597,6 +597,8 @@
     "preview": "Xem trước"
   },
   "UserManagement": {
+    "choose user role": "Chọn vai trò người dùng",
+    "update user role": "Thay đổi vai trò người dùng",
     "create user": "Tạo người dùng",
     "update user": "Chỉnh sửa người dùng",
     "delete user": "Xóa người dùng",
@@ -606,6 +608,8 @@
     "users selected": "Đang chọn ({amount})"
   },
   "EmployeeManagement": {
+    "choose employee role": "Chọn vai trò nhân viên",
+    "update employee role": "Thay đổi vai trò nhân viên",
     "create employee": "Tạo nhân viên",
     "update employee": "Chỉnh sửa nhân viên",
     "delete employee": "Xóa nhân viên",
@@ -1057,6 +1061,7 @@
       "borrow digital": "Mượn tài liệu điện tử",
       "borrow library items tracking": "Theo dõi mượn tài liệu",
       "borrow tracking desc": "Theo dõi các mục bạn đã mượn và xem lịch sử mượn",
+      "pickup expiration date": "Hạn lấy tài liệu",
       "total borrow": "Tổng số tài liệu mượn",
       "total request": "Tổng số yêu cầu",
       "total borrow in once": "Tổng số mượn cùng một lúc",
@@ -1110,7 +1115,7 @@
       "audio book": "Sách nói",
       "borrow duration": "Thời gian mượn",
       "days": "Ngày",
-      "pending resources": "Tài liệu bị hoãn",
+      "pending resources": "Tài liệu đang chờ thanh toán",
       "Borrow Reservations Not Found": "Không tìm thấy đặt trước",
       "No borrow reservations matching your request were found Please check your information or try searching with different criteria": "Hiện tại không có đặt trước nào phù hợp với yêu cầu của bạn. Vui lòng kiểm tra lại thông tin hoặc thử tìm kiếm với tiêu chí khác.",
       "Borrow Records Not Found": "Không tìm thấy lịch sử mượn",

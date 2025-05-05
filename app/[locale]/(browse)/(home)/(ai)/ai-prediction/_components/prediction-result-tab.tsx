@@ -65,7 +65,7 @@ const PredictionResultTab = () => {
         />
       </section>
 
-      <section className="w-1/4 space-y-4 rounded-md border p-4 shadow-lg">
+      <section className="hidden w-1/4 space-y-4 rounded-md border p-4 shadow-lg">
         <h1 className="text-center text-2xl font-semibold text-primary">
           {t("AI-predict")}
         </h1>
