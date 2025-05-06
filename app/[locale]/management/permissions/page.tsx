@@ -17,6 +17,7 @@ import {
 
 import AccessLevelContextMenu from "./_components/access-level-context-menu"
 import DiagonalTableCell from "./_components/diagonal-table-cell"
+import HistoriesDialog from "./_components/histories-dialog"
 import RoleActionContextMenu from "./_components/role-action-context-menu"
 import RoleLayoutDropdown from "./_components/role-layout-dropdown"
 
@@ -44,6 +45,7 @@ async function RolesManagementPage({ searchParams }: Props) {
         <h3 className="text-2xl font-semibold">{t("Permissions")}</h3>
         <div className="flex items-center gap-x-4">
           <RoleLayoutDropdown />
+          <HistoriesDialog />
         </div>
       </div>
       <div className="my-4 grid w-full">
@@ -91,11 +93,11 @@ async function RolesManagementPage({ searchParams }: Props) {
                           roleName={
                             isRoleVerticalLayout === "true"
                               ? row.cells[0].cellContent
-                              : tableData?.columnHeaders[colIdx]
+                              : tableData?.columnHeaders[colIdx - 1]
                           }
                           featureName={
                             isRoleVerticalLayout === "true"
-                              ? tableData?.columnHeaders[colIdx]
+                              ? tableData?.columnHeaders[colIdx - 1]
                               : row.cells[0].cellContent
                           }
                           colId={cell.colId}

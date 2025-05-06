@@ -150,13 +150,15 @@ function AccessLevelContextMenu({
                     role: () =>
                       `<strong class="text-primary">${roleName}</strong>`,
                     permission: () =>
-                      `<strong class="text-primary">${t(
+                      `<strong class="text-primary">${
                         selectedPermissionId
-                          ? levelList.find(
-                              (item) => +item.value === selectedPermissionId
-                            )?.label
+                          ? t(
+                              levelList.find(
+                                (item) => +item.value === selectedPermissionId
+                              )?.label
+                            )
                           : null
-                      )}</strong>`,
+                      }</strong>`,
                     feature: () =>
                       `<strong class="text-primary">${featureName}</strong>`,
                   }),
@@ -226,59 +228,6 @@ function AccessLevelContextMenu({
       </ContextMenu>
     </>
   )
-  // }
-
-  // return (
-  //   <Popover>
-  //     <PopoverTrigger asChild>
-  //       <Button
-  //         variant="outline"
-  //         role="combobox"
-  //         className={cn(
-  //           "w-[200px] justify-between",
-  //           !permissionId && "text-muted-foreground"
-  //         )}
-  //       >
-  //         <div className="flex items-center gap-x-2">
-  //           {permissionId
-  //             ? levelList.find((item) => +item.value === permissionId)?.ICon()
-  //             : null}
-  //           {permissionId
-  //             ? levelList.find((item) => +item.value === permissionId)?.label
-  //             : "Select level"}
-  //         </div>
-  //         <ChevronsUpDown className="opacity-50" />
-  //       </Button>
-  //     </PopoverTrigger>
-  //     <PopoverContent className="w-[200px] p-0">
-  //       <Command>
-  //         <CommandList>
-  //           <CommandGroup>
-  //             {levelList.map((item) => (
-  //               <CommandItem
-  //                 value={item.label}
-  //                 key={item.value}
-  //                 onSelect={() => {
-  //                   setPermissionId(+item.value)
-  //                 }}
-  //                 className="cursor-pointer"
-  //               >
-  //                 <item.ICon />
-  //                 {item.label}
-  //                 <Check
-  //                   className={cn(
-  //                     "ml-auto",
-  //                     +item.value === permissionId ? "opacity-100" : "opacity-0"
-  //                   )}
-  //                 />
-  //               </CommandItem>
-  //             ))}
-  //           </CommandGroup>
-  //         </CommandList>
-  //       </Command>
-  //     </PopoverContent>
-  //   </Popover>
-  // )
 }
 
 export default AccessLevelContextMenu
