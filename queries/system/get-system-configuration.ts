@@ -4,6 +4,12 @@ import "server-only"
 
 import { auth } from "../auth"
 
+export type Schedule = {
+  days: number[]
+  open: string
+  close: string
+}
+
 export type TSystemConfiguration = {
   AdsScriptSettings: {
     En: string
@@ -26,6 +32,9 @@ export type TSystemConfiguration = {
     LibraryName: string
     PageSize: number
     RefreshValue: number
+    LibrarySchedule: {
+      schedules: Schedule[]
+    }
   }
   BorrowSettings: {
     AllowToExtendInDays: number
@@ -61,6 +70,17 @@ const getSystemConfiguration =
       return data
         ? {
             ...data,
+            AppSettings: {
+              ...data.AppSettings,
+              LibrarySchedule: {
+                schedules: data.AppSettings.LibrarySchedule.schedules.map(
+                  (s) => ({
+                    ...s,
+                    days: s.days.sort(),
+                  })
+                ),
+              },
+            },
             AISettings: {
               ...data.AISettings,
               PublisherPercentage: Math.round(
