@@ -3,7 +3,7 @@
 
 import { useState, useTransition } from "react"
 import { type TSystemConfiguration } from "@/queries/system/get-system-configuration"
-import { Loader2 } from "lucide-react"
+import { Loader2, RotateCcw, Save } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
@@ -25,19 +25,22 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Textarea } from "@/components/ui/textarea"
 import { Toaster } from "@/components/ui/toaster"
 
-//
+import ScheduleEditor from "./schedule-editor"
 
 type Props = {
   systemConfiguration: TSystemConfiguration
 }
 
 export default function ConfigurationTabs({ systemConfiguration }: Props) {
-  const [prevConfig, setPrevConfig] = useState(systemConfiguration)
-  const [config, setConfig] = useState(systemConfiguration)
+  const [prevConfig, setPrevConfig] = useState(
+    structuredClone(systemConfiguration)
+  )
+  const [config, setConfig] = useState(structuredClone(systemConfiguration))
   const t = useTranslations("SystemConfiguration")
   const [isPending, startTransition] = useTransition()
   const locale = useLocale()
   const [showAIError, setShowAIError] = useState(false)
+  const [showScheduleError, setShowScheduleError] = useState(false)
   const [tab, setTab] = useState("ads")
 
   const checkAIValidate = () => {
@@ -48,12 +51,10 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
       value: config["AISettings"][key],
     }))
     try {
-      console.log("start")
-
       const tPct = Number(
         fields.find((f) => f.name === "AISettings:TitlePercentage")?.value
       )
-      console.log({ tPct })
+
       if (!tPct || !Number.isInteger(tPct) || tPct < 0 || tPct > 100) {
         throw Error("tPct")
       }
@@ -70,12 +71,6 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
         throw Error("pPct")
       }
 
-      console.log({
-        tPct,
-        aPct,
-        pPct,
-      })
-
       if (tPct + aPct + pPct !== 100) {
         throw Error("sum")
       }
@@ -87,15 +82,43 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
     }
   }
 
-  const handleChange = (section: string, key: string, value: string) => {
-    setConfig((prevConfig) => ({
-      ...prevConfig,
-      [section]: {
-        ...prevConfig[section as keyof typeof prevConfig],
-        [key]: value,
-      },
-    }))
+  const checkScheduleValidate = () => {
+    const schedules = config["AppSettings"]["LibrarySchedule"].schedules
+    const days = schedules
+      .map((s) => s.days)
+      .flat()
+      .sort()
+
+    if (schedules.some((s) => s.close < s.open)) {
+      setShowScheduleError(true)
+      return false
+    }
+
+    if (JSON.stringify(days) !== JSON.stringify([0, 1, 2, 3, 4, 5, 6])) {
+      setShowScheduleError(true)
+      return false
+    }
+    setShowScheduleError(false)
+    return true
+  }
+
+  const handleChange = (section: string, key: string, value: any) => {
+    setConfig((prevConfig) =>
+      structuredClone({
+        ...prevConfig,
+        [section]: {
+          ...prevConfig[section as keyof typeof prevConfig],
+          [key]: value,
+        },
+      })
+    )
     if (showAIError && tab === "ai") checkAIValidate()
+    if (
+      showScheduleError &&
+      section === "AppSettings" &&
+      key === "LibrarySchedule"
+    )
+      checkScheduleValidate()
   }
 
   const handleSave = (section: keyof typeof config) => {
@@ -114,6 +137,7 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
         value: config[section][key],
       }))
     if (section === "AISettings" && !checkAIValidate()) return
+    if (section === "AppSettings" && !checkScheduleValidate()) return
     startTransition(async () => {
       const res = await editConfiguration(fields)
 
@@ -124,11 +148,20 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
           variant: "success",
         })
 
-        setPrevConfig(config)
+        setPrevConfig(structuredClone(config))
         return
       }
       handleServerActionError(res, locale)
     })
+  }
+
+  const handleReset = (section: keyof typeof config) => {
+    setConfig((prev) =>
+      structuredClone({
+        ...prev,
+        [section]: prevConfig[section],
+      })
+    )
   }
 
   return (
@@ -180,17 +213,32 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
               </div>
             </CardContent>
             <CardFooter>
-              <Button
-                disabled={
-                  isPending ||
-                  JSON.stringify(config.AdsScriptSettings) ===
-                    JSON.stringify(prevConfig.AdsScriptSettings)
-                }
-                onClick={() => handleSave("AdsScriptSettings")}
-              >
-                {t("Save Changes")}
-                {isPending && <Loader2 className="size-4 animate-spin" />}
-              </Button>
+              <div className="flex w-full items-center justify-end gap-4">
+                <Button
+                  variant="outline"
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.AdsScriptSettings) ===
+                      JSON.stringify(prevConfig.AdsScriptSettings)
+                  }
+                  onClick={() => handleReset("AdsScriptSettings")}
+                >
+                  <RotateCcw className="size-4" />
+                  {t("Reset")}
+                </Button>
+                <Button
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.AdsScriptSettings) ===
+                      JSON.stringify(prevConfig.AdsScriptSettings)
+                  }
+                  onClick={() => handleSave("AdsScriptSettings")}
+                >
+                  <Save className="size-4" />
+                  {t("Save Changes")}
+                  {isPending && <Loader2 className="size-4 animate-spin" />}
+                </Button>
+              </div>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -296,19 +344,53 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
                   }
                 />
               </div>
+              <div className="space-y-2 md:col-span-2">
+                <Label>{t("Library Schedule")}</Label>
+                <ScheduleEditor
+                  schedules={config.AppSettings.LibrarySchedule.schedules}
+                  onChange={(newSchedules) => {
+                    handleChange("AppSettings", "LibrarySchedule", {
+                      schedules: newSchedules,
+                    })
+                  }}
+                />
+                <div
+                  className={cn(
+                    "text-sm text-muted-foreground",
+                    showScheduleError && "text-danger"
+                  )}
+                >
+                  {t("AppSettingsLibraryScheduleFieldsDescription")}
+                </div>
+              </div>
             </CardContent>
             <CardFooter>
-              <Button
-                disabled={
-                  isPending ||
-                  JSON.stringify(config.AppSettings) ===
-                    JSON.stringify(prevConfig.AppSettings)
-                }
-                onClick={() => handleSave("AppSettings")}
-              >
-                {t("Save Changes")}
-                {isPending && <Loader2 className="size-4 animate-spin" />}
-              </Button>
+              <div className="flex w-full items-center justify-end gap-4">
+                <Button
+                  variant="outline"
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.AppSettings) ===
+                      JSON.stringify(prevConfig.AppSettings)
+                  }
+                  onClick={() => handleReset("AppSettings")}
+                >
+                  <RotateCcw className="size-4" />
+                  {t("Reset")}
+                </Button>
+                <Button
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.AppSettings) ===
+                      JSON.stringify(prevConfig.AppSettings)
+                  }
+                  onClick={() => handleSave("AppSettings")}
+                >
+                  <Save className="size-4" />
+                  {t("Save Changes")}
+                  {isPending && <Loader2 className="size-4 animate-spin" />}
+                </Button>
+              </div>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -523,17 +605,32 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
               </div>
             </CardContent>
             <CardFooter>
-              <Button
-                disabled={
-                  isPending ||
-                  JSON.stringify(config.BorrowSettings) ===
-                    JSON.stringify(prevConfig.BorrowSettings)
-                }
-                onClick={() => handleSave("BorrowSettings")}
-              >
-                {t("Save Changes")}
-                {isPending && <Loader2 className="size-4 animate-spin" />}
-              </Button>
+              <div className="flex w-full items-center justify-end gap-4">
+                <Button
+                  variant="outline"
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.BorrowSettings) ===
+                      JSON.stringify(prevConfig.BorrowSettings)
+                  }
+                  onClick={() => handleReset("BorrowSettings")}
+                >
+                  <RotateCcw className="size-4" />
+                  {t("Reset")}
+                </Button>
+                <Button
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.BorrowSettings) ===
+                      JSON.stringify(prevConfig.BorrowSettings)
+                  }
+                  onClick={() => handleSave("BorrowSettings")}
+                >
+                  <Save className="size-4" />
+                  {t("Save Changes")}
+                  {isPending && <Loader2 className="size-4 animate-spin" />}
+                </Button>
+              </div>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -584,17 +681,32 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
               </div>
             </CardContent>
             <CardFooter>
-              <Button
-                disabled={
-                  isPending ||
-                  JSON.stringify(config.DigitalBorrowSettings) ===
-                    JSON.stringify(prevConfig.DigitalBorrowSettings)
-                }
-                onClick={() => handleSave("DigitalBorrowSettings")}
-              >
-                {t("Save Changes")}
-                {isPending && <Loader2 className="size-4 animate-spin" />}
-              </Button>
+              <div className="flex w-full items-center justify-end gap-4">
+                <Button
+                  variant="outline"
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.DigitalBorrowSettings) ===
+                      JSON.stringify(prevConfig.DigitalBorrowSettings)
+                  }
+                  onClick={() => handleReset("DigitalBorrowSettings")}
+                >
+                  <RotateCcw className="size-4" />
+                  {t("Reset")}
+                </Button>
+                <Button
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.DigitalBorrowSettings) ===
+                      JSON.stringify(prevConfig.DigitalBorrowSettings)
+                  }
+                  onClick={() => handleSave("DigitalBorrowSettings")}
+                >
+                  <Save className="size-4" />
+                  {t("Save Changes")}
+                  {isPending && <Loader2 className="size-4 animate-spin" />}
+                </Button>
+              </div>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -726,17 +838,32 @@ export default function ConfigurationTabs({ systemConfiguration }: Props) {
               </div>
             </CardContent>
             <CardFooter>
-              <Button
-                disabled={
-                  isPending ||
-                  JSON.stringify(config.AISettings) ===
-                    JSON.stringify(prevConfig.AISettings)
-                }
-                onClick={() => handleSave("AISettings")}
-              >
-                {t("Save Changes")}
-                {isPending && <Loader2 className="size-4 animate-spin" />}
-              </Button>
+              <div className="flex w-full items-center justify-end gap-4">
+                <Button
+                  variant="outline"
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.AISettings) ===
+                      JSON.stringify(prevConfig.AISettings)
+                  }
+                  onClick={() => handleReset("AISettings")}
+                >
+                  <RotateCcw className="size-4" />
+                  {t("Reset")}
+                </Button>
+                <Button
+                  disabled={
+                    isPending ||
+                    JSON.stringify(config.AISettings) ===
+                      JSON.stringify(prevConfig.AISettings)
+                  }
+                  onClick={() => handleSave("AISettings")}
+                >
+                  <Save className="size-4" />
+                  {t("Save Changes")}
+                  {isPending && <Loader2 className="size-4 animate-spin" />}
+                </Button>
+              </div>
             </CardFooter>
           </Card>
         </TabsContent>
