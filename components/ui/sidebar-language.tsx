@@ -6,6 +6,8 @@ import { usePathname, useRouter } from "@/i18n/routing"
 import { Languages, Loader2 } from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
+import handleServerActionError from "@/lib/handle-server-action-error"
+import { changeLanguage } from "@/actions/i18n/change-language"
 import { DropdownMenuItem } from "@/components/ui/dropdown-menu"
 
 import {
@@ -26,17 +28,22 @@ const SidebarLanguage = () => {
   const pathname = usePathname()
   const params = useParams()
 
-  const newLocale = locale === "en" ? "vi" : "en"
   const switchLanguage = () => {
-    startTransition(() => {
-      router.replace(
-        // @ts-expect-error -- TypeScript will validate that only known `params`
-        // are used in combination with a given `pathname`. Since the two will
-        // always match for the current route, we can skip runtime checks.
-        { pathname, params },
-        { scroll: false, locale: newLocale }
-      )
-      // window?.location?.reload()
+    startTransition(async () => {
+      const res = await changeLanguage()
+      if (res.isSuccess) {
+        router.replace(
+          // @ts-expect-error -- TypeScript will validate that only known `params`
+          // are used in combination with a given `pathname`. Since the two will
+          // always match for the current route, we can skip runtime checks.
+          { pathname, params },
+          { scroll: false, locale: res.data }
+        )
+        // window?.location?.reload()
+        return
+      }
+
+      handleServerActionError(res, locale)
     })
   }
 
@@ -44,7 +51,11 @@ const SidebarLanguage = () => {
     <Select onValueChange={() => switchLanguage()} defaultValue={locale}>
       <DropdownMenuItem asChild className="cursor-pointer">
         <SelectTrigger>
-          {isPending ? <Loader2 size={20} /> : <Languages size={20} />}
+          {isPending ? (
+            <Loader2 size={20} className="animate-spin" />
+          ) : (
+            <Languages size={20} />
+          )}
           <SelectValue placeholder={t("language")} />
         </SelectTrigger>
       </DropdownMenuItem>

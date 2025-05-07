@@ -290,6 +290,7 @@
     "addFineOverdue": "Phải thêm phí phạt 'Quá hạn'"
   },
   "Me": {
+    "home page": "Trang chủ",
     "fine": "Phạt",
     "account": "Tài khoản",
     "profile": "Hồ sơ",
@@ -951,6 +952,8 @@
     "Cancel": "Hủy"
   },
   "BookPage": {
+    "Back to Home Page": "Về Trang Chủ",
+    "Warning Do not attempt to steal resources": "Cảnh cáo: Đừng cố gắng ăn cắp tài nguyên",
     "Library items": "Tài liệu",
     "remove borrow": "Hủy mượn",
     "Error while loading audiobook": "Có lỗi xảy ra khi đang tải audiobook. Vui lòng thử lại.",

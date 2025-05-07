@@ -287,6 +287,7 @@
     "addFineOverdue": "Must add 'Overdue' fine"
   },
   "Me": {
+    "home page": "Home page",
     "fine": "Fine",
     "account": "Account",
     "profile": "Profile",
@@ -946,6 +947,8 @@
     "Cancel": "Cancel"
   },
   "BookPage": {
+    "Back to Home Page": "Back to Home Page",
+    "Warning Do not attempt to steal resources": "Warning: Do not attempt to steal resources",
     "Library items": "Library items",
     "remove borrow": "Remove borrow",
     "Error while loading audiobook": "Error while loading audiobook. Please try again.",
