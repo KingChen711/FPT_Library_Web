@@ -2,6 +2,7 @@
 
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
+import dangerCat from "@/public/images/danger-cat.jpg"
 import HTMLFlipBook from "react-pageflip"
 import { Document, Page, pdfjs } from "react-pdf"
 
@@ -24,6 +25,7 @@ import {
 import "react-pdf/dist/Page/AnnotationLayer.css"
 import "react-pdf/dist/Page/TextLayer.css"
 
+import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { WorkerPdfVersion } from "@/constants/library-version"
 import { useAuth } from "@/contexts/auth-provider"
@@ -44,6 +46,7 @@ import { http } from "@/lib/http"
 import { EResourceBookType } from "@/lib/types/enums"
 import { cn } from "@/lib/utils"
 import useResourcePublicDetail from "@/hooks/library-items/use-resource-detail"
+import useProtectResource from "@/hooks/use-check-dev-tools"
 import { toast } from "@/hooks/use-toast"
 import { Button } from "@/components/ui/button"
 
@@ -214,6 +217,8 @@ export default function ResourceContent({
     setIsClient(true)
   }, [])
 
+  const { devtoolsOpen } = useProtectResource()
+
   if (
     isLoadingResource ||
     isLoadingAuth ||
@@ -233,6 +238,20 @@ export default function ResourceContent({
   return (
     <>
       {/* Open warning */}
+      {devtoolsOpen && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center gap-6 bg-black text-white">
+          <Image
+            alt="danger-cat"
+            src={dangerCat}
+            height={500}
+            width={500}
+            className="aspect-square object-cover"
+          />
+          <div className="text-2xl font-bold">
+            {t("Warning Do not attempt to steal resources")}
+          </div>
+        </div>
+      )}
       <Dialog
         open={openPrintShotWarning}
         onOpenChange={setOpenPrintShotWarning}

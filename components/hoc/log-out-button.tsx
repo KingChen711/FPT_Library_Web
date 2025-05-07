@@ -3,8 +3,16 @@
 import React, { useState, useTransition } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
+import { usePathname } from "@/i18n/routing"
 import { useQueryClient } from "@tanstack/react-query"
-import { BadgeCheck, ChevronsUpDown, Loader2, LogOut, User } from "lucide-react"
+import {
+  ChevronsUpDown,
+  HomeIcon,
+  Loader2,
+  LogOut,
+  User,
+  User2Icon,
+} from "lucide-react"
 import { useLocale, useTranslations } from "next-intl"
 
 import handleServerActionError from "@/lib/handle-server-action-error"
@@ -21,6 +29,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu"
+import { Icons } from "../ui/icons"
 import { SidebarMenuButton, SidebarMenuItem } from "../ui/sidebar"
 
 type Props = {
@@ -34,6 +43,7 @@ function ManagementSidebarFooter({ user }: Props) {
   const router = useRouter()
   const queryClient = useQueryClient()
   const [openDropdown, setOpenDropdown] = useState(false)
+  const pathName = usePathname()
 
   const handleLogout = () => {
     startTransition(async () => {
@@ -95,16 +105,26 @@ function ManagementSidebarFooter({ user }: Props) {
             <DropdownMenuGroup>
               <DropdownMenuItem className="cursor-pointer" asChild>
                 <Link href="/me/account/profile">
-                  <BadgeCheck />
+                  <User2Icon />
                   {t("account")}
                 </Link>
               </DropdownMenuItem>
               {(user.role.roleType === ERoleType.EMPLOYEE ||
-                user.role.roleId === 1) && (
+                user.role.englishName === "Administration") &&
+                !pathName.includes("/management") && (
+                  <DropdownMenuItem className="cursor-pointer" asChild>
+                    <Link href="/management">
+                      <Icons.Dashboard className="size-4" />
+                      {t("management page")}
+                    </Link>
+                  </DropdownMenuItem>
+                )}
+
+              {pathName.includes("/management") && (
                 <DropdownMenuItem className="cursor-pointer" asChild>
-                  <Link href="/management">
-                    <BadgeCheck />
-                    {t("management page")}
+                  <Link href="/">
+                    <HomeIcon className="size-4" />
+                    {t("home page")}
                   </Link>
                 </DropdownMenuItem>
               )}
