@@ -93,6 +93,8 @@ export default function ResourceContent({
 
   const isAdded = borrowedResources.has(resourceId)
 
+  const [currentPage, setCurrentPage] = useState(0)
+
   const onDocumentLoadSuccess = ({ numPages }: { numPages: number }) => {
     setNumPages(numPages)
   }
@@ -125,6 +127,10 @@ export default function ResourceContent({
     })
     setOpenBorrowDigital(false)
   }
+
+  useEffect(() => {
+    console.log({ numPages })
+  }, [numPages])
 
   useEffect(() => {
     if (!isClient) return
@@ -446,21 +452,31 @@ export default function ResourceContent({
                     showPageCorners={true}
                     disableFlipByClick={false}
                     className=""
+                    onFlip={(e) => {
+                      setCurrentPage(e.data)
+                    }}
                   >
-                    {Array.from(new Array(numPages), (_, index) => (
-                      <div
-                        key={`page_${index + 1}`}
-                        className="overflow-hidden"
-                        style={{ width: baseWidth, height: baseWidth / ratio }}
-                      >
-                        <Page
-                          pageNumber={index + 1}
-                          width={baseWidth}
-                          height={baseWidth / ratio}
-                          className="size-full"
-                        />
-                      </div>
-                    ))}
+                    {Array.from(new Array(numPages), (_, index) => {
+                      if (Math.abs(currentPage - (index + 1)) > 5)
+                        return <div key={`page_${index + 1}`}></div>
+                      return (
+                        <div
+                          key={`page_${index + 1}`}
+                          className="overflow-hidden"
+                          style={{
+                            width: baseWidth,
+                            height: baseWidth / ratio,
+                          }}
+                        >
+                          <Page
+                            pageNumber={index + 1}
+                            width={baseWidth}
+                            height={baseWidth / ratio}
+                            className="size-full"
+                          />
+                        </div>
+                      )
+                    })}
                   </HTMLFlipBook>
                 )}
               </Document>
