@@ -5,6 +5,8 @@
     "Not found description": "Sorry, we couldn't find the page you're looking for. It may have moved or it may not exist."
   },
   "Dashboard": {
+    "Total in shelf": "Total in shelf",
+    "Total out of shelf": "Total out of shelf",
     "Available units": "Available units",
     "Need units": "Need units",
     "Failed requests": "Failed requests",
@@ -1157,6 +1159,7 @@
     "selected items": "Selected items",
     "books": "Books",
     "add borrow list": "Add to borrow list",
+    "add reserved list": "Add to reserved list",
     "are you absolutely sure to delete your borrow list": "Are you absolutely sure to delete your borrow list?",
     "are you absolutely sure to delete": "Are you absolutely sure to delete?",
     "add to borrow list": "Add {title} to borrow list",
@@ -1964,6 +1967,8 @@
     "DDC additional info": "Additionally, many public and university libraries also provide guides and materials on how to use DDC. You can check the website of your local library or nearest university for more information."
   },
   "TrackingsManagementPage": {
+    "Extend": "Extend",
+    "Are you sure you want to extend": "Are you sure you want to extend {itemName}?",
     "Available units": "Available units",
     "Need units": "Need units",
     "Average need satisfaction rate": "Average need satisfaction rate",

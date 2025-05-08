@@ -851,7 +851,7 @@ async function BorrowRecordDetailPage({ params }: Props) {
           </div>
         </div> */}
 
-        <BorrowHistory borrowRecord={record} />
+        <BorrowHistory borrowRecord={record} management />
       </div>
     </div>
   )

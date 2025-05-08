@@ -19,6 +19,8 @@ export type TDashboardTopCirculation = {
     totalRequestFailed: number
     totalBorrowed: number
     totalReserved: number
+    totalInShelf: number
+    totalOutOfShelf: number
     averageNeedSatisfactionRate: number
     availableUnits: number
     needUnits: number

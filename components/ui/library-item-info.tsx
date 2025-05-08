@@ -328,7 +328,13 @@ const LibraryItemInfo = ({
             {!isManager && (
               <Button onClick={handleAddToBorrowList}>
                 <Book />
-                <span>{t("add borrow list")}</span>
+                <span>
+                  {t(
+                    libraryItem.libraryItemInventory.availableUnits === 0
+                      ? "add reserved list"
+                      : "add borrow list"
+                  )}
+                </span>
               </Button>
             )}
           </section>
