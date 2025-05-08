@@ -69,21 +69,24 @@ export const searchTopCirculation = z
       .enum([
         "BorrowSuccessCount",
         "-BorrowSuccessCount",
+        "BorrowRequestCount",
+        "-BorrowRequestCount",
         "BorrowFailedCount",
         "-BorrowFailedCount",
-        "ReserveCount",
-        "-ReserveCount",
+        "TotalSatisfactionUnits",
+        "-TotalSatisfactionUnits",
         "ExtendedBorrowCount",
         "-ExtendedBorrowCount",
         "DigitalBorrowCount",
         "-DigitalBorrowCount",
         "BorrowFailedRate",
         "-BorrowFailedRate",
+        "SatisfactionRate",
+        "-SatisfactionRate",
         "BorrowExtensionRate",
         "-BorrowExtensionRate",
       ])
-      .optional()
-      .catch(undefined),
+      .catch("-BorrowFailedCount"),
   })
   .and(filterTopCirculation)
 

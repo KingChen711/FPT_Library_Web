@@ -150,6 +150,8 @@ export const generatePDF = ({
 
     if (!supplementRequest) {
       row.push(`${item.barcodeRangeFrom}-${item.barcodeRangeTo}`)
+    } else {
+      row.push(item?.supplementRequestReason || "-")
     }
 
     itemRowsByCategory[item.category.vietnameseName] = itemRowsByCategory[
@@ -164,6 +166,8 @@ export const generatePDF = ({
 
   if (!supplementRequest) {
     itemColumns.push("Số ĐKCB")
+  } else {
+    itemColumns.push("Lý do bổ sung")
   }
 
   let finalY = 205 // Ép kiểu vì lastAutoTable không được định nghĩa sẵn trong jsPDF

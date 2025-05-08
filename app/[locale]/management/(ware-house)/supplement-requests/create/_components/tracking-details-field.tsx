@@ -92,11 +92,11 @@ function TrackingDetailsField({
       availableUnits: item.availableVsNeedChart.availableUnits,
       needUnits: item.availableVsNeedChart.needUnits,
       borrowFailedCount: item.borrowFailedCount,
-      borrowFailedRate: item.borrowFailedRate,
       borrowSuccessCount: item.borrowSuccessCount,
+      borrowRequestCount: item.borrowRequestCount,
       categoryId: item.libraryItem.categoryId,
       libraryItemId: item.libraryItem.libraryItemId,
-      reserveCount: item.reserveCount,
+      totalSatisfactionUnits: item.totalSatisfactionUnits,
       unitPrice: item.libraryItem.estimatedPrice || 0,
       isbn: item.libraryItem.isbn || "",
       hasInitPrice: !!item.libraryItem.estimatedPrice,
@@ -106,6 +106,7 @@ function TrackingDetailsField({
       itemTotal: 0,
       totalAmount: 0,
       supplementRequestReason: "",
+      borrowExtensionRate: item.borrowExtensionRate,
     })
   }
 
@@ -216,9 +217,11 @@ function TrackingDetailsField({
                         availableUnits: undefined,
                         needUnits: undefined,
                         borrowFailedCount: undefined,
-                        borrowFailedRate: undefined,
+                        satisfactionRate: undefined,
                         borrowSuccessCount: undefined,
-                        reserveCount: undefined,
+                        borrowRequestCount: undefined,
+                        totalSatisfactionUnits: undefined,
+                        borrowExtensionRate: undefined,
                         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                         //@ts-ignore
                         categoryId: undefined,

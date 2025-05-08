@@ -79,13 +79,15 @@ export const warehouseTrackingDetailSchema = z.object({
     .refine((data) => data.length <= 255, {
       message: "max255",
     }),
+
   borrowSuccessCount: z.number().optional(),
-  reserveCount: z.number().optional(),
+  borrowRequestCount: z.number().optional(),
   borrowFailedCount: z.number().optional(),
-  borrowFailedRate: z.number().optional(),
+  totalSatisfactionUnits: z.number().optional(),
   availableUnits: z.number().optional(),
   needUnits: z.number().optional(),
   averageNeedSatisfactionRate: z.number().optional(),
+  borrowExtensionRate: z.number().optional(),
 })
 
 export type TWarehouseTrackingDetailSchema = z.infer<

@@ -639,6 +639,15 @@ export type TrackingDetail = {
   barcodeRangeFrom: string
   barcodeRangeTo: string
   hasGlueBarcode: boolean
+  supplementRequestReason?: string
+  borrowSuccessCount?: number
+  borrowRequestCount?: number
+  borrowFailedCount?: number
+  totalSatisfactionUnits?: number
+  availableUnits?: number
+  needUnits?: number
+  averageNeedSatisfactionRate?: number
+  borrowExtensionRate?: number
 }
 
 // Ocr Result
