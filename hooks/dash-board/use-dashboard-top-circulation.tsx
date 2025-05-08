@@ -27,10 +27,11 @@ export type TDashboardTopCirculation = {
     {
       borrowSuccessCount: number
       borrowFailedCount: number
-      reserveCount: number
+      borrowRequestCount: number
+      totalSatisfactionUnits: number
       extendedBorrowCount: number
       digitalBorrowCount: number
-      borrowFailedRate: number
+      satisfactionRate: number
       borrowExtensionRate: number
       libraryItem: BookEdition & { category: Category }
       availableVsNeedChart: {

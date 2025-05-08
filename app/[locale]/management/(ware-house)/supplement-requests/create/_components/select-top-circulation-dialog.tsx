@@ -67,6 +67,7 @@ const initSearchParams: TSearchTopCirculation = {
   f: [],
   o: [],
   v: [],
+  sort: "SatisfactionRate",
 }
 
 function SelectTopCirculationDialog({
@@ -148,32 +149,24 @@ function SelectTopCirculationDialog({
 
                           <SortableTableHead
                             currentSort={searchParams.sort}
-                            label={t("Borrow reserve count")}
-                            sortKey="ReserveCount"
+                            label={t("Borrow request count")}
+                            sortKey="BorrowRequestCount"
                             position="center"
                             onSort={handleSort}
                           />
 
                           <SortableTableHead
                             currentSort={searchParams.sort}
-                            label={t("Extended borrow count")}
-                            sortKey="ExtendedBorrowCount"
+                            label={t("Total satisfaction units")}
+                            sortKey="TotalSatisfactionUnits"
                             position="center"
                             onSort={handleSort}
                           />
 
                           <SortableTableHead
                             currentSort={searchParams.sort}
-                            label={t("Digital borrow count")}
-                            sortKey="DigitalBorrowCount"
-                            position="center"
-                            onSort={handleSort}
-                          />
-
-                          <SortableTableHead
-                            currentSort={searchParams.sort}
-                            label={t("Borrow failed rates")}
-                            sortKey="BorrowFailedRate"
+                            label={t("Satisfaction rate")}
+                            sortKey="SatisfactionRate"
                             position="center"
                             onSort={handleSort}
                           />
@@ -234,25 +227,19 @@ function SelectTopCirculationDialog({
 
                                   <TableCell className="text-nowrap">
                                     <div className="flex justify-center">
-                                      {source.reserveCount}
+                                      {source.borrowRequestCount}
                                     </div>
                                   </TableCell>
 
                                   <TableCell className="text-nowrap">
                                     <div className="flex justify-center">
-                                      {source.extendedBorrowCount}
+                                      {source.totalSatisfactionUnits}
                                     </div>
                                   </TableCell>
 
                                   <TableCell className="text-nowrap">
                                     <div className="flex justify-center">
-                                      {source.digitalBorrowCount}
-                                    </div>
-                                  </TableCell>
-
-                                  <TableCell className="text-nowrap">
-                                    <div className="flex justify-center">
-                                      {source.borrowFailedRate}%
+                                      {source.satisfactionRate}%
                                     </div>
                                   </TableCell>
                                   <TableCell className="text-nowrap">

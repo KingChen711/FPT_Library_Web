@@ -13,7 +13,17 @@ import { formatPrice } from "@/lib/utils"
 import { type TSearchTrackingDetailsSchema } from "@/lib/validations/trackings/search-tracking-details"
 import useTrackingDetails from "@/hooks/trackings/use-search-tracking-details"
 import useFormatLocale from "@/hooks/utils/use-format-locale"
+import { Button } from "@/components/ui/button"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
 import Paginator from "@/components/ui/paginator"
+import ParseHtml from "@/components/ui/parse-html"
 import SearchForm from "@/components/ui/search-form"
 import SortableTableHead from "@/components/ui/sortable-table-head"
 import StockTransactionTypeBadge from "@/components/ui/stock-transaction-type-badge"
@@ -162,6 +172,70 @@ function TrackingDetailsTabsContent({ trackingId, conditions }: Props) {
                     {t("Condition")}
                   </TableHead>
 
+                  {/* <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Borrow success count")}
+                    sortKey="BorrowSuccessCount"
+                    position="center"
+                    onSort={handleSort}
+                  />
+
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Borrow request count")}
+                    sortKey="BorrowRequestCount"
+                    position="center"
+                    onSort={handleSort}
+                  />
+
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Borrow failed count")}
+                    sortKey="BorrowFailedCount"
+                    position="center"
+                    onSort={handleSort}
+                  />
+
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Total satisfaction units")}
+                    sortKey="TotalSatisfactionUnits"
+                    position="center"
+                    onSort={handleSort}
+                  />
+
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Available units")}
+                    sortKey="AvailableUnits"
+                    position="center"
+                    onSort={handleSort}
+                  />
+
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Need units")}
+                    sortKey="NeedUnits"
+                    position="center"
+                    onSort={handleSort}
+                  />
+
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Average need satisfaction rate")}
+                    sortKey="AverageNeedSatisfactionRate"
+                    position="center"
+                    onSort={handleSort}
+                  />
+
+                  <SortableTableHead
+                    currentSort={searchParams.sort}
+                    label={t("Borrow extension rate")}
+                    sortKey="BorrowExtensionRate"
+                    position="center"
+                    onSort={handleSort}
+                  /> */}
+
                   <SortableTableHead
                     currentSort={searchParams.sort}
                     label={t("Created at")}
@@ -193,6 +267,12 @@ function TrackingDetailsTabsContent({ trackingId, conditions }: Props) {
                     position="center"
                     onSort={handleSort}
                   />
+
+                  <TableHead className="text-nowrap font-bold">
+                    <div className="flex justify-center">
+                      {t("Supplement request reason")}
+                    </div>
+                  </TableHead>
 
                   <TableHead className="text-nowrap font-bold">
                     <div className="flex justify-center">{t("Actions")}</div>
@@ -278,6 +358,49 @@ function TrackingDetailsTabsContent({ trackingId, conditions }: Props) {
                       </div>
                     </TableCell>
 
+                    {/* <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {trackingDetail.borrowSuccessCount ?? "-"}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {trackingDetail.borrowRequestCount ?? "-"}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {trackingDetail.borrowFailedCount ?? "-"}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {trackingDetail.totalSatisfactionUnits ?? "-"}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {trackingDetail.availableUnits ?? "-"}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {trackingDetail.needUnits ?? "-"}
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {trackingDetail.averageNeedSatisfactionRate ?? "-"}%
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {trackingDetail.borrowExtensionRate ?? "-"}%
+                      </div>
+                    </TableCell> */}
+
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
                         {trackingDetail.createdAt
@@ -315,6 +438,34 @@ function TrackingDetailsTabsContent({ trackingId, conditions }: Props) {
                     <TableCell className="text-nowrap">
                       <div className="flex justify-center">
                         {trackingDetail.updatedBy || "-"}
+                      </div>
+                    </TableCell>
+
+                    <TableCell className="text-nowrap">
+                      <div className="flex justify-center">
+                        {trackingDetail.supplementRequestReason ? (
+                          <Dialog>
+                            <DialogTrigger asChild>
+                              <Button variant="outline" size="sm">
+                                {t("View content")}
+                              </Button>
+                            </DialogTrigger>
+                            <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto overflow-x-hidden">
+                              <DialogHeader>
+                                <DialogTitle>{t("Description")}</DialogTitle>
+                                <DialogDescription>
+                                  <ParseHtml
+                                    data={
+                                      trackingDetail.supplementRequestReason
+                                    }
+                                  />
+                                </DialogDescription>
+                              </DialogHeader>
+                            </DialogContent>
+                          </Dialog>
+                        ) : (
+                          "-"
+                        )}
                       </div>
                     </TableCell>
 

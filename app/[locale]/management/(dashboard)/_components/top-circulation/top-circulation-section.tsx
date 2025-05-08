@@ -64,6 +64,7 @@ const initSearchParams: TSearchTopCirculation = {
   f: [],
   o: [],
   v: [],
+  sort: "SatisfactionRate",
 }
 
 function TopCirculationSection() {
@@ -106,10 +107,6 @@ function TopCirculationSection() {
             <div className="font-medium">{data.needUnits}</div>
             <div className="text-muted-foreground">{t("Total requests")}:</div>
             <div className="font-medium">{data.totalRequest}</div>
-            <div className="text-muted-foreground">{t("Failed requests")}:</div>
-            <div className="font-medium">{data.totalRequestFailed}</div>
-            <div className="text-muted-foreground">{t("Total borrowed")}:</div>
-            <div className="font-medium">{data.totalBorrowed}</div>
             <div className="text-muted-foreground">{t("Total reserved")}:</div>
             <div className="font-medium">{data.totalReserved}</div>
           </div>
@@ -232,32 +229,24 @@ function TopCirculationSection() {
 
                   <SortableTableHead
                     currentSort={searchParams.sort}
-                    label={t("Borrow reserve count")}
-                    sortKey="ReserveCount"
+                    label={t("Borrow request count")}
+                    sortKey="BorrowRequestCount"
                     position="center"
                     onSort={handleSort}
                   />
 
                   <SortableTableHead
                     currentSort={searchParams.sort}
-                    label={t("Extended borrow count")}
-                    sortKey="ExtendedBorrowCount"
+                    label={t("Total satisfaction units")}
+                    sortKey="TotalSatisfactionUnits"
                     position="center"
                     onSort={handleSort}
                   />
 
                   <SortableTableHead
                     currentSort={searchParams.sort}
-                    label={t("Digital borrow count")}
-                    sortKey="DigitalBorrowCount"
-                    position="center"
-                    onSort={handleSort}
-                  />
-
-                  <SortableTableHead
-                    currentSort={searchParams.sort}
-                    label={t("Borrow failed rates")}
-                    sortKey="BorrowFailedRate"
+                    label={t("Satisfaction rate")}
+                    sortKey="SatisfactionRate"
                     position="center"
                     onSort={handleSort}
                   />
@@ -317,25 +306,19 @@ function TopCirculationSection() {
 
                           <TableCell className="text-nowrap">
                             <div className="flex justify-center">
-                              {source.reserveCount}
+                              {source.borrowRequestCount}
                             </div>
                           </TableCell>
 
                           <TableCell className="text-nowrap">
                             <div className="flex justify-center">
-                              {source.extendedBorrowCount}
+                              {source.totalSatisfactionUnits}
                             </div>
                           </TableCell>
 
                           <TableCell className="text-nowrap">
                             <div className="flex justify-center">
-                              {source.digitalBorrowCount}
-                            </div>
-                          </TableCell>
-
-                          <TableCell className="text-nowrap">
-                            <div className="flex justify-center">
-                              {source.borrowFailedRate}%
+                              {source.satisfactionRate}%
                             </div>
                           </TableCell>
                           <TableCell className="text-nowrap">

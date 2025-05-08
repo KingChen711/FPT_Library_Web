@@ -47,12 +47,30 @@ function useProtectResource() {
     if (!client) return
 
     const handleKeyDown = (e: KeyboardEvent) => {
+      const key = e.key.toLowerCase()
+      let danger = false
       if (
         e.key === "F12" ||
-        (e.ctrlKey && e.shiftKey && e.key === "I") ||
-        (e.ctrlKey && e.key === "U")
+        (e.ctrlKey && e.shiftKey && key === "i") ||
+        (e.ctrlKey && key === "u") ||
+        (e.ctrlKey && key === "p") || // In
+        (e.ctrlKey && key === "s") || // Lưu
+        (e.ctrlKey && e.shiftKey && key === "j") || // DevTools Console
+        (e.ctrlKey && e.shiftKey && key === "c") // DevTools Elements
       ) {
+        danger = true
         e.preventDefault()
+      }
+
+      // Chặn PrintScreen nếu có thể=
+      if (e.key === "PrintScreen") {
+        navigator.clipboard.writeText("") // Xóa clipboard nếu được hỗ trợ
+        danger = true
+        e.preventDefault()
+      }
+
+      if (danger) {
+        router.push("/danger-cat")
       }
     }
 
@@ -60,7 +78,7 @@ function useProtectResource() {
     return () => {
       document.removeEventListener("keydown", handleKeyDown)
     }
-  }, [client])
+  }, [client, router])
 
   useEffect(() => {
     if (devtoolsOpen) {

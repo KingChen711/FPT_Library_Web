@@ -10,6 +10,7 @@ import { useTranslations } from "next-intl"
 
 import { type TSearchAIRecommendsSchema } from "@/lib/validations/trackings/search-ai-recommend"
 import useAIRecommends from "@/hooks/trackings/use-ai-recommends"
+import LibraryItemCard from "@/components/ui/book-card"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -219,6 +220,12 @@ function RecommendTabsContent({ trackingId }: Props) {
                         {t("Supplement request reason")}
                       </div>
                     </TableHead>
+
+                    <TableHead className="text-nowrap font-bold">
+                      <div className="flex justify-center">
+                        {t("Related item")}
+                      </div>
+                    </TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
@@ -378,6 +385,33 @@ function RecommendTabsContent({ trackingId }: Props) {
                                   <DialogDescription>
                                     <ParseHtml
                                       data={field.supplementRequestReason}
+                                    />
+                                  </DialogDescription>
+                                </DialogHeader>
+                              </DialogContent>
+                            </Dialog>
+                          ) : (
+                            "-"
+                          )}
+                        </div>
+                      </TableCell>
+
+                      <TableCell>
+                        <div className="flex justify-center">
+                          {field.relatedLibraryItem ? (
+                            <Dialog>
+                              <DialogTrigger asChild>
+                                <Button variant="outline" size="sm">
+                                  {t("View content")}
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto overflow-x-hidden">
+                                <DialogHeader>
+                                  <DialogTitle>{t("Related item")}</DialogTitle>
+                                  <DialogDescription>
+                                    <LibraryItemCard
+                                      libraryItem={field.relatedLibraryItem}
+                                      modal
                                     />
                                   </DialogDescription>
                                 </DialogHeader>

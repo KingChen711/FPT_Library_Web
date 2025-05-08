@@ -85,7 +85,7 @@ const ManagementSidebarContent = () => {
                 >
                   <SidebarMenuItem>
                     <CollapsibleTrigger asChild>
-                      <SidebarMenuButton tooltip={route.label}>
+                      <SidebarMenuButton tooltip={t(route.label)}>
                         {route.Icon && (
                           <route.Icon
                             className={cn(
@@ -148,7 +148,7 @@ const ManagementSidebarContent = () => {
               return (
                 <SidebarMenuItem key={route.label}>
                   <SidebarMenuButton
-                    tooltip={route.label}
+                    tooltip={t(route.label)}
                     asChild
                     isActive={isActive}
                   >

@@ -2,7 +2,7 @@
 
 import type React from "react"
 import { useEffect, useRef, useState } from "react"
-import dangerCat from "@/public/images/danger-cat.jpg"
+import dangerCat from "@/public/images/danger-sign.png"
 import HTMLFlipBook from "react-pageflip"
 import { Document, Page, pdfjs } from "react-pdf"
 
@@ -139,28 +139,6 @@ export default function ResourceContent({
       document.removeEventListener("fullscreenchange", handleFullscreenChange)
     }
   }, [isClient])
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      // Ngăn Ctrl + P (Print)
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "p") {
-        e.preventDefault()
-        setOpenPrintShotWarning(true)
-      }
-
-      // Cảnh báo nếu nhấn PrintScreen
-      if (e.key === "PrintScreen") {
-        e.preventDefault()
-        setOpenPrintShotWarning(true)
-      }
-    }
-
-    window.addEventListener("keydown", handleKeyDown)
-
-    return () => {
-      window.removeEventListener("keydown", handleKeyDown)
-    }
-  }, [])
 
   useEffect(() => {
     if (isLoadingAuth || resourceType === EResourceBookType.AUDIO_BOOK) return

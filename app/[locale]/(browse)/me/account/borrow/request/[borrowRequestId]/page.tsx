@@ -1,20 +1,11 @@
-"use client"
-
-import { useState } from "react"
 import Link from "next/link"
-import {
-  ArrowLeft,
-  BookOpen,
-  Calendar,
-  Clock,
-  FileText,
-  Loader2,
-} from "lucide-react"
-import { useTranslations } from "next-intl"
+import { notFound } from "next/navigation"
+import getBorrowRequestPatron from "@/queries/borrows/get-borrow-request-patron"
+import { ArrowLeft, BookOpen, Calendar, Clock, FileText } from "lucide-react"
 
+import { getTranslations } from "@/lib/get-translations"
 import { ETransactionStatus } from "@/lib/types/enums"
 import { formatDate } from "@/lib/utils"
-import useBorrowRequestDetail from "@/hooks/library-items/use-borrow-request-detail"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -25,14 +16,13 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import NoData from "@/components/ui/no-data"
-import NoResult from "@/components/ui/no-result"
 import BorrowRequestStatusBadge from "@/components/badges/borrow-request-status-badge"
 import TransactionStatusBadge from "@/components/badges/transaction-status-badge"
 
-import BorrowRequestTransactionDialog from "../_components/borrow-request-transaction-dialog"
 import BorrowBookPreview from "../../_components/borrow-book-preview"
 import BorrowReserveItemPreview from "../../_components/borrow-reserve-item-preview"
 import BorrowResourcePreview from "../../_components/borrow-resource-preview"
+import PaymentButton from "./_components/payment-button"
 
 type Props = {
   params: {
@@ -40,52 +30,20 @@ type Props = {
   }
 }
 
-const BorrowRequestDetail = ({ params }: Props) => {
-  const [openTransaction, setOpenTransaction] = useState(false)
-  const t = useTranslations("BookPage.borrow tracking")
+const BorrowRequestDetail = async ({ params }: Props) => {
+  const t = await getTranslations("BookPage.borrow tracking")
 
-  const { data: borrowRequest, isLoading } = useBorrowRequestDetail(
-    +params.borrowRequestId
-  )
+  const borrowRequest = await getBorrowRequestPatron(+params.borrowRequestId)
 
   const transaction = borrowRequest?.borrowRequestResources[0]?.transaction
   const transactionStatus = transaction?.transactionStatus
 
-  if (isLoading) {
-    return (
-      <div className="flex h-[50vh] w-full items-center justify-center">
-        <div className="flex flex-col items-center gap-2">
-          <Loader2 className="size-12 animate-spin text-primary" />
-        </div>
-      </div>
-    )
-  }
-
   if (!borrowRequest) {
-    return (
-      <div className="flex justify-center p-4">
-        <NoResult
-          title={t("Borrow Requests Not Found")}
-          description={t(
-            "No borrow requests matching your request were found Please check your information or try searching with different criteria"
-          )}
-        />
-      </div>
-    )
+    notFound()
   }
 
   return (
     <div className="mx-auto">
-      {(borrowRequest.isExistPendingResources ||
-        transaction?.transactionStatus === ETransactionStatus.PENDING) && (
-        <BorrowRequestTransactionDialog
-          transaction={transaction || undefined}
-          borrowRequestId={+params.borrowRequestId}
-          open={openTransaction}
-          setOpen={setOpenTransaction}
-        />
-      )}
-
       <section className="mb-4 flex items-center justify-between gap-2">
         <div className="flex items-center gap-3">
           <Button
@@ -307,9 +265,10 @@ const BorrowRequestDetail = ({ params }: Props) => {
                 {(borrowRequest.isExistPendingResources ||
                   transactionStatus === ETransactionStatus.PENDING) &&
                   transactionStatus !== ETransactionStatus.CANCELLED && (
-                    <Button onClick={() => setOpenTransaction(true)}>
-                      {t("payment")}
-                    </Button>
+                    <PaymentButton
+                      borrowRequestId={+params.borrowRequestId}
+                      transaction={transaction}
+                    />
                   )}
               </div>
             </CardHeader>

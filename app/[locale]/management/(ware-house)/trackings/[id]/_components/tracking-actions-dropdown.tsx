@@ -34,6 +34,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { Icons } from "@/components/ui/icons"
 
+import ConfirmCancelTrackingDialog from "./confirm-cancel-tracking"
 import ConfirmExportFileDialog from "./confirm-export-file-dialog"
 import DeleteTrackingDialog from "./delete-tracking-dialog"
 import EditTrackingDialog from "./edit-tracking-dialog"
@@ -54,6 +55,7 @@ function TrackingActionsDropdown({
   const [openEdit, setOpenEdit] = useState(false)
   const [openDelete, setOpenDelete] = useState(false)
   const [openExport, setOpenExport] = useState(false)
+  const [openCancel, setOpenCancel] = useState(false)
   const [completing, startComplete] = useTransition()
   const [cancelling, startCancel] = useTransition()
   const [exporting, startExport] = useTransition()
@@ -77,6 +79,9 @@ function TrackingActionsDropdown({
           variant: "success",
         })
         setOpenDropdown(false)
+        if (status === ETrackingStatus.CANCELLED) {
+          setOpenCancel(false)
+        }
         return
       }
       handleServerActionError(res, locale)
@@ -170,7 +175,15 @@ function TrackingActionsDropdown({
         isPending={exporting}
         onExportFile={handleExport}
         receipt={tracking.receiptNumber}
-        supplementRequest
+        supplementRequest={supplementRequest}
+      />
+      <ConfirmCancelTrackingDialog
+        open={openCancel}
+        setOpen={setOpenCancel}
+        isPending={cancelling}
+        onCancelTracking={() => handleChangeStatus(ETrackingStatus.CANCELLED)}
+        receipt={tracking.receiptNumber}
+        supplementRequest={supplementRequest}
       />
       <EditTrackingDialog
         open={openEdit}
@@ -215,9 +228,7 @@ function TrackingActionsDropdown({
                   <DropdownMenuItem
                     disabled={cancelling || completing || exporting}
                     className="cursor-pointer"
-                    onClick={() =>
-                      handleChangeStatus(ETrackingStatus.CANCELLED)
-                    }
+                    onClick={() => setOpenCancel(true)}
                   >
                     {cancelling ? (
                       <Loader2 className="size-4 animate-spin" />
