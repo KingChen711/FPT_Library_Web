@@ -67,11 +67,12 @@ export default function ResourceContent({
   resourceType,
 }: Props) {
   const baseWidth = 400
-  const baseHeight = 600
+
   const { accessToken, isManager, isLoadingAuth } = useAuth()
   const flipBookRef = useRef(null)
   const router = useRouter()
   const locale = useLocale()
+  const [ratio, setRatio] = useState(2 / 3)
 
   const [isClient, setIsClient] = useState(false)
   const [numPages, setNumPages] = useState<number>(0)
@@ -139,6 +140,26 @@ export default function ResourceContent({
       document.removeEventListener("fullscreenchange", handleFullscreenChange)
     }
   }, [isClient])
+
+  useEffect(() => {
+    const loadPdf = async () => {
+      if (!pdfLink) return
+
+      try {
+        const loadingTask = pdfjs.getDocument(pdfLink)
+        const pdf = await loadingTask.promise
+
+        const page = await pdf.getPage(1) // Đọc trang đầu tiên
+        const viewport = page.getViewport({ scale: 1 }) // scale = 1 để lấy kích thước gốc
+
+        setRatio(viewport.width / viewport.height)
+      } catch (error) {
+        console.error("Lỗi khi đọc PDF:", error)
+      }
+    }
+
+    loadPdf()
+  }, [pdfLink])
 
   useEffect(() => {
     if (isLoadingAuth || resourceType === EResourceBookType.AUDIO_BOOK) return
@@ -403,12 +424,12 @@ export default function ResourceContent({
                   <HTMLFlipBook
                     ref={flipBookRef}
                     width={baseWidth}
-                    height={baseHeight}
+                    height={baseWidth / ratio}
                     size="stretch"
                     minWidth={baseWidth}
                     maxWidth={baseWidth}
-                    minHeight={baseHeight}
-                    maxHeight={baseHeight}
+                    minHeight={baseWidth / ratio}
+                    maxHeight={baseWidth / ratio}
                     autoSize={true}
                     style={{}}
                     flippingTime={1000}
@@ -430,12 +451,12 @@ export default function ResourceContent({
                       <div
                         key={`page_${index + 1}`}
                         className="overflow-hidden"
-                        style={{ width: baseWidth, height: baseHeight }}
+                        style={{ width: baseWidth, height: baseWidth / ratio }}
                       >
                         <Page
                           pageNumber={index + 1}
                           width={baseWidth}
-                          height={baseHeight}
+                          height={baseWidth / ratio}
                           className="size-full"
                         />
                       </div>
