@@ -1,8 +1,11 @@
 "use client"
 
 import React from "react"
+import { useSearchParams } from "next/navigation"
 import { useTranslations } from "next-intl"
 
+import { parseSearchParamsDateRange } from "@/lib/filters"
+import { EDashboardPeriodLabel } from "@/lib/types/enums"
 import useDashboardOverview from "@/hooks/dash-board/use-dashboard-overview"
 import { Skeleton } from "@/components/ui/skeleton"
 
@@ -11,7 +14,17 @@ import InventoryPieChart from "./inventory-pie-chart"
 
 function OverviewSection() {
   const t = useTranslations("Dashboard")
-  const { data, isLoading } = useDashboardOverview()
+  const searchParams = useSearchParams()
+
+  const period =
+    searchParams.get("period") || EDashboardPeriodLabel.DAILY.toString()
+  const dateRange = parseSearchParamsDateRange(searchParams.getAll("dateRange"))
+
+  const { data, isLoading } = useDashboardOverview({
+    period: +period,
+    startDate: dateRange[0],
+    endDate: dateRange[1],
+  })
 
   if (isLoading) return <OverviewSectionSkeleton />
 

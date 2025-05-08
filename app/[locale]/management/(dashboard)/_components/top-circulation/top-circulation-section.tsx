@@ -109,6 +109,12 @@ function TopCirculationSection() {
             <div className="font-medium">{data.totalRequest}</div>
             <div className="text-muted-foreground">{t("Total reserved")}:</div>
             <div className="font-medium">{data.totalReserved}</div>
+            <div className="text-muted-foreground">{t("Total in shelf")}:</div>
+            <div className="font-medium">{data.totalInShelf}</div>
+            <div className="text-muted-foreground">
+              {t("Total out of shelf")}:
+            </div>
+            <div className="font-medium">{data.totalOutOfShelf}</div>
           </div>
         </div>
       )

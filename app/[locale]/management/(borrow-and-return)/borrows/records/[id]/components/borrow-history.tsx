@@ -6,6 +6,7 @@ import { BookOpen, Clock } from "lucide-react"
 
 import { getLocale } from "@/lib/get-locale"
 import { getTranslations } from "@/lib/get-translations"
+import { EBorrowRecordStatus } from "@/lib/types/enums"
 import { formatPrice } from "@/lib/utils"
 import { Badge } from "@/components/ui/badge"
 import BarcodeGenerator from "@/components/ui/barcode-generator"
@@ -24,6 +25,8 @@ import BorrowRecordStatusBadge from "@/components/badges/borrow-record-status-ba
 import FineBorrowStatusBadge from "@/components/badges/fine-borrow-status"
 import FineTypeBadge from "@/components/badges/fine-type-badge"
 
+import ConfirmExtendDialog from "./confirm-extend-dialog"
+
 // Sample data for demonstration
 
 const formatDate = (dateString: string | Date | null) => {
@@ -34,9 +37,11 @@ const formatDate = (dateString: string | Date | null) => {
 export default async function BorrowHistory({
   borrowRecord,
   actions,
+  management,
 }: {
   borrowRecord: BorrowRecordDetailItem
   actions?: React.ReactNode
+  management?: boolean
 }) {
   const locale = await getLocale()
   const t = await getTranslations("BorrowAndReturnManagementPage")
@@ -208,6 +213,14 @@ export default async function BorrowHistory({
                     />
                     <div className="flex flex-1 flex-col items-end gap-2">
                       <BorrowRecordStatusBadge status={detail.status} />
+                      {detail.status === EBorrowRecordStatus.BORROWING && (
+                        <ConfirmExtendDialog
+                          management={management}
+                          itemName={detail.libraryItem.title}
+                          recordDetailId={detail.borrowRecordDetailId}
+                          recordId={detail.borrowRecordId}
+                        />
+                      )}
                     </div>
                   </div>
 
