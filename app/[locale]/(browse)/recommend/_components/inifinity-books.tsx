@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useEffect } from "react"
+import React, { useEffect, useMemo, useRef, useState } from "react"
 import { useAuth } from "@/contexts/auth-provider"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import { useTranslations } from "next-intl"
@@ -47,6 +47,31 @@ type Props = {
 }
 
 function InfinityBooks({ searchParams }: Props) {
+  const refContainer = useRef<HTMLDivElement>(null)
+  const [is5ItemsARow, setIs5ItemsARow] = useState(false)
+
+  useEffect(() => {
+    const element = refContainer.current
+    if (!element) return
+
+    const resizeObserver = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        if (entry.contentRect) {
+          setIs5ItemsARow(
+            entry.contentRect.width >= 1296 && entry.contentRect.width <= 1560
+          )
+        }
+      }
+    })
+
+    resizeObserver.observe(element)
+
+    // Cleanup
+    return () => {
+      resizeObserver.disconnect()
+    }
+  }, [])
+
   const { accessToken } = useAuth()
   const t = useTranslations("BookPage")
   const { ref, inView } = useInView()
@@ -75,11 +100,24 @@ function InfinityBooks({ searchParams }: Props) {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage])
 
-  const virtualItemCount = (pageSize - (items.length % pageSize)) % pageSize
+  const virtualItemCount = useMemo(
+    () =>
+      is5ItemsARow
+        ? (5 - (items.length % 5)) % 5
+        : (pageSize - (items.length % pageSize)) % pageSize,
+    [is5ItemsARow, items.length]
+  )
+
+  useEffect(() => {
+    console.log(virtualItemCount)
+  }, [virtualItemCount])
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex w-full flex-wrap justify-between gap-6">
+      <div
+        ref={refContainer}
+        className="flex w-full flex-wrap justify-between gap-6"
+      >
         {status === "pending" || isLoading ? (
           <>
             {Array(pageSize)
@@ -98,19 +136,33 @@ function InfinityBooks({ searchParams }: Props) {
           />
         ) : (
           <>
-            {items.map((item) => (
-              <div
-                key={item.libraryItemId}
-                className="min-w-[240px] max-w-[340px] flex-1"
-              >
-                <BookItemCard item={item} />
-              </div>
-            ))}
-            {Array(virtualItemCount)
-              .fill(null)
-              .map((_, i) => (
-                <div key={i} className="min-w-[240px] max-w-[340px] flex-1" />
-              ))}
+            {[...items, ...Array(virtualItemCount).fill(null)].map(
+              (item, i) => {
+                if (!item) {
+                  if (isFetchingNextPage || isLoading)
+                    return (
+                      <BrowseBookCardSkeleton
+                        key={i}
+                        className="min-w-[240px] max-w-[340px] flex-1"
+                      />
+                    )
+                  return (
+                    <div
+                      key={i}
+                      className="min-w-[240px] max-w-[340px] flex-1"
+                    />
+                  )
+                }
+                return (
+                  <div
+                    key={item.libraryItemId}
+                    className="min-w-[240px] max-w-[340px] flex-1"
+                  >
+                    <BookItemCard item={item} />
+                  </div>
+                )
+              }
+            )}
             {hasNextPage && (
               <div
                 ref={ref}

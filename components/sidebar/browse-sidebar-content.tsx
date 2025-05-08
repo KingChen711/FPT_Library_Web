@@ -122,7 +122,7 @@ const BrowseSidebarContent = () => {
             return (
               <SidebarMenuItem key={route.label}>
                 <SidebarMenuButton
-                  tooltip={route.label}
+                  tooltip={t(route.label)}
                   asChild
                   isActive={isActive}
                 >
